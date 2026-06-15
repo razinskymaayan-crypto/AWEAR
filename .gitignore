@@ -16,3 +16,5 @@ __pycache__/
 .DS_Store
 .env
 venv312/
+.tg_chat
+.tg_inbox
