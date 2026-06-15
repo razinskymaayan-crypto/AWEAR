@@ -133,10 +133,15 @@
   .err { background: rgba(255,61,119,.12); border: 1px solid var(--accent); border-radius: 14px;
     padding: 16px; color: #ffb3c9; font-size: 14px; margin-top: 14px; }
 
-  /* ---- feed ---- */
+  /* ---- feed: TikTok-style immersive vertical scroll ---- */
   .feed-h { font-family: "Poppins", sans-serif; font-weight: 800; padding: 4px 4px 14px; font-size: 15px; }
+  /* immersive mode: turn the shared <main> scroller into a full-bleed snap feed */
+  main.feed-mode { padding: 0; scroll-snap-type: y mandatory; }
+  main.feed-mode .feed-h { display: none; }
   .feed-card { position: relative; border-radius: 20px; overflow: hidden; margin-bottom: 14px;
     height: 500px; display: flex; align-items: flex-end; }
+  main.feed-mode .feed-card { height: var(--feed-h, 100%); border-radius: 0; margin-bottom: 0;
+    scroll-snap-align: start; scroll-snap-stop: always; }
   .feed-card .bg { position: absolute; inset: 0; }
   .g1 { background: linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac); }
   .g2 { background: linear-gradient(160deg,#a18cd1,#fbc2eb); }
@@ -144,25 +149,53 @@
   .g4 { background: linear-gradient(160deg,#fccb90,#d57eeb); }
   .g5 { background: linear-gradient(160deg,#5ee7df,#b490ca); }
   .feed-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .feed-card .overlay { position: relative; width: 100%; padding: 18px;
-    background: linear-gradient(0deg, rgba(0,0,0,.78), rgba(0,0,0,.1) 70%, transparent); }
+  .feed-card .overlay { position: relative; width: 100%; padding: 18px 84px 20px 18px; z-index: 2;
+    background: linear-gradient(0deg, rgba(0,0,0,.82), rgba(0,0,0,.12) 70%, transparent); }
+  main.feed-mode .feed-card .overlay { padding-bottom: 96px; }  /* clear the bottom nav bar */
   .feed-card .user { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; }
   .feed-card .dot { width: 32px; height: 32px; border-radius: 50%;
     background: linear-gradient(135deg, var(--accent2), var(--accent)); border: 2px solid rgba(255,255,255,.7); }
-  .feed-card .cap { font-size: 13.5px; margin: 9px 0; line-height: 1.45; }
-  .feed-card .acts { display: flex; gap: 18px; font-size: 13px; font-weight: 700; }
-  .buy-look { position: absolute; top: 14px; inset-inline-start: 14px; background: rgba(255,255,255,.95);
-    color: #111; font-size: 12px; font-weight: 900; padding: 8px 13px; border-radius: 22px; border: 0;
-    cursor: pointer; font-family: inherit; backdrop-filter: blur(6px); }
-  .match-badge { position: absolute; top: 14px; inset-inline-end: 14px; z-index: 2;
+  .feed-card .cap { font-size: 13.5px; margin: 9px 0 0; line-height: 1.45; }
+
+  /* right-side action rail (TikTok signature) */
+  .rail { position: absolute; inset-inline-end: 10px; bottom: 84px; z-index: 3;
+    display: flex; flex-direction: column; gap: 15px; align-items: center; }
+  main.feed-mode .rail { bottom: 104px; }
+  .rail .act { display: flex; flex-direction: column; align-items: center; gap: 3px;
+    background: none; border: 0; cursor: pointer; font-family: inherit; color: #fff; padding: 0; }
+  .rail .ic { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 23px; background: rgba(0,0,0,.34); backdrop-filter: blur(6px);
+    transition: transform .15s, background .15s; }
+  .rail .act:active .ic { transform: scale(.84); }
+  .rail .lbl { font-size: 10.5px; font-weight: 800; text-shadow: 0 1px 4px rgba(0,0,0,.7); }
+  .rail .act.on .ic { background: rgba(255,61,119,.92); }
+  .rail .act.saved .ic { background: rgba(123,92,255,.92); }
+
+  /* double-tap heart burst */
+  .heart-burst { position: absolute; top: 46%; left: 50%; z-index: 4; font-size: 100px;
+    transform: translate(-50%,-50%) scale(0); opacity: 0; pointer-events: none;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,.45)); }
+  .heart-burst.go { animation: burst .8s ease forwards; }
+  @keyframes burst {
+    0% { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+    18% { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: translate(-50%,-58%) scale(1); opacity: 0; } }
+
+  .buy-look { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px;
+    background: rgba(255,255,255,.96); color: #111; font-size: 13px; font-weight: 900;
+    padding: 11px 17px; border-radius: 24px; border: 0; cursor: pointer; font-family: inherit;
+    backdrop-filter: blur(6px); box-shadow: 0 6px 18px rgba(0,0,0,.3); }
+  .match-badge { position: absolute; top: 14px; inset-inline-end: 14px; z-index: 3;
     background: linear-gradient(135deg, rgba(123,92,255,.92), rgba(255,61,119,.92));
     color: #fff; font-size: 11.5px; font-weight: 900; padding: 7px 12px; border-radius: 22px;
     backdrop-filter: blur(6px); box-shadow: 0 4px 14px rgba(0,0,0,.3); white-space: nowrap; }
-  .feed-card.mine { border: 1px solid rgba(255,61,119,.45);
-    box-shadow: 0 0 0 1px rgba(255,61,119,.25), 0 8px 30px rgba(255,61,119,.18); }
-  .mine-tag { position: absolute; top: 14px; inset-inline-start: 14px; z-index: 2;
+  main.feed-mode .match-badge { top: 18px; }
+  .feed-card.mine .match-badge { display: none; }
+  .mine-tag { position: absolute; top: 14px; inset-inline-start: 14px; z-index: 3;
     background: rgba(255,61,119,.95); color: #fff; font-size: 11px; font-weight: 900;
     padding: 7px 12px; border-radius: 22px; backdrop-filter: blur(6px); }
+  main.feed-mode .mine-tag { top: 18px; inset-inline-start: 18px; }
 
   /* ---- purchase modal ---- */
   .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: none;
@@ -223,6 +256,78 @@
     transform: translateX(-50%) translateY(12px); transition: opacity .25s, transform .25s; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+  /* ============ PROFILE = CLOSET — Dolce design system ============ */
+  /* identity header (Instagram-style) */
+  .ig-head { display: flex; align-items: center; gap: 16px; padding: 8px 4px 16px; }
+  .ig-ava { width: 76px; height: 76px; border-radius: 50%; flex-shrink: 0; position: relative;
+    background: linear-gradient(135deg, var(--accent2), var(--accent)); padding: 3px; }
+  .ig-ava::after { content: "👧"; position: absolute; inset: 3px; border-radius: 50%;
+    background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .ig-id { flex: 1; min-width: 0; }
+  .ig-name { font-weight: 900; font-size: 19px; letter-spacing: -.3px; }
+  .ig-handle { color: var(--muted); font-size: 13px; font-weight: 600; margin-top: 3px; }
+  .ig-edit { margin-top: 10px; display: inline-block; font-size: 11.5px; font-weight: 800; color: var(--text);
+    background: #20202b; border: 1px solid var(--line); border-radius: 10px; padding: 6px 14px; cursor: pointer;
+    transition: background .15s; }
+  .ig-edit:active { background: #2a2a37; }
+
+  /* stats row */
+  .ig-stats { display: flex; justify-content: space-around; text-align: center; padding: 6px 0 14px;
+    border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+  .ig-stats > div { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .ig-stats b { font-size: 18px; font-weight: 900; font-family: "Poppins", sans-serif; }
+  .ig-stats span { font-size: 11px; color: var(--muted); font-weight: 700; }
+  .ig-bio { font-size: 13px; color: rgba(246,246,249,.82); line-height: 1.55; padding: 0 2px 16px; }
+  .ig-bio b { color: var(--text); font-weight: 800; }
+
+  /* segmented control */
+  .seg { display: flex; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    margin: 0 0 18px; background: var(--card); padding: 4px; gap: 4px; }
+  .seg button { flex: 1; padding: 10px 4px; background: none; border: 0; cursor: pointer; font-family: inherit;
+    color: var(--muted); font-size: 12.5px; font-weight: 800; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .18s, color .18s; }
+  .seg button.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    box-shadow: 0 4px 14px rgba(255,61,119,.3); }
+
+  /* boutique shelves */
+  .shelf { margin-bottom: 22px; }
+  .shelf-title { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 14.5px; margin: 0 2px 12px; }
+  .shelf-title .cnt { color: var(--muted); font-size: 12px; font-weight: 700; }
+  .shelf-row { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 0; scrollbar-width: none; }
+  .shelf-row::-webkit-scrollbar { display: none; }
+  /* physical wooden ledge the products sit on */
+  .shelf-ledge { height: 12px; border-radius: 3px; margin: 0 2px;
+    background: linear-gradient(180deg, #7a5636 0%, #5a3e26 45%, #3a2716 100%);
+    box-shadow: 0 8px 18px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.18), inset 0 -2px 4px rgba(0,0,0,.4); }
+
+  /* product tile — clean "cutout" retail look on a light surface */
+  .ptile { flex-shrink: 0; width: 122px; background: #fbfbfd; border-radius: 16px; padding: 11px;
+    cursor: pointer; display: flex; flex-direction: column;
+    box-shadow: 0 8px 18px rgba(0,0,0,.32); transition: transform .15s; }
+  .ptile:active { transform: scale(.97); }
+  .ptile .pimg { height: 88px; display: flex; align-items: center; justify-content: center; font-size: 54px;
+    filter: drop-shadow(0 8px 7px rgba(0,0,0,.22)); }
+  .ptile .pname { color: #14141a; font-size: 12.5px; font-weight: 800; line-height: 1.25; margin-top: 8px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ptile .pbrand { color: #9a9aa5; font-size: 10px; font-weight: 700; margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ptile .pprice { color: #14141a; font-size: 14px; font-weight: 900; margin-top: 5px; font-family: "Poppins", sans-serif; }
+  .ptile .pacts { display: flex; gap: 6px; margin-top: 10px; }
+  .ptile .pbuy, .ptile .psell { flex: 1; border: 0; border-radius: 9px; padding: 7px 0; font-size: 11px;
+    font-weight: 800; cursor: pointer; font-family: inherit; transition: filter .15s; }
+  .ptile .pbuy { color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .ptile .psell { color: #3a3a44; background: #ececf2; }
+  .ptile .pbuy:active, .ptile .psell:active { filter: brightness(.92); }
+
+  /* looks grid (Instagram tiles) */
+  .looks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .look-cell { position: relative; aspect-ratio: 3 / 4; border-radius: 10px; overflow: hidden; cursor: pointer;
+    background: linear-gradient(160deg, #a18cd1, #fbc2eb); transition: transform .15s; }
+  .look-cell:active { transform: scale(.97); }
+  .look-cell img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .look-cell .lc-meta { position: absolute; inset: auto 0 0 0; padding: 16px 8px 7px; font-size: 10.5px;
+    font-weight: 800; color: #fff; background: linear-gradient(0deg, rgba(0,0,0,.72), transparent); }
+
   input[type=file] { display: none; }
 </style>
 </head>
@@ -246,80 +351,19 @@
       </div>
     </section>
 
-    <!-- FEED -->
+    <!-- FEED — TikTok-style immersive vertical scroll (cards built in JS) -->
     <section id="feed" class="view">
       <div class="feed-h">בשבילך · For You</div>
-
-      <!-- user-shared looks render here (newest-first), above the seed cards -->
-      <div id="feed-mine"></div>
-
-      <div class="feed-card seed" data-tags="y2k,casual,minimal,top,dress">
-        <div class="bg g1"></div>
-        <img class="feed-img" src="/static/feed/1.jpg" alt="" onerror="this.remove()">
-        <button class="buy-look" data-buy="1" data-label="הלוק של נועה" data-price="149">🛍️ קני את הלוק · ₪149</button>
-        <div class="overlay">
-          <div class="user"><div class="dot"></div>@noa.styles</div>
-          <div class="cap">לוק קיצי לבית קפה ☕️ #y2k #telaviv</div>
-          <div class="acts"><span>❤️ 2.4K</span><span>💬 88</span><span>↗️ שיתוף</span></div>
-        </div>
-      </div>
-
-      <div class="feed-card seed" data-tags="streetwear,utility,bottoms,sneakers,shoes">
-        <div class="bg g2"></div>
-        <img class="feed-img" src="/static/feed/2.jpg" alt="" onerror="this.remove()">
-        <button class="buy-look" data-buy="1" data-label="הלוק של יעל" data-price="219">🛍️ קני את הלוק · ₪219</button>
-        <div class="overlay">
-          <div class="user"><div class="dot"></div>@yael_fits</div>
-          <div class="cap">סטריטוור עכשווי ✨ #streetwear</div>
-          <div class="acts"><span>❤️ 5.1K</span><span>💬 203</span><span>↗️ שיתוף</span></div>
-        </div>
-      </div>
-
-      <div class="feed-card seed" data-tags="secondhand,vintage,everyday,top,bag">
-        <div class="bg g3"></div>
-        <img class="feed-img" src="/static/feed/3.jpg" alt="" onerror="this.remove()">
-        <button class="buy-look" data-buy="1" data-label="לוק יד שנייה" data-price="89">♻️ קני יד שנייה · ₪89</button>
-        <div class="overlay">
-          <div class="user"><div class="dot"></div>@mika.thrift</div>
-          <div class="cap">יד שנייה במצב מעולה ♻️ #secondhand</div>
-          <div class="acts"><span>❤️ 1.8K</span><span>💬 64</span><span>↗️ שיתוף</span></div>
-        </div>
-      </div>
-
-      <div class="feed-card seed" data-tags="minimal,everyday,ootd,dress,shoes">
-        <div class="bg g4"></div>
-        <img class="feed-img" src="/static/feed/4.jpg" alt="" onerror="this.remove()">
-        <button class="buy-look" data-buy="1" data-label="הלוק של שיר" data-price="179">🛍️ קני את הלוק · ₪179</button>
-        <div class="overlay">
-          <div class="user"><div class="dot"></div>@shir.daily</div>
-          <div class="cap">אאוטפיט ליום ראשון 🤍 #ootd</div>
-          <div class="acts"><span>❤️ 3.3K</span><span>💬 121</span><span>↗️ שיתוף</span></div>
-        </div>
-      </div>
-
-      <div class="feed-card seed" data-tags="vintage,retro,thrifted,accessory,outerwear">
-        <div class="bg g5"></div>
-        <img class="feed-img" src="/static/feed/5.jpg" alt="" onerror="this.remove()">
-        <button class="buy-look" data-buy="1" data-label="הלוק של אגם" data-price="259">🛍️ קני את הלוק · ₪259</button>
-        <div class="overlay">
-          <div class="user"><div class="dot"></div>@agam.x</div>
-          <div class="cap">vintage vibes 🕶️ #thrifted #vintage</div>
-          <div class="acts"><span>❤️ 4.0K</span><span>💬 156</span><span>↗️ שיתוף</span></div>
-        </div>
-      </div>
+      <!-- newest user looks first, then seed creators — all rendered by renderFeed() -->
+      <div id="feed-scroll"></div>
     </section>
 
-    <!-- PROFILE -->
-    <section id="profile" class="view">
-      <div id="profile-body"></div>
-    </section>
   </main>
 
   <nav>
-    <button data-view="closet" class="active"><span class="ico">👚</span>הארון שלי</button>
-    <button data-view="feed"><span class="ico">▶️</span>פיד</button>
+    <button data-view="closet" class="active"><span class="ico">👤</span>הפרופיל שלי</button>
     <button class="fab" id="capture-btn">＋</button>
-    <button data-view="profile"><span class="ico">👤</span>פרופיל</button>
+    <button data-view="feed"><span class="ico">▶️</span>פיד</button>
   </nav>
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
@@ -332,7 +376,6 @@
 <script>
   const fileInput = document.getElementById('file-input');
   const closetBody = document.getElementById('closet-body');
-  const profileBody = document.getElementById('profile-body');
   const modal = document.getElementById('purchase-modal');
   const modalCard = document.getElementById('modal-card');
 
@@ -349,11 +392,21 @@
   function showView(name) {
     document.querySelectorAll('nav button[data-view]').forEach(x => x.classList.toggle('active', x.dataset.view === name));
     document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === name));
-    if (name === 'profile') renderProfile();
-    if (name === 'feed') renderFeed();
+    const mainEl = document.querySelector('main');
+    mainEl.classList.toggle('feed-mode', name === 'feed');
+    if (name === 'closet') renderCloset();
+    if (name === 'feed') {
+      renderFeed();
+      // size each card to the live viewport so one look fills the screen (snap)
+      requestAnimationFrame(() => {
+        mainEl.style.setProperty('--feed-h', mainEl.clientHeight + 'px');
+        mainEl.scrollTop = 0;
+      });
+    }
   }
 
   document.getElementById('capture-btn').addEventListener('click', () => {
+    profileTab = 'closet';  // land on the closet shelves to see the new items
     showView('closet');
     fileInput.click();
   });
@@ -466,7 +519,7 @@
   }
   function removeListing(ts) {
     saveShelf(loadShelf().filter(x => x.ts !== ts));
-    renderProfile();
+    renderCloset();
   }
 
   function loadWardrobe() {
@@ -486,63 +539,143 @@
     localStorage.removeItem(FEED_KEY);
     localStorage.removeItem(LASTSCAN_KEY);
     renderCloset();
-    renderMyFeed();
+    renderFeed();
   }
 
-  // ---- card builder ----
-  function itemCard(it) {
+  // ---- render the full accumulated closet from storage ----
+  // closet shelves: which categories sit on which "shelf / drawer"
+  const SHELF_GROUPS = [
+    { cats: ['top'],                       title: 'מדף עליוניות', icon: '👕' },
+    { cats: ['dress'],                     title: 'מדף שמלות',    icon: '👗' },
+    { cats: ['bottoms'],                   title: 'מדף מכנסיים',  icon: '👖' },
+    { cats: ['outerwear'],                 title: 'מדף מעילים',   icon: '🧥' },
+    { cats: ['shoes'],                     title: 'ארון נעליים',  icon: '👟' },
+    { cats: ['bag'],                       title: 'מדף תיקים',    icon: '👜' },
+    { cats: ['accessory', 'jewelry', 'hat'], title: 'מגירת אקססוריז', icon: '🕶️' },
+  ];
+  let profileTab = 'closet';  // closet | looks | forsale
+
+  // a single product, shown "cutout" style on a light tile like a retail site
+  function productTile(it) {
     return `
-      <div class="item">
-        <div class="thumb">${emojiFor(it.category)}</div>
-        <div class="cat">${esc(it.category)}</div>
-        <div class="nm">${esc(it.name)}</div>
-        <div class="meta">${esc(it.color)} · ${esc(it.material_guess)}<br/>${esc(it.brand_vibe)}</div>
-        <div class="tags">${(it.style_tags||[]).map(t => '<span class="tag">#'+esc(t)+'</span>').join('')}</div>
-        <span class="resale ${esc(it.resale_potential)}">פוטנציאל מכירה: ${esc(it.resale_potential)}</span>
-        <div class="price">~₪${esc(it.price_estimate_ils)}</div>
-        <div class="actions">
-          <button class="buy-btn" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_ils)}">🛍️ קני</button>
-          <button class="sell-btn" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_ils||0)*0.5)}">💸 מכרי</button>
+      <div class="ptile">
+        <div class="pimg">${emojiFor(it.category)}</div>
+        <div class="pname">${esc(it.name)}</div>
+        <div class="pbrand">${esc(it.brand_vibe || '')}</div>
+        <div class="pprice">₪${esc(it.price_estimate_ils)}</div>
+        <div class="pacts">
+          <button class="pbuy" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_ils)}">קני</button>
+          <button class="psell" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_ils || 0) * 0.5)}">מכרי</button>
         </div>
       </div>`;
   }
 
-  // ---- render the full accumulated closet from storage ----
+  function closetShelvesHTML(wardrobe) {
+    if (!wardrobe.length) {
+      return `<div class="hint" style="padding:56px 26px">
+        <div class="big">🚪</div><h2>הארון שלך עוד ריק</h2>
+        <p>צלמי תלבושת וה-AI יסדר כל פריט<br/>על המדף הנכון בארון שלך.</p>
+        <div class="cta">לחצי על ➕ למטה כדי להתחיל</div></div>`;
+    }
+    const byCat = {};
+    wardrobe.forEach(it => { const c = (it.category || '').toLowerCase(); (byCat[c] = byCat[c] || []).push(it); });
+    const known = new Set();
+    SHELF_GROUPS.forEach(g => g.cats.forEach(c => known.add(c)));
+    let html = '';
+    const shelf = (icon, title, items) => `
+      <div class="shelf">
+        <div class="shelf-title">${icon} ${esc(title)} <span class="cnt">· ${items.length}</span></div>
+        <div class="shelf-row">${items.map(productTile).join('')}</div>
+        <div class="shelf-ledge"></div>
+      </div>`;
+    SHELF_GROUPS.forEach(g => {
+      const items = g.cats.flatMap(c => byCat[c] || []);
+      if (items.length) html += shelf(g.icon, g.title, items);
+    });
+    const others = wardrobe.filter(it => !known.has((it.category || '').toLowerCase()));
+    if (others.length) html += shelf('🧷', 'שונות', others);
+    return html;
+  }
+
+  function looksGridHTML() {
+    const feed = loadFeed();
+    if (!feed.length) return `<div class="shelf-empty"><div class="big">📸</div>עדיין לא שיתפת לוקים.<br/>צלמי תלבושת ושתפי אותה לפיד<br/>כדי שתופיע כאן בפרופיל שלך.</div>`;
+    return `<div class="looks-grid">${feed.map(p => {
+      const bg = p.photo ? `<img src="${attr(p.photo)}" alt="">` : '';
+      return `<div class="look-cell" data-goto-feed="1">${bg}<div class="lc-meta">${esc(p.item_count || 0)} פריטים${p.look_total_ils ? ' · ₪' + esc(p.look_total_ils) : ''}</div></div>`;
+    }).join('')}</div>`;
+  }
+
+  function forSaleHTML() {
+    const shelf = loadShelf();
+    const shelfTotal = shelf.reduce((s, it) => s + (Number(it.price) || 0), 0);
+    const earnings = Math.round(shelfTotal * 0.85);  // Awear takes 15%
+    const earnCard = shelf.length ? `
+      <div class="earn">
+        <div class="top"><span class="big-num">₪${earnings.toLocaleString()}</span><span class="ttl">פוטנציאל רווח</span></div>
+        <p>${shelf.length} פריטים במכירה · שווי ₪${shelfTotal.toLocaleString()} · נטו אחרי עמלת Awear 15%</p>
+      </div>` : '';
+    const listings = shelf.length
+      ? shelf.map(it => `
+        <div class="listing">
+          <div class="ic">${emojiFor(it.category)}</div>
+          <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div></div>
+          <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
+          <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button>
+        </div>`).join('')
+      : `<div class="shelf-empty"><div class="big">💸</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`;
+    return earnCard + listings;
+  }
+
+  // PROFILE = CLOSET: one Instagram-style screen — identity + shelves / looks / for-sale
   function renderCloset() {
     const wardrobe = loadWardrobe();
-    if (!wardrobe.length) {
-      closetBody.innerHTML = `
-        <div class="hint">
-          <div class="big">👗</div>
-          <h2>הארון הדיגיטלי שלך</h2>
-          <p>צלמי את התלבושת של היום<br/>וה-AI יזהה כל פריט, יתמחר אותו<br/>ויהפוך אותו לניתן לקנייה ומכירה.</p>
-          <div class="cta">לחצי על ➕ למטה כדי להתחיל</div>
-        </div>`;
-      return;
-    }
-
     const meta = loadMeta() || {};
-    const items = wardrobe.map(itemCard).join('');
+    const feed = loadFeed();
+    const closetValue = wardrobe.reduce((s, it) => s + (Number(it.price_estimate_ils) || 0), 0);
 
-    closetBody.innerHTML = `
-      <div class="summary">
-        <div class="row">
-          <span class="badge">${wardrobe.length} פריטים בארון</span>
-          ${meta.trend_score != null ? `<span class="trend">🔥 ${esc(meta.trend_score)} טרנדיות</span>` : ''}
-          <span class="reset" id="reset-link">איפוס</span>
-        </div>
-        ${(meta.overall_style || meta.occasion) ? `<div class="row"><span class="style">${esc(meta.overall_style)} · ${esc(meta.occasion)}</span></div>` : ''}
-        ${meta.summary ? `<p>${esc(meta.summary)}</p>` : ''}
-      </div>
+    let body;
+    if (profileTab === 'looks') body = looksGridHTML();
+    else if (profileTab === 'forsale') body = forSaleHTML();
+    else body = `
       ${meta.stylist_tip ? `<div class="stylist"><div class="stylist-h">✨ סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>` : ''}
       ${meta.look_total_ils != null ? `<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_ils)}">🛍️ קני את הלוק האחרון · ~₪${esc(meta.look_total_ils)}</button>` : ''}
-      <button class="shop-look share-look" id="share-look">📲 שתפי את הלוק לפיד</button>
-      <div class="grid">${items}</div>`;
+      ${wardrobe.length ? `<button class="shop-look share-look" id="share-look">📲 שתפי את הלוק לפיד</button>` : ''}
+      ${closetShelvesHTML(wardrobe)}`;
+
+    closetBody.innerHTML = `
+      <div class="ig-head">
+        <div class="ig-ava"></div>
+        <div class="ig-id">
+          <div class="ig-name">הסטייל שלי</div>
+          <div class="ig-handle">@me · תל אביב</div>
+          <span class="ig-edit" id="reset-link">איפוס ארון</span>
+        </div>
+      </div>
+      <div class="ig-stats">
+        <div><b>${feed.length}</b><span>לוקים</span></div>
+        <div><b>1.2K</b><span>עוקבים</span></div>
+        <div><b>340</b><span>עוקבת</span></div>
+        <div><b>🔥${meta.trend_score != null ? esc(meta.trend_score) : '—'}</b><span>טרנדיות</span></div>
+      </div>
+      <div class="ig-bio"><b>${wardrobe.length} פריטים</b> בארון · שווי ~₪${closetValue.toLocaleString()}${meta.overall_style ? ' · ' + esc(meta.overall_style) : ''}</div>
+      <div class="seg">
+        <button data-seg="closet" class="${profileTab === 'closet' ? 'on' : ''}">🚪 הארון</button>
+        <button data-seg="looks" class="${profileTab === 'looks' ? 'on' : ''}">📸 לוקים</button>
+        <button data-seg="forsale" class="${profileTab === 'forsale' ? 'on' : ''}">💸 למכירה</button>
+      </div>
+      ${body}`;
 
     const resetLink = document.getElementById('reset-link');
     if (resetLink) resetLink.addEventListener('click', resetWardrobe);
     const shareBtn = document.getElementById('share-look');
     if (shareBtn) shareBtn.addEventListener('click', shareLookToFeed);
+    closetBody.querySelectorAll('[data-seg]').forEach(b =>
+      b.addEventListener('click', () => { profileTab = b.dataset.seg; renderCloset(); }));
+    closetBody.querySelectorAll('[data-rm]').forEach(btn =>
+      btn.addEventListener('click', () => removeListing(Number(btn.dataset.rm))));
+    closetBody.querySelectorAll('[data-goto-feed]').forEach(cell =>
+      cell.addEventListener('click', () => showView('feed')));
   }
 
   // ---- append a new scan to the wardrobe, persist, re-render ----
@@ -610,53 +743,139 @@
     const feed = loadFeed();
     feed.unshift(post);  // newest-first
     saveFeed(feed);
-    renderMyFeed();
+    renderFeed();
     showToast('הלוק שותף לפיד ✨');
     showView('feed');
   }
 
-  // render the user's shared looks at the top of the feed
-  function renderMyFeed() {
-    const host = document.getElementById('feed-mine');
-    if (!host) return;
-    const feed = loadFeed();
-    host.innerHTML = feed.map(p => {
-      const bg = p.photo
-        ? `<img class="feed-img" src="${attr(p.photo)}" alt="">`
-        : `<div class="bg g2"></div>`;
-      const price = p.look_total_ils ? `~₪${esc(p.look_total_ils)}` : '';
-      return `
-        <div class="feed-card mine">
-          ${bg}
-          <span class="mine-tag">✨ אני · @you</span>
-          ${p.look_total_ils ? `<button class="buy-look" data-buy="1" data-label="הלוק שלי" data-price="${attr(p.look_total_ils)}">🛍️ קני את הלוק · ${price}</button>` : ''}
-          <div class="overlay">
-            <div class="user"><div class="dot"></div>@you · אני</div>
-            <div class="cap">${esc(p.caption)}${p.occasion ? ' · ' + esc(p.occasion) : ''} · ${esc(p.item_count)} פריטים</div>
-            <div class="acts"><span>❤️ אהבתי</span><span>💬 תגובה</span><span>↗️ שיתוף</span></div>
-          </div>
-        </div>`;
-    }).join('');
+  // ---- TikTok-style feed: one renderer for both the user's looks and seed creators ----
+  const LIKES_KEY = 'awear_likes';
+  const SAVED_KEY = 'awear_saved';
+  function loadSet(k) { try { return new Set(JSON.parse(localStorage.getItem(k)) || []); } catch (e) { return new Set(); } }
+  function saveSet(k, s) { localStorage.setItem(k, JSON.stringify([...s])); }
+  let LIKES = loadSet(LIKES_KEY);
+  let SAVED = loadSet(SAVED_KEY);
+
+  // seed creators — fixed demo content the feed always shows under the user's looks
+  const SEED_POSTS = [
+    { id:'s1', user:'@noa.styles',  g:'g1', img:'/static/feed/1.jpg', cap:'לוק קיצי לבית קפה ☕️ #y2k #telaviv', price:149, buyLabel:'הלוק של נועה', likes:2400, comments:88,  tags:['y2k','casual','minimal','top','dress'] },
+    { id:'s2', user:'@yael_fits',   g:'g2', img:'/static/feed/2.jpg', cap:'סטריטוור עכשווי ✨ #streetwear',     price:219, buyLabel:'הלוק של יעל',  likes:5100, comments:203, tags:['streetwear','utility','bottoms','sneakers','shoes'] },
+    { id:'s3', user:'@mika.thrift', g:'g3', img:'/static/feed/3.jpg', cap:'יד שנייה במצב מעולה ♻️ #secondhand', price:89,  buyLabel:'לוק יד שנייה', secondhand:true, likes:1800, comments:64, tags:['secondhand','vintage','everyday','top','bag'] },
+    { id:'s4', user:'@shir.daily',  g:'g4', img:'/static/feed/4.jpg', cap:'אאוטפיט ליום ראשון 🤍 #ootd',         price:179, buyLabel:'הלוק של שיר', likes:3300, comments:121, tags:['minimal','everyday','ootd','dress','shoes'] },
+    { id:'s5', user:'@agam.x',      g:'g5', img:'/static/feed/5.jpg', cap:'vintage vibes 🕶️ #thrifted #vintage', price:259, buyLabel:'הלוק של אגם', likes:4000, comments:156, tags:['vintage','retro','thrifted','accessory','outerwear'] },
+  ];
+
+  function fmtCount(n) { return n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'K' : '' + n; }
+
+  // the user's shared looks, mapped into the same post shape as the seeds
+  function minePosts() {
+    return loadFeed().map(p => ({
+      id: 'm' + p.ts, mine: true, user: '@you · אני', img: p.photo || null, g: 'g2',
+      cap: (p.caption || 'הלוק שלי') + (p.occasion ? ' · ' + p.occasion : '') + ' · ' + (p.item_count || 0) + ' פריטים',
+      price: p.look_total_ils || 0, buyLabel: 'הלוק שלי', likes: 0, comments: 0, tags: p.tags || [],
+    }));
   }
 
-  // compute + inject the real match badge onto each seed feed card
-  function renderSeedMatches() {
-    document.querySelectorAll('#feed .feed-card.seed').forEach(card => {
-      const tags = (card.dataset.tags || '').split(',').map(s => s.trim()).filter(Boolean);
-      const pct = matchPercent(tags);
-      let badge = card.querySelector('.match-badge');
-      if (!badge) {
-        badge = document.createElement('span');
-        badge.className = 'match-badge';
-        card.appendChild(badge);
-      }
-      badge.textContent = pct + '% התאמה לארון';
-    });
+  function feedCardHTML(p) {
+    const liked = LIKES.has(p.id);
+    const saved = SAVED.has(p.id);
+    const likeCount = (p.likes || 0) + (liked ? 1 : 0);
+    const bg = `<div class="bg ${p.g || 'g2'}"></div>` +
+      (p.img ? `<img class="feed-img" src="${attr(p.img)}" alt="" onerror="this.remove()">` : '');
+    const badge = p.mine
+      ? `<span class="mine-tag">✨ אני</span>`
+      : `<span class="match-badge">${matchPercent(p.tags)}% התאמה לארון</span>`;
+    const buyTxt = p.secondhand ? '♻️ קני יד שנייה' : '🛍️ Shop the Look';
+    return `
+      <div class="feed-card${p.mine ? ' mine' : ''}" data-id="${attr(p.id)}">
+        ${bg}
+        ${badge}
+        <div class="heart-burst">❤️</div>
+        <div class="rail">
+          <button class="act like${liked ? ' on' : ''}" data-like="${attr(p.id)}" data-base="${p.likes || 0}">
+            <span class="ic">${liked ? '❤️' : '🤍'}</span><span class="lbl">${fmtCount(likeCount) || 'אהבתי'}</span>
+          </button>
+          <button class="act" data-comment="${attr(p.id)}">
+            <span class="ic">💬</span><span class="lbl">${p.comments ? fmtCount(p.comments) : 'תגובה'}</span>
+          </button>
+          <button class="act save${saved ? ' saved' : ''}" data-save="${attr(p.id)}">
+            <span class="ic">${saved ? '🔖' : '➕'}</span><span class="lbl">${saved ? 'נשמר' : 'שמירה'}</span>
+          </button>
+          <button class="act" data-share="${attr(p.id)}">
+            <span class="ic">↗️</span><span class="lbl">שיתוף</span>
+          </button>
+        </div>
+        <div class="overlay">
+          <div class="user"><div class="dot"></div>${esc(p.user)}</div>
+          <div class="cap">${esc(p.cap)}</div>
+          ${p.price ? `<button class="buy-look" data-buy="1" data-label="${attr(p.buyLabel)}" data-price="${attr(p.price)}">${buyTxt} · ₪${esc(p.price)}</button>` : ''}
+        </div>
+      </div>`;
   }
 
   function renderFeed() {
-    renderMyFeed();
-    renderSeedMatches();
+    const host = document.getElementById('feed-scroll');
+    if (!host) return;
+    LIKES = loadSet(LIKES_KEY);
+    SAVED = loadSet(SAVED_KEY);
+    host.innerHTML = minePosts().concat(SEED_POSTS).map(feedCardHTML).join('');
+  }
+
+  // ---- feed interactions: like / save / comment / share + double-tap to like ----
+  function refreshLikeBtn(btn, id) {
+    const liked = LIKES.has(id);
+    const base = Number(btn.dataset.base) || 0;
+    btn.classList.toggle('on', liked);
+    btn.querySelector('.ic').textContent = liked ? '❤️' : '🤍';
+    btn.querySelector('.lbl').textContent = fmtCount(base + (liked ? 1 : 0)) || 'אהבתי';
+  }
+  function setLike(id, on, btn) {
+    if (on) LIKES.add(id); else LIKES.delete(id);
+    saveSet(LIKES_KEY, LIKES);
+    if (btn) refreshLikeBtn(btn, id);
+  }
+  function burstHeart(card) {
+    const h = card.querySelector('.heart-burst');
+    if (!h) return;
+    h.classList.remove('go'); void h.offsetWidth; h.classList.add('go');
+  }
+
+  const feedScroll = document.getElementById('feed-scroll');
+  if (feedScroll) {
+    feedScroll.addEventListener('click', (e) => {
+      const likeBtn = e.target.closest('[data-like]');
+      if (likeBtn) { setLike(likeBtn.dataset.like, !LIKES.has(likeBtn.dataset.like), likeBtn); return; }
+      const saveBtn = e.target.closest('[data-save]');
+      if (saveBtn) {
+        const id = saveBtn.dataset.save, on = !SAVED.has(id);
+        if (on) SAVED.add(id); else SAVED.delete(id);
+        saveSet(SAVED_KEY, SAVED);
+        saveBtn.classList.toggle('saved', on);
+        saveBtn.querySelector('.ic').textContent = on ? '🔖' : '➕';
+        saveBtn.querySelector('.lbl').textContent = on ? 'נשמר' : 'שמירה';
+        showToast(on ? 'נשמר לרשימת המשאלות 🔖' : 'הוסר מהשמורים');
+        return;
+      }
+      if (e.target.closest('[data-comment]')) { showToast('תגובות בקרוב 💬'); return; }
+      if (e.target.closest('[data-share]')) { showToast('הקישור הועתק — שתפי בסטורי ↗️'); return; }
+    });
+
+    // double-tap anywhere on a card => like + heart burst (TikTok gesture)
+    let lastTap = 0, lastCard = null;
+    feedScroll.addEventListener('pointerup', (e) => {
+      if (e.target.closest('button')) return;  // taps on controls handled above
+      const card = e.target.closest('.feed-card');
+      if (!card) return;
+      const now = Date.now();
+      if (now - lastTap < 320 && lastCard === card) {
+        const id = card.dataset.id;
+        setLike(id, true, card.querySelector('[data-like]'));
+        burstHeart(card);
+        lastTap = 0;
+      } else {
+        lastTap = now; lastCard = card;
+      }
+    });
   }
 
   // ---- toast ----
@@ -672,56 +891,6 @@
     t.classList.add('show');
     clearTimeout(showToast._timer);
     showToast._timer = setTimeout(() => t.classList.remove('show'), 2400);
-  }
-
-  // ---- profile: closet stats + sell shelf (Layers 1+3 on one screen) ----
-  function renderProfile() {
-    const wardrobe = loadWardrobe();
-    const shelf = loadShelf();
-    const meta = loadMeta() || {};
-
-    const closetValue = wardrobe.reduce((s, it) => s + (Number(it.price_estimate_ils) || 0), 0);
-    const shelfTotal = shelf.reduce((s, it) => s + (Number(it.price) || 0), 0);
-    const earnings = Math.round(shelfTotal * 0.85);  // Awear takes 15%
-
-    const statsRow = `
-      <div class="stats">
-        <div class="stat"><div class="num">${wardrobe.length}</div><div class="lbl">פריטים בארון</div></div>
-        <div class="stat"><div class="num">~₪${closetValue.toLocaleString()}</div><div class="lbl">שווי הארון</div></div>
-        <div class="stat"><div class="num">${meta.trend_score != null ? meta.trend_score : '—'}</div><div class="lbl">ציון טרנדיות</div></div>
-      </div>`;
-
-    const earnCard = shelf.length ? `
-      <div class="earn">
-        <div class="top"><span class="big-num">₪${earnings.toLocaleString()}</span><span class="ttl">פוטנציאל רווח</span></div>
-        <p>${shelf.length} פריטים במכירה · שווי ₪${shelfTotal.toLocaleString()} · נטו אחרי עמלת Awear 15%</p>
-      </div>` : '';
-
-    const listings = shelf.length
-      ? shelf.map(it => `
-        <div class="listing">
-          <div class="ic">${emojiFor(it.category)}</div>
-          <div class="info">
-            <div class="nm">${esc(it.name)}</div>
-            <div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div>
-          </div>
-          <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
-          <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button>
-        </div>`).join('')
-      : `<div class="shelf-empty"><div class="big">💸</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט<br/>כדי להרוויח מהבגדים שכבר לא בלבישה.</div>`;
-
-    profileBody.innerHTML = `
-      <div class="pro-head">
-        <div class="pro-ava"></div>
-        <div><div class="pro-name">הסטייל שלי</div><div class="pro-handle">@me · תל אביב</div></div>
-      </div>
-      ${statsRow}
-      ${earnCard}
-      <div class="sec-h">מדף המכירה <span class="cnt">${shelf.length ? shelf.length + ' פריטים' : ''}</span></div>
-      ${listings}`;
-
-    profileBody.querySelectorAll('[data-rm]').forEach(btn =>
-      btn.addEventListener('click', () => removeListing(Number(btn.dataset.rm))));
   }
 
   // ---- render persisted wardrobe + feed on load ----
