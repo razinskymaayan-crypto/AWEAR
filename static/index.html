@@ -9,35 +9,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0e;
-    --bg2: #111118;
-    --card: #17171f;
-    --accent: #ff3d77;
-    --accent2: #7b5cff;
-    --text: #f6f6f9;
-    --muted: #8e8e9c;
-    --line: #24242e;
+    --bg: #0a0a0e; --bg2: #111118; --card: #17171f;
+    --accent: #ff3d77; --accent2: #7b5cff; --text: #f6f6f9; --muted: #8e8e9c; --line: #24242e;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: "Heebo", -apple-system, system-ui, sans-serif;
+  body { font-family: "Heebo", -apple-system, system-ui, sans-serif;
     background: radial-gradient(140% 100% at 50% 0%, #15131f 0%, #000 70%);
-    color: var(--text);
-    display: flex; justify-content: center; align-items: center;
-    min-height: 100vh;
-  }
-  .phone {
-    width: 390px; height: 844px; max-width: 100vw; max-height: 100vh;
-    background: linear-gradient(180deg, var(--bg2), var(--bg));
-    position: relative; overflow: hidden; display: flex; flex-direction: column;
-    border-radius: 30px; box-shadow: 0 30px 80px rgba(123,92,255,.28), 0 0 0 1px rgba(255,255,255,.04);
-  }
+    color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+  .phone { width: 390px; height: 844px; max-width: 100vw; max-height: 100vh;
+    background: linear-gradient(180deg, var(--bg2), var(--bg)); position: relative; overflow: hidden;
+    display: flex; flex-direction: column; border-radius: 30px;
+    box-shadow: 0 30px 80px rgba(123,92,255,.28), 0 0 0 1px rgba(255,255,255,.04); }
   @media (max-width: 430px) { .phone { border-radius: 0; height: 100vh; } }
 
-  header {
-    padding: 18px 20px 12px; display: flex; align-items: center; justify-content: space-between;
-    position: relative; z-index: 5; flex-shrink: 0;
-  }
+  header { padding: 18px 20px 12px; display: flex; align-items: center; justify-content: space-between;
+    position: relative; z-index: 5; flex-shrink: 0; }
   .logo { font-family: "Poppins", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -1px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -51,20 +37,16 @@
   main::-webkit-scrollbar { display: none; }
   main.feed-mode { padding: 0; overflow: hidden; }
 
-  nav {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 76px;
-    background: rgba(10,10,14,.86); backdrop-filter: blur(16px);
-    border-top: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: space-around; z-index: 10;
-  }
+  nav { position: absolute; bottom: 0; left: 0; right: 0; height: 76px;
+    background: rgba(10,10,14,.86); backdrop-filter: blur(16px); border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-around; z-index: 10; }
   nav button { background: none; border: 0; color: var(--muted); font-size: 11px; font-weight: 600;
     font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
   nav button.active { color: var(--text); }
   nav .ico { font-size: 22px; }
-  .fab {
-    width: 58px; height: 58px; border-radius: 50%; border: 0; cursor: pointer;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff; font-size: 30px; font-weight: 300; box-shadow: 0 8px 24px rgba(255,61,119,.5);
+  .fab { width: 58px; height: 58px; border-radius: 50%; border: 0; cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; font-size: 30px;
+    font-weight: 300; box-shadow: 0 8px 24px rgba(255,61,119,.5);
     transform: translateY(-12px); transition: transform .15s; }
   .fab:active { transform: translateY(-12px) scale(.92); }
 
@@ -72,60 +54,24 @@
   .view.active { display: block; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-  /* ---- closet ---- */
-  .hint { text-align: center; color: var(--muted); padding: 90px 26px; }
+  /* ---- closet base ---- */
+  .hint { text-align: center; color: var(--muted); padding: 56px 26px; }
   .hint .big { font-size: 60px; margin-bottom: 16px; filter: drop-shadow(0 8px 20px rgba(123,92,255,.4)); }
   .hint h2 { color: var(--text); font-size: 20px; font-weight: 800; margin-bottom: 8px; }
   .hint p { font-size: 14px; line-height: 1.6; }
   .hint .cta { margin-top: 18px; display: inline-block; font-size: 13px; color: var(--accent); font-weight: 700; }
-
-  .summary { background: linear-gradient(135deg, rgba(123,92,255,.22), rgba(255,61,119,.14));
-    border: 1px solid rgba(255,255,255,.07); border-radius: 18px; padding: 16px; margin: 6px 0 14px; }
-  .summary .row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .badge { background: rgba(255,255,255,.14); color: #fff; font-size: 12px; font-weight: 800;
-    padding: 4px 11px; border-radius: 20px; }
-  .summary .style { font-weight: 800; font-size: 15px; }
-  .summary p { color: rgba(246,246,249,.8); font-size: 13.5px; line-height: 1.55; }
-  .trend { margin-inline-start: auto; font-weight: 900; font-size: 15px; white-space: nowrap;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .reset { font-size: 11px; color: var(--muted); cursor: pointer; text-decoration: underline; }
-
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .item { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 13px;
-    display: flex; flex-direction: column; }
-  .thumb { width: 100%; height: 92px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    font-size: 40px; margin-bottom: 10px; background: linear-gradient(135deg, #20202b, #191922); }
-  .item .cat { font-size: 10px; color: var(--accent2); font-weight: 800; text-transform: uppercase; letter-spacing: .5px; }
-  .item .nm { font-size: 14.5px; font-weight: 800; margin: 3px 0 7px; line-height: 1.25; }
-  .item .meta { font-size: 11.5px; color: var(--muted); line-height: 1.55; }
-  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
-  .tag { font-size: 10px; background: #23232e; color: #cfcfe0; padding: 3px 8px; border-radius: 20px; }
-  .resale { display: inline-block; margin-top: 8px; font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 8px; align-self: flex-start; }
-  .resale.high { background: rgba(52,211,153,.16); color: #34d399; }
-  .resale.medium { background: rgba(251,191,36,.16); color: #fbbf24; }
-  .resale.low { background: rgba(148,163,184,.16); color: #94a3b8; }
-  .price { font-size: 14px; font-weight: 900; margin-top: 10px; }
-  .buy-btn { margin-top: 8px; padding: 9px; border-radius: 11px; font-size: 12.5px; font-weight: 800;
-    color: #fff; border: 0; cursor: pointer; width: 100%; font-family: inherit;
-    background: linear-gradient(135deg, var(--accent), var(--accent2)); }
   .shop-look { display: flex; align-items: center; justify-content: center; gap: 8px;
     margin: 2px 0 16px; padding: 14px; border-radius: 15px; font-weight: 900; font-size: 15px;
     color: #111; background: #fff; border: 0; cursor: pointer; width: 100%; font-family: inherit;
     box-shadow: 0 6px 20px rgba(255,255,255,.12); }
   .share-look { color: #fff; background: linear-gradient(135deg, var(--accent2), var(--accent));
     margin-top: -8px; box-shadow: 0 6px 20px rgba(123,92,255,.3); }
-  .actions { display: flex; gap: 7px; margin-top: 8px; }
-  .actions .buy-btn { margin-top: 0; flex: 1; }
-  .sell-btn { flex: 1; padding: 9px; border-radius: 11px; font-size: 12.5px; font-weight: 800;
-    color: var(--text); border: 1px solid var(--line); cursor: pointer; font-family: inherit; background: #20202b; }
   .stylist { background: var(--card); border: 1px solid var(--line); border-radius: 16px;
     padding: 14px 16px; margin: 0 0 14px; }
   .stylist-h { font-weight: 800; font-size: 13px; margin-bottom: 5px;
     background: linear-gradient(90deg, var(--accent2), var(--accent));
     -webkit-background-clip: text; background-clip: text; color: transparent; }
   .stylist p { color: rgba(246,246,249,.82); font-size: 13.5px; line-height: 1.55; }
-
   .loading { text-align: center; padding: 100px 20px; }
   .spinner { width: 50px; height: 50px; border: 4px solid var(--line); border-top-color: var(--accent);
     border-radius: 50%; margin: 0 auto 20px; animation: spin .8s linear infinite; }
@@ -134,272 +80,71 @@
   .err { background: rgba(255,61,119,.12); border: 1px solid var(--accent); border-radius: 14px;
     padding: 16px; color: #ffb3c9; font-size: 14px; margin-top: 14px; }
 
-  /* ---- FEED TikTok style ---- */
-  #feed.view.active {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .feed-filters {
-    display: flex;
-    gap: 8px;
-    padding: 10px 14px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    flex-shrink: 0;
-    background: rgba(10,10,14,.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--line);
-    z-index: 5;
-  }
-  .feed-filters::-webkit-scrollbar { display: none; }
-
-  .ff {
-    flex-shrink: 0;
-    border: 1px solid var(--line);
-    background: transparent;
-    color: var(--muted);
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .ff.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-
-  .feed-scroll {
-    flex: 1;
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
-    scrollbar-width: none;
-  }
-  .feed-scroll::-webkit-scrollbar { display: none; }
-
-  .feed-card-full {
-    position: relative;
-    height: 100%;
-    scroll-snap-align: start;
-    overflow: hidden;
-    background: #111;
-  }
-  .feed-card-full.is-mine {
-    outline: 2px solid rgba(255,61,119,.5);
-    outline-offset: -2px;
-  }
-
-  .fcbg {
-    position: absolute;
-    inset: 0;
-  }
-  .fcbg .feed-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .fc-top {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    right: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    z-index: 5;
-  }
-  .mine-tag {
-    background: rgba(255,61,119,.95);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 900;
-    padding: 6px 12px;
-    border-radius: 20px;
-    backdrop-filter: blur(6px);
-  }
-  .trend-badge {
-    background: rgba(0,0,0,.6);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 900;
-    padding: 6px 12px;
-    border-radius: 20px;
-    backdrop-filter: blur(6px);
-    margin-inline-start: auto;
-  }
-
-  /* Right side TikTok actions */
-  .fc-actions {
-    position: absolute;
-    right: 12px;
-    bottom: 110px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    z-index: 5;
-  }
-
-  .fc-action {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 800;
-    text-shadow: 0 1px 4px rgba(0,0,0,.6);
-    user-select: none;
-  }
-
-  .fca-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: rgba(0,0,0,.45);
-    backdrop-filter: blur(6px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    transition: transform .15s;
-    border: 1px solid rgba(255,255,255,.1);
-  }
-  .fc-action:active .fca-icon { transform: scale(.85); }
-  .fca-icon.liked { background: rgba(255,61,119,.55); }
-  .fca-icon.saved { background: rgba(123,92,255,.55); }
-
-  .buy-action .fca-icon {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border: none;
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-  }
-
-  /* Bottom info */
-  .fc-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 72px;
-    padding: 20px 14px 22px;
-    background: linear-gradient(0deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.4) 55%, transparent 100%);
-    z-index: 5;
-  }
-  .fc-user {
-    font-weight: 900;
-    font-size: 15px;
-    color: #fff;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .fc-verified {
-    font-size: 13px;
-    background: linear-gradient(135deg, var(--accent2), var(--accent));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .fc-caption {
-    font-size: 13.5px;
-    color: rgba(255,255,255,.9);
-    line-height: 1.4;
-    margin-bottom: 9px;
-  }
-  .fc-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-  .ftag {
-    font-size: 12px;
-    color: rgba(255,255,255,.8);
-    font-weight: 700;
-  }
-  .fc-match {
-    display: inline-flex;
-    align-items: center;
-    background: linear-gradient(135deg, rgba(123,92,255,.85), rgba(255,61,119,.85));
-    color: #fff;
-    font-size: 11.5px;
-    font-weight: 900;
-    padding: 5px 12px;
-    border-radius: 20px;
-    backdrop-filter: blur(6px);
-  }
-
-  /* Influencer earn line */
-  .fc-earn {
-    font-size: 11px;
-    color: #34d399;
-    font-weight: 700;
-    margin-top: 6px;
-  }
-
-  /* Feed empty state */
-  .feed-empty {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    text-align: center;
-    padding: 40px;
-  }
-  .feed-empty .big { font-size: 50px; margin-bottom: 14px; }
-  .feed-empty p { font-size: 14px; line-height: 1.6; }
-
-  /* ---- purchase modal ---- */
-  .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: none;
-    align-items: center; justify-content: center; padding: 28px; z-index: 60; backdrop-filter: blur(4px); }
-  .modal-overlay.show { display: flex; }
-  .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px;
-    padding: 28px 22px; text-align: center; width: 100%; animation: pop .25s ease; }
-  @keyframes pop { from { transform: scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
-  .modal-card .big { font-size: 48px; margin-bottom: 12px; }
-  .modal-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
-  .modal-card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
-  .modal-card .earn-line { color: #34d399; font-size: 13px; font-weight: 800; margin-top: 8px; }
-  .modal-card .close { margin-top: 20px; padding: 11px 26px; border: 0; border-radius: 13px; font-weight: 800;
-    cursor: pointer; color: #fff; font-family: inherit; font-size: 14px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2)); }
-
-  /* ---- profile ---- */
-  .pro-head { display: flex; align-items: center; gap: 14px; padding: 8px 4px 18px; }
-  .pro-ava { width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0; position: relative;
-    background: linear-gradient(135deg, var(--accent2), var(--accent)); }
-  .pro-ava::after { content: "👧"; position: absolute; inset: 0; display: flex; align-items: center;
-    justify-content: center; font-size: 30px; }
-  .pro-name { font-weight: 900; font-size: 19px; }
-  .pro-handle { color: var(--muted); font-size: 13px; font-weight: 600; }
-  .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 18px; }
-  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 8px; text-align: center; }
-  .stat .num { font-weight: 900; font-size: 19px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .stat .lbl { color: var(--muted); font-size: 10.5px; font-weight: 700; margin-top: 4px; line-height: 1.3; }
+  /* ---- Dolce design system (profile + closet shelves) ---- */
+  .ig-head { display: flex; align-items: center; gap: 16px; padding: 8px 4px 16px; }
+  .ig-ava { width: 76px; height: 76px; border-radius: 50%; flex-shrink: 0; position: relative;
+    background: linear-gradient(135deg, var(--accent2), var(--accent)); padding: 3px; }
+  .ig-ava::after { content: "👧"; position: absolute; inset: 3px; border-radius: 50%;
+    background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .ig-id { flex: 1; min-width: 0; }
+  .ig-name { font-weight: 900; font-size: 19px; letter-spacing: -.3px; }
+  .ig-handle { color: var(--muted); font-size: 13px; font-weight: 600; margin-top: 3px; }
+  .ig-edit { margin-top: 10px; display: inline-block; font-size: 11.5px; font-weight: 800; color: var(--text);
+    background: #20202b; border: 1px solid var(--line); border-radius: 10px; padding: 6px 14px;
+    cursor: pointer; transition: background .15s; }
+  .ig-edit:active { background: #2a2a37; }
+  .ig-stats { display: flex; justify-content: space-around; text-align: center; padding: 6px 0 14px;
+    border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+  .ig-stats > div { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .ig-stats b { font-size: 18px; font-weight: 900; font-family: "Poppins", sans-serif; }
+  .ig-stats span { font-size: 11px; color: var(--muted); font-weight: 700; }
+  .ig-bio { font-size: 13px; color: rgba(246,246,249,.82); line-height: 1.55; padding: 0 2px 16px; }
+  .ig-bio b { color: var(--text); font-weight: 800; }
+  .seg { display: flex; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    margin: 0 0 18px; background: var(--card); padding: 4px; gap: 4px; }
+  .seg button { flex: 1; padding: 10px 4px; background: none; border: 0; cursor: pointer;
+    font-family: inherit; color: var(--muted); font-size: 12.5px; font-weight: 800; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .18s, color .18s; }
+  .seg button.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    box-shadow: 0 4px 14px rgba(255,61,119,.3); }
+  .shelf { margin-bottom: 22px; }
+  .shelf-title { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 14.5px; margin: 0 2px 12px; }
+  .shelf-title .cnt { color: var(--muted); font-size: 12px; font-weight: 700; }
+  .shelf-row { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 0; scrollbar-width: none; }
+  .shelf-row::-webkit-scrollbar { display: none; }
+  .shelf-ledge { height: 12px; border-radius: 3px; margin: 0 2px;
+    background: linear-gradient(180deg, #7a5636 0%, #5a3e26 45%, #3a2716 100%);
+    box-shadow: 0 8px 18px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.18), inset 0 -2px 4px rgba(0,0,0,.4); }
+  .ptile { flex-shrink: 0; width: 122px; background: #fbfbfd; border-radius: 16px; padding: 11px;
+    cursor: pointer; display: flex; flex-direction: column; box-shadow: 0 8px 18px rgba(0,0,0,.32);
+    transition: transform .15s; }
+  .ptile:active { transform: scale(.97); }
+  .ptile .pimg { height: 88px; display: flex; align-items: center; justify-content: center; font-size: 54px;
+    filter: drop-shadow(0 8px 7px rgba(0,0,0,.22)); }
+  .ptile .pname { color: #14141a; font-size: 12.5px; font-weight: 800; line-height: 1.25; margin-top: 8px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ptile .pbrand { color: #9a9aa5; font-size: 10px; font-weight: 700; margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ptile .pprice { color: #14141a; font-size: 14px; font-weight: 900; margin-top: 5px; font-family: "Poppins", sans-serif; }
+  .ptile .pacts { display: flex; gap: 6px; margin-top: 10px; }
+  .ptile .pbuy, .ptile .psell { flex: 1; border: 0; border-radius: 9px; padding: 7px 0; font-size: 11px;
+    font-weight: 800; cursor: pointer; font-family: inherit; transition: filter .15s; }
+  .ptile .pbuy { color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .ptile .psell { color: #3a3a44; background: #ececf2; }
+  .ptile .pbuy:active, .ptile .psell:active { filter: brightness(.92); }
+  .looks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .look-cell { position: relative; aspect-ratio: 3 / 4; border-radius: 10px; overflow: hidden;
+    cursor: pointer; background: linear-gradient(160deg, #a18cd1, #fbc2eb); transition: transform .15s; }
+  .look-cell:active { transform: scale(.97); }
+  .look-cell img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .look-cell .lc-meta { position: absolute; inset: auto 0 0 0; padding: 16px 8px 7px; font-size: 10.5px;
+    font-weight: 800; color: #fff; background: linear-gradient(0deg, rgba(0,0,0,.72), transparent); }
   .earn { background: linear-gradient(135deg, rgba(52,211,153,.18), rgba(123,92,255,.12));
     border: 1px solid rgba(52,211,153,.25); border-radius: 18px; padding: 16px; margin-bottom: 20px; }
   .earn .top { display: flex; align-items: baseline; gap: 8px; }
   .earn .big-num { font-weight: 900; font-size: 26px; color: #34d399; }
   .earn .ttl { font-weight: 800; font-size: 13.5px; }
   .earn p { color: rgba(246,246,249,.7); font-size: 12.5px; line-height: 1.5; margin-top: 6px; }
-  .sec-h { font-weight: 900; font-size: 15px; margin: 4px 4px 12px; display: flex; align-items: center; gap: 7px; }
-  .sec-h .cnt { color: var(--muted); font-size: 12px; font-weight: 700; }
   .shelf-empty { text-align: center; color: var(--muted); padding: 40px 26px; font-size: 13.5px; line-height: 1.6; }
   .shelf-empty .big { font-size: 44px; margin-bottom: 12px; }
   .listing { display: flex; align-items: center; gap: 12px; background: var(--card);
@@ -416,13 +161,97 @@
   .listing .rm { background: none; border: 0; color: var(--muted); font-size: 18px; cursor: pointer;
     font-family: inherit; padding: 0 2px; flex-shrink: 0; }
 
-  .toast { position: absolute; left: 50%; bottom: 92px;
-    background: rgba(23,23,31,.96); border: 1px solid var(--line); color: var(--text);
-    font-size: 13px; font-weight: 700; padding: 11px 18px; border-radius: 22px; z-index: 70;
-    box-shadow: 0 8px 24px rgba(0,0,0,.45); opacity: 0; pointer-events: none;
-    transform: translateX(-50%) translateY(12px); transition: opacity .25s, transform .25s; }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  /* ---- Feed TikTok style ---- */
+  #feed.view.active { display: flex; flex-direction: column; height: 100%; }
 
+  .feed-filters { display: flex; gap: 8px; padding: 10px 14px; overflow-x: auto; scrollbar-width: none;
+    flex-shrink: 0; background: rgba(10,10,14,.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line); z-index: 5; }
+  .feed-filters::-webkit-scrollbar { display: none; }
+  .ff { flex-shrink: 0; border: 1px solid var(--line); background: transparent; color: var(--muted);
+    font-family: inherit; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px;
+    cursor: pointer; transition: all .15s; }
+  .ff.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .feed-scroll { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+  .feed-scroll::-webkit-scrollbar { display: none; }
+
+  .feed-card-full { position: relative; height: 100%; scroll-snap-align: start; overflow: hidden; background: #111; }
+  .feed-card-full.is-mine { outline: 2px solid rgba(255,61,119,.5); outline-offset: -2px; }
+
+  .fcbg { position: absolute; inset: 0; }
+  .fcbg .feed-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+  /* double-tap heart burst */
+  .heart-burst { position: absolute; top: 46%; left: 50%; z-index: 6; font-size: 100px;
+    transform: translate(-50%,-50%) scale(0); opacity: 0; pointer-events: none;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,.45)); }
+  .heart-burst.go { animation: burst .8s ease forwards; }
+  @keyframes burst {
+    0%   { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+    18%  { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+    70%  { opacity: 1; }
+    100% { transform: translate(-50%,-58%) scale(1); opacity: 0; } }
+
+  .fc-top { position: absolute; top: 14px; left: 14px; right: 14px;
+    display: flex; justify-content: space-between; align-items: flex-start; z-index: 5; }
+  .mine-tag { background: rgba(255,61,119,.95); color: #fff; font-size: 11px; font-weight: 900;
+    padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(6px); }
+  .trend-badge { background: rgba(0,0,0,.6); color: #fff; font-size: 12px; font-weight: 900;
+    padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(6px); margin-inline-start: auto; }
+
+  .fc-actions { position: absolute; right: 12px; bottom: 110px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px; z-index: 5; }
+  .fc-action { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;
+    color: #fff; font-size: 10px; font-weight: 800; text-shadow: 0 1px 4px rgba(0,0,0,.6);
+    user-select: none; background: none; border: 0; font-family: inherit; padding: 0; }
+  .fca-icon { width: 46px; height: 46px; border-radius: 50%; background: rgba(0,0,0,.45);
+    backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center;
+    font-size: 22px; transition: transform .15s; border: 1px solid rgba(255,255,255,.1); }
+  .fc-action:active .fca-icon { transform: scale(.84); }
+  .fca-icon.liked { background: rgba(255,61,119,.55); }
+  .fca-icon.saved { background: rgba(123,92,255,.55); }
+  .buy-action .fca-icon { background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; width: 50px; height: 50px; font-size: 24px; }
+
+  .fc-info { position: absolute; bottom: 0; left: 0; right: 70px; padding: 20px 14px 22px;
+    background: linear-gradient(0deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.4) 55%, transparent 100%); z-index: 5; }
+  .fc-user { font-weight: 900; font-size: 15px; color: #fff; margin-bottom: 5px;
+    display: flex; align-items: center; gap: 6px; }
+  .fc-verified { font-size: 13px; background: linear-gradient(135deg, var(--accent2), var(--accent));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .fc-caption { font-size: 13.5px; color: rgba(255,255,255,.9); line-height: 1.4; margin-bottom: 9px; }
+  .fc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .ftag { font-size: 12px; color: rgba(255,255,255,.8); font-weight: 700; }
+  .fc-match { display: inline-flex; align-items: center;
+    background: linear-gradient(135deg, rgba(123,92,255,.85), rgba(255,61,119,.85));
+    color: #fff; font-size: 11.5px; font-weight: 900; padding: 5px 12px; border-radius: 20px; }
+  .fc-earn { font-size: 11px; color: #34d399; font-weight: 700; margin-top: 6px; }
+  .feed-empty { height: 100%; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; color: var(--muted); text-align: center; padding: 40px; }
+  .feed-empty .big { font-size: 50px; margin-bottom: 14px; }
+
+  /* ---- modal ---- */
+  .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: none;
+    align-items: center; justify-content: center; padding: 28px; z-index: 60; backdrop-filter: blur(4px); }
+  .modal-overlay.show { display: flex; }
+  .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px;
+    padding: 28px 22px; text-align: center; width: 100%; animation: pop .25s ease; }
+  @keyframes pop { from { transform: scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modal-card .big { font-size: 48px; margin-bottom: 12px; }
+  .modal-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
+  .modal-card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+  .modal-card .earn-line { color: #34d399; font-size: 13px; font-weight: 800; margin-top: 8px; }
+  .modal-card .close { margin-top: 20px; padding: 11px 26px; border: 0; border-radius: 13px;
+    font-weight: 800; cursor: pointer; color: #fff; font-family: inherit; font-size: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+
+  .toast { position: absolute; left: 50%; bottom: 92px; background: rgba(23,23,31,.96);
+    border: 1px solid var(--line); color: var(--text); font-size: 13px; font-weight: 700;
+    padding: 11px 18px; border-radius: 22px; z-index: 70; box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(12px);
+    transition: opacity .25s, transform .25s; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   input[type=file] { display: none; }
 </style>
 </head>
@@ -434,21 +263,13 @@
   </header>
 
   <main id="main">
-    <!-- CLOSET -->
+    <!-- CLOSET + PROFILE (Dolce) -->
     <section id="closet" class="view active">
-      <div id="closet-body">
-        <div class="hint">
-          <div class="big">👗</div>
-          <h2>הארון הדיגיטלי שלך</h2>
-          <p>צלמי את התלבושת של היום<br/>וה-AI יזהה כל פריט, יתמחר אותו<br/>ויהפוך אותו לניתן לקנייה ומכירה.</p>
-          <div class="cta">לחצי על ➕ למטה כדי להתחיל</div>
-        </div>
-      </div>
+      <div id="closet-body"></div>
     </section>
 
     <!-- FEED -->
     <section id="feed" class="view">
-      <!-- Filter tabs -->
       <div class="feed-filters" id="feed-filters">
         <button class="ff active" data-filter="all">הכל</button>
         <button class="ff" data-filter="y2k">Y2K</button>
@@ -457,146 +278,62 @@
         <button class="ff" data-filter="vintage">וינטג'</button>
         <button class="ff" data-filter="secondhand">יד שנייה</button>
       </div>
-
-      <!-- TikTok scroll container -->
       <div class="feed-scroll" id="feed-scroll"></div>
-    </section>
-
-    <!-- PROFILE -->
-    <section id="profile" class="view">
-      <div id="profile-body"></div>
     </section>
   </main>
 
   <nav>
-    <button data-view="closet" class="active"><span class="ico">👚</span>הארון שלי</button>
-    <button data-view="feed"><span class="ico">▶️</span>פיד</button>
+    <button data-view="closet" class="active"><span class="ico">👤</span>הפרופיל שלי</button>
     <button class="fab" id="capture-btn">＋</button>
-    <button data-view="profile"><span class="ico">👤</span>פרופיל</button>
+    <button data-view="feed"><span class="ico">▶️</span>פיד</button>
   </nav>
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
-
-  <div id="purchase-modal" class="modal-overlay">
-    <div class="modal-card" id="modal-card"></div>
-  </div>
+  <div id="purchase-modal" class="modal-overlay"><div class="modal-card" id="modal-card"></div></div>
 </div>
 
 <script>
-  const fileInput = document.getElementById('file-input');
+  const fileInput  = document.getElementById('file-input');
   const closetBody = document.getElementById('closet-body');
-  const profileBody = document.getElementById('profile-body');
-  const modal = document.getElementById('purchase-modal');
-  const modalCard = document.getElementById('modal-card');
-  const mainEl = document.getElementById('main');
+  const modal      = document.getElementById('purchase-modal');
+  const modalCard  = document.getElementById('modal-card');
+  const mainEl     = document.getElementById('main');
 
   const EMOJI = { top:'👕', bottoms:'👖', dress:'👗', outerwear:'🧥', shoes:'👟',
                   bag:'👜', accessory:'🕶️', jewelry:'💍', hat:'🧢' };
   function emojiFor(cat) { return EMOJI[(cat||'').toLowerCase()] || '🧷'; }
-  function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+  function esc(s)  { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
   function attr(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-  function formatCount(n) {
-    n = Number(n) || 0;
-    if (n >= 1000) return (n / 1000).toFixed(1).replace('.0','') + 'K';
-    return String(n);
-  }
+  function fmtN(n) { n=Number(n)||0; return n>=1000?(n/1000).toFixed(1).replace('.0','')+'K':''+n; }
 
-  // ---- tabs ----
-  document.querySelectorAll('nav button[data-view]').forEach(b => {
-    b.addEventListener('click', () => showView(b.dataset.view));
-  });
+  // ---- navigation ----
+  document.querySelectorAll('nav button[data-view]').forEach(b =>
+    b.addEventListener('click', () => showView(b.dataset.view)));
 
   function showView(name) {
-    document.querySelectorAll('nav button[data-view]').forEach(x => x.classList.toggle('active', x.dataset.view === name));
-    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === name));
+    document.querySelectorAll('nav button[data-view]').forEach(x =>
+      x.classList.toggle('active', x.dataset.view === name));
+    document.querySelectorAll('.view').forEach(v =>
+      v.classList.toggle('active', v.id === name));
     mainEl.classList.toggle('feed-mode', name === 'feed');
-    if (name === 'profile') renderProfile();
-    if (name === 'feed') renderFeed();
+    if (name === 'closet') renderCloset();
+    if (name === 'feed')   renderFeed();
   }
 
   document.getElementById('capture-btn').addEventListener('click', () => {
-    showView('closet');
-    fileInput.click();
+    profileTab = 'closet'; showView('closet'); fileInput.click();
   });
 
-  // ---- FEED seed data ----
-  const SEED_POSTS = [
-    { id:'s1', user:'noa.styles', name:'נועה', verified:true,
-      caption:'לוק קיצי לבית קפה ☕️', tags:['y2k','casual','minimal'],
-      price:149, img:'/static/feed/1.jpg',
-      grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',
-      likes:2400, saves:312, trend:91, earn:15,
-      mtags:['y2k','casual','minimal','top','dress'] },
-    { id:'s2', user:'yael_fits', name:'יעל', verified:false,
-      caption:'סטריטוור עכשווי ✨', tags:['streetwear','utility'],
-      price:219, img:'/static/feed/2.jpg',
-      grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',
-      likes:5100, saves:891, trend:96, earn:22,
-      mtags:['streetwear','utility','bottoms','sneakers','shoes'] },
-    { id:'s3', user:'mika.thrift', name:'מיקה', verified:true,
-      caption:'יד שנייה במצב מעולה ♻️', tags:['secondhand','vintage'],
-      price:89, img:null,
-      grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',
-      likes:1800, saves:204, trend:82, earn:9,
-      mtags:['secondhand','vintage','everyday','top','bag'] },
-    { id:'s4', user:'shir.daily', name:'שיר', verified:false,
-      caption:'אאוטפיט ליום ראשון 🤍', tags:['minimal','ootd'],
-      price:179, img:null,
-      grad:'linear-gradient(160deg,#fccb90,#d57eeb)',
-      likes:3300, saves:445, trend:88, earn:18,
-      mtags:['minimal','everyday','ootd','dress','shoes'] },
-    { id:'s5', user:'agam.x', name:'אגם', verified:true,
-      caption:'vintage vibes 🕶️', tags:['vintage','retro'],
-      price:259, img:null,
-      grad:'linear-gradient(160deg,#5ee7df,#b490ca)',
-      likes:4000, saves:567, trend:94, earn:26,
-      mtags:['vintage','retro','thrifted','accessory','outerwear'] },
-    { id:'s6', user:'dana.edit', name:'דנה', verified:false,
-      caption:'office but make it cute 💼', tags:['minimal','ootd'],
-      price:320, img:null,
-      grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',
-      likes:6200, saves:1100, trend:97, earn:32,
-      mtags:['minimal','business','dress','shoes','bag'] },
-    { id:'s7', user:'lia.threads', name:'ליה', verified:true,
-      caption:'beach day ready 🌊', tags:['casual','y2k'],
-      price:120, img:null,
-      grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',
-      likes:3800, saves:520, trend:89, earn:12,
-      mtags:['casual','summer','y2k','top','bottoms'] },
-  ];
-
-  // ---- Social state (liked / saved) ----
-  const LIKED_KEY = 'awear_liked';
-  const SAVED_KEY = 'awear_saved2';
-  let likedSet = new Set(JSON.parse(localStorage.getItem(LIKED_KEY) || '[]'));
-  let savedSet = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]'));
-  function persistLiked() { localStorage.setItem(LIKED_KEY, JSON.stringify([...likedSet])); }
-  function persistSaved() { localStorage.setItem(SAVED_KEY, JSON.stringify([...savedSet])); }
-
-  // ---- active filter ----
-  let activeFilter = 'all';
-  document.getElementById('feed-filters').addEventListener('click', e => {
-    const btn = e.target.closest('.ff');
-    if (!btn) return;
-    document.querySelectorAll('.ff').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeFilter = btn.dataset.filter;
-    renderFeed();
-  });
-
-  // ---- buy / sell flows ----
+  // ---- buy / sell ----
   function buyFlow(label, price, earnAmt, influencerUser) {
     modal.classList.add('show');
     modalCard.innerHTML = '<div class="spinner"></div><h3>רוכשת את ' + esc(label) + '…</h3><p>Awear מבצעת את ההזמנה עבורך</p>';
     setTimeout(() => {
       const earnLine = (earnAmt && influencerUser)
-        ? `<div class="earn-line">✓ @${esc(influencerUser)} מרוויחה קרדיט ₪${esc(earnAmt)}</div>`
-        : '';
-      modalCard.innerHTML =
-        '<div class="big">✅</div><h3>ההזמנה אושרה!</h3>' +
+        ? `<div class="earn-line">✓ @${esc(influencerUser)} מרוויחה קרדיט ₪${esc(earnAmt)}</div>` : '';
+      modalCard.innerHTML = '<div class="big">✅</div><h3>ההזמנה אושרה!</h3>' +
         '<p>' + esc(label) + ' בדרך אליך · שולם ₪' + esc(price) + '<br/>משלוח עד הבית תוך 3-5 ימים 📦</p>' +
-        earnLine +
-        '<button class="close">מעולה</button>';
+        earnLine + '<button class="close">מעולה</button>';
       modalCard.querySelector('.close').addEventListener('click', () => modal.classList.remove('show'));
     }, 1300);
   }
@@ -605,417 +342,319 @@
     modal.classList.add('show');
     modalCard.innerHTML = '<div class="spinner"></div><h3>מפרסמת את ' + esc(label) + ' למכירה…</h3><p>ה-AI מתמחר לפי ביקוש בשוק היד-שנייה</p>';
     setTimeout(() => {
-      addListing({ name: label, price: Number(price) || 0, category: cat || '' });
-      modalCard.innerHTML =
-        '<div class="big">💸</div><h3>פורסם למכירה!</h3>' +
+      addListing({ name:label, price:Number(price)||0, category:cat||'' });
+      modalCard.innerHTML = '<div class="big">💸</div><h3>פורסם למכירה!</h3>' +
         '<p>' + esc(label) + ' עכשיו במדף המכירה בפרופיל שלך<br/>מחיר מומלץ: ₪' + esc(price) + ' · עמלת Awear 15%</p>' +
         '<button class="close">לפרופיל</button>';
-      modalCard.querySelector('.close').addEventListener('click', () => { modal.classList.remove('show'); showView('profile'); });
+      modalCard.querySelector('.close').addEventListener('click', () => { modal.classList.remove('show'); showView('closet'); });
     }, 1300);
   }
 
-  // ---- Global event delegation ----
-  document.querySelector('main').addEventListener('click', (e) => {
-    // Buy (closet items)
-    const buyBtn = e.target.closest('[data-buy="1"]:not(.fc-action)');
-    if (buyBtn && !buyBtn.closest('.fc-actions')) {
-      buyFlow(buyBtn.dataset.label, buyBtn.dataset.price, 0, '');
-      return;
-    }
-    // Sell
+  document.querySelector('main').addEventListener('click', e => {
+    const buyBtn = e.target.closest('[data-buy]');
+    if (buyBtn && !buyBtn.classList.contains('buy-action')) { buyFlow(buyBtn.dataset.label, buyBtn.dataset.price, 0, ''); return; }
+    const buyAction = e.target.closest('.buy-action');
+    if (buyAction) { buyFlow(buyAction.dataset.label, buyAction.dataset.price, buyAction.dataset.earn, buyAction.dataset.user); return; }
     const sellBtn = e.target.closest('[data-sell]');
     if (sellBtn) { sellFlow(sellBtn.dataset.label, sellBtn.dataset.price, sellBtn.dataset.cat); return; }
-    // Feed actions
-    const fcAction = e.target.closest('.fc-action');
-    if (fcAction) {
-      const action = fcAction.dataset.action;
-      const id = fcAction.dataset.id;
-      if (action === 'like') toggleLike(id, fcAction);
-      if (action === 'save') toggleSave(id, fcAction);
-      if (action === 'share') { showToast('הקישור הועתק ✓'); }
-      return;
-    }
-    // Buy from feed
-    const buyAction = e.target.closest('.buy-action');
-    if (buyAction) {
-      buyFlow(buyAction.dataset.label, buyAction.dataset.price, buyAction.dataset.earn, buyAction.dataset.user);
-      return;
-    }
   });
 
-  function toggleLike(id, el) {
-    const icon = el.querySelector('.fca-icon');
-    const countEl = el.querySelector('span');
-    const post = SEED_POSTS.find(p => p.id === id) || { likes: 0 };
-    if (likedSet.has(id)) {
-      likedSet.delete(id);
-      icon.textContent = '🤍';
-      icon.classList.remove('liked');
-      if (countEl) countEl.textContent = formatCount(post.likes);
-    } else {
-      likedSet.add(id);
-      icon.textContent = '❤️';
-      icon.classList.add('liked');
-      if (countEl) countEl.textContent = formatCount(post.likes + 1);
-      // pulse animation
-      icon.style.transform = 'scale(1.35)';
-      setTimeout(() => { icon.style.transform = ''; }, 200);
-    }
-    persistLiked();
-  }
-
-  function toggleSave(id, el) {
-    const icon = el.querySelector('.fca-icon');
-    const countEl = el.querySelector('span');
-    if (savedSet.has(id)) {
-      savedSet.delete(id);
-      icon.classList.remove('saved');
-      if (countEl) countEl.textContent = 'שמרי';
-    } else {
-      savedSet.add(id);
-      icon.classList.add('saved');
-      if (countEl) countEl.textContent = 'נשמר';
-      showToast('נשמר לארון שלך 🔖');
-    }
-    persistSaved();
-  }
-
-  // ---- analyze flow ----
+  // ---- analyze ----
   function readDataURL(file) {
-    return new Promise((resolve) => {
-      const r = new FileReader();
-      r.onload = () => resolve(r.result);
-      r.onerror = () => resolve(null);
-      r.readAsDataURL(file);
-    });
+    return new Promise(res => { const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=()=>res(null); r.readAsDataURL(file); });
   }
-
   fileInput.addEventListener('change', async () => {
-    const file = fileInput.files[0];
-    if (!file) return;
-    closetBody.innerHTML = '<div class="loading"><div class="spinner"></div><p>ה-AI מזהה את הפריטים שלך…</p></div>';
-
-    const photoPromise = readDataURL(file);
-    const fd = new FormData();
-    fd.append('photo', file);
-
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 30000);
+    const file=fileInput.files[0]; if(!file) return;
+    closetBody.innerHTML='<div class="loading"><div class="spinner"></div><p>ה-AI מזהה את הפריטים שלך…</p></div>';
+    const photoP=readDataURL(file), fd=new FormData(); fd.append('photo',file);
+    const ctrl=new AbortController(), timer=setTimeout(()=>ctrl.abort(),30000);
     try {
-      const res = await fetch('/api/analyze', { method: 'POST', body: fd, signal: controller.signal });
-      if (!res.ok) {
-        const e = await res.json().catch(() => ({}));
-        throw new Error(e.detail || ('שגיאה ' + res.status));
-      }
-      const data = await res.json();
-      data.photo = await photoPromise;
-      addScan(data);
-    } catch (err) {
-      const msg = err.name === 'AbortError' ? 'הבקשה ארכה יותר מדי — נסי שוב' : err.message;
-      closetBody.innerHTML = '<div class="err">⚠️ ' + esc(msg) + '</div>';
-    } finally {
-      clearTimeout(timer);
-    }
-    fileInput.value = '';
+      const res=await fetch('/api/analyze',{method:'POST',body:fd,signal:ctrl.signal});
+      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'שגיאה '+res.status);}
+      const data=await res.json(); data.photo=await photoP; addScan(data);
+    } catch(err) {
+      closetBody.innerHTML='<div class="err">⚠️ '+esc(err.name==='AbortError'?'הבקשה ארכה יותר מדי — נסי שוב':err.message)+'</div>';
+    } finally { clearTimeout(timer); }
+    fileInput.value='';
   });
 
-  // ---- persistence (localStorage) ----
-  const WARDROBE_KEY = 'awear_wardrobe';
-  const META_KEY = 'awear_meta';
-  const SHELF_KEY = 'awear_shelf';
-  const FEED_KEY = 'awear_feed';
-  const LASTSCAN_KEY = 'awear_lastscan';
+  // ---- persistence ----
+  const WARDROBE_KEY='awear_wardrobe',META_KEY='awear_meta',SHELF_KEY='awear_shelf',
+        FEED_KEY='awear_feed',LASTSCAN_KEY='awear_lastscan';
+  const ls={load:k=>{try{return JSON.parse(localStorage.getItem(k))||null;}catch(e){return null;}},
+            save:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+  const loadWardrobe=()=>ls.load(WARDROBE_KEY)||[];
+  const saveWardrobe=v=>ls.save(WARDROBE_KEY,v);
+  const loadMeta=()=>ls.load(META_KEY)||{};
+  const saveMeta=v=>ls.save(META_KEY,v);
+  const loadShelf=()=>ls.load(SHELF_KEY)||[];
+  const saveShelf=v=>ls.save(SHELF_KEY,v);
+  const loadFeedPosts=()=>ls.load(FEED_KEY)||[];
+  const saveFeedPosts=v=>ls.save(FEED_KEY,v);
+  const loadLastScan=()=>ls.load(LASTSCAN_KEY);
+  const saveLastScan=v=>ls.save(LASTSCAN_KEY,v);
+  function addListing(it){const s=loadShelf();s.unshift({name:it.name,price:it.price,category:it.category,ts:Date.now()});saveShelf(s);}
+  function removeListing(ts){saveShelf(loadShelf().filter(x=>x.ts!==ts));renderCloset();}
+  function resetWardrobe(){[WARDROBE_KEY,META_KEY,SHELF_KEY,FEED_KEY,LASTSCAN_KEY].forEach(k=>localStorage.removeItem(k));profileTab='closet';renderCloset();renderFeed();}
 
-  function loadFeed() { try { return JSON.parse(localStorage.getItem(FEED_KEY)) || []; } catch(e) { return []; } }
-  function saveFeed(posts) { localStorage.setItem(FEED_KEY, JSON.stringify(posts)); }
-  function loadLastScan() { try { return JSON.parse(localStorage.getItem(LASTSCAN_KEY)) || null; } catch(e) { return null; } }
-  function saveLastScan(scan) { try { localStorage.setItem(LASTSCAN_KEY, JSON.stringify(scan)); } catch(e) {} }
-  function loadShelf() { try { return JSON.parse(localStorage.getItem(SHELF_KEY)) || []; } catch(e) { return []; } }
-  function saveShelf(items) { localStorage.setItem(SHELF_KEY, JSON.stringify(items)); }
-  function addListing(it) {
-    const shelf = loadShelf();
-    shelf.unshift({ name: it.name, price: it.price, category: it.category, ts: Date.now() });
-    saveShelf(shelf);
-  }
-  function removeListing(ts) { saveShelf(loadShelf().filter(x => x.ts !== ts)); renderProfile(); }
-  function loadWardrobe() { try { return JSON.parse(localStorage.getItem(WARDROBE_KEY)) || []; } catch(e) { return []; } }
-  function saveWardrobe(items) { localStorage.setItem(WARDROBE_KEY, JSON.stringify(items)); }
-  function loadMeta() { try { return JSON.parse(localStorage.getItem(META_KEY)) || null; } catch(e) { return null; } }
-  function saveMeta(meta) { localStorage.setItem(META_KEY, JSON.stringify(meta)); }
-  function resetWardrobe() {
-    [WARDROBE_KEY, META_KEY, SHELF_KEY, FEED_KEY, LASTSCAN_KEY].forEach(k => localStorage.removeItem(k));
-    renderCloset(); renderFeed();
+  // ---- Dolce closet / profile ----
+  const SHELF_GROUPS=[
+    {cats:['top'],                       title:'מדף עליוניות',   icon:'👕'},
+    {cats:['dress'],                     title:'מדף שמלות',      icon:'👗'},
+    {cats:['bottoms'],                   title:'מדף מכנסיים',    icon:'👖'},
+    {cats:['outerwear'],                 title:'מדף מעילים',     icon:'🧥'},
+    {cats:['shoes'],                     title:'ארון נעליים',    icon:'👟'},
+    {cats:['bag'],                       title:'מדף תיקים',      icon:'👜'},
+    {cats:['accessory','jewelry','hat'], title:'מגירת אקססוריז', icon:'🕶️'},
+  ];
+  let profileTab='closet';
+
+  function productTile(it){return `<div class="ptile">
+    <div class="pimg">${emojiFor(it.category)}</div>
+    <div class="pname">${esc(it.name)}</div><div class="pbrand">${esc(it.brand_vibe||'')}</div>
+    <div class="pprice">₪${esc(it.price_estimate_ils)}</div>
+    <div class="pacts">
+      <button class="pbuy" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_ils)}">קני</button>
+      <button class="psell" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_ils||0)*.5)}">מכרי</button>
+    </div></div>`;}
+
+  function closetShelvesHTML(wardrobe){
+    if(!wardrobe.length) return `<div class="hint"><div class="big">🚪</div><h2>הארון שלך עוד ריק</h2>
+      <p>צלמי תלבושת וה-AI יסדר כל פריט<br/>על המדף הנכון בארון שלך.</p>
+      <div class="cta">לחצי על ➕ למטה כדי להתחיל</div></div>`;
+    const byCat={};
+    wardrobe.forEach(it=>{const c=(it.category||'').toLowerCase();(byCat[c]=byCat[c]||[]).push(it);});
+    const known=new Set(SHELF_GROUPS.flatMap(g=>g.cats));
+    const shelf=(icon,title,items)=>`<div class="shelf">
+      <div class="shelf-title">${icon} ${esc(title)} <span class="cnt">· ${items.length}</span></div>
+      <div class="shelf-row">${items.map(productTile).join('')}</div>
+      <div class="shelf-ledge"></div></div>`;
+    let html=SHELF_GROUPS.map(g=>{const items=g.cats.flatMap(c=>byCat[c]||[]);return items.length?shelf(g.icon,g.title,items):'';}).join('');
+    const others=wardrobe.filter(it=>!known.has((it.category||'').toLowerCase()));
+    if(others.length) html+=shelf('🧷','שונות',others);
+    return html;
   }
 
-  // ---- closet card builder ----
-  function itemCard(it) {
-    return `
-      <div class="item">
-        <div class="thumb">${emojiFor(it.category)}</div>
-        <div class="cat">${esc(it.category)}</div>
-        <div class="nm">${esc(it.name)}</div>
-        <div class="meta">${esc(it.color)} · ${esc(it.material_guess)}<br/>${esc(it.brand_vibe)}</div>
-        <div class="tags">${(it.style_tags||[]).map(t => '<span class="tag">#'+esc(t)+'</span>').join('')}</div>
-        <span class="resale ${esc(it.resale_potential)}">פוטנציאל מכירה: ${esc(it.resale_potential)}</span>
-        <div class="price">~₪${esc(it.price_estimate_ils)}</div>
-        <div class="actions">
-          <button class="buy-btn" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_ils)}">🛍️ קני</button>
-          <button class="sell-btn" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_ils||0)*0.5)}">💸 מכרי</button>
-        </div>
-      </div>`;
+  function looksGridHTML(){
+    const feed=loadFeedPosts();
+    if(!feed.length) return `<div class="shelf-empty"><div class="big">📸</div>עדיין לא שיתפת לוקים.<br/>צלמי תלבושת ושתפי אותה לפיד<br/>כדי שתופיע כאן בפרופיל שלך.</div>`;
+    return `<div class="looks-grid">${feed.map(p=>`<div class="look-cell" data-goto-feed="1">
+      ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
+      <div class="lc-meta">${esc(p.item_count||0)} פריטים${p.look_total_ils?' · ₪'+esc(p.look_total_ils):''}</div>
+    </div>`).join('')}</div>`;}
+
+  function forSaleHTML(){
+    const shelf=loadShelf(),shelfTotal=shelf.reduce((s,it)=>s+(Number(it.price)||0),0),earnings=Math.round(shelfTotal*.85);
+    const earnCard=shelf.length?`<div class="earn"><div class="top"><span class="big-num">₪${earnings.toLocaleString()}</span><span class="ttl">פוטנציאל רווח</span></div>
+      <p>${shelf.length} פריטים במכירה · שווי ₪${shelfTotal.toLocaleString()} · נטו אחרי עמלת Awear 15%</p></div>`:'';
+    const listings=shelf.length
+      ?shelf.map(it=>`<div class="listing"><div class="ic">${emojiFor(it.category)}</div>
+        <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div></div>
+        <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
+        <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button></div>`).join('')
+      :`<div class="shelf-empty"><div class="big">💸</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`;
+    return earnCard+listings;
   }
 
-  function renderCloset() {
-    const wardrobe = loadWardrobe();
-    if (!wardrobe.length) {
-      closetBody.innerHTML = `
-        <div class="hint">
-          <div class="big">👗</div>
-          <h2>הארון הדיגיטלי שלך</h2>
-          <p>צלמי את התלבושת של היום<br/>וה-AI יזהה כל פריט, יתמחר אותו<br/>ויהפוך אותו לניתן לקנייה ומכירה.</p>
-          <div class="cta">לחצי על ➕ למטה כדי להתחיל</div>
-        </div>`;
-      return;
-    }
-    const meta = loadMeta() || {};
-    closetBody.innerHTML = `
-      <div class="summary">
-        <div class="row">
-          <span class="badge">${wardrobe.length} פריטים בארון</span>
-          ${meta.trend_score != null ? `<span class="trend">🔥 ${esc(meta.trend_score)} טרנדיות</span>` : ''}
-          <span class="reset" id="reset-link">איפוס</span>
-        </div>
-        ${(meta.overall_style || meta.occasion) ? `<div class="row"><span class="style">${esc(meta.overall_style)} · ${esc(meta.occasion)}</span></div>` : ''}
-        ${meta.summary ? `<p>${esc(meta.summary)}</p>` : ''}
+  function renderCloset(){
+    const wardrobe=loadWardrobe(),meta=loadMeta(),feed=loadFeedPosts();
+    const closetValue=wardrobe.reduce((s,it)=>s+(Number(it.price_estimate_ils)||0),0);
+    let body;
+    if(profileTab==='looks') body=looksGridHTML();
+    else if(profileTab==='forsale') body=forSaleHTML();
+    else body=`
+      ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h">✨ סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
+      ${meta.look_total_ils!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_ils)}">🛍️ קני את הלוק האחרון · ~₪${esc(meta.look_total_ils)}</button>`:''}
+      ${wardrobe.length?`<button class="shop-look share-look" id="share-look">📲 שתפי את הלוק לפיד</button>`:''}
+      ${closetShelvesHTML(wardrobe)}`;
+
+    closetBody.innerHTML=`
+      <div class="ig-head"><div class="ig-ava"></div>
+        <div class="ig-id"><div class="ig-name">הסטייל שלי</div><div class="ig-handle">@me · תל אביב</div>
+          <span class="ig-edit" id="reset-link">איפוס ארון</span></div></div>
+      <div class="ig-stats">
+        <div><b>${feed.length}</b><span>לוקים</span></div>
+        <div><b>1.2K</b><span>עוקבים</span></div>
+        <div><b>340</b><span>עוקבת</span></div>
+        <div><b>🔥${meta.trend_score!=null?esc(meta.trend_score):'—'}</b><span>טרנדיות</span></div>
       </div>
-      ${meta.stylist_tip ? `<div class="stylist"><div class="stylist-h">✨ סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>` : ''}
-      ${meta.look_total_ils != null ? `<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_ils)}">🛍️ קני את הלוק האחרון · ~₪${esc(meta.look_total_ils)}</button>` : ''}
-      <button class="shop-look share-look" id="share-look">📲 שתפי את הלוק לפיד</button>
-      <div class="grid">${wardrobe.map(itemCard).join('')}</div>`;
-    document.getElementById('reset-link')?.addEventListener('click', resetWardrobe);
-    document.getElementById('share-look')?.addEventListener('click', shareLookToFeed);
+      <div class="ig-bio"><b>${wardrobe.length} פריטים</b> בארון · שווי ~₪${closetValue.toLocaleString()}${meta.overall_style?' · '+esc(meta.overall_style):''}</div>
+      <div class="seg">
+        <button data-seg="closet" class="${profileTab==='closet'?'on':''}">🚪 הארון</button>
+        <button data-seg="looks"  class="${profileTab==='looks'?'on':''}">📸 לוקים</button>
+        <button data-seg="forsale" class="${profileTab==='forsale'?'on':''}">💸 למכירה</button>
+      </div>${body}`;
+
+    document.getElementById('reset-link')?.addEventListener('click',resetWardrobe);
+    document.getElementById('share-look')?.addEventListener('click',shareLookToFeed);
+    closetBody.querySelectorAll('[data-seg]').forEach(b=>b.addEventListener('click',()=>{profileTab=b.dataset.seg;renderCloset();}));
+    closetBody.querySelectorAll('[data-rm]').forEach(btn=>btn.addEventListener('click',()=>removeListing(Number(btn.dataset.rm))));
+    closetBody.querySelectorAll('[data-goto-feed]').forEach(cell=>cell.addEventListener('click',()=>showView('feed')));
   }
 
-  function addScan(data) {
-    const newItems = data.items || [];
+  function addScan(data){
+    const newItems=data.items||[];
     saveWardrobe(newItems.concat(loadWardrobe()));
-    const meta = {
-      overall_style: data.overall_style, occasion: data.occasion,
-      trend_score: data.trend_score, summary: data.summary,
-      stylist_tip: data.stylist_tip, look_total_ils: data.look_total_ils,
-    };
-    saveMeta(meta);
-    saveLastScan({ photo: data.photo || null, items: newItems, meta });
-    renderCloset();
-    if (newItems.length) showToast('נוספו ' + newItems.length + ' פריטים לארון ✨');
+    const meta={overall_style:data.overall_style,occasion:data.occasion,trend_score:data.trend_score,
+      summary:data.summary,stylist_tip:data.stylist_tip,look_total_ils:data.look_total_ils};
+    saveMeta(meta); saveLastScan({photo:data.photo||null,items:newItems,meta});
+    renderCloset(); if(newItems.length) showToast('נוספו '+newItems.length+' פריטים לארון ✨');
   }
 
-  // ---- wardrobe tag matching ----
-  function wardrobeTagSet() {
-    const set = new Set();
-    loadWardrobe().forEach(it => {
-      (it.style_tags || []).forEach(t => set.add(String(t).toLowerCase()));
-      if (it.category) set.add(String(it.category).toLowerCase());
-    });
+  function wardrobeTagSet(){
+    const set=new Set();
+    loadWardrobe().forEach(it=>{(it.style_tags||[]).forEach(t=>set.add(String(t).toLowerCase()));if(it.category)set.add(String(it.category).toLowerCase());});
     return set;
   }
-
-  function matchPercent(cardTags) {
-    const userSet = wardrobeTagSet();
-    if (!userSet.size) return 72;
-    const tags = (cardTags || []).map(t => String(t).toLowerCase()).filter(Boolean);
-    if (!tags.length) return 72;
-    let hits = 0;
-    tags.forEach(t => { if (userSet.has(t)) hits++; });
-    return Math.round(60 + (hits / tags.length) * 38);
+  function matchPercent(tags){
+    const s=wardrobeTagSet();if(!s.size)return 72;
+    const t=(tags||[]).map(t=>String(t).toLowerCase()).filter(Boolean);if(!t.length)return 72;
+    let h=0;t.forEach(x=>{if(s.has(x))h++;});return Math.round(60+(h/t.length)*38);
   }
 
-  // ---- share look to feed ----
-  function shareLookToFeed() {
-    const scan = loadLastScan();
-    if (!scan) { showToast('צלמי לוק קודם כדי לשתף 📸'); return; }
-    const meta = scan.meta || {};
-    const post = {
-      ts: Date.now(),
-      id: 'mine_' + Date.now(),
-      photo: scan.photo || null,
-      caption: meta.overall_style || 'הלוק שלי',
-      occasion: meta.occasion || '',
-      item_count: (scan.items || []).length,
-      look_total_ils: meta.look_total_ils || 0,
-      tags: (scan.items || []).reduce((acc, it) => {
-        (it.style_tags || []).forEach(t => acc.push(t));
-        if (it.category) acc.push(it.category);
-        return acc;
-      }, []),
-    };
-    const feed = loadFeed();
-    feed.unshift(post);
-    saveFeed(feed);
-    showToast('הלוק שותף לפיד ✨');
-    showView('feed');
+  function shareLookToFeed(){
+    const scan=loadLastScan();if(!scan){showToast('צלמי לוק קודם כדי לשתף 📸');return;}
+    const meta=scan.meta||{};
+    const post={ts:Date.now(),id:'mine_'+Date.now(),photo:scan.photo||null,
+      caption:meta.overall_style||'הלוק שלי',occasion:meta.occasion||'',
+      item_count:(scan.items||[]).length,look_total_ils:meta.look_total_ils||0,
+      tags:(scan.items||[]).reduce((acc,it)=>{(it.style_tags||[]).forEach(t=>acc.push(t));if(it.category)acc.push(it.category);return acc;},[])};
+    const feed=loadFeedPosts();feed.unshift(post);saveFeedPosts(feed);
+    showToast('הלוק שותף לפיד ✨');showView('feed');
   }
 
-  // ---- feed card builder ----
-  function feedCardHTML(post, isMine) {
-    const tags = post.tags || [];
-    const mtags = post.mtags || tags;
-    const pct = matchPercent(mtags);
-    const liked = likedSet.has(post.id);
-    const saved = savedSet.has(post.id);
-    const likeCount = formatCount((post.likes || 0) + (liked ? 1 : 0));
+  // ---- Feed ----
+  const SEED_POSTS=[
+    {id:'s1',user:'noa.styles', name:'נועה',verified:true, caption:'לוק קיצי לבית קפה ☕️',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress']},
+    {id:'s2',user:'yael_fits',  name:'יעל', verified:false,caption:'סטריטוור עכשווי ✨',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes']},
+    {id:'s3',user:'mika.thrift',name:'מיקה',verified:true, caption:'יד שנייה במצב מעולה ♻️',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag']},
+    {id:'s4',user:'shir.daily', name:'שיר', verified:false,caption:'אאוטפיט ליום ראשון 🤍',        tags:['minimal','ootd'],            price:179,img:null,                 grad:'linear-gradient(160deg,#fccb90,#d57eeb)',         likes:3300,trend:88,earn:18,mtags:['minimal','everyday','ootd','dress','shoes']},
+    {id:'s5',user:'agam.x',     name:'אגם', verified:true, caption:'vintage vibes 🕶️',            tags:['vintage','retro'],           price:259,img:null,                 grad:'linear-gradient(160deg,#5ee7df,#b490ca)',         likes:4000,trend:94,earn:26,mtags:['vintage','retro','thrifted','accessory','outerwear']},
+    {id:'s6',user:'dana.edit',  name:'דנה', verified:false,caption:'office but make it cute 💼',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag']},
+    {id:'s7',user:'lia.threads',name:'ליה', verified:true, caption:'beach day ready 🌊',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms']},
+  ];
 
-    const bgImg = post.img
-      ? `<img class="feed-img" src="${attr(post.img)}" alt="" onerror="this.style.display='none'">`
-      : '';
+  function loadSet(k){try{return new Set(JSON.parse(localStorage.getItem(k))||[]);}catch(e){return new Set();}}
+  function saveSet(k,s){localStorage.setItem(k,JSON.stringify([...s]));}
+  let LIKES=loadSet('awear_likes'), SAVED=loadSet('awear_saved');
 
-    const tagPills = tags.map(t => `<span class="ftag">#${esc(t)}</span>`).join('');
-    const mineBadge = isMine ? `<span class="mine-tag">✨ אני</span>` : `<span></span>`;
-    const earnLine = (!isMine && post.earn)
-      ? `<div class="fc-earn">💎 @${esc(post.user)} תרוויח ₪${esc(post.earn)} על כל קנייה</div>`
-      : '';
+  let activeFilter='all';
+  document.getElementById('feed-filters').addEventListener('click',e=>{
+    const btn=e.target.closest('.ff');if(!btn)return;
+    document.querySelectorAll('.ff').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');activeFilter=btn.dataset.filter;renderFeed();
+  });
 
-    return `
-      <div class="feed-card-full${isMine?' is-mine':''}"
-           data-id="${attr(post.id||'')}">
-        <div class="fcbg" style="background:${attr(post.grad||post.gradient||'linear-gradient(160deg,#a18cd1,#fbc2eb)')}">${bgImg}</div>
-
-        <div class="fc-top">
-          ${mineBadge}
-          <span class="trend-badge">🔥 ${esc(post.trend||post.trend_score||80)}</span>
-        </div>
-
-        <div class="fc-actions">
-          <div class="fc-action" data-action="like" data-id="${attr(post.id||'')}">
-            <div class="fca-icon${liked?' liked':''}">${liked?'❤️':'🤍'}</div>
-            <span>${likeCount}</span>
-          </div>
-          <div class="fc-action" data-action="save" data-id="${attr(post.id||'')}">
-            <div class="fca-icon${saved?' saved':''}">🔖</div>
-            <span>${saved?'נשמר':'שמרי'}</span>
-          </div>
-          <div class="fc-action" data-action="share" data-id="${attr(post.id||'')}">
-            <div class="fca-icon">↗️</div>
-            <span>שתפי</span>
-          </div>
-          <div class="fc-action buy-action"
-               data-label="${attr(post.name?'לוק של '+post.name:(post.caption||'הלוק'))}"
-               data-price="${attr(post.price||post.look_total_ils||0)}"
-               data-earn="${attr(post.earn||0)}"
-               data-user="${attr(post.user||'')}">
-            <div class="fca-icon buy-icon">🛍️</div>
-            <span>₪${esc(post.price||post.look_total_ils||0)}</span>
-          </div>
-        </div>
-
-        <div class="fc-info">
-          <div class="fc-user">
-            @${esc(post.user||'me')}
-            ${post.verified ? '<span class="fc-verified">✓</span>' : ''}
-          </div>
-          <div class="fc-caption">${esc(post.caption||'')}</div>
-          <div class="fc-tags">${tagPills}</div>
-          <span class="fc-match">${pct}% התאמה לארון שלי</span>
-          ${earnLine}
-        </div>
-      </div>`;
+  function feedCardHTML(post,isMine){
+    const tags=post.tags||[],mtags=post.mtags||tags;
+    const liked=LIKES.has(post.id),saved=SAVED.has(post.id);
+    const bgImg=post.img?`<img class="feed-img" src="${attr(post.img)}" alt="" onerror="this.style.display='none'">` :'';
+    const tagPills=tags.map(t=>`<span class="ftag">#${esc(t)}</span>`).join('');
+    const mineBadge=isMine?`<span class="mine-tag">✨ אני</span>`:`<span></span>`;
+    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn">💎 @${esc(post.user)} תרוויח ₪${esc(post.earn)} על כל קנייה</div>`:'';
+    const lbl=post.name?'לוק של '+post.name:(post.caption||'הלוק');
+    return `<div class="feed-card-full${isMine?' is-mine':''}" data-id="${attr(post.id||'')}">
+      <div class="fcbg" style="background:${attr(post.grad||'linear-gradient(160deg,#a18cd1,#fbc2eb)')}">${bgImg}</div>
+      <div class="heart-burst">❤️</div>
+      <div class="fc-top">${mineBadge}<span class="trend-badge">🔥 ${esc(post.trend||80)}</span></div>
+      <div class="fc-actions">
+        <button class="fc-action" data-action="like" data-id="${attr(post.id||'')}">
+          <div class="fca-icon${liked?' liked':''}">${liked?'❤️':'🤍'}</div>
+          <span>${fmtN((post.likes||0)+(liked?1:0))}</span>
+        </button>
+        <button class="fc-action" data-action="save" data-id="${attr(post.id||'')}">
+          <div class="fca-icon${saved?' saved':''}">🔖</div>
+          <span>${saved?'נשמר':'שמרי'}</span>
+        </button>
+        <button class="fc-action" data-action="share">
+          <div class="fca-icon">↗️</div><span>שתפי</span>
+        </button>
+        <button class="fc-action buy-action"
+            data-label="${attr(lbl)}" data-price="${attr(post.price||post.look_total_ils||0)}"
+            data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
+          <div class="fca-icon buy-icon">🛍️</div>
+          <span>₪${esc(post.price||post.look_total_ils||0)}</span>
+        </button>
+      </div>
+      <div class="fc-info">
+        <div class="fc-user">@${esc(post.user||'me')}${post.verified?'<span class="fc-verified"> ✓</span>':''}</div>
+        <div class="fc-caption">${esc(post.caption||'')}</div>
+        <div class="fc-tags">${tagPills}</div>
+        <span class="fc-match">${matchPercent(mtags)}% התאמה לארון שלי</span>
+        ${earnLine}
+      </div></div>`;
   }
 
-  // ---- render feed (user posts + seed) ----
-  function renderFeed() {
-    const scroll = document.getElementById('feed-scroll');
-    if (!scroll) return;
-    scroll.innerHTML = '';
-
-    // User's own shared looks
-    const myPosts = loadFeed();
-    myPosts.forEach(p => {
-      const wrap = document.createElement('div');
-      wrap.innerHTML = feedCardHTML({
-        ...p,
-        id: p.id || ('mine_' + p.ts),
-        user: 'you',
-        grad: p.photo ? null : 'linear-gradient(160deg,#a18cd1,#fbc2eb)',
-        img: p.photo || null,
-        tags: p.tags || [],
-        trend: 95,
-      }, true);
-      scroll.appendChild(wrap.firstElementChild);
+  function renderFeed(){
+    const host=document.getElementById('feed-scroll');if(!host)return;
+    LIKES=loadSet('awear_likes');SAVED=loadSet('awear_saved');
+    host.innerHTML='';
+    loadFeedPosts().forEach(p=>{
+      const wrap=document.createElement('div');
+      wrap.innerHTML=feedCardHTML({...p,id:p.id||'mine_'+p.ts,user:'you',
+        grad:p.photo?null:'linear-gradient(160deg,#a18cd1,#fbc2eb)',img:p.photo||null,tags:p.tags||[],trend:95},true);
+      host.appendChild(wrap.firstElementChild);
     });
-
-    // Seed posts with filter
-    let seeds = SEED_POSTS;
-    if (activeFilter !== 'all') {
-      seeds = seeds.filter(p => (p.tags || []).includes(activeFilter));
+    let seeds=SEED_POSTS;
+    if(activeFilter!=='all') seeds=seeds.filter(p=>(p.tags||[]).includes(activeFilter));
+    if(!seeds.length&&!loadFeedPosts().length){
+      host.innerHTML=`<div class="feed-empty"><div class="big">🔍</div><p>אין לוקים בסגנון הזה עדיין</p></div>`;return;
     }
-
-    if (!seeds.length && !myPosts.length) {
-      scroll.innerHTML = `<div class="feed-empty"><div class="big">🔍</div><p>אין לוקים בסגנון הזה עדיין</p></div>`;
-      return;
-    }
-
-    seeds.forEach(post => {
-      const wrap = document.createElement('div');
-      wrap.innerHTML = feedCardHTML(post, false);
-      scroll.appendChild(wrap.firstElementChild);
-    });
+    seeds.forEach(post=>{const wrap=document.createElement('div');wrap.innerHTML=feedCardHTML(post,false);host.appendChild(wrap.firstElementChild);});
   }
+
+  // ---- feed interactions ----
+  function burstHeart(card){
+    const h=card.querySelector('.heart-burst');if(!h)return;
+    h.classList.remove('go');void h.offsetWidth;h.classList.add('go');
+  }
+
+  const feedScroll=document.getElementById('feed-scroll');
+  feedScroll.addEventListener('click',e=>{
+    const action=e.target.closest('.fc-action');if(!action)return;
+    const type=action.dataset.action,id=action.dataset.id;
+    if(type==='like'){
+      const on=!LIKES.has(id);
+      if(on)LIKES.add(id);else LIKES.delete(id);
+      saveSet('awear_likes',LIKES);
+      const icon=action.querySelector('.fca-icon'),cnt=action.querySelector('span');
+      const post=SEED_POSTS.find(p=>p.id===id)||{likes:0};
+      icon.textContent=on?'❤️':'🤍';icon.classList.toggle('liked',on);
+      if(cnt)cnt.textContent=fmtN((post.likes||0)+(on?1:0));
+      if(on){icon.style.transform='scale(1.35)';setTimeout(()=>icon.style.transform='',200);}
+    }
+    if(type==='save'){
+      const on=!SAVED.has(id);
+      if(on)SAVED.add(id);else SAVED.delete(id);
+      saveSet('awear_saved',SAVED);
+      const icon=action.querySelector('.fca-icon'),cnt=action.querySelector('span');
+      icon.classList.toggle('saved',on);if(cnt)cnt.textContent=on?'נשמר':'שמרי';
+      showToast(on?'נשמר לרשימת המשאלות 🔖':'הוסר מהשמורים');
+    }
+    if(type==='share')showToast('הקישור הועתק ↗️');
+  });
+
+  let lastTap=0,lastCard=null;
+  feedScroll.addEventListener('pointerup',e=>{
+    if(e.target.closest('button'))return;
+    const card=e.target.closest('.feed-card-full');if(!card)return;
+    const now=Date.now();
+    if(now-lastTap<320&&lastCard===card){
+      const id=card.dataset.id;LIKES.add(id);saveSet('awear_likes',LIKES);
+      const btn=card.querySelector('[data-action="like"]');
+      if(btn){const icon=btn.querySelector('.fca-icon');icon.textContent='❤️';icon.classList.add('liked');}
+      burstHeart(card);lastTap=0;
+    } else {lastTap=now;lastCard=card;}
+  });
 
   // ---- toast ----
-  function showToast(msg) {
-    let t = document.getElementById('toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'toast';
-      t.className = 'toast';
-      document.querySelector('.phone').appendChild(t);
-    }
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(() => t.classList.remove('show'), 2400);
+  function showToast(msg){
+    let t=document.getElementById('toast');
+    if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.querySelector('.phone').appendChild(t);}
+    t.textContent=msg;t.classList.add('show');clearTimeout(showToast._t);
+    showToast._t=setTimeout(()=>t.classList.remove('show'),2400);
   }
 
-  // ---- profile ----
-  function renderProfile() {
-    const wardrobe = loadWardrobe();
-    const shelf = loadShelf();
-    const meta = loadMeta() || {};
-    const closetValue = wardrobe.reduce((s, it) => s + (Number(it.price_estimate_ils) || 0), 0);
-    const shelfTotal = shelf.reduce((s, it) => s + (Number(it.price) || 0), 0);
-    const earnings = Math.round(shelfTotal * 0.85);
-
-    profileBody.innerHTML = `
-      <div class="pro-head">
-        <div class="pro-ava"></div>
-        <div><div class="pro-name">הסטייל שלי</div><div class="pro-handle">@me · תל אביב</div></div>
-      </div>
-      <div class="stats">
-        <div class="stat"><div class="num">${wardrobe.length}</div><div class="lbl">פריטים בארון</div></div>
-        <div class="stat"><div class="num">~₪${closetValue.toLocaleString()}</div><div class="lbl">שווי הארון</div></div>
-        <div class="stat"><div class="num">${meta.trend_score != null ? meta.trend_score : '—'}</div><div class="lbl">ציון טרנדיות</div></div>
-      </div>
-      ${shelf.length ? `
-      <div class="earn">
-        <div class="top"><span class="big-num">₪${earnings.toLocaleString()}</span><span class="ttl">פוטנציאל רווח</span></div>
-        <p>${shelf.length} פריטים במכירה · שווי ₪${shelfTotal.toLocaleString()} · נטו אחרי עמלת Awear 15%</p>
-      </div>` : ''}
-      <div class="sec-h">מדף המכירה <span class="cnt">${shelf.length ? shelf.length + ' פריטים' : ''}</span></div>
-      ${shelf.length
-        ? shelf.map(it => `
-          <div class="listing">
-            <div class="ic">${emojiFor(it.category)}</div>
-            <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div></div>
-            <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
-            <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button>
-          </div>`).join('')
-        : `<div class="shelf-empty"><div class="big">💸</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`}`;
-
-    profileBody.querySelectorAll('[data-rm]').forEach(btn =>
-      btn.addEventListener('click', () => removeListing(Number(btn.dataset.rm))));
-  }
-
-  // ---- init ----
   renderCloset();
   renderFeed();
 </script>
