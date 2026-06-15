@@ -4,117 +4,224 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>AWEAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0c0c0f;
-    --card: #17171c;
+    --bg: #0a0a0e;
+    --bg2: #111118;
+    --card: #17171f;
     --accent: #ff3d77;
     --accent2: #7b5cff;
-    --text: #f5f5f7;
-    --muted: #9a9aa5;
-    --line: #26262e;
+    --text: #f6f6f9;
+    --muted: #8e8e9c;
+    --line: #24242e;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
-    font-family: -apple-system, "Segoe UI", "Heebo", system-ui, sans-serif;
-    background: #000; color: var(--text);
+    font-family: "Heebo", -apple-system, system-ui, sans-serif;
+    background: radial-gradient(140% 100% at 50% 0%, #15131f 0%, #000 70%);
+    color: var(--text);
     display: flex; justify-content: center; align-items: center;
     min-height: 100vh;
   }
-  /* phone frame */
   .phone {
     width: 390px; height: 844px; max-width: 100vw; max-height: 100vh;
-    background: var(--bg); position: relative; overflow: hidden;
-    display: flex; flex-direction: column;
-    border-radius: 28px; box-shadow: 0 0 60px rgba(123,92,255,.25);
+    background: linear-gradient(180deg, var(--bg2), var(--bg));
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+    border-radius: 30px; box-shadow: 0 30px 80px rgba(123,92,255,.28), 0 0 0 1px rgba(255,255,255,.04);
   }
   @media (max-width: 430px) { .phone { border-radius: 0; height: 100vh; } }
 
   header {
-    padding: 16px 18px 10px; display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px 12px; display: flex; align-items: center; justify-content: space-between;
+    position: relative; z-index: 5;
   }
-  .logo { font-weight: 800; font-size: 24px; letter-spacing: -.5px;
+  .logo { font-family: "Poppins", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -1px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .logo span { font-size: 13px; color: var(--muted); font-weight: 500; margin-inline-start: 6px; }
-  .ava { width: 34px; height: 34px; border-radius: 50%;
+  .logo .pin { font-size: 12px; color: var(--muted); font-weight: 500; margin-inline-start: 6px;
+    -webkit-text-fill-color: var(--muted); }
+  .ava { width: 36px; height: 36px; border-radius: 50%; position: relative;
     background: linear-gradient(135deg, var(--accent2), var(--accent)); }
+  .ava::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--bg2); }
 
-  main { flex: 1; overflow-y: auto; padding: 4px 14px 90px; }
+  main { flex: 1; overflow-y: auto; padding: 4px 14px 96px; scrollbar-width: none; }
+  main::-webkit-scrollbar { display: none; }
 
-  /* tabs */
   nav {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 72px;
-    background: rgba(12,12,15,.92); backdrop-filter: blur(12px);
+    position: absolute; bottom: 0; left: 0; right: 0; height: 76px;
+    background: rgba(10,10,14,.86); backdrop-filter: blur(16px);
     border-top: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: space-around;
+    display: flex; align-items: center; justify-content: space-around; z-index: 10;
   }
-  nav button { background: none; border: 0; color: var(--muted); font-size: 11px;
-    display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+  nav button { background: none; border: 0; color: var(--muted); font-size: 11px; font-weight: 600;
+    font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
   nav button.active { color: var(--text); }
   nav .ico { font-size: 22px; }
   .fab {
-    width: 54px; height: 54px; border-radius: 50%; border: 0; cursor: pointer;
+    width: 58px; height: 58px; border-radius: 50%; border: 0; cursor: pointer;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff; font-size: 28px; box-shadow: 0 6px 20px rgba(255,61,119,.45);
-    transform: translateY(-10px);
-  }
+    color: #fff; font-size: 30px; font-weight: 300; box-shadow: 0 8px 24px rgba(255,61,119,.5);
+    transform: translateY(-12px); transition: transform .15s; }
+  .fab:active { transform: translateY(-12px) scale(.92); }
 
-  .view { display: none; }
+  .view { display: none; animation: fade .25s ease; }
   .view.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-  /* closet */
-  .hint { text-align: center; color: var(--muted); padding: 60px 20px; }
-  .hint .big { font-size: 48px; margin-bottom: 12px; }
-  .summary { background: linear-gradient(135deg, rgba(123,92,255,.18), rgba(255,61,119,.12));
-    border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; margin: 8px 0 16px; }
-  .summary .row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .badge { background: var(--accent); color: #fff; font-size: 12px; font-weight: 700;
-    padding: 3px 9px; border-radius: 20px; }
-  .summary p { color: var(--muted); font-size: 14px; line-height: 1.5; }
-  .trend { margin-inline-start: auto; font-weight: 800; font-size: 15px;
+  /* ---- closet ---- */
+  .hint { text-align: center; color: var(--muted); padding: 90px 26px; }
+  .hint .big { font-size: 60px; margin-bottom: 16px; filter: drop-shadow(0 8px 20px rgba(123,92,255,.4)); }
+  .hint h2 { color: var(--text); font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+  .hint p { font-size: 14px; line-height: 1.6; }
+  .hint .cta { margin-top: 18px; display: inline-block; font-size: 13px; color: var(--accent); font-weight: 700; }
+
+  .summary { background: linear-gradient(135deg, rgba(123,92,255,.22), rgba(255,61,119,.14));
+    border: 1px solid rgba(255,255,255,.07); border-radius: 18px; padding: 16px; margin: 6px 0 14px; }
+  .summary .row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .badge { background: rgba(255,255,255,.14); color: #fff; font-size: 12px; font-weight: 800;
+    padding: 4px 11px; border-radius: 20px; }
+  .summary .style { font-weight: 800; font-size: 15px; }
+  .summary p { color: rgba(246,246,249,.8); font-size: 13.5px; line-height: 1.55; }
+  .trend { margin-inline-start: auto; font-weight: 900; font-size: 15px; white-space: nowrap;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .reset { font-size: 11px; color: var(--muted); cursor: pointer; text-decoration: underline; }
 
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .item { background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-    padding: 14px; }
-  .item .cat { font-size: 11px; color: var(--accent2); font-weight: 700; text-transform: uppercase; }
-  .item .nm { font-size: 15px; font-weight: 700; margin: 4px 0 8px; }
-  .item .meta { font-size: 12px; color: var(--muted); line-height: 1.6; }
-  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
-  .tag { font-size: 10px; background: #22222a; color: var(--text); padding: 3px 8px; border-radius: 20px; }
-  .resale { display: inline-block; margin-top: 9px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 8px; }
-  .resale.high { background: rgba(52,211,153,.18); color: #34d399; }
-  .resale.medium { background: rgba(251,191,36,.18); color: #fbbf24; }
-  .resale.low { background: rgba(148,163,184,.18); color: #94a3b8; }
+  .item { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 13px;
+    display: flex; flex-direction: column; }
+  .thumb { width: 100%; height: 92px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 40px; margin-bottom: 10px; background: linear-gradient(135deg, #20202b, #191922); }
+  .item .cat { font-size: 10px; color: var(--accent2); font-weight: 800; text-transform: uppercase; letter-spacing: .5px; }
+  .item .nm { font-size: 14.5px; font-weight: 800; margin: 3px 0 7px; line-height: 1.25; }
+  .item .meta { font-size: 11.5px; color: var(--muted); line-height: 1.55; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .tag { font-size: 10px; background: #23232e; color: #cfcfe0; padding: 3px 8px; border-radius: 20px; }
+  .resale { display: inline-block; margin-top: 8px; font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 8px; align-self: flex-start; }
+  .resale.high { background: rgba(52,211,153,.16); color: #34d399; }
+  .resale.medium { background: rgba(251,191,36,.16); color: #fbbf24; }
+  .resale.low { background: rgba(148,163,184,.16); color: #94a3b8; }
+  .price { font-size: 14px; font-weight: 900; margin-top: 10px; }
+  .buy-btn { margin-top: 8px; padding: 9px; border-radius: 11px; font-size: 12.5px; font-weight: 800;
+    color: #fff; border: 0; cursor: pointer; width: 100%; font-family: inherit;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .shop-look { display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin: 2px 0 16px; padding: 14px; border-radius: 15px; font-weight: 900; font-size: 15px;
+    color: #111; background: #fff; border: 0; cursor: pointer; width: 100%; font-family: inherit;
+    box-shadow: 0 6px 20px rgba(255,255,255,.12); }
+  .share-look { color: #fff; background: linear-gradient(135deg, var(--accent2), var(--accent));
+    margin-top: -8px; box-shadow: 0 6px 20px rgba(123,92,255,.3); }
+  .actions { display: flex; gap: 7px; margin-top: 8px; }
+  .actions .buy-btn { margin-top: 0; flex: 1; }
+  .sell-btn { flex: 1; padding: 9px; border-radius: 11px; font-size: 12.5px; font-weight: 800;
+    color: var(--text); border: 1px solid var(--line); cursor: pointer; font-family: inherit; background: #20202b; }
+  .stylist { background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 14px 16px; margin: 0 0 14px; }
+  .stylist-h { font-weight: 800; font-size: 13px; margin-bottom: 5px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stylist p { color: rgba(246,246,249,.82); font-size: 13.5px; line-height: 1.55; }
 
-  .loading { text-align: center; padding: 70px 20px; }
-  .spinner { width: 46px; height: 46px; border: 4px solid var(--line);
-    border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 18px;
-    animation: spin .8s linear infinite; }
+  .loading { text-align: center; padding: 100px 20px; }
+  .spinner { width: 50px; height: 50px; border: 4px solid var(--line); border-top-color: var(--accent);
+    border-radius: 50%; margin: 0 auto 20px; animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading p { color: var(--muted); }
-  .err { background: rgba(255,61,119,.12); border: 1px solid var(--accent);
-    border-radius: 12px; padding: 14px; color: #ffb3c9; font-size: 14px; margin-top: 14px; }
+  .loading p { color: var(--muted); font-size: 14px; }
+  .err { background: rgba(255,61,119,.12); border: 1px solid var(--accent); border-radius: 14px;
+    padding: 16px; color: #ffb3c9; font-size: 14px; margin-top: 14px; }
 
-  /* feed */
-  .feed-card { position: relative; height: 100%; border-radius: 18px; overflow: hidden;
-    margin-bottom: 14px; min-height: 460px;
-    display: flex; align-items: flex-end; }
+  /* ---- feed ---- */
+  .feed-h { font-family: "Poppins", sans-serif; font-weight: 800; padding: 4px 4px 14px; font-size: 15px; }
+  .feed-card { position: relative; border-radius: 20px; overflow: hidden; margin-bottom: 14px;
+    height: 500px; display: flex; align-items: flex-end; }
   .feed-card .bg { position: absolute; inset: 0; }
   .g1 { background: linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac); }
   .g2 { background: linear-gradient(160deg,#a18cd1,#fbc2eb); }
   .g3 { background: linear-gradient(160deg,#84fab0,#8fd3f4); }
+  .g4 { background: linear-gradient(160deg,#fccb90,#d57eeb); }
+  .g5 { background: linear-gradient(160deg,#5ee7df,#b490ca); }
+  .feed-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .feed-card .overlay { position: relative; width: 100%; padding: 18px;
-    background: linear-gradient(0deg, rgba(0,0,0,.65), transparent); }
-  .feed-card .user { display: flex; align-items: center; gap: 8px; font-weight: 700; }
-  .feed-card .dot { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,.4); }
-  .feed-card .cap { font-size: 14px; margin: 8px 0; line-height: 1.4; }
-  .feed-card .acts { display: flex; gap: 16px; font-size: 13px; color: #fff; }
-  .buy { position: absolute; top: 14px; inset-inline-start: 14px; background: #fff; color: #111;
-    font-size: 12px; font-weight: 800; padding: 7px 12px; border-radius: 20px; }
-  .feed-h { font-weight: 700; padding: 6px 4px 12px; color: var(--muted); font-size: 13px; }
+    background: linear-gradient(0deg, rgba(0,0,0,.78), rgba(0,0,0,.1) 70%, transparent); }
+  .feed-card .user { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; }
+  .feed-card .dot { width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), var(--accent)); border: 2px solid rgba(255,255,255,.7); }
+  .feed-card .cap { font-size: 13.5px; margin: 9px 0; line-height: 1.45; }
+  .feed-card .acts { display: flex; gap: 18px; font-size: 13px; font-weight: 700; }
+  .buy-look { position: absolute; top: 14px; inset-inline-start: 14px; background: rgba(255,255,255,.95);
+    color: #111; font-size: 12px; font-weight: 900; padding: 8px 13px; border-radius: 22px; border: 0;
+    cursor: pointer; font-family: inherit; backdrop-filter: blur(6px); }
+  .match-badge { position: absolute; top: 14px; inset-inline-end: 14px; z-index: 2;
+    background: linear-gradient(135deg, rgba(123,92,255,.92), rgba(255,61,119,.92));
+    color: #fff; font-size: 11.5px; font-weight: 900; padding: 7px 12px; border-radius: 22px;
+    backdrop-filter: blur(6px); box-shadow: 0 4px 14px rgba(0,0,0,.3); white-space: nowrap; }
+  .feed-card.mine { border: 1px solid rgba(255,61,119,.45);
+    box-shadow: 0 0 0 1px rgba(255,61,119,.25), 0 8px 30px rgba(255,61,119,.18); }
+  .mine-tag { position: absolute; top: 14px; inset-inline-start: 14px; z-index: 2;
+    background: rgba(255,61,119,.95); color: #fff; font-size: 11px; font-weight: 900;
+    padding: 7px 12px; border-radius: 22px; backdrop-filter: blur(6px); }
+
+  /* ---- purchase modal ---- */
+  .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: none;
+    align-items: center; justify-content: center; padding: 28px; z-index: 60; backdrop-filter: blur(4px); }
+  .modal-overlay.show { display: flex; }
+  .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px;
+    padding: 28px 22px; text-align: center; width: 100%; animation: pop .25s ease; }
+  @keyframes pop { from { transform: scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modal-card .big { font-size: 48px; margin-bottom: 12px; }
+  .modal-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
+  .modal-card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+  .modal-card .close { margin-top: 20px; padding: 11px 26px; border: 0; border-radius: 13px; font-weight: 800;
+    cursor: pointer; color: #fff; font-family: inherit; font-size: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+
+  /* ---- profile ---- */
+  .pro-head { display: flex; align-items: center; gap: 14px; padding: 8px 4px 18px; }
+  .pro-ava { width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0; position: relative;
+    background: linear-gradient(135deg, var(--accent2), var(--accent)); }
+  .pro-ava::after { content: "👧"; position: absolute; inset: 0; display: flex; align-items: center;
+    justify-content: center; font-size: 30px; }
+  .pro-name { font-weight: 900; font-size: 19px; }
+  .pro-handle { color: var(--muted); font-size: 13px; font-weight: 600; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 8px; text-align: center; }
+  .stat .num { font-weight: 900; font-size: 19px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat .lbl { color: var(--muted); font-size: 10.5px; font-weight: 700; margin-top: 4px; line-height: 1.3; }
+  .earn { background: linear-gradient(135deg, rgba(52,211,153,.18), rgba(123,92,255,.12));
+    border: 1px solid rgba(52,211,153,.25); border-radius: 18px; padding: 16px; margin-bottom: 20px; }
+  .earn .top { display: flex; align-items: baseline; gap: 8px; }
+  .earn .big-num { font-weight: 900; font-size: 26px; color: #34d399; }
+  .earn .ttl { font-weight: 800; font-size: 13.5px; }
+  .earn p { color: rgba(246,246,249,.7); font-size: 12.5px; line-height: 1.5; margin-top: 6px; }
+  .sec-h { font-weight: 900; font-size: 15px; margin: 4px 4px 12px; display: flex; align-items: center; gap: 7px; }
+  .sec-h .cnt { color: var(--muted); font-size: 12px; font-weight: 700; }
+  .shelf-empty { text-align: center; color: var(--muted); padding: 40px 26px; font-size: 13.5px; line-height: 1.6; }
+  .shelf-empty .big { font-size: 44px; margin-bottom: 12px; }
+  .listing { display: flex; align-items: center; gap: 12px; background: var(--card);
+    border: 1px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 10px; }
+  .listing .ic { width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0; font-size: 24px;
+    display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #20202b, #191922); }
+  .listing .info { flex: 1; min-width: 0; }
+  .listing .info .nm { font-weight: 800; font-size: 13.5px; line-height: 1.25; }
+  .listing .info .sub { color: var(--muted); font-size: 11px; margin-top: 3px; }
+  .listing .ask { text-align: end; flex-shrink: 0; }
+  .listing .ask .p { font-weight: 900; font-size: 14px; }
+  .listing .ask .live { font-size: 9.5px; font-weight: 800; color: #34d399; }
+  .listing .ask .live::before { content: "● "; }
+  .listing .rm { background: none; border: 0; color: var(--muted); font-size: 18px; cursor: pointer;
+    font-family: inherit; padding: 0 2px; flex-shrink: 0; }
+
+  .toast { position: absolute; left: 50%; bottom: 92px;
+    background: rgba(23,23,31,.96); border: 1px solid var(--line); color: var(--text);
+    font-size: 13px; font-weight: 700; padding: 11px 18px; border-radius: 22px; z-index: 70;
+    box-shadow: 0 8px 24px rgba(0,0,0,.45); opacity: 0; pointer-events: none;
+    transform: translateX(-50%) translateY(12px); transition: opacity .25s, transform .25s; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   input[type=file] { display: none; }
 </style>
@@ -122,28 +229,34 @@
 <body>
 <div class="phone">
   <header>
-    <div class="logo">AWEAR <span>תל אביב</span></div>
+    <div class="logo">AWEAR<span class="pin">· תל אביב</span></div>
     <div class="ava"></div>
   </header>
 
   <main>
-    <!-- CLOSET VIEW -->
+    <!-- CLOSET -->
     <section id="closet" class="view active">
       <div id="closet-body">
         <div class="hint">
           <div class="big">👗</div>
-          <p>צלמי את התלבושת של היום<br/>וה-AI יבנה לך את הארון הדיגיטלי</p>
+          <h2>הארון הדיגיטלי שלך</h2>
+          <p>צלמי את התלבושת של היום<br/>וה-AI יזהה כל פריט, יתמחר אותו<br/>ויהפוך אותו לניתן לקנייה ומכירה.</p>
+          <div class="cta">לחצי על ➕ למטה כדי להתחיל</div>
         </div>
       </div>
     </section>
 
-    <!-- FEED VIEW -->
+    <!-- FEED -->
     <section id="feed" class="view">
       <div class="feed-h">בשבילך · For You</div>
 
-      <div class="feed-card">
+      <!-- user-shared looks render here (newest-first), above the seed cards -->
+      <div id="feed-mine"></div>
+
+      <div class="feed-card seed" data-tags="y2k,casual,minimal,top,dress">
         <div class="bg g1"></div>
-        <div class="buy">🛍️ קני את הלוק · ₪149</div>
+        <img class="feed-img" src="/static/feed/1.jpg" alt="" onerror="this.remove()">
+        <button class="buy-look" data-buy="1" data-label="הלוק של נועה" data-price="149">🛍️ קני את הלוק · ₪149</button>
         <div class="overlay">
           <div class="user"><div class="dot"></div>@noa.styles</div>
           <div class="cap">לוק קיצי לבית קפה ☕️ #y2k #telaviv</div>
@@ -151,106 +264,469 @@
         </div>
       </div>
 
-      <div class="feed-card">
+      <div class="feed-card seed" data-tags="streetwear,utility,bottoms,sneakers,shoes">
         <div class="bg g2"></div>
-        <div class="buy">🛍️ קני את הלוק · ₪219</div>
+        <img class="feed-img" src="/static/feed/2.jpg" alt="" onerror="this.remove()">
+        <button class="buy-look" data-buy="1" data-label="הלוק של יעל" data-price="219">🛍️ קני את הלוק · ₪219</button>
         <div class="overlay">
           <div class="user"><div class="dot"></div>@yael_fits</div>
-          <div class="cap">93% התאמה לארון שלך ✨ #streetwear</div>
+          <div class="cap">סטריטוור עכשווי ✨ #streetwear</div>
           <div class="acts"><span>❤️ 5.1K</span><span>💬 203</span><span>↗️ שיתוף</span></div>
         </div>
       </div>
 
-      <div class="feed-card">
+      <div class="feed-card seed" data-tags="secondhand,vintage,everyday,top,bag">
         <div class="bg g3"></div>
-        <div class="buy">🛍️ קני את הלוק · ₪89</div>
+        <img class="feed-img" src="/static/feed/3.jpg" alt="" onerror="this.remove()">
+        <button class="buy-look" data-buy="1" data-label="לוק יד שנייה" data-price="89">♻️ קני יד שנייה · ₪89</button>
         <div class="overlay">
           <div class="user"><div class="dot"></div>@mika.thrift</div>
           <div class="cap">יד שנייה במצב מעולה ♻️ #secondhand</div>
           <div class="acts"><span>❤️ 1.8K</span><span>💬 64</span><span>↗️ שיתוף</span></div>
         </div>
       </div>
+
+      <div class="feed-card seed" data-tags="minimal,everyday,ootd,dress,shoes">
+        <div class="bg g4"></div>
+        <img class="feed-img" src="/static/feed/4.jpg" alt="" onerror="this.remove()">
+        <button class="buy-look" data-buy="1" data-label="הלוק של שיר" data-price="179">🛍️ קני את הלוק · ₪179</button>
+        <div class="overlay">
+          <div class="user"><div class="dot"></div>@shir.daily</div>
+          <div class="cap">אאוטפיט ליום ראשון 🤍 #ootd</div>
+          <div class="acts"><span>❤️ 3.3K</span><span>💬 121</span><span>↗️ שיתוף</span></div>
+        </div>
+      </div>
+
+      <div class="feed-card seed" data-tags="vintage,retro,thrifted,accessory,outerwear">
+        <div class="bg g5"></div>
+        <img class="feed-img" src="/static/feed/5.jpg" alt="" onerror="this.remove()">
+        <button class="buy-look" data-buy="1" data-label="הלוק של אגם" data-price="259">🛍️ קני את הלוק · ₪259</button>
+        <div class="overlay">
+          <div class="user"><div class="dot"></div>@agam.x</div>
+          <div class="cap">vintage vibes 🕶️ #thrifted #vintage</div>
+          <div class="acts"><span>❤️ 4.0K</span><span>💬 156</span><span>↗️ שיתוף</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profile" class="view">
+      <div id="profile-body"></div>
     </section>
   </main>
 
   <nav>
     <button data-view="closet" class="active"><span class="ico">👚</span>הארון שלי</button>
-    <button class="fab" id="capture-btn">+</button>
     <button data-view="feed"><span class="ico">▶️</span>פיד</button>
+    <button class="fab" id="capture-btn">＋</button>
+    <button data-view="profile"><span class="ico">👤</span>פרופיל</button>
   </nav>
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
+
+  <div id="purchase-modal" class="modal-overlay">
+    <div class="modal-card" id="modal-card"></div>
+  </div>
 </div>
 
 <script>
   const fileInput = document.getElementById('file-input');
   const closetBody = document.getElementById('closet-body');
+  const profileBody = document.getElementById('profile-body');
+  const modal = document.getElementById('purchase-modal');
+  const modalCard = document.getElementById('modal-card');
 
-  // tab switching
+  const EMOJI = { top:'👕', bottoms:'👖', dress:'👗', outerwear:'🧥', shoes:'👟',
+                  bag:'👜', accessory:'🕶️', jewelry:'💍', hat:'🧢' };
+  function emojiFor(cat) { return EMOJI[(cat||'').toLowerCase()] || '🧷'; }
+  function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+  function attr(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+  // ---- tabs ----
   document.querySelectorAll('nav button[data-view]').forEach(b => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('nav button[data-view]').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById(b.dataset.view).classList.add('active');
-    });
+    b.addEventListener('click', () => showView(b.dataset.view));
   });
+  function showView(name) {
+    document.querySelectorAll('nav button[data-view]').forEach(x => x.classList.toggle('active', x.dataset.view === name));
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === name));
+    if (name === 'profile') renderProfile();
+    if (name === 'feed') renderFeed();
+  }
 
   document.getElementById('capture-btn').addEventListener('click', () => {
-    // make sure the closet tab is visible when shooting
-    document.querySelectorAll('nav button[data-view]').forEach(x => x.classList.remove('active'));
-    document.querySelector('nav button[data-view="closet"]').classList.add('active');
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('closet').classList.add('active');
+    showView('closet');
     fileInput.click();
   });
+
+  // ---- simulated in-app purchase (dropshipping shown as if it already works) ----
+  function buyFlow(label, price) {
+    modal.classList.add('show');
+    modalCard.innerHTML = '<div class="spinner"></div><h3>רוכשת את ' + esc(label) + '…</h3><p>Awear מבצעת את ההזמנה מהמותג עבורך</p>';
+    setTimeout(() => {
+      modalCard.innerHTML =
+        '<div class="big">✅</div><h3>ההזמנה אושרה!</h3>' +
+        '<p>' + esc(label) + ' בדרך אליך · שולם ₪' + esc(price) + '<br/>משלוח עד הבית תוך 3-5 ימים 📦</p>' +
+        '<button class="close">מעולה</button>';
+      modalCard.querySelector('.close').addEventListener('click', () => modal.classList.remove('show'));
+    }, 1300);
+  }
+  function sellFlow(label, price, cat) {
+    modal.classList.add('show');
+    modalCard.innerHTML = '<div class="spinner"></div><h3>מפרסמת את ' + esc(label) + ' למכירה…</h3><p>ה-AI מתמחר לפי ביקוש בשוק היד-שנייה</p>';
+    setTimeout(() => {
+      addListing({ name: label, price: Number(price) || 0, category: cat || '' });
+      modalCard.innerHTML =
+        '<div class="big">💸</div><h3>פורסם למכירה!</h3>' +
+        '<p>' + esc(label) + ' עכשיו במדף המכירה בפרופיל שלך<br/>מחיר מומלץ: ₪' + esc(price) + ' · עמלת Awear 15%</p>' +
+        '<button class="close">לפרופיל</button>';
+      modalCard.querySelector('.close').addEventListener('click', () => { modal.classList.remove('show'); showView('profile'); });
+    }, 1300);
+  }
+  // delegate buy + sell clicks across closet + feed
+  document.querySelector('main').addEventListener('click', (e) => {
+    const buyBtn = e.target.closest('[data-buy]');
+    if (buyBtn) { buyFlow(buyBtn.dataset.label, buyBtn.dataset.price); return; }
+    const sellBtn = e.target.closest('[data-sell]');
+    if (sellBtn) sellFlow(sellBtn.dataset.label, sellBtn.dataset.price, sellBtn.dataset.cat);
+  });
+
+  // ---- analyze flow ----
+  // read an image File into a dataURL so the latest look's photo can be reused in the feed
+  function readDataURL(file) {
+    return new Promise((resolve) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => resolve(null);
+      r.readAsDataURL(file);
+    });
+  }
 
   fileInput.addEventListener('change', async () => {
     const file = fileInput.files[0];
     if (!file) return;
+    closetBody.innerHTML = '<div class="loading"><div class="spinner"></div><p>ה-AI מזהה את הפריטים שלך…</p></div>';
 
-    closetBody.innerHTML =
-      '<div class="loading"><div class="spinner"></div><p>ה-AI מזהה את הפריטים שלך…</p></div>';
+    // capture the photo as a dataURL in parallel with the upload
+    const photoPromise = readDataURL(file);
 
     const fd = new FormData();
     fd.append('photo', file);
 
+    // ~30s AbortController timeout so the spinner never hangs on a stuck request
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30000);
     try {
-      const res = await fetch('/api/analyze', { method: 'POST', body: fd });
+      const res = await fetch('/api/analyze', { method: 'POST', body: fd, signal: controller.signal });
       if (!res.ok) {
         const e = await res.json().catch(() => ({}));
         throw new Error(e.detail || ('שגיאה ' + res.status));
       }
-      render(await res.json());
+      const data = await res.json();
+      data.photo = await photoPromise;  // attach captured look image for the feed
+      addScan(data);
     } catch (err) {
-      closetBody.innerHTML = '<div class="err">⚠️ ' + err.message + '</div>';
+      const msg = err.name === 'AbortError' ? 'הבקשה ארכה יותר מדי — נסי שוב' : err.message;
+      closetBody.innerHTML = '<div class="err">⚠️ ' + esc(msg) + '</div>';
+    } finally {
+      clearTimeout(timer);
     }
     fileInput.value = '';
   });
 
-  function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+  // ---- persistence (localStorage) ----
+  const WARDROBE_KEY = 'awear_wardrobe';
+  const META_KEY = 'awear_meta';
+  const SHELF_KEY = 'awear_shelf';
+  const FEED_KEY = 'awear_feed';
+  const LASTSCAN_KEY = 'awear_lastscan';
 
-  function render(data) {
-    const items = (data.items || []).map(it => `
+  function loadFeed() {
+    try { return JSON.parse(localStorage.getItem(FEED_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function saveFeed(posts) { localStorage.setItem(FEED_KEY, JSON.stringify(posts)); }
+  function loadLastScan() {
+    try { return JSON.parse(localStorage.getItem(LASTSCAN_KEY)) || null; }
+    catch (e) { return null; }
+  }
+  function saveLastScan(scan) {
+    try { localStorage.setItem(LASTSCAN_KEY, JSON.stringify(scan)); }
+    catch (e) { /* dataURL may exceed quota — degrade to gradient fallback */ }
+  }
+
+  function loadShelf() {
+    try { return JSON.parse(localStorage.getItem(SHELF_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function saveShelf(items) { localStorage.setItem(SHELF_KEY, JSON.stringify(items)); }
+  function addListing(it) {
+    const shelf = loadShelf();
+    shelf.unshift({ name: it.name, price: it.price, category: it.category, ts: Date.now() });
+    saveShelf(shelf);
+  }
+  function removeListing(ts) {
+    saveShelf(loadShelf().filter(x => x.ts !== ts));
+    renderProfile();
+  }
+
+  function loadWardrobe() {
+    try { return JSON.parse(localStorage.getItem(WARDROBE_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function saveWardrobe(items) { localStorage.setItem(WARDROBE_KEY, JSON.stringify(items)); }
+  function loadMeta() {
+    try { return JSON.parse(localStorage.getItem(META_KEY)) || null; }
+    catch (e) { return null; }
+  }
+  function saveMeta(meta) { localStorage.setItem(META_KEY, JSON.stringify(meta)); }
+  function resetWardrobe() {
+    localStorage.removeItem(WARDROBE_KEY);
+    localStorage.removeItem(META_KEY);
+    localStorage.removeItem(SHELF_KEY);
+    localStorage.removeItem(FEED_KEY);
+    localStorage.removeItem(LASTSCAN_KEY);
+    renderCloset();
+    renderMyFeed();
+  }
+
+  // ---- card builder ----
+  function itemCard(it) {
+    return `
       <div class="item">
+        <div class="thumb">${emojiFor(it.category)}</div>
         <div class="cat">${esc(it.category)}</div>
         <div class="nm">${esc(it.name)}</div>
         <div class="meta">${esc(it.color)} · ${esc(it.material_guess)}<br/>${esc(it.brand_vibe)}</div>
         <div class="tags">${(it.style_tags||[]).map(t => '<span class="tag">#'+esc(t)+'</span>').join('')}</div>
         <span class="resale ${esc(it.resale_potential)}">פוטנציאל מכירה: ${esc(it.resale_potential)}</span>
-      </div>`).join('');
+        <div class="price">~₪${esc(it.price_estimate_ils)}</div>
+        <div class="actions">
+          <button class="buy-btn" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_ils)}">🛍️ קני</button>
+          <button class="sell-btn" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_ils||0)*0.5)}">💸 מכרי</button>
+        </div>
+      </div>`;
+  }
+
+  // ---- render the full accumulated closet from storage ----
+  function renderCloset() {
+    const wardrobe = loadWardrobe();
+    if (!wardrobe.length) {
+      closetBody.innerHTML = `
+        <div class="hint">
+          <div class="big">👗</div>
+          <h2>הארון הדיגיטלי שלך</h2>
+          <p>צלמי את התלבושת של היום<br/>וה-AI יזהה כל פריט, יתמחר אותו<br/>ויהפוך אותו לניתן לקנייה ומכירה.</p>
+          <div class="cta">לחצי על ➕ למטה כדי להתחיל</div>
+        </div>`;
+      return;
+    }
+
+    const meta = loadMeta() || {};
+    const items = wardrobe.map(itemCard).join('');
 
     closetBody.innerHTML = `
       <div class="summary">
         <div class="row">
-          <span class="badge">${(data.items||[]).length} פריטים</span>
-          <span class="trend">🔥 ${esc(data.trend_score)} טרנדיות</span>
+          <span class="badge">${wardrobe.length} פריטים בארון</span>
+          ${meta.trend_score != null ? `<span class="trend">🔥 ${esc(meta.trend_score)} טרנדיות</span>` : ''}
+          <span class="reset" id="reset-link">איפוס</span>
         </div>
-        <div class="row" style="font-weight:700">${esc(data.overall_style)} · ${esc(data.occasion)}</div>
-        <p>${esc(data.summary)}</p>
+        ${(meta.overall_style || meta.occasion) ? `<div class="row"><span class="style">${esc(meta.overall_style)} · ${esc(meta.occasion)}</span></div>` : ''}
+        ${meta.summary ? `<p>${esc(meta.summary)}</p>` : ''}
       </div>
+      ${meta.stylist_tip ? `<div class="stylist"><div class="stylist-h">✨ סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>` : ''}
+      ${meta.look_total_ils != null ? `<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_ils)}">🛍️ קני את הלוק האחרון · ~₪${esc(meta.look_total_ils)}</button>` : ''}
+      <button class="shop-look share-look" id="share-look">📲 שתפי את הלוק לפיד</button>
       <div class="grid">${items}</div>`;
+
+    const resetLink = document.getElementById('reset-link');
+    if (resetLink) resetLink.addEventListener('click', resetWardrobe);
+    const shareBtn = document.getElementById('share-look');
+    if (shareBtn) shareBtn.addEventListener('click', shareLookToFeed);
   }
+
+  // ---- append a new scan to the wardrobe, persist, re-render ----
+  function addScan(data) {
+    const newItems = data.items || [];
+    const wardrobe = newItems.concat(loadWardrobe());  // newest-first
+    saveWardrobe(wardrobe);
+    const meta = {
+      overall_style: data.overall_style,
+      occasion: data.occasion,
+      trend_score: data.trend_score,
+      summary: data.summary,
+      stylist_tip: data.stylist_tip,
+      look_total_ils: data.look_total_ils,
+    };
+    saveMeta(meta);
+    // remember the latest look (photo + items + meta) so it can be shared to the feed
+    saveLastScan({ photo: data.photo || null, items: newItems, meta: meta });
+    renderCloset();
+    if (newItems.length) showToast('נוספו ' + newItems.length + ' פריטים לארון ✨');
+  }
+
+  // ---- closet → feed value loop ----
+  // build the union of style tags + categories across the user's wardrobe
+  function wardrobeTagSet() {
+    const set = new Set();
+    loadWardrobe().forEach(it => {
+      (it.style_tags || []).forEach(t => set.add(String(t).toLowerCase()));
+      if (it.category) set.add(String(it.category).toLowerCase());
+    });
+    return set;
+  }
+
+  // REAL "% match to your closet": overlap between a card's tags and the wardrobe,
+  // mapped into a sensible 60–98% range. Empty wardrobe → a neutral default.
+  function matchPercent(cardTags) {
+    const userSet = wardrobeTagSet();
+    if (!userSet.size) return 72;  // sensible default before any scan
+    const tags = (cardTags || []).map(t => String(t).toLowerCase()).filter(Boolean);
+    if (!tags.length) return 72;
+    let hits = 0;
+    tags.forEach(t => { if (userSet.has(t)) hits++; });
+    const ratio = hits / tags.length;             // 0..1 overlap
+    return Math.round(60 + ratio * 38);           // → 60..98%
+  }
+
+  // share the latest scanned look as a persisted feed post, then jump to the feed
+  function shareLookToFeed() {
+    const scan = loadLastScan();
+    if (!scan) { showToast('צלמי לוק קודם כדי לשתף 📸'); return; }
+    const meta = scan.meta || {};
+    const post = {
+      ts: Date.now(),
+      photo: scan.photo || null,
+      caption: meta.overall_style || 'הלוק שלי',
+      occasion: meta.occasion || '',
+      item_count: (scan.items || []).length,
+      look_total_ils: meta.look_total_ils || 0,
+      tags: (scan.items || []).reduce((acc, it) => {
+        (it.style_tags || []).forEach(t => acc.push(t));
+        if (it.category) acc.push(it.category);
+        return acc;
+      }, []),
+    };
+    const feed = loadFeed();
+    feed.unshift(post);  // newest-first
+    saveFeed(feed);
+    renderMyFeed();
+    showToast('הלוק שותף לפיד ✨');
+    showView('feed');
+  }
+
+  // render the user's shared looks at the top of the feed
+  function renderMyFeed() {
+    const host = document.getElementById('feed-mine');
+    if (!host) return;
+    const feed = loadFeed();
+    host.innerHTML = feed.map(p => {
+      const bg = p.photo
+        ? `<img class="feed-img" src="${attr(p.photo)}" alt="">`
+        : `<div class="bg g2"></div>`;
+      const price = p.look_total_ils ? `~₪${esc(p.look_total_ils)}` : '';
+      return `
+        <div class="feed-card mine">
+          ${bg}
+          <span class="mine-tag">✨ אני · @you</span>
+          ${p.look_total_ils ? `<button class="buy-look" data-buy="1" data-label="הלוק שלי" data-price="${attr(p.look_total_ils)}">🛍️ קני את הלוק · ${price}</button>` : ''}
+          <div class="overlay">
+            <div class="user"><div class="dot"></div>@you · אני</div>
+            <div class="cap">${esc(p.caption)}${p.occasion ? ' · ' + esc(p.occasion) : ''} · ${esc(p.item_count)} פריטים</div>
+            <div class="acts"><span>❤️ אהבתי</span><span>💬 תגובה</span><span>↗️ שיתוף</span></div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // compute + inject the real match badge onto each seed feed card
+  function renderSeedMatches() {
+    document.querySelectorAll('#feed .feed-card.seed').forEach(card => {
+      const tags = (card.dataset.tags || '').split(',').map(s => s.trim()).filter(Boolean);
+      const pct = matchPercent(tags);
+      let badge = card.querySelector('.match-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'match-badge';
+        card.appendChild(badge);
+      }
+      badge.textContent = pct + '% התאמה לארון';
+    });
+  }
+
+  function renderFeed() {
+    renderMyFeed();
+    renderSeedMatches();
+  }
+
+  // ---- toast ----
+  function showToast(msg) {
+    let t = document.getElementById('toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'toast';
+      t.className = 'toast';
+      document.querySelector('.phone').appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  // ---- profile: closet stats + sell shelf (Layers 1+3 on one screen) ----
+  function renderProfile() {
+    const wardrobe = loadWardrobe();
+    const shelf = loadShelf();
+    const meta = loadMeta() || {};
+
+    const closetValue = wardrobe.reduce((s, it) => s + (Number(it.price_estimate_ils) || 0), 0);
+    const shelfTotal = shelf.reduce((s, it) => s + (Number(it.price) || 0), 0);
+    const earnings = Math.round(shelfTotal * 0.85);  // Awear takes 15%
+
+    const statsRow = `
+      <div class="stats">
+        <div class="stat"><div class="num">${wardrobe.length}</div><div class="lbl">פריטים בארון</div></div>
+        <div class="stat"><div class="num">~₪${closetValue.toLocaleString()}</div><div class="lbl">שווי הארון</div></div>
+        <div class="stat"><div class="num">${meta.trend_score != null ? meta.trend_score : '—'}</div><div class="lbl">ציון טרנדיות</div></div>
+      </div>`;
+
+    const earnCard = shelf.length ? `
+      <div class="earn">
+        <div class="top"><span class="big-num">₪${earnings.toLocaleString()}</span><span class="ttl">פוטנציאל רווח</span></div>
+        <p>${shelf.length} פריטים במכירה · שווי ₪${shelfTotal.toLocaleString()} · נטו אחרי עמלת Awear 15%</p>
+      </div>` : '';
+
+    const listings = shelf.length
+      ? shelf.map(it => `
+        <div class="listing">
+          <div class="ic">${emojiFor(it.category)}</div>
+          <div class="info">
+            <div class="nm">${esc(it.name)}</div>
+            <div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div>
+          </div>
+          <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
+          <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button>
+        </div>`).join('')
+      : `<div class="shelf-empty"><div class="big">💸</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט<br/>כדי להרוויח מהבגדים שכבר לא בלבישה.</div>`;
+
+    profileBody.innerHTML = `
+      <div class="pro-head">
+        <div class="pro-ava"></div>
+        <div><div class="pro-name">הסטייל שלי</div><div class="pro-handle">@me · תל אביב</div></div>
+      </div>
+      ${statsRow}
+      ${earnCard}
+      <div class="sec-h">מדף המכירה <span class="cnt">${shelf.length ? shelf.length + ' פריטים' : ''}</span></div>
+      ${listings}`;
+
+    profileBody.querySelectorAll('[data-rm]').forEach(btn =>
+      btn.addEventListener('click', () => removeListing(Number(btn.dataset.rm))));
+  }
+
+  // ---- render persisted wardrobe + feed on load ----
+  renderCloset();
+  renderFeed();
 </script>
 </body>
 </html>

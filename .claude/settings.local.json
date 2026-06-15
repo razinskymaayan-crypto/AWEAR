@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(venv312/bin/uvicorn:*)",
+      "Bash(venv312/bin/python:*)",
+      "Bash(venv312/bin/pip:*)",
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir:*)",
+      "Bash(echo:*)",
+      "Bash(sed:*)"
+    ]
+  },
+  "skipDangerousModePermissionPrompt": true
+}
