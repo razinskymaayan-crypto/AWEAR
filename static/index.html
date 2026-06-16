@@ -252,6 +252,11 @@
     background: linear-gradient(135deg, rgba(123,92,255,.85), rgba(255,61,119,.85));
     color: #fff; font-size: 11.5px; font-weight: 900; padding: 5px 12px; border-radius: 20px; }
   .fc-earn { font-size: 11px; color: #34d399; font-weight: 700; margin-top: 6px; }
+  .fc-own-badge { position: absolute; bottom: 84px; left: 14px; z-index: 6;
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(0,0,0,.52); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.18); border-radius: 20px;
+    padding: 5px 11px; font-size: 11px; font-weight: 800; color: rgba(255,255,255,.88); }
   .feed-empty { height: 100%; display: flex; flex-direction: column; align-items: center;
     justify-content: center; color: var(--muted); text-align: center; padding: 40px; }
   .feed-empty .big { font-size: 50px; margin-bottom: 14px; }
@@ -741,6 +746,38 @@
   .sr-insight-text { font-size: 13px; font-weight: 700; line-height: 1.5; }
   .sr-action-row { display: flex; gap: 10px; padding: 0 18px; }
 
+  /* ---- Admin Dashboard ---- */
+  .adm-wrap { display:flex;flex-direction:column;padding-bottom:90px;overflow-y:auto;height:100%; }
+  .adm-header { padding:18px 18px 6px;display:flex;align-items:center;justify-content:space-between; }
+  .adm-title { font-size:20px;font-weight:900;letter-spacing:-.4px; }
+  .adm-badge { font-size:10px;font-weight:900;padding:4px 10px;border-radius:20px;background:rgba(255,61,119,.15);color:var(--accent);border:1px solid rgba(255,61,119,.3); }
+  .adm-kpi-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 18px 14px; }
+  .adm-kpi { background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 14px;display:flex;flex-direction:column;gap:4px; }
+  .adm-kpi-icon { font-size:20px;margin-bottom:2px; }
+  .adm-kpi-num { font-size:22px;font-weight:900;letter-spacing:-.5px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent; }
+  .adm-kpi-label { font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.4px;text-transform:uppercase; }
+  .adm-kpi-sub { font-size:11px;color:rgba(246,246,249,.5);font-weight:600; }
+  .adm-section { padding:4px 18px 14px; }
+  .adm-sec-title { font-size:13px;font-weight:900;margin-bottom:10px; }
+  .adm-grade-card { margin:0 18px 14px;border-radius:20px;padding:18px 20px;background:linear-gradient(135deg,#0d1f10,#122018);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;gap:16px; }
+  .adm-grade-letter { font-size:52px;font-weight:900;line-height:1;color:#4ade80; }
+  .adm-grade-info { flex:1; }
+  .adm-grade-label { font-size:13px;font-weight:900;color:#4ade80; }
+  .adm-grade-sub { font-size:11px;color:rgba(246,246,249,.55);font-weight:600;margin-top:4px;line-height:1.5; }
+  .adm-bar-row { display:flex;align-items:center;gap:10px;margin-bottom:9px; }
+  .adm-bar-lbl { font-size:11.5px;font-weight:700;width:70px;flex-shrink:0;text-align:right; }
+  .adm-bar-track { flex:1;height:8px;background:var(--line);border-radius:4px;overflow:hidden; }
+  .adm-bar-fill { height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+  .adm-bar-val { font-size:11px;color:var(--muted);font-weight:700;width:30px;text-align:left; }
+  .adm-event-row { display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line); }
+  .adm-ev-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+  .adm-ev-text { font-size:12.5px;font-weight:700;flex:1; }
+  .adm-ev-time { font-size:10px;color:var(--muted);font-weight:600;flex-shrink:0; }
+  .adm-export-row { padding:10px 18px 16px;display:flex;gap:8px; }
+  .adm-export-btn { flex:1;padding:12px 0;border:0;border-radius:14px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:all .18s; }
+  .adm-export-btn.primary { background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff; }
+  .adm-export-btn.secondary { background:var(--card);border:1.5px solid var(--line);color:var(--text); }
+
   /* ---- Shopping Feed ---- */
   .sf-wrap { display:flex; flex-direction:column; height:100%; overflow:hidden; }
   .sf-header { padding:18px 18px 0; flex-shrink:0; }
@@ -1064,6 +1101,11 @@
       <div class="sr-wrap" id="sr-wrap"></div>
     </section>
 
+    <!-- ADMIN DASHBOARD -->
+    <section id="admin" class="view">
+      <div class="adm-wrap" id="adm-wrap"></div>
+    </section>
+
     <!-- SHOPPING FEED -->
     <section id="shopping" class="view">
       <div class="sf-wrap">
@@ -1350,6 +1392,7 @@
     if (name === 'seasonal')      renderSeasonalReport();
     if (name === 'compare')       initCompare();
     if (name === 'shopping')      initShoppingFeed();
+    if (name === 'admin')         renderAdminDashboard();
     if (name === 'wishlist')  renderWishlist();
     if (name === 'chat')      initChat();
   }
@@ -1932,6 +1975,10 @@
     const mineBadge=isMine?`<span class="mine-tag" style="display:inline-flex;align-items:center;gap:4px">${icon('sparkle',13)} אני</span>`:`<span></span>`;
     const earnLine=(!isMine&&post.earn)?`<div class="fc-earn" style="display:flex;align-items:center;gap:5px">${icon('diamond',13)} @${esc(post.user)} תרוויח ₪${esc(post.earn)} על כל קנייה</div>`:'';
     const lbl=post.name?'לוק של '+post.name:(post.caption||'הלוק');
+    // % of this look already in wardrobe
+    const _ownWardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
+    const _ownScore=_ownWardrobe.length?calcCompatScore({style_tags:tags},_ownWardrobe):{pct:0,matches:[]};
+    const ownBadge=_ownWardrobe.length?`<div class="fc-own-badge">${icon('hanger',12)} ${esc(_ownScore.pct)}% כבר בארון שלך</div>`:'';
 
     // Item pills — right side, vertical stack
     const pillItems=(post.items||[]).slice(0,4);
@@ -1978,6 +2025,7 @@
           <span>₪${esc(post.price||post.look_total_ils||0)}</span>
         </button>
       </div>
+      ${ownBadge}
     </div>`;
   }
 
@@ -3660,6 +3708,86 @@
 
   renderCloset();
   renderFeed();
+
+  // ===== ADMIN DASHBOARD =====
+  const ADMIN_LOG_KEY = 'awear_admin_log';
+
+  function logAdminEvent(type, label) {
+    try {
+      const log = JSON.parse(localStorage.getItem(ADMIN_LOG_KEY) || '[]');
+      log.unshift({type, label, ts: Date.now()});
+      if (log.length > 200) log.length = 200;
+      localStorage.setItem(ADMIN_LOG_KEY, JSON.stringify(log));
+    } catch(e) {}
+  }
+
+  function renderAdminDashboard() {
+    const el = document.getElementById('adm-wrap');
+    if (!el) return;
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const shelf    = JSON.parse(localStorage.getItem('awear_shelf') || '[]');
+    const mp       = JSON.parse(localStorage.getItem('awear_marketplace') || '[]');
+    const log      = JSON.parse(localStorage.getItem(ADMIN_LOG_KEY) || '[]');
+    const rwData   = JSON.parse(localStorage.getItem(RW_KEY) || '{"points":0,"actions":{}}');
+    const today    = new Date().toDateString();
+    const todayEvts= log.filter(e => new Date(e.ts).toDateString() === today);
+    const d7Evts   = log.filter(e => Date.now() - e.ts < 7*24*60*60*1000);
+    const wardValue= wardrobe.reduce((s,i)=>s+(i.price_estimate_ils||0),0);
+    const totalW   = wardrobe.reduce((s,i)=>s+(i.wear_count||0),0);
+    const scanEvts = log.filter(e=>e.type==='scan').length;
+    const ogEvts   = log.filter(e=>e.type==='outfit_gen').length || ((rwData.actions&&rwData.actions.wore)||0);
+    const buyEvts  = log.filter(e=>e.type==='buy_intent').length;
+    const unworn   = wardrobe.filter(i=>(i.wear_count||0)===0).length;
+    const reuseR   = wardrobe.length>0?Math.round(((wardrobe.length-unworn)/wardrobe.length)*100):0;
+    const avgCPW   = totalW>0?wardValue/totalW:0;
+    const cpwScore = avgCPW>0?Math.min(30,30*(50/avgCPW)):0;
+    const susScore = Math.round((reuseR/100)*40+cpwScore+Math.min(30,mp.length*6));
+    const susGrade = susScore>=80?'A':susScore>=60?'B':susScore>=40?'C':'D';
+    const susColor = susScore>=80?'#4ade80':susScore>=60?'#86efac':susScore>=40?'#fbbf24':'#f87171';
+    const catMap   = {};
+    wardrobe.forEach(i=>{const c=catLabel(i.category||'other');catMap[c]=(catMap[c]||0)+1;});
+    const topCats  = Object.entries(catMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const maxCat   = topCats[0]?.[1]||1;
+    const kpis = [
+      {icon:'👤',num:todayEvts.length>0?'1':'0',label:'DAU',sub:`D7: ${d7Evts.length} פעולות`},
+      {icon:'💰',num:wardValue>999?'₪'+(wardValue/1000).toFixed(1)+'K':'₪'+wardValue,label:'Wardrobe Value',sub:`${wardrobe.length} פריטים`},
+      {icon:'📸',num:wardrobe.length,label:'Items Scanned',sub:`${scanEvts} סקאנים`},
+      {icon:'✨',num:ogEvts,label:'Outfit Gens',sub:'AI מגנרטור'},
+      {icon:'📉',num:totalW>0?'₪'+Math.round(wardValue/totalW):'—',label:'CPW Avg',sub:`${totalW} לבישות`},
+      {icon:'🛒',num:shelf.length+mp.length,label:'For Sale',sub:`${buyEvts} buy intents`},
+    ];
+    const recentLog = log.slice(0,10);
+    el.innerHTML = `
+      <div class="adm-header"><div class="adm-title">📊 Admin Dashboard</div><div class="adm-badge">INTERNAL</div></div>
+      <div class="adm-kpi-grid">${kpis.map(k=>`<div class="adm-kpi"><div class="adm-kpi-icon">${k.icon}</div><div class="adm-kpi-num">${esc(String(k.num))}</div><div class="adm-kpi-label">${esc(k.label)}</div><div class="adm-kpi-sub">${esc(k.sub)}</div></div>`).join('')}</div>
+      <div class="adm-section"><div class="adm-sec-title">🌿 Sustainability</div></div>
+      <div class="adm-grade-card"><div class="adm-grade-letter" style="color:${susColor}">${susGrade}</div><div class="adm-grade-info"><div class="adm-grade-label">${susScore}/100</div><div class="adm-grade-sub">Reuse: ${reuseR}% · Sold: ${mp.length} · CPW: ₪${Math.round(avgCPW)||'—'}</div></div></div>
+      <div class="adm-section"><div class="adm-sec-title">👗 Categories</div>${topCats.length?topCats.map(([cat,cnt])=>`<div class="adm-bar-row"><div class="adm-bar-lbl">${esc(cat)}</div><div class="adm-bar-track"><div class="adm-bar-fill" style="width:${Math.round((cnt/maxCat)*100)}%"></div></div><div class="adm-bar-val">${cnt}</div></div>`).join(''):'<div style="color:var(--muted);font-size:13px">ארון ריק</div>'}</div>
+      <div class="adm-section"><div class="adm-sec-title">⚡ Event Log</div>${recentLog.length?recentLog.map(e=>{const t=new Date(e.ts).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});return`<div class="adm-event-row"><div class="adm-ev-dot"></div><div class="adm-ev-text">${esc(e.label)}</div><div class="adm-ev-time">${t}</div></div>`;}).join(''):'<div style="color:var(--muted);font-size:13px;padding:12px 0">אין אירועים עדיין</div>'}</div>
+      <div class="adm-export-row"><button class="adm-export-btn primary" onclick="adminExportCSV()">📥 Export CSV</button><button class="adm-export-btn secondary" onclick="adminClearLog()">🗑 Reset Log</button></div>
+    `;
+  }
+
+  function adminExportCSV() {
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
+    const headers  = ['name','category','color','price_estimate_ils','wear_count'];
+    const rows     = wardrobe.map(i=>headers.map(h=>JSON.stringify(i[h]??'')).join(','));
+    const csv      = [headers.join(','),...rows].join('\n');
+    const blob     = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const url      = URL.createObjectURL(blob);
+    const a        = document.createElement('a');
+    a.href=url;a.download='awear_wardrobe.csv';a.click();
+    URL.revokeObjectURL(url);
+    showToast('CSV exported ✓');
+  }
+
+  function adminClearLog() {
+    localStorage.removeItem(ADMIN_LOG_KEY);
+    renderAdminDashboard();
+    showToast('Log cleared');
+  }
+
+  if (new URLSearchParams(location.search).get('admin')==='1') showView('admin');
 
   // ===== SHOPPING FEED =====
   const SHOP_SEED = [
