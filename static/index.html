@@ -324,6 +324,63 @@
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; background-clip: text; color: transparent; }
 
+  /* ---- item detail sheet (feed -> per-item) ---- */
+  .item-hero { position: relative; border-radius: 18px; overflow: hidden; margin-bottom: 16px;
+    background: #fbfbfd; aspect-ratio: 4/5; max-height: 340px;
+    box-shadow: 0 12px 34px rgba(0,0,0,.4); }
+  .item-hero img { width: 100%; height: 100%; object-fit: contain; display: block; background: #fff; }
+  /* skeleton shimmer behind product images until they load */
+  .item-hero, .combo-thumb { background: linear-gradient(100deg,#e9e9f0 25%,#f4f4f8 50%,#e9e9f0 75%);
+    background-size: 220% 100%; animation: pi-shimmer 1.4s linear infinite; }
+  @keyframes pi-shimmer { from { background-position: 220% 0; } to { background-position: -220% 0; } }
+  .pi-img { opacity: 0; transition: opacity .35s ease; }
+  .pi-img.loaded { opacity: 1; }
+  .item-match-invite { font-size: 11px; font-weight: 700; }
+  .item-hero .img-fallback { width: 100%; height: 100%; background: #fbfbfd; color: #b8b8c4; }
+  .item-hero-cat { position: absolute; top: 12px; right: 12px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px;
+    background: rgba(10,10,14,.62); backdrop-filter: blur(8px); color: #fff;
+    font-size: 11.5px; font-weight: 800; }
+  .item-match { position: absolute; bottom: 12px; left: 12px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 20px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    font-size: 13px; font-weight: 900; box-shadow: 0 6px 18px rgba(255,61,119,.4); }
+  .item-match b { font-family: "Poppins", sans-serif; font-size: 15px; font-weight: 800; }
+  .item-name { font-weight: 900; font-size: 19px; letter-spacing: -.3px; line-height: 1.2; }
+  .item-meta { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 18px; }
+  .item-price { font-family: "Poppins", sans-serif; font-size: 22px; font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .item-brand { color: var(--muted); font-size: 12.5px; font-weight: 700; }
+
+  /* stylist combos */
+  .stylist-h2 { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 900;
+    letter-spacing: -.2px; margin-bottom: 4px; }
+  .stylist-h2 .ic-svg { color: var(--accent2); }
+  .stylist-sub { color: var(--muted); font-size: 11.5px; font-weight: 600; margin-bottom: 14px; }
+  .combo { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 16px; padding: 12px; margin-bottom: 10px; }
+  .combo-cap { font-size: 12.5px; font-weight: 800; margin-bottom: 10px; color: var(--text);
+    display: flex; align-items: center; gap: 6px; }
+  .combo-cap .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .combo-row { display: flex; align-items: stretch; gap: 8px; }
+  .combo-pc { flex: 1; min-width: 0; text-align: center; }
+  .combo-thumb { width: 100%; aspect-ratio: 4/5; border-radius: 12px; overflow: hidden;
+    background: #fbfbfd; position: relative; }
+  .combo-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; background: #fff; }
+  .combo-thumb .img-fallback { width: 100%; height: 100%; background: #fbfbfd; color: #b8b8c4; }
+  .combo-pc.is-this .combo-thumb { box-shadow: 0 0 0 2px var(--accent) inset; }
+  .combo-tag { position: absolute; top: 6px; right: 6px; font-size: 9px; font-weight: 900;
+    padding: 3px 7px; border-radius: 12px; background: rgba(255,61,119,.92); color: #fff; }
+  .combo-nm { font-size: 10.5px; font-weight: 700; color: rgba(246,246,249,.85); margin-top: 6px;
+    line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .combo-plus { align-self: center; color: var(--muted); flex-shrink: 0; font-weight: 800; }
+  .combo-empty { background: rgba(123,92,255,.08); border: 1px dashed rgba(123,92,255,.3);
+    border-radius: 16px; padding: 18px 16px; text-align: center; color: var(--muted);
+    font-size: 12.5px; font-weight: 600; line-height: 1.55; }
+  .combo-empty .ic-svg { color: var(--accent2); margin-bottom: 8px; }
+
   /* look rows */
   .sheet-look-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
   .sheet-look-row {
@@ -377,6 +434,22 @@
     border-radius: 22px; color: #fff; font-size: 12.5px; font-weight: 800; cursor: pointer; font-family: inherit;
     transition: transform .15s, background .15s; }
   .fc-shop:active { transform: scale(.96); background: rgba(255,255,255,.22); }
+  /* per-item shop chips on each feed card (horizontal scroll) */
+  .fc-items { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: none; padding-bottom: 2px; -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity; mask-image: linear-gradient(90deg, transparent 0, #000 12px); }
+  .fc-items::-webkit-scrollbar { display: none; }
+  .fc-item { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; min-height: 44px;
+    padding: 9px 15px 9px 10px; scroll-snap-align: start; cursor: pointer; font-family: inherit;
+    background: rgba(255,255,255,.13); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.2); border-radius: 24px; color: #fff;
+    transition: transform .15s, background .15s; }
+  .fc-item:active { transform: scale(.95); background: rgba(255,255,255,.24); }
+  .fc-item-ic { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(255,255,255,.16); display: flex; align-items: center; justify-content: center; }
+  .fc-item-name { font-size: 12.5px; font-weight: 800; white-space: nowrap; letter-spacing: -.2px; }
+  .fc-item-price { font-family: "Poppins", sans-serif; font-size: 12.5px; font-weight: 800;
+    color: rgba(255,255,255,.7); white-space: nowrap; }
   .sheet-buy .sheet-buy-price {
     background: rgba(255,255,255,.22);
     border-radius: 8px; padding: 2px 8px;
@@ -531,6 +604,9 @@
   const CAT_ICON = { top:'shirt', dress:'hanger', bottoms:'shirt', outerwear:'hanger',
                      shoes:'bag', bag:'bag', accessory:'sparkle', jewelry:'diamond', hat:'tag' };
   function catIcon(cat){ return CAT_ICON[(cat||'').toLowerCase()] || 'hanger'; }
+  const CAT_LABEL = { top:'עליונית', dress:'שמלה', bottoms:'מכנסיים', outerwear:'מעיל',
+                      shoes:'נעליים', bag:'תיק', accessory:'אקססורי', jewelry:'תכשיט', hat:'כובע' };
+  function catLabel(cat){ return CAT_LABEL[(cat||'').toLowerCase()] || 'פריט'; }
 
   // ---- real product images (Pollinations, no key) with graceful SVG fallback ----
   // onerror -> imgFallback() swaps the broken <img> for a line-art garment icon,
@@ -547,8 +623,8 @@
     const url = 'https://image.pollinations.ai/prompt/' +
       encodeURIComponent(q + ', fashion product photo, plain white background, e-commerce, centered, studio lighting') +
       '?width=400&height=500&nologo=true';
-    return `<img class="${cls||''}" src="${attr(url)}" alt="${attr((it&&it.name)||'')}" loading="lazy" `+
-      `data-cat="${attr((it&&it.category)||'')}" onerror="this.onerror=null;imgFallback(this)">`;
+    return `<img class="pi-img ${cls||''}" src="${attr(url)}" alt="${attr((it&&it.name)||'')}" loading="lazy" `+
+      `data-cat="${attr((it&&it.category)||'')}" onload="this.classList.add('loaded')" onerror="this.onerror=null;imgFallback(this)">`;
   }
 
   function esc(s)  { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
@@ -645,6 +721,133 @@
             style="text-decoration:none" aria-label="קני ${attr(it.name)} ב-${attr(primary.retailer)}">
            קני ב-${esc(primary.retailer)}
            <span class="sheet-buy-price">₪${esc(it.price_estimate_ils)}</span>
+         </a>`
+      : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">אין קישור קנייה זמין לפריט זה עדיין</div>`;
+
+    showSheet();
+  }
+
+  // ---- AI stylist heuristic: build outfit combos from the user's closet ----
+  // For a tapped item, pick complementary categories and prefer closet pieces that
+  // share style_tags / color with it. Returns up to 3 combos, each = [item, ...closetPieces].
+  const COMPLEMENTS = {
+    top:       ['bottoms','shoes','bag','accessory','outerwear'],
+    bottoms:   ['top','shoes','outerwear','bag'],
+    dress:     ['shoes','bag','outerwear','accessory'],
+    outerwear: ['top','bottoms','shoes','dress'],
+    shoes:     ['top','bottoms','dress','bag'],
+    bag:       ['top','dress','shoes','bottoms'],
+    accessory: ['top','dress','bottoms','outerwear'],
+    jewelry:   ['top','dress','outerwear'],
+    hat:       ['top','dress','outerwear'],
+  };
+  const COMBO_CAPTIONS = ['מתאים עם','לוק לערב','קז׳ואל ליום־יום','ערכה מהארון שלך'];
+  function itemTagSet(it){
+    const s=new Set();((it&&it.style_tags)||[]).forEach(t=>s.add(String(t).toLowerCase()));
+    if(it&&it.color) s.add(String(it.color).toLowerCase());
+    return s;
+  }
+  // score a closet piece by tag/color overlap with the source item (higher = better match)
+  function affinity(src,cand){
+    const a=itemTagSet(src), b=itemTagSet(cand); let score=0;
+    b.forEach(t=>{if(a.has(t))score++;});
+    if(src.color&&cand.color&&String(src.color).toLowerCase()===String(cand.color).toLowerCase())score+=1;
+    return score;
+  }
+  function closetCombos(item, fallbackPool){
+    const wardrobe=loadWardrobe();
+    const cat=(item.category||'').toLowerCase();
+    const order=COMPLEMENTS[cat]||['top','bottoms','shoes'];
+    // group closet by category, each list sorted by affinity to the source item
+    const byCat={};
+    wardrobe.forEach(it=>{
+      const c=(it.category||'').toLowerCase();
+      if(!c||c===cat&&it.name===item.name) return; // don't pair an item with itself
+      (byCat[c]=byCat[c]||[]).push(it);
+    });
+    Object.keys(byCat).forEach(c=>byCat[c].sort((x,y)=>affinity(item,y)-affinity(item,x)));
+    const used=new Set();
+    const take=cands=>{
+      for(const it of (cands||[])){const k=it.name+'|'+it.category; if(!used.has(k)){used.add(k);return it;}}
+      return null;
+    };
+    const combos=[];
+    // primary combos from the closet: each pairs the item with 1-2 complementary pieces
+    for(let i=0;i<order.length&&combos.length<3;i++){
+      const c=order[i];
+      const first=take(byCat[c]); if(!first)continue;
+      const pieces=[first];
+      // try to add a second complementary piece from a different category
+      for(let j=0;j<order.length;j++){
+        if(order[j]===c)continue;
+        const second=take(byCat[order[j]]);
+        if(second){pieces.push(second);break;}
+      }
+      combos.push({caption:COMBO_CAPTIONS[Math.min(combos.length,COMBO_CAPTIONS.length-1)],pieces});
+    }
+    // fallback: complement with other items from the same post (different category),
+    // so a sparse/empty closet still shows at least one styled combination
+    if(combos.length<2 && fallbackPool && fallbackPool.length){
+      const others=fallbackPool.filter(x=>x.name!==item.name && (x.category||'').toLowerCase()!==cat
+        && !used.has(x.name+'|'+x.category));
+      if(others.length){
+        combos.push({caption:'מהלוק הזה',pieces:others.slice(0,2),fromPost:true});
+      }
+    }
+    return combos;
+  }
+
+  function comboPieceHTML(it,isThis){
+    return `<div class="combo-pc${isThis?' is-this':''}">
+      <div class="combo-thumb">${productImage(it)}${isThis?`<span class="combo-tag">הפריט</span>`:''}</div>
+      <div class="combo-nm">${esc(it.name)}</div>
+    </div>`;
+  }
+  function comboHTML(item,combo){
+    const pcs=[comboPieceHTML(item,true)];
+    combo.pieces.forEach(p=>pcs.push(comboPieceHTML(p,false)));
+    return `<div class="combo">
+      <div class="combo-cap"><span class="dot"></span>${esc(combo.caption)}</div>
+      <div class="combo-row">${pcs.join(`<span class="combo-plus">${icon('plus',16)}</span>`)}</div>
+    </div>`;
+  }
+
+  // full item detail sheet: real photo -> match% -> closet combos (AI stylist) -> buy
+  function openSheetItem(item, fallbackPool){
+    const it=item||{};
+    const stores=itemStores(it);
+    const hasCloset=loadWardrobe().length>0;
+    const pct=matchPercent((it.style_tags||[]).concat(it.category?[it.category]:[]));
+    const matchBadge = hasCloset
+      ? `<span class="item-match">${icon('sparkle',14)} <b>${pct}%</b> התאמה לארון</span>`
+      : `<span class="item-match item-match-invite">${icon('sparkle',14)} הוסיפי בגדים לארון לראות התאמה</span>`;
+    const combos=closetCombos(it,fallbackPool);
+    const combosHTML = combos.length
+      ? combos.map(c=>comboHTML(it,c)).join('')
+      : `<div class="combo-empty">${icon('hanger',32)}<div>צלמי עוד פריטים לארון שלך<br/>כדי שהסטייליסט יבנה לך לוקים מהבגדים שכבר יש לך.</div></div>`;
+
+    sheetBody.innerHTML = `
+      <div class="item-hero">
+        <span class="item-hero-cat">${icon(catIcon(it.category),14)} ${esc(catLabel(it.category))}</span>
+        ${productImage(it)}
+        ${matchBadge}
+      </div>
+      <div class="item-name">${esc(it.name)}</div>
+      <div class="item-meta">
+        <span class="item-price">₪${esc(it.price_estimate_ils||it.price||0)}</span>
+        ${it.brand_vibe?`<span class="item-brand">${esc(it.brand_vibe)}</span>`:''}
+      </div>
+      <div class="stylist-h2">${icon('sparkle',16)} הסטייליסט מציע</div>
+      <div class="stylist-sub">לוקים שמשלבים את הפריט עם הבגדים מהארון שלך</div>
+      ${combosHTML}
+      <div style="height:8px"></div>`;
+
+    const primary=stores[0];
+    sheetFooter.innerHTML = primary
+      ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
+            style="text-decoration:none" aria-label="קני ${attr(it.name)} ב-${attr(primary.retailer)}">
+           קני ב-${esc(primary.retailer)}
+           <span class="sheet-buy-price">₪${esc(it.price_estimate_ils||it.price||0)}</span>
          </a>`
       : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">אין קישור קנייה זמין לפריט זה עדיין</div>`;
 
@@ -1032,7 +1235,12 @@
         <div class="fc-caption">${esc(post.caption||'')}</div>
         <div class="fc-tags">${tagPills}</div>
         <span class="fc-match">${matchPercent(mtags)}% התאמה לארון שלי</span>
-        ${(post.items&&post.items.length)?`<button class="fc-shop" data-shop="${attr(post.id||'')}">${icon('bag',15)} קני פריטים · ${post.items.length}</button>`:''}
+        ${(post.items&&post.items.length)?`<div class="fc-items">${post.items.map((it,i)=>
+          `<button class="fc-item" data-shop="${attr(post.id||'')}" data-item="${i}" aria-label="פתחי ${attr(it.name)}">
+             <span class="fc-item-ic">${icon(catIcon(it.category),16)}</span>
+             <span class="fc-item-name">${esc(it.name)}</span>
+             ${(it.price_estimate_ils||it.price)?`<span class="fc-item-price">₪${esc(it.price_estimate_ils||it.price)}</span>`:''}
+           </button>`).join('')}</div>`:''}
         ${earnLine}
       </div></div>`;
   }
@@ -1077,6 +1285,18 @@
   }
 
   feedScroll.addEventListener('click',e=>{
+    const chip=e.target.closest('.fc-item');
+    if(chip){
+      const post=feedPostById(chip.dataset.shop);
+      const idx=Number(chip.dataset.item);
+      const item=post&&post.items&&post.items[idx];
+      if(item){
+        // give the stylist real signal: inherit the post's style tags when the item has none
+        const enriched={...item, style_tags:(item.style_tags&&item.style_tags.length)?item.style_tags:(post.tags||[])};
+        openSheetItem(enriched, post.items);
+      }
+      return;
+    }
     const shop=e.target.closest('.fc-shop');
     if(shop){ shopPostItems(feedPostById(shop.dataset.shop)); return; }
     const action=e.target.closest('.fc-action');if(!action)return;
