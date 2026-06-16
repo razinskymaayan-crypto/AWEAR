@@ -9,6 +9,7 @@ import smtplib
 from datetime import datetime, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from typing import List, Optional
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -16,7 +17,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 COMPANY_EMAIL = "awearteam66@gmail.com"
-SCOPES = ["https://www.googleapis.com/auth/calendar"]
+SCOPES = [
+    "https://www.googleapis.com/auth/calendar",
+    "https://www.googleapis.com/auth/gmail.send",
+]
 TOKEN_FILE = "google_token.json"
 CREDS_FILE = "google_credentials.json"
 
@@ -43,6 +47,19 @@ AGENT_DISPLAY_NAMES = {
     "board":   "Board — AWEAR",
     "carmel":  "כרמל",
     "maayan":  "מעיין",
+}
+
+# All agents share the company calendar — swap individual emails here when ready
+AGENT_EMAILS = {
+    "jeff":   COMPANY_EMAIL,
+    "ayalon": COMPANY_EMAIL,
+    "steve":  COMPANY_EMAIL,
+    "mark":   COMPANY_EMAIL,
+    "varan":  COMPANY_EMAIL,
+    "sam":    COMPANY_EMAIL,
+    "board":  COMPANY_EMAIL,
+    "carmel": COMPANY_EMAIL,
+    "maayan": COMPANY_EMAIL,
 }
 
 
@@ -140,8 +157,8 @@ def create_calendar_event(
     start_iso: str,
     end_iso: str,
     description: str = "",
-    attendees: list[str] | None = None,
-) -> str | None:
+    attendees: Optional[List[str]] = None,
+) -> Optional[str]:
     """
     Create a Google Calendar event.
     start_iso / end_iso: ISO 8601, e.g. '2026-06-18T10:00:00+03:00'
@@ -168,3 +185,39 @@ def create_calendar_event(
     except Exception as e:
         print(f"Calendar error: {e}")
         return None
+
+
+# ---------------------------------------------------------------------------
+# Google Calendar — schedule meeting between agents
+# ---------------------------------------------------------------------------
+
+def schedule_agent_meeting(
+    organizer: str,
+    participants: List[str],
+    title: str,
+    start_iso: str,
+    end_iso: str,
+    description: str = "",
+) -> Optional[str]:
+    """
+    Create a calendar meeting between agents.
+    organizer: agent key (e.g. 'jeff') — determines event color
+    participants: list of agent keys to invite (e.g. ['steve', 'mark'])
+    Returns the event URL or None on failure.
+    """
+    all_agents = [organizer] + [p for p in participants if p != organizer]
+    attendee_emails = list({AGENT_EMAILS[a] for a in all_agents if a in AGENT_EMAILS})
+
+    participant_names = ", ".join(
+        AGENT_DISPLAY_NAMES.get(a, a) for a in all_agents
+    )
+    full_description = f"משתתפים: {participant_names}\n\n{description}".strip()
+
+    return create_calendar_event(
+        agent=organizer,
+        title=title,
+        start_iso=start_iso,
+        end_iso=end_iso,
+        description=full_description,
+        attendees=attendee_emails,
+    )

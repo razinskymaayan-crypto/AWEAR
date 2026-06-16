@@ -4,6 +4,7 @@
 *.key
 google_credentials.json
 google_token.json
+client_secret_*.json
 
 # Python virtual envs
 .venv/

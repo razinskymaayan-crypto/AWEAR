@@ -25,7 +25,7 @@ from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from pydantic import BaseModel
 
-from google_services import create_calendar_event, send_summary_email
+from google_services import create_calendar_event, schedule_agent_meeting, send_summary_email
 
 load_dotenv()  # loads ANTHROPIC_API_KEY from .env
 
@@ -270,6 +270,31 @@ async def agent_schedule(data: CalendarEvent):
     )
     if not url:
         raise HTTPException(status_code=500, detail="Failed to create calendar event — check google_token.json")
+    return {"status": "created", "event_url": url}
+
+
+class AgentMeeting(BaseModel):
+    organizer: str           # agent who calls the meeting, e.g. "jeff"
+    participants: list       # list of agent keys, e.g. ["steve", "mark"]
+    title: str
+    start_iso: str           # e.g. "2026-06-18T10:00:00+03:00"
+    end_iso: str
+    description: str = ""
+
+
+@app.post("/api/agent/meeting")
+async def agent_meeting(data: AgentMeeting):
+    """Schedule a meeting between agents — organizer invites participants."""
+    url = schedule_agent_meeting(
+        organizer=data.organizer,
+        participants=data.participants,
+        title=data.title,
+        start_iso=data.start_iso,
+        end_iso=data.end_iso,
+        description=data.description,
+    )
+    if not url:
+        raise HTTPException(status_code=500, detail="Failed to create meeting — check google_token.json")
     return {"status": "created", "event_url": url}
 
 
