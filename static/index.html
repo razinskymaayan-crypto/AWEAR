@@ -1021,6 +1021,11 @@
   .typing-dot:nth-child(2) { animation-delay: .2s; }
   .typing-dot:nth-child(3) { animation-delay: .4s; }
   @keyframes tdot { 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
+  .typing-bubble { display: flex; align-items: center; gap: 6px; padding: 11px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; border-bottom-right-radius: 5px; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .typing-bubble .tdots { display: flex; gap: 4px; align-items: center; }
+  .typing-bubble .typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: tdot 1.2s infinite; }
+  .typing-bubble .typing-dot:nth-child(2) { animation-delay: .2s; }
+  .typing-bubble .typing-dot:nth-child(3) { animation-delay: .4s; }
   .chat-presets { display: flex; gap: 7px; padding: 8px 14px 6px; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }
   .chat-presets::-webkit-scrollbar { display: none; }
   .chat-preset { flex-shrink: 0; padding: 7px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: 12px; font-weight: 700; color: var(--text); cursor: pointer; white-space: nowrap; font-family: inherit; transition: all .18s; }
@@ -1185,8 +1190,8 @@
         <div class="chat-header">
           <div class="chat-header-avatar">💅</div>
           <div>
-            <div style="font-size:14px;font-weight:900">סטייליסט AI</div>
-            <div style="font-size:11px;color:var(--muted);font-weight:600">מחובר · זמין 24/7</div>
+            <div style="font-size:14px;font-weight:900">אביגיל ✨</div>
+            <div style="font-size:11px;color:var(--muted);font-weight:600">הסטייליסטית שלך · מחובר</div>
           </div>
         </div>
         <div class="chat-messages" id="chat-messages"></div>
@@ -3189,6 +3194,7 @@
     'מה חסר לי בארון?','אני צריכה לוק לדייט הערב',
     'בני לי ארון קפסולה','איזה נעליים יתאימו?',
     'איך להתלבש לראיון עבודה?','כמה אני מבזבזת על ביגוד?',
+    'מה הטרנד עכשיו?','תעזרי לי לסדר ארון',
   ];
   let chatInited = false;
   let chatHistory = [];
@@ -3206,7 +3212,17 @@
 
     if (!chatInited) {
       chatInited = true;
-      addChatMsg('bot', 'שלום! אני הסטייליסט AI של AWEAR 💅 שאלי אותי הכל על הארון שלך, על לוקים, או על מה לקנות הבאה. אני פה 24/7!');
+      const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+      let greeting;
+      if (wardrobe.length >= 2) {
+        const sample = wardrobe.slice(0, 2).map(i => i.name).join(' ו-');
+        greeting = 'היי מותק! 💅 אני אביגיל, הסטייליסטית שלך. ראיתי שיש לך בארון ' + sample + ' — קומבינציה ממש חמודה! ספרי לי מה מציק לך ואעשה סדר ✨';
+      } else if (wardrobe.length === 1) {
+        greeting = 'היי! 💅 אני אביגיל, הסטייליסטית שלך. ראיתי שהוספת ' + wardrobe[0].name + ' לארון — טעם מצוין! בואי נבנה לוקים סביבו ✨';
+      } else {
+        greeting = 'היי מותק! 💅 אני אביגיל — הסטייליסטית האישית שלך ב-AWEAR. צלמי קצת בגדים לארון ואני אבנה לך לוקים שיגרמו לך להרגיש מלכה. מה שאלת? ✨';
+      }
+      addChatMsg('bot', greeting);
     }
 
     const input = document.getElementById('chat-input');
@@ -3233,7 +3249,7 @@
     if (!el || document.getElementById('chat-typing')) return;
     const div = document.createElement('div');
     div.id = 'chat-typing'; div.className = 'chat-msg bot chat-typing-wrap';
-    div.innerHTML = `<div class="chat-typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+    div.innerHTML = `<div class="typing-bubble">אביגיל מקלידה<span class="tdots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span></div>`;
     el.appendChild(div);
     el.scrollTop = el.scrollHeight;
   }
