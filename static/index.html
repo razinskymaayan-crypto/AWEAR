@@ -2083,10 +2083,13 @@
             <div class="an-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="an-item-name">${esc(i.name)}</div>
-              <div class="an-item-sub">₪${i.price_estimate_ils||0} בארון</div>
+              <div class="an-item-sub">₪${i.price_estimate_ils||0} בארון · מעולם לא נלבש</div>
             </div>
-            <button class="ha-btn ha-secondary" style="padding:6px 12px;font-size:11px;border-radius:10px;white-space:nowrap;flex-shrink:0" onclick="showView('closet')">למכירה</button>
+            <button class="ha-btn ha-secondary" style="padding:6px 12px;font-size:11px;border-radius:10px;white-space:nowrap;flex-shrink:0" onclick="addToWishlistFromItem('${attr(i.name)}')">למכירה</button>
           </div>`).join('')}
+      </div>
+      <div class="an-section">
+        <button class="ha-btn ha-primary" style="width:100%" onclick="runDeclutter()">🧹 Smart Declutter — AI מנקה את הארון</button>
       </div>` : ''}
     `;
   }
@@ -2268,6 +2271,61 @@
         <div style="font-size:11px;font-weight:700;color:${color};margin-top:5px">${label}</div>
         ${matches.length ? `<div class="cs-matches">${matches.map(m=>`<span class="cs-match-tag">${esc(m)}</span>`).join('')}</div>` : ''}
       </div>`;
+  }
+
+  // ---- Smart Declutter ----
+  async function runDeclutter() {
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    if (!wardrobe.length) { showToast('הארון ריק — אין מה לנקות'); return; }
+    showToast('AI מנתח את הארון... ✨');
+    const candidates = wardrobe.filter(i => (i.wear_count||0) === 0);
+    if (!candidates.length) { showToast('הכל נלבש — הארון מנוצל מעולה! 🎉'); return; }
+    try {
+      const res = await fetch('/api/declutter', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({wardrobe: wardrobe.map(i=>({name:i.name,category:i.category,wear_count:i.wear_count||0,price_estimate_ils:i.price_estimate_ils||0,style_tags:i.style_tags||[]}))}),
+      });
+      const data = await res.json();
+      showDeclutterResults(data.suggestions || []);
+    } catch(_) {
+      const suggestions = candidates.slice(0,3).map(i => ({
+        name: i.name, action: 'מכירה', reason: 'לא נלבש אף פעם', price_suggestion: Math.round((i.price_estimate_ils||100)*0.4),
+      }));
+      showDeclutterResults(suggestions);
+    }
+  }
+
+  function showDeclutterResults(suggestions) {
+    if (!suggestions.length) { showToast('הארון נקי — אין צורך בניקוי'); return; }
+    const modal = document.getElementById('purchase-modal');
+    const card  = document.getElementById('modal-card');
+    card.innerHTML = `
+      <div style="padding:20px 20px 0;font-size:17px;font-weight:900">🧹 Smart Declutter</div>
+      <div style="padding:6px 20px 14px;font-size:12px;color:var(--muted);font-weight:600">AI ממליץ לשחרר ${suggestions.length} פריטים</div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;max-height:320px;overflow-y:auto">
+        ${suggestions.map(s => `
+          <div style="background:#17171f;border-radius:14px;padding:12px 14px;border:1px solid #24242e">
+            <div style="font-size:14px;font-weight:800;margin-bottom:4px">${esc(s.name)}</div>
+            <div style="font-size:11px;color:#8e8e9c;font-weight:600;margin-bottom:6px">${esc(s.reason)}</div>
+            <div style="display:flex;gap:8px">
+              <span style="padding:4px 10px;background:rgba(74,222,128,.15);border-radius:20px;font-size:11px;font-weight:800;color:#4ade80">${esc(s.action)} • ₪${s.price_suggestion||0}</span>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div style="padding:16px 16px 20px">
+        <button class="ha-btn ha-primary" style="width:100%" onclick="document.getElementById('purchase-modal').classList.remove('show')">סגרי</button>
+      </div>`;
+    modal.classList.add('show');
+    card.querySelector('.ha-btn')?.addEventListener('click', () => modal.classList.remove('show'));
+  }
+
+  function addToWishlistFromItem(name) {
+    const wl = loadWishlist();
+    if (!wl.find(i => i.name === name)) {
+      wl.unshift({id: Date.now(), name, addedAt: new Date().toLocaleDateString('he-IL')});
+      saveWishlist(wl);
+      showToast('נוסף ל-Wishlist 💫');
+    }
   }
 
   // ---- Wishlist ----
@@ -2555,13 +2613,16 @@
   // ---- Onboarding ----
   const ONBOARDING_KEY = 'awear_onboarded';
   const ONB_SLIDES = [
-    { emoji:'👗', title:'הארון הדיגיטלי שלך', desc:'צלמי את הבגדים שלך — AI מזהה כל פריט ומסדר אותם בארון.' },
-    { emoji:'🛍️', title:'קני כל לוק בלחיצה', desc:'כל בגד בפיד הופך לקניה מיידית. מוצאי סטייל שאוהבת — קוני ישירות.' },
-    { emoji:'💸', title:'מכרי מה שלא לובשת', desc:'הוסיפי פריטים למכירה, AI מתמחר לפי שוק, ואת מרוויחה.' },
+    { emoji:'👗', title:'Fashion Operating System', desc:'AWEAR הוא לא סתם ארון בגדים — זה מערכת הפעלה אישית לכל החלטת אופנה שלך.' },
+    { emoji:'📸', title:'סרקי. AI יזהה הכל.', desc:'צלמי את הלוק שלך כל יום — AI מזהה כל פריט, בונה לך גרף אופנה אישי, ומציע לוקים חדשים.' },
+    { emoji:'💸', title:'קני חכם. מכרי מה שחסר.', desc:'כל פריט בפיד הופך לקנייה מיידית עם Compatibility Score. מה שלא לובשת — AI עוזר לך למכור.' },
   ];
+
+  // Extended quiz: 5 steps
   const QUIZ_STEPS = [
     {
-      q: 'מה הוייב שלך?', hint: 'בחרי עד 2',
+      type: 'choice', q: 'מה הוייב שלך?', hint: 'בחרי עד 2', multi: true,
+      key: 'styleVibes',
       opts: [
         {emoji:'✨',label:'Y2K',sub:'טרנדי & רטרו'},
         {emoji:'🖤',label:'Streetwear',sub:'אורבני'},
@@ -2570,13 +2631,38 @@
       ]
     },
     {
-      q: 'איפה את בעיקר קונה?', hint: 'בחרי אחת',
+      type: 'choice', q: 'מה המטרה העיקרית שלך?', hint: 'בחרי אחת', multi: false,
+      key: 'goal',
+      opts: [
+        {emoji:'💃',label:'להתלבש טוב יותר',sub:'לוקים ורעיונות'},
+        {emoji:'💰',label:'לחסוך כסף',sub:'CPW & smart buys'},
+        {emoji:'♻️',label:'למכור בגדים',sub:'Marketplace'},
+        {emoji:'✂️',label:'ארון קפסולה',sub:'פחות, טוב יותר'},
+      ]
+    },
+    {
+      type: 'choice', q: 'מה התקציב החודשי לביגוד?', hint: 'בחרי אחת', multi: false,
+      key: 'budget',
+      opts: [
+        {emoji:'💵',label:'עד ₪200',sub:'חכמה'},
+        {emoji:'💳',label:'₪200–500',sub:'בינוני'},
+        {emoji:'💎',label:'₪500–1000',sub:'לוקסוס'},
+        {emoji:'👑',label:'₪1000+',sub:'כל מה שרוצה'},
+      ]
+    },
+    {
+      type: 'choice', q: 'איפה את בעיקר קונה?', hint: 'בחרי עד 2', multi: true,
+      key: 'shopSource',
       opts: [
         {emoji:'📱',label:'ASOS / Zara',sub:'online'},
         {emoji:'🏬',label:'Terminal X',sub:'ישראלי'},
         {emoji:'♻️',label:'יד שנייה',sub:'Depop / Vinted'},
         {emoji:'🔥',label:'הכל',sub:'כל מקור'},
       ]
+    },
+    {
+      type: 'text', q: 'מה שמך?', hint: 'כדי שנתייחס אלייך אישית',
+      key: 'name', placeholder: 'שמי...',
     },
   ];
 
@@ -2589,11 +2675,18 @@
   function finishOnboarding() {
     localStorage.setItem(ONBOARDING_KEY, '1');
     const prof = loadProfile();
-    if (quizAnswers[0]) prof.styleVibes = quizAnswers[0];
-    if (quizAnswers[1]) prof.shopSource = quizAnswers[1];
+    QUIZ_STEPS.forEach((step, i) => {
+      if (!quizAnswers[i]) return;
+      if (step.type === 'text') {
+        prof[step.key] = quizAnswers[i];
+      } else {
+        const labels = [...quizAnswers[i]].map(idx => step.opts[idx]?.label).filter(Boolean);
+        prof[step.key] = step.multi ? labels : labels[0];
+      }
+    });
     saveProfile(prof);
     document.getElementById('onboarding').style.display = 'none';
-    renderCloset(); renderFeed();
+    renderHome();
   }
 
   function renderOnbSlide() {
@@ -2622,33 +2715,45 @@
       const step = QUIZ_STEPS[qi];
       quizStep = qi;
       const sel = quizAnswers[qi] || new Set();
-      document.getElementById('onb-content').innerHTML = `
-        <div class="quiz-wrap">
-          <div class="quiz-q">${step.q}</div>
-          <div class="quiz-hint">${step.hint}</div>
-          <div class="quiz-grid">${step.opts.map((o,i) =>
-            `<button class="quiz-opt${sel.has?.(i)||([...sel].includes(i))?' sel':''}" data-qi="${qi}" data-oi="${i}">
-               <div class="qo-emoji">${o.emoji}</div>
-               <div class="qo-label">${o.label}</div>
-               <div class="qo-sub">${o.sub}</div>
-             </button>`).join('')}
-          </div>
-        </div>`;
-      document.getElementById('onb-content').querySelectorAll('.quiz-opt').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const qi2 = Number(btn.dataset.qi), oi = Number(btn.dataset.oi);
-          if (!quizAnswers[qi2]) quizAnswers[qi2] = new Set();
-          const isMulti = QUIZ_STEPS[qi2].hint.includes('2');
-          if (isMulti) {
-            quizAnswers[qi2].has(oi) ? quizAnswers[qi2].delete(oi) : quizAnswers[qi2].add(oi);
-          } else {
-            quizAnswers[qi2] = new Set([oi]);
-          }
-          btn.closest('.quiz-grid').querySelectorAll('.quiz-opt').forEach((b,i) =>
-            b.classList.toggle('sel', quizAnswers[qi2].has(i)));
-        });
-      });
       const isLast = onbStep === ONB_SLIDES.length + QUIZ_STEPS.length - 1;
+
+      if (step.type === 'text') {
+        document.getElementById('onb-content').innerHTML = `
+          <div class="quiz-wrap">
+            <div class="quiz-q">${esc(step.q)}</div>
+            <div class="quiz-hint">${esc(step.hint)}</div>
+            <input id="onb-text-input" style="width:100%;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 16px;font-family:inherit;font-size:16px;color:var(--text);outline:none;direction:rtl;margin-top:16px;transition:border .18s" placeholder="${attr(step.placeholder||'')}" value="${attr(quizAnswers[qi]||'')}" />
+          </div>`;
+        const inp = document.getElementById('onb-text-input');
+        inp.addEventListener('focus', () => inp.style.borderColor = 'var(--accent)');
+        inp.addEventListener('blur', () => inp.style.borderColor = 'var(--line)');
+        inp.addEventListener('input', () => { quizAnswers[qi] = inp.value; });
+      } else {
+        document.getElementById('onb-content').innerHTML = `
+          <div class="quiz-wrap">
+            <div class="quiz-q">${esc(step.q)}</div>
+            <div class="quiz-hint">${esc(step.hint)}</div>
+            <div class="quiz-grid">${step.opts.map((o,i) =>
+              `<button class="quiz-opt${([...sel].includes(i))?' sel':''}" data-qi="${qi}" data-oi="${i}">
+                 <div class="qo-emoji">${o.emoji}</div>
+                 <div class="qo-label">${esc(o.label)}</div>
+                 <div class="qo-sub">${esc(o.sub)}</div>
+               </button>`).join('')}
+            </div>
+          </div>`;
+        document.getElementById('onb-content').querySelectorAll('.quiz-opt').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const qi2 = Number(btn.dataset.qi), oi = Number(btn.dataset.oi);
+            if (!quizAnswers[qi2]) quizAnswers[qi2] = new Set();
+            if (step.multi) {
+              quizAnswers[qi2].has(oi) ? quizAnswers[qi2].delete(oi) : quizAnswers[qi2].add(oi);
+            } else {
+              quizAnswers[qi2] = new Set([oi]);
+            }
+            btn.closest('.quiz-grid').querySelectorAll('.quiz-opt').forEach((b,i) =>
+              b.classList.toggle('sel', quizAnswers[qi2].has(i)));
+        });
+      }
       nextBtn.textContent = isLast ? 'בואי נתחיל 🚀' : 'המשך';
     }
   }

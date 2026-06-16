@@ -352,6 +352,46 @@ async def generate_outfit(data: OutfitRequest):
         return {"outfits": []}
 
 
+class DeclutterRequest(BaseModel):
+    wardrobe: list = []
+
+
+@app.post("/api/declutter")
+async def smart_declutter(data: DeclutterRequest):
+    """AI suggests what to sell/donate from the wardrobe."""
+    unused = [i for i in data.wardrobe if (i.get("wear_count") or 0) == 0]
+    if not unused:
+        return {"suggestions": []}
+
+    items_desc = "\n".join(
+        f"- {it.get('name','?')} ({it.get('category','?')}) ₪{it.get('price_estimate_ils',0)}"
+        for it in unused[:20]
+    )
+    system = (
+        "את מנהלת ארון AI. בדקי רשימת פריטים שמעולם לא נלבשו. "
+        "לכל פריט, הצעי: action (מכירה/תרומה/מחזור), reason קצר, price_suggestion (60% מהמחיר המקורי למכירה). "
+        'החזירי JSON בלבד: {"suggestions": [{"name":"...","action":"מכירה","reason":"...","price_suggestion":120}]}'
+    )
+    try:
+        response = client.messages.create(
+            model=MODEL, max_tokens=600,
+            system=system,
+            messages=[{"role": "user", "content": f"פריטים לא נלבשים:\n{items_desc}"}],
+        )
+        import json as _json
+        text = response.content[0].text.strip()
+        if text.startswith("```"):
+            text = "\n".join(text.split("\n")[1:]).rstrip("`").strip()
+        return _json.loads(text)
+    except Exception:
+        return {"suggestions": [
+            {"name": it.get("name","?"), "action": "מכירה",
+             "reason": "לא נלבש אף פעם",
+             "price_suggestion": round((it.get("price_estimate_ils") or 100) * 0.4)}
+            for it in unused[:5]
+        ]}
+
+
 class StylistMessage(BaseModel):
     question: str
     wardrobe_context: str = ""
