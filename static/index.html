@@ -203,22 +203,43 @@
   .trend-badge { background: rgba(0,0,0,.6); color: #fff; font-size: 12px; font-weight: 900;
     padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(6px); margin-inline-start: auto; }
 
-  .fc-actions { position: absolute; right: 12px; bottom: 110px;
-    display: flex; flex-direction: column; align-items: center; gap: 16px; z-index: 5; }
-  .fc-action { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;
-    color: #fff; font-size: 10px; font-weight: 800; text-shadow: 0 1px 4px rgba(0,0,0,.6);
-    user-select: none; background: none; border: 0; font-family: inherit; padding: 0; }
-  .fca-icon { width: 46px; height: 46px; border-radius: 50%; background: rgba(0,0,0,.45);
-    backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center;
-    font-size: 22px; transition: transform .15s; border: 1px solid rgba(255,255,255,.1); }
-  .fc-action:active .fca-icon { transform: scale(.84); }
-  .fca-icon.liked { background: rgba(255,61,119,.55); }
-  .fca-icon.saved { background: rgba(123,92,255,.55); }
-  .buy-action .fca-icon { background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border: none; width: 50px; height: 50px; font-size: 24px; }
+  /* old fc-actions hidden — replaced by fc-item-pills + fc-action-bar */
+  .fc-actions { display: none; }
 
-  .fc-info { position: absolute; bottom: 0; left: 0; right: 70px; padding: 20px 14px 22px;
-    background: linear-gradient(0deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.4) 55%, transparent 100%); z-index: 5; }
+  /* ---- Item pills (right side) ---- */
+  .fc-item-pills { position: absolute; right: 10px; top: 50%; transform: translateY(-55%);
+    display: flex; flex-direction: column; gap: 8px; z-index: 5; max-height: 62%; overflow: hidden; }
+  .fc-pill { display: flex; flex-direction: column; align-items: center; gap: 3px;
+    background: rgba(0,0,0,.52); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.16); border-radius: 16px;
+    padding: 10px 8px; cursor: pointer; width: 62px;
+    transition: transform .14s, background .14s;
+    font-family: inherit; color: #fff; text-align: center; }
+  .fc-pill:active { transform: scale(.91); background: rgba(255,255,255,.16); }
+  .fc-pill-name { font-size: 10px; font-weight: 800; line-height: 1.2;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50px; }
+  .fc-pill-price { font-size: 10.5px; font-weight: 900; color: rgba(255,255,255,.75);
+    font-family: "Poppins", sans-serif; }
+
+  /* ---- Bottom action bar ---- */
+  .fc-action-bar { position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
+    display: flex; align-items: center;
+    padding: 8px 8px 12px;
+    background: linear-gradient(0deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.3) 70%, transparent 100%); }
+  .fca-btn { flex: 1; background: none; border: 0; color: #fff; font-family: inherit;
+    font-size: 11px; font-weight: 800; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; cursor: pointer; padding: 4px 0; text-shadow: 0 1px 4px rgba(0,0,0,.7); }
+  .fca-ico { width: 42px; height: 42px; border-radius: 50%; background: rgba(0,0,0,.42);
+    backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center;
+    font-size: 20px; transition: transform .14s; border: 1px solid rgba(255,255,255,.12); }
+  .fca-btn:active .fca-ico { transform: scale(.84); }
+  .fca-btn.liked .fca-ico { background: rgba(255,61,119,.58); }
+  .fca-btn.saved .fca-ico { background: rgba(123,92,255,.58); }
+  .fca-btn.buy-btn .fca-ico { background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; width: 46px; height: 46px; font-size: 22px; }
+
+  .fc-info { position: absolute; bottom: 76px; left: 0; right: 72px; padding: 16px 14px 0;
+    background: linear-gradient(0deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.3) 60%, transparent 100%); z-index: 5; }
   .fc-user { font-weight: 900; font-size: 15px; color: #fff; margin-bottom: 5px;
     display: flex; align-items: center; gap: 6px; }
   .fc-verified { color: var(--accent); display: inline-flex; align-items: center; }
@@ -1303,42 +1324,53 @@
     const mineBadge=isMine?`<span class="mine-tag" style="display:inline-flex;align-items:center;gap:4px">${icon('sparkle',13)} אני</span>`:`<span></span>`;
     const earnLine=(!isMine&&post.earn)?`<div class="fc-earn" style="display:flex;align-items:center;gap:5px">${icon('diamond',13)} @${esc(post.user)} תרוויח ₪${esc(post.earn)} על כל קנייה</div>`:'';
     const lbl=post.name?'לוק של '+post.name:(post.caption||'הלוק');
+
+    // Item pills — right side, vertical stack
+    const pillItems=(post.items||[]).slice(0,4);
+    const pillsHTML=pillItems.map((it,i)=>`
+      <button class="fc-pill" data-shop="${attr(post.id||'')}" data-item="${i}" aria-label="${attr(it.name)}">
+        <span class="ic-svg" style="width:22px;height:22px" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">${ICONS[catIcon(it.category)]||ICONS.hanger}</svg>
+        </span>
+        <span class="fc-pill-name">${esc((it.name||'').split(' ').slice(0,2).join(' '))}</span>
+        ${(it.price_estimate_ils||it.price)?`<span class="fc-pill-price">₪${esc(it.price_estimate_ils||it.price)}</span>`:''}
+      </button>`).join('');
+
     return `<div class="feed-card-full${isMine?' is-mine':''}" data-id="${attr(post.id||'')}">
       <div class="fcbg" style="background:${attr(post.grad||'linear-gradient(160deg,#a18cd1,#fbc2eb)')}">${bgImg}</div>
       <div class="heart-burst">${icon('heartFill',100)}</div>
       <div class="fc-top">${mineBadge}<span class="trend-badge" style="display:inline-flex;align-items:center;gap:5px">${icon('flame',14)} ${esc(post.trend||80)}</span></div>
-      <div class="fc-actions">
-        <button class="fc-action" data-action="like" data-id="${attr(post.id||'')}">
-          <div class="fca-icon${liked?' liked':''}">${icon(liked?'heartFill':'heart',24)}</div>
-          <span>${fmtN((post.likes||0)+(liked?1:0))}</span>
-        </button>
-        <button class="fc-action" data-action="save" data-id="${attr(post.id||'')}">
-          <div class="fca-icon${saved?' saved':''}">${icon(saved?'bookmarkFill':'bookmark',23)}</div>
-          <span>${saved?'נשמר':'שמרי'}</span>
-        </button>
-        <button class="fc-action" data-action="share">
-          <div class="fca-icon">${icon('share',23)}</div><span>שתפי</span>
-        </button>
-        <button class="fc-action buy-action"
-            data-label="${attr(lbl)}" data-price="${attr(post.price||post.look_total_ils||0)}"
-            data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
-          <div class="fca-icon buy-icon">${icon('bag',24)}</div>
-          <span>₪${esc(post.price||post.look_total_ils||0)}</span>
-        </button>
-      </div>
+
+      ${pillsHTML?`<div class="fc-item-pills">${pillsHTML}</div>`:''}
+
       <div class="fc-info">
         <div class="fc-user">@${esc(post.user||'me')}${post.verified?`<span class="fc-verified">${icon('checkCircle',14)}</span>`:''}</div>
         <div class="fc-caption">${esc(post.caption||'')}</div>
         <div class="fc-tags">${tagPills}</div>
         <span class="fc-match">${matchPercent(mtags)}% התאמה לארון שלי</span>
-        ${(post.items&&post.items.length)?`<div class="fc-items">${post.items.map((it,i)=>
-          `<button class="fc-item" data-shop="${attr(post.id||'')}" data-item="${i}" aria-label="פתחי ${attr(it.name)}">
-             <span class="fc-item-ic">${icon(catIcon(it.category),16)}</span>
-             <span class="fc-item-name">${esc(it.name)}</span>
-             ${(it.price_estimate_ils||it.price)?`<span class="fc-item-price">₪${esc(it.price_estimate_ils||it.price)}</span>`:''}
-           </button>`).join('')}</div>`:''}
         ${earnLine}
-      </div></div>`;
+      </div>
+
+      <div class="fc-action-bar">
+        <button class="fca-btn${liked?' liked':''}" data-action="like" data-id="${attr(post.id||'')}">
+          <div class="fca-ico">${icon(liked?'heartFill':'heart',22)}</div>
+          <span>${fmtN((post.likes||0)+(liked?1:0))}</span>
+        </button>
+        <button class="fca-btn${saved?' saved':''}" data-action="save" data-id="${attr(post.id||'')}">
+          <div class="fca-ico">${icon(saved?'bookmarkFill':'bookmark',21)}</div>
+          <span>${saved?'נשמר':'שמרי'}</span>
+        </button>
+        <button class="fca-btn" data-action="share">
+          <div class="fca-ico">${icon('share',21)}</div><span>שתפי</span>
+        </button>
+        <button class="fca-btn buy-btn buy-action"
+            data-label="${attr(lbl)}" data-price="${attr(post.price||post.look_total_ils||0)}"
+            data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
+          <div class="fca-ico">${icon('bag',22)}</div>
+          <span>₪${esc(post.price||post.look_total_ils||0)}</span>
+        </button>
+      </div>
+    </div>`;
   }
 
   function renderFeed(){
@@ -1381,29 +1413,33 @@
   }
 
   feedScroll.addEventListener('click',e=>{
-    const chip=e.target.closest('.fc-item');
-    if(chip){
-      const post=feedPostById(chip.dataset.shop);
-      const idx=Number(chip.dataset.item);
+    // item pill — open item detail sheet
+    const pill=e.target.closest('.fc-pill');
+    if(pill){
+      const post=feedPostById(pill.dataset.shop);
+      const idx=Number(pill.dataset.item);
       const item=post&&post.items&&post.items[idx];
       if(item){
-        // give the stylist real signal: inherit the post's style tags when the item has none
         const enriched={...item, style_tags:(item.style_tags&&item.style_tags.length)?item.style_tags:(post.tags||[])};
         openSheetItem(enriched, post.items);
       }
       return;
     }
-    const shop=e.target.closest('.fc-shop');
-    if(shop){ shopPostItems(feedPostById(shop.dataset.shop)); return; }
-    const action=e.target.closest('.fc-action');if(!action)return;
+    // bottom action bar buttons
+    const action=e.target.closest('.fca-btn');if(!action)return;
+    if(action.classList.contains('buy-action')||action.classList.contains('buy-btn')){
+      // buy handled by main listener below
+      return;
+    }
     const type=action.dataset.action,id=action.dataset.id;
     if(type==='like'){
       const on=!LIKES.has(id);
       if(on)LIKES.add(id);else LIKES.delete(id);
       saveSet('awear_likes',LIKES);
-      const ico=action.querySelector('.fca-icon'),cnt=action.querySelector('span');
+      const ico=action.querySelector('.fca-ico'),cnt=action.querySelector('span');
       const post=SEED_POSTS.find(p=>p.id===id)||{likes:0};
-      ico.innerHTML=icon(on?'heartFill':'heart',24);ico.classList.toggle('liked',on);
+      ico.innerHTML=icon(on?'heartFill':'heart',22);
+      action.classList.toggle('liked',on);
       if(cnt)cnt.textContent=fmtN((post.likes||0)+(on?1:0));
       if(on){ico.style.transform='scale(1.35)';setTimeout(()=>ico.style.transform='',200);}
     }
@@ -1411,8 +1447,10 @@
       const on=!SAVED.has(id);
       if(on)SAVED.add(id);else SAVED.delete(id);
       saveSet('awear_saved',SAVED);
-      const ico=action.querySelector('.fca-icon'),cnt=action.querySelector('span');
-      ico.innerHTML=icon(on?'bookmarkFill':'bookmark',23);ico.classList.toggle('saved',on);if(cnt)cnt.textContent=on?'נשמר':'שמרי';
+      const ico=action.querySelector('.fca-ico'),cnt=action.querySelector('span');
+      ico.innerHTML=icon(on?'bookmarkFill':'bookmark',21);
+      action.classList.toggle('saved',on);
+      if(cnt)cnt.textContent=on?'נשמר':'שמרי';
       showToast(on?'נשמר לרשימת המשאלות':'הוסר מהשמורים');
     }
     if(type==='share')showToast('הקישור הועתק');
@@ -1420,7 +1458,7 @@
 
   let lastTap=0,lastCard=null;
   feedScroll.addEventListener('pointerup',e=>{
-    if(e.target.closest('button'))return;
+    if(e.target.closest('.fca-btn')||e.target.closest('.fc-pill'))return;
     const card=e.target.closest('.feed-card-full');if(!card)return;
     const now=Date.now();
     if(now-lastTap<320&&lastCard===card){
