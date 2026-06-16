@@ -300,4 +300,37 @@ async def agent_meeting(data: AgentMeeting):
     return {"status": "created", "event_url": url}
 
 
+# ---------------------------------------------------------------------------
+# AI Stylist Chat
+# ---------------------------------------------------------------------------
+
+class StylistMessage(BaseModel):
+    question: str
+    wardrobe_context: str = ""
+
+
+@app.post("/api/stylist/chat")
+async def stylist_chat(data: StylistMessage):
+    """AI Stylist: answers fashion questions with optional wardrobe context."""
+    system = (
+        "את סטייליסטית AI של AWEAR — אפליקציית אופנה Gen-Z בישראל. "
+        "עני בעברית, קצר (2-3 משפטים), בסגנון חברותי ומדויק. "
+        "השתמשי בנתוני הארון כשהם רלוונטיים להמלצות ספציפיות. "
+        "לא תמיד לקנות — לפעמים הפתרון נמצא בארון הקיים."
+    )
+    try:
+        response = client.messages.create(
+            model=MODEL,
+            max_tokens=400,
+            system=system,
+            messages=[{
+                "role": "user",
+                "content": f"מידע על הארון: {data.wardrobe_context}\n\nשאלה: {data.question}",
+            }],
+        )
+        return {"answer": response.content[0].text}
+    except Exception:
+        return {"answer": "הסטייליסט AI לא זמין כרגע 🙏 נסי שוב בעוד רגע"}
+
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
