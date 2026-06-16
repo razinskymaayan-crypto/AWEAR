@@ -253,6 +253,163 @@
     transition: opacity .25s, transform .25s; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   input[type=file] { display: none; }
+
+  /* ---- Bottom Sheet ---- */
+  .sheet-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0);
+    z-index: 50;
+    pointer-events: none;
+    transition: background .25s ease;
+  }
+  .sheet-overlay.show {
+    background: rgba(0,0,0,.62);
+    pointer-events: auto;
+    backdrop-filter: blur(3px);
+  }
+
+  .sheet {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg, #1c1c26 0%, var(--card) 100%);
+    border-radius: 24px 24px 0 0;
+    border-top: 1px solid rgba(255,255,255,.07);
+    padding: 0 0 calc(env(safe-area-inset-bottom, 0px) + 8px);
+    z-index: 51;
+    transform: translateY(110%);
+    transition: transform .3s cubic-bezier(.32,.72,0,1);
+    box-shadow: 0 -16px 48px rgba(0,0,0,.55);
+    max-height: 88%;
+    display: flex; flex-direction: column;
+  }
+  .sheet.show { transform: translateY(0); }
+
+  .sheet-handle {
+    width: 40px; height: 5px; border-radius: 3px;
+    background: rgba(255,255,255,.15);
+    margin: 12px auto 0;
+    flex-shrink: 0;
+  }
+
+  .sheet-scroll {
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding: 16px 20px 0;
+    flex: 1; min-height: 0;
+  }
+  .sheet-scroll::-webkit-scrollbar { display: none; }
+
+  /* hero — single item */
+  .sheet-hero {
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .sheet-hero-img {
+    width: 72px; height: 72px; border-radius: 14px;
+    background: #fbfbfd;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; flex-shrink: 0;
+    box-shadow: 0 6px 18px rgba(0,0,0,.32);
+  }
+  .sheet-hero-info { flex: 1; min-width: 0; }
+  .sheet-hero-name { font-weight: 900; font-size: 16px; letter-spacing: -.2px;
+    line-height: 1.25; margin-bottom: 4px; }
+  .sheet-hero-brand { color: var(--muted); font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+  .sheet-hero-price { font-family: "Poppins", sans-serif; font-size: 22px; font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* look rows */
+  .sheet-look-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .sheet-look-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: 14px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  .sheet-look-emoji { font-size: 26px; width: 40px; text-align: center; flex-shrink: 0; }
+  .sheet-look-name { flex: 1; font-weight: 700; font-size: 13.5px; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sheet-look-price { font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 700;
+    color: var(--muted); flex-shrink: 0; }
+
+  .sheet-total {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 14px 4px 20px;
+    border-top: 1px solid var(--line);
+  }
+  .sheet-total-label { font-size: 13px; color: var(--muted); font-weight: 700; }
+  .sheet-total-amt { font-family: "Poppins", sans-serif; font-size: 22px; font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* CTA */
+  .sheet-footer {
+    padding: 12px 20px 4px;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(255,255,255,.05);
+  }
+  .sheet-buy {
+    width: 100%; padding: 16px;
+    border: 0; border-radius: 16px;
+    font-family: inherit; font-size: 16px; font-weight: 900;
+    color: #fff; cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 8px 28px rgba(255,61,119,.42);
+    transition: transform .14s, filter .14s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 52px;
+  }
+  .sheet-buy:active { transform: scale(.97); filter: brightness(.93); }
+  /* per-item "buy" pill inside the look sheet */
+  .sheet-row-buy { flex-shrink: 0; margin-inline-start: 10px; padding: 7px 16px; border-radius: 20px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    font-size: 12px; font-weight: 800; transition: filter .15s; }
+  .sheet-row-buy:active { filter: brightness(.9); }
+  /* "tap to shop" pill on each feed card */
+  .fc-shop { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 9px 15px;
+    background: rgba(255,255,255,.14); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.2);
+    border-radius: 22px; color: #fff; font-size: 12.5px; font-weight: 800; cursor: pointer; font-family: inherit;
+    transition: transform .15s, background .15s; }
+  .fc-shop:active { transform: scale(.96); background: rgba(255,255,255,.22); }
+  .sheet-buy .sheet-buy-price {
+    background: rgba(255,255,255,.22);
+    border-radius: 8px; padding: 2px 8px;
+    font-size: 14px; font-weight: 800;
+  }
+
+  .sheet-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 14px 0 12px; color: var(--muted); font-size: 11.5px; font-weight: 700;
+  }
+  .sheet-divider::before, .sheet-divider::after {
+    content: ""; flex: 1; height: 1px; background: var(--line);
+  }
+
+  .sheet-stores { display: flex; flex-direction: column; gap: 8px; }
+  .store-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 14px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.07);
+    text-decoration: none; color: var(--text);
+    transition: background .15s;
+    min-height: 48px;
+  }
+  .store-row:active { background: rgba(255,255,255,.08); }
+  .store-logo {
+    width: 32px; height: 32px; border-radius: 8px; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 900; color: #111;
+    flex-shrink: 0; letter-spacing: -.3px;
+    overflow: hidden;
+  }
+  .store-name { flex: 1; font-size: 13.5px; font-weight: 800; }
+  .store-scope { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .store-arrow { color: var(--muted); font-size: 16px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -290,6 +447,14 @@
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
   <div id="purchase-modal" class="modal-overlay"><div class="modal-card" id="modal-card"></div></div>
+
+  <!-- Bottom Sheet -->
+  <div id="sheet-overlay" class="sheet-overlay" role="dialog" aria-modal="true" aria-label="קנייה"></div>
+  <div id="buy-sheet" class="sheet" aria-hidden="true">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <div class="sheet-scroll" id="sheet-body"></div>
+    <div class="sheet-footer" id="sheet-footer"></div>
+  </div>
 </div>
 
 <script>
@@ -324,8 +489,167 @@
     profileTab = 'closet'; showView('closet'); fileInput.click();
   });
 
-  // ---- buy / sell ----
-  function buyFlow(label, price, earnAmt, influencerUser) {
+  // ---- bottom sheet ----
+  const sheetOverlay = document.getElementById('sheet-overlay');
+  const buySheet     = document.getElementById('buy-sheet');
+  const sheetBody    = document.getElementById('sheet-body');
+  const sheetFooter  = document.getElementById('sheet-footer');
+
+  const STORE_LOGOS = {
+    'ASOS':'ASOS', 'Zara':'Zara', 'H&M':'H&M', 'SHEIN':'SHN',
+    'Terminalx':'TX', 'adidas':'ADI', 'Nike':'NK', 'Mango':'MNG',
+    'Pull&Bear':'P&B', 'Bershka':'BSK',
+  };
+  function storeLogo(name){ return STORE_LOGOS[name] || (name||'').slice(0,3).toUpperCase(); }
+  function scopeLabel(s){
+    if(s==='global') return 'שליחה בינלאומית';
+    if(s==='il')     return 'משלוח לישראל';
+    return s || '';
+  }
+
+  function storeRowHTML(opt){
+    return `<a class="store-row" href="${attr(opt.url||'#')}" target="_blank" rel="noopener" aria-label="קני ב-${attr(opt.retailer)}">
+      <div class="store-logo">${esc(storeLogo(opt.retailer))}</div>
+      <div style="flex:1;min-width:0">
+        <div class="store-name">${esc(opt.retailer||'חנות')}</div>
+        <div class="store-scope">${esc(scopeLabel(opt.scope))}</div>
+      </div>
+      <span class="store-arrow">↗</span>
+    </a>`;
+  }
+
+  // affiliate retailers (mirror of app.py) — build a real shopping link for any item
+  const AFF_RETAILERS=[
+    ['Google Shopping','https://www.google.com/search?tbm=shop&q='],
+    ['ASOS','https://www.asos.com/search/?q='],
+    ['Terminal X','https://www.terminalx.com/catalogsearch/result/?q='],
+  ];
+  function buildBuyOptions(query){
+    if(!query) return [];
+    const q=encodeURIComponent(query);
+    return AFF_RETAILERS.map(([retailer,base])=>({retailer,scope:'',url:base+q+'&aff=awear'}));
+  }
+  // an item always resolves to real stores: use API buy_options, else derive from its name/query
+  function itemStores(it){
+    if(it.buy_options&&it.buy_options.length) return it.buy_options;
+    return buildBuyOptions(it.search_query||it.q||it.name);
+  }
+
+  function openSheetSingle(it, earnAmt, influencerUser){
+    const emoji  = emojiFor(it.category);
+    const stores = itemStores(it);
+    const earnLine = (earnAmt && influencerUser)
+      ? `<p style="font-size:11.5px;color:#34d399;font-weight:700;margin-top:8px;text-align:center">
+           💎 @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על הרכישה הזאת
+         </p>` : '';
+    sheetBody.innerHTML = `
+      <div class="sheet-hero">
+        <div class="sheet-hero-img">${emoji}</div>
+        <div class="sheet-hero-info">
+          <div class="sheet-hero-name">${esc(it.name)}</div>
+          <div class="sheet-hero-brand">${esc(it.brand_vibe||'')}</div>
+          <div class="sheet-hero-price">₪${esc(it.price_estimate_ils)}</div>
+        </div>
+      </div>
+      ${earnLine}
+      ${stores.length ? `<div class="sheet-divider">או מצאי בחנויות</div>
+        <div class="sheet-stores">${stores.map(storeRowHTML).join('')}</div>` : ''}
+      <div style="height:16px"></div>`;
+
+    const primary = stores[0];
+    sheetFooter.innerHTML = primary
+      ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
+            style="text-decoration:none" aria-label="קני ${attr(it.name)} ב-${attr(primary.retailer)}">
+           קני ב-${esc(primary.retailer)}
+           <span class="sheet-buy-price">₪${esc(it.price_estimate_ils)}</span>
+         </a>`
+      : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">אין קישור קנייה זמין לפריט זה עדיין</div>`;
+
+    showSheet();
+  }
+
+  function openSheetLook(label, items, totalPrice, earnAmt, influencerUser){
+    const list = items||[];
+    const rows = list.map(it => {
+      const st = itemStores(it), url = st[0] ? st[0].url : '';
+      const buy = url
+        ? `<a class="sheet-row-buy" href="${attr(url)}" target="_blank" rel="noopener" style="text-decoration:none">קני</a>`
+        : '';
+      return `<div class="sheet-look-row">
+        <div class="sheet-look-emoji">${emojiFor(it.category)}</div>
+        <div class="sheet-look-name">${esc(it.name)}</div>
+        <div class="sheet-look-price">₪${esc(it.price_estimate_ils||it.price||0)}</div>
+        ${buy}
+      </div>`;
+    }).join('');
+    const earnLine = (earnAmt && influencerUser)
+      ? `<p style="font-size:11.5px;color:#34d399;font-weight:700;margin-top:4px;text-align:center">
+           💎 @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על כל קנייה
+         </p>` : '';
+
+    sheetBody.innerHTML = `
+      <div style="font-weight:900;font-size:15px;margin-bottom:14px;letter-spacing:-.2px">
+        ${esc(label)} · ${list.length} פריטים
+      </div>
+      <div class="sheet-look-list">${rows}</div>
+      <div class="sheet-total">
+        <span class="sheet-total-label">סה"כ הלוק</span>
+        <span class="sheet-total-amt">₪${esc(totalPrice)}</span>
+      </div>
+      ${earnLine}
+      <div style="height:8px"></div>`;
+
+    sheetFooter.innerHTML =
+      `<div style="text-align:center;color:var(--muted);font-size:12.5px;padding:6px 0 2px">
+         👆 קני כל פריט ישירות מהחנות שלו
+       </div>`;
+
+    showSheet();
+  }
+
+  function showSheet(){
+    sheetOverlay.classList.add('show');
+    buySheet.classList.add('show');
+    buySheet.setAttribute('aria-hidden','false');
+    // focus trap — focus on first focusable element inside sheet
+    requestAnimationFrame(()=>{
+      const first = buySheet.querySelector('button, a');
+      if(first) first.focus();
+    });
+  }
+  function closeSheet(){
+    sheetOverlay.classList.remove('show');
+    buySheet.classList.remove('show');
+    buySheet.setAttribute('aria-hidden','true');
+  }
+  sheetOverlay.addEventListener('click', closeSheet);
+
+  // swipe-down to dismiss
+  let sheetStartY = null;
+  buySheet.addEventListener('pointerdown', e => {
+    sheetStartY = e.clientY;
+    buySheet.style.transition = 'none'; // instant during drag
+  });
+  buySheet.addEventListener('pointermove', e => {
+    if(sheetStartY === null) return;
+    const dy = e.clientY - sheetStartY;
+    if(dy > 0) buySheet.style.transform = `translateY(${dy}px)`;
+  });
+  buySheet.addEventListener('pointerup', e => {
+    const dy = e.clientY - (sheetStartY||0);
+    buySheet.style.transition = ''; // restore CSS transition
+    buySheet.style.transform = '';
+    if(dy > 80) closeSheet();
+    sheetStartY = null;
+  });
+  buySheet.addEventListener('pointercancel', () => {
+    buySheet.style.transition = '';
+    buySheet.style.transform = '';
+    sheetStartY = null;
+  });
+
+  // ---- buy confirm (existing modal, unchanged) ----
+  function buyConfirm(label, price, earnAmt, influencerUser) {
     modal.classList.add('show');
     modalCard.innerHTML = '<div class="spinner"></div><h3>רוכשת את ' + esc(label) + '…</h3><p>Awear מבצעת את ההזמנה עבורך</p>';
     setTimeout(() => {
@@ -336,6 +660,12 @@
         earnLine + '<button class="close">מעולה</button>';
       modalCard.querySelector('.close').addEventListener('click', () => modal.classList.remove('show'));
     }, 1300);
+  }
+
+  // kept for internal use (sellFlow calls this indirectly, no change needed)
+  function buyFlow(label, price, earnAmt, influencerUser) {
+    // legacy shim — routes through sheet when item object exists, else direct confirm
+    buyConfirm(label, price, earnAmt, influencerUser);
   }
 
   function sellFlow(label, price, cat) {
@@ -352,12 +682,49 @@
 
   document.querySelector('main').addEventListener('click', e => {
     const buyBtn = e.target.closest('[data-buy]');
-    if (buyBtn && !buyBtn.classList.contains('buy-action')) { buyFlow(buyBtn.dataset.label, buyBtn.dataset.price, 0, ''); return; }
+    if (buyBtn && !buyBtn.classList.contains('buy-action')) {
+      // "קני את הלוק" button (shop-look) — try to use wardrobe items for look sheet
+      const label = buyBtn.dataset.label || 'הלוק';
+      const price = buyBtn.dataset.price;
+      const wardrobe = loadWardrobe();
+      const meta = loadMeta();
+      if (wardrobe.length && meta.look_total_ils != null) {
+        openSheetLook(label, wardrobe, price, 0, '');
+      } else {
+        // single synthetic item fallback
+        const synth = { name: label, brand_vibe: 'Awear', category: 'top',
+                        price_estimate_ils: price, buy_options: [] };
+        openSheetSingle(synth, 0, '');
+      }
+      return;
+    }
     const buyAction = e.target.closest('.buy-action');
-    if (buyAction) { buyFlow(buyAction.dataset.label, buyAction.dataset.price, buyAction.dataset.earn, buyAction.dataset.user); return; }
+    if (buyAction) {
+      const post = feedPostById(buyAction.closest('[data-id]')?.dataset.id);
+      if (!shopPostItems(post, buyAction.dataset.label, buyAction.dataset.price, buyAction.dataset.earn, buyAction.dataset.user)) {
+        const synth = {name:buyAction.dataset.label, category:'top', price_estimate_ils:buyAction.dataset.price, buy_options:[]};
+        openSheetSingle(synth, buyAction.dataset.earn, buyAction.dataset.user);
+      }
+      return;
+    }
     const sellBtn = e.target.closest('[data-sell]');
     if (sellBtn) { sellFlow(sellBtn.dataset.label, sellBtn.dataset.price, sellBtn.dataset.cat); return; }
   });
+
+  // ".pbuy" buttons inside .ptile tiles (closet shelves) — intercept before main listener
+  document.getElementById('closet-body').addEventListener('click', e => {
+    const pbuy = e.target.closest('.pbuy[data-buy]');
+    if (!pbuy) return;
+    e.stopPropagation(); // prevent main listener from also firing
+    const label  = pbuy.dataset.label;
+    const price  = pbuy.dataset.price;
+    const wardrobe = loadWardrobe();
+    const it = wardrobe.find(x => x.name === label) || {
+      name: label, brand_vibe: '', category: 'top',
+      price_estimate_ils: price, buy_options: []
+    };
+    openSheetSingle(it, 0, '');
+  }, true); // capture phase — runs before main's bubble listener
 
   // ---- analyze ----
   function readDataURL(file) {
@@ -518,6 +885,7 @@
     const post={ts:Date.now(),id:'mine_'+Date.now(),photo:scan.photo||null,
       caption:meta.overall_style||'הלוק שלי',occasion:meta.occasion||'',
       item_count:(scan.items||[]).length,look_total_ils:meta.look_total_ils||0,
+      items:(scan.items||[]).map(it=>({category:it.category,name:it.name,price_estimate_ils:it.price_estimate_ils,buy_options:it.buy_options||[],search_query:it.search_query})),
       tags:(scan.items||[]).reduce((acc,it)=>{(it.style_tags||[]).forEach(t=>acc.push(t));if(it.category)acc.push(it.category);return acc;},[])};
     const feed=loadFeedPosts();feed.unshift(post);saveFeedPosts(feed);
     showToast('הלוק שותף לפיד ✨');showView('feed');
@@ -525,13 +893,13 @@
 
   // ---- Feed ----
   const SEED_POSTS=[
-    {id:'s1',user:'noa.styles', name:'נועה',verified:true, caption:'לוק קיצי לבית קפה ☕️',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress']},
-    {id:'s2',user:'yael_fits',  name:'יעל', verified:false,caption:'סטריטוור עכשווי ✨',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes']},
-    {id:'s3',user:'mika.thrift',name:'מיקה',verified:true, caption:'יד שנייה במצב מעולה ♻️',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag']},
-    {id:'s4',user:'shir.daily', name:'שיר', verified:false,caption:'אאוטפיט ליום ראשון 🤍',        tags:['minimal','ootd'],            price:179,img:null,                 grad:'linear-gradient(160deg,#fccb90,#d57eeb)',         likes:3300,trend:88,earn:18,mtags:['minimal','everyday','ootd','dress','shoes']},
-    {id:'s5',user:'agam.x',     name:'אגם', verified:true, caption:'vintage vibes 🕶️',            tags:['vintage','retro'],           price:259,img:null,                 grad:'linear-gradient(160deg,#5ee7df,#b490ca)',         likes:4000,trend:94,earn:26,mtags:['vintage','retro','thrifted','accessory','outerwear']},
-    {id:'s6',user:'dana.edit',  name:'דנה', verified:false,caption:'office but make it cute 💼',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag']},
-    {id:'s7',user:'lia.threads',name:'ליה', verified:true, caption:'beach day ready 🌊',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms']},
+    {id:'s1',user:'noa.styles', name:'נועה',verified:true, caption:'לוק קיצי לבית קפה ☕️',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress'],items:[{category:'top',name:'חולצת קרופ לבנה',price_estimate_ils:79,q:'white cropped tee'},{category:'bottoms',name:'מכנס בייקר בז',price_estimate_ils:159,q:'beige baker trousers'},{category:'shoes',name:'סניקרס לבנות',price_estimate_ils:220,q:'white leather sneakers'},{category:'accessory',name:'משקפי שמש',price_estimate_ils:89,q:'trendy sunglasses'}]},
+    {id:'s2',user:'yael_fits',  name:'יעל', verified:false,caption:'סטריטוור עכשווי ✨',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes'],items:[{category:'top',name:'טי אוברסייז',price_estimate_ils:99,q:'oversized graphic tee'},{category:'bottoms',name:'קרגו פראשוט',price_estimate_ils:159,q:'parachute cargo pants'},{category:'shoes',name:'אדידס סמבה',price_estimate_ils:449,q:'adidas samba'},{category:'accessory',name:'כובע בייסבול',price_estimate_ils:69,q:'baseball cap'}]},
+    {id:'s3',user:'mika.thrift',name:'מיקה',verified:true, caption:'יד שנייה במצב מעולה ♻️',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag'],items:[{category:'top',name:'חולצה משומשת',price_estimate_ils:45,q:'vintage shirt'},{category:'bottoms',name:'גינס מאם',price_estimate_ils:89,q:'vintage mom jeans'},{category:'bag',name:'תיק כתף',price_estimate_ils:60,q:'vintage shoulder bag'}]},
+    {id:'s4',user:'shir.daily', name:'שיר', verified:false,caption:'אאוטפיט ליום ראשון 🤍',        tags:['minimal','ootd'],            price:179,img:null,                 grad:'linear-gradient(160deg,#fccb90,#d57eeb)',         likes:3300,trend:88,earn:18,mtags:['minimal','everyday','ootd','dress','shoes'],items:[{category:'dress',name:'שמלת מידי',price_estimate_ils:179,q:'midi slip dress'},{category:'shoes',name:'נעלי בלרינה',price_estimate_ils:120,q:'ballet flats'},{category:'bag',name:'תיק מיני',price_estimate_ils:95,q:'mini bag'}]},
+    {id:'s5',user:'agam.x',     name:'אגם', verified:true, caption:'vintage vibes 🕶️',            tags:['vintage','retro'],           price:259,img:null,                 grad:'linear-gradient(160deg,#5ee7df,#b490ca)',         likes:4000,trend:94,earn:26,mtags:['vintage','retro','thrifted','accessory','outerwear'],items:[{category:'outerwear',name:'מעיל דנים',price_estimate_ils:199,q:'vintage denim jacket'},{category:'accessory',name:'משקפי רטרו',price_estimate_ils:79,q:'retro sunglasses'},{category:'shoes',name:'מגף קאובוי',price_estimate_ils:259,q:'cowboy boots'}]},
+    {id:'s6',user:'dana.edit',  name:'דנה', verified:false,caption:'office but make it cute 💼',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag'],items:[{category:'dress',name:'שמלת בלייזר',price_estimate_ils:320,q:'blazer dress'},{category:'shoes',name:'מוקסינים',price_estimate_ils:199,q:'leather loafers'},{category:'bag',name:'תיק מובנה',price_estimate_ils:240,q:'structured work bag'}]},
+    {id:'s7',user:'lia.threads',name:'ליה', verified:true, caption:'beach day ready 🌊',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms'],items:[{category:'top',name:'טופ ביקיני',price_estimate_ils:69,q:'bikini top'},{category:'bottoms',name:'מכנס פשתן',price_estimate_ils:120,q:'linen beach pants'},{category:'accessory',name:'כובע קש',price_estimate_ils:79,q:'straw hat'}]},
   ];
 
   function loadSet(k){try{return new Set(JSON.parse(localStorage.getItem(k))||[]);}catch(e){return new Set();}}
@@ -581,6 +949,7 @@
         <div class="fc-caption">${esc(post.caption||'')}</div>
         <div class="fc-tags">${tagPills}</div>
         <span class="fc-match">${matchPercent(mtags)}% התאמה לארון שלי</span>
+        ${(post.items&&post.items.length)?`<button class="fc-shop" data-shop="${attr(post.id||'')}">🛍️ קני פריטים · ${post.items.length}</button>`:''}
         ${earnLine}
       </div></div>`;
   }
@@ -610,7 +979,23 @@
   }
 
   const feedScroll=document.getElementById('feed-scroll');
+  // resolve a post (seed or the user's own shared look) by its id
+  function feedPostById(id){
+    return SEED_POSTS.find(p=>p.id===id) || loadFeedPosts().find(p=>(p.id||'mine_'+p.ts)===id) || null;
+  }
+  function shopPostItems(post,fallbackLabel,price,earn,user){
+    if(post && post.items && post.items.length){
+      const total=post.items.reduce((s,x)=>s+(Number(x.price_estimate_ils||x.price)||0),0);
+      openSheetLook(post.name?('לוק של '+post.name):(post.caption||fallbackLabel||'הלוק'),
+        post.items, price||post.price||post.look_total_ils||total, earn||post.earn||0, user||post.user||'');
+      return true;
+    }
+    return false;
+  }
+
   feedScroll.addEventListener('click',e=>{
+    const shop=e.target.closest('.fc-shop');
+    if(shop){ shopPostItems(feedPostById(shop.dataset.shop)); return; }
     const action=e.target.closest('.fc-action');if(!action)return;
     const type=action.dataset.action,id=action.dataset.id;
     if(type==='like'){
