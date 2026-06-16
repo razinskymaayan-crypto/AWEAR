@@ -20,6 +20,7 @@ COMPANY_EMAIL = "awearteam66@gmail.com"
 SCOPES = [
     "https://www.googleapis.com/auth/calendar",
     "https://www.googleapis.com/auth/gmail.send",
+    "https://www.googleapis.com/auth/gmail.readonly",
 ]
 TOKEN_FILE = "google_token.json"
 CREDS_FILE = "google_credentials.json"
