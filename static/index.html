@@ -741,6 +741,39 @@
   .sr-insight-text { font-size: 13px; font-weight: 700; line-height: 1.5; }
   .sr-action-row { display: flex; gap: 10px; padding: 0 18px; }
 
+  /* ---- Marketplace ---- */
+  .mp-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
+  .mp-header { padding: 14px 18px 8px; display: flex; align-items: center; justify-content: space-between; }
+  .mp-title { font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
+  .mp-sell-btn { padding: 8px 16px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; border-radius: 20px; font-family: inherit; font-size: 12px; font-weight: 900; color: #fff; cursor: pointer; transition: transform .15s; }
+  .mp-sell-btn:active { transform: scale(.95); }
+  .mp-tabs { display: flex; gap: 0; padding: 0 18px 12px; }
+  .mp-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 800; color: var(--muted); border-bottom: 2px solid var(--line); cursor: pointer; transition: all .18s; font-family: inherit; background: none; border-top: none; border-left: none; border-right: none; }
+  .mp-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .mp-filters { display: flex; gap: 7px; padding: 0 18px 12px; overflow-x: auto; scrollbar-width: none; }
+  .mp-filters::-webkit-scrollbar { display: none; }
+  .mp-filter { flex-shrink: 0; padding: 6px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: 12px; font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; transition: all .18s; }
+  .mp-filter.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: #fff; }
+  .mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px; }
+  .mp-item { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
+  .mp-item:active { transform: scale(.97); }
+  .mp-item-img { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; background: linear-gradient(160deg, #2a2040, #1a1030); position: relative; }
+  .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 20px; }
+  .mp-item-badge.new { background: var(--accent); color: #fff; }
+  .mp-item-badge.like-new { background: #4ade80; color: #0a0a0e; }
+  .mp-item-badge.used { background: var(--accent2); color: #fff; }
+  .mp-item-info { padding: 10px 12px 12px; }
+  .mp-item-name { font-size: 13px; font-weight: 800; line-height: 1.2; }
+  .mp-item-price { font-size: 15px; font-weight: 900; color: var(--accent); margin-top: 5px; }
+  .mp-item-seller { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 3px; }
+  .mp-item-compat { font-size: 11px; color: var(--accent2); font-weight: 800; margin-top: 3px; }
+  .mp-sell-form { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
+  .mp-form-label { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 4px; }
+  .mp-form-input { width: 100%; background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 14px; font-family: inherit; font-size: 14px; color: var(--text); outline: none; direction: rtl; transition: border .18s; }
+  .mp-form-input:focus { border-color: var(--accent); }
+  .mp-price-row { display: flex; gap: 10px; align-items: flex-end; }
+  .mp-ai-price { padding: 8px 14px; background: rgba(123,92,255,.15); border: 1.5px solid var(--accent2); border-radius: 12px; font-size: 12px; font-weight: 800; color: var(--accent2); cursor: pointer; white-space: nowrap; font-family: inherit; }
+
   /* ---- Wishlist ---- */
   .wl-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
   .wl-header { padding: 16px 18px 12px; font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
@@ -905,6 +938,11 @@
     <!-- ANALYTICS -->
     <section id="analytics" class="view">
       <div class="an-wrap" id="analytics-wrap"></div>
+    </section>
+
+    <!-- MARKETPLACE -->
+    <section id="marketplace" class="view">
+      <div class="mp-wrap" id="mp-wrap"></div>
     </section>
 
     <!-- PUBLIC CLOSETS -->
@@ -1152,6 +1190,7 @@
     if (name === 'explore')   initExplore();
     if (name === 'analytics') renderAnalytics();
     if (name === 'outfits')       initOutfitGen();
+    if (name === 'marketplace')   renderMarketplace();
     if (name === 'publicclosets') renderPublicClosets();
     if (name === 'seasonal')      renderSeasonalReport();
     if (name === 'wishlist')  renderWishlist();
@@ -1995,7 +2034,7 @@
         <button class="hq-btn" onclick="showView('chat')"><span class="hq-icon">💅</span>סטייליסט</button>
         <button class="hq-btn" onclick="showView('wishlist')"><span class="hq-icon">💫</span>Wishlist</button>
         <button class="hq-btn" onclick="showView('seasonal')"><span class="hq-icon">📋</span>דו"ח עונה</button>
-        <button class="hq-btn" onclick="showView('publicclosets')"><span class="hq-icon">👥</span>ארונות</button>
+        <button class="hq-btn" onclick="showView('marketplace')"><span class="hq-icon">🛒</span>Marketplace</button>
       </div>
     `;
 
@@ -2331,6 +2370,174 @@
         <div style="font-size:11px;font-weight:700;color:${color};margin-top:5px">${label}</div>
         ${matches.length ? `<div class="cs-matches">${matches.map(m=>`<span class="cs-match-tag">${esc(m)}</span>`).join('')}</div>` : ''}
       </div>`;
+  }
+
+  // ---- Marketplace ----
+  const MP_KEY = 'awear_marketplace';
+  const MP_SEED = [
+    {id:'mp1', name:'ג׳ינס בארל לייט', emoji:'👖', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'כחול'},
+    {id:'mp2', name:'מעיל עור שחור וינטג׳', emoji:'🧥', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'שחור'},
+    {id:'mp3', name:'סניקרס Adidas Samba לבן', emoji:'👟', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'לבן'},
+    {id:'mp4', name:'מיני בג׳ שחור', emoji:'👜', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'שחור'},
+    {id:'mp5', name:'חולצת קרופ ריב שמנת', emoji:'👕', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'שמנת'},
+    {id:'mp6', name:'חצאית מידי סאטן', emoji:'👗', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'ירוק'},
+    {id:'mp7', name:'כובע בייסבול שחור', emoji:'🧢', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'שחור'},
+    {id:'mp8', name:'מכנסי קרגו בז׳', emoji:'👖', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'בז׳'},
+  ];
+  let mpTab = 'browse', mpFilter = 'all';
+
+  function loadMPListings() {
+    const user = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
+    return [...user, ...MP_SEED];
+  }
+
+  function renderMarketplace() {
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const listings = loadMPListings();
+    const categories = ['all','top','bottoms','shoes','bag','outerwear'];
+    const catLabels = {all:'הכל',top:'חולצות',bottoms:'מכנסיים',shoes:'נעליים',bag:'תיקים',outerwear:'מעילים'};
+
+    let filtered = listings;
+    if (mpFilter !== 'all') filtered = listings.filter(i => i.category === mpFilter);
+
+    const el = document.getElementById('mp-wrap');
+    el.innerHTML = `
+      <div class="mp-header">
+        <div class="mp-title">🛒 Marketplace</div>
+        <button class="mp-sell-btn" id="mp-sell-open">+ מכרי פריט</button>
+      </div>
+      <div class="mp-tabs">
+        <button class="mp-tab${mpTab==='browse'?' active':''}" data-tab="browse">קנייה</button>
+        <button class="mp-tab${mpTab==='sell'?' active':''}" data-tab="sell">מכירה שלי</button>
+        <button class="mp-tab${mpTab==='swap'?' active':''}" data-tab="swap">החלפה</button>
+      </div>
+      ${mpTab === 'browse' ? `
+      <div class="mp-filters">
+        ${categories.map(c => `<button class="mp-filter${mpFilter===c?' active':''}" data-cat="${c}">${catLabels[c]}</button>`).join('')}
+      </div>
+      <div class="mp-grid">
+        ${filtered.map(item => {
+          const compat = wardrobe.length ? calcCompatScore(item, wardrobe) : null;
+          const cond = item.condition === 'new' ? 'חדש' : item.condition === 'like-new' ? 'כמו חדש' : 'משומש';
+          return `<div class="mp-item" data-id="${item.id}">
+            <div class="mp-item-img">
+              ${item.emoji}
+              <div class="mp-item-badge ${item.condition}">${esc(cond)}</div>
+            </div>
+            <div class="mp-item-info">
+              <div class="mp-item-name">${esc(item.name)}</div>
+              <div class="mp-item-price">₪${item.price} <span style="font-size:11px;font-weight:600;color:var(--muted);text-decoration:line-through">₪${item.orig}</span></div>
+              <div class="mp-item-seller">${esc(item.seller)}</div>
+              ${compat ? `<div class="mp-item-compat">${compat.pct}% התאמה לארון</div>` : ''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>` : mpTab === 'sell' ? renderMySells() : renderSwap()}
+    `;
+
+    // Tabs
+    el.querySelectorAll('.mp-tab').forEach(btn => btn.addEventListener('click', () => {
+      mpTab = btn.dataset.tab; renderMarketplace();
+    }));
+
+    // Filters
+    el.querySelectorAll('.mp-filter').forEach(btn => btn.addEventListener('click', () => {
+      mpFilter = btn.dataset.cat; renderMarketplace();
+    }));
+
+    // Sell button
+    el.querySelector('#mp-sell-open')?.addEventListener('click', openSellForm);
+
+    // Item click → buy sheet
+    el.querySelectorAll('.mp-item').forEach(card => card.addEventListener('click', () => {
+      const id = card.dataset.id;
+      const item = loadMPListings().find(i => i.id === id);
+      if (!item) return;
+      openSheetSingle({
+        name: item.name, category: item.category, color: item.color,
+        brand_vibe: item.seller, price_estimate_ils: item.price,
+        search_query: item.name, style_tags: item.style_tags || [],
+      }, null, null);
+    }));
+  }
+
+  function renderMySells() {
+    const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
+    if (!mine.length) return `<div style="text-align:center;padding:40px 20px;color:var(--muted)"><div style="font-size:36px;margin-bottom:12px">📦</div><div style="font-size:14px;font-weight:700">עוד לא מכרת פריטים</div><div style="font-size:12px;margin-top:6px;opacity:.7">לחצי על "+ מכרי פריט" כדי להתחיל</div></div>`;
+    return `<div class="mp-grid">${mine.map(item => `
+      <div class="mp-item">
+        <div class="mp-item-img">${item.emoji||'👗'}<div class="mp-item-badge like-new">שלי</div></div>
+        <div class="mp-item-info">
+          <div class="mp-item-name">${esc(item.name)}</div>
+          <div class="mp-item-price">₪${item.price}</div>
+          <div class="mp-item-seller" style="color:#4ade80">פעיל ✓</div>
+        </div>
+      </div>`).join('')}</div>`;
+  }
+
+  function renderSwap() {
+    return `<div style="text-align:center;padding:40px 20px">
+      <div style="font-size:40px;margin-bottom:12px">🔄</div>
+      <div style="font-size:15px;font-weight:900;margin-bottom:8px">החלפת פריטים בקרוב</div>
+      <div style="font-size:13px;color:var(--muted);font-weight:600">גרסה 2 — Swap עם ארונות של חברות</div>
+    </div>`;
+  }
+
+  function openSellForm() {
+    const modal = document.getElementById('purchase-modal');
+    const card  = document.getElementById('modal-card');
+    card.innerHTML = `
+      <div style="padding:18px 20px 0;font-size:17px;font-weight:900">📦 מכרי פריט</div>
+      <div class="mp-sell-form">
+        <div>
+          <div class="mp-form-label">שם הפריט</div>
+          <input class="mp-form-input" id="sf-name" placeholder='למשל: ג׳ינס Zara כחול' />
+        </div>
+        <div class="mp-price-row">
+          <div style="flex:1">
+            <div class="mp-form-label">מחיר (₪)</div>
+            <input class="mp-form-input" id="sf-price" type="number" placeholder="150" />
+          </div>
+          <button class="mp-ai-price" id="sf-ai-price">AI תמחור</button>
+        </div>
+        <div>
+          <div class="mp-form-label">מצב</div>
+          <select class="mp-form-input" id="sf-condition">
+            <option value="new">חדש</option>
+            <option value="like-new" selected>כמו חדש</option>
+            <option value="used">משומש</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="ha-btn ha-primary" style="flex:1" id="sf-submit">פרסמי למכירה</button>
+          <button class="ha-btn ha-secondary" style="flex:1" onclick="document.getElementById('purchase-modal').classList.remove('show')">ביטול</button>
+        </div>
+      </div>`;
+    modal.classList.add('show');
+
+    document.getElementById('sf-ai-price').addEventListener('click', () => {
+      const name = document.getElementById('sf-name').value;
+      if (!name) { showToast('הכניסי שם פריט קודם'); return; }
+      const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+      const match = wardrobe.find(i => i.name && name && i.name.includes(name.slice(0,4)));
+      const suggested = match ? Math.round((match.price_estimate_ils || 200) * 0.5) : 150;
+      document.getElementById('sf-price').value = suggested;
+      showToast(`AI מציע ₪${suggested} (50% ממחיר קנייה)`);
+    });
+
+    document.getElementById('sf-submit').addEventListener('click', () => {
+      const name = document.getElementById('sf-name').value.trim();
+      const price = Number(document.getElementById('sf-price').value) || 150;
+      const condition = document.getElementById('sf-condition').value;
+      if (!name) { showToast('חסר שם פריט'); return; }
+      const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
+      mine.unshift({id:'u'+Date.now(), name, price, condition, emoji:'👗', category:'other', seller:'@אני', orig: price*2, style_tags:[]});
+      localStorage.setItem(MP_KEY, JSON.stringify(mine));
+      modal.classList.remove('show');
+      mpTab = 'sell';
+      renderMarketplace();
+      showToast('פריט פורסם! 🎉');
+    });
   }
 
   // ---- Public Closets ----
