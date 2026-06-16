@@ -648,6 +648,76 @@
   .ex-result-name { font-size: 14px; font-weight: 800; color: var(--text); }
   .ex-result-cat { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
 
+  /* ---- Outfit Generator ---- */
+  .og-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
+  .og-header { padding: 16px 18px 10px; }
+  .og-title { font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
+  .og-sub { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+  .og-input-row { display: flex; gap: 8px; padding: 0 18px 12px; }
+  .og-input { flex: 1; background: var(--card); border: 1.5px solid var(--line); border-radius: 18px; padding: 13px 16px; font-family: inherit; font-size: 14px; color: var(--text); outline: none; direction: rtl; transition: border .18s; }
+  .og-input:focus { border-color: var(--accent2); }
+  .og-go { padding: 13px 18px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; border-radius: 18px; color: #fff; font-family: inherit; font-size: 14px; font-weight: 900; cursor: pointer; transition: transform .15s; white-space: nowrap; }
+  .og-go:active { transform: scale(.96); }
+  .og-scenarios { display: flex; gap: 8px; padding: 0 18px 16px; overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
+  .og-scenarios::-webkit-scrollbar { display: none; }
+  .og-chip { flex-shrink: 0; padding: 8px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: 12px; font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; transition: all .18s; display: flex; align-items: center; gap: 5px; }
+  .og-chip:active { border-color: var(--accent2); background: rgba(123,92,255,.1); }
+  .og-result-section { padding: 0 18px; display: flex; flex-direction: column; gap: 14px; }
+  .og-outfit-card { background: var(--card); border-radius: 20px; border: 1px solid var(--line); overflow: hidden; }
+  .og-outfit-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px; border-bottom: 1px solid var(--line); }
+  .og-outfit-num { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; color: #fff; flex-shrink: 0; }
+  .og-outfit-name { font-size: 14px; font-weight: 900; flex: 1; }
+  .og-outfit-score { font-size: 12px; font-weight: 800; color: var(--accent2); }
+  .og-outfit-items { padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .og-item-row { display: flex; align-items: center; gap: 10px; }
+  .og-item-ico { font-size: 20px; width: 36px; height: 36px; background: rgba(255,255,255,.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .og-item-info { flex: 1; }
+  .og-item-name { font-size: 13px; font-weight: 800; }
+  .og-item-status { font-size: 11px; margin-top: 2px; font-weight: 600; }
+  .og-item-have { color: #4ade80; }
+  .og-item-need { color: var(--accent); }
+  .og-outfit-tip { margin: 0 14px 12px; background: rgba(123,92,255,.1); border-radius: 12px; padding: 10px 12px; font-size: 12px; font-weight: 600; color: rgba(246,246,249,.8); line-height: 1.5; }
+  .og-loading { text-align: center; padding: 40px 20px; }
+  .og-loading-spinner { font-size: 32px; animation: spin 1s linear infinite; display: inline-block; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .og-empty { text-align: center; padding: 50px 20px; color: var(--muted); }
+  .og-empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .og-empty-text { font-size: 14px; font-weight: 700; }
+  .og-empty-sub { font-size: 12px; margin-top: 6px; font-weight: 500; opacity: .7; }
+
+  /* ---- Compatibility Score (on scan modal) ---- */
+  .compat-score-bar { margin: 0 20px 14px; }
+  .cs-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .cs-label { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: .5px; }
+  .cs-pct { font-size: 20px; font-weight: 900; letter-spacing: -.5px; }
+  .cs-track { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .cs-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s ease; }
+  .cs-matches { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .cs-match-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; background: rgba(123,92,255,.15); border-radius: 20px; color: var(--accent2); }
+
+  /* ---- Wishlist ---- */
+  .wl-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
+  .wl-header { padding: 16px 18px 12px; font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
+  .wl-empty { text-align: center; padding: 60px 20px; }
+  .wl-empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .wl-empty-text { font-size: 14px; font-weight: 700; color: var(--muted); }
+  .wl-empty-sub { font-size: 12px; font-weight: 500; color: var(--muted); margin-top: 6px; opacity: .7; }
+  .wl-list { display: flex; flex-direction: column; gap: 10px; padding: 0 18px; }
+  .wl-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 18px; padding: 14px; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
+  .wl-item:active { transform: scale(.98); }
+  .wl-item-ico { font-size: 28px; width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg,#2a2040,#1a1030); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .wl-item-info { flex: 1; min-width: 0; }
+  .wl-item-name { font-size: 14px; font-weight: 800; }
+  .wl-item-price { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 3px; }
+  .wl-item-compat { font-size: 11px; font-weight: 800; color: var(--accent2); margin-top: 3px; }
+  .wl-item-del { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,61,119,.1); border: 0; color: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; font-size: 16px; transition: all .18s; }
+  .wl-item-del:active { background: rgba(255,61,119,.25); }
+  .wl-add-row { padding: 12px 18px 0; display: flex; gap: 8px; }
+  .wl-add-input { flex: 1; background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 11px 14px; font-family: inherit; font-size: 14px; color: var(--text); outline: none; direction: rtl; }
+  .wl-add-input:focus { border-color: var(--accent2); }
+  .wl-add-btn { padding: 11px 16px; background: var(--card); border: 1.5px solid var(--accent2); border-radius: 14px; font-family: inherit; font-size: 13px; font-weight: 800; color: var(--accent2); cursor: pointer; white-space: nowrap; transition: all .18s; }
+  .wl-add-btn:active { background: rgba(123,92,255,.15); }
+
   /* ---- Home Screen ---- */
   .home-wrap { display: flex; flex-direction: column; gap: 0; padding-bottom: 8px; }
   .home-greeting-section { padding: 16px 18px 10px; }
@@ -789,6 +859,35 @@
     <!-- ANALYTICS -->
     <section id="analytics" class="view">
       <div class="an-wrap" id="analytics-wrap"></div>
+    </section>
+
+    <!-- OUTFIT GENERATOR -->
+    <section id="outfits" class="view">
+      <div class="og-wrap" id="og-wrap">
+        <div class="og-header">
+          <div class="og-title">✨ Outfit Generator</div>
+          <div class="og-sub">תארי את הצורך שלך — AI יבנה לוקים מהארון</div>
+        </div>
+        <div class="og-input-row">
+          <input class="og-input" id="og-input" placeholder='למשל: "יש לי דייט הערב"' />
+          <button class="og-go" id="og-go">צרי</button>
+        </div>
+        <div class="og-scenarios" id="og-scenarios"></div>
+        <div id="og-result"></div>
+      </div>
+    </section>
+
+    <!-- WISHLIST -->
+    <section id="wishlist" class="view">
+      <div class="wl-wrap" id="wl-wrap">
+        <div class="wl-header">💫 Wishlist</div>
+        <div class="wl-add-row">
+          <input class="wl-add-input" id="wl-input" placeholder="הוסיפי פריט לרשימה..." />
+          <button class="wl-add-btn" id="wl-add-btn">+ הוסיפי</button>
+        </div>
+        <div style="height:12px"></div>
+        <div class="wl-list" id="wl-list"></div>
+      </div>
     </section>
 
     <!-- AI STYLIST CHAT -->
@@ -996,6 +1095,8 @@
     if (name === 'feed')      renderFeed();
     if (name === 'explore')   initExplore();
     if (name === 'analytics') renderAnalytics();
+    if (name === 'outfits')   initOutfitGen();
+    if (name === 'wishlist')  renderWishlist();
     if (name === 'chat')      initChat();
   }
 
@@ -1055,7 +1156,11 @@
       ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:#34d399;font-weight:700;margin-top:8px;text-align:center">
            ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על הרכישה הזאת
          </p>` : '';
+    const wardrobe4compat = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const csHTML = wardrobe4compat.length ? compatScoreHTML(it, wardrobe4compat) : '';
+
     sheetBody.innerHTML = `
+      ${csHTML}
       <div class="sheet-hero">
         <div class="sheet-hero-img">${productImage(it)}</div>
         <div class="sheet-hero-info">
@@ -1827,10 +1932,10 @@
 
       <div class="home-sec-label">⚡ פעולות מהירות</div>
       <div class="home-quick">
-        <button class="hq-btn" onclick="showView('chat')"><span class="hq-icon">💅</span>סטייליסט AI</button>
+        <button class="hq-btn" onclick="showView('outfits')"><span class="hq-icon">✨</span>Outfit AI</button>
         <button class="hq-btn" onclick="showView('analytics')"><span class="hq-icon">📊</span>אנליטיקס</button>
-        <button class="hq-btn" onclick="showView('explore')"><span class="hq-icon">🔍</span>חיפוש</button>
-        <button class="hq-btn" onclick="showView('feed')"><span class="hq-icon">🔥</span>פיד</button>
+        <button class="hq-btn" onclick="showView('chat')"><span class="hq-icon">💅</span>סטייליסט</button>
+        <button class="hq-btn" onclick="showView('wishlist')"><span class="hq-icon">💫</span>Wishlist</button>
       </div>
     `;
 
@@ -1984,6 +2089,248 @@
           </div>`).join('')}
       </div>` : ''}
     `;
+  }
+
+  // ---- Outfit Generator ----
+  const OG_SCENARIOS = [
+    {emoji:'💕',label:'דייט הערב'},
+    {emoji:'💼',label:'ראיון עבודה'},
+    {emoji:'✈️',label:'טיול לאירופה'},
+    {emoji:'🎉',label:'מסיבת יום הולדת'},
+    {emoji:'☕',label:'בוקר בתל אביב'},
+    {emoji:'🏃',label:'אימון ספורט'},
+    {emoji:'🎓',label:'אירוע פורמלי'},
+    {emoji:'🌊',label:'חוף הים'},
+  ];
+
+  let ogLoading = false;
+
+  function initOutfitGen() {
+    const scenariosEl = document.getElementById('og-scenarios');
+    scenariosEl.innerHTML = OG_SCENARIOS.map(s =>
+      `<button class="og-chip" data-q="${attr(s.label)}">${s.emoji} ${esc(s.label)}</button>`
+    ).join('');
+    scenariosEl.querySelectorAll('.og-chip').forEach(btn =>
+      btn.addEventListener('click', () => runOutfitGen(btn.dataset.q))
+    );
+
+    const goBtn = document.getElementById('og-go');
+    const input = document.getElementById('og-input');
+    if (!goBtn._bound) {
+      goBtn._bound = true;
+      goBtn.addEventListener('click', () => { const q = input.value.trim(); if(q) runOutfitGen(q); });
+      input.addEventListener('keydown', e => { if(e.key==='Enter'){const q=input.value.trim();if(q)runOutfitGen(q);} });
+    }
+  }
+
+  async function runOutfitGen(occasion) {
+    if (ogLoading) return;
+    ogLoading = true;
+    document.getElementById('og-input').value = occasion;
+    const resultEl = document.getElementById('og-result');
+    resultEl.innerHTML = `<div class="og-loading"><div class="og-loading-spinner">✨</div><div style="margin-top:12px;font-size:14px;font-weight:700;color:var(--muted)">בונה לוקים...</div></div>`;
+
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const prof = loadProfile();
+
+    try {
+      const res = await fetch('/api/outfit/generate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          occasion,
+          wardrobe: wardrobe.map(i => ({name:i.name,category:i.category,color:i.color,style_tags:i.style_tags,brand_vibe:i.brand_vibe})),
+          style_vibes: prof.styleVibes || [],
+        }),
+      });
+      const data = await res.json();
+      ogLoading = false;
+      renderOutfitResults(data.outfits || [], occasion);
+    } catch(_) {
+      ogLoading = false;
+      const fallbackOutfits = buildFallbackOutfits(occasion, wardrobe);
+      renderOutfitResults(fallbackOutfits, occasion);
+    }
+  }
+
+  function buildFallbackOutfits(occasion, wardrobe) {
+    const tops    = wardrobe.filter(i => i.category === 'top');
+    const bottoms = wardrobe.filter(i => i.category === 'bottoms' || i.category === 'dress');
+    const shoes   = wardrobe.filter(i => i.category === 'shoes');
+    const bags    = wardrobe.filter(i => i.category === 'bag');
+
+    const presets = {
+      'דייט': [
+        {name:'לוק רומנטי', tip:'הוסיפי עגילים זהב ובושם קל — ה-details מנצחים.', items:[
+          tops[0]||{name:'חולצה שקופה',category:'top',_missing:true},
+          bottoms[0]||{name:'חצאית מידי',category:'dress',_missing:true},
+          shoes[0]||{name:'עקב נמוך',category:'shoes',_missing:true},
+        ]},
+        {name:'לוק אורבני', tip:'ג׳קט דנים מוסיף קשיחות — פרפקט לדייט casual.', items:[
+          tops[1]||tops[0]||{name:'טי-שירט בסיס',category:'top',_missing:true},
+          bottoms[1]||bottoms[0]||{name:'ג׳ינס slim',category:'bottoms',_missing:true},
+          shoes[0]||{name:'סניקרס לבן',category:'shoes',_missing:true},
+        ]},
+      ],
+      'ראיון': [
+        {name:'Business Professional', tip:'פרטים: שרשרת עדינה, ציפורניים נקיות. Less is more.', items:[
+          tops[0]||{name:'חולצה לבנה',category:'top',_missing:true},
+          bottoms[0]||{name:'מכנס שחור ישר',category:'bottoms',_missing:true},
+          shoes[0]||{name:'עקב קלאסי',category:'shoes',_missing:true},
+          bags[0]||{name:'תיק מקצועי',category:'bag',_missing:true},
+        ]},
+      ],
+      'ספורט': [
+        {name:'Sport Chic', tip:'מגבת קטנה + בקבוק מים מותאם = שלם את הלוק.', items:[
+          tops[0]||{name:'קרופ ספורטיבי',category:'top',_missing:true},
+          bottoms[0]||{name:'לגינס',category:'bottoms',_missing:true},
+          shoes[0]||{name:'סניקרס ספורט',category:'shoes',_missing:true},
+        ]},
+      ],
+    };
+
+    const key = Object.keys(presets).find(k => occasion.includes(k));
+    return presets[key] || [{
+      name: 'לוק מושלם ל' + occasion,
+      tip: 'שלבי צבעים נייטרל עם פריט statement אחד — זה הסוד.',
+      items: [
+        tops[0]||{name:'חולצה בסיס',category:'top',_missing:true},
+        bottoms[0]||{name:'מכנס מתאים',category:'bottoms',_missing:true},
+        shoes[0]||{name:'נעל מתאימה',category:'shoes',_missing:true},
+      ],
+    }];
+  }
+
+  function renderOutfitResults(outfits, occasion) {
+    const el = document.getElementById('og-result');
+    if (!outfits.length) {
+      el.innerHTML = `<div class="og-empty"><div class="og-empty-icon">🤔</div><div class="og-empty-text">לא הצלחתי לבנות לוק</div><div class="og-empty-sub">נסי לסרוק עוד פריטים לארון</div></div>`;
+      return;
+    }
+    el.innerHTML = `
+      <div style="padding:0 18px 10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">לוקים ל${esc(occasion)}</div>
+      <div class="og-result-section">
+        ${outfits.map((o,i) => `
+          <div class="og-outfit-card">
+            <div class="og-outfit-header">
+              <div class="og-outfit-num">${i+1}</div>
+              <div class="og-outfit-name">${esc(o.name||'לוק '+(i+1))}</div>
+              ${o.match_pct ? `<div class="og-outfit-score">${o.match_pct}% מהארון</div>` : ''}
+            </div>
+            <div class="og-outfit-items">
+              ${(o.items||[]).map(item => `
+                <div class="og-item-row">
+                  <div class="og-item-ico">${CAT_EMOJI[item.category]||'👕'}</div>
+                  <div class="og-item-info">
+                    <div class="og-item-name">${esc(item.name)}</div>
+                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '⚡ חסר — שקלי לקנות' : '✓ יש בארון'}</div>
+                  </div>
+                </div>`).join('')}
+            </div>
+            ${o.tip ? `<div class="og-outfit-tip">💡 ${esc(o.tip)}</div>` : ''}
+          </div>`).join('')}
+      </div>`;
+  }
+
+  // ---- Compatibility Score ----
+  function calcCompatScore(newItem, wardrobe) {
+    if (!wardrobe.length) return {pct: 70, matches: []};
+    const newTags = new Set((newItem.style_tags || []).map(t => t.toLowerCase()));
+    const newColor = (newItem.color || '').toLowerCase();
+
+    let tagMatches = 0, colorMatches = 0;
+    const matchingItems = [];
+    wardrobe.forEach(w => {
+      const wTags = (w.style_tags || []).map(t => t.toLowerCase());
+      const tagHits = wTags.filter(t => newTags.has(t)).length;
+      if (tagHits > 0) { tagMatches += tagHits; matchingItems.push(w.name); }
+      if (w.color && newColor && w.color.toLowerCase().includes(newColor.slice(0,3))) colorMatches++;
+    });
+
+    const tagScore  = Math.min(50, (tagMatches  / Math.max(newTags.size, 1)) * 40);
+    const colorScore = Math.min(20, colorMatches * 8);
+    const baseScore = 40;
+    const pct = Math.min(99, Math.round(baseScore + tagScore + colorScore));
+    return {pct, matches: matchingItems.slice(0,4)};
+  }
+
+  function compatScoreHTML(item, wardrobe) {
+    const {pct, matches} = calcCompatScore(item, wardrobe);
+    const color = pct >= 80 ? '#4ade80' : pct >= 60 ? 'var(--accent2)' : 'var(--accent)';
+    const label = pct >= 80 ? 'מתאים מצוין לארון!' : pct >= 60 ? 'מתאים טוב' : 'מתאים חלקית';
+    return `
+      <div class="compat-score-bar">
+        <div class="cs-label-row">
+          <span class="cs-label">COMPATIBILITY SCORE</span>
+          <span class="cs-pct" style="color:${color}">${pct}%</span>
+        </div>
+        <div class="cs-track"><div class="cs-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div style="font-size:11px;font-weight:700;color:${color};margin-top:5px">${label}</div>
+        ${matches.length ? `<div class="cs-matches">${matches.map(m=>`<span class="cs-match-tag">${esc(m)}</span>`).join('')}</div>` : ''}
+      </div>`;
+  }
+
+  // ---- Wishlist ----
+  const WL_KEY = 'awear_wishlist';
+
+  function loadWishlist() { return JSON.parse(localStorage.getItem(WL_KEY) || '[]'); }
+  function saveWishlist(wl) { localStorage.setItem(WL_KEY, JSON.stringify(wl)); }
+
+  function renderWishlist() {
+    const wl = loadWishlist();
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const list = document.getElementById('wl-list');
+
+    // Add button
+    const addBtn = document.getElementById('wl-add-btn');
+    const addInput = document.getElementById('wl-input');
+    if (addBtn && !addBtn._bound) {
+      addBtn._bound = true;
+      const doAdd = () => {
+        const name = addInput.value.trim();
+        if (!name) return;
+        const wl2 = loadWishlist();
+        wl2.unshift({id: Date.now(), name, addedAt: new Date().toLocaleDateString('he-IL')});
+        saveWishlist(wl2);
+        addInput.value = '';
+        renderWishlist();
+        showToast('נוסף ל-Wishlist 💫');
+      };
+      addBtn.addEventListener('click', doAdd);
+      addInput.addEventListener('keydown', e => { if(e.key==='Enter') doAdd(); });
+    }
+
+    if (!wl.length) {
+      list.innerHTML = `
+        <div class="wl-empty">
+          <div class="wl-empty-icon">💭</div>
+          <div class="wl-empty-text">הרשימה ריקה</div>
+          <div class="wl-empty-sub">הוסיפי פריטים שאת רוצה לקנות</div>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = wl.map(item => {
+      const compat = calcCompatScore({name: item.name, style_tags: [], color: ''}, wardrobe);
+      return `<div class="wl-item" data-id="${item.id}">
+        <div class="wl-item-ico">💫</div>
+        <div class="wl-item-info">
+          <div class="wl-item-name">${esc(item.name)}</div>
+          <div class="wl-item-price">נוסף ${esc(item.addedAt)}</div>
+          ${wardrobe.length ? `<div class="wl-item-compat">התאמה לארון: ${compat.pct}%</div>` : ''}
+        </div>
+        <button class="wl-item-del" data-id="${item.id}">×</button>
+      </div>`;
+    }).join('');
+
+    list.querySelectorAll('.wl-item-del').forEach(btn =>
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const id = Number(btn.dataset.id);
+        saveWishlist(loadWishlist().filter(i => i.id !== id));
+        renderWishlist();
+      })
+    );
   }
 
   // ---- AI Stylist Chat ----

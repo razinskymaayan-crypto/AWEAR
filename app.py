@@ -304,6 +304,54 @@ async def agent_meeting(data: AgentMeeting):
 # AI Stylist Chat
 # ---------------------------------------------------------------------------
 
+class OutfitRequest(BaseModel):
+    occasion: str
+    wardrobe: list = []
+    style_vibes: list = []
+
+
+@app.post("/api/outfit/generate")
+async def generate_outfit(data: OutfitRequest):
+    """Generate outfit suggestions for a given occasion using the user's wardrobe."""
+    wardrobe_desc = ", ".join(
+        f"{it.get('name','')} ({it.get('category','')})"
+        for it in data.wardrobe[:30]
+    ) or "ארון ריק"
+
+    system = (
+        "את סטייליסטית AI של AWEAR. תייצרי 2-3 הצעות לוק לאירוע שמבוקש, "
+        "תוך שימוש מקסימלי בפריטים מהארון הקיים. "
+        "החזירי JSON בלבד (ללא markdown): "
+        '{"outfits": [{"name": "שם הלוק", "match_pct": 85, "tip": "טיפ קצר", '
+        '"items": [{"name": "שם פריט", "category": "top/bottoms/shoes/bag/outerwear", '
+        '"_missing": false}]}]}'
+        " — _missing: true אם הפריט לא בארון ויש לקנות."
+    )
+    try:
+        response = client.messages.create(
+            model=MODEL,
+            max_tokens=800,
+            system=system,
+            messages=[{
+                "role": "user",
+                "content": (
+                    f"אירוע: {data.occasion}\n"
+                    f"ארון: {wardrobe_desc}\n"
+                    f"סגנונות אהובים: {', '.join(data.style_vibes) or 'כלשהו'}"
+                ),
+            }],
+        )
+        import json as _json
+        text = response.content[0].text.strip()
+        # strip markdown fences if present
+        if text.startswith("```"):
+            text = "\n".join(text.split("\n")[1:])
+            text = text.rstrip("`").strip()
+        return _json.loads(text)
+    except Exception:
+        return {"outfits": []}
+
+
 class StylistMessage(BaseModel):
     question: str
     wardrobe_context: str = ""
