@@ -1,8 +1,12 @@
 # הגדרת יומן Google Calendar — AWEAR
 
-## שלב 1 — פתיחת חשבון Google
+## חשבון החברה
 
-1. פתחי חשבון Gmail חדש: `awear.team.il@gmail.com` (או שם אחר שתבחרי)
+כתובת מייל: `awearteam66@gmail.com`
+
+## שלב 1 — הגדרת החשבון
+
+1. היכנסי לחשבון `awearteam66@gmail.com`
 2. הוסיפי את כרמל ומעיין כמנהלות החשבון
 
 ---
