@@ -741,6 +741,50 @@
   .sr-insight-text { font-size: 13px; font-weight: 700; line-height: 1.5; }
   .sr-action-row { display: flex; gap: 10px; padding: 0 18px; }
 
+  /* ---- Rewards ---- */
+  .rw-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
+  .rw-header { padding: 16px 18px 10px; }
+  .rw-title { font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
+  .rw-points-card { margin: 4px 18px 16px; background: linear-gradient(135deg, #1a1030 0%, #201540 60%, #2a1030 100%); border-radius: 24px; padding: 22px 20px; border: 1px solid rgba(123,92,255,.35); }
+  .rw-pts-num { font-size: 48px; font-weight: 900; letter-spacing: -2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
+  .rw-pts-label { font-size: 13px; color: rgba(246,246,249,.7); font-weight: 700; margin-top: 4px; }
+  .rw-level-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+  .rw-level-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; }
+  .rw-level-track { flex: 1; height: 6px; background: rgba(255,255,255,.15); border-radius: 3px; overflow: hidden; }
+  .rw-level-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .rw-level-next { font-size: 11px; color: rgba(246,246,249,.5); font-weight: 700; }
+  .rw-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px 14px; }
+  .rw-action { background: var(--card); border-radius: 16px; padding: 14px 14px; border: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+  .rw-action-icon { font-size: 24px; }
+  .rw-action-name { font-size: 13px; font-weight: 800; }
+  .rw-action-pts { font-size: 12px; color: var(--accent2); font-weight: 800; }
+  .rw-action-done { font-size: 11px; color: #4ade80; font-weight: 700; }
+  .rw-perks-list { display: flex; flex-direction: column; gap: 10px; padding: 0 18px; }
+  .rw-perk { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 16px; padding: 14px; border: 1px solid var(--line); }
+  .rw-perk-icon { font-size: 24px; width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg,#2a2040,#1a1030); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rw-perk-info { flex: 1; }
+  .rw-perk-name { font-size: 13px; font-weight: 800; }
+  .rw-perk-desc { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .rw-perk-pts { font-size: 12px; font-weight: 900; color: var(--accent); flex-shrink: 0; }
+  .rw-perk-btn { padding: 7px 14px; border-radius: 20px; font-family: inherit; font-size: 12px; font-weight: 800; border: 0; cursor: pointer; flex-shrink: 0; }
+  .rw-perk-btn.locked { background: var(--card); color: var(--muted); border: 1.5px solid var(--line); }
+  .rw-perk-btn.unlocked { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+
+  /* ---- Sustainability Score ---- */
+  .sus-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
+  .sus-header { padding: 16px 18px 10px; font-size: 20px; font-weight: 900; }
+  .sus-score-card { margin: 4px 18px 16px; border-radius: 24px; padding: 22px; background: linear-gradient(135deg, #0d1f10, #122018); border: 1px solid rgba(74,222,128,.3); }
+  .sus-score-num { font-size: 56px; font-weight: 900; letter-spacing: -2px; color: #4ade80; line-height: 1; }
+  .sus-score-label { font-size: 13px; color: rgba(246,246,249,.6); font-weight: 700; margin-top: 4px; }
+  .sus-score-grade { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; margin-top: 10px; background: rgba(74,222,128,.2); color: #4ade80; }
+  .sus-metric { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .sus-metric-icon { font-size: 20px; width: 36px; text-align: center; flex-shrink: 0; }
+  .sus-metric-info { flex: 1; }
+  .sus-metric-name { font-size: 13px; font-weight: 800; }
+  .sus-metric-sub { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .sus-metric-val { font-size: 14px; font-weight: 900; color: #4ade80; flex-shrink: 0; }
+  .sus-tip { margin: 0 18px 12px; background: rgba(74,222,128,.08); border-radius: 14px; border-left: 3px solid #4ade80; padding: 12px 14px; font-size: 13px; font-weight: 600; color: rgba(246,246,249,.85); line-height: 1.5; }
+
   /* ---- Marketplace ---- */
   .mp-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
   .mp-header { padding: 14px 18px 8px; display: flex; align-items: center; justify-content: space-between; }
@@ -938,6 +982,16 @@
     <!-- ANALYTICS -->
     <section id="analytics" class="view">
       <div class="an-wrap" id="analytics-wrap"></div>
+    </section>
+
+    <!-- REWARDS -->
+    <section id="rewards" class="view">
+      <div class="rw-wrap" id="rw-wrap"></div>
+    </section>
+
+    <!-- SUSTAINABILITY -->
+    <section id="sustainability" class="view">
+      <div class="sus-wrap" id="sus-wrap"></div>
     </section>
 
     <!-- MARKETPLACE -->
@@ -1190,6 +1244,8 @@
     if (name === 'explore')   initExplore();
     if (name === 'analytics') renderAnalytics();
     if (name === 'outfits')       initOutfitGen();
+    if (name === 'rewards')        renderRewards();
+    if (name === 'sustainability') renderSustainability();
     if (name === 'marketplace')   renderMarketplace();
     if (name === 'publicclosets') renderPublicClosets();
     if (name === 'seasonal')      renderSeasonalReport();
@@ -2369,6 +2425,166 @@
         <div class="cs-track"><div class="cs-fill" style="width:${pct}%;background:${color}"></div></div>
         <div style="font-size:11px;font-weight:700;color:${color};margin-top:5px">${label}</div>
         ${matches.length ? `<div class="cs-matches">${matches.map(m=>`<span class="cs-match-tag">${esc(m)}</span>`).join('')}</div>` : ''}
+      </div>`;
+  }
+
+  // ---- Rewards & Gamification ----
+  const RW_KEY = 'awear_rewards';
+  const LEVELS = [
+    {name:'מתחילה', emoji:'🌱', min:0, color:'#4ade80'},
+    {name:'סטייליסטית', emoji:'✨', min:100, color:'var(--accent2)'},
+    {name:'מובילת טרנד', emoji:'🔥', min:300, color:'var(--accent)'},
+    {name:'Fashion Icon', emoji:'👑', min:600, color:'#f59e0b'},
+  ];
+  const PERKS = [
+    {name:'מנוי פרמיום חודש', desc:'ללא מודעות + ניתוחי AI מתקדמים', pts:500, icon:'💎'},
+    {name:'ייעוץ סטייליסט', desc:'30 דקות עם סטייליסט אנושי', pts:300, icon:'💅'},
+    {name:'משלוח חינם', desc:'עבור קנייה ב-Marketplace', pts:150, icon:'📦'},
+    {name:'עמלת מכירה 0%', desc:'פריט אחד ללא עמלה', pts:100, icon:'🏷️'},
+  ];
+  const RW_ACTIONS = [
+    {key:'scan', name:'סריקת לוק', icon:'📸', pts:10, desc:'כל סריקה חדשה'},
+    {key:'wore', name:'לבשתי', icon:'👗', pts:5, desc:'רישום לבישה יומי'},
+    {key:'sell', name:'מכרתי פריט', icon:'💸', pts:25, desc:'מכירה ב-Marketplace'},
+    {key:'refer', name:'הזמנת חברה', icon:'👯', pts:50, desc:'חברה הצטרפה'},
+  ];
+
+  function loadRewards() { return JSON.parse(localStorage.getItem(RW_KEY) || '{"points":0,"actions":{}}'); }
+  function saveRewards(rw) { localStorage.setItem(RW_KEY, JSON.stringify(rw)); }
+  function addPoints(action, count) {
+    const rw = loadRewards();
+    const act = RW_ACTIONS.find(a => a.key === action);
+    if (!act) return;
+    rw.points += act.pts * (count || 1);
+    rw.actions[action] = (rw.actions[action] || 0) + (count || 1);
+    saveRewards(rw);
+    showToast(`+${act.pts} נקודות! 🎉`);
+  }
+
+  function renderRewards() {
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const scans = wardrobe.length;
+    const rw = loadRewards();
+    // Auto-credit scan points from wardrobe
+    const expectedPts = scans * 10 + (rw.actions.wore||0)*5 + (rw.actions.sell||0)*25;
+    if (rw.points < expectedPts) { rw.points = expectedPts; saveRewards(rw); }
+
+    const pts = rw.points;
+    const levelIdx = LEVELS.reduce((best, l, i) => pts >= l.min ? i : best, 0);
+    const level = LEVELS[levelIdx];
+    const nextLevel = LEVELS[levelIdx + 1];
+    const progress = nextLevel
+      ? Math.round(((pts - level.min) / (nextLevel.min - level.min)) * 100)
+      : 100;
+
+    const el = document.getElementById('rw-wrap');
+    el.innerHTML = `
+      <div class="rw-header"><div class="rw-title">🏆 Rewards</div></div>
+      <div class="rw-points-card">
+        <div class="rw-pts-num">${pts.toLocaleString()}</div>
+        <div class="rw-pts-label">נקודות AWEAR</div>
+        <div class="rw-level-row">
+          <div class="rw-level-badge" style="background:${level.color}20;color:${level.color}">${level.emoji} ${esc(level.name)}</div>
+          <div class="rw-level-track"><div class="rw-level-fill" style="width:${progress}%"></div></div>
+          <div class="rw-level-next">${nextLevel ? nextLevel.min+' ל-'+nextLevel.emoji : '👑 Max!'}</div>
+        </div>
+      </div>
+
+      <div style="padding:0 18px 10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.6px;text-transform:uppercase">איך מרוויחים</div>
+      <div class="rw-actions-grid">
+        ${RW_ACTIONS.map(a => `
+          <div class="rw-action">
+            <div class="rw-action-icon">${a.icon}</div>
+            <div class="rw-action-name">${esc(a.name)}</div>
+            <div class="rw-action-pts">+${a.pts} נקודות</div>
+            <div class="rw-action-done">${rw.actions[a.key]||0} פעמים</div>
+          </div>`).join('')}
+      </div>
+
+      <div style="padding:4px 18px 10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.6px;text-transform:uppercase">הטבות</div>
+      <div class="rw-perks-list">
+        ${PERKS.map(p => {
+          const canRedeem = pts >= p.pts;
+          return `<div class="rw-perk">
+            <div class="rw-perk-icon">${p.icon}</div>
+            <div class="rw-perk-info">
+              <div class="rw-perk-name">${esc(p.name)}</div>
+              <div class="rw-perk-desc">${esc(p.desc)}</div>
+            </div>
+            <button class="rw-perk-btn ${canRedeem?'unlocked':'locked'}" data-pts="${p.pts}">
+              ${canRedeem ? 'מממשי' : p.pts+'⭐'}
+            </button>
+          </div>`;
+        }).join('')}
+      </div>`;
+
+    el.querySelectorAll('.rw-perk-btn.unlocked').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cost = Number(btn.dataset.pts);
+        const rw2 = loadRewards();
+        if (rw2.points < cost) { showToast('אין מספיק נקודות'); return; }
+        rw2.points -= cost;
+        saveRewards(rw2);
+        showToast('הטבה מומשה! ✨');
+        renderRewards();
+      });
+    });
+  }
+
+  // ---- Sustainability Score ----
+  function renderSustainability() {
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const mp = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
+    const el = document.getElementById('sus-wrap');
+
+    const totalItems = wardrobe.length;
+    const totalWears = wardrobe.reduce((s,i) => s + (i.wear_count||0), 0);
+    const unworn = wardrobe.filter(i => (i.wear_count||0) === 0).length;
+    const reuseRate = totalItems > 0 ? Math.round(((totalItems - unworn) / totalItems) * 100) : 0;
+    const soldItems = mp.length;
+
+    // Score formula: 40% reuse rate + 30% CPW efficiency + 30% sales (circular)
+    const avgCPW = totalWears > 0 ? wardrobe.reduce((s,i)=>s+(i.price_estimate_ils||0),0) / totalWears : 0;
+    const cpwScore = avgCPW > 0 ? Math.min(30, 30 * (50 / avgCPW)) : 0;
+    const reuseScore = (reuseRate / 100) * 40;
+    const circularScore = Math.min(30, soldItems * 6);
+    const total = Math.round(reuseScore + cpwScore + circularScore);
+
+    const grade = total >= 80 ? 'A 🌿 מצוין' : total >= 60 ? 'B 🌱 טוב' : total >= 40 ? 'C 🔄 בינוני' : 'D ⚠️ שפר';
+    const gradeColor = total >= 80 ? '#4ade80' : total >= 60 ? '#86efac' : total >= 40 ? '#fbbf24' : '#f87171';
+
+    const tips = [];
+    if (reuseRate < 70) tips.push(`${unworn} פריטים מעולם לא נלבשו — לבשי אותם או מכרי`);
+    if (avgCPW > 50) tips.push(`עלות ללבישה גבוהה — לבשי יותר את מה שיש בארון`);
+    if (soldItems === 0) tips.push(`מכרי פריטים ב-Marketplace ותגדילי את ה-Sustainability Score שלך`);
+    if (total >= 70) tips.push(`הארון שלך מנוצל יפה — את בדרך הנכונה!`);
+
+    el.innerHTML = `
+      <div class="sus-header">🌿 Sustainability Score</div>
+      <div class="sus-score-card">
+        <div class="sus-score-num" style="color:${gradeColor}">${total}</div>
+        <div class="sus-score-label">ציון קיימות</div>
+        <div class="sus-score-grade" style="background:${gradeColor}20;color:${gradeColor}">${grade}</div>
+      </div>
+
+      ${tips.map(t => `<div class="sus-tip">💡 ${esc(t)}</div>`).join('')}
+
+      <div style="padding:4px 18px 14px">
+        <div style="font-size:13px;font-weight:900;margin-bottom:12px">מדדים</div>
+        ${[
+          {icon:'♻️', name:'ניצול ארון', sub:`${totalItems-unworn}/${totalItems} פריטים נלבשו`, val: reuseRate+'%'},
+          {icon:'💚', name:'יד שנייה', sub:`${soldItems} פריטים נמכרו ב-Marketplace`, val: soldItems+''},
+          {icon:'📉', name:'Cost Per Wear', sub:`ממוצע ₪${Math.round(avgCPW)||0} ללבישה`, val: avgCPW < 30 ? '✓ יפה' : '↑'},
+          {icon:'🌍', name:'פחמן שנחסך', sub:`בהשוואה לרכישה חדשה`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
+        ].map(m => `
+          <div class="sus-metric">
+            <div class="sus-metric-icon">${m.icon}</div>
+            <div class="sus-metric-info">
+              <div class="sus-metric-name">${esc(m.name)}</div>
+              <div class="sus-metric-sub">${esc(m.sub)}</div>
+            </div>
+            <div class="sus-metric-val" style="color:${gradeColor}">${esc(m.val)}</div>
+          </div>`).join('')}
       </div>`;
   }
 
