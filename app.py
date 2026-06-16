@@ -15,6 +15,7 @@ Then open http://localhost:8000
 import base64
 import io
 import urllib.parse
+from typing import Optional
 
 import anthropic
 from dotenv import load_dotenv
@@ -23,6 +24,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from pydantic import BaseModel
+
+from google_services import create_calendar_event, send_summary_email
 
 load_dotenv()  # loads ANTHROPIC_API_KEY from .env
 
@@ -214,6 +217,60 @@ async def analyze(photo: UploadFile):
 @app.get("/")
 async def index():
     return FileResponse("static/index.html")
+
+
+# ---------------------------------------------------------------------------
+# Agent endpoints — email summaries + calendar events
+# ---------------------------------------------------------------------------
+
+class MeetingSummary(BaseModel):
+    agent: str                          # jeff | ayalon | steve | mark | varan | sam | board
+    department: str                     # display name, e.g. "Product"
+    attendees: str
+    summary: str
+    completed: list[str] = []
+    in_progress: list[str] = []
+    decisions: list[str] = []
+    board_approval: list[str] = []
+    next_step: str = ""
+
+
+class CalendarEvent(BaseModel):
+    agent: str
+    title: str
+    start_iso: str                      # e.g. "2026-06-18T10:00:00+03:00"
+    end_iso: str
+    description: str = ""
+    attendees: list[str] = []
+
+
+@app.post("/api/agent/summary")
+async def agent_summary(data: MeetingSummary):
+    """Send meeting summary email to company inbox."""
+    ok = send_summary_email(
+        agent=data.agent,
+        department=data.department,
+        summary=data.dict(),
+    )
+    if not ok:
+        raise HTTPException(status_code=500, detail="Failed to send email — check GMAIL_APP_PASSWORD in .env")
+    return {"status": "sent"}
+
+
+@app.post("/api/agent/schedule")
+async def agent_schedule(data: CalendarEvent):
+    """Create a Google Calendar event on behalf of an agent."""
+    url = create_calendar_event(
+        agent=data.agent,
+        title=data.title,
+        start_iso=data.start_iso,
+        end_iso=data.end_iso,
+        description=data.description,
+        attendees=data.attendees or None,
+    )
+    if not url:
+        raise HTTPException(status_code=500, detail="Failed to create calendar event — check google_token.json")
+    return {"status": "created", "event_url": url}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
