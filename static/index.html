@@ -43,10 +43,11 @@
   nav button { background: none; border: 0; color: var(--muted); font-size: 11px; font-weight: 600;
     font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
   nav button.active { color: var(--text); }
-  nav .ico { font-size: 22px; }
+  nav .ico { display: flex; align-items: center; justify-content: center; height: 24px; }
   .fab { width: 58px; height: 58px; border-radius: 50%; border: 0; cursor: pointer;
-    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; font-size: 30px;
-    font-weight: 300; box-shadow: 0 8px 24px rgba(255,61,119,.5);
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px rgba(255,61,119,.5);
     transform: translateY(-12px); transition: transform .15s; }
   .fab:active { transform: translateY(-12px) scale(.92); }
 
@@ -84,8 +85,10 @@
   .ig-head { display: flex; align-items: center; gap: 16px; padding: 8px 4px 16px; }
   .ig-ava { width: 76px; height: 76px; border-radius: 50%; flex-shrink: 0; position: relative;
     background: linear-gradient(135deg, var(--accent2), var(--accent)); padding: 3px; }
-  .ig-ava::after { content: "👧"; position: absolute; inset: 3px; border-radius: 50%;
-    background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .ig-ava::after { content: ""; position: absolute; inset: 3px; border-radius: 50%;
+    background: var(--bg2); }
+  .ig-ava .ava-ico { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center;
+    justify-content: center; color: var(--accent); }
   .ig-id { flex: 1; min-width: 0; }
   .ig-name { font-weight: 900; font-size: 19px; letter-spacing: -.3px; }
   .ig-handle { color: var(--muted); font-size: 13px; font-weight: 600; margin-top: 3px; }
@@ -218,8 +221,7 @@
     background: linear-gradient(0deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.4) 55%, transparent 100%); z-index: 5; }
   .fc-user { font-weight: 900; font-size: 15px; color: #fff; margin-bottom: 5px;
     display: flex; align-items: center; gap: 6px; }
-  .fc-verified { font-size: 13px; background: linear-gradient(135deg, var(--accent2), var(--accent));
-    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .fc-verified { color: var(--accent); display: inline-flex; align-items: center; }
   .fc-caption { font-size: 13.5px; color: rgba(255,255,255,.9); line-height: 1.4; margin-bottom: 9px; }
   .fc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
   .ftag { font-size: 12px; color: rgba(255,255,255,.8); font-weight: 700; }
@@ -410,6 +412,27 @@
   .store-name { flex: 1; font-size: 13.5px; font-weight: 800; }
   .store-scope { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
   .store-arrow { color: var(--muted); font-size: 16px; flex-shrink: 0; }
+
+  /* ---- icon system ---- */
+  .ic-svg { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+  .ic-svg svg { display: block; width: 100%; height: 100%; }
+  /* align icon + text inside pill/segment buttons */
+  .seg button, .shop-look, .sheet-buy, .fc-shop, .sheet-row-buy { line-height: normal; }
+  .seg button .ic-svg { margin-inline-end: 1px; }
+  .shelf-title .ic-svg, .stylist-h .ic-svg { vertical-align: -2px; }
+
+  /* ---- real product images ---- */
+  .pimg img, .sheet-hero-img img, .sheet-look-emoji img, .listing .ic img {
+    width: 100%; height: 100%; object-fit: contain; display: block; border-radius: inherit;
+    background: #fff; }
+  .pimg img { object-fit: contain; }
+  /* fallback line-art icon shown when product photo fails to load */
+  .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    color: #b8b8c4; background: linear-gradient(160deg, #f3f3f7, #e8e8ef); border-radius: inherit; }
+  .sheet-hero-img .img-fallback, .listing .ic .img-fallback {
+    background: linear-gradient(135deg, #20202b, #191922); color: var(--muted); }
+  .sheet-look-emoji { overflow: hidden; border-radius: 9px; background: #fbfbfd; }
+  .sheet-look-emoji .img-fallback { background: #fbfbfd; color: #b8b8c4; }
 </style>
 </head>
 <body>
@@ -440,9 +463,9 @@
   </main>
 
   <nav>
-    <button data-view="closet" class="active"><span class="ico">👤</span>הפרופיל שלי</button>
-    <button class="fab" id="capture-btn">＋</button>
-    <button data-view="feed"><span class="ico">▶️</span>פיד</button>
+    <button data-view="closet" class="active"><span class="ico" id="nav-ico-closet"></span>הפרופיל שלי</button>
+    <button class="fab" id="capture-btn"><span id="nav-ico-fab"></span></button>
+    <button data-view="feed"><span class="ico" id="nav-ico-feed"></span>פיד</button>
   </nav>
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
@@ -464,9 +487,70 @@
   const modalCard  = document.getElementById('modal-card');
   const mainEl     = document.getElementById('main');
 
-  const EMOJI = { top:'👕', bottoms:'👖', dress:'👗', outerwear:'🧥', shoes:'👟',
-                  bag:'👜', accessory:'🕶️', jewelry:'💍', hat:'🧢' };
-  function emojiFor(cat) { return EMOJI[(cat||'').toLowerCase()] || '🧷'; }
+  // ---- icon system: clean inline line-art SVGs (Lucide/Phosphor style) ----
+  // every path uses currentColor so the icon inherits its parent's text color.
+  const ICONS = {
+    user:'<path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M5 20a7 7 0 0 1 14 0"/>',
+    play:'<path d="M7 5.5v13l11-6.5-11-6.5Z" stroke-linejoin="round"/>',
+    grid:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.4"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.4"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.4"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.4"/>',
+    plus:'<path d="M12 5v14M5 12h14"/>',
+    camera:'<path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h1.8l1.1-1.7A1 1 0 0 1 10.2 5h3.6a1 1 0 0 1 .8.3L15.7 7h2.8A1.5 1.5 0 0 1 20 8.5v9A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-9Z"/><circle cx="12" cy="13" r="3.2"/>',
+    heart:'<path d="M12 20.5 4.3 13a4.6 4.6 0 0 1 6.5-6.5l1.2 1.2 1.2-1.2A4.6 4.6 0 0 1 19.7 13L12 20.5Z" stroke-linejoin="round"/>',
+    heartFill:'<path d="M12 20.5 4.3 13a4.6 4.6 0 0 1 6.5-6.5l1.2 1.2 1.2-1.2A4.6 4.6 0 0 1 19.7 13L12 20.5Z" fill="currentColor" stroke="none"/>',
+    bookmark:'<path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21l-6-3.6L6 21V4.5Z" stroke-linejoin="round"/>',
+    bookmarkFill:'<path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21l-6-3.6L6 21V4.5Z" fill="currentColor" stroke="none"/>',
+    share:'<path d="M14 4h6v6M20 4l-8.5 8.5"/><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-9A1.5 1.5 0 0 1 6 18.5v-9A1.5 1.5 0 0 1 7.5 8H12"/>',
+    bag:'<path d="M6 8h12l-.9 11a1 1 0 0 1-1 .9H7.9a1 1 0 0 1-1-.9L6 8Z" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>',
+    flame:'<path d="M12 3s5 3.5 5 8.5a5 5 0 0 1-10 0c0-1.6.8-2.9 1.6-3.7C8.7 9 9 11 11 11c0-2 .5-5 1-8Z" stroke-linejoin="round"/>',
+    sparkle:'<path d="M12 3l1.7 4.8L18.5 9.5l-4.8 1.7L12 16l-1.7-4.8L5.5 9.5l4.8-1.7L12 3Z" stroke-linejoin="round"/><path d="M18.5 15l.7 2 .8 2-2-.7-2-.8 2-.7.5-1.8Z" stroke-linejoin="round"/>',
+    hanger:'<path d="M12 6.2a2 2 0 1 1 1.4 1.9c-.5.2-.9.6-.9 1.2v.8"/><path d="M12 10.5 4.5 16a1 1 0 0 0 .6 1.8h13.8A1 1 0 0 0 19.5 16L12 10.5Z" stroke-linejoin="round"/>',
+    tag:'<path d="M4 11.5V5.5A1.5 1.5 0 0 1 5.5 4h6l8 8a1.4 1.4 0 0 1 0 2l-5.5 5.5a1.4 1.4 0 0 1-2 0l-8-8Z" stroke-linejoin="round"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>',
+    coins:'<ellipse cx="9" cy="7" rx="5" ry="2.4"/><path d="M4 7v4c0 1.3 2.2 2.4 5 2.4s5-1.1 5-2.4V7"/><path d="M10 14.6c.6 1 2.5 1.8 5 1.8 2.8 0 5-1.1 5-2.4v-4c0-1-1.3-1.9-3.3-2.2"/>',
+    door:'<rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M9 3.5v17"/><circle cx="6.6" cy="12" r=".9" fill="currentColor" stroke="none"/>',
+    image:'<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m5 17 4.5-4.5L13 16l2.5-2.5L20 18" stroke-linejoin="round"/>',
+    check:'<path d="m5 12.5 4.5 4.5L19 7" stroke-linejoin="round"/>',
+    checkCircle:'<circle cx="12" cy="12" r="8.5"/><path d="m8.5 12 2.5 2.5L15.5 9.5" stroke-linejoin="round"/>',
+    receipt:'<path d="M6 3.5h12v17l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3v-17Z" stroke-linejoin="round"/><path d="M9 8h6M9 12h6"/>',
+    cash:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v.01M18 14.5v.01"/>',
+    search:'<circle cx="11" cy="11" r="6.5"/><path d="m20 20-3.6-3.6"/>',
+    arrowUp:'<path d="M12 19V5M6 11l6-6 6 6" stroke-linejoin="round"/>',
+    arrowOut:'<path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/>',
+    diamond:'<path d="M5 9h14l-7 11L5 9Z" stroke-linejoin="round"/><path d="M8 4.5h8l3 4.5H5l3-4.5Z" stroke-linejoin="round"/><path d="M9 9 12 20 15 9" /><path d="M8 4.5 5 9M16 4.5 19 9"/>',
+    point:'<path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10l3.3.6a2 2 0 0 1 1.6 2.4l-.8 3.6A2 2 0 0 1 14.2 20H10a2 2 0 0 1-1.6-.8L5 14.5a1.6 1.6 0 0 1 2.4-2.1L9 13.8" stroke-linejoin="round"/>',
+    shirt:'<path d="M8 4 4.5 7 7 10l1-1v10h8V9l1 1 2.5-3L16 4l-1.5 1a3 3 0 0 1-5 0L8 4Z" stroke-linejoin="round"/>',
+    box:'<path d="M3.5 7 12 3l8.5 4-8.5 4-8.5-4Z" stroke-linejoin="round"/><path d="M3.5 7v10l8.5 4 8.5-4V7M12 11v10"/>',
+    alert:'<path d="M12 3 1.5 21h21L12 3Z" stroke-linejoin="round"/><path d="M12 9v5M12 17.5v.01"/>',
+  };
+  function icon(name, size){
+    const s = size || 20;
+    const p = ICONS[name] || ICONS.tag;
+    return `<span class="ic-svg" style="width:${s}px;height:${s}px" aria-hidden="true">`+
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">${p}</svg></span>`;
+  }
+  // category -> garment icon (used as image fallback + listing thumbs)
+  const CAT_ICON = { top:'shirt', dress:'hanger', bottoms:'shirt', outerwear:'hanger',
+                     shoes:'bag', bag:'bag', accessory:'sparkle', jewelry:'diamond', hat:'tag' };
+  function catIcon(cat){ return CAT_ICON[(cat||'').toLowerCase()] || 'hanger'; }
+
+  // ---- real product images (Pollinations, no key) with graceful SVG fallback ----
+  // onerror -> imgFallback() swaps the broken <img> for a line-art garment icon,
+  // so the demo never shows a broken-image glyph.
+  function imgFallback(img){
+    const cat = img.getAttribute('data-cat') || '';
+    const span = document.createElement('span');
+    span.className = 'img-fallback';
+    span.innerHTML = icon(catIcon(cat), 40);
+    img.replaceWith(span);
+  }
+  function productImage(it, cls){
+    const q = (it && (it.search_query || it.q || it.name)) || 'fashion clothing item';
+    const url = 'https://image.pollinations.ai/prompt/' +
+      encodeURIComponent(q + ', fashion product photo, plain white background, e-commerce, centered, studio lighting') +
+      '?width=400&height=500&nologo=true';
+    return `<img class="${cls||''}" src="${attr(url)}" alt="${attr((it&&it.name)||'')}" loading="lazy" `+
+      `data-cat="${attr((it&&it.category)||'')}" onerror="this.onerror=null;imgFallback(this)">`;
+  }
+
   function esc(s)  { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
   function attr(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
   function fmtN(n) { n=Number(n)||0; return n>=1000?(n/1000).toFixed(1).replace('.0','')+'K':''+n; }
@@ -514,7 +598,7 @@
         <div class="store-name">${esc(opt.retailer||'חנות')}</div>
         <div class="store-scope">${esc(scopeLabel(opt.scope))}</div>
       </div>
-      <span class="store-arrow">↗</span>
+      <span class="store-arrow">${icon('arrowOut', 16)}</span>
     </a>`;
   }
 
@@ -536,15 +620,14 @@
   }
 
   function openSheetSingle(it, earnAmt, influencerUser){
-    const emoji  = emojiFor(it.category);
     const stores = itemStores(it);
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="font-size:11.5px;color:#34d399;font-weight:700;margin-top:8px;text-align:center">
-           💎 @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על הרכישה הזאת
+      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:#34d399;font-weight:700;margin-top:8px;text-align:center">
+           ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על הרכישה הזאת
          </p>` : '';
     sheetBody.innerHTML = `
       <div class="sheet-hero">
-        <div class="sheet-hero-img">${emoji}</div>
+        <div class="sheet-hero-img">${productImage(it)}</div>
         <div class="sheet-hero-info">
           <div class="sheet-hero-name">${esc(it.name)}</div>
           <div class="sheet-hero-brand">${esc(it.brand_vibe||'')}</div>
@@ -576,15 +659,15 @@
         ? `<a class="sheet-row-buy" href="${attr(url)}" target="_blank" rel="noopener" style="text-decoration:none">קני</a>`
         : '';
       return `<div class="sheet-look-row">
-        <div class="sheet-look-emoji">${emojiFor(it.category)}</div>
+        <div class="sheet-look-emoji">${productImage(it)}</div>
         <div class="sheet-look-name">${esc(it.name)}</div>
         <div class="sheet-look-price">₪${esc(it.price_estimate_ils||it.price||0)}</div>
         ${buy}
       </div>`;
     }).join('');
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="font-size:11.5px;color:#34d399;font-weight:700;margin-top:4px;text-align:center">
-           💎 @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על כל קנייה
+      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:#34d399;font-weight:700;margin-top:4px;text-align:center">
+           ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על כל קנייה
          </p>` : '';
 
     sheetBody.innerHTML = `
@@ -600,8 +683,8 @@
       <div style="height:8px"></div>`;
 
     sheetFooter.innerHTML =
-      `<div style="text-align:center;color:var(--muted);font-size:12.5px;padding:6px 0 2px">
-         👆 קני כל פריט ישירות מהחנות שלו
+      `<div style="display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;color:var(--muted);font-size:12.5px;padding:6px 0 2px">
+         ${icon('bag',15)} קני כל פריט ישירות מהחנות שלו
        </div>`;
 
     showSheet();
@@ -654,9 +737,9 @@
     modalCard.innerHTML = '<div class="spinner"></div><h3>רוכשת את ' + esc(label) + '…</h3><p>Awear מבצעת את ההזמנה עבורך</p>';
     setTimeout(() => {
       const earnLine = (earnAmt && influencerUser)
-        ? `<div class="earn-line">✓ @${esc(influencerUser)} מרוויחה קרדיט ₪${esc(earnAmt)}</div>` : '';
-      modalCard.innerHTML = '<div class="big">✅</div><h3>ההזמנה אושרה!</h3>' +
-        '<p>' + esc(label) + ' בדרך אליך · שולם ₪' + esc(price) + '<br/>משלוח עד הבית תוך 3-5 ימים 📦</p>' +
+        ? `<div class="earn-line" style="display:flex;align-items:center;justify-content:center;gap:5px">${icon('check',14)} @${esc(influencerUser)} מרוויחה קרדיט ₪${esc(earnAmt)}</div>` : '';
+      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:#34d399">' + icon('checkCircle',52) + '</div><h3>ההזמנה אושרה!</h3>' +
+        '<p>' + esc(label) + ' בדרך אליך · שולם ₪' + esc(price) + '<br/>משלוח עד הבית תוך 3-5 ימים</p>' +
         earnLine + '<button class="close">מעולה</button>';
       modalCard.querySelector('.close').addEventListener('click', () => modal.classList.remove('show'));
     }, 1300);
@@ -673,7 +756,7 @@
     modalCard.innerHTML = '<div class="spinner"></div><h3>מפרסמת את ' + esc(label) + ' למכירה…</h3><p>ה-AI מתמחר לפי ביקוש בשוק היד-שנייה</p>';
     setTimeout(() => {
       addListing({ name:label, price:Number(price)||0, category:cat||'' });
-      modalCard.innerHTML = '<div class="big">💸</div><h3>פורסם למכירה!</h3>' +
+      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:#34d399">' + icon('cash',48) + '</div><h3>פורסם למכירה!</h3>' +
         '<p>' + esc(label) + ' עכשיו במדף המכירה בפרופיל שלך<br/>מחיר מומלץ: ₪' + esc(price) + ' · עמלת Awear 15%</p>' +
         '<button class="close">לפרופיל</button>';
       modalCard.querySelector('.close').addEventListener('click', () => { modal.classList.remove('show'); showView('closet'); });
@@ -740,7 +823,7 @@
       if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'שגיאה '+res.status);}
       const data=await res.json(); data.photo=await photoP; addScan(data);
     } catch(err) {
-      closetBody.innerHTML='<div class="err">⚠️ '+esc(err.name==='AbortError'?'הבקשה ארכה יותר מדי — נסי שוב':err.message)+'</div>';
+      closetBody.innerHTML='<div class="err" style="display:flex;align-items:center;gap:8px">'+icon('alert',18)+'<span>'+esc(err.name==='AbortError'?'הבקשה ארכה יותר מדי — נסי שוב':err.message)+'</span></div>';
     } finally { clearTimeout(timer); }
     fileInput.value='';
   });
@@ -766,18 +849,18 @@
 
   // ---- Dolce closet / profile ----
   const SHELF_GROUPS=[
-    {cats:['top'],                       title:'מדף עליוניות',   icon:'👕'},
-    {cats:['dress'],                     title:'מדף שמלות',      icon:'👗'},
-    {cats:['bottoms'],                   title:'מדף מכנסיים',    icon:'👖'},
-    {cats:['outerwear'],                 title:'מדף מעילים',     icon:'🧥'},
-    {cats:['shoes'],                     title:'ארון נעליים',    icon:'👟'},
-    {cats:['bag'],                       title:'מדף תיקים',      icon:'👜'},
-    {cats:['accessory','jewelry','hat'], title:'מגירת אקססוריז', icon:'🕶️'},
+    {cats:['top'],                       title:'מדף עליוניות',   icon:'shirt'},
+    {cats:['dress'],                     title:'מדף שמלות',      icon:'hanger'},
+    {cats:['bottoms'],                   title:'מדף מכנסיים',    icon:'shirt'},
+    {cats:['outerwear'],                 title:'מדף מעילים',     icon:'hanger'},
+    {cats:['shoes'],                     title:'ארון נעליים',    icon:'bag'},
+    {cats:['bag'],                       title:'מדף תיקים',      icon:'bag'},
+    {cats:['accessory','jewelry','hat'], title:'מגירת אקססוריז', icon:'sparkle'},
   ];
   let profileTab='closet';
 
   function productTile(it){return `<div class="ptile">
-    <div class="pimg">${emojiFor(it.category)}</div>
+    <div class="pimg">${productImage(it)}</div>
     <div class="pname">${esc(it.name)}</div><div class="pbrand">${esc(it.brand_vibe||'')}</div>
     <div class="pprice">₪${esc(it.price_estimate_ils)}</div>
     <div class="pacts">
@@ -786,25 +869,25 @@
     </div></div>`;}
 
   function closetShelvesHTML(wardrobe){
-    if(!wardrobe.length) return `<div class="hint"><div class="big">🚪</div><h2>הארון שלך עוד ריק</h2>
+    if(!wardrobe.length) return `<div class="hint"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('door',60)}</div><h2>הארון שלך עוד ריק</h2>
       <p>צלמי תלבושת וה-AI יסדר כל פריט<br/>על המדף הנכון בארון שלך.</p>
-      <div class="cta">לחצי על ➕ למטה כדי להתחיל</div></div>`;
+      <div class="cta" style="display:inline-flex;align-items:center;gap:5px">לחצי על ${icon('plus',15)} למטה כדי להתחיל</div></div>`;
     const byCat={};
     wardrobe.forEach(it=>{const c=(it.category||'').toLowerCase();(byCat[c]=byCat[c]||[]).push(it);});
     const known=new Set(SHELF_GROUPS.flatMap(g=>g.cats));
-    const shelf=(icon,title,items)=>`<div class="shelf">
-      <div class="shelf-title">${icon} ${esc(title)} <span class="cnt">· ${items.length}</span></div>
+    const shelf=(ic,title,items)=>`<div class="shelf">
+      <div class="shelf-title">${icon(ic,18)} ${esc(title)} <span class="cnt">· ${items.length}</span></div>
       <div class="shelf-row">${items.map(productTile).join('')}</div>
       <div class="shelf-ledge"></div></div>`;
     let html=SHELF_GROUPS.map(g=>{const items=g.cats.flatMap(c=>byCat[c]||[]);return items.length?shelf(g.icon,g.title,items):'';}).join('');
     const others=wardrobe.filter(it=>!known.has((it.category||'').toLowerCase()));
-    if(others.length) html+=shelf('🧷','שונות',others);
+    if(others.length) html+=shelf('hanger','שונות',others);
     return html;
   }
 
   function looksGridHTML(){
     const feed=loadFeedPosts();
-    if(!feed.length) return `<div class="shelf-empty"><div class="big">📸</div>עדיין לא שיתפת לוקים.<br/>צלמי תלבושת ושתפי אותה לפיד<br/>כדי שתופיע כאן בפרופיל שלך.</div>`;
+    if(!feed.length) return `<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('image',44)}</div>עדיין לא שיתפת לוקים.<br/>צלמי תלבושת ושתפי אותה לפיד<br/>כדי שתופיע כאן בפרופיל שלך.</div>`;
     return `<div class="looks-grid">${feed.map(p=>`<div class="look-cell" data-goto-feed="1">
       ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
       <div class="lc-meta">${esc(p.item_count||0)} פריטים${p.look_total_ils?' · ₪'+esc(p.look_total_ils):''}</div>
@@ -815,11 +898,11 @@
     const earnCard=shelf.length?`<div class="earn"><div class="top"><span class="big-num">₪${earnings.toLocaleString()}</span><span class="ttl">פוטנציאל רווח</span></div>
       <p>${shelf.length} פריטים במכירה · שווי ₪${shelfTotal.toLocaleString()} · נטו אחרי עמלת Awear 15%</p></div>`:'';
     const listings=shelf.length
-      ?shelf.map(it=>`<div class="listing"><div class="ic">${emojiFor(it.category)}</div>
+      ?shelf.map(it=>`<div class="listing"><div class="ic">${productImage(it)}</div>
         <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div></div>
         <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
         <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button></div>`).join('')
-      :`<div class="shelf-empty"><div class="big">💸</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`;
+      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:#34d399">${icon('cash',44)}</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`;
     return earnCard+listings;
   }
 
@@ -830,26 +913,26 @@
     if(profileTab==='looks') body=looksGridHTML();
     else if(profileTab==='forsale') body=forSaleHTML();
     else body=`
-      ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h">✨ סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
-      ${meta.look_total_ils!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_ils)}">🛍️ קני את הלוק האחרון · ~₪${esc(meta.look_total_ils)}</button>`:''}
-      ${wardrobe.length?`<button class="shop-look share-look" id="share-look">📲 שתפי את הלוק לפיד</button>`:''}
+      ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
+      ${meta.look_total_ils!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_ils)}">${icon('bag',18)} קני את הלוק האחרון · ~₪${esc(meta.look_total_ils)}</button>`:''}
+      ${wardrobe.length?`<button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>`:''}
       ${closetShelvesHTML(wardrobe)}`;
 
     closetBody.innerHTML=`
-      <div class="ig-head"><div class="ig-ava"></div>
+      <div class="ig-head"><div class="ig-ava"><span class="ava-ico">${icon('user',38)}</span></div>
         <div class="ig-id"><div class="ig-name">הסטייל שלי</div><div class="ig-handle">@me · תל אביב</div>
           <span class="ig-edit" id="reset-link">איפוס ארון</span></div></div>
       <div class="ig-stats">
         <div><b>${feed.length}</b><span>לוקים</span></div>
         <div><b>1.2K</b><span>עוקבים</span></div>
         <div><b>340</b><span>עוקבת</span></div>
-        <div><b>🔥${meta.trend_score!=null?esc(meta.trend_score):'—'}</b><span>טרנדיות</span></div>
+        <div><b style="display:inline-flex;align-items:center;gap:3px;color:var(--accent)">${icon('flame',16)}${meta.trend_score!=null?esc(meta.trend_score):'—'}</b><span>טרנדיות</span></div>
       </div>
       <div class="ig-bio"><b>${wardrobe.length} פריטים</b> בארון · שווי ~₪${closetValue.toLocaleString()}${meta.overall_style?' · '+esc(meta.overall_style):''}</div>
       <div class="seg">
-        <button data-seg="closet" class="${profileTab==='closet'?'on':''}">🚪 הארון</button>
-        <button data-seg="looks"  class="${profileTab==='looks'?'on':''}">📸 לוקים</button>
-        <button data-seg="forsale" class="${profileTab==='forsale'?'on':''}">💸 למכירה</button>
+        <button data-seg="closet" class="${profileTab==='closet'?'on':''}">${icon('hanger',15)} הארון</button>
+        <button data-seg="looks"  class="${profileTab==='looks'?'on':''}">${icon('grid',15)} לוקים</button>
+        <button data-seg="forsale" class="${profileTab==='forsale'?'on':''}">${icon('tag',15)} למכירה</button>
       </div>${body}`;
 
     document.getElementById('reset-link')?.addEventListener('click',resetWardrobe);
@@ -865,7 +948,7 @@
     const meta={overall_style:data.overall_style,occasion:data.occasion,trend_score:data.trend_score,
       summary:data.summary,stylist_tip:data.stylist_tip,look_total_ils:data.look_total_ils};
     saveMeta(meta); saveLastScan({photo:data.photo||null,items:newItems,meta});
-    renderCloset(); if(newItems.length) showToast('נוספו '+newItems.length+' פריטים לארון ✨');
+    renderCloset(); if(newItems.length) showToast('נוספו '+newItems.length+' פריטים לארון');
   }
 
   function wardrobeTagSet(){
@@ -880,7 +963,7 @@
   }
 
   function shareLookToFeed(){
-    const scan=loadLastScan();if(!scan){showToast('צלמי לוק קודם כדי לשתף 📸');return;}
+    const scan=loadLastScan();if(!scan){showToast('צלמי לוק קודם כדי לשתף');return;}
     const meta=scan.meta||{};
     const post={ts:Date.now(),id:'mine_'+Date.now(),photo:scan.photo||null,
       caption:meta.overall_style||'הלוק שלי',occasion:meta.occasion||'',
@@ -888,7 +971,7 @@
       items:(scan.items||[]).map(it=>({category:it.category,name:it.name,price_estimate_ils:it.price_estimate_ils,buy_options:it.buy_options||[],search_query:it.search_query})),
       tags:(scan.items||[]).reduce((acc,it)=>{(it.style_tags||[]).forEach(t=>acc.push(t));if(it.category)acc.push(it.category);return acc;},[])};
     const feed=loadFeedPosts();feed.unshift(post);saveFeedPosts(feed);
-    showToast('הלוק שותף לפיד ✨');showView('feed');
+    showToast('הלוק שותף לפיד');showView('feed');
   }
 
   // ---- Feed ----
@@ -918,38 +1001,38 @@
     const liked=LIKES.has(post.id),saved=SAVED.has(post.id);
     const bgImg=post.img?`<img class="feed-img" src="${attr(post.img)}" alt="" onerror="this.style.display='none'">` :'';
     const tagPills=tags.map(t=>`<span class="ftag">#${esc(t)}</span>`).join('');
-    const mineBadge=isMine?`<span class="mine-tag">✨ אני</span>`:`<span></span>`;
-    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn">💎 @${esc(post.user)} תרוויח ₪${esc(post.earn)} על כל קנייה</div>`:'';
+    const mineBadge=isMine?`<span class="mine-tag" style="display:inline-flex;align-items:center;gap:4px">${icon('sparkle',13)} אני</span>`:`<span></span>`;
+    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn" style="display:flex;align-items:center;gap:5px">${icon('diamond',13)} @${esc(post.user)} תרוויח ₪${esc(post.earn)} על כל קנייה</div>`:'';
     const lbl=post.name?'לוק של '+post.name:(post.caption||'הלוק');
     return `<div class="feed-card-full${isMine?' is-mine':''}" data-id="${attr(post.id||'')}">
       <div class="fcbg" style="background:${attr(post.grad||'linear-gradient(160deg,#a18cd1,#fbc2eb)')}">${bgImg}</div>
-      <div class="heart-burst">❤️</div>
-      <div class="fc-top">${mineBadge}<span class="trend-badge">🔥 ${esc(post.trend||80)}</span></div>
+      <div class="heart-burst">${icon('heartFill',100)}</div>
+      <div class="fc-top">${mineBadge}<span class="trend-badge" style="display:inline-flex;align-items:center;gap:5px">${icon('flame',14)} ${esc(post.trend||80)}</span></div>
       <div class="fc-actions">
         <button class="fc-action" data-action="like" data-id="${attr(post.id||'')}">
-          <div class="fca-icon${liked?' liked':''}">${liked?'❤️':'🤍'}</div>
+          <div class="fca-icon${liked?' liked':''}">${icon(liked?'heartFill':'heart',24)}</div>
           <span>${fmtN((post.likes||0)+(liked?1:0))}</span>
         </button>
         <button class="fc-action" data-action="save" data-id="${attr(post.id||'')}">
-          <div class="fca-icon${saved?' saved':''}">🔖</div>
+          <div class="fca-icon${saved?' saved':''}">${icon(saved?'bookmarkFill':'bookmark',23)}</div>
           <span>${saved?'נשמר':'שמרי'}</span>
         </button>
         <button class="fc-action" data-action="share">
-          <div class="fca-icon">↗️</div><span>שתפי</span>
+          <div class="fca-icon">${icon('share',23)}</div><span>שתפי</span>
         </button>
         <button class="fc-action buy-action"
             data-label="${attr(lbl)}" data-price="${attr(post.price||post.look_total_ils||0)}"
             data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
-          <div class="fca-icon buy-icon">🛍️</div>
+          <div class="fca-icon buy-icon">${icon('bag',24)}</div>
           <span>₪${esc(post.price||post.look_total_ils||0)}</span>
         </button>
       </div>
       <div class="fc-info">
-        <div class="fc-user">@${esc(post.user||'me')}${post.verified?'<span class="fc-verified"> ✓</span>':''}</div>
+        <div class="fc-user">@${esc(post.user||'me')}${post.verified?`<span class="fc-verified">${icon('checkCircle',14)}</span>`:''}</div>
         <div class="fc-caption">${esc(post.caption||'')}</div>
         <div class="fc-tags">${tagPills}</div>
         <span class="fc-match">${matchPercent(mtags)}% התאמה לארון שלי</span>
-        ${(post.items&&post.items.length)?`<button class="fc-shop" data-shop="${attr(post.id||'')}">🛍️ קני פריטים · ${post.items.length}</button>`:''}
+        ${(post.items&&post.items.length)?`<button class="fc-shop" data-shop="${attr(post.id||'')}">${icon('bag',15)} קני פריטים · ${post.items.length}</button>`:''}
         ${earnLine}
       </div></div>`;
   }
@@ -967,7 +1050,7 @@
     let seeds=SEED_POSTS;
     if(activeFilter!=='all') seeds=seeds.filter(p=>(p.tags||[]).includes(activeFilter));
     if(!seeds.length&&!loadFeedPosts().length){
-      host.innerHTML=`<div class="feed-empty"><div class="big">🔍</div><p>אין לוקים בסגנון הזה עדיין</p></div>`;return;
+      host.innerHTML=`<div class="feed-empty"><div class="big" style="display:flex;justify-content:center">${icon('search',50)}</div><p>אין לוקים בסגנון הזה עדיין</p></div>`;return;
     }
     seeds.forEach(post=>{const wrap=document.createElement('div');wrap.innerHTML=feedCardHTML(post,false);host.appendChild(wrap.firstElementChild);});
   }
@@ -1002,21 +1085,21 @@
       const on=!LIKES.has(id);
       if(on)LIKES.add(id);else LIKES.delete(id);
       saveSet('awear_likes',LIKES);
-      const icon=action.querySelector('.fca-icon'),cnt=action.querySelector('span');
+      const ico=action.querySelector('.fca-icon'),cnt=action.querySelector('span');
       const post=SEED_POSTS.find(p=>p.id===id)||{likes:0};
-      icon.textContent=on?'❤️':'🤍';icon.classList.toggle('liked',on);
+      ico.innerHTML=icon(on?'heartFill':'heart',24);ico.classList.toggle('liked',on);
       if(cnt)cnt.textContent=fmtN((post.likes||0)+(on?1:0));
-      if(on){icon.style.transform='scale(1.35)';setTimeout(()=>icon.style.transform='',200);}
+      if(on){ico.style.transform='scale(1.35)';setTimeout(()=>ico.style.transform='',200);}
     }
     if(type==='save'){
       const on=!SAVED.has(id);
       if(on)SAVED.add(id);else SAVED.delete(id);
       saveSet('awear_saved',SAVED);
-      const icon=action.querySelector('.fca-icon'),cnt=action.querySelector('span');
-      icon.classList.toggle('saved',on);if(cnt)cnt.textContent=on?'נשמר':'שמרי';
-      showToast(on?'נשמר לרשימת המשאלות 🔖':'הוסר מהשמורים');
+      const ico=action.querySelector('.fca-icon'),cnt=action.querySelector('span');
+      ico.innerHTML=icon(on?'bookmarkFill':'bookmark',23);ico.classList.toggle('saved',on);if(cnt)cnt.textContent=on?'נשמר':'שמרי';
+      showToast(on?'נשמר לרשימת המשאלות':'הוסר מהשמורים');
     }
-    if(type==='share')showToast('הקישור הועתק ↗️');
+    if(type==='share')showToast('הקישור הועתק');
   });
 
   let lastTap=0,lastCard=null;
@@ -1027,7 +1110,7 @@
     if(now-lastTap<320&&lastCard===card){
       const id=card.dataset.id;LIKES.add(id);saveSet('awear_likes',LIKES);
       const btn=card.querySelector('[data-action="like"]');
-      if(btn){const icon=btn.querySelector('.fca-icon');icon.textContent='❤️';icon.classList.add('liked');}
+      if(btn){const ico=btn.querySelector('.fca-icon');ico.innerHTML=icon('heartFill',24);ico.classList.add('liked');}
       burstHeart(card);lastTap=0;
     } else {lastTap=now;lastCard=card;}
   });
@@ -1039,6 +1122,11 @@
     t.textContent=msg;t.classList.add('show');clearTimeout(showToast._t);
     showToast._t=setTimeout(()=>t.classList.remove('show'),2400);
   }
+
+  // ---- static UI icons (nav bar) ----
+  document.getElementById('nav-ico-closet').innerHTML = icon('user', 24);
+  document.getElementById('nav-ico-feed').innerHTML   = icon('play', 24);
+  document.getElementById('nav-ico-fab').innerHTML    = icon('plus', 28);
 
   renderCloset();
   renderFeed();
