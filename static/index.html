@@ -695,6 +695,52 @@
   .cs-matches { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .cs-match-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; background: rgba(123,92,255,.15); border-radius: 20px; color: var(--accent2); }
 
+  /* ---- Public Closets ---- */
+  .pc-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
+  .pc-header { padding: 16px 18px 10px; font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
+  .pc-featured-row { display: flex; gap: 10px; padding: 0 18px 16px; overflow-x: auto; scrollbar-width: none; }
+  .pc-featured-row::-webkit-scrollbar { display: none; }
+  .pc-featured-card { flex-shrink: 0; width: 150px; background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
+  .pc-featured-card:active { transform: scale(.97); }
+  .pc-feat-cover { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; background: linear-gradient(160deg, #2a2040, #1a1030); }
+  .pc-feat-info { padding: 10px 12px 12px; }
+  .pc-feat-name { font-size: 13px; font-weight: 900; }
+  .pc-feat-handle { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .pc-feat-items { font-size: 11px; color: var(--accent2); font-weight: 800; margin-top: 4px; }
+  .pc-section-label { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; padding: 4px 18px 10px; }
+  .pc-list { display: flex; flex-direction: column; gap: 10px; padding: 0 18px; }
+  .pc-row { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 16px; padding: 12px 14px; cursor: pointer; transition: all .18s; border: 1px solid var(--line); }
+  .pc-row:active { transform: scale(.98); }
+  .pc-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .pc-info { flex: 1; }
+  .pc-name { font-size: 14px; font-weight: 900; }
+  .pc-handle { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .pc-tag { font-size: 11px; color: var(--accent2); font-weight: 800; margin-top: 4px; }
+  .pc-follow-btn { padding: 7px 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; border-radius: 20px; font-family: inherit; font-size: 12px; font-weight: 800; color: #fff; cursor: pointer; flex-shrink: 0; transition: all .18s; }
+  .pc-follow-btn.following { background: var(--card); color: var(--muted); border: 1.5px solid var(--line); }
+
+  /* ---- Seasonal Report ---- */
+  .sr-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
+  .sr-header { padding: 16px 18px 6px; }
+  .sr-title { font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
+  .sr-period { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+  .sr-hero { margin: 10px 18px 14px; background: linear-gradient(135deg, #1a1030, #201540); border: 1px solid rgba(123,92,255,.3); border-radius: 22px; padding: 20px; }
+  .sr-hero-title { font-size: 13px; font-weight: 800; color: var(--accent2); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 12px; }
+  .sr-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .sr-hero-stat { }
+  .sr-hero-num { font-size: 26px; font-weight: 900; letter-spacing: -1px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sr-hero-label { font-size: 11px; color: rgba(246,246,249,.6); font-weight: 700; margin-top: 2px; }
+  .sr-section { padding: 6px 18px 14px; }
+  .sr-sec-title { font-size: 13px; font-weight: 900; margin-bottom: 10px; }
+  .sr-item-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .sr-rank { font-size: 18px; font-weight: 900; width: 24px; color: var(--muted); flex-shrink: 0; }
+  .sr-item-ico { font-size: 18px; width: 36px; height: 36px; border-radius: 10px; background: var(--card); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sr-item-name { font-size: 13px; font-weight: 800; flex: 1; }
+  .sr-item-meta { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 600; }
+  .sr-insight-card { margin: 0 18px 12px; background: var(--card); border-radius: 16px; padding: 14px 16px; border-left: 3px solid var(--accent); }
+  .sr-insight-text { font-size: 13px; font-weight: 700; line-height: 1.5; }
+  .sr-action-row { display: flex; gap: 10px; padding: 0 18px; }
+
   /* ---- Wishlist ---- */
   .wl-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
   .wl-header { padding: 16px 18px 12px; font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
@@ -859,6 +905,16 @@
     <!-- ANALYTICS -->
     <section id="analytics" class="view">
       <div class="an-wrap" id="analytics-wrap"></div>
+    </section>
+
+    <!-- PUBLIC CLOSETS -->
+    <section id="publicclosets" class="view">
+      <div class="pc-wrap" id="pc-wrap"></div>
+    </section>
+
+    <!-- SEASONAL REPORT -->
+    <section id="seasonal" class="view">
+      <div class="sr-wrap" id="sr-wrap"></div>
     </section>
 
     <!-- OUTFIT GENERATOR -->
@@ -1095,7 +1151,9 @@
     if (name === 'feed')      renderFeed();
     if (name === 'explore')   initExplore();
     if (name === 'analytics') renderAnalytics();
-    if (name === 'outfits')   initOutfitGen();
+    if (name === 'outfits')       initOutfitGen();
+    if (name === 'publicclosets') renderPublicClosets();
+    if (name === 'seasonal')      renderSeasonalReport();
     if (name === 'wishlist')  renderWishlist();
     if (name === 'chat')      initChat();
   }
@@ -1936,6 +1994,8 @@
         <button class="hq-btn" onclick="showView('analytics')"><span class="hq-icon">📊</span>אנליטיקס</button>
         <button class="hq-btn" onclick="showView('chat')"><span class="hq-icon">💅</span>סטייליסט</button>
         <button class="hq-btn" onclick="showView('wishlist')"><span class="hq-icon">💫</span>Wishlist</button>
+        <button class="hq-btn" onclick="showView('seasonal')"><span class="hq-icon">📋</span>דו"ח עונה</button>
+        <button class="hq-btn" onclick="showView('publicclosets')"><span class="hq-icon">👥</span>ארונות</button>
       </div>
     `;
 
@@ -2270,6 +2330,165 @@
         <div class="cs-track"><div class="cs-fill" style="width:${pct}%;background:${color}"></div></div>
         <div style="font-size:11px;font-weight:700;color:${color};margin-top:5px">${label}</div>
         ${matches.length ? `<div class="cs-matches">${matches.map(m=>`<span class="cs-match-tag">${esc(m)}</span>`).join('')}</div>` : ''}
+      </div>`;
+  }
+
+  // ---- Public Closets ----
+  const SEED_USERS = [
+    {id:'u1', name:'Noa Levi', handle:'@noalevi', avatar:'🌸', vibe:'Y2K Queen', items:42, cover:'👗✨💕', following:false},
+    {id:'u2', name:'Maya Cohen', handle:'@mayacohen', avatar:'🖤', vibe:'Streetwear', items:28, cover:'🧥👟🖤', following:false},
+    {id:'u3', name:'Shira Ben', handle:'@shirastyle', avatar:'🤍', vibe:'Minimal', items:19, cover:'🤍👜☁️', following:true},
+    {id:'u4', name:'Dana Katz', handle:'@danakatz', avatar:'🌊', vibe:'Boho Chic', items:35, cover:'🌊🌺👒', following:false},
+    {id:'u5', name:'Roni Gold', handle:'@ronigold', avatar:'⚡', vibe:'Sport Luxe', items:22, cover:'⚡🏃💎', following:false},
+    {id:'u6', name:'Lior Sade', handle:'@liorsade', avatar:'🦋', vibe:'Vintage', items:51, cover:'🦋👗🌹', following:false},
+  ];
+  let followState = JSON.parse(localStorage.getItem('awear_follows') || '{}');
+
+  function renderPublicClosets() {
+    const el = document.getElementById('pc-wrap');
+    el.innerHTML = `
+      <div class="pc-header">👥 ארונות ציבוריים</div>
+      <div class="pc-section-label">מובחרים</div>
+      <div class="pc-featured-row">
+        ${SEED_USERS.slice(0,4).map(u => `
+          <div class="pc-featured-card" data-uid="${u.id}">
+            <div class="pc-feat-cover">${u.cover}</div>
+            <div class="pc-feat-info">
+              <div class="pc-feat-name">${esc(u.name)}</div>
+              <div class="pc-feat-handle">${esc(u.handle)}</div>
+              <div class="pc-feat-items">${u.items} פריטים</div>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="pc-section-label">כולם</div>
+      <div class="pc-list">
+        ${SEED_USERS.map(u => {
+          const isFollowing = followState[u.id] ?? u.following;
+          return `<div class="pc-row">
+            <div class="pc-avatar">${u.avatar}</div>
+            <div class="pc-info">
+              <div class="pc-name">${esc(u.name)}</div>
+              <div class="pc-handle">${esc(u.handle)} · ${u.items} פריטים</div>
+              <div class="pc-tag">${esc(u.vibe)}</div>
+            </div>
+            <button class="pc-follow-btn${isFollowing?' following':''}" data-uid="${u.id}">${isFollowing?'עוקבת':'+ עקבי'}</button>
+          </div>`;
+        }).join('')}
+      </div>`;
+
+    el.querySelectorAll('.pc-follow-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const uid = btn.dataset.uid;
+        followState[uid] = !followState[uid];
+        localStorage.setItem('awear_follows', JSON.stringify(followState));
+        btn.textContent = followState[uid] ? 'עוקבת' : '+ עקבי';
+        btn.classList.toggle('following', !!followState[uid]);
+        showToast(followState[uid] ? 'עוקבת ✓' : 'הפסקת לעקוב');
+      });
+    });
+  }
+
+  // ---- Seasonal Report ----
+  function renderSeasonalReport() {
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const el = document.getElementById('sr-wrap');
+    const now = new Date();
+    const month = now.getMonth();
+    const season = month < 3 ? 'חורף 2025' : month < 6 ? 'אביב 2026' : month < 9 ? 'קיץ 2026' : 'סתיו 2025';
+
+    if (!wardrobe.length) {
+      el.innerHTML = `
+        <div class="sr-header"><div class="sr-title">📋 דו"ח עונה</div><div class="sr-period">${esc(season)}</div></div>
+        <div style="text-align:center;padding:60px 20px;color:var(--muted)">
+          <div style="font-size:40px;margin-bottom:12px">📭</div>
+          <div style="font-size:14px;font-weight:700">אין עדיין נתונים</div>
+          <div style="font-size:12px;margin-top:6px;opacity:.7">סרקי לוקים לאורך העונה</div>
+        </div>`;
+      return;
+    }
+
+    const totalItems = wardrobe.length;
+    const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_ils||0), 0);
+    const totalWears = wardrobe.reduce((s,i) => s + (i.wear_count||0), 0);
+    const worn = wardrobe.filter(i => (i.wear_count||0) > 0);
+    const unworn = wardrobe.filter(i => (i.wear_count||0) === 0);
+    const unusedValue = unworn.reduce((s,i) => s + (i.price_estimate_ils||0), 0);
+    const utilizationPct = totalItems > 0 ? Math.round((worn.length / totalItems) * 100) : 0;
+    const avgCPW = totalValue > 0 && totalWears > 0 ? Math.round(totalValue / totalWears) : null;
+
+    const sortedByWear = [...wardrobe].sort((a,b) => (b.wear_count||0) - (a.wear_count||0));
+    const top3 = sortedByWear.filter(i => (i.wear_count||0) > 0).slice(0,3);
+    const bottom3 = unworn.slice(0,3);
+
+    const insights = [];
+    if (utilizationPct < 50) insights.push(`רק ${utilizationPct}% מהארון נלבש — שקלי לנקות ${unworn.length} פריטים לא בשימוש`);
+    if (unusedValue > 500) insights.push(`₪${unusedValue} שוכבים בארון ולא נלבשים — אפשר למכור ולהרוויח`);
+    if (avgCPW && avgCPW < 20) insights.push(`עלות ללבישה ממוצעת ₪${avgCPW} — מצוין! את מנצלת את הארון יפה`);
+    if (avgCPW && avgCPW > 100) insights.push(`עלות ללבישה גבוהה (₪${avgCPW}) — כדאי ללבוש יותר מה שיש`);
+
+    el.innerHTML = `
+      <div class="sr-header">
+        <div class="sr-title">📋 דו"ח עונה</div>
+        <div class="sr-period">${esc(season)}</div>
+      </div>
+      <div class="sr-hero">
+        <div class="sr-hero-title">סיכום עונה</div>
+        <div class="sr-hero-grid">
+          <div class="sr-hero-stat">
+            <div class="sr-hero-num">${utilizationPct}%</div>
+            <div class="sr-hero-label">ניצול הארון</div>
+          </div>
+          <div class="sr-hero-stat">
+            <div class="sr-hero-num">${totalWears}</div>
+            <div class="sr-hero-label">לבישות סה"כ</div>
+          </div>
+          <div class="sr-hero-stat">
+            <div class="sr-hero-num">₪${unusedValue}</div>
+            <div class="sr-hero-label">שכב בארון</div>
+          </div>
+          <div class="sr-hero-stat">
+            <div class="sr-hero-num">${avgCPW ? '₪'+avgCPW : '—'}</div>
+            <div class="sr-hero-label">CPW ממוצע</div>
+          </div>
+        </div>
+      </div>
+
+      ${insights.map(ins => `
+      <div class="sr-insight-card">
+        <div class="sr-insight-text">💡 ${esc(ins)}</div>
+      </div>`).join('')}
+
+      ${top3.length ? `
+      <div class="sr-section">
+        <div class="sr-sec-title">🔥 הכי נלבש בעונה</div>
+        ${top3.map((i,idx) => `
+          <div class="sr-item-row">
+            <div class="sr-rank">${idx+1}</div>
+            <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
+            <div style="flex:1;min-width:0">
+              <div class="sr-item-name">${esc(i.name)}</div>
+              <div class="sr-item-meta">${i.wear_count} לבישות · CPW ₪${i.price_estimate_ils && i.wear_count ? Math.round(i.price_estimate_ils/i.wear_count) : '—'}</div>
+            </div>
+          </div>`).join('')}
+      </div>` : ''}
+
+      ${bottom3.length ? `
+      <div class="sr-section">
+        <div class="sr-sec-title">💤 לא נלבש בכלל</div>
+        ${bottom3.map(i => `
+          <div class="sr-item-row">
+            <div class="sr-rank" style="font-size:12px">😴</div>
+            <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
+            <div style="flex:1;min-width:0">
+              <div class="sr-item-name">${esc(i.name)}</div>
+              <div class="sr-item-meta">₪${i.price_estimate_ils||0} בארון · 0 לבישות</div>
+            </div>
+          </div>`).join('')}
+      </div>` : ''}
+
+      <div class="sr-action-row">
+        <button class="ha-btn ha-primary" style="flex:1" onclick="runDeclutter()">🧹 נקי את הארון</button>
+        <button class="ha-btn ha-secondary" style="flex:1" onclick="showView('analytics')">📊 אנליטיקס</button>
       </div>`;
   }
 
