@@ -3451,6 +3451,7 @@
             }
             btn.closest('.quiz-grid').querySelectorAll('.quiz-opt').forEach((b,i) =>
               b.classList.toggle('sel', quizAnswers[qi2].has(i)));
+          });
         });
       }
       nextBtn.textContent = isLast ? 'בואי נתחיל 🚀' : 'המשך';
