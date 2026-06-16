@@ -256,6 +256,66 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   input[type=file] { display: none; }
 
+  /* ---- Feed tabs ---- */
+  .feed-top { display: flex; flex-direction: column; flex-shrink: 0;
+    background: rgba(10,10,14,.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line); z-index: 5; }
+  .feed-tabs { display: flex; padding: 4px 20px 0; }
+  .ftab { flex: 1; background: none; border: 0; color: var(--muted); font-family: inherit;
+    font-size: 14px; font-weight: 800; padding: 10px 0; cursor: pointer; position: relative; transition: color .15s; }
+  .ftab.active { color: var(--text); }
+  .ftab.active::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 32px; height: 2.5px; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; }
+
+  /* ---- Stories bar ---- */
+  .stories-bar { display: flex; gap: 14px; padding: 12px 14px 10px; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }
+  .stories-bar::-webkit-scrollbar { display: none; }
+  .story-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex-shrink: 0; }
+  .story-ring { width: 58px; height: 58px; border-radius: 50%; padding: 2.5px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); flex-shrink: 0; }
+  .story-ring.seen { background: var(--line); }
+  .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg2);
+    border: 2.5px solid var(--bg2); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .story-name { font-size: 10.5px; font-weight: 700; color: rgba(246,246,249,.8);
+    max-width: 62px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ---- Edit profile modal ---- */
+  .edit-modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.75);
+    z-index: 80; display: none; align-items: flex-end; justify-content: center; }
+  .edit-modal-overlay.show { display: flex; }
+  .edit-modal { background: linear-gradient(180deg, #1c1c26 0%, var(--card) 100%);
+    border-radius: 24px 24px 0 0; border-top: 1px solid rgba(255,255,255,.07);
+    padding: 20px 22px 32px; width: 100%; animation: slideUp .28s cubic-bezier(.32,.72,0,1); }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+  .edit-modal h3 { font-size: 17px; font-weight: 900; margin-bottom: 18px; text-align: center; }
+  .edit-field { margin-bottom: 14px; }
+  .edit-field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 5px; }
+  .edit-field input, .edit-field textarea { width: 100%; background: rgba(255,255,255,.05);
+    border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; color: var(--text);
+    font-family: inherit; font-size: 14px; font-weight: 600; outline: none; resize: none; }
+  .edit-field input:focus, .edit-field textarea:focus { border-color: var(--accent2); }
+  .edit-field textarea { height: 72px; line-height: 1.5; }
+  .edit-photo-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .edit-photo-circle { width: 66px; height: 66px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), var(--accent)); padding: 2px; flex-shrink: 0; }
+  .edit-photo-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg2);
+    border: 2px solid var(--bg2); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .edit-photo-inner img { width: 100%; height: 100%; object-fit: cover; }
+  .edit-photo-btn { flex: 1; padding: 12px 0; border: 1px dashed rgba(123,92,255,.5);
+    border-radius: 12px; background: rgba(123,92,255,.08); color: var(--accent2);
+    font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer; text-align: center; }
+  .edit-save { width: 100%; padding: 15px; border: 0; border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    font-family: inherit; font-size: 16px; font-weight: 900; cursor: pointer; margin-top: 4px; }
+  .edit-cancel { width: 100%; padding: 12px; background: none; border: 0; color: var(--muted);
+    font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; }
+
+  /* ---- profile photo in ig-head ---- */
+  .ig-ava { position: relative; }
+  .ig-ava-photo { position: absolute; inset: 3px; z-index: 1; border-radius: 50%; object-fit: cover; width: calc(100% - 6px); height: calc(100% - 6px); }
+  .ig-ava .ava-ico { position: relative; z-index: 0; }
+
+
   /* ---- Bottom Sheet ---- */
   .sheet-overlay {
     position: absolute; inset: 0;
@@ -523,13 +583,19 @@
 
     <!-- FEED -->
     <section id="feed" class="view">
-      <div class="feed-filters" id="feed-filters">
-        <button class="ff active" data-filter="all">הכל</button>
-        <button class="ff" data-filter="y2k">Y2K</button>
-        <button class="ff" data-filter="streetwear">Streetwear</button>
-        <button class="ff" data-filter="minimal">מינימל</button>
-        <button class="ff" data-filter="vintage">וינטג'</button>
-        <button class="ff" data-filter="secondhand">יד שנייה</button>
+      <div class="feed-top">
+        <div class="feed-tabs">
+          <button class="ftab active" data-tab="foryou">בשבילי</button>
+          <button class="ftab" data-tab="following">עוקבת</button>
+        </div>
+        <div class="feed-filters" id="feed-filters">
+          <button class="ff active" data-filter="all">הכל</button>
+          <button class="ff" data-filter="y2k">Y2K</button>
+          <button class="ff" data-filter="streetwear">Streetwear</button>
+          <button class="ff" data-filter="minimal">מינימל</button>
+          <button class="ff" data-filter="vintage">וינטג'</button>
+          <button class="ff" data-filter="secondhand">יד שנייה</button>
+        </div>
       </div>
       <div class="feed-scroll" id="feed-scroll"></div>
     </section>
@@ -543,6 +609,24 @@
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
   <div id="purchase-modal" class="modal-overlay"><div class="modal-card" id="modal-card"></div></div>
+
+  <!-- Edit Profile Modal -->
+  <div id="edit-profile-overlay" class="edit-modal-overlay">
+    <div class="edit-modal">
+      <h3>עריכת פרופיל</h3>
+      <div class="edit-photo-row">
+        <div class="edit-photo-circle"><div class="edit-photo-inner" id="edit-photo-preview"></div></div>
+        <button class="edit-photo-btn" id="edit-photo-btn">שנה תמונת פרופיל</button>
+        <input type="file" id="edit-photo-input" accept="image/*">
+      </div>
+      <div class="edit-field"><label>שם</label><input id="edit-name" type="text" placeholder="השם שלך" maxlength="30"></div>
+      <div class="edit-field"><label>שם משתמש</label><input id="edit-handle" type="text" placeholder="handle" maxlength="20"></div>
+      <div class="edit-field"><label>עיר</label><input id="edit-city" type="text" placeholder="תל אביב" maxlength="20"></div>
+      <div class="edit-field"><label>ביו</label><textarea id="edit-bio" placeholder="כתבי משהו על הסטייל שלך..."></textarea></div>
+      <button class="edit-save" id="edit-save-btn">שמור</button>
+      <button class="edit-cancel" id="edit-cancel-btn">ביטול</button>
+    </div>
+  </div>
 
   <!-- Bottom Sheet -->
   <div id="sheet-overlay" class="sheet-overlay" role="dialog" aria-modal="true" aria-label="קנייה"></div>
@@ -1033,9 +1117,11 @@
 
   // ---- persistence ----
   const WARDROBE_KEY='awear_wardrobe',META_KEY='awear_meta',SHELF_KEY='awear_shelf',
-        FEED_KEY='awear_feed',LASTSCAN_KEY='awear_lastscan';
+        FEED_KEY='awear_feed',LASTSCAN_KEY='awear_lastscan',PROFILE_KEY='awear_profile';
   const ls={load:k=>{try{return JSON.parse(localStorage.getItem(k))||null;}catch(e){return null;}},
             save:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+  const loadProfile=()=>ls.load(PROFILE_KEY)||{name:'הסטייל שלי',handle:'me',city:'תל אביב',bio:'',photo:null};
+  const saveProfile=v=>ls.save(PROFILE_KEY,v);
   const loadWardrobe=()=>ls.load(WARDROBE_KEY)||[];
   const saveWardrobe=v=>ls.save(WARDROBE_KEY,v);
   const loadMeta=()=>ls.load(META_KEY)||{};
@@ -1121,10 +1207,20 @@
       ${wardrobe.length?`<button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>`:''}
       ${closetShelvesHTML(wardrobe)}`;
 
+    const prof=loadProfile();
+    const profPhotoHTML=prof.photo
+      ?`<img class="ig-ava-photo" src="${attr(prof.photo)}" alt="">`
+      :`<span class="ava-ico">${icon('user',38)}</span>`;
     closetBody.innerHTML=`
-      <div class="ig-head"><div class="ig-ava"><span class="ava-ico">${icon('user',38)}</span></div>
-        <div class="ig-id"><div class="ig-name">הסטייל שלי</div><div class="ig-handle">@me · תל אביב</div>
-          <span class="ig-edit" id="reset-link">איפוס ארון</span></div></div>
+      <div class="ig-head">
+        <div class="ig-ava">${profPhotoHTML}</div>
+        <div class="ig-id">
+          <div class="ig-name">${esc(prof.name||'הסטייל שלי')}</div>
+          <div class="ig-handle">@${esc(prof.handle||'me')}${prof.city?' · '+esc(prof.city):''}</div>
+          ${prof.bio?`<div style="font-size:12px;color:rgba(246,246,249,.7);margin-top:4px;line-height:1.4">${esc(prof.bio)}</div>`:''}
+          <span class="ig-edit" id="edit-profile-btn">עריכת פרופיל</span>
+        </div>
+      </div>
       <div class="ig-stats">
         <div><b>${feed.length}</b><span>לוקים</span></div>
         <div><b>1.2K</b><span>עוקבים</span></div>
@@ -1138,8 +1234,8 @@
         <button data-seg="forsale" class="${profileTab==='forsale'?'on':''}">${icon('tag',15)} למכירה</button>
       </div>${body}`;
 
-    document.getElementById('reset-link')?.addEventListener('click',resetWardrobe);
     document.getElementById('share-look')?.addEventListener('click',shareLookToFeed);
+    document.getElementById('edit-profile-btn')?.addEventListener('click',openEditProfile);
     closetBody.querySelectorAll('[data-seg]').forEach(b=>b.addEventListener('click',()=>{profileTab=b.dataset.seg;renderCloset();}));
     closetBody.querySelectorAll('[data-rm]').forEach(btn=>btn.addEventListener('click',()=>removeListing(Number(btn.dataset.rm))));
     closetBody.querySelectorAll('[data-goto-feed]').forEach(cell=>cell.addEventListener('click',()=>showView('feed')));
@@ -1347,6 +1443,150 @@
   document.getElementById('nav-ico-closet').innerHTML = icon('user', 24);
   document.getElementById('nav-ico-feed').innerHTML   = icon('play', 24);
   document.getElementById('nav-ico-fab').innerHTML    = icon('plus', 28);
+
+  // ---- Edit profile ----
+  const editOverlay = document.getElementById('edit-profile-overlay');
+  let editPhotoData = null;
+
+  function openEditProfile(){
+    const prof = loadProfile();
+    document.getElementById('edit-name').value    = prof.name||'';
+    document.getElementById('edit-handle').value  = prof.handle||'';
+    document.getElementById('edit-city').value    = prof.city||'';
+    document.getElementById('edit-bio').value     = prof.bio||'';
+    editPhotoData = prof.photo||null;
+    const prev = document.getElementById('edit-photo-preview');
+    prev.innerHTML = prof.photo
+      ? `<img src="${attr(prof.photo)}" alt="">`
+      : icon('user', 32);
+    editOverlay.classList.add('show');
+  }
+
+  document.getElementById('edit-cancel-btn').addEventListener('click',()=>editOverlay.classList.remove('show'));
+  editOverlay.addEventListener('click',e=>{ if(e.target===editOverlay) editOverlay.classList.remove('show'); });
+
+  document.getElementById('edit-photo-btn').addEventListener('click',()=>document.getElementById('edit-photo-input').click());
+  document.getElementById('edit-photo-input').addEventListener('change',e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      editPhotoData=r.result;
+      document.getElementById('edit-photo-preview').innerHTML=`<img src="${attr(r.result)}" alt="">`;
+    };
+    r.readAsDataURL(f);
+    e.target.value='';
+  });
+
+  document.getElementById('edit-save-btn').addEventListener('click',()=>{
+    const prof={
+      name:  document.getElementById('edit-name').value.trim()  || 'הסטייל שלי',
+      handle:document.getElementById('edit-handle').value.trim().replace(/^@/,'') || 'me',
+      city:  document.getElementById('edit-city').value.trim()  || 'תל אביב',
+      bio:   document.getElementById('edit-bio').value.trim(),
+      photo: editPhotoData,
+    };
+    saveProfile(prof);
+    editOverlay.classList.remove('show');
+    renderCloset();
+  });
+
+  // ---- Feed tabs ----
+  let activeTab = 'foryou';
+  document.querySelectorAll('.ftab').forEach(t=>t.addEventListener('click',()=>{
+    document.querySelectorAll('.ftab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    activeTab = t.dataset.tab;
+    renderFeed();
+  }));
+
+  // ---- Stories data ----
+  const STORIES = [
+    {id:'st0', name:'הוסיפי סטורי', emoji:'➕', seen:false, isAdd:true},
+    {id:'st1', name:'Y2K Challenge', emoji:'✨', seen:false},
+    {id:'st2', name:'נועה', emoji:'🌸', seen:false},
+    {id:'st3', name:'יעל', emoji:'💜', seen:true},
+    {id:'st4', name:'מינימל יום', emoji:'🤍', seen:false},
+    {id:'st5', name:'מיקה', emoji:'♻️', seen:true},
+    {id:'st6', name:'Streetwear', emoji:'🔥', seen:false},
+  ];
+  let seenStories = new Set(JSON.parse(localStorage.getItem('awear_stories_seen')||'[]'));
+
+  function renderStories(){
+    const bar = document.createElement('div');
+    bar.className = 'stories-bar';
+    bar.innerHTML = STORIES.map(s=>{
+      const seen = !s.isAdd && seenStories.has(s.id);
+      return `<div class="story-item" data-story="${attr(s.id)}">
+        <div class="story-ring${seen?' seen':''}">
+          <div class="story-inner">${s.emoji}</div>
+        </div>
+        <span class="story-name">${esc(s.name)}</span>
+      </div>`;
+    }).join('');
+    bar.addEventListener('click',e=>{
+      const item=e.target.closest('.story-item');
+      if(!item||item.dataset.story==='st0') return;
+      seenStories.add(item.dataset.story);
+      localStorage.setItem('awear_stories_seen',JSON.stringify([...seenStories]));
+      item.querySelector('.story-ring').classList.add('seen');
+      showToast('סטורי נצפה');
+    });
+    return bar;
+  }
+
+  // ---- Following empty state ----
+  function renderFollowingEmpty(){
+    const div = document.createElement('div');
+    div.className = 'feed-empty';
+    div.innerHTML = `<div class="big" style="display:flex;justify-content:center">${icon('heart',50)}</div>
+      <p style="margin-top:14px;font-size:15px;font-weight:800;color:var(--text)">עדיין לא עוקבת אחרי אף אחת</p>
+      <p style="margin-top:8px;font-size:13px;color:var(--muted);line-height:1.6">עברי לפיד "בשבילי", גלי לוקים<br/>ולחצי על שם המשתמשת כדי לעקוב</p>`;
+    return div;
+  }
+
+  // patch renderFeed to support tabs + stories
+  const _origRenderFeed = renderFeed;
+  renderFeed = function(){
+    const host=document.getElementById('feed-scroll'); if(!host) return;
+    host.innerHTML='';
+    if(activeTab==='following'){
+      host.appendChild(renderFollowingEmpty());
+      return;
+    }
+    // stories at top of foryou
+    host.appendChild(renderStories());
+    // then the regular feed cards
+    _origRenderFeed.call(this);
+    // move the stories into position (renderFeed clears host, so re-inject)
+  };
+
+  // override: renderFeed adds cards to host — we need stories first
+  // Re-implement cleanly:
+  renderFeed = function(){
+    const host=document.getElementById('feed-scroll'); if(!host) return;
+    LIKES=loadSet('awear_likes'); SAVED=loadSet('awear_saved');
+    host.innerHTML='';
+    if(activeTab==='following'){
+      host.appendChild(renderFollowingEmpty());
+      return;
+    }
+    host.appendChild(renderStories());
+    // user's own posts
+    loadFeedPosts().forEach(p=>{
+      const wrap=document.createElement('div');
+      wrap.innerHTML=feedCardHTML({...p,id:p.id||'mine_'+p.ts,user:'you',
+        grad:p.photo?null:'linear-gradient(160deg,#a18cd1,#fbc2eb)',img:p.photo||null,tags:p.tags||[],trend:95},true);
+      host.appendChild(wrap.firstElementChild);
+    });
+    let seeds=SEED_POSTS;
+    if(activeFilter!=='all') seeds=seeds.filter(p=>(p.tags||[]).includes(activeFilter));
+    if(!seeds.length&&!loadFeedPosts().length){
+      const em=document.createElement('div');em.className='feed-empty';
+      em.innerHTML=`<div class="big" style="display:flex;justify-content:center">${icon('search',50)}</div><p>אין לוקים בסגנון הזה עדיין</p>`;
+      host.appendChild(em); return;
+    }
+    seeds.forEach(post=>{const wrap=document.createElement('div');wrap.innerHTML=feedCardHTML(post,false);host.appendChild(wrap.firstElementChild);});
+  };
 
   renderCloset();
   renderFeed();
