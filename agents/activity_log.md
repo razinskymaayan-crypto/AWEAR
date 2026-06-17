@@ -23,6 +23,10 @@
 | 2026-06-18 | שירה | Social Features (תחת איילון) | סגירת 2 hard rules שדיווחה כ-out-of-scope במשימה הקודמת: rate limiting (3 תגובות/דקה) + report button | **הושלם ומוזג ל-main** — ג'ף בדק diff (67 שורות, index.html בלבד), אומת חי ע"י הסוכן ב-Playwright (4 תגובות מהירות→4ית נחסמה, report button→admin log+toast), commit כבר על main | agentId `afdf0a54fa31a7f3f`, commit `9b67c80` (ישירות על main — ⚠ לא עבר worktree isolation, פער תהליך מתועד) |
 | 2026-06-18 | אורן | Integration (תחת סטיב) | תוכנית currency layer (price_estimate_ils → multi-currency) — **תכנון בלבד, לא ביצוע** | **הושלם** — מצא ~70 מקורות ₪ ב-index.html + בעיית לוגיקה אמיתית (סף CPW בש"ח, לא רק תצוגה) + סתירה קיימת בקוד (`price_estimate_ils` בפועל ב-USD לפי הפרומפט בעצמו); תוכנית `{amount,currency}` + שאלות פתוחות לאיילון/בורד | agentId `aa6463489570de462`, מסמך: `agents/oren_currency_plan_2026-06-18.md` |
 
+| 2026-06-18 | איילון | Product Direction | הכרעת מוצר ב-6 שאלות פתוחות מתוכניות אורן/רועי (currency canonical, FX vendor, resale %, סדר i18n, chat copy review, admin scope) | **הושלם** | agentId `a8b56b3ce0c27c179`, מסמך: `agents/ayalon_product_decisions_2026-06-18.md` |
+| 2026-06-18 | דנה | RN Eng (תחת וראן) | מסך הרשאת מצלמה (onboarding) — לפי ה-roadmap העצמי שלה | **הושלם ומוזג ל-main** — אומת ע"י בנדל Metro web + grep על תוכן הבנדל (אין Chromium בסביבה ל-screenshot); iOS/Android אמיתי **לא נבדק**, מתועד ב-README | agentId `ab104b63d0ffb8998`, commit `134f65f` |
+| 2026-06-18 | דולצ'ה+גבאנה | Design (תחת מארק) | Phase 2 המשך — מיפוי אימוג'י מושגי/אבסטרקטי (quiz, onboarding, trending) לאייקוני SVG | **הושלם ומוזג ל-main** — Playwright before/after לכל מסך, 0 pageerror, ספוט-צ'ק נוסף שלי על main לאחר מיזוג: 0 errors | agentId `a19d5c96a5c5b43a4`, commit `0afd932` |
+
 ---
 
 ## איך זה עובד בפועל
