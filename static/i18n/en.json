@@ -1,0 +1,120 @@
+{
+  "app": {
+    "name": "AWEAR"
+  },
+  "nav": {
+    "home":        "Home",
+    "feed":        "Feed",
+    "closet":      "Closet",
+    "chat":        "Abigail",
+    "shopping":    "Shop",
+    "marketplace": "Marketplace"
+  },
+  "home": {
+    "greeting_night":     "Good night",
+    "greeting_morning":   "Good morning",
+    "greeting_noon":      "Good afternoon",
+    "greeting_evening":   "Good evening",
+    "outfit_today":       "Today's look",
+    "wardrobe_section":   "My wardrobe",
+    "challenge_section":  "Daily challenge",
+    "quick_actions":      "Quick actions",
+    "stat_items":         "Items",
+    "stat_value":         "Wardrobe value",
+    "stat_wears":         "Wears",
+    "wore_it":            "Wore it",
+    "wore_saved":         "Saved!",
+    "scan_title":         "Scan today's look",
+    "scan_sub":           "AI identifies your items and builds your digital wardrobe in seconds",
+    "profile_next_step":  "Next step",
+    "profile_complete":   "Profile complete"
+  },
+  "closet": {
+    "items":         "items",
+    "value":         "Value",
+    "tab_closet":    "Wardrobe",
+    "tab_looks":     "Looks",
+    "tab_forsale":   "For sale",
+    "share_look":    "Share look to feed",
+    "edit_profile":  "Edit profile",
+    "scan_first":    "Scan first look"
+  },
+  "feed": {
+    "tab_foryou":      "For you",
+    "tab_following":   "Following",
+    "tab_inspiration": "Inspiration",
+    "match_wardrobe":  "% match to my wardrobe",
+    "already_owned":   "% already in your wardrobe",
+    "earn_on_buy":     "earns on every purchase",
+    "no_following":    "You're not following anyone yet",
+    "no_looks":        "No looks in this style yet"
+  },
+  "reactions": {
+    "react":       "React",
+    "comment":     "Comment",
+    "comments":    "comments",
+    "add_comment": "Add a comment...",
+    "send":        "Send",
+    "views":       "views"
+  },
+  "scan": {
+    "analyzing":    "Analyzing your look...",
+    "added_to":     "added to wardrobe",
+    "error":        "Scan unavailable — try again",
+    "demo_mode":    "Demo mode"
+  },
+  "chat": {
+    "placeholder":  "Ask Abigail anything...",
+    "send":         "Send",
+    "thinking":     "Thinking..."
+  },
+  "marketplace": {
+    "title":           "Marketplace",
+    "tab_browse":      "Browse",
+    "tab_sell":        "My listings",
+    "tab_swap":        "Swap",
+    "sell_item":       "Sell item",
+    "earnings":        "Potential earnings",
+    "active_listings": "active listings",
+    "list_item":       "List for sale",
+    "remove":          "Remove",
+    "condition_new":   "New",
+    "condition_likenew":"Like new",
+    "condition_used":  "Used",
+    "ai_price":        "AI pricing",
+    "cancel":          "Cancel"
+  },
+  "wishlist": {
+    "title":       "Wishlist",
+    "empty":       "Your list is empty",
+    "empty_sub":   "Add items you want to buy",
+    "suggestions": "Suggested for you"
+  },
+  "onboarding": {
+    "next":     "Next",
+    "back":     "Back",
+    "finish":   "Start",
+    "skip":     "Skip"
+  },
+  "rewards": {
+    "points":  "points",
+    "level":   "Level"
+  },
+  "common": {
+    "buy":         "Buy",
+    "sell":        "Sell",
+    "save":        "Save",
+    "share":       "Share",
+    "close":       "Close",
+    "cancel":      "Cancel",
+    "confirm":     "Confirm",
+    "loading":     "Loading...",
+    "error":       "Something went wrong",
+    "retry":       "Try again",
+    "add":         "Add",
+    "remove":      "Remove",
+    "edit":        "Edit",
+    "delete":      "Delete",
+    "search":      "Search"
+  }
+}

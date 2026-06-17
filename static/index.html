@@ -252,6 +252,30 @@
     background: linear-gradient(135deg, rgba(123,92,255,.85), rgba(255,61,119,.85));
     color: #fff; font-size: 11.5px; font-weight: 900; padding: 5px 12px; border-radius: 20px; }
   .fc-earn { font-size: 11px; color: #34d399; font-weight: 700; margin-top: 6px; }
+
+  /* ---- Reactions (Shira) ---- */
+  .fc-reactions { display: flex; align-items: center; gap: 6px; padding: 8px 14px 4px; }
+  .fc-reaction-btn { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 999px; padding: 5px 11px; font-size: 15px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px; transition: transform 150ms ease, background 150ms ease; }
+  .fc-reaction-btn:active { transform: scale(.9); }
+  .fc-reaction-btn.reacted { background: rgba(123,92,255,.22); border-color: rgba(123,92,255,.45); }
+  .fc-reaction-btn .rc-count { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.7); }
+  .fc-views { margin-left: auto; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.35); }
+  /* Comments */
+  .fc-comments { padding: 0 14px 10px; }
+  .fc-comment-toggle { background: none; border: none; color: rgba(255,255,255,.45);
+    font-size: 12px; font-weight: 700; cursor: pointer; padding: 2px 0 8px; font-family: inherit; }
+  .fc-comment-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+  .fc-comment-item { background: rgba(255,255,255,.06); border-radius: 10px; padding: 7px 10px; }
+  .fc-comment-user { font-size: 11px; font-weight: 800; color: var(--accent); margin-bottom: 2px; }
+  .fc-comment-text { font-size: 12px; color: rgba(255,255,255,.82); line-height: 1.4; }
+  .fc-comment-input-row { display: flex; gap: 6px; }
+  .fc-comment-input { flex: 1; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 999px; padding: 7px 14px; font-size: 13px; color: var(--fg);
+    font-family: inherit; outline: none; }
+  .fc-comment-send { background: var(--accent); border: none; border-radius: 999px;
+    padding: 7px 14px; font-size: 12px; font-weight: 800; color: #fff; cursor: pointer; font-family: inherit; }
   .fc-own-badge { position: absolute; bottom: 84px; left: 14px; z-index: 6;
     display: inline-flex; align-items: center; gap: 4px;
     background: rgba(0,0,0,.52); backdrop-filter: blur(10px);
@@ -2122,6 +2146,7 @@
         </button>
       </div>
       ${ownBadge}
+      ${reactionsHTML(post.id||post.ts||'p'+Math.random())}
     </div>`;
   }
 
@@ -3932,6 +3957,138 @@
     {id:'st5', name:'מיקה', emoji:'♻️', seen:true},
     {id:'st6', name:'Streetwear', emoji:'🔥', seen:false},
   ];
+  // ===== REACTIONS + COMMENTS (Shira) =====
+  const REACTIONS_KEY = 'awear_reactions';
+  const COMMENTS_KEY  = 'awear_comments';
+  const REACTION_SET  = ['❤️','🔥','⭐','✨'];
+
+  function loadReactions() {
+    try { return JSON.parse(localStorage.getItem(REACTIONS_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function saveReactions(r) { localStorage.setItem(REACTIONS_KEY, JSON.stringify(r)); }
+  function loadComments() {
+    try { return JSON.parse(localStorage.getItem(COMMENTS_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function saveComments(c) { localStorage.setItem(COMMENTS_KEY, JSON.stringify(c)); }
+
+  function getPostReactions(postId) {
+    const all = loadReactions();
+    return all[postId] || { counts: {'❤️':0,'🔥':0,'⭐':0,'✨':0}, mine: null };
+  }
+
+  function toggleReaction(postId, emoji) {
+    const all = loadReactions();
+    if (!all[postId]) all[postId] = { counts: {'❤️':0,'🔥':0,'⭐':0,'✨':0}, mine: null };
+    const prev = all[postId].mine;
+    if (prev === emoji) {
+      all[postId].counts[emoji] = Math.max(0, (all[postId].counts[emoji]||0) - 1);
+      all[postId].mine = null;
+    } else {
+      if (prev) all[postId].counts[prev] = Math.max(0, (all[postId].counts[prev]||0) - 1);
+      all[postId].counts[emoji] = (all[postId].counts[emoji]||0) + 1;
+      all[postId].mine = emoji;
+    }
+    saveReactions(all);
+    return all[postId];
+  }
+
+  function getPostComments(postId) {
+    const all = loadComments();
+    return all[postId] || [];
+  }
+
+  function addComment(postId, text) {
+    if (!text.trim()) return;
+    const all = loadComments();
+    if (!all[postId]) all[postId] = [];
+    all[postId].push({ user: 'את', text: text.trim(), ts: Date.now() });
+    saveComments(all);
+    logAdminEvent('comment', postId + ': ' + text.slice(0,30));
+  }
+
+  function reactionsHTML(postId) {
+    const r = getPostReactions(postId);
+    const comments = getPostComments(postId);
+    const viewCount = Math.floor(Math.random() * 800 + 40);
+    return `
+      <div class="fc-reactions" data-post="${postId}">
+        ${REACTION_SET.map(e => `
+          <button class="fc-reaction-btn${r.mine===e?' reacted':''}" data-react="${e}" data-post="${postId}">
+            ${e}<span class="rc-count">${r.counts[e]||0}</span>
+          </button>`).join('')}
+        <span class="fc-views">${viewCount} views</span>
+      </div>
+      <div class="fc-comments" data-post="${postId}">
+        <button class="fc-comment-toggle" data-post="${postId}">
+          ${comments.length ? `${comments.length} תגובות · הצגה` : '+ הוסיפי תגובה'}
+        </button>
+        <div class="fc-comment-list" style="display:none" data-clist="${postId}">
+          ${comments.map(c => `
+            <div class="fc-comment-item">
+              <div class="fc-comment-user">@${esc(c.user)}</div>
+              <div class="fc-comment-text">${esc(c.text)}</div>
+            </div>`).join('')}
+          <div class="fc-comment-input-row">
+            <input class="fc-comment-input" placeholder="הוסיפי תגובה..." data-cinput="${postId}" />
+            <button class="fc-comment-send" data-csend="${postId}">שלחי</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function bindReactions(host) {
+    host.querySelectorAll('.fc-reaction-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const postId = btn.dataset.post;
+        const emoji  = btn.dataset.react;
+        const updated = toggleReaction(postId, emoji);
+        const reactionRow = host.querySelector(`.fc-reactions[data-post="${postId}"]`);
+        if (reactionRow) {
+          reactionRow.querySelectorAll('.fc-reaction-btn').forEach(b => {
+            b.classList.toggle('reacted', b.dataset.react === updated.mine);
+            const cnt = b.querySelector('.rc-count');
+            if (cnt) cnt.textContent = updated.counts[b.dataset.react] || 0;
+          });
+        }
+      });
+    });
+    host.querySelectorAll('.fc-comment-toggle').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const postId = btn.dataset.post;
+        const list = host.querySelector(`[data-clist="${postId}"]`);
+        if (!list) return;
+        const open = list.style.display === 'none';
+        list.style.display = open ? 'flex' : 'none';
+        list.style.flexDirection = 'column';
+        btn.textContent = open
+          ? `${getPostComments(postId).length} תגובות · סגירה`
+          : (getPostComments(postId).length ? `${getPostComments(postId).length} תגובות · הצגה` : '+ הוסיפי תגובה');
+      });
+    });
+    host.querySelectorAll('.fc-comment-send').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const postId = btn.dataset.csend;
+        const input  = host.querySelector(`[data-cinput="${postId}"]`);
+        if (!input || !input.value.trim()) return;
+        addComment(postId, input.value);
+        input.value = '';
+        const list = host.querySelector(`[data-clist="${postId}"]`);
+        if (list) {
+          const comments = getPostComments(postId);
+          const items = list.querySelector('.fc-comment-list') || list;
+          const newItem = document.createElement('div');
+          newItem.className = 'fc-comment-item';
+          newItem.innerHTML = `<div class="fc-comment-user">@את</div><div class="fc-comment-text">${esc(comments[comments.length-1].text)}</div>`;
+          list.insertBefore(newItem, list.querySelector('.fc-comment-input-row'));
+        }
+        showToast('תגובה נוספה ✓');
+      });
+    });
+  }
+
   let seenStories = new Set(JSON.parse(localStorage.getItem('awear_stories_seen')||'[]'));
 
   function renderStories(){
@@ -4022,6 +4179,7 @@
       host.appendChild(em); return;
     }
     seeds.forEach(post=>{const wrap=document.createElement('div');wrap.innerHTML=feedCardHTML(post,false);host.appendChild(wrap.firstElementChild);});
+    bindReactions(host);
   };
 
   renderCloset();

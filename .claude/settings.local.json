@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "bypassPermissions",
     "allow": [
       "Bash(cd:*)",
       "Bash(venv312/bin/uvicorn:*)",
@@ -13,8 +12,12 @@
       "Bash(cat:*)",
       "Bash(mkdir:*)",
       "Bash(echo:*)",
-      "Bash(sed:*)"
-    ]
+      "Bash(sed:*)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
+    ],
+    "defaultMode": "bypassPermissions"
   },
   "skipDangerousModePermissionPrompt": true
 }

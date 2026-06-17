@@ -1,0 +1,120 @@
+{
+  "app": {
+    "name": "AWEAR"
+  },
+  "nav": {
+    "home":        "בית",
+    "feed":        "פיד",
+    "closet":      "הארון",
+    "chat":        "אביגיל",
+    "shopping":    "קניות",
+    "marketplace": "מרקטפלייס"
+  },
+  "home": {
+    "greeting_night":     "לילה טוב",
+    "greeting_morning":   "בוקר טוב",
+    "greeting_noon":      "צהריים טובים",
+    "greeting_evening":   "ערב טוב",
+    "outfit_today":       "הלוק של היום",
+    "wardrobe_section":   "הארון שלי",
+    "challenge_section":  "אתגר יומי",
+    "quick_actions":      "פעולות מהירות",
+    "stat_items":         "פריטים",
+    "stat_value":         "שווי ארון",
+    "stat_wears":         "לבישות",
+    "wore_it":            "לבשתי",
+    "wore_saved":         "נשמר!",
+    "scan_title":         "סרקי את הלוק של היום",
+    "scan_sub":           "AI מזהה את הבגדים ובונה לך ארון דיגיטלי תוך שניות",
+    "profile_next_step":  "הצעד הבא",
+    "profile_complete":   "פרופיל הושלם"
+  },
+  "closet": {
+    "items":         "פריטים",
+    "value":         "שווי",
+    "tab_closet":    "הארון",
+    "tab_looks":     "לוקים",
+    "tab_forsale":   "למכירה",
+    "share_look":    "שתפי לוק לפיד",
+    "edit_profile":  "עריכת פרופיל",
+    "scan_first":    "סרקי לוק ראשון"
+  },
+  "feed": {
+    "tab_foryou":      "בשבילי",
+    "tab_following":   "עוקבת",
+    "tab_inspiration": "יש לי ✨",
+    "match_wardrobe":  "% התאמה לארון שלי",
+    "already_owned":   "% כבר בארון שלך",
+    "earn_on_buy":     "תרוויח על כל קנייה",
+    "no_following":    "עדיין לא עוקבת אחרי אף אחת",
+    "no_looks":        "אין לוקים בסגנון הזה עדיין"
+  },
+  "reactions": {
+    "react":       "הגיבי",
+    "comment":     "תגובה",
+    "comments":    "תגובות",
+    "add_comment": "הוסיפי תגובה...",
+    "send":        "שלחי",
+    "views":       "צפיות"
+  },
+  "scan": {
+    "analyzing":    "מנתח את הלוק שלך...",
+    "added_to":     "נוסף לארון",
+    "error":        "הסריקה לא זמינה — נסי שוב",
+    "demo_mode":    "מצב דמו"
+  },
+  "chat": {
+    "placeholder":  "שאלי את אביגיל כל דבר...",
+    "send":         "שלחי",
+    "thinking":     "חושבת..."
+  },
+  "marketplace": {
+    "title":           "מרקטפלייס",
+    "tab_browse":      "קנייה",
+    "tab_sell":        "מכירה שלי",
+    "tab_swap":        "החלפה",
+    "sell_item":       "מכרי פריט",
+    "earnings":        "פוטנציאל הכנסה",
+    "active_listings": "פריטים פעילים",
+    "list_item":       "פרסמי למכירה",
+    "remove":          "הסר",
+    "condition_new":   "חדש",
+    "condition_likenew":"כמו חדש",
+    "condition_used":  "משומש",
+    "ai_price":        "AI תמחור",
+    "cancel":          "ביטול"
+  },
+  "wishlist": {
+    "title":       "Wishlist",
+    "empty":       "הרשימה ריקה",
+    "empty_sub":   "הוסיפי פריטים שאת רוצה לקנות",
+    "suggestions": "הצעות בשבילך"
+  },
+  "onboarding": {
+    "next":     "הבא",
+    "back":     "חזרה",
+    "finish":   "התחילי",
+    "skip":     "דלגי"
+  },
+  "rewards": {
+    "points":  "נקודות",
+    "level":   "רמה"
+  },
+  "common": {
+    "buy":         "קני",
+    "sell":        "מכרי",
+    "save":        "שמרי",
+    "share":       "שתפי",
+    "close":       "סגרי",
+    "cancel":      "ביטול",
+    "confirm":     "אישור",
+    "loading":     "טוענת...",
+    "error":       "משהו השתבש",
+    "retry":       "נסי שוב",
+    "add":         "הוסיפי",
+    "remove":      "הסר",
+    "edit":        "ערכי",
+    "delete":      "מחקי",
+    "search":      "חיפוש"
+  }
+}
