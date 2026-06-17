@@ -1417,6 +1417,12 @@
     leaf:'<path d="M19 5c-7 0-13 4-13 11 0 1.5.3 2.5.3 2.5S7 12 19 5Z" stroke-linejoin="round"/><path d="M6.3 18.5C9 14 13 9.5 19 5"/>',
     crown:'<path d="M4 18h16l-1.3-8-3.2 3.5L12 8l-3.5 5.5L5.3 10 4 18Z" stroke-linejoin="round"/><path d="M4 18h16v2H4v-2Z"/>',
     users:'<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M14.8 12.2A4 4 0 0 1 20.5 16"/>',
+    briefcase:'<rect x="3.5" y="8" width="17" height="11" rx="1.5"/><path d="M8.5 8V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/><path d="M3.5 13h17"/>',
+    plane:'<path d="M12 2v8.5L4 14v2l8-2.5V19l-2.5 1.8V22l3.5-1 3.5 1v-1.2L13 19v-5.5l8 2.5v-2l-8-3.5V2h-1Z" stroke-linejoin="round"/>',
+    gift:'<rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M4 13h16M12 9v11"/><path d="M9 9c-1.5 0-2.5-1-2.5-2.2C6.5 5.5 7.5 5 8.5 5c1.5 0 3 1.5 3.5 4M15 9c1.5 0 2.5-1 2.5-2.2 0-1.3-1-1.8-2-1.8-1.5 0-3 1.5-3.5 4" stroke-linejoin="round"/>',
+    coffee:'<path d="M5 9h12v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V9Z" stroke-linejoin="round"/><path d="M17 10.5h1.5a2 2 0 0 1 0 4H17"/><path d="M8 4.5c0 1-1 1-1 2M12 4.5c0 1-1 1-1 2"/>',
+    dumbbell:'<rect x="2.5" y="10" width="3" height="4" rx="1"/><rect x="18.5" y="10" width="3" height="4" rx="1"/><path d="M5.5 12h13"/><rect x="5" y="8.5" width="2" height="7" rx="0.8"/><rect x="17" y="8.5" width="2" height="7" rx="0.8"/>',
+    wave:'<path d="M2 14c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2"/><path d="M2 18c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -2654,14 +2660,14 @@
 
   // ---- Outfit Generator ----
   const OG_SCENARIOS = [
-    {emoji:'💕',label:'דייט הערב'},
-    {emoji:'💼',label:'ראיון עבודה'},
-    {emoji:'✈️',label:'טיול לאירופה'},
-    {emoji:'🎉',label:'מסיבת יום הולדת'},
-    {emoji:'☕',label:'בוקר קז׳ואל בעיר'},
-    {emoji:'🏃',label:'אימון ספורט'},
-    {emoji:'🎓',label:'אירוע פורמלי'},
-    {emoji:'🌊',label:'חוף הים'},
+    {icon:'heartFill',label:'דייט הערב'},
+    {icon:'briefcase',label:'ראיון עבודה'},
+    {icon:'plane',label:'טיול לאירופה'},
+    {icon:'gift',label:'מסיבת יום הולדת'},
+    {icon:'coffee',label:'בוקר קז׳ואל בעיר'},
+    {icon:'dumbbell',label:'אימון ספורט'},
+    {icon:'diamond',label:'אירוע פורמלי'},
+    {icon:'wave',label:'חוף הים'},
   ];
 
   let ogLoading = false;
@@ -2669,7 +2675,7 @@
   function initOutfitGen() {
     const scenariosEl = document.getElementById('og-scenarios');
     scenariosEl.innerHTML = OG_SCENARIOS.map(s =>
-      `<button class="og-chip" data-q="${attr(s.label)}">${s.emoji} ${esc(s.label)}</button>`
+      `<button class="og-chip" data-q="${attr(s.label)}">${icon(s.icon,14)} ${esc(s.label)}</button>`
     ).join('');
     scenariosEl.querySelectorAll('.og-chip').forEach(btn =>
       btn.addEventListener('click', () => runOutfitGen(btn.dataset.q))
