@@ -280,6 +280,11 @@
   .fc-comment-item { background: rgba(255,255,255,.05); border-radius: 10px;
     padding: 8px 12px; margin-bottom: 8px; }
   .fc-comment-user { font-size: 11px; font-weight: 800; color: var(--accent); margin-bottom: 3px; }
+  .fc-comment-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .fc-comment-report { background: none; border: none; padding: 2px; margin: 0;
+    display: inline-flex; align-items: center; cursor: pointer;
+    color: rgba(255,255,255,.3); transition: color 150ms ease; }
+  .fc-comment-report:hover, .fc-comment-report:active { color: rgba(255,255,255,.7); }
   .fc-comment-text { font-size: 13px; color: var(--fg); line-height: 1.4; }
   .fc-comment-input-row { display: flex; gap: 8px; margin-top: 12px; }
   .fc-comment-input { flex: 1; background: var(--surface); border: 1px solid var(--line);
@@ -1423,6 +1428,7 @@
     coffee:'<path d="M5 9h12v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V9Z" stroke-linejoin="round"/><path d="M17 10.5h1.5a2 2 0 0 1 0 4H17"/><path d="M8 4.5c0 1-1 1-1 2M12 4.5c0 1-1 1-1 2"/>',
     dumbbell:'<rect x="2.5" y="10" width="3" height="4" rx="1"/><rect x="18.5" y="10" width="3" height="4" rx="1"/><path d="M5.5 12h13"/><rect x="5" y="8.5" width="2" height="7" rx="0.8"/><rect x="17" y="8.5" width="2" height="7" rx="0.8"/>',
     wave:'<path d="M2 14c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2"/><path d="M2 18c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2"/>',
+    flag:'<path d="M6 21V4"/><path d="M6 4.5h11l-2.8 3.5L17 11.5H6" stroke-linejoin="round"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -2171,6 +2177,9 @@
         <button class="fca-btn" data-action="share">
           <div class="fca-ico">${icon('share',21)}</div><span>שתפי</span>
         </button>
+        <button class="fca-btn" data-action="report" data-id="${attr(post.id||'')}" aria-label="Report post">
+          <div class="fca-ico">${icon('flag',21)}</div><span>דווחי</span>
+        </button>
         <button class="fca-btn buy-btn buy-action"
             data-label="${attr(lbl)}" data-price="${attr(post.price||post.look_total_ils||0)}"
             data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
@@ -2264,6 +2273,10 @@
       showToast(on?'נשמר לרשימת המשאלות':'הוסר מהשמורים');
     }
     if(type==='share')showToast('הקישור הועתק');
+    if(type==='report'){
+      const post=feedPostById(id);
+      reportContent('post', id, post?(post.caption||post.name||''):'');
+    }
   });
 
   let lastTap=0,lastCard=null;
@@ -4059,6 +4072,33 @@
     saveComments(all);
   }
 
+  // ---- comment rate limiting (client-side only) ----
+  // This app has no logged-in-user id reaching the backend (comments are
+  // stored keyed by postId in localStorage with a hardcoded 'את' author —
+  // there's no session/auth concept at all), so true per-user server-side
+  // limiting isn't possible without backend auth work that's out of scope
+  // here. This throttles the local client to ≤3 comment posts per rolling
+  // 60s window and surfaces a clear message instead of silently dropping.
+  const COMMENT_RATE_LIMIT = 3;
+  const COMMENT_RATE_WINDOW_MS = 60 * 1000;
+  let _commentPostTimestamps = [];
+
+  function isCommentRateLimited() {
+    const now = Date.now();
+    _commentPostTimestamps = _commentPostTimestamps.filter(t => now - t < COMMENT_RATE_WINDOW_MS);
+    return _commentPostTimestamps.length >= COMMENT_RATE_LIMIT;
+  }
+
+  function recordCommentPost() {
+    _commentPostTimestamps.push(Date.now());
+  }
+
+  // ---- report comment/post (client-side log only, no backend user model) ----
+  function reportContent(kind, id, label) {
+    logAdminEvent('report_' + kind, id + (label ? (': "' + label.slice(0,40) + '"') : '') + ' — reported by user');
+    showToast("thanks, we'll review this");
+  }
+
   // Claude-based comment moderation (language-agnostic, not a keyword filter).
   // Additive/async: the comment is already shown optimistically by the caller —
   // this never blocks or delays that. If the call is slow or fails, nothing
@@ -4130,13 +4170,22 @@
     sheet.querySelector('.fc-comment-send').addEventListener('click', () => {
       const input = sheet.querySelector('.fc-comment-input');
       if (!input.value.trim() || !_commentsPostId) return;
+      if (isCommentRateLimited()) {
+        showToast("you're commenting too fast, wait a moment");
+        return;
+      }
       const postId = _commentsPostId;
       const comment = addComment(postId, input.value);
       if (!comment) return;
+      recordCommentPost();
       const newItem = document.createElement('div');
       newItem.className = 'fc-comment-item';
       newItem.dataset.commentId = comment.id;
-      newItem.innerHTML = `<div class="fc-comment-user">@you</div><div class="fc-comment-text">${esc(input.value)}</div>`;
+      newItem.innerHTML = `<div class="fc-comment-row">
+          <div class="fc-comment-user">@you</div>
+          <button class="fc-comment-report" data-report-comment="${esc(comment.id)}" aria-label="Report comment">${icon('flag',14)}</button>
+        </div>
+        <div class="fc-comment-text">${esc(input.value)}</div>`;
       sheet.querySelector('.cs-list').appendChild(newItem);
       input.value = '';
       // Update comment count button in card
@@ -4148,6 +4197,17 @@
       // Optimistic display happens above; moderation runs async and only
       // acts (hide/flag) if it comes back harmful — never blocks the UI.
       moderateCommentAsync(postId, comment, sheet.querySelector('.cs-list'));
+    });
+
+    // Report a single comment — tap anywhere in the list, delegate to the flag button
+    sheet.querySelector('.cs-list').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-report-comment]');
+      if (!btn) return;
+      e.stopPropagation();
+      const commentId = btn.dataset.reportComment;
+      const item = btn.closest('.fc-comment-item');
+      const text = item ? item.querySelector('.fc-comment-text')?.textContent : '';
+      reportContent('comment', commentId, text || '');
     });
 
     // Close on backdrop tap
@@ -4173,7 +4233,10 @@
     const list = sheet.querySelector('.cs-list');
     list.innerHTML = comments.map(c => `
       <div class="fc-comment-item" data-comment-id="${esc(c.id||'')}">
-        <div class="fc-comment-user">@${esc(c.user)}</div>
+        <div class="fc-comment-row">
+          <div class="fc-comment-user">@${esc(c.user)}</div>
+          <button class="fc-comment-report" data-report-comment="${esc(c.id||'')}" aria-label="Report comment">${icon('flag',14)}</button>
+        </div>
         <div class="fc-comment-text">${esc(c.text)}</div>
       </div>`).join('') || `<div style="color:rgba(255,255,255,.35);font-size:13px;padding:12px 0">No comments yet</div>`;
     sheet.classList.add('open');
