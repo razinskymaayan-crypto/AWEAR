@@ -2924,16 +2924,53 @@
 
   function renderMySells() {
     const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
-    if (!mine.length) return `<div style="text-align:center;padding:40px 20px;color:var(--muted)"><div style="font-size:36px;margin-bottom:12px">📦</div><div style="font-size:14px;font-weight:700">עוד לא מכרת פריטים</div><div style="font-size:12px;margin-top:6px;opacity:.7">לחצי על "+ מכרי פריט" כדי להתחיל</div></div>`;
-    return `<div class="mp-grid">${mine.map(item => `
-      <div class="mp-item">
+    if (!mine.length) {
+      const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+      const suggestions = wardrobe.slice(0, 3);
+      return `<div style="text-align:center;padding:32px 20px 16px;color:var(--muted)">
+        <div style="font-size:36px;margin-bottom:12px">📦</div>
+        <div style="font-size:14px;font-weight:700;color:var(--fg)">עוד לא מכרת פריטים</div>
+        <div style="font-size:12px;margin-top:6px;opacity:.7">לחצי על "+ מכרי פריט" כדי להתחיל</div>
+      </div>
+      ${suggestions.length ? `<div style="padding:0 16px 8px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">מהארון שלך — כדאי למכור?</div>
+        ${suggestions.map(item => `<div onclick="openSellFormWithItem(${JSON.stringify(JSON.stringify(item))})" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer">
+          <div style="font-size:26px">${item.emoji||'👗'}</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700">${esc(item.name||'פריט')}</div><div style="font-size:11px;color:var(--muted)">מחיר מוצע: ₪${Math.round((item.price_estimate_ils||200)*0.5)}</div></div>
+          <div style="font-size:11px;font-weight:700;color:var(--accent);background:rgba(139,92,246,.12);padding:4px 10px;border-radius:20px">מכרי</div>
+        </div>`).join('')}</div>` : ''}`;
+    }
+    const totalEarnings = mine.reduce((s,i) => s + (Number(i.price)||0), 0);
+    return `
+      <div style="padding:14px 16px 0">
+        <div style="background:linear-gradient(135deg,#4ade80,#22d3ee);border-radius:14px;padding:14px 16px;color:#000;margin-bottom:14px">
+          <div style="font-size:11px;font-weight:700;opacity:.7">פוטנציאל הכנסה</div>
+          <div style="font-size:26px;font-weight:900">₪${totalEarnings.toLocaleString()}</div>
+          <div style="font-size:11px;font-weight:600;opacity:.8">${mine.length} פריטים פעילים</div>
+        </div>
+      </div>
+      <div class="mp-grid">${mine.map(item => `
+      <div class="mp-item" style="position:relative">
         <div class="mp-item-img">${item.emoji||'👗'}<div class="mp-item-badge like-new">שלי</div></div>
         <div class="mp-item-info">
           <div class="mp-item-name">${esc(item.name)}</div>
           <div class="mp-item-price">₪${item.price}</div>
           <div class="mp-item-seller" style="color:#4ade80">פעיל ✓</div>
+          <button onclick="deleteMySell('${item.id}')" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,.15);border:none;border-radius:8px;padding:3px 7px;font-size:11px;font-weight:700;color:#ef4444;cursor:pointer">הסר</button>
         </div>
       </div>`).join('')}</div>`;
+  }
+
+  function deleteMySell(id) {
+    const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
+    const updated = mine.filter(i => i.id !== id);
+    localStorage.setItem(MP_KEY, JSON.stringify(updated));
+    renderMarketplace();
+    showToast('פריט הוסר מהמכירה');
+  }
+
+  function openSellFormWithItem(jsonStr) {
+    const item = JSON.parse(jsonStr);
+    openSellForm(item);
   }
 
   function renderSwap() {
@@ -2944,20 +2981,36 @@
     </div>`;
   }
 
-  function openSellForm() {
+  function openSellForm(prefill) {
     const modal = document.getElementById('purchase-modal');
     const card  = document.getElementById('modal-card');
+    const CAT_EMOJIS = {top:'👕',bottoms:'👖',shoes:'👟',bag:'👜',outerwear:'🧥',dress:'👗',hat:'🧢',other:'✨'};
+    const prefillName = prefill ? (prefill.name || '') : '';
+    const prefillPrice = prefill ? Math.round((prefill.price_estimate_ils || 200) * 0.5) : '';
+    const prefillCat = prefill ? (prefill.category || 'other') : 'other';
+    const prefillEmoji = prefill ? (prefill.emoji || CAT_EMOJIS[prefillCat] || '👗') : '👗';
+
     card.innerHTML = `
-      <div style="padding:18px 20px 0;font-size:17px;font-weight:900">📦 מכרי פריט</div>
+      <div style="padding:18px 20px 6px;font-size:17px;font-weight:900">📦 מכרי פריט</div>
       <div class="mp-sell-form">
+        ${prefill ? `<div style="display:flex;align-items:center;gap:10px;background:rgba(139,92,246,.1);border-radius:12px;padding:10px 14px;margin-bottom:4px">
+          <div style="font-size:28px">${prefillEmoji}</div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent)">ממוין מהארון שלך ✓</div>
+        </div>` : ''}
         <div>
           <div class="mp-form-label">שם הפריט</div>
-          <input class="mp-form-input" id="sf-name" placeholder='למשל: ג׳ינס Zara כחול' />
+          <input class="mp-form-input" id="sf-name" placeholder='למשל: ג׳ינס Zara כחול' value="${attr(prefillName)}" />
+        </div>
+        <div>
+          <div class="mp-form-label">קטגוריה</div>
+          <select class="mp-form-input" id="sf-cat">
+            ${Object.entries(CAT_EMOJIS).map(([k,v]) => `<option value="${k}" ${k===prefillCat?'selected':''}>${v} ${k==='top'?'חולצות':k==='bottoms'?'מכנסיים':k==='shoes'?'נעליים':k==='bag'?'תיקים':k==='outerwear'?'מעילים':k==='dress'?'שמלות':k==='hat'?'כובעים':'אחר'}</option>`).join('')}
+          </select>
         </div>
         <div class="mp-price-row">
           <div style="flex:1">
             <div class="mp-form-label">מחיר (₪)</div>
-            <input class="mp-form-input" id="sf-price" type="number" placeholder="150" />
+            <input class="mp-form-input" id="sf-price" type="number" placeholder="150" value="${prefillPrice}" />
           </div>
           <button class="mp-ai-price" id="sf-ai-price">AI תמחור</button>
         </div>
@@ -2970,7 +3023,7 @@
           </select>
         </div>
         <div style="display:flex;gap:8px">
-          <button class="ha-btn ha-primary" style="flex:1" id="sf-submit">פרסמי למכירה</button>
+          <button class="ha-btn ha-primary" style="flex:1" id="sf-submit">פרסמי למכירה 🚀</button>
           <button class="ha-btn ha-secondary" style="flex:1" onclick="document.getElementById('purchase-modal').classList.remove('show')">ביטול</button>
         </div>
       </div>`;
@@ -2983,21 +3036,25 @@
       const match = wardrobe.find(i => i.name && name && i.name.includes(name.slice(0,4)));
       const suggested = match ? Math.round((match.price_estimate_ils || 200) * 0.5) : 150;
       document.getElementById('sf-price').value = suggested;
-      showToast(`AI מציע ₪${suggested} (50% ממחיר קנייה)`);
+      showToast(`AI מציע ₪${suggested} — 50% ממחיר קנייה`);
     });
 
     document.getElementById('sf-submit').addEventListener('click', () => {
       const name = document.getElementById('sf-name').value.trim();
       const price = Number(document.getElementById('sf-price').value) || 150;
       const condition = document.getElementById('sf-condition').value;
+      const cat = document.getElementById('sf-cat').value;
       if (!name) { showToast('חסר שם פריט'); return; }
+      const emoji = prefillEmoji || CAT_EMOJIS[cat] || '👗';
       const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
-      mine.unshift({id:'u'+Date.now(), name, price, condition, emoji:'👗', category:'other', seller:'@אני', orig: price*2, style_tags:[]});
+      mine.unshift({id:'u'+Date.now(), name, price, condition, emoji, category: cat, seller:'@אני', orig: price*2, style_tags: prefill?.style_tags || []});
       localStorage.setItem(MP_KEY, JSON.stringify(mine));
       modal.classList.remove('show');
+      logAdminEvent('sell', 'פרסמה: ' + name + ' ₪' + price);
+      addRewardPoints(25, 'sell_listing');
       mpTab = 'sell';
       renderMarketplace();
-      showToast('פריט פורסם! 🎉');
+      showToast('פריט פורסם! 🎉 +25 נקודות');
     });
   }
 
