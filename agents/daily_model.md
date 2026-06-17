@@ -78,6 +78,7 @@
 6. **אפס hardcoded strings** — הכל דרך i18n file.
 7. **אפס inline styles** ללא token reference מנטה.
 8. **UI change** → token check + mobile viewport + RTL check.
+9. **כל commit שמשנה רינדור (DOM/CSS/JS שמשפיע על מה שהמשתמש רואה) חייב לעבור הרצה בדפדפן אמיתי (Playwright) לפני merge.** "עבר JS syntax validation" הוא תנאי הכרחי בלבד — לא מספיק. נוסף ב-17.06.2026 בעקבות [postmortem_2026-06-17.md](postmortem_2026-06-17.md) — שני באגי רינדור רצופים (reactions נסתרים, מסך בית קפוא) שעברו syntax check אבל קרסו בדפדפן בפועל.
 
 ---
 

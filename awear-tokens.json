@@ -1,7 +1,7 @@
 {
   "color": {
-    "accent":       "#7b5cff",
-    "accent2":      "#ff3d77",
+    "accent":       "#ff3d77",
+    "accent2":      "#7b5cff",
     "accent3":      "#06b6d4",
     "bg":           "#0d0d14",
     "surface":      "#13131f",
@@ -16,7 +16,7 @@
     "overlay":      "rgba(0,0,0,0.72)"
   },
   "gradient": {
-    "primary":      "linear-gradient(135deg, #7b5cff, #ff3d77)",
+    "primary":      "linear-gradient(135deg, #ff3d77, #7b5cff)",
     "secondary":    "linear-gradient(135deg, #06b6d4, #7b5cff)",
     "success":      "linear-gradient(135deg, #4ade80, #22d3ee)",
     "card-shine":   "linear-gradient(160deg, rgba(123,92,255,0.15), rgba(255,61,119,0.08))"
