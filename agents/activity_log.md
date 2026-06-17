@@ -18,6 +18,10 @@
 | 2026-06-17 | שירה | Social Features (תחת איילון) | מימוש Claude-based comment moderation — `/api/moderate` + wiring ל-`addComment` | **הושלם ומוזג ל-main** — ג'ף בדק diff, אימת חי (curl + regression 17 מסכים), מיזג | agentId `a5454c1d4ed9274bc`, commit מקורי `de309a6`, מוזג כ-`b3f682c` על `main` |
 | 2026-06-17 | נטה | Design System (תחת מארק) | הערכת migration לפלטת `tokens.css` (`--bg`/`--card`/`--line`/`--muted`) | **הושלם — המלצת NO-GO**, לא דרוש מיזוג (לא שינתה קבצים חיים) | agentId `a22dab301e0627d97`, מסמך המלצה: `agents/netta_tokens_recommendation_2026-06-17.md`, צילומי מסך ב-`/tmp/netta_tokens_screens/` |
 | 2026-06-17 | נטה (המשך) | Design System (תחת מארק) | יישום ה"תיקון האמיתי" שנטה עצמה זיהתה: עדכון `tokens.css`/`awear-tokens.json` כך שיתאימו לערכים החיים/תקניים מ-`DESIGN_STANDARDS.md` (לא `index.html`) | **הושלם** — `--bg`/`--card`/`--line`/`--muted` תוקנו ב-2 הקבצים, `index.html` לא נגע, אומת ויזואלית (Playwright pixel-diff: זהה לחלוטין) | commit ראה git log |
+| 2026-06-18 | דנה | RN Eng (תחת וראן) | משימה ראשונה זעירה במתכוון (כלל stall-escalation): הקמת RN project skeleton שרץ בפועל על סימולטור/web | בשיגור | --- |
+| 2026-06-18 | רועי | RN Eng + i18n (תחת וראן) | תוכנית מסך-מסך ל-wiring של 614 המחרוזות ב-web — **תכנון בלבד, לא ביצוע** | בשיגור | --- |
+| 2026-06-18 | שירה | Social Features (תחת איילון) | סגירת 2 hard rules שדיווחה כ-out-of-scope במשימה הקודמת: rate limiting (3 תגובות/דקה) + report button | בשיגור | --- |
+| 2026-06-18 | אורן | Integration (תחת סטיב) | תוכנית currency layer (price_estimate_ils → multi-currency) — **תכנון בלבד, לא ביצוע** | בשיגור | --- |
 
 ---
 
