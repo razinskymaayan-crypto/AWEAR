@@ -625,7 +625,7 @@
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 6px; }
   .onb-sub { color: var(--muted); font-size: 14px; font-weight: 600; margin-bottom: 40px; }
-  .onb-emoji { font-size: 72px; margin-bottom: 24px; filter: drop-shadow(0 12px 28px rgba(123,92,255,.45)); }
+  .onb-emoji { display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: var(--accent2); filter: drop-shadow(0 12px 28px rgba(123,92,255,.45)); }
   .onb-title { font-size: 26px; font-weight: 900; letter-spacing: -.5px; line-height: 1.2; margin-bottom: 12px; }
   .onb-desc { color: rgba(246,246,249,.7); font-size: 15px; line-height: 1.6; max-width: 290px; }
   .onb-progress { display: flex; gap: 6px; margin-top: 32px; }
@@ -649,7 +649,9 @@
   .quiz-opt:active { transform: scale(.96); }
   .quiz-opt.sel { border-color: var(--accent); background: rgba(255,61,119,.1);
     box-shadow: 0 0 0 1px var(--accent); }
-  .quiz-opt .qo-emoji { font-size: 36px; margin-bottom: 8px; }
+  .quiz-opt .qo-emoji { display: flex; align-items: center; justify-content: center; height: 36px; margin-bottom: 8px; color: var(--accent2); }
+  .quiz-opt.sel .qo-emoji { color: var(--accent); }
+  .quiz-opt .qo-text { font-family: "Poppins", sans-serif; font-size: 19px; font-weight: 800; letter-spacing: -.2px; }
   .quiz-opt .qo-label { font-size: 13px; font-weight: 800; color: var(--text); }
   .quiz-opt .qo-sub { font-size: 11px; color: var(--muted); margin-top: 3px; font-weight: 600; }
 
@@ -683,7 +685,7 @@
   .ex-trend-chip { flex-shrink: 0; display: flex; align-items: center; gap: 7px; padding: 9px 14px;
     background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; cursor: pointer; transition: all .18s; }
   .ex-trend-chip:active { transform: scale(.96); border-color: var(--accent); }
-  .ex-trend-chip .tc-emoji { font-size: 18px; }
+  .ex-trend-chip .tc-emoji { display: inline-flex; color: var(--accent2); }
   .ex-trend-chip .tc-text { font-size: 12px; font-weight: 800; color: var(--text); }
   .ex-results { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px; }
   .ex-result-row { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 14px;
@@ -1429,6 +1431,11 @@
     dumbbell:'<rect x="2.5" y="10" width="3" height="4" rx="1"/><rect x="18.5" y="10" width="3" height="4" rx="1"/><path d="M5.5 12h13"/><rect x="5" y="8.5" width="2" height="7" rx="0.8"/><rect x="17" y="8.5" width="2" height="7" rx="0.8"/>',
     wave:'<path d="M2 14c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2"/><path d="M2 18c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2"/>',
     flag:'<path d="M6 21V4"/><path d="M6 4.5h11l-2.8 3.5L17 11.5H6" stroke-linejoin="round"/>',
+    hoodie:'<path d="M8.5 5.2A4 4 0 0 1 12 3.2a4 4 0 0 1 3.5 2" stroke-linejoin="round"/><path d="M5 9.2c0-2.6 1.6-4.6 3.5-5l.6 2.4a2.2 2.2 0 0 0 2.9 1.6 2.2 2.2 0 0 0 1.4-1.6l.6-2.4c1.9.4 3.5 2.4 3.5 5l3 3a1 1 0 0 1-.3 1.6l-2.7 1.3V20a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-5l-2.7-1.3a1 1 0 0 1-.3-1.6l3-3Z" stroke-linejoin="round"/>',
+    flower:'<circle cx="12" cy="12" r="2.1"/><path d="M12 9.7a2.4 2.4 0 1 1 0-4.8 2.4 2.4 0 0 1 0 4.8ZM12 19.1a2.4 2.4 0 1 1 0-4.8 2.4 2.4 0 0 1 0 4.8ZM9.7 12a2.4 2.4 0 1 1-4.8 0 2.4 2.4 0 0 1 4.8 0ZM19.1 12a2.4 2.4 0 1 1-4.8 0 2.4 2.4 0 0 1 4.8 0Z" stroke-linejoin="round"/>',
+    minimal:'<circle cx="12" cy="12" r="7.5"/><path d="M8.2 12h7.6"/>',
+    globe:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.3 3.7 5.4 3.7 8.5s-1.3 6.2-3.7 8.5c-2.4-2.3-3.7-5.4-3.7-8.5s1.3-6.2 3.7-8.5Z" stroke-linejoin="round"/>',
+    storefront:'<path d="M4 9.5 5 4h14l1 5.5" stroke-linejoin="round"/><path d="M4 9.5a2.2 2.2 0 0 0 4.4.3 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4-.3" stroke-linejoin="round"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -3633,22 +3640,22 @@
     {label:'פרפורמנס', val:'sport'}, {label:'פורמלי', val:'formal'},
   ];
   const EX_TRENDING = [
-    {emoji:'🔥',label:'Adidas Samba',tag:'streetwear'},
-    {emoji:'👖',label:'בארל ג׳ינס',tag:'y2k'},
-    {emoji:'🧥',label:'ז׳קט עור',tag:'streetwear'},
-    {emoji:'👜',label:'מיני בג',tag:'y2k'},
-    {emoji:'🌸',label:'Cottage Core',tag:'cottage'},
-    {emoji:'✨',label:'Y2K Denim',tag:'y2k'},
-    {emoji:'🤍',label:'מינימל לבן',tag:'minimal'},
-    {emoji:'💼',label:'Power Dressing',tag:'formal'},
+    {icon:'flame',label:'Adidas Samba',tag:'streetwear'},
+    {icon:'hanger',label:'בארל ג׳ינס',tag:'y2k'},
+    {icon:'hanger',label:'ז׳קט עור',tag:'streetwear'},
+    {icon:'bag',label:'מיני בג',tag:'y2k'},
+    {icon:'flower',label:'Cottage Core',tag:'cottage'},
+    {icon:'sparkle',label:'Y2K Denim',tag:'y2k'},
+    {icon:'minimal',label:'מינימל לבן',tag:'minimal'},
+    {icon:'briefcase',label:'Power Dressing',tag:'formal'},
   ];
   const EX_CARDS = [
-    {emoji:'☀️',name:'לוק קיץ עירוני',sub:'Zara + Samba',badge:'טרנד'},
-    {emoji:'🖤',name:'Streetwear All Black',sub:'קרגו + אוברסייז',badge:'הכי אין'},
-    {emoji:'🌸',name:'Cottage Romance',sub:'וינטג׳ + רומנטי',badge:''},
-    {emoji:'⚡',name:'Sport Luxe',sub:'Nike + מינימל',badge:'חדש'},
-    {emoji:'🤍',name:'מינימל קלאסי',sub:'לבן + ניוד',badge:''},
-    {emoji:'🦋',name:'Y2K Butterfly',sub:'לו-רייז + קרופ',badge:'ויראלי'},
+    {name:'לוק קיץ עירוני',sub:'Zara + Samba',badge:'טרנד'},
+    {name:'Streetwear All Black',sub:'קרגו + אוברסייז',badge:'הכי אין'},
+    {name:'Cottage Romance',sub:'וינטג׳ + רומנטי',badge:''},
+    {name:'Sport Luxe',sub:'Nike + מינימל',badge:'חדש'},
+    {name:'מינימל קלאסי',sub:'לבן + ניוד',badge:''},
+    {name:'Y2K Butterfly',sub:'לו-רייז + קרופ',badge:'ויראלי'},
   ];
 
   let exVibe = 'all', exInited = false;
@@ -3675,7 +3682,7 @@
     // trending chips
     document.getElementById('ex-trending').innerHTML = EX_TRENDING.map(t =>
       `<button class="ex-trend-chip" data-q="${attr(t.label)}" data-tag="${attr(t.tag||'')}">
-         <span class="tc-emoji">${t.emoji}</span>
+         <span class="tc-emoji">${icon(t.icon,16)}</span>
          <span class="tc-text">${esc(t.label)}</span>
        </button>`
     ).join('');
@@ -3782,9 +3789,9 @@
   // ---- Onboarding ----
   const ONBOARDING_KEY = 'awear_onboarded';
   const ONB_SLIDES = [
-    { emoji:'👗', title:'Fashion Operating System', desc:'AWEAR הוא לא סתם ארון בגדים — זה מערכת הפעלה אישית לכל החלטת אופנה שלך.' },
-    { emoji:'📸', title:'סרקי. AI יזהה הכל.', desc:'צלמי את הלוק שלך כל יום — AI מזהה כל פריט, בונה לך גרף אופנה אישי, ומציע לוקים חדשים.' },
-    { emoji:'💸', title:'קני חכם. מכרי מה שחסר.', desc:'כל פריט בפיד הופך לקנייה מיידית עם Compatibility Score. מה שלא לובשת — AI עוזר לך למכור.' },
+    { icon:'hanger', title:'Fashion Operating System', desc:'AWEAR הוא לא סתם ארון בגדים — זה מערכת הפעלה אישית לכל החלטת אופנה שלך.' },
+    { icon:'camera', title:'סרקי. AI יזהה הכל.', desc:'צלמי את הלוק שלך כל יום — AI מזהה כל פריט, בונה לך גרף אופנה אישי, ומציע לוקים חדשים.' },
+    { icon:'cash', title:'קני חכם. מכרי מה שחסר.', desc:'כל פריט בפיד הופך לקנייה מיידית עם Compatibility Score. מה שלא לובשת — AI עוזר לך למכור.' },
   ];
 
   // Extended quiz: 5 steps
@@ -3793,50 +3800,50 @@
       type: 'choice', q: 'מה הוייב שלך?', hint: 'בחרי עד 2', multi: true,
       key: 'styleVibes',
       opts: [
-        {emoji:'✨',label:'Y2K',sub:'טרנדי & רטרו'},
-        {emoji:'🖤',label:'Streetwear',sub:'אורבני'},
-        {emoji:'🤍',label:'Minimal',sub:'נקי & פשוט'},
-        {emoji:'🌸',label:'Cottage Core',sub:'רומנטי & וינטג׳'},
+        {icon:'sparkle',label:'Y2K',sub:'טרנדי & רטרו'},
+        {icon:'hoodie',label:'Streetwear',sub:'אורבני'},
+        {icon:'minimal',label:'Minimal',sub:'נקי & פשוט'},
+        {icon:'flower',label:'Cottage Core',sub:'רומנטי & וינטג׳'},
       ]
     },
     {
       type: 'choice', q: 'מה המטרה העיקרית שלך?', hint: 'בחרי אחת', multi: false,
       key: 'goal',
       opts: [
-        {emoji:'💃',label:'להתלבש טוב יותר',sub:'לוקים ורעיונות'},
-        {emoji:'💰',label:'לחסוך כסף',sub:'CPW & smart buys'},
-        {emoji:'♻️',label:'למכור בגדים',sub:'Marketplace'},
-        {emoji:'✂️',label:'ארון קפסולה',sub:'פחות, טוב יותר'},
+        {icon:'shirt',label:'להתלבש טוב יותר',sub:'לוקים ורעיונות'},
+        {icon:'coins',label:'לחסוך כסף',sub:'CPW & smart buys'},
+        {icon:'tag',label:'למכור בגדים',sub:'Marketplace'},
+        {icon:'box',label:'ארון קפסולה',sub:'פחות, טוב יותר'},
       ]
     },
     {
       type: 'choice', q: 'מה התקציב החודשי לביגוד?', hint: 'בחרי אחת', multi: false,
       key: 'budget',
       opts: [
-        {emoji:'💵',label:'עד ₪200',sub:'חכמה'},
-        {emoji:'💳',label:'₪200–500',sub:'בינוני'},
-        {emoji:'💎',label:'₪500–1000',sub:'לוקסוס'},
-        {emoji:'👑',label:'₪1000+',sub:'כל מה שרוצה'},
+        {icon:'cash',label:'עד ₪200',sub:'חכמה'},
+        {icon:'receipt',label:'₪200–500',sub:'בינוני'},
+        {icon:'diamond',label:'₪500–1000',sub:'לוקסוס'},
+        {icon:'crown',label:'₪1000+',sub:'כל מה שרוצה'},
       ]
     },
     {
       type: 'choice', q: 'איפה את בעיקר קונה?', hint: 'בחרי עד 2', multi: true,
       key: 'shopSource',
       opts: [
-        {emoji:'📱',label:'ASOS / Zara',sub:'online'},
-        {emoji:'🏬',label:'H&M / Mango',sub:'רשת בינלאומית'},
-        {emoji:'♻️',label:'יד שנייה',sub:'Depop / Vinted'},
-        {emoji:'🔥',label:'הכל',sub:'כל מקור'},
+        {icon:'globe',label:'ASOS / Zara',sub:'online'},
+        {icon:'storefront',label:'H&M / Mango',sub:'רשת בינלאומית'},
+        {icon:'leaf',label:'יד שנייה',sub:'Depop / Vinted'},
+        {icon:'flame',label:'הכל',sub:'כל מקור'},
       ]
     },
     {
       type: 'choice', q: 'מה המידה שלך?', hint: 'כדי שנציג המלצות מדויקות', multi: false,
       key: 'size',
       opts: [
-        {emoji:'🌸',label:'XS / S',sub:'34–36'},
-        {emoji:'✨',label:'M',sub:'38–40'},
-        {emoji:'💫',label:'L',sub:'42–44'},
-        {emoji:'🌟',label:'XL+',sub:'46+'},
+        {text:'XS/S',label:'XS / S',sub:'34–36'},
+        {text:'M',label:'M',sub:'38–40'},
+        {text:'L',label:'L',sub:'42–44'},
+        {text:'XL+',label:'XL+',sub:'46+'},
       ]
     },
     {
@@ -3884,7 +3891,7 @@
         <div class="onb-slide">
           <div class="onb-logo">AWEAR</div>
           <div class="onb-sub">הארון של Gen-Z</div>
-          <div class="onb-emoji">${s.emoji}</div>
+          <div class="onb-emoji">${icon(s.icon,64)}</div>
           <div class="onb-title">${s.title}</div>
           <div class="onb-desc">${s.desc}</div>
         </div>`;
@@ -3914,7 +3921,7 @@
             <div class="quiz-hint">${esc(step.hint)}</div>
             <div class="quiz-grid">${step.opts.map((o,i) =>
               `<button class="quiz-opt${([...sel].includes(i))?' sel':''}" data-qi="${qi}" data-oi="${i}">
-                 <div class="qo-emoji">${o.emoji}</div>
+                 <div class="qo-emoji">${o.icon ? icon(o.icon,32) : `<span class="qo-text">${esc(o.text)}</span>`}</div>
                  <div class="qo-label">${esc(o.label)}</div>
                  <div class="qo-sub">${esc(o.sub)}</div>
                </button>`).join('')}
