@@ -778,6 +778,39 @@
   .adm-export-btn.primary { background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff; }
   .adm-export-btn.secondary { background:var(--card);border:1.5px solid var(--line);color:var(--text); }
 
+  /* ---- Stylist Marketplace ---- */
+  .styl-wrap { display:flex;flex-direction:column;padding-bottom:80px; }
+  .styl-header { padding:18px 18px 4px; }
+  .styl-title { font-size:22px;font-weight:900;letter-spacing:-.5px; }
+  .styl-sub { font-size:12px;color:var(--muted);font-weight:600;margin-top:3px; }
+  .styl-grid { display:flex;flex-direction:column;gap:14px;padding:14px 18px 0; }
+  .styl-card { background:var(--card);border-radius:22px;border:1px solid var(--line);overflow:hidden; }
+  .styl-top { display:flex;align-items:center;gap:14px;padding:16px 16px 12px; }
+  .styl-avatar { width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0; }
+  .styl-info { flex:1;min-width:0; }
+  .styl-name { font-size:15px;font-weight:900; }
+  .styl-spec { font-size:11px;color:var(--muted);font-weight:700;margin-top:2px; }
+  .styl-price { font-size:13px;font-weight:900;color:var(--accent);margin-top:4px; }
+  .styl-avail { font-size:10px;font-weight:800;padding:3px 9px;border-radius:10px;flex-shrink:0; }
+  .styl-avail.open { background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.3); }
+  .styl-avail.busy { background:rgba(255,100,100,.1);color:#f87171;border:1px solid rgba(255,100,100,.2); }
+  .styl-tags { display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 12px; }
+  .styl-tag { font-size:10px;font-weight:800;padding:3px 9px;border-radius:8px;background:rgba(123,92,255,.12);color:var(--accent2);border:1px solid rgba(123,92,255,.2); }
+  .styl-actions { display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 16px; }
+  .styl-btn { padding:9px 0;border:0;border-radius:12px;font-family:inherit;font-size:11px;font-weight:900;cursor:pointer;transition:all .15s; }
+  .styl-btn.primary { background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff; }
+  .styl-btn.secondary { background:var(--card);border:1.5px solid var(--line);color:var(--text); }
+  /* booking modal */
+  .book-overlay { position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:flex-end; }
+  .book-sheet { background:var(--bg);border-radius:28px 28px 0 0;padding:24px 20px 40px;width:100%;max-width:430px;margin:0 auto; }
+  .book-title { font-size:18px;font-weight:900;margin-bottom:16px; }
+  .book-field { margin-bottom:12px; }
+  .book-label { font-size:11px;font-weight:800;color:var(--muted);margin-bottom:5px; }
+  .book-input { width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;font-family:inherit;font-size:14px;color:var(--text);outline:none;box-sizing:border-box; }
+  .book-input:focus { border-color:var(--accent); }
+  .book-submit { width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;border-radius:16px;font-family:inherit;font-size:15px;font-weight:900;color:#fff;cursor:pointer;margin-top:6px; }
+  .book-cancel { width:100%;padding:10px;background:transparent;border:0;font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;margin-top:6px; }
+
   /* ---- Shopping Feed ---- */
   .sf-wrap { display:flex; flex-direction:column; height:100%; overflow:hidden; }
   .sf-header { padding:18px 18px 0; flex-shrink:0; }
@@ -1111,6 +1144,11 @@
       <div class="adm-wrap" id="adm-wrap"></div>
     </section>
 
+    <!-- STYLIST MARKETPLACE -->
+    <section id="stylists" class="view">
+      <div class="styl-wrap" id="styl-wrap"></div>
+    </section>
+
     <!-- SHOPPING FEED -->
     <section id="shopping" class="view">
       <div class="sf-wrap">
@@ -1398,6 +1436,7 @@
     if (name === 'compare')       initCompare();
     if (name === 'shopping')      initShoppingFeed();
     if (name === 'admin')         renderAdminDashboard();
+    if (name === 'stylists')      renderStylistMarketplace();
     if (name === 'wishlist')  renderWishlist();
     if (name === 'chat')      initChat();
   }
@@ -2247,6 +2286,7 @@
         <button class="hq-btn" onclick="showView('marketplace')"><span class="hq-icon">🛒</span>Marketplace</button>
         <button class="hq-btn" onclick="showView('compare')"><span class="hq-icon">⚖️</span>השוואה</button>
         <button class="hq-btn" onclick="showView('shopping')"><span class="hq-icon">🛍️</span>Shopping</button>
+        <button class="hq-btn" onclick="showView('stylists')"><span class="hq-icon">💅</span>סטייליסטים</button>
       </div>
     `;
 
@@ -3804,6 +3844,87 @@
   }
 
   if (new URLSearchParams(location.search).get('admin')==='1') showView('admin');
+
+  // ===== STYLIST MARKETPLACE =====
+  const STYLISTS_SEED = [
+    {id:'st1', name:'Maya Cohen', emoji:'👩‍🎨', avatar_bg:'linear-gradient(135deg,#f472b6,#a855f7)', spec:'Y2K & Streetwear', price:'₪150/שעה', tags:['Y2K','Streetwear','Gen-Z'], avail:true,  rating:'4.9', sessions:234},
+    {id:'st2', name:'Noa Levi',   emoji:'✨',   avatar_bg:'linear-gradient(135deg,#818cf8,#6366f1)', spec:'Minimal & Elegant', price:'₪200/שעה', tags:['Minimal','Business','Bridal'], avail:true,  rating:'5.0', sessions:189},
+    {id:'st3', name:'Shira Bar',  emoji:'🖤',   avatar_bg:'linear-gradient(135deg,#1a1a2e,#16213e)', spec:'Dark & Edgy',       price:'₪120/שעה', tags:['Edgy','Rock','Alternative'], avail:false, rating:'4.7', sessions:98},
+    {id:'st4', name:'Tamar Raz',  emoji:'🌸',   avatar_bg:'linear-gradient(135deg,#f9a8d4,#fbbf24)', spec:'Cottage Core & Boho', price:'₪130/שעה', tags:['Cottage Core','Boho','Romantic'], avail:true,  rating:'4.8', sessions:156},
+    {id:'st5', name:'Dana Katz',  emoji:'💼',   avatar_bg:'linear-gradient(135deg,#0ea5e9,#6366f1)', spec:'Corporate & Power', price:'₪250/שעה', tags:['Business','Formal','Power Dressing'], avail:true,  rating:'4.9', sessions:312},
+    {id:'st6', name:'Lior Mizrahi',emoji:'🔥',  avatar_bg:'linear-gradient(135deg,#f59e0b,#ef4444)', spec:'Trendy & Bold',      price:'₪180/שעה', tags:['Trendy','Bold','Going Out'], avail:false, rating:'4.6', sessions:77},
+  ];
+
+  function renderStylistMarketplace() {
+    const el = document.getElementById('styl-wrap');
+    if (!el) return;
+    el.innerHTML = `
+      <div class="styl-header">
+        <div class="styl-title">💅 סטייליסטים</div>
+        <div class="styl-sub">הזמיני פגישה אישית עם סטייליסטית מקצועית</div>
+      </div>
+      <div class="styl-grid">
+        ${STYLISTS_SEED.map(s => `
+          <div class="styl-card">
+            <div class="styl-top">
+              <div class="styl-avatar" style="background:${s.avatar_bg}">${esc(s.emoji)}</div>
+              <div class="styl-info">
+                <div class="styl-name">${esc(s.name)}</div>
+                <div class="styl-spec">${esc(s.spec)}</div>
+                <div class="styl-price">${esc(s.price)} · ⭐ ${esc(s.rating)} · ${s.sessions} פגישות</div>
+              </div>
+              <div class="styl-avail ${s.avail?'open':'busy'}">${s.avail?'זמינה':'עסוקה'}</div>
+            </div>
+            <div class="styl-tags">${s.tags.map(t=>`<div class="styl-tag">${esc(t)}</div>`).join('')}</div>
+            <div class="styl-actions">
+              <button class="styl-btn primary" onclick="openBooking('${attr(s.id)}','${attr(s.name)}')" ${s.avail?'':'disabled style="opacity:.4"'}>📅 הזמיני</button>
+              <button class="styl-btn secondary" onclick="stylistVideoCall('${attr(s.name)}')">📹 וידאו</button>
+              <button class="styl-btn secondary" onclick="stylistChat('${attr(s.name)}')">💬 צ׳אט</button>
+            </div>
+          </div>`).join('')}
+      </div>
+    `;
+  }
+
+  function openBooking(id, name) {
+    const existing = document.getElementById('book-overlay-el');
+    if (existing) existing.remove();
+    const overlay = document.createElement('div');
+    overlay.id = 'book-overlay-el';
+    overlay.className = 'book-overlay';
+    overlay.innerHTML = `
+      <div class="book-sheet">
+        <div class="book-title">📅 הזמנת פגישה עם ${esc(name)}</div>
+        <div class="book-field"><div class="book-label">שם מלא</div><input class="book-input" id="book-nm" placeholder="שמי..." /></div>
+        <div class="book-field"><div class="book-label">תאריך</div><input class="book-input" id="book-dt" type="date" /></div>
+        <div class="book-field"><div class="book-label">סוג פגישה</div>
+          <select class="book-input" id="book-type">
+            <option value="video">📹 וידאו קול</option>
+            <option value="chat">💬 צ׳אט טקסט</option>
+            <option value="home">🏠 ביקור בית</option>
+          </select>
+        </div>
+        <button class="book-submit" onclick="submitBooking('${attr(name)}')">אשרי פגישה ✓</button>
+        <button class="book-cancel" onclick="document.getElementById('book-overlay-el').remove()">ביטול</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  }
+
+  function submitBooking(name) {
+    const nm = document.getElementById('book-nm')?.value.trim();
+    const dt = document.getElementById('book-dt')?.value;
+    const type = document.getElementById('book-type')?.value;
+    if (!nm || !dt) { showToast('מלאי את כל הפרטים'); return; }
+    document.getElementById('book-overlay-el')?.remove();
+    const typeLabel = type === 'video' ? 'וידאו' : type === 'chat' ? 'צ׳אט' : 'ביקור בית';
+    showToast(`✓ פגישת ${typeLabel} עם ${name} נקבעה!`);
+    logAdminEvent('booking', `פגישה עם ${name} — ${typeLabel} ב-${dt}`);
+    addRewardPoints(50, 'booking');
+  }
+
+  function stylistVideoCall(name) { showToast(`📹 מתחברת לוידאו עם ${name}...`); }
+  function stylistChat(name) { showToast(`💬 פותחת צ׳אט עם ${name}...`); }
 
   // ===== SHOPPING FEED =====
   const SHOP_SEED = [
