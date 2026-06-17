@@ -1270,6 +1270,7 @@
       <div class="feed-top">
         <div class="feed-tabs">
           <button class="ftab active" data-tab="foryou">בשבילי</button>
+          <button class="ftab" data-tab="inspiration">יש לי ✨</button>
           <button class="ftab" data-tab="following">עוקבת</button>
         </div>
         <div class="feed-filters" id="feed-filters">
@@ -3510,6 +3511,16 @@
       ]
     },
     {
+      type: 'choice', q: 'מה המידה שלך?', hint: 'כדי שנציג המלצות מדויקות', multi: false,
+      key: 'size',
+      opts: [
+        {emoji:'🌸',label:'XS / S',sub:'34–36'},
+        {emoji:'✨',label:'M',sub:'38–40'},
+        {emoji:'💫',label:'L',sub:'42–44'},
+        {emoji:'🌟',label:'XL+',sub:'46+'},
+      ]
+    },
+    {
       type: 'text', q: 'מה שמך?', hint: 'כדי שנתייחס אלייך אישית',
       key: 'name', placeholder: 'שמי...',
     },
@@ -3745,7 +3756,6 @@
       return;
     }
     host.appendChild(renderStories());
-    // user's own posts
     loadFeedPosts().forEach(p=>{
       const wrap=document.createElement('div');
       wrap.innerHTML=feedCardHTML({...p,id:p.id||'mine_'+p.ts,user:'you',
@@ -3754,6 +3764,20 @@
     });
     let seeds=SEED_POSTS;
     if(activeFilter!=='all') seeds=seeds.filter(p=>(p.tags||[]).includes(activeFilter));
+    if(activeTab==='inspiration'){
+      const wardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
+      if(!wardrobe.length){
+        const em=document.createElement('div');em.className='feed-empty';
+        em.innerHTML=`<div style="font-size:48px;text-align:center">🪄</div><p style="margin-top:12px;font-weight:800">סרקי לוק ראשון<br/>כדי לראות כמה מהלוק כבר יש לך</p>`;
+        host.appendChild(em); return;
+      }
+      const wardTags=new Set(wardrobe.flatMap(i=>(i.style_tags||[]).map(t=>t.toLowerCase())));
+      seeds=[...seeds].sort((a,b)=>{
+        const aMatch=(a.tags||[]).filter(t=>wardTags.has(t.toLowerCase())).length;
+        const bMatch=(b.tags||[]).filter(t=>wardTags.has(t.toLowerCase())).length;
+        return bMatch-aMatch;
+      });
+    }
     if(!seeds.length&&!loadFeedPosts().length){
       const em=document.createElement('div');em.className='feed-empty';
       em.innerHTML=`<div class="big" style="display:flex;justify-content:center">${icon('search',50)}</div><p>אין לוקים בסגנון הזה עדיין</p>`;
