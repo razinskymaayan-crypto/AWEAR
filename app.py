@@ -65,21 +65,28 @@ class OutfitAnalysis(BaseModel):
 
 
 SYSTEM_PROMPT = (
-    "You are the AI stylist inside AWEAR, a fashion app for Gen-Z (a 17-year-old in "
-    "Tel Aviv, active on TikTok and Instagram). A user uploads a photo of their daily outfit. "
+    "You are the AI stylist inside AWEAR, a global fashion app. "
+    "A user uploads a photo of their outfit from anywhere in the world. "
     "Identify EVERY distinct clothing item and accessory visible on the person.\n\n"
     "CRITICAL — be SPECIFIC, not generic:\n"
-    "• If you can see a brand logo or label, name the brand (e.g. 'Adidas Samba OG', 'Levi's 501', 'Nike Air Force 1').\n"
-    "• Describe the EXACT silhouette, cut, and fit (e.g. 'wide-leg', 'cropped', 'oversized', 'slim-fit', 'barrel-leg').\n"
-    "• Describe the EXACT color and any pattern or wash (e.g. 'acid-wash light blue', 'ribbed off-white', 'chocolate brown corduroy').\n"
-    "• `search_query` must be precise enough to find THIS exact item on a retailer — not 'white tee' but 'white ribbed cropped sleeveless tank top'. "
-    "Include brand if identified, silhouette, color, and material.\n"
-    "• `name` in Hebrew should be short and trendy but descriptive (e.g. 'קרופ ריב שמנת', 'ג׳ינס בארל לייט', 'סניקרס לבן Samba').\n\n"
+    "• If you can see a brand logo or label, name the exact brand and model "
+    "(e.g. 'Adidas Samba OG', 'Levi's 501', 'Nike Air Force 1', 'Acne Studios scarf').\n"
+    "• Describe the EXACT silhouette, cut, and fit "
+    "(e.g. 'wide-leg', 'cropped', 'oversized', 'slim-fit', 'barrel-leg', 'boxy').\n"
+    "• Describe the EXACT color, pattern, texture, and wash "
+    "(e.g. 'acid-wash light blue', 'ribbed off-white', 'chocolate brown corduroy', 'camel plaid').\n"
+    "• `search_query` must be precise enough to find THIS exact item globally — "
+    "not 'white tee' but 'white ribbed cropped sleeveless tank top women'. "
+    "Include brand if identified, silhouette, color, material, and gender.\n"
+    "• `name` should be short, trendy, and descriptive in the user's likely language — "
+    "default to English if unsure (e.g. 'White Ribbed Crop Top', 'Barrel-Leg Light Wash Denim', 'Adidas Samba White').\n\n"
     "For each item: name, dominant color, material guess, brand_vibe (actual brand if visible, else aesthetic), "
-    "style tags, resale potential, search_query (precise English), price_estimate_ils (integer ILS).\n\n"
-    "Then summarize the overall look and produce `stylist_tip` — one short, friendly Hebrew suggestion "
-    "(what to add, swap, or when to wear it). "
-    "Reply in Hebrew for names/summary; English for search_query."
+    "style tags (global fashion vocabulary: y2k, streetwear, minimal, vintage, preppy, coastal, etc.), "
+    "resale potential, search_query (precise English for global retailers), "
+    "price_estimate_ils (estimated retail price in USD — use integer).\n\n"
+    "Then summarize the overall look in English and produce `stylist_tip` — "
+    "one short, actionable styling suggestion in English. "
+    "If you can confidently detect the user's language from any visible text or context, use that language instead."
 )
 
 
@@ -95,11 +102,12 @@ SYSTEM_PROMPT = (
 
 AFFILIATE_TAG = "awear"  # replace with the real network publisher id once signed
 
-# (display name, search URL template, scope) — search URLs work today with zero approval.
+# (display name, search URL template, scope) — all global, zero approval required.
 RETAILERS = [
     ("Google Shopping", "https://www.google.com/search?tbm=shop&q={q}", "global"),
     ("ASOS", "https://www.asos.com/search/?q={q}", "global"),
-    ("Terminal X", "https://www.terminalx.com/catalogsearch/result/?q={q}", "israel"),
+    ("Depop", "https://www.depop.com/search/?q={q}", "global"),
+    ("ZARA", "https://www.zara.com/ww/en/search?searchTerm={q}", "global"),
 ]
 
 
@@ -117,34 +125,83 @@ def build_buy_options(query: str) -> list[dict]:
     ]
 
 
-def _demo_analysis() -> dict:
-    """Realistic fallback so the demo NEVER breaks — e.g. without a valid API key.
-    A pitch should never crash on stage; this keeps the full flow working as a simulation."""
-    return {
+import random as _random
+
+_DEMO_OUTFITS = [
+    {
         "items": [
-            {"category": "top", "name": "חולצת ריב לבנה קרופ", "color": "לבן",
-             "material_guess": "כותנה", "brand_vibe": "Zara-like",
-             "style_tags": ["casual", "minimal", "y2k"], "resale_potential": "medium",
-             "search_query": "white ribbed cropped tee", "price_estimate_ils": 79},
-            {"category": "bottoms", "name": "מכנסי קרגו פראשוט בז'", "color": "בז'",
-             "material_guess": "ניילון", "brand_vibe": "streetwear",
-             "style_tags": ["streetwear", "utility"], "resale_potential": "high",
-             "search_query": "beige parachute cargo pants", "price_estimate_ils": 159},
-            {"category": "shoes", "name": "סניקרס Adidas Samba", "color": "לבן/שחור",
-             "material_guess": "עור", "brand_vibe": "Adidas",
-             "style_tags": ["retro", "iconic"], "resale_potential": "high",
-             "search_query": "adidas samba sneakers", "price_estimate_ils": 449},
-            {"category": "bag", "name": "תיק כתף מיני שחור", "color": "שחור",
-             "material_guess": "דמוי עור", "brand_vibe": "vintage",
-             "style_tags": ["minimal", "everyday"], "resale_potential": "medium",
-             "search_query": "black mini shoulder bag", "price_estimate_ils": 119},
+            {"category": "top", "name": "White Ribbed Crop Top", "color": "white",
+             "material_guess": "cotton", "brand_vibe": "Zara", "style_tags": ["minimal", "y2k"],
+             "resale_potential": "medium", "search_query": "white ribbed cropped sleeveless tank top women", "price_estimate_ils": 25},
+            {"category": "bottoms", "name": "Barrel-Leg Light Wash Denim", "color": "light blue",
+             "material_guess": "denim", "brand_vibe": "Levi's",
+             "style_tags": ["denim", "y2k", "casual"], "resale_potential": "high",
+             "search_query": "barrel leg light wash jeans women", "price_estimate_ils": 80},
+            {"category": "shoes", "name": "Adidas Samba OG White", "color": "white/black",
+             "material_guess": "leather", "brand_vibe": "Adidas",
+             "style_tags": ["retro", "sporty", "iconic"], "resale_potential": "high",
+             "search_query": "adidas samba og white black sneakers", "price_estimate_ils": 120},
         ],
-        "overall_style": "סטריטוור מינימלי",
-        "occasion": "יום־יום / בית קפה בתל אביב",
+        "overall_style": "Y2K Minimal",
+        "occasion": "Everyday / Coffee shop",
+        "trend_score": 91,
+        "summary": "Clean Y2K-inspired look — white crop with barrel denim and Sambas. Effortless and on-trend.",
+        "stylist_tip": "Add a slim gold chain and a mini shoulder bag to elevate this look from casual to polished.",
+    },
+    {
+        "items": [
+            {"category": "outerwear", "name": "Oversized Camel Blazer", "color": "camel",
+             "material_guess": "wool blend", "brand_vibe": "& Other Stories",
+             "style_tags": ["preppy", "minimal", "smart-casual"], "resale_potential": "high",
+             "search_query": "oversized camel blazer women wool", "price_estimate_ils": 150},
+            {"category": "bottoms", "name": "Straight-Leg Black Trousers", "color": "black",
+             "material_guess": "polyester blend", "brand_vibe": "COS",
+             "style_tags": ["minimal", "office", "classic"], "resale_potential": "medium",
+             "search_query": "straight leg black tailored trousers women", "price_estimate_ils": 70},
+            {"category": "shoes", "name": "Pointed-Toe Leather Mules", "color": "black",
+             "material_guess": "leather", "brand_vibe": "Mango",
+             "style_tags": ["minimal", "elegant"], "resale_potential": "medium",
+             "search_query": "pointed toe black leather mules women", "price_estimate_ils": 60},
+        ],
+        "overall_style": "Minimal Chic",
+        "occasion": "Office / Dinner",
         "trend_score": 88,
-        "summary": "לוק נקי וטרנדי — בסיס לבן עם קרגו וסמבות, מנצח לבית קפה.",
-        "stylist_tip": "תוסיפי שרשרת זהב עדינה וכובע בייסבול והלוק עולה רמה — ובערב פשוט תזרקי מעליו ז'קט דנים.",
-    }
+        "summary": "Sharp minimal look — camel blazer over black trousers reads confident and effortless.",
+        "stylist_tip": "Try a simple white tee under the blazer instead of nothing — softens the look for daytime.",
+    },
+    {
+        "items": [
+            {"category": "top", "name": "Vintage Band Graphic Tee", "color": "black",
+             "material_guess": "cotton", "brand_vibe": "vintage",
+             "style_tags": ["streetwear", "vintage", "grunge"], "resale_potential": "high",
+             "search_query": "vintage black band graphic tee oversized", "price_estimate_ils": 35},
+            {"category": "bottoms", "name": "Baggy Cargo Pants Khaki", "color": "khaki",
+             "material_guess": "cotton twill", "brand_vibe": "Carhartt",
+             "style_tags": ["streetwear", "utility", "y2k"], "resale_potential": "high",
+             "search_query": "baggy cargo pants khaki women utility", "price_estimate_ils": 90},
+            {"category": "shoes", "name": "New Balance 550 White Cream", "color": "white/cream",
+             "material_guess": "leather", "brand_vibe": "New Balance",
+             "style_tags": ["retro", "sporty", "streetwear"], "resale_potential": "high",
+             "search_query": "new balance 550 white cream sneakers", "price_estimate_ils": 110},
+            {"category": "bag", "name": "Mini Crossbody Black Canvas", "color": "black",
+             "material_guess": "canvas", "brand_vibe": "streetwear",
+             "style_tags": ["streetwear", "everyday"], "resale_potential": "low",
+             "search_query": "mini black canvas crossbody bag streetwear", "price_estimate_ils": 30},
+        ],
+        "overall_style": "Urban Streetwear",
+        "occasion": "Weekend / Street",
+        "trend_score": 94,
+        "summary": "Strong streetwear moment — vintage tee, cargo utility, NB550s. Authentic and well-layered.",
+        "stylist_tip": "Tuck the front of the tee halfway into the cargos for more shape — it balances the baggy silhouette.",
+    },
+]
+
+
+def _demo_analysis() -> dict:
+    """Fallback for when the AI is unavailable (no API key, timeout, etc.).
+    Returns a random realistic outfit so repeated demo scans feel varied.
+    mode='demo' is set by the caller — never silently pretend this is a real scan."""
+    return _random.choice(_DEMO_OUTFITS).copy()
 
 
 # ---------------------------------------------------------------------------
@@ -401,10 +458,12 @@ class StylistMessage(BaseModel):
 async def stylist_chat(data: StylistMessage):
     """AI Stylist: answers fashion questions with optional wardrobe context."""
     system = (
-        "את סטייליסטית AI של AWEAR — אפליקציית אופנה Gen-Z בישראל. "
-        "עני בעברית, קצר (2-3 משפטים), בסגנון חברותי ומדויק. "
-        "השתמשי בנתוני הארון כשהם רלוונטיים להמלצות ספציפיות. "
-        "לא תמיד לקנות — לפעמים הפתרון נמצא בארון הקיים."
+        "You are Abigail, the AI stylist inside AWEAR — a global fashion app. "
+        "You help users style their wardrobe, suggest outfits, and give honest fashion advice. "
+        "Reply in the same language the user writes in. Keep answers short (2-3 sentences), "
+        "friendly, specific, and actionable. Use the wardrobe data when available to give "
+        "personalized suggestions. Not every answer should be 'buy something' — "
+        "the best advice often uses what's already in the closet."
     )
     try:
         response = client.messages.create(
