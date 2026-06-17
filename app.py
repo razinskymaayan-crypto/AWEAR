@@ -484,4 +484,49 @@ async def stylist_chat(data: StylistMessage):
         return {"answer": "AI stylist unavailable right now 🙏 try again in a moment"}
 
 
+class CommentModerationRequest(BaseModel):
+    text: str
+
+
+@app.post("/api/moderate")
+async def moderate_comment(data: CommentModerationRequest):
+    """Claude-based comment moderation (language-agnostic, not a keyword filter).
+
+    Returns {"harmful": bool, "severity": "none"|"medium"|"high"}.
+    Fails open (severity "none") on any error — moderation must never be the
+    reason a comment is silently blocked because of an infra issue. We log
+    the fallback so it's visible instead of invisible.
+    """
+    system = (
+        "You moderate comments on a global fashion social app. Given a single "
+        "user comment in any language, decide if it is harmful (harassment, hate "
+        "speech, threats, explicit sexual content, severe bullying, etc.) and rate "
+        "its severity. Respond with ONLY a compact JSON object, no prose, no markdown "
+        "fences, in exactly this shape: "
+        '{"harmful": true|false, "severity": "none"|"medium"|"high"}. '
+        "\"none\" = not harmful at all. \"medium\" = borderline/rude/mildly offensive "
+        "but not dangerous. \"high\" = clearly harmful (hate speech, harassment, "
+        "threats, explicit content)."
+    )
+    try:
+        response = client.messages.create(
+            model=MODEL,
+            max_tokens=50,
+            system=system,
+            messages=[{"role": "user", "content": data.text}],
+        )
+        import json as _json
+        text = response.content[0].text.strip()
+        if text.startswith("```"):
+            text = "\n".join(text.split("\n")[1:]).rstrip("`").strip()
+        parsed = _json.loads(text)
+        severity = parsed.get("severity", "none")
+        if severity not in ("none", "medium", "high"):
+            severity = "none"
+        return {"harmful": bool(parsed.get("harmful", False)), "severity": severity}
+    except Exception as e:
+        print(f"[moderate] fallback to severity=none due to: {e}")
+        return {"harmful": False, "severity": "none", "fallback": True}
+
+
 app.mount("/static", StaticFiles(directory="static"), name="static")

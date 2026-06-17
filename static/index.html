@@ -4042,12 +4042,53 @@
   }
 
   function addComment(postId, text) {
-    if (!text.trim()) return;
+    if (!text.trim()) return null;
     const all = loadComments();
     if (!all[postId]) all[postId] = [];
-    all[postId].push({ user: 'את', text: text.trim(), ts: Date.now() });
+    const comment = { id: 'c' + Date.now() + '_' + Math.random().toString(36).slice(2,7), user: 'את', text: text.trim(), ts: Date.now() };
+    all[postId].push(comment);
     saveComments(all);
     logAdminEvent('comment', postId + ': ' + text.slice(0,30));
+    return comment;
+  }
+
+  function removeComment(postId, commentId) {
+    const all = loadComments();
+    if (!all[postId]) return;
+    all[postId] = all[postId].filter(c => c.id !== commentId);
+    saveComments(all);
+  }
+
+  // Claude-based comment moderation (language-agnostic, not a keyword filter).
+  // Additive/async: the comment is already shown optimistically by the caller —
+  // this never blocks or delays that. If the call is slow or fails, nothing
+  // happens to the comment (fail open) per the moderation hard rule.
+  async function moderateCommentAsync(postId, comment, host) {
+    try {
+      const res = await fetch('/api/moderate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: comment.text }),
+      });
+      const data = await res.json();
+      if (data.severity === 'high') {
+        removeComment(postId, comment.id);
+        const node = (host || document).querySelector(`[data-comment-id="${comment.id}"]`);
+        if (node) node.remove();
+        const openBtn = document.querySelector(`[data-comment-open="${postId}"]`);
+        if (openBtn) {
+          const cnt = getPostComments(postId).length;
+          openBtn.textContent = cnt ? `💬 ${cnt}` : '💬';
+        }
+        logAdminEvent('comment_hidden', postId + ': "' + comment.text.slice(0,40) + '" — severity high, removed by moderation');
+      } else if (data.severity === 'medium') {
+        logAdminEvent('comment_flagged', postId + ': "' + comment.text.slice(0,40) + '" — severity medium, visible, flagged for review');
+      }
+    } catch (e) {
+      // Fail open: comment stays visible, no admin event needed beyond the
+      // backend's own fallback logging — moderation being unreachable must
+      // never silently block or remove a comment.
+    }
   }
 
   function reactionsHTML(postId) {
@@ -4089,18 +4130,24 @@
     sheet.querySelector('.fc-comment-send').addEventListener('click', () => {
       const input = sheet.querySelector('.fc-comment-input');
       if (!input.value.trim() || !_commentsPostId) return;
-      addComment(_commentsPostId, input.value);
+      const postId = _commentsPostId;
+      const comment = addComment(postId, input.value);
+      if (!comment) return;
       const newItem = document.createElement('div');
       newItem.className = 'fc-comment-item';
+      newItem.dataset.commentId = comment.id;
       newItem.innerHTML = `<div class="fc-comment-user">@you</div><div class="fc-comment-text">${esc(input.value)}</div>`;
       sheet.querySelector('.cs-list').appendChild(newItem);
       input.value = '';
       // Update comment count button in card
-      const openBtn = document.querySelector(`[data-comment-open="${_commentsPostId}"]`);
+      const openBtn = document.querySelector(`[data-comment-open="${postId}"]`);
       if (openBtn) {
-        const cnt = getPostComments(_commentsPostId).length;
+        const cnt = getPostComments(postId).length;
         openBtn.textContent = `💬 ${cnt}`;
       }
+      // Optimistic display happens above; moderation runs async and only
+      // acts (hide/flag) if it comes back harmful — never blocks the UI.
+      moderateCommentAsync(postId, comment, sheet.querySelector('.cs-list'));
     });
 
     // Close on backdrop tap
@@ -4125,7 +4172,7 @@
     const comments = getPostComments(postId);
     const list = sheet.querySelector('.cs-list');
     list.innerHTML = comments.map(c => `
-      <div class="fc-comment-item">
+      <div class="fc-comment-item" data-comment-id="${esc(c.id||'')}">
         <div class="fc-comment-user">@${esc(c.user)}</div>
         <div class="fc-comment-text">${esc(c.text)}</div>
       </div>`).join('') || `<div style="color:rgba(255,255,255,.35);font-size:13px;padding:12px 0">No comments yet</div>`;
