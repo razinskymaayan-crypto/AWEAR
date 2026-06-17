@@ -1413,6 +1413,10 @@
     shirt:'<path d="M8 4 4.5 7 7 10l1-1v10h8V9l1 1 2.5-3L16 4l-1.5 1a3 3 0 0 1-5 0L8 4Z" stroke-linejoin="round"/>',
     box:'<path d="M3.5 7 12 3l8.5 4-8.5 4-8.5-4Z" stroke-linejoin="round"/><path d="M3.5 7v10l8.5 4 8.5-4V7M12 11v10"/>',
     alert:'<path d="M12 3 1.5 21h21L12 3Z" stroke-linejoin="round"/><path d="M12 9v5M12 17.5v.01"/>',
+    trophy:'<path d="M8 4h8v3a4 4 0 0 1-8 0V4Z" stroke-linejoin="round"/><path d="M8 5H5.5A1.5 1.5 0 0 0 4 6.5 3.5 3.5 0 0 0 7.5 10M16 5h2.5A1.5 1.5 0 0 1 20 6.5 3.5 3.5 0 0 1 16.5 10"/><path d="M12 11v3M9 20h6M10 17h4v3h-4v-3Z" stroke-linejoin="round"/>',
+    leaf:'<path d="M19 5c-7 0-13 4-13 11 0 1.5.3 2.5.3 2.5S7 12 19 5Z" stroke-linejoin="round"/><path d="M6.3 18.5C9 14 13 9.5 19 5"/>',
+    crown:'<path d="M4 18h16l-1.3-8-3.2 3.5L12 8l-3.5 5.5L5.3 10 4 18Z" stroke-linejoin="round"/><path d="M4 18h16v2H4v-2Z"/>',
+    users:'<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M14.8 12.2A4 4 0 0 1 20.5 16"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -2295,22 +2299,22 @@
   // ---- Rewards & Gamification (hoisted above renderHome — TDZ fix) ----
   const RW_KEY = 'awear_rewards';
   const LEVELS = [
-    {name:'מתחילה', emoji:'🌱', min:0, color:'#4ade80'},
-    {name:'סטייליסטית', emoji:'✨', min:100, color:'var(--accent2)'},
-    {name:'מובילת טרנד', emoji:'🔥', min:300, color:'var(--accent)'},
-    {name:'Fashion Icon', emoji:'👑', min:600, color:'#f59e0b'},
+    {name:'מתחילה', icon:'leaf', min:0, color:'#4ade80'},
+    {name:'סטייליסטית', icon:'sparkle', min:100, color:'var(--accent2)'},
+    {name:'מובילת טרנד', icon:'flame', min:300, color:'var(--accent)'},
+    {name:'Fashion Icon', icon:'crown', min:600, color:'#f59e0b'},
   ];
   const PERKS = [
-    {name:'מנוי פרמיום חודש', desc:'ללא מודעות + ניתוחי AI מתקדמים', pts:500, icon:'💎'},
-    {name:'ייעוץ סטייליסט', desc:'30 דקות עם סטייליסט אנושי', pts:300, icon:'💅'},
-    {name:'משלוח חינם', desc:'עבור קנייה ב-Marketplace', pts:150, icon:'📦'},
-    {name:'עמלת מכירה 0%', desc:'פריט אחד ללא עמלה', pts:100, icon:'🏷️'},
+    {name:'מנוי פרמיום חודש', desc:'ללא מודעות + ניתוחי AI מתקדמים', pts:500, icon:'diamond'},
+    {name:'ייעוץ סטייליסט', desc:'30 דקות עם סטייליסט אנושי', pts:300, icon:'sparkle'},
+    {name:'משלוח חינם', desc:'עבור קנייה ב-Marketplace', pts:150, icon:'box'},
+    {name:'עמלת מכירה 0%', desc:'פריט אחד ללא עמלה', pts:100, icon:'tag'},
   ];
   const RW_ACTIONS = [
-    {key:'scan', name:'סריקת לוק', icon:'📸', pts:10, desc:'כל סריקה חדשה'},
-    {key:'wore', name:'לבשתי', icon:'👗', pts:5, desc:'רישום לבישה יומי'},
-    {key:'sell', name:'מכרתי פריט', icon:'💸', pts:25, desc:'מכירה ב-Marketplace'},
-    {key:'refer', name:'הזמנת חברה', icon:'👯', pts:50, desc:'חברה הצטרפה'},
+    {key:'scan', name:'סריקת לוק', icon:'camera', pts:10, desc:'כל סריקה חדשה'},
+    {key:'wore', name:'לבשתי', icon:'hanger', pts:5, desc:'רישום לבישה יומי'},
+    {key:'sell', name:'מכרתי פריט', icon:'cash', pts:25, desc:'מכירה ב-Marketplace'},
+    {key:'refer', name:'הזמנת חברה', icon:'users', pts:50, desc:'חברה הצטרפה'},
   ];
 
   // Auto-render home on load
@@ -2467,7 +2471,7 @@
           </div>
           <div style="margin-top:12px;">
             <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:5px">
-              <span>${curLevel.emoji} ${esc(curLevel.name)} · ${pts} נק׳</span>
+              <span style="display:inline-flex;align-items:center;gap:3px">${icon(curLevel.icon,12)} ${esc(curLevel.name)} · ${pts} נק׳</span>
               <span>${esc(nextLevel.name)} ${nextLevel.min} נק׳</span>
             </div>
             <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden">
@@ -2859,14 +2863,14 @@
 
     const el = document.getElementById('rw-wrap');
     el.innerHTML = `
-      <div class="rw-header"><div class="rw-title">🏆 Rewards</div></div>
+      <div class="rw-header"><div class="rw-title" style="display:flex;align-items:center;gap:7px">${icon('trophy',20)} Rewards</div></div>
       <div class="rw-points-card">
         <div class="rw-pts-num">${pts.toLocaleString()}</div>
         <div class="rw-pts-label">נקודות AWEAR</div>
         <div class="rw-level-row">
-          <div class="rw-level-badge" style="background:${level.color}20;color:${level.color}">${level.emoji} ${esc(level.name)}</div>
+          <div class="rw-level-badge" style="background:${level.color}20;color:${level.color};display:inline-flex;align-items:center;gap:5px">${icon(level.icon,14)} ${esc(level.name)}</div>
           <div class="rw-level-track"><div class="rw-level-fill" style="width:${progress}%"></div></div>
-          <div class="rw-level-next">${nextLevel ? nextLevel.min+' ל-'+nextLevel.emoji : '👑 Max!'}</div>
+          <div class="rw-level-next" style="display:inline-flex;align-items:center;gap:3px">${nextLevel ? nextLevel.min+' ל-'+icon(nextLevel.icon,12) : icon('crown',12)+' Max!'}</div>
         </div>
       </div>
 
@@ -2874,7 +2878,7 @@
       <div class="rw-actions-grid">
         ${RW_ACTIONS.map(a => `
           <div class="rw-action">
-            <div class="rw-action-icon">${a.icon}</div>
+            <div class="rw-action-icon">${icon(a.icon,22)}</div>
             <div class="rw-action-name">${esc(a.name)}</div>
             <div class="rw-action-pts">+${a.pts} נקודות</div>
             <div class="rw-action-done">${rw.actions[a.key]||0} פעמים</div>
@@ -2886,13 +2890,13 @@
         ${PERKS.map(p => {
           const canRedeem = pts >= p.pts;
           return `<div class="rw-perk">
-            <div class="rw-perk-icon">${p.icon}</div>
+            <div class="rw-perk-icon">${icon(p.icon,22)}</div>
             <div class="rw-perk-info">
               <div class="rw-perk-name">${esc(p.name)}</div>
               <div class="rw-perk-desc">${esc(p.desc)}</div>
             </div>
-            <button class="rw-perk-btn ${canRedeem?'unlocked':'locked'}" data-pts="${p.pts}">
-              ${canRedeem ? 'מממשי' : p.pts+'⭐'}
+            <button class="rw-perk-btn ${canRedeem?'unlocked':'locked'}" data-pts="${p.pts}" style="display:inline-flex;align-items:center;gap:4px">
+              ${canRedeem ? 'מממשי' : p.pts+''+icon('sparkle',11)}
             </button>
           </div>`;
         }).join('')}
