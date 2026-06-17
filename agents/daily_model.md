@@ -79,6 +79,7 @@
 7. **אפס inline styles** ללא token reference מנטה.
 8. **UI change** → token check + mobile viewport + RTL check.
 9. **כל commit שמשנה רינדור (DOM/CSS/JS שמשפיע על מה שהמשתמש רואה) חייב לעבור הרצה בדפדפן אמיתי (Playwright) לפני merge.** "עבר JS syntax validation" הוא תנאי הכרחי בלבד — לא מספיק. נוסף ב-17.06.2026 בעקבות [postmortem_2026-06-17.md](postmortem_2026-06-17.md) — שני באגי רינדור רצופים (reactions נסתרים, מסך בית קפוא) שעברו syntax check אבל קרסו בדפדפן בפועל.
+10. **כל delegation אמיתי (Agent tool) נכנס ל-[activity_log.md](activity_log.md) בזמן שיגור המשימה — לא בדיעבד.** סוכן, מחלקה, משימה, סטטוס, הוכחה ניתנת לאימות (agentId / commit / קובץ). הדירקטוריון עוקב מהטבלה הזו, לא מהצהרות. נוסף ב-17.06.2026 לפי הנחיית כרמל — "שכל פעולה שקורת יהיה רשום איזה סוכן עובד עליה ומאיזה מחלקה."
 
 ---
 
