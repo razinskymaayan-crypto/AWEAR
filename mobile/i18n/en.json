@@ -1,0 +1,19 @@
+{
+  "app": {
+    "name": "AWEAR"
+  },
+  "cameraPermission": {
+    "iosUsageDescription": "AWEAR uses your camera to scan clothing into your digital wardrobe.",
+    "title": "See your wardrobe, instantly",
+    "body": "AWEAR uses your camera to scan clothing items so you can build a digital wardrobe and get outfit ideas. We only use the camera when you choose to scan something.",
+    "allowButton": "Allow camera access",
+    "continueButton": "Continue",
+    "openSettingsButton": "Open settings",
+    "checkingStatus": "Checking camera access...",
+    "grantedTitle": "Camera access on",
+    "grantedBody": "You're all set. AWEAR can scan clothing items whenever you're ready.",
+    "deniedTitle": "Camera access off",
+    "deniedBody": "Wardrobe scanning needs your camera. You can turn it on in your device settings whenever you're ready.",
+    "deniedRetryBody": "Camera access is required to scan your wardrobe. Allow it to continue."
+  }
+}
