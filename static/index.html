@@ -2277,17 +2277,54 @@
         </div>
       </div>
 
+      ${(() => {
+        const rw = JSON.parse(localStorage.getItem(RW_KEY) || '{"points":0}');
+        const pts = rw.points || 0;
+        const nextLevel = LEVELS.find(l => l.min > pts) || LEVELS[LEVELS.length-1];
+        const curLevel  = [...LEVELS].reverse().find(l => pts >= l.min) || LEVELS[0];
+        const pct = nextLevel.min > curLevel.min ? Math.round(((pts - curLevel.min) / (nextLevel.min - curLevel.min)) * 100) : 100;
+        const DAILY = [
+          {icon:'📸', text:'סרקי פריט חדש לארון', pts:20},
+          {icon:'✨', text:'צרי לוק עם ה-AI', pts:15},
+          {icon:'💬', text:'שאלי את אביגיל משהו', pts:10},
+          {icon:'🛒', text:'פרסמי פריט למכירה', pts:25},
+        ];
+        const todayChallenge = DAILY[new Date().getDay() % DAILY.length];
+        return `
+        <div class="home-sec-label">🎯 אתגר יומי</div>
+        <div style="margin:0 18px 16px;background:linear-gradient(135deg,rgba(123,92,255,.15),rgba(255,61,119,.1));border:1px solid rgba(123,92,255,.25);border-radius:20px;padding:16px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="font-size:32px">${todayChallenge.icon}</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:800">${esc(todayChallenge.text)}</div>
+              <div style="font-size:11px;color:var(--accent2);font-weight:700;margin-top:3px">+${todayChallenge.pts} נקודות</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:5px">
+              <span>${curLevel.emoji} ${esc(curLevel.name)} · ${pts} נק׳</span>
+              <span>${esc(nextLevel.name)} ${nextLevel.min} נק׳</span>
+            </div>
+            <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s"></div>
+            </div>
+          </div>
+        </div>`;
+      })()}
+
       <div class="home-sec-label">⚡ פעולות מהירות</div>
-      <div class="home-quick">
-        <button class="hq-btn" onclick="showView('outfits')"><span class="hq-icon">✨</span>Outfit AI</button>
-        <button class="hq-btn" onclick="showView('analytics')"><span class="hq-icon">📊</span>אנליטיקס</button>
-        <button class="hq-btn" onclick="showView('chat')"><span class="hq-icon">💅</span>סטייליסט</button>
-        <button class="hq-btn" onclick="showView('wishlist')"><span class="hq-icon">💫</span>Wishlist</button>
-        <button class="hq-btn" onclick="showView('seasonal')"><span class="hq-icon">📋</span>דו"ח עונה</button>
-        <button class="hq-btn" onclick="showView('marketplace')"><span class="hq-icon">🛒</span>Marketplace</button>
-        <button class="hq-btn" onclick="showView('compare')"><span class="hq-icon">⚖️</span>השוואה</button>
-        <button class="hq-btn" onclick="showView('shopping')"><span class="hq-icon">🛍️</span>Shopping</button>
-        <button class="hq-btn" onclick="showView('stylists')"><span class="hq-icon">💅</span>סטייליסטים</button>
+      <div class="home-quick" style="overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;padding-bottom:4px">
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('outfits')"><span class="hq-icon">✨</span>Outfit AI</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('shopping')"><span class="hq-icon">🛍️</span>Shopping</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('chat')"><span class="hq-icon">💅</span>אביגיל</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('stylists')"><span class="hq-icon">🧑‍🎨</span>סטייליסטים</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('analytics')"><span class="hq-icon">📊</span>אנליטיקס</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('wishlist')"><span class="hq-icon">💫</span>Wishlist</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('marketplace')"><span class="hq-icon">🛒</span>Marketplace</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('compare')"><span class="hq-icon">⚖️</span>השוואה</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('rewards')"><span class="hq-icon">🏆</span>Rewards</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('sustainability')"><span class="hq-icon">🌿</span>Eco</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('seasonal')"><span class="hq-icon">📋</span>עונה</button>
       </div>
     `;
 
