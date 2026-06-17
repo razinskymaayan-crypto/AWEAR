@@ -17,6 +17,7 @@
 |-------|------|--------|--------|--------|--------|
 | 2026-06-17 | שירה | Social Features (תחת איילון) | מימוש Claude-based comment moderation — `/api/moderate` + wiring ל-`addComment` | הושלם בworktree, **מחכה לאינטגרציה/review של ג'ף** | agentId `a5454c1d4ed9274bc`, commit `de309a6` על branch `worktree-agent-a5454c1d4ed9274bc`, worktree ב-`.claude/worktrees/agent-a5454c1d4ed9274bc` |
 | 2026-06-17 | נטה | Design System (תחת מארק) | הערכת migration לפלטת `tokens.css` (`--bg`/`--card`/`--line`/`--muted`) | **הושלם — המלצת NO-GO**, לא דרוש מיזוג (לא שינתה קבצים חיים) | agentId `a22dab301e0627d97`, מסמך המלצה: `agents/netta_tokens_recommendation_2026-06-17.md`, צילומי מסך ב-`/tmp/netta_tokens_screens/` |
+| 2026-06-17 | נטה (המשך) | Design System (תחת מארק) | יישום ה"תיקון האמיתי" שנטה עצמה זיהתה: עדכון `tokens.css`/`awear-tokens.json` כך שיתאימו לערכים החיים/תקניים מ-`DESIGN_STANDARDS.md` (לא `index.html`) | **הושלם** — `--bg`/`--card`/`--line`/`--muted` תוקנו ב-2 הקבצים, `index.html` לא נגע, אומת ויזואלית (Playwright pixel-diff: זהה לחלוטין) | commit ראה git log |
 
 ---
 
