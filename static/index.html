@@ -1493,6 +1493,7 @@
   }
 
   function openSheetSingle(it, earnAmt, influencerUser){
+    logAdminEvent('buy_intent', 'פתחה שיט: ' + (it.name||'פריט'));
     const stores = itemStores(it);
     const earnLine = (earnAmt && influencerUser)
       ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:#34d399;font-weight:700;margin-top:8px;text-align:center">
@@ -1616,6 +1617,7 @@
   // full item detail sheet: real photo -> match% -> closet combos (AI stylist) -> buy
   function openSheetItem(item, fallbackPool){
     const it=item||{};
+    logAdminEvent('buy_intent', 'פתחה שיט: ' + (it.name||'פריט'));
     const stores=itemStores(it);
     const hasCloset=loadWardrobe().length>0;
     const pct=matchPercent((it.style_tags||[]).concat(it.category?[it.category]:[]));
@@ -1919,10 +1921,18 @@
     if(profileTab==='looks') body=looksGridHTML();
     else if(profileTab==='forsale') body=forSaleHTML();
     else body=`
+      ${!wardrobe.length ? `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;gap:12px">
+          <div style="font-size:64px;line-height:1">👗✨</div>
+          <div style="font-size:18px;font-weight:900;letter-spacing:-.3px">הארון שלך מחכה</div>
+          <div style="font-size:13px;color:var(--muted);font-weight:600;line-height:1.6;max-width:240px">סרקי את הלוק הראשון שלך — ה-AI יזהה את הפריטים ויבנה את הארון האישי שלך</div>
+          <button onclick="document.getElementById('file-input').click()" style="margin-top:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;border-radius:16px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">📸 סרקי לוק ראשון</button>
+        </div>` : `
       ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
       ${meta.look_total_ils!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_ils)}">${icon('bag',18)} קני את הלוק האחרון · ~₪${esc(meta.look_total_ils)}</button>`:''}
-      ${wardrobe.length?`<button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>`:''}
-      ${closetShelvesHTML(wardrobe)}`;
+      <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>
+      ${closetShelvesHTML(wardrobe)}`}`;
+
 
     const prof=loadProfile();
     const profPhotoHTML=prof.photo
@@ -1964,7 +1974,8 @@
     const meta={overall_style:data.overall_style,occasion:data.occasion,trend_score:data.trend_score,
       summary:data.summary,stylist_tip:data.stylist_tip,look_total_ils:data.look_total_ils};
     saveMeta(meta); saveLastScan({photo:data.photo||null,items:newItems,meta});
-    renderCloset(); if(newItems.length) showToast('נוספו '+newItems.length+' פריטים לארון');
+    if(newItems.length) logAdminEvent('scan', 'סרקה ' + newItems.length + ' פריטים — ' + (newItems[0]?.name||''));
+    renderCloset(); if(newItems.length) showToast((newItems[0]?.emoji||'✨') + ' ' + (newItems[0]?.name||'') + ' נוסף לארון ✓');
   }
 
   function wardrobeTagSet(){
@@ -3335,6 +3346,7 @@
 
   async function sendChatMsg(q) {
     if (!q) return;
+    logAdminEvent('chat', 'שאלה: ' + q.slice(0,40));
     addChatMsg('user', q);
     showChatTyping();
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
@@ -3388,8 +3400,14 @@
     {label:'פרפורמנס', val:'sport'}, {label:'פורמלי', val:'formal'},
   ];
   const EX_TRENDING = [
-    {emoji:'🔥',label:'Adidas Samba'},{emoji:'👖',label:'בארל ג׳ינס'},{emoji:'🧥',label:'ז׳קט עור'},
-    {emoji:'👜',label:'מיני בג'},{emoji:'🌸',label:'Cottage Core'},{emoji:'✨',label:'Y2K Denim'},
+    {emoji:'🔥',label:'Adidas Samba',tag:'streetwear'},
+    {emoji:'👖',label:'בארל ג׳ינס',tag:'y2k'},
+    {emoji:'🧥',label:'ז׳קט עור',tag:'streetwear'},
+    {emoji:'👜',label:'מיני בג',tag:'y2k'},
+    {emoji:'🌸',label:'Cottage Core',tag:'cottage'},
+    {emoji:'✨',label:'Y2K Denim',tag:'y2k'},
+    {emoji:'🤍',label:'מינימל לבן',tag:'minimal'},
+    {emoji:'💼',label:'Power Dressing',tag:'formal'},
   ];
   const EX_CARDS = [
     {emoji:'☀️',name:'לוק קיץ תל אביבי',sub:'Zara + Samba',badge:'טרנד'},
@@ -3423,15 +3441,18 @@
 
     // trending chips
     document.getElementById('ex-trending').innerHTML = EX_TRENDING.map(t =>
-      `<button class="ex-trend-chip" data-q="${attr(t.label)}">
+      `<button class="ex-trend-chip" data-q="${attr(t.label)}" data-tag="${attr(t.tag||'')}">
          <span class="tc-emoji">${t.emoji}</span>
          <span class="tc-text">${esc(t.label)}</span>
        </button>`
     ).join('');
     document.getElementById('ex-trending').querySelectorAll('.ex-trend-chip').forEach(btn =>
       btn.addEventListener('click', () => {
+        document.getElementById('ex-trending').querySelectorAll('.ex-trend-chip').forEach(b=>b.style.background='');
+        btn.style.background='linear-gradient(135deg,rgba(255,61,119,.2),rgba(123,92,255,.2))';
+        btn.style.borderColor='var(--accent)';
         document.getElementById('ex-input').value = btn.dataset.q;
-        runExSearch(btn.dataset.q);
+        runExSearch(btn.dataset.q, btn.dataset.tag);
       })
     );
 
@@ -3469,44 +3490,54 @@
     ).join('');
   }
 
-  function runExSearch(q) {
+  function runExSearch(q, tag) {
     if (!q) { showExDefault(); return; }
     document.getElementById('ex-default').style.display = 'none';
     document.getElementById('ex-results').style.display = 'block';
     document.getElementById('ex-results-label').textContent = `תוצאות עבור "${q}"`;
 
-    // search wardrobe items
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
-    const hits = wardrobe.filter(it =>
-      [(it.name||''),(it.category||''),(it.style_tags||[]).join(' '),
-       (it.brand_vibe||''),(it.color||'')].join(' ').toLowerCase()
-       .includes(q.toLowerCase())
+    const ql = q.toLowerCase();
+    const wardHits = wardrobe.filter(it =>
+      [(it.name||''),(it.category||''),(it.style_tags||[]).join(' '),(it.color||'')].join(' ').toLowerCase().includes(ql)
     );
 
-    // add curated static results
-    const staticHits = EX_CARDS.filter(c =>
-      (c.name+c.sub).toLowerCase().includes(q.toLowerCase())
-    ).map(c => ({name:c.name, category:c.sub, emoji:c.emoji, _static:true}));
-
-    const all = [
-      ...hits.map(it=>({name:it.name, category:catLabel(it.category), emoji:null, _item:it})),
-      ...staticHits,
-    ];
+    // Match shop seed items
+    const shopHits = SHOP_SEED.filter(it =>
+      [it.name, it.brand, ...(it.style_tags||[])].join(' ').toLowerCase().includes(ql) ||
+      (tag && (it.style_tags||[]).some(t=>t.toLowerCase().includes(tag)))
+    ).slice(0,6);
 
     const list = document.getElementById('ex-results-list');
-    if (!all.length) {
-      list.innerHTML = `<div style="text-align:center;color:var(--muted);padding:32px 0;font-size:14px;font-weight:700;">לא נמצאו תוצאות 🔍<br><span style="font-size:12px;font-weight:500">נסי סגנון, צבע או מותג</span></div>`;
+    let html = '';
+
+    if (wardHits.length) {
+      html += `<div style="font-size:11px;font-weight:800;color:var(--muted);padding:0 0 8px;letter-spacing:.4px">מהארון שלך</div>`;
+      html += wardHits.map(it => `
+        <div class="ex-result-row" onclick="openSheetItem(${JSON.stringify({name:it.name,category:it.category,emoji:it.emoji,style_tags:it.style_tags||[]})})">
+          <div class="ex-result-emoji">${it.emoji||CAT_EMOJI[it.category]||'👗'}</div>
+          <div><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(catLabel(it.category))}</div></div>
+        </div>`).join('');
+    }
+
+    if (shopHits.length) {
+      html += `<div style="font-size:11px;font-weight:800;color:var(--muted);padding:${wardHits.length?'14px':0} 0 8px;letter-spacing:.4px">קנייה</div>`;
+      html += shopHits.map(it => {
+        const disc = it.orig > it.price ? Math.round((1-it.price/it.orig)*100) : 0;
+        return `
+        <div class="ex-result-row" onclick="openSheetSingle({name:'${attr(it.name)}',category:'${attr(it.category)}',emoji:'${attr(it.emoji)}',style_tags:${JSON.stringify(it.style_tags)},price_estimate_ils:${it.price}},0,null)">
+          <div class="ex-result-emoji">${it.emoji}</div>
+          <div style="flex:1"><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(it.brand)} · ₪${it.price}${disc?` <span style="color:#4ade80">-${disc}%</span>`:''}</div></div>
+          ${it.badge?`<div style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;background:rgba(255,61,119,.15);color:var(--accent)">${esc(it.badge)}</div>`:''}
+        </div>`;
+      }).join('');
+    }
+
+    if (!html) {
+      list.innerHTML = `<div style="text-align:center;color:var(--muted);padding:32px 0;font-size:14px;font-weight:700">לא נמצאו תוצאות 🔍<br><span style="font-size:12px;font-weight:500">נסי סגנון, צבע או מותג</span></div>`;
       return;
     }
-    list.innerHTML = all.map(r =>
-      `<div class="ex-result-row">
-         <div class="ex-result-emoji">${r.emoji || '👗'}</div>
-         <div>
-           <div class="ex-result-name">${esc(r.name)}</div>
-           <div class="ex-result-cat">${esc(r.category)}</div>
-         </div>
-       </div>`
-    ).join('');
+    list.innerHTML = html;
   }
 
   function showExDefault() {
