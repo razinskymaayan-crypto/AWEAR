@@ -41,6 +41,12 @@ Backend API — אורן.
 Design tokens — נטה (מקבל ומיישם, לא מגדיר).
 Social features (reactions architecture) — שירה מגדירה, רועי מיישם בRN.
 
+# כלל ברזל — stall escalation (נוסף 17.06.2026)
+זוהה: שבועיים ברצף בלי שום commit או תוצר נראה-לעין מה-scope הזה — ראו [company_reflection_2026-06-17.md](company_reflection_2026-06-17.md).
+- המשימה הראשונה בכל cycle חדש חייבת להיות זעירה במתכוון, לא "Feed screen מלא" — יחידה אחת שרצה בפועל תוך יום.
+- 48 שעות בלי commit = דיווח חסם בקול, לא שתיקה.
+- ה-614 מחרוזות i18n שזוהו ב-web (web ≠ RN, אבל אותה בעיה צפויה): לפני שמתחילים RN i18n, לוודא שיש תוכנית מסך-מסך, לא ניסיון לחבר הכל בבת אחת.
+
 # חלוקת עבודה עם דנה
 Shared infrastructure: navigation, i18n setup, AsyncStorage schema.
 כל conflict על scope — עולה לוארן מיידית, לא מסתדרים "בינינו".

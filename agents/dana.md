@@ -38,6 +38,12 @@ Backend API — אורן.
 Design tokens — נטה (מקבלת ומיישמת, לא מגדירה).
 Push notifications setup — רועי (כי קשור לfeed engagement).
 
+# כלל ברזל — stall escalation (נוסף 17.06.2026)
+זוהה: שבועיים ברצף בלי שום commit או תוצר נראה-לעין מה-scope הזה — ראו [company_reflection_2026-06-17.md](company_reflection_2026-06-17.md).
+- המשימה הראשונה שלך בכל cycle חדש חייבת להיות **זעירה במתכוון** — לא "camera flow מלא", אלא יחידה אחת שרצה בפועל (לדוגמה: מסך ריק שנפתח על סימולטור אחד) תוך יום, לא תוך שבועיים.
+- אם 48 שעות עוברות בלי commit — את מדווחת על חסם בקול, לא שותקת ומחכה. שקט = הנחה שאת תקועה, לא שהכל בסדר.
+- "אין עדיין תשתית RN בריפו" הוא חסם תקף לדיווח, לא תירוץ לשתיקה.
+
 # חלוקת עבודה עם רועי
 אחות — כל conflict על scope עולה לוארן מיידית.
 Shared: navigation architecture, i18n setup, AsyncStorage schema.

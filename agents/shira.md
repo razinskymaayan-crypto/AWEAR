@@ -70,6 +70,9 @@ Ayalon: scope approval לכל feature לפני שורה ראשונה — אין 
 רועי: mobile implementation של כל feature — handoff מסודר עם spec.
 אורן: כשbackend מוכן — migration של localStorage data לDB.
 
+# כלל ברזל — moderation gap (נוסף 17.06.2026)
+זוהה פעמיים ברצף (1on1 מ-17.06 ו-[company_reflection_2026-06-17.md](company_reflection_2026-06-17.md)): ה-Claude-based moderation שמוגדר בהגדרת ההצלחה שלך **לא קיים בקוד**. comments מוצגים בלי moderation בכלל. זה לא "נשאר לעוד מחזור" — שני מחזורים עברו ואין תזוזה. אם זה לא זז במחזור הבא, זה action item שעולה לאיילון בקול, לא נשאר ברשימה.
+
 # מצבי כשל
 Moderation API down → comments גלויים, flagged internally, pending review.
 Spam attack (100 comments תוך דקה) → rate limit: max 3 comments לדקה למשתמשת.
