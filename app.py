@@ -373,16 +373,18 @@ async def generate_outfit(data: OutfitRequest):
     wardrobe_desc = ", ".join(
         f"{it.get('name','')} ({it.get('category','')})"
         for it in data.wardrobe[:30]
-    ) or "ארון ריק"
+    ) or "empty wardrobe"
 
     system = (
-        "את סטייליסטית AI של AWEAR. תייצרי 2-3 הצעות לוק לאירוע שמבוקש, "
-        "תוך שימוש מקסימלי בפריטים מהארון הקיים. "
-        "החזירי JSON בלבד (ללא markdown): "
-        '{"outfits": [{"name": "שם הלוק", "match_pct": 85, "tip": "טיפ קצר", '
-        '"items": [{"name": "שם פריט", "category": "top/bottoms/shoes/bag/outerwear", '
+        "You are AWEAR's AI stylist, serving users worldwide. Generate 2-3 outfit "
+        "suggestions for the requested occasion, using the user's existing wardrobe "
+        "as much as possible. Reply in the same language the occasion/request is "
+        "written in (default to English if unsure). "
+        "Return JSON only (no markdown): "
+        '{"outfits": [{"name": "outfit name", "match_pct": 85, "tip": "short tip", '
+        '"items": [{"name": "item name", "category": "top/bottoms/shoes/bag/outerwear", '
         '"_missing": false}]}]}'
-        " — _missing: true אם הפריט לא בארון ויש לקנות."
+        " — _missing: true if the item isn't in the wardrobe and needs to be bought."
     )
     try:
         response = client.messages.create(
@@ -392,9 +394,9 @@ async def generate_outfit(data: OutfitRequest):
             messages=[{
                 "role": "user",
                 "content": (
-                    f"אירוע: {data.occasion}\n"
-                    f"ארון: {wardrobe_desc}\n"
-                    f"סגנונות אהובים: {', '.join(data.style_vibes) or 'כלשהו'}"
+                    f"Occasion: {data.occasion}\n"
+                    f"Wardrobe: {wardrobe_desc}\n"
+                    f"Preferred styles: {', '.join(data.style_vibes) or 'any'}"
                 ),
             }],
         )
@@ -421,19 +423,21 @@ async def smart_declutter(data: DeclutterRequest):
         return {"suggestions": []}
 
     items_desc = "\n".join(
-        f"- {it.get('name','?')} ({it.get('category','?')}) ₪{it.get('price_estimate_ils',0)}"
+        f"- {it.get('name','?')} ({it.get('category','?')}) {it.get('price_estimate_ils',0)}"
         for it in unused[:20]
     )
     system = (
-        "את מנהלת ארון AI. בדקי רשימת פריטים שמעולם לא נלבשו. "
-        "לכל פריט, הצעי: action (מכירה/תרומה/מחזור), reason קצר, price_suggestion (60% מהמחיר המקורי למכירה). "
-        'החזירי JSON בלבד: {"suggestions": [{"name":"...","action":"מכירה","reason":"...","price_suggestion":120}]}'
+        "You are AWEAR's AI wardrobe manager, serving users worldwide. Review this list "
+        "of items that were never worn. For each item, suggest: action (sell/donate/recycle), "
+        "a short reason, price_suggestion (60% of the original price for resale). "
+        "Reply in the same language the item names are written in (default to English if unsure). "
+        'Return JSON only: {"suggestions": [{"name":"...","action":"sell","reason":"...","price_suggestion":120}]}'
     )
     try:
         response = client.messages.create(
             model=MODEL, max_tokens=600,
             system=system,
-            messages=[{"role": "user", "content": f"פריטים לא נלבשים:\n{items_desc}"}],
+            messages=[{"role": "user", "content": f"Unworn items:\n{items_desc}"}],
         )
         import json as _json
         text = response.content[0].text.strip()
@@ -442,8 +446,8 @@ async def smart_declutter(data: DeclutterRequest):
         return _json.loads(text)
     except Exception:
         return {"suggestions": [
-            {"name": it.get("name","?"), "action": "מכירה",
-             "reason": "לא נלבש אף פעם",
+            {"name": it.get("name","?"), "action": "sell",
+             "reason": "never worn",
              "price_suggestion": round((it.get("price_estimate_ils") or 100) * 0.4)}
             for it in unused[:5]
         ]}
@@ -472,12 +476,12 @@ async def stylist_chat(data: StylistMessage):
             system=system,
             messages=[{
                 "role": "user",
-                "content": f"מידע על הארון: {data.wardrobe_context}\n\nשאלה: {data.question}",
+                "content": f"Wardrobe info: {data.wardrobe_context}\n\nQuestion: {data.question}",
             }],
         )
         return {"answer": response.content[0].text}
     except Exception:
-        return {"answer": "הסטייליסט AI לא זמין כרגע 🙏 נסי שוב בעוד רגע"}
+        return {"answer": "AI stylist unavailable right now 🙏 try again in a moment"}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

@@ -76,3 +76,21 @@
 
 ### השבוע הבא — מטרה ראשית
 לפי הנחיית כרמל ("תריצו עוד שבוע ועוד שבוע עד שאני חוזר") — ממשיכים מחזור Build/Verify על הסעיפים שנמצאו. הראשון בתור: i18n actual wiring (הסיכון הגדול ביותר שנשאר — קובץ שנוצר ולא מחובר, בדיוק הדפוס שגרם לבאג tokens.css).
+
+---
+
+## ג'ף — שבוע 2 (24–30.06.2026), Build Days — המשך לפי הנחיית כרמל
+
+### הושלם
+- **תוקנו 3 system prompts בעברית-בלבד ב-`app.py`** (`/api/outfit/generate`, `/api/declutter`, fallback של `/api/stylist/chat`) ל-language-agnostic — נבדק coupling עם הפרונט קודם (`showDeclutterResults`/`renderOutfitResults` מציגים `name`/`reason`/`action`/`tip` כטקסט אופאקי בלבד, אין pattern-matching על ערכים בעברית) ולכן זה תיקון בטוח. אומת חי: `curl` לכל 3 ה-endpoints + הרצת `runDeclutter()` בפועל ב-Playwright עם screenshot — "sell • ₪80" מוצג נכון.
+- **סקירה פרואקטיבית למניעת באג #3 מסוג RW_KEY**: ניתוח סטטי גילה שיש רק **4 קריאות פונקציה שמתבצעות בפועל ב-top-level synchronous execution** בכל הקובץ (`updateHeaderCityPin`, `renderHome`, `renderCloset`, `renderFeed`) — כל השאר רק נרשמות כ-event handlers ורצות אחרי שהסקריפט כבר אותחל לגמרי (לא יכולות לסבול מ-TDZ). כל 4 נבדקו ידנית: התלויות שלהן (`loadProfile`, `RW_KEY`/`LEVELS`, `SEED_POSTS`/`LIKES`/`SAVED`) כולן מוגדרות לפני נקודת הקריאה. **אין עוד באגים מהסוג הזה בקוד הנוכחי.**
+- **גודל אמיתי של פרויקט i18n wiring נמדד, לא הוערך**: `grep` לכל string literal עם תווים בעברית בקובץ — **614 מחרוזות hardcoded**. זה מאשר שזה לא "quick link" כמו tokens.css — זה רי-write רב-ימים שדורש תכנון מסודר (סדר עבודה לפי מסך, לא global find-replace שיהיה הרסני נגד template literals). לא בוצע חלקי כדי לא ליצור מצב ביניים מבלבל (כמו tokens.css לפני שתוקן).
+- regression מלא הורץ פעמיים (לפני ואחרי תיקוני ה-prompts) — 0 שגיאות, 17/17.
+
+### חסמים פתוחים (נשארים, לא נסגרו השבוע)
+1. tokens.css palette migration — נטה.
+2. **i18n wiring — 614 מחרוזות, פרויקט מוגדר בנפרד, לא Week קצר.** מומלץ: לתכנן sprint ייעודי, מסך-מסך, עם QA אחרי כל מסך (לא הכל בבת אחת).
+3. Style Dictionary pipeline לא קיים בפועל.
+
+### השבוע הבא — מטרה ראשית
+המשך מחזור build/verify. ללא יעד "לגעת ב-i18n" נוסף עד שיש תוכנית sprint מסודרת מאיילון/נטה — ביצוע חלקי שלה יזיק יותר משיעזור.
