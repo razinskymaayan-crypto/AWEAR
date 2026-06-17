@@ -684,7 +684,7 @@
   .ex-result-row { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 14px;
     padding: 12px 14px; cursor: pointer; transition: all .18s; }
   .ex-result-row:active { transform: scale(.98); background: rgba(255,255,255,.07); }
-  .ex-result-emoji { font-size: 28px; width: 44px; height: 44px; border-radius: 12px;
+  .ex-result-emoji { font-size: 28px; width: 44px; height: 44px; border-radius: 12px; overflow: hidden;
     background: linear-gradient(135deg,#2a2040,#1a1030); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .ex-result-name { font-size: 14px; font-weight: 800; color: var(--text); }
   .ex-result-cat { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
@@ -1123,6 +1123,11 @@
     color: #b8b8c4; background: linear-gradient(160deg, #f3f3f7, #e8e8ef); border-radius: inherit; }
   .sheet-hero-img .img-fallback, .listing .ic .img-fallback {
     background: linear-gradient(135deg, #20202b, #191922); color: var(--muted); }
+  /* Marketplace / Shopping Feed / Explore — real product photo replacing emoji placeholder */
+  .mp-item-img img, .sf-card-img img, .ex-card-bg img, .ex-result-emoji img {
+    width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit; background: #fff; }
+  .mp-item-img .img-fallback, .sf-card-img .img-fallback, .ex-card-bg .img-fallback, .ex-result-emoji .img-fallback {
+    background: linear-gradient(160deg, #2a2040, #1a1030); color: var(--muted); font-size: 28px; }
   .sheet-look-emoji { overflow: hidden; border-radius: 9px; background: #fbfbfd; }
   .sheet-look-emoji .img-fallback { background: #fbfbfd; color: #b8b8c4; }
 </style>
@@ -3012,7 +3017,7 @@
           const cond = item.condition === 'new' ? 'חדש' : item.condition === 'like-new' ? 'כמו חדש' : 'משומש';
           return `<div class="mp-item" data-id="${item.id}">
             <div class="mp-item-img">
-              ${item.emoji}
+              ${productImage(item)}
               <div class="mp-item-badge ${item.condition}">${esc(cond)}</div>
             </div>
             <div class="mp-item-info">
@@ -3685,7 +3690,7 @@
     }
     document.getElementById('ex-grid').innerHTML = cards.map(c =>
       `<div class="ex-card">
-         <div class="ex-card-bg">${c.emoji}</div>
+         <div class="ex-card-bg">${productImage({name:c.name, search_query:c.name+' '+(c.sub||'')})}</div>
          <div class="ex-card-info">
            <div class="ex-card-name">${esc(c.name)}</div>
            <div class="ex-card-sub">${esc(c.sub)}</div>
@@ -3731,7 +3736,7 @@
         const disc = it.orig > it.price ? Math.round((1-it.price/it.orig)*100) : 0;
         return `
         <div class="ex-result-row" onclick="openSheetSingle({name:'${attr(it.name)}',category:'${attr(it.category)}',emoji:'${attr(it.emoji)}',style_tags:${JSON.stringify(it.style_tags)},price_estimate_ils:${it.price}},0,null)">
-          <div class="ex-result-emoji">${it.emoji}</div>
+          <div class="ex-result-emoji">${productImage(it)}</div>
           <div style="flex:1"><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(it.brand)} · ₪${it.price}${disc?` <span style="color:#4ade80">-${disc}%</span>`:''}</div></div>
           ${it.badge?`<div style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;background:rgba(255,61,119,.15);color:var(--accent)">${esc(it.badge)}</div>`:''}
         </div>`;
@@ -4504,7 +4509,7 @@
       return `
         <div class="sf-card" onclick="openShopItem('${attr(it.id)}')">
           <div class="sf-card-img">
-            ${it.emoji}
+            ${productImage(it)}
             ${it.badge ? `<div class="sf-badge ${badgeCls}">${esc(it.badge)}</div>` : ''}
           </div>
           <div class="sf-card-body">

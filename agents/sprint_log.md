@@ -94,3 +94,27 @@
 
 ### השבוע הבא — מטרה ראשית
 המשך מחזור build/verify. ללא יעד "לגעת ב-i18n" נוסף עד שיש תוכנית sprint מסודרת מאיילון/נטה — ביצוע חלקי שלה יזיק יותר משיעזור.
+
+---
+
+## פגישת בורד + מחלקות — 17.06.2026 (אסטרטגיית עיצוב, ביוזמת כרמל)
+
+מסמך מלא: [board_meeting_2026-06-17_design_strategy.md](board_meeting_2026-06-17_design_strategy.md)
+
+### ממצא הבורד
+בדיקה מול `DESIGN_STANDARDS.md` (לא הערכה — grep + קריאת קוד) גילתה שהאפליקציה מפרה את התקן שלה עצמה ב-10+ מקומות: P0 #2 ("בגד הוא תמיד תמונה אמיתית") מופר ב-Marketplace, Shopping Feed, Explore — מוצרים מוצגים כ-emoji. P0 #1 ("אין אימוג'י כ-UI chrome") מופר ב-Stories, Rewards badges, Outfit Generator chips, quiz options.
+
+### Phase 1 — בוצע היום (ג'ף)
+הוחלף `it.emoji` ב-`productImage(it)` (התשתית הקיימת — תמונת AI + fallback מעוצב) ב-4 מקומות: Marketplace grid, Shopping Feed grid, Explore inspiration cards, Explore search results. נוספה CSS תואמת (`object-fit`, `overflow:hidden` ב-`.ex-result-emoji`).
+
+**ממצא חשוב שהתגלה בבדיקה:** ה-API שמייצר את התמונות (`pollinations.ai`) עבר ל-**תשלום חובה** — `HTTP 402`, "Queue full... pay to bypass rate limit", מוגבל ל-1 בקשה במקביל ל-IP. זו לא תקלה בקוד שלי. **התוצאה בפועל כרגע: ברוב המקרים מוצג ה-fallback המעוצב (אייקון line-art נקי על גרדיאנט) במקום תמונה אמיתית — אבל זה עדיין שיפור אמיתי על emoji, ועומד בדרישת ה-fallback של התקן.** בבדיקה חזותית, תמונה אחת בכל זאת נטענה בהצלחה ("Cottage Romance") — מאשר שהצנרת תקינה, רק מוגבלת קשות ב-tier החינמי.
+
+**זו לא החלטה שלי לקחת:** האם לשלם על tier בתשלום ל-pollinations, לעבור לספק תמונות אחר (Unsplash API, stock photo service), או לאמץ את ה-fallback המעוצב כשפה חזותית רשמית לseed/demo data — דורש החלטת תקציב/וונדור מכרמל.
+
+### Phase 2 — לא בוצע היום, בכוונה
+Emoji chrome (badges/chips/stories) → SVG icons. דורש מיפוי עיצובי (איזה SVG מתאים לכל emoji) — החלטת עיצוב של דולצ'ה, לא תיקון אוטומטי. בעלים: דולצ'ה (מיפוי) + נטה (icon sizing tokens) + גבאנה (אישור).
+
+### Phase 3 — לא בוצע היום
+הירארכיה חזותית של מסך הבית (להרגיש "רשת חברתית" לא "דשבורד"). דורש Strategy Day נפרד עם דולצ'ה + איילון.
+
+regression מלא (17 מסכים) הורץ לפני ואחרי Phase 1 — 0 שגיאות.
