@@ -2329,6 +2329,43 @@
       </div>
 
       ${(() => {
+        // Profile completeness card
+        const onboarded = !!localStorage.getItem('awear_onboarded');
+        const hasName = !!(prof.name);
+        const hasPhoto = !!(prof.photo);
+        const hasFeed = loadFeedPosts().length > 0;
+        const steps = [
+          {done: wardrobe.length > 0, label: 'סרקי פריט לארון', action: "document.getElementById('file-input').click()", pts: 25},
+          {done: onboarded, label: 'מלאי את הסטייל-קוויז', action: "showView('onboarding')", pts: 25},
+          {done: hasName, label: 'הוסיפי שם פרופיל', action: "showView('closet')", pts: 20},
+          {done: hasPhoto, label: 'הוסיפי תמונת פרופיל', action: "showView('closet')", pts: 15},
+          {done: hasFeed, label: 'שתפי לוק לפיד', action: "showView('feed')", pts: 15},
+        ];
+        const donePts = steps.filter(s => s.done).reduce((a,s) => a + s.pts, 0);
+        const totalPts = steps.reduce((a,s) => a + s.pts, 0);
+        const completePct = Math.round((donePts / totalPts) * 100);
+        const nextStep = steps.find(s => !s.done);
+        if (completePct < 100) {
+          return `
+          <div class="home-sec-label">🎯 פרופיל שלך — ${completePct}% הושלם</div>
+          <div onclick="${nextStep ? nextStep.action : ''}" style="margin:0 18px 16px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 16px;cursor:pointer">
+            <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:10px">
+              <div style="height:100%;width:${completePct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px"></div>
+            </div>
+            ${nextStep ? `<div style="display:flex;align-items:center;gap:10px">
+              <div style="font-size:22px">⚡</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:800">הצעד הבא: ${esc(nextStep.label)}</div>
+                <div style="font-size:11px;color:var(--accent);font-weight:700;margin-top:2px">+${nextStep.pts} נקודות</div>
+              </div>
+              <div style="font-size:18px;color:var(--muted)">›</div>
+            </div>` : ''}
+          </div>`;
+        }
+        return '';
+      })()}
+
+      ${(() => {
         const rw = JSON.parse(localStorage.getItem(RW_KEY) || '{"points":0}');
         const pts = rw.points || 0;
         const nextLevel = LEVELS.find(l => l.min > pts) || LEVELS[LEVELS.length-1];
