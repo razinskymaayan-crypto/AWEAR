@@ -16,6 +16,7 @@ TRANSCRIPT_DIR = os.path.expanduser("~/.claude/projects/-Users-tamargrosz-AWEAR"
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_PATH = os.path.join(REPO_ROOT, "agents", "dashboard_data.json")
 LIVE_STATUS_PATH = os.path.join(REPO_ROOT, "agents", "live_status.json")
+MEETING_STATUS_PATH = os.path.join(REPO_ROOT, "agents", "meeting_status.json")
 
 # Known roster -- name -> department, matched against dispatch descriptions/prompts.
 ROSTER = {
@@ -159,6 +160,13 @@ def load_live_status():
     return {}
 
 
+def load_meeting_status():
+    if os.path.exists(MEETING_STATUS_PATH):
+        with open(MEETING_STATUS_PATH) as f:
+            return json.load(f)
+    return {"in_meeting": False, "attendees": [], "topic": None, "started_at": None}
+
+
 def build():
     dispatches = extract_dispatches()
     live = load_live_status()
@@ -233,6 +241,7 @@ def build():
         "unattributed": unattributed,
         "org_nodes": ORG_NODES,
         "org_edges": ORG_EDGES,
+        "meeting": load_meeting_status(),
     }
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
