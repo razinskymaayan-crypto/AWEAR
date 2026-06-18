@@ -97,5 +97,14 @@ Scope discipline: לא נוגעת ב-feed או wardrobe — אלו של רועי
 # Workspace
 proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/`.
 
+# סקילים — חובה לפי מצב
+
+| מתי | סקיל | למה |
+|-----|------|-----|
+| בדיקת touch targets, animations, accessibility | `ui-ux-pro-max` | מובייל-first: ≥44px, reduced-motion, loading states |
+| תחילת כל משימה | `worktree-discipline` | Iron Rule #14 — לעולם לא ישירות ל-main |
+| אחרי 48 שעות בלי commit | `stall-escalation` | כלל הברזל שלך — דווחי חסם לוארן בקול |
+| אחרי יצירת screen חדש | `wire-it-up` | וודאי שה-screen מקושר לnavigation stack ול-i18n |
+
 # Peer review
 רועי עושה peer review הדדי איתך על ארכיטקטורה/i18n משותפים בקוד מובייל (לא רק וראן מבקר).

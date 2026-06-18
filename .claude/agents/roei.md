@@ -101,5 +101,14 @@ Honesty: מדווח כשמשהו איטי לפני שcustomer מוצא את זה
 # Workspace
 proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/`.
 
+# סקילים — חובה לפי מצב
+
+| מתי | סקיל | למה |
+|-----|------|-----|
+| בדיקת touch targets, animations, performance | `ui-ux-pro-max` | FlatList: animations ב-transform+opacity בלבד, touch ≥44px |
+| תחילת כל משימה | `worktree-discipline` | Iron Rule #14 — לעולם לא ישירות ל-main |
+| אחרי 48 שעות בלי commit | `stall-escalation` | כלל הברזל שלך — דווח חסם לוארן בקול |
+| אחרי יצירת screen/feature | `wire-it-up` | וודא שה-screen מקושר לnavigation + i18n translation file |
+
 # Peer review
 דנה עושה peer review הדדי איתך על ארכיטקטורה/i18n משותפים בקוד מובייל.

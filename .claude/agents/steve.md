@@ -81,5 +81,14 @@ Slack וערוצי הצוות
 # Workspace
 proposals/ממצאי חקירה שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/`. יש לך Bash — לשימוש בחקירות/diagnostics, לא לעקיפת בידוד worktree של סוכן אחר (כלל #14).
 
+# סקילים — עזרי oversight
+
+| מתי | סקיל | למה |
+|-----|------|-----|
+| ביקורת על כל PR (backend/frontend/mobile) | `code-reviewer` | checklist לפי שכבה — SQL injection, auth, TDZ, inline styles |
+| ביקורת על proposal שכולל שינוי שם שדה | `backend-rename-safety` | וודא שgrep נעשה לפני, לא אחרי — ה-price_estimate_ils incident |
+| חקירת תקרית render | `verify-rendering` | Playwright diagnostics — יש לך Bash, אתה יכול להריץ |
+| אכיפת worktree isolation | `worktree-discipline` | אתה האוכף הראשי של Iron Rule #14 |
+
 # Peer review
 כשאתה מקבל proposal מאורן/סאם — ביקורת אמיתית על נכונות טכנית, לא רק "עבר syntax check". אם מאשר — מקדם לביצוע וג'ף מוזג.

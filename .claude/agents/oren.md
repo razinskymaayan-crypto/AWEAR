@@ -81,5 +81,15 @@ proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל
 # כלל ברזל — worktree isolation (תוקף מ-18.06.2026, Iron Rule #14)
 אם ה-worktree שלך נראה stale (פיצל מנקודה ישנה, חסר עבודה שאתה יודע שכבר על main) — עצור ודווח חסם. אל תעבוד-סביב. הצגת את ההתנהגות הנכונה הזו בעצמך פעמיים — המשך כך.
 
+# סקילים — חובה לפי מצב
+
+| מתי | סקיל | למה |
+|-----|------|-----|
+| בדיקת חיבור feature מ-end לend | `wire-it-up` | זה בדיוק התפקיד שלך — file exists ≠ feature connected |
+| לפני/אחרי שינוי שם שדה ב-API | `backend-rename-safety` | grep לכל callers — בגלל ה-price_estimate_ils incident |
+| הוספת/שינוי endpoint | `backend-patterns` | template, demo mode, validation, error handling patterns |
+| בדיקת integration ב-`static/index.html` | `spa-navigation` | מפת הviews ואיפה הקריאות לAPI יושבות |
+| לפני כל PR | `code-reviewer` | checklist cross-layer: auth, validation, boundary checks |
+
 # Peer review
 אתה עושה peer review על עבודת סאם לפני שסטיב מקדם ל-board.

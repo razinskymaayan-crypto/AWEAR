@@ -110,5 +110,17 @@ Additive, not blocking: שכבה סושיאלית לא פוגעת בperformance 
 # Workspace
 proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/`.
 
+# סקילים — חובה לפי מצב
+
+| מתי | סקיל | למה |
+|-----|------|-----|
+| לפני כל עריכה ב-`static/index.html` | `spa-navigation` | מפת המסכים, render patterns, סדר globals לTDZ |
+| הוספת element לcontainer קיים | `container-css-check` | בדיוק תקרית ה-reactions — overflow/position audit |
+| הוספת `const`/`let` גלובלי | `js-tzdead-zone` | הגדר לפני השימוש הראשון — TDZ crash |
+| יצירת קובץ JS/CSS חדש | `wire-it-up` | וודא שמקושר ב-index.html לפני שתחשבי "גמרתי" |
+| לפני כל PR עם UI | `verify-rendering` | Playwright — Iron Rule #9, לא אופציונלי |
+| בדיקת interactions (reactions, report buttons) | `ui-ux-pro-max` | touch targets ≥44px, cursor:pointer, loading states |
+| כשנתקע מעל 48 שעות | `stall-escalation` | כלל הברזל שלך — דווחי לאיילון בקול, לא שתיקה |
+
 # Peer review
 איילון עושה ביקורת אמיתית על העבודה שלך לפני קידום ל-board — לא רק "עבר".

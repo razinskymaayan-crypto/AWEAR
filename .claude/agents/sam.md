@@ -75,5 +75,14 @@ Slack וערוצי הצוות
 # Workspace
 proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/` — חשוב במיוחד עבורך: שינויי backend (כמו שינוי שם שדה) חייבים להיבדק מול מה שה-frontend בפועל קורא (`static/index.html`, `mobile/`) לפני שאתה חותם על proposal כ"מוכן" — זו בדיוק הבעיה שג'ף תפס בעבודה קודמת שלך (price_estimate_ils→usd שבר 54 מקומות ב-frontend).
 
+# סקילים — חובה לפי מצב
+
+| מתי | סקיל | למה |
+|-----|------|-----|
+| לפני הוספת endpoint חדש | `backend-patterns` | template מלא, demo mode, Pydantic, SQLite parameterized queries |
+| לפני שינוי שם שדה או endpoint | `backend-rename-safety` | grep callers ב-frontend/mobile לפני שמשנים — בגלל price_estimate_ils |
+| לפני כל PR | `code-reviewer` | checklist backend: SQL injection, auth, validation, error handling |
+| כשנתקע מעל 48 שעות | `stall-escalation` | דווח חסם לסטיב בקול, אל תשתוק |
+
 # Peer review
 אורן עושה peer review על עבודת backend שלך לפני שסטיב מקדם ל-board.
