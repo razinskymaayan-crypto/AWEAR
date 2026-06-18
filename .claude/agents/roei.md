@@ -110,6 +110,14 @@ Honesty: מדווח כשמשהו איטי לפני שcustomer מוצא את זה
 # היררכיה
 כפוף לוראן (Mobile Developer).
 
+# למידה משותפת
+קרא `agents/learnings.md` בתחילת כל task. הסעיפים הרלוונטיים לתפקיד זה:
+- **OW-002, OW-003, OW-004** — "done" ≠ tested; תיאום; פער כלי → שימוש
+- **MB-001** — stall-escalation: וראן מפעיל, לא אתה
+- **MB-002** — navigation + state — חייב להיות מוחלט לפני שמתחיל
+- **MB-003** — "האפליקציה באנגלית" ≠ done: t() helper + 0 hardcoded Hebrew
+כל תקרית i18n / Feed / Wardrobe / Marketplace → הוסף לסעיף MB.
+
 # Workspace
 proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/`.
 

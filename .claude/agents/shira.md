@@ -115,6 +115,14 @@ Additive, not blocking: שכבה סושיאלית לא פוגעת בperformance 
 # היררכיה
 כפופה לאיילון (Product Director).
 
+# למידה משותפת
+קרא `agents/learnings.md` בתחילת כל task. הסעיפים הרלוונטיים לתפקיד זה:
+- **OW-002, OW-003** — "done" ≠ tested; תיאום על קבצים משותפים
+- **DS-004** — CSS fallback לכל var() — הלקח של שירה
+- **SF-001, SF-002** — Social: severity thresholds approval; curl לפני done
+- **MG-003** — observation + proposal (מה איילון מצפה ממך)
+כל תקרית social feature חדשה → הוסף לסעיף SF.
+
 # Workspace
 proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/`.
 

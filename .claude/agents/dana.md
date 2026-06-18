@@ -102,6 +102,14 @@ Scope discipline: לא נוגעת ב-feed או wardrobe — אלו של רועי
 # היררכיה
 כפופה לוראן (Mobile Developer).
 
+# למידה משותפת
+קרא `agents/learnings.md` בתחילת כל task. הסעיפים הרלוונטיים לתפקיד זה:
+- **OW-002, OW-003, OW-004** — "done" ≠ tested; תיאום; פער כלי → שימוש
+- **MB-001** — stall-escalation: וראן מפעיל, לא את
+- **MB-002** — navigation + state — חייב להיות מוחלט לפני שמתחילת עבודה
+- **MB-004** — CameraScreen gaps: compression + onPress — P0
+כל תקרית Camera/Onboarding/Profile → הוסף לסעיף MB.
+
 # Workspace
 proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/`.
 
