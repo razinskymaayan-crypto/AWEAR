@@ -15,9 +15,13 @@ Then open http://localhost:8000
 import base64
 import io
 import json
+import logging
 import traceback
 import urllib.parse
+from pathlib import Path
 from typing import Optional
+
+logger = logging.getLogger(__name__)
 
 import anthropic
 from dotenv import load_dotenv
@@ -591,6 +595,112 @@ async def moderate_comment(data: CommentModerationRequest):
     except Exception as e:
         print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"harmful": False, "severity": "none", "fallback": True}
+
+
+# ---------------------------------------------------------------------------
+# Data API — products / posts / profiles
+# ---------------------------------------------------------------------------
+
+PRODUCTS_PATH = Path("static/data/products.json")
+POSTS_PATH = Path("static/data/posts.json")
+PROFILES_PATH = Path("static/data/profiles.json")
+
+# In-memory caches — loaded once at startup, not on every request.
+# Mutation is intentionally absent: these are read-only fixtures for the demo.
+_products_cache: list = []
+_posts_cache: list = []
+_profiles_cache: list = []
+
+
+@app.on_event("startup")
+async def load_data_files():
+    """Load JSON fixtures into memory once so every request is O(n) filter, not disk I/O."""
+    global _products_cache, _posts_cache, _profiles_cache
+    try:
+        with open(PRODUCTS_PATH) as f:
+            _products_cache = json.load(f)
+        with open(POSTS_PATH) as f:
+            _posts_cache = json.load(f)
+        with open(PROFILES_PATH) as f:
+            _profiles_cache = json.load(f)
+        logger.info(
+            "Data loaded: %d products, %d posts, %d profiles",
+            len(_products_cache), len(_posts_cache), len(_profiles_cache),
+        )
+    except Exception as e:
+        # Log the error but don't crash — the endpoints will return empty lists
+        # and the main analyze/scan flow continues to work.
+        logger.error("Failed to load data files: %s", e)
+
+
+@app.get("/api/products")
+async def get_products(
+    category: Optional[str] = None,
+    color: Optional[str] = None,
+    in_stock: Optional[bool] = None,
+    limit: int = 50,
+    offset: int = 0,
+):
+    """Return paginated products with optional filtering by category, color, and stock status."""
+    products = _products_cache
+
+    if category:
+        products = [p for p in products if p.get("category") == category]
+    if color:
+        products = [p for p in products if p.get("color") == color]
+    if in_stock is not None:
+        products = [p for p in products if p.get("in_stock") == in_stock]
+
+    total = len(products)
+    return {
+        "items": products[offset: offset + limit],
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
+
+
+@app.get("/api/posts")
+async def get_posts(
+    user_id: Optional[str] = None,
+    limit: int = 20,
+    offset: int = 0,
+):
+    """Return paginated posts, optionally filtered by user_id."""
+    posts = _posts_cache
+
+    if user_id:
+        posts = [p for p in posts if p.get("user_id") == user_id]
+
+    total = len(posts)
+    return {
+        "items": posts[offset: offset + limit],
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
+
+
+@app.get("/api/profiles")
+async def get_profiles(limit: int = 20, offset: int = 0):
+    """Return paginated profiles."""
+    profiles = _profiles_cache
+    total = len(profiles)
+    return {
+        "items": profiles[offset: offset + limit],
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
+
+
+@app.get("/api/profiles/{user_id}")
+async def get_profile(user_id: str):
+    """Return a single profile by user_id. 404 if not found."""
+    profile = next((p for p in _profiles_cache if p.get("id") == user_id), None)
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return profile
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
