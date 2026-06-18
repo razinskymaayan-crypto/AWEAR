@@ -2503,7 +2503,7 @@
       </div>
 
       ${hasOutfits ? `
-      <div class="home-sec-label">✨ ${t('home.outfit_today')}</div>
+      <div class="home-sec-label">${t('home.outfit_today')}</div>
       <div class="home-outfit-row" id="ho-row">
         ${outfits.map((o,i) => {
           // Real product photography (productImage()), not an emoji stack on a flat
@@ -2568,7 +2568,7 @@
         const nextStep = steps.find(s => !s.done);
         if (completePct < 100) {
           return `
-          <div class="home-sec-label">🎯 ${t('home.profile_pct_title', {pct: completePct})}</div>
+          <div class="home-sec-label">${t('home.profile_pct_title', {pct: completePct})}</div>
           <div onclick="${nextStep ? nextStep.action : ''}" style="margin:0 18px 16px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 16px;cursor:pointer">
             <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:10px">
               <div style="height:100%;width:${completePct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px"></div>
@@ -2600,7 +2600,7 @@
         ];
         const todayChallenge = DAILY[new Date().getDay() % DAILY.length];
         return `
-        <div class="home-sec-label">🎯 ${t('home.challenge_section')}</div>
+        <div class="home-sec-label">${t('home.challenge_section')}</div>
         <div style="margin:0 18px 16px;background:linear-gradient(135deg,rgba(123,92,255,.15),rgba(255,61,119,.1));border:1px solid rgba(123,92,255,.25);border-radius:20px;padding:16px;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="font-size:32px">${todayChallenge.icon}</div>
@@ -2621,7 +2621,7 @@
         </div>`;
       })()}
 
-      <div class="home-sec-label">⚡ ${t('home.quick_actions')}</div>
+      <div class="home-sec-label">${t('home.quick_actions')}</div>
       <div class="home-quick" style="overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;padding-bottom:4px">
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('outfits')"><span class="hq-icon">✨</span>Outfit AI</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('shopping')"><span class="hq-icon">🛍️</span>Shopping</button>
