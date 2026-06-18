@@ -1695,7 +1695,7 @@
         <div class="sheet-hero-info">
           <div class="sheet-hero-name">${esc(it.name)}</div>
           <div class="sheet-hero-brand">${esc(it.brand_vibe||'')}</div>
-          <div class="sheet-hero-price">₪${esc(it.price_estimate_usd)}</div>
+          <div class="sheet-hero-price">$${esc(it.price_estimate_usd)}</div>
         </div>
       </div>
       ${earnLine}
@@ -1708,7 +1708,7 @@
       ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
             style="text-decoration:none" aria-label="קני ${attr(it.name)} ב-${attr(primary.retailer)}">
            קני ב-${esc(primary.retailer)}
-           <span class="sheet-buy-price">₪${esc(it.price_estimate_usd)}</span>
+           <span class="sheet-buy-price">$${esc(it.price_estimate_usd)}</span>
          </a>`
       : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">אין קישור קנייה זמין לפריט זה עדיין</div>`;
 
@@ -1823,7 +1823,7 @@
       </div>
       <div class="item-name">${esc(it.name)}</div>
       <div class="item-meta">
-        <span class="item-price">₪${esc(it.price_estimate_usd||it.price||0)}</span>
+        <span class="item-price">$${esc(it.price_estimate_usd||it.price||0)}</span>
         ${it.brand_vibe?`<span class="item-brand">${esc(it.brand_vibe)}</span>`:''}
       </div>
       <div class="stylist-h2">${icon('sparkle',16)} הסטייליסט מציע</div>
@@ -1836,7 +1836,7 @@
       ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
             style="text-decoration:none" aria-label="קני ${attr(it.name)} ב-${attr(primary.retailer)}">
            קני ב-${esc(primary.retailer)}
-           <span class="sheet-buy-price">₪${esc(it.price_estimate_usd||it.price||0)}</span>
+           <span class="sheet-buy-price">$${esc(it.price_estimate_usd||it.price||0)}</span>
          </a>`
       : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">אין קישור קנייה זמין לפריט זה עדיין</div>`;
 
@@ -1853,7 +1853,7 @@
       return `<div class="sheet-look-row">
         <div class="sheet-look-emoji">${productImage(it)}</div>
         <div class="sheet-look-name">${esc(it.name)}</div>
-        <div class="sheet-look-price">₪${esc(it.price_estimate_usd||it.price||0)}</div>
+        <div class="sheet-look-price">$${esc(it.price_estimate_usd||it.price||0)}</div>
         ${buy}
       </div>`;
     }).join('');
@@ -1923,24 +1923,15 @@
     sheetStartY = null;
   });
 
-  // ---- buy confirm (existing modal, unchanged) ----
-  function buyConfirm(label, price, earnAmt, influencerUser) {
-    modal.classList.add('show');
-    modalCard.innerHTML = '<div class="spinner"></div><h3>רוכשת את ' + esc(label) + '…</h3><p>Awear מבצעת את ההזמנה עבורך</p>';
-    setTimeout(() => {
-      const earnLine = (earnAmt && influencerUser)
-        ? `<div class="earn-line" style="display:flex;align-items:center;justify-content:center;gap:5px">${icon('check',14)} @${esc(influencerUser)} מרוויחה קרדיט ₪${esc(earnAmt)}</div>` : '';
-      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:#34d399">' + icon('checkCircle',52) + '</div><h3>ההזמנה אושרה!</h3>' +
-        '<p>' + esc(label) + ' בדרך אליך · שולם ₪' + esc(price) + '<br/>משלוח עד הבית תוך 3-5 ימים</p>' +
-        earnLine + '<button class="close">מעולה</button>';
-      modalCard.querySelector('.close').addEventListener('click', () => modal.classList.remove('show'));
-    }, 1300);
+  // ---- buy confirm — opens product sheet with real retailers (no fake animation) ----
+  function buyConfirm(synth) {
+    openSheetSingle(synth);
   }
 
-  // kept for internal use (sellFlow calls this indirectly, no change needed)
+  // kept for internal use — routes to product sheet
   function buyFlow(label, price, earnAmt, influencerUser) {
-    // legacy shim — routes through sheet when item object exists, else direct confirm
-    buyConfirm(label, price, earnAmt, influencerUser);
+    const synth = { name: label, price_estimate_usd: price, buy_options: [] };
+    openSheetSingle(synth, earnAmt, influencerUser);
   }
 
   function sellFlow(label, price, cat) {
@@ -2056,7 +2047,7 @@
   function productTile(it){return `<div class="ptile" onclick="openWardrobeItemDetail('${attr(it.name)}')">
     <div class="pimg">${productImage(it)}</div>
     <div class="pname">${esc(it.name)}</div><div class="pbrand">${esc(it.brand_vibe||'')}</div>
-    <div class="pprice">₪${esc(it.price_estimate_usd)}</div>
+    <div class="pprice">$${esc(it.price_estimate_usd)}</div>
     <div class="pacts">
       <button class="pbuy" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_usd)}" onclick="event.stopPropagation()">קני</button>
       <button class="psell" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_usd||0)*.5)}" onclick="event.stopPropagation()">מכרי</button>
@@ -2079,7 +2070,7 @@
         ${tags.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px">
           ${tags.map(t => `<span style="background:var(--card);border:1px solid var(--line);border-radius:20px;font-size:11px;font-weight:700;padding:3px 10px">${esc(t)}</span>`).join('')}
         </div>` : ''}
-        <div style="font-size:22px;font-weight:900;text-align:center;margin-top:12px;color:var(--accent)">₪${it.price_estimate_usd || '—'}</div>
+        <div style="font-size:22px;font-weight:900;text-align:center;margin-top:12px;color:var(--accent)">$${it.price_estimate_usd || '—'}</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:14px 20px 20px">
         <button onclick="openAbigailWithItem('${attr(it.name)}')" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">Ask Abigail what to wear</button>
@@ -2273,7 +2264,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">${ICONS[catIcon(it.category)]||ICONS.hanger}</svg>
         </span>
         <span class="fc-pill-name">${esc((it.name||'').split(' ').slice(0,2).join(' '))}</span>
-        ${(it.price_estimate_usd||it.price)?`<span class="fc-pill-price">₪${esc(it.price_estimate_usd||it.price)}</span>`:''}
+        ${(it.price_estimate_usd||it.price)?`<span class="fc-pill-price">$${esc(it.price_estimate_usd||it.price)}</span>`:''}
       </button>`).join('');
 
     const moreBtn = isMine ? '' : `<button class="fc-more-btn" data-more-user="${attr(post.user||'')}" aria-label="עוד אפשרויות">${icon('more',18)}</button>`;
@@ -2780,7 +2771,7 @@
               <div class="an-item-name">${esc(i.name)}</div>
               <div class="an-item-sub">${i.wear_count} לבישות</div>
             </div>
-            <div class="an-item-cpw">${i.price_estimate_usd && i.wear_count ? '₪'+Math.round(i.price_estimate_usd/i.wear_count)+'/ל׳' : ''}</div>
+            <div class="an-item-cpw">${i.price_estimate_usd && i.wear_count ? '$'+Math.round(i.price_estimate_usd/i.wear_count)+'/ל׳' : ''}</div>
           </div>`).join('')}
       </div>` : ''}
 
@@ -2792,7 +2783,7 @@
             <div class="an-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="an-item-name">${esc(i.name)}</div>
-              <div class="an-item-sub">₪${i.price_estimate_usd||0} בארון · מעולם לא נלבש</div>
+              <div class="an-item-sub">$${i.price_estimate_usd||0} בארון · מעולם לא נלבש</div>
             </div>
             <button class="ha-btn ha-secondary" style="padding:6px 12px;font-size:11px;border-radius:10px;white-space:nowrap;flex-shrink:0" onclick="addToWishlistFromItem('${attr(i.name)}')">למכירה</button>
           </div>`).join('')}
@@ -3225,7 +3216,7 @@
       ${suggestions.length ? `<div style="padding:0 16px 8px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">מהארון שלך — כדאי למכור?</div>
         ${suggestions.map(item => `<div onclick="openSellFormWithItem(${JSON.stringify(JSON.stringify(item))})" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer">
           <div style="font-size:26px">${item.emoji||'👗'}</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:700">${esc(item.name||'פריט')}</div><div style="font-size:11px;color:var(--muted)">מחיר מוצע: ₪${Math.round((item.price_estimate_usd||200)*0.5)}</div></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700">${esc(item.name||'פריט')}</div><div style="font-size:11px;color:var(--muted)">מחיר מוצע: $${Math.round((item.price_estimate_usd||200)*0.5)}</div></div>
           <div style="font-size:11px;font-weight:700;color:var(--accent);background:rgba(139,92,246,.12);padding:4px 10px;border-radius:20px">מכרי</div>
         </div>`).join('')}</div>` : ''}`;
     }
@@ -3571,7 +3562,7 @@
             <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="sr-item-name">${esc(i.name)}</div>
-              <div class="sr-item-meta">${i.wear_count} לבישות · CPW ₪${i.price_estimate_usd && i.wear_count ? Math.round(i.price_estimate_usd/i.wear_count) : '—'}</div>
+              <div class="sr-item-meta">${i.wear_count} לבישות · CPW $${i.price_estimate_usd && i.wear_count ? Math.round(i.price_estimate_usd/i.wear_count) : '—'}</div>
             </div>
           </div>`).join('')}
       </div>` : ''}
@@ -3585,7 +3576,7 @@
             <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="sr-item-name">${esc(i.name)}</div>
-              <div class="sr-item-meta">₪${i.price_estimate_usd||0} בארון · 0 לבישות</div>
+              <div class="sr-item-meta">$${i.price_estimate_usd||0} בארון · 0 לבישות</div>
             </div>
           </div>`).join('')}
       </div>` : ''}
@@ -4967,7 +4958,7 @@
               <div style="height:80px;overflow:hidden;background:var(--card);">${productImage(it)}</div>
               <div style="padding:8px 10px;">
                 <div style="font-size:12px;font-weight:800;color:var(--text);">${esc(it.name||'Item')}</div>
-                <div style="font-size:11px;color:var(--accent2);margin-top:3px;">${it.price_estimate_usd || it.price ? '₪'+(it.price_estimate_usd||it.price) : ''} · ${esc(it._src)}</div>
+                <div style="font-size:11px;color:var(--accent2);margin-top:3px;">${it.price_estimate_usd || it.price ? '$'+(it.price_estimate_usd||it.price) : ''} · ${esc(it._src)}</div>
               </div>
             </div>
           `).join('')}
@@ -5000,7 +4991,7 @@
         <div class="cmp-slot-img">${esc(item.emoji||CAT_EMOJI[item.category]||'👗')}</div>
         <div class="cmp-slot-info">
           <div class="cmp-slot-name">${esc(item.name||'פריט')}</div>
-          <div class="cmp-slot-price">${item.price_estimate_usd||item.price ? '₪'+(item.price_estimate_usd||item.price) : 'מחיר לא ידוע'}</div>
+          <div class="cmp-slot-price">${item.price_estimate_usd||item.price ? '$'+(item.price_estimate_usd||item.price) : 'מחיר לא ידוע'}</div>
         </div>
       </div>`;
     slotEl.onclick = () => openCmpPicker(slot);

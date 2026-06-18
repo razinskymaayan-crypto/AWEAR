@@ -14,6 +14,8 @@ Then open http://localhost:8000
 
 import base64
 import io
+import json
+import traceback
 import urllib.parse
 from typing import Optional
 
@@ -320,7 +322,8 @@ async def analyze(photo: UploadFile):
             raise ValueError("empty parse")
         result = response.parsed_output.model_dump()
         result["mode"] = "live"
-    except Exception:  # noqa: BLE001 — auth/api/parse failure -> graceful demo fallback
+    except Exception as e:  # noqa: BLE001 — auth/api/parse failure -> graceful demo fallback
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         result = _demo_analysis()
         result["mode"] = "demo"
 
@@ -460,14 +463,14 @@ async def generate_outfit(data: OutfitRequest):
                 ),
             }],
         )
-        import json as _json
         text = response.content[0].text.strip()
         # strip markdown fences if present
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:])
             text = text.rstrip("`").strip()
-        return _json.loads(text)
-    except Exception:
+        return json.loads(text)
+    except Exception as e:
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"outfits": []}
 
 
@@ -500,12 +503,12 @@ async def smart_declutter(data: DeclutterRequest):
             system=system,
             messages=[{"role": "user", "content": f"Unworn items:\n{items_desc}"}],
         )
-        import json as _json
         text = response.content[0].text.strip()
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:]).rstrip("`").strip()
-        return _json.loads(text)
-    except Exception:
+        return json.loads(text)
+    except Exception as e:
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"suggestions": [
             {"name": it.get("name","?"), "action": "sell",
              "reason": "never worn",
@@ -541,7 +544,8 @@ async def stylist_chat(data: StylistMessage):
             }],
         )
         return {"answer": response.content[0].text}
-    except Exception:
+    except Exception as e:
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"answer": "AI stylist unavailable right now 🙏 try again in a moment"}
 
 
@@ -576,17 +580,16 @@ async def moderate_comment(data: CommentModerationRequest):
             system=system,
             messages=[{"role": "user", "content": data.text}],
         )
-        import json as _json
         text = response.content[0].text.strip()
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:]).rstrip("`").strip()
-        parsed = _json.loads(text)
+        parsed = json.loads(text)
         severity = parsed.get("severity", "none")
         if severity not in ("none", "medium", "high"):
             severity = "none"
         return {"harmful": bool(parsed.get("harmful", False)), "severity": severity}
     except Exception as e:
-        print(f"[moderate] fallback to severity=none due to: {e}")
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"harmful": False, "severity": "none", "fallback": True}
 
 
