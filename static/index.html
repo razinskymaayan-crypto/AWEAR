@@ -1684,7 +1684,7 @@
         <div class="sheet-hero-info">
           <div class="sheet-hero-name">${esc(it.name)}</div>
           <div class="sheet-hero-brand">${esc(it.brand_vibe||'')}</div>
-          <div class="sheet-hero-price">₪${esc(it.price_estimate_ils)}</div>
+          <div class="sheet-hero-price">₪${esc(it.price_estimate_usd)}</div>
         </div>
       </div>
       ${earnLine}
@@ -1697,7 +1697,7 @@
       ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
             style="text-decoration:none" aria-label="קני ${attr(it.name)} ב-${attr(primary.retailer)}">
            קני ב-${esc(primary.retailer)}
-           <span class="sheet-buy-price">₪${esc(it.price_estimate_ils)}</span>
+           <span class="sheet-buy-price">₪${esc(it.price_estimate_usd)}</span>
          </a>`
       : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">אין קישור קנייה זמין לפריט זה עדיין</div>`;
 
@@ -1812,7 +1812,7 @@
       </div>
       <div class="item-name">${esc(it.name)}</div>
       <div class="item-meta">
-        <span class="item-price">₪${esc(it.price_estimate_ils||it.price||0)}</span>
+        <span class="item-price">₪${esc(it.price_estimate_usd||it.price||0)}</span>
         ${it.brand_vibe?`<span class="item-brand">${esc(it.brand_vibe)}</span>`:''}
       </div>
       <div class="stylist-h2">${icon('sparkle',16)} הסטייליסט מציע</div>
@@ -1825,7 +1825,7 @@
       ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
             style="text-decoration:none" aria-label="קני ${attr(it.name)} ב-${attr(primary.retailer)}">
            קני ב-${esc(primary.retailer)}
-           <span class="sheet-buy-price">₪${esc(it.price_estimate_ils||it.price||0)}</span>
+           <span class="sheet-buy-price">₪${esc(it.price_estimate_usd||it.price||0)}</span>
          </a>`
       : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">אין קישור קנייה זמין לפריט זה עדיין</div>`;
 
@@ -1842,7 +1842,7 @@
       return `<div class="sheet-look-row">
         <div class="sheet-look-emoji">${productImage(it)}</div>
         <div class="sheet-look-name">${esc(it.name)}</div>
-        <div class="sheet-look-price">₪${esc(it.price_estimate_ils||it.price||0)}</div>
+        <div class="sheet-look-price">₪${esc(it.price_estimate_usd||it.price||0)}</div>
         ${buy}
       </div>`;
     }).join('');
@@ -1952,12 +1952,12 @@
       const price = buyBtn.dataset.price;
       const wardrobe = loadWardrobe();
       const meta = loadMeta();
-      if (wardrobe.length && meta.look_total_ils != null) {
+      if (wardrobe.length && meta.look_total_usd != null) {
         openSheetLook(label, wardrobe, price, 0, '');
       } else {
         // single synthetic item fallback
         const synth = { name: label, brand_vibe: 'Awear', category: 'top',
-                        price_estimate_ils: price, buy_options: [] };
+                        price_estimate_usd: price, buy_options: [] };
         openSheetSingle(synth, 0, '');
       }
       return;
@@ -1966,7 +1966,7 @@
     if (buyAction) {
       const post = feedPostById(buyAction.closest('[data-id]')?.dataset.id);
       if (!shopPostItems(post, buyAction.dataset.label, buyAction.dataset.price, buyAction.dataset.earn, buyAction.dataset.user)) {
-        const synth = {name:buyAction.dataset.label, category:'top', price_estimate_ils:buyAction.dataset.price, buy_options:[]};
+        const synth = {name:buyAction.dataset.label, category:'top', price_estimate_usd:buyAction.dataset.price, buy_options:[]};
         openSheetSingle(synth, buyAction.dataset.earn, buyAction.dataset.user);
       }
       return;
@@ -1985,7 +1985,7 @@
     const wardrobe = loadWardrobe();
     const it = wardrobe.find(x => x.name === label) || {
       name: label, brand_vibe: '', category: 'top',
-      price_estimate_ils: price, buy_options: []
+      price_estimate_usd: price, buy_options: []
     };
     openSheetSingle(it, 0, '');
   }, true); // capture phase — runs before main's bubble listener
@@ -2045,10 +2045,10 @@
   function productTile(it){return `<div class="ptile" onclick="openWardrobeItemDetail('${attr(it.name)}')">
     <div class="pimg">${productImage(it)}</div>
     <div class="pname">${esc(it.name)}</div><div class="pbrand">${esc(it.brand_vibe||'')}</div>
-    <div class="pprice">₪${esc(it.price_estimate_ils)}</div>
+    <div class="pprice">₪${esc(it.price_estimate_usd)}</div>
     <div class="pacts">
-      <button class="pbuy" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_ils)}" onclick="event.stopPropagation()">קני</button>
-      <button class="psell" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_ils||0)*.5)}" onclick="event.stopPropagation()">מכרי</button>
+      <button class="pbuy" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_usd)}" onclick="event.stopPropagation()">קני</button>
+      <button class="psell" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_usd||0)*.5)}" onclick="event.stopPropagation()">מכרי</button>
     </div></div>`;}
 
   function openWardrobeItemDetail(name) {
@@ -2068,7 +2068,7 @@
         ${tags.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px">
           ${tags.map(t => `<span style="background:var(--card);border:1px solid var(--line);border-radius:20px;font-size:11px;font-weight:700;padding:3px 10px">${esc(t)}</span>`).join('')}
         </div>` : ''}
-        <div style="font-size:22px;font-weight:900;text-align:center;margin-top:12px;color:var(--accent)">₪${it.price_estimate_ils || '—'}</div>
+        <div style="font-size:22px;font-weight:900;text-align:center;margin-top:12px;color:var(--accent)">₪${it.price_estimate_usd || '—'}</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:14px 20px 20px">
         <button onclick="openAbigailWithItem('${attr(it.name)}')" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">✨ שאלי את אביגיל מה ללבוש</button>
@@ -2113,7 +2113,7 @@
     if(!feed.length) return `<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('image',44)}</div>עדיין לא שיתפת לוקים.<br/>צלמי תלבושת ושתפי אותה לפיד<br/>כדי שתופיע כאן בפרופיל שלך.</div>`;
     return `<div class="looks-grid">${feed.map(p=>`<div class="look-cell" data-goto-feed="1">
       ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
-      <div class="lc-meta">${esc(p.item_count||0)} פריטים${p.look_total_ils?' · ₪'+esc(p.look_total_ils):''}</div>
+      <div class="lc-meta">${esc(p.item_count||0)} פריטים${p.look_total_usd?' · ₪'+esc(p.look_total_usd):''}</div>
     </div>`).join('')}</div>`;}
 
   function forSaleHTML(){
@@ -2131,7 +2131,7 @@
 
   function renderCloset(){
     const wardrobe=loadWardrobe(),meta=loadMeta(),feed=loadFeedPosts();
-    const closetValue=wardrobe.reduce((s,it)=>s+(Number(it.price_estimate_ils)||0),0);
+    const closetValue=wardrobe.reduce((s,it)=>s+(Number(it.price_estimate_usd)||0),0);
     let body;
     if(profileTab==='looks') body=looksGridHTML();
     else if(profileTab==='forsale') body=forSaleHTML();
@@ -2145,7 +2145,7 @@
         </div>` : `
       ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size:11.5px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">⚠️ הסריקה האחרונה הייתה במצב דמו — AI לא היה זמין, אלו פריטי הדגמה</div>`:''}
       ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
-      ${meta.look_total_ils!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_ils)}">${icon('bag',18)} קני את הלוק האחרון · ~₪${esc(meta.look_total_ils)}</button>`:''}
+      ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} קני את הלוק האחרון · ~₪${esc(meta.look_total_usd)}</button>`:''}
       <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>
       ${closetShelvesHTML(wardrobe)}`}`;
 
@@ -2188,7 +2188,7 @@
     const newItems=data.items||[];
     saveWardrobe(newItems.concat(loadWardrobe()));
     const meta={overall_style:data.overall_style,occasion:data.occasion,trend_score:data.trend_score,
-      summary:data.summary,stylist_tip:data.stylist_tip,look_total_ils:data.look_total_ils,mode:data.mode||'live'};
+      summary:data.summary,stylist_tip:data.stylist_tip,look_total_usd:data.look_total_usd,mode:data.mode||'live'};
     saveMeta(meta); saveLastScan({photo:data.photo||null,items:newItems,meta});
     if(newItems.length) logAdminEvent('scan', 'סרקה ' + newItems.length + ' פריטים — ' + (newItems[0]?.name||''));
     renderCloset();
@@ -2214,8 +2214,8 @@
     const meta=scan.meta||{};
     const post={ts:Date.now(),id:'mine_'+Date.now(),photo:scan.photo||null,
       caption:meta.overall_style||'הלוק שלי',occasion:meta.occasion||'',
-      item_count:(scan.items||[]).length,look_total_ils:meta.look_total_ils||0,
-      items:(scan.items||[]).map(it=>({category:it.category,name:it.name,price_estimate_ils:it.price_estimate_ils,buy_options:it.buy_options||[],search_query:it.search_query})),
+      item_count:(scan.items||[]).length,look_total_usd:meta.look_total_usd||0,
+      items:(scan.items||[]).map(it=>({category:it.category,name:it.name,price_estimate_usd:it.price_estimate_usd,buy_options:it.buy_options||[],search_query:it.search_query})),
       tags:(scan.items||[]).reduce((acc,it)=>{(it.style_tags||[]).forEach(t=>acc.push(t));if(it.category)acc.push(it.category);return acc;},[])};
     const feed=loadFeedPosts();feed.unshift(post);saveFeedPosts(feed);
     showToast('הלוק שותף לפיד');showView('feed');
@@ -2223,13 +2223,13 @@
 
   // ---- Feed ----
   const SEED_POSTS=[
-    {id:'s1',user:'noa.styles', name:'נועה',verified:true, caption:'לוק קיצי לבית קפה ☕️',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress'],items:[{category:'top',name:'חולצת קרופ לבנה',price_estimate_ils:79,q:'white cropped tee'},{category:'bottoms',name:'מכנס בייקר בז',price_estimate_ils:159,q:'beige baker trousers'},{category:'shoes',name:'סניקרס לבנות',price_estimate_ils:220,q:'white leather sneakers'},{category:'accessory',name:'משקפי שמש',price_estimate_ils:89,q:'trendy sunglasses'}]},
-    {id:'s2',user:'yael_fits',  name:'יעל', verified:false,caption:'סטריטוור עכשווי ✨',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes'],items:[{category:'top',name:'טי אוברסייז',price_estimate_ils:99,q:'oversized graphic tee'},{category:'bottoms',name:'קרגו פראשוט',price_estimate_ils:159,q:'parachute cargo pants'},{category:'shoes',name:'אדידס סמבה',price_estimate_ils:449,q:'adidas samba'},{category:'accessory',name:'כובע בייסבול',price_estimate_ils:69,q:'baseball cap'}]},
-    {id:'s3',user:'mika.thrift',name:'מיקה',verified:true, caption:'יד שנייה במצב מעולה ♻️',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag'],items:[{category:'top',name:'חולצה משומשת',price_estimate_ils:45,q:'vintage shirt'},{category:'bottoms',name:'גינס מאם',price_estimate_ils:89,q:'vintage mom jeans'},{category:'bag',name:'תיק כתף',price_estimate_ils:60,q:'vintage shoulder bag'}]},
-    {id:'s4',user:'shir.daily', name:'שיר', verified:false,caption:'אאוטפיט ליום ראשון 🤍',        tags:['minimal','ootd'],            price:179,img:null,                 grad:'linear-gradient(160deg,#fccb90,#d57eeb)',         likes:3300,trend:88,earn:18,mtags:['minimal','everyday','ootd','dress','shoes'],items:[{category:'dress',name:'שמלת מידי',price_estimate_ils:179,q:'midi slip dress'},{category:'shoes',name:'נעלי בלרינה',price_estimate_ils:120,q:'ballet flats'},{category:'bag',name:'תיק מיני',price_estimate_ils:95,q:'mini bag'}]},
-    {id:'s5',user:'agam.x',     name:'אגם', verified:true, caption:'vintage vibes 🕶️',            tags:['vintage','retro'],           price:259,img:null,                 grad:'linear-gradient(160deg,#5ee7df,#b490ca)',         likes:4000,trend:94,earn:26,mtags:['vintage','retro','thrifted','accessory','outerwear'],items:[{category:'outerwear',name:'מעיל דנים',price_estimate_ils:199,q:'vintage denim jacket'},{category:'accessory',name:'משקפי רטרו',price_estimate_ils:79,q:'retro sunglasses'},{category:'shoes',name:'מגף קאובוי',price_estimate_ils:259,q:'cowboy boots'}]},
-    {id:'s6',user:'dana.edit',  name:'דנה', verified:false,caption:'office but make it cute 💼',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag'],items:[{category:'dress',name:'שמלת בלייזר',price_estimate_ils:320,q:'blazer dress'},{category:'shoes',name:'מוקסינים',price_estimate_ils:199,q:'leather loafers'},{category:'bag',name:'תיק מובנה',price_estimate_ils:240,q:'structured work bag'}]},
-    {id:'s7',user:'lia.threads',name:'ליה', verified:true, caption:'beach day ready 🌊',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms'],items:[{category:'top',name:'טופ ביקיני',price_estimate_ils:69,q:'bikini top'},{category:'bottoms',name:'מכנס פשתן',price_estimate_ils:120,q:'linen beach pants'},{category:'accessory',name:'כובע קש',price_estimate_ils:79,q:'straw hat'}]},
+    {id:'s1',user:'noa.styles', name:'נועה',verified:true, caption:'לוק קיצי לבית קפה ☕️',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress'],items:[{category:'top',name:'חולצת קרופ לבנה',price_estimate_usd:79,q:'white cropped tee'},{category:'bottoms',name:'מכנס בייקר בז',price_estimate_usd:159,q:'beige baker trousers'},{category:'shoes',name:'סניקרס לבנות',price_estimate_usd:220,q:'white leather sneakers'},{category:'accessory',name:'משקפי שמש',price_estimate_usd:89,q:'trendy sunglasses'}]},
+    {id:'s2',user:'yael_fits',  name:'יעל', verified:false,caption:'סטריטוור עכשווי ✨',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes'],items:[{category:'top',name:'טי אוברסייז',price_estimate_usd:99,q:'oversized graphic tee'},{category:'bottoms',name:'קרגו פראשוט',price_estimate_usd:159,q:'parachute cargo pants'},{category:'shoes',name:'אדידס סמבה',price_estimate_usd:449,q:'adidas samba'},{category:'accessory',name:'כובע בייסבול',price_estimate_usd:69,q:'baseball cap'}]},
+    {id:'s3',user:'mika.thrift',name:'מיקה',verified:true, caption:'יד שנייה במצב מעולה ♻️',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag'],items:[{category:'top',name:'חולצה משומשת',price_estimate_usd:45,q:'vintage shirt'},{category:'bottoms',name:'גינס מאם',price_estimate_usd:89,q:'vintage mom jeans'},{category:'bag',name:'תיק כתף',price_estimate_usd:60,q:'vintage shoulder bag'}]},
+    {id:'s4',user:'shir.daily', name:'שיר', verified:false,caption:'אאוטפיט ליום ראשון 🤍',        tags:['minimal','ootd'],            price:179,img:null,                 grad:'linear-gradient(160deg,#fccb90,#d57eeb)',         likes:3300,trend:88,earn:18,mtags:['minimal','everyday','ootd','dress','shoes'],items:[{category:'dress',name:'שמלת מידי',price_estimate_usd:179,q:'midi slip dress'},{category:'shoes',name:'נעלי בלרינה',price_estimate_usd:120,q:'ballet flats'},{category:'bag',name:'תיק מיני',price_estimate_usd:95,q:'mini bag'}]},
+    {id:'s5',user:'agam.x',     name:'אגם', verified:true, caption:'vintage vibes 🕶️',            tags:['vintage','retro'],           price:259,img:null,                 grad:'linear-gradient(160deg,#5ee7df,#b490ca)',         likes:4000,trend:94,earn:26,mtags:['vintage','retro','thrifted','accessory','outerwear'],items:[{category:'outerwear',name:'מעיל דנים',price_estimate_usd:199,q:'vintage denim jacket'},{category:'accessory',name:'משקפי רטרו',price_estimate_usd:79,q:'retro sunglasses'},{category:'shoes',name:'מגף קאובוי',price_estimate_usd:259,q:'cowboy boots'}]},
+    {id:'s6',user:'dana.edit',  name:'דנה', verified:false,caption:'office but make it cute 💼',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag'],items:[{category:'dress',name:'שמלת בלייזר',price_estimate_usd:320,q:'blazer dress'},{category:'shoes',name:'מוקסינים',price_estimate_usd:199,q:'leather loafers'},{category:'bag',name:'תיק מובנה',price_estimate_usd:240,q:'structured work bag'}]},
+    {id:'s7',user:'lia.threads',name:'ליה', verified:true, caption:'beach day ready 🌊',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms'],items:[{category:'top',name:'טופ ביקיני',price_estimate_usd:69,q:'bikini top'},{category:'bottoms',name:'מכנס פשתן',price_estimate_usd:120,q:'linen beach pants'},{category:'accessory',name:'כובע קש',price_estimate_usd:79,q:'straw hat'}]},
   ];
 
   function loadSet(k){try{return new Set(JSON.parse(localStorage.getItem(k))||[]);}catch(e){return new Set();}}
@@ -2264,7 +2264,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">${ICONS[catIcon(it.category)]||ICONS.hanger}</svg>
         </span>
         <span class="fc-pill-name">${esc((it.name||'').split(' ').slice(0,2).join(' '))}</span>
-        ${(it.price_estimate_ils||it.price)?`<span class="fc-pill-price">₪${esc(it.price_estimate_ils||it.price)}</span>`:''}
+        ${(it.price_estimate_usd||it.price)?`<span class="fc-pill-price">₪${esc(it.price_estimate_usd||it.price)}</span>`:''}
       </button>`).join('');
 
     return `<div class="feed-card-full${isMine?' is-mine':''}" data-id="${attr(post.id||'')}">
@@ -2298,10 +2298,10 @@
           <div class="fca-ico">${icon('flag',21)}</div><span>דווחי</span>
         </button>
         <button class="fca-btn buy-btn buy-action"
-            data-label="${attr(lbl)}" data-price="${attr(post.price||post.look_total_ils||0)}"
+            data-label="${attr(lbl)}" data-price="${attr(post.price||post.look_total_usd||0)}"
             data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
           <div class="fca-ico">${icon('bag',22)}</div>
-          <span>₪${esc(post.price||post.look_total_ils||0)}</span>
+          <span>₪${esc(post.price||post.look_total_usd||0)}</span>
         </button>
       </div>
       ${ownBadge}
@@ -2340,9 +2340,9 @@
   }
   function shopPostItems(post,fallbackLabel,price,earn,user){
     if(post && post.items && post.items.length){
-      const total=post.items.reduce((s,x)=>s+(Number(x.price_estimate_ils||x.price)||0),0);
+      const total=post.items.reduce((s,x)=>s+(Number(x.price_estimate_usd||x.price)||0),0);
       openSheetLook(post.name?('לוק של '+post.name):(post.caption||fallbackLabel||'הלוק'),
-        post.items, price||post.price||post.look_total_ils||total, earn||post.earn||0, user||post.user||'');
+        post.items, price||post.price||post.look_total_usd||total, earn||post.earn||0, user||post.user||'');
       return true;
     }
     return false;
@@ -2485,7 +2485,7 @@
     }
 
     const totalItems = wardrobe.length;
-    const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_ils||0), 0);
+    const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_usd||0), 0);
     const totalWears = wardrobe.reduce((s,i) => s + (i.wear_count||0), 0);
 
     document.getElementById('home-wrap').innerHTML = `
@@ -2702,7 +2702,7 @@
     }
 
     const totalItems = wardrobe.length;
-    const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_ils||0), 0);
+    const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_usd||0), 0);
     const totalWears = wardrobe.reduce((s,i) => s + (i.wear_count||0), 0);
     const avgCPW = totalValue > 0 && totalWears > 0 ? Math.round(totalValue / totalWears) : null;
 
@@ -2769,7 +2769,7 @@
               <div class="an-item-name">${esc(i.name)}</div>
               <div class="an-item-sub">${i.wear_count} לבישות</div>
             </div>
-            <div class="an-item-cpw">${i.price_estimate_ils && i.wear_count ? '₪'+Math.round(i.price_estimate_ils/i.wear_count)+'/ל׳' : ''}</div>
+            <div class="an-item-cpw">${i.price_estimate_usd && i.wear_count ? '₪'+Math.round(i.price_estimate_usd/i.wear_count)+'/ל׳' : ''}</div>
           </div>`).join('')}
       </div>` : ''}
 
@@ -2781,7 +2781,7 @@
             <div class="an-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="an-item-name">${esc(i.name)}</div>
-              <div class="an-item-sub">₪${i.price_estimate_ils||0} בארון · מעולם לא נלבש</div>
+              <div class="an-item-sub">₪${i.price_estimate_usd||0} בארון · מעולם לא נלבש</div>
             </div>
             <button class="ha-btn ha-secondary" style="padding:6px 12px;font-size:11px;border-radius:10px;white-space:nowrap;flex-shrink:0" onclick="addToWishlistFromItem('${attr(i.name)}')">למכירה</button>
           </div>`).join('')}
@@ -3068,7 +3068,7 @@
     const soldItems = mp.length;
 
     // Score formula: 40% reuse rate + 30% CPW efficiency + 30% sales (circular)
-    const avgCPW = totalWears > 0 ? wardrobe.reduce((s,i)=>s+(i.price_estimate_ils||0),0) / totalWears : 0;
+    const avgCPW = totalWears > 0 ? wardrobe.reduce((s,i)=>s+(i.price_estimate_usd||0),0) / totalWears : 0;
     const cpwScore = avgCPW > 0 ? Math.min(30, 30 * (50 / avgCPW)) : 0;
     const reuseScore = (reuseRate / 100) * 40;
     const circularScore = Math.min(30, soldItems * 6);
@@ -3195,7 +3195,7 @@
       if (!item) return;
       openSheetSingle({
         name: item.name, category: item.category, color: item.color,
-        brand_vibe: item.seller, price_estimate_ils: item.price,
+        brand_vibe: item.seller, price_estimate_usd: item.price,
         search_query: item.name, style_tags: item.style_tags || [],
       }, null, null);
     }));
@@ -3214,7 +3214,7 @@
       ${suggestions.length ? `<div style="padding:0 16px 8px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">מהארון שלך — כדאי למכור?</div>
         ${suggestions.map(item => `<div onclick="openSellFormWithItem(${JSON.stringify(JSON.stringify(item))})" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer">
           <div style="font-size:26px">${item.emoji||'👗'}</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:700">${esc(item.name||'פריט')}</div><div style="font-size:11px;color:var(--muted)">מחיר מוצע: ₪${Math.round((item.price_estimate_ils||200)*0.5)}</div></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700">${esc(item.name||'פריט')}</div><div style="font-size:11px;color:var(--muted)">מחיר מוצע: ₪${Math.round((item.price_estimate_usd||200)*0.5)}</div></div>
           <div style="font-size:11px;font-weight:700;color:var(--accent);background:rgba(139,92,246,.12);padding:4px 10px;border-radius:20px">מכרי</div>
         </div>`).join('')}</div>` : ''}`;
     }
@@ -3265,7 +3265,7 @@
     const card  = document.getElementById('modal-card');
     const CAT_EMOJIS = {top:'👕',bottoms:'👖',shoes:'👟',bag:'👜',outerwear:'🧥',dress:'👗',hat:'🧢',other:'✨'};
     const prefillName = prefill ? (prefill.name || '') : '';
-    const prefillPrice = prefill ? Math.round((prefill.price_estimate_ils || 200) * 0.5) : '';
+    const prefillPrice = prefill ? Math.round((prefill.price_estimate_usd || 200) * 0.5) : '';
     const prefillCat = prefill ? (prefill.category || 'other') : 'other';
     const prefillEmoji = prefill ? (prefill.emoji || CAT_EMOJIS[prefillCat] || '👗') : '👗';
 
@@ -3313,7 +3313,7 @@
       if (!name) { showToast('הכניסי שם פריט קודם'); return; }
       const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
       const match = wardrobe.find(i => i.name && name && i.name.includes(name.slice(0,4)));
-      const suggested = match ? Math.round((match.price_estimate_ils || 200) * 0.5) : 150;
+      const suggested = match ? Math.round((match.price_estimate_usd || 200) * 0.5) : 150;
       document.getElementById('sf-price').value = suggested;
       showToast(`AI מציע ₪${suggested} — 50% ממחיר קנייה`);
     });
@@ -3412,11 +3412,11 @@
     }
 
     const totalItems = wardrobe.length;
-    const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_ils||0), 0);
+    const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_usd||0), 0);
     const totalWears = wardrobe.reduce((s,i) => s + (i.wear_count||0), 0);
     const worn = wardrobe.filter(i => (i.wear_count||0) > 0);
     const unworn = wardrobe.filter(i => (i.wear_count||0) === 0);
-    const unusedValue = unworn.reduce((s,i) => s + (i.price_estimate_ils||0), 0);
+    const unusedValue = unworn.reduce((s,i) => s + (i.price_estimate_usd||0), 0);
     const utilizationPct = totalItems > 0 ? Math.round((worn.length / totalItems) * 100) : 0;
     const avgCPW = totalValue > 0 && totalWears > 0 ? Math.round(totalValue / totalWears) : null;
 
@@ -3471,7 +3471,7 @@
             <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="sr-item-name">${esc(i.name)}</div>
-              <div class="sr-item-meta">${i.wear_count} לבישות · CPW ₪${i.price_estimate_ils && i.wear_count ? Math.round(i.price_estimate_ils/i.wear_count) : '—'}</div>
+              <div class="sr-item-meta">${i.wear_count} לבישות · CPW ₪${i.price_estimate_usd && i.wear_count ? Math.round(i.price_estimate_usd/i.wear_count) : '—'}</div>
             </div>
           </div>`).join('')}
       </div>` : ''}
@@ -3485,7 +3485,7 @@
             <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="sr-item-name">${esc(i.name)}</div>
-              <div class="sr-item-meta">₪${i.price_estimate_ils||0} בארון · 0 לבישות</div>
+              <div class="sr-item-meta">₪${i.price_estimate_usd||0} בארון · 0 לבישות</div>
             </div>
           </div>`).join('')}
       </div>` : ''}
@@ -3506,13 +3506,13 @@
     try {
       const res = await fetch('/api/declutter', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({wardrobe: wardrobe.map(i=>({name:i.name,category:i.category,wear_count:i.wear_count||0,price_estimate_ils:i.price_estimate_ils||0,style_tags:i.style_tags||[]}))}),
+        body: JSON.stringify({wardrobe: wardrobe.map(i=>({name:i.name,category:i.category,wear_count:i.wear_count||0,price_estimate_usd:i.price_estimate_usd||0,style_tags:i.style_tags||[]}))}),
       });
       const data = await res.json();
       showDeclutterResults(data.suggestions || []);
     } catch(_) {
       const suggestions = candidates.slice(0,3).map(i => ({
-        name: i.name, action: 'מכירה', reason: 'לא נלבש אף פעם', price_suggestion: Math.round((i.price_estimate_ils||100)*0.4),
+        name: i.name, action: 'מכירה', reason: 'לא נלבש אף פעם', price_suggestion: Math.round((i.price_estimate_usd||100)*0.4),
       }));
       showDeclutterResults(suggestions);
     }
@@ -3879,7 +3879,7 @@
       html += shopHits.map(it => {
         const disc = it.orig > it.price ? Math.round((1-it.price/it.orig)*100) : 0;
         return `
-        <div class="ex-result-row" onclick="openSheetSingle({name:'${attr(it.name)}',category:'${attr(it.category)}',emoji:'${attr(it.emoji)}',style_tags:${JSON.stringify(it.style_tags)},price_estimate_ils:${it.price}},0,null)">
+        <div class="ex-result-row" onclick="openSheetSingle({name:'${attr(it.name)}',category:'${attr(it.category)}',emoji:'${attr(it.emoji)}',style_tags:${JSON.stringify(it.style_tags)},price_estimate_usd:${it.price}},0,null)">
           <div class="ex-result-emoji">${productImage(it)}</div>
           <div style="flex:1"><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(it.brand)} · ₪${it.price}${disc?` <span style="color:#4ade80">-${disc}%</span>`:''}</div></div>
           ${it.badge?`<div style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;background:rgba(255,61,119,.15);color:var(--accent)">${esc(it.badge)}</div>`:''}
@@ -4542,7 +4542,7 @@
     const today    = new Date().toDateString();
     const todayEvts= log.filter(e => new Date(e.ts).toDateString() === today);
     const d7Evts   = log.filter(e => Date.now() - e.ts < 7*24*60*60*1000);
-    const wardValue= wardrobe.reduce((s,i)=>s+(i.price_estimate_ils||0),0);
+    const wardValue= wardrobe.reduce((s,i)=>s+(i.price_estimate_usd||0),0);
     const totalW   = wardrobe.reduce((s,i)=>s+(i.wear_count||0),0);
     const scanEvts = log.filter(e=>e.type==='scan').length;
     const ogEvts   = log.filter(e=>e.type==='outfit_gen').length || ((rwData.actions&&rwData.actions.wore)||0);
@@ -4580,7 +4580,7 @@
 
   function adminExportCSV() {
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
-    const headers  = ['name','category','color','price_estimate_ils','wear_count'];
+    const headers  = ['name','category','color','price_estimate_usd','wear_count'];
     const rows     = wardrobe.map(i=>headers.map(h=>JSON.stringify(i[h]??'')).join(','));
     const csv      = [headers.join(','),...rows].join('\n');
     const blob     = new Blob([csv],{type:'text/csv;charset=utf-8;'});
@@ -4805,7 +4805,7 @@
       emoji: it.emoji,
       style_tags: it.style_tags,
       color: '',
-      price_estimate_ils: it.price,
+      price_estimate_usd: it.price,
     }, 0, null);
   }
 
@@ -4852,7 +4852,7 @@
               <div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:36px;background:linear-gradient(160deg,#2a2040,#1a1030);">${esc(it.emoji||CAT_EMOJI[it.category]||'👗')}</div>
               <div style="padding:8px 10px;">
                 <div style="font-size:12px;font-weight:800;color:#fff;">${esc(it.name||'פריט')}</div>
-                <div style="font-size:11px;color:#a78bfa;margin-top:3px;">${it.price_estimate_ils || it.price ? '₪'+(it.price_estimate_ils||it.price) : ''} · ${esc(it._src)}</div>
+                <div style="font-size:11px;color:#a78bfa;margin-top:3px;">${it.price_estimate_usd || it.price ? '₪'+(it.price_estimate_usd||it.price) : ''} · ${esc(it._src)}</div>
               </div>
             </div>
           `).join('')}
@@ -4885,7 +4885,7 @@
         <div class="cmp-slot-img">${esc(item.emoji||CAT_EMOJI[item.category]||'👗')}</div>
         <div class="cmp-slot-info">
           <div class="cmp-slot-name">${esc(item.name||'פריט')}</div>
-          <div class="cmp-slot-price">${item.price_estimate_ils||item.price ? '₪'+(item.price_estimate_ils||item.price) : 'מחיר לא ידוע'}</div>
+          <div class="cmp-slot-price">${item.price_estimate_usd||item.price ? '₪'+(item.price_estimate_usd||item.price) : 'מחיר לא ידוע'}</div>
         </div>
       </div>`;
     slotEl.onclick = () => openCmpPicker(slot);
@@ -4900,8 +4900,8 @@
     if (!a || !b) return;
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
 
-    const priceA = a.price_estimate_ils || a.price || 0;
-    const priceB = b.price_estimate_ils || b.price || 0;
+    const priceA = a.price_estimate_usd || a.price || 0;
+    const priceB = b.price_estimate_usd || b.price || 0;
 
     const wearsA = a.wear_count || 1, wearsB = b.wear_count || 1;
     const cpwA = priceA ? (priceA / wearsA).toFixed(0) : '—';
