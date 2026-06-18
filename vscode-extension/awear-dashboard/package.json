@@ -1,0 +1,16 @@
+{
+  "name": "awear-company-dashboard",
+  "displayName": "AWEAR Company Dashboard",
+  "description": "Live agent status, connection map, 3D office, and per-agent notes for the AWEAR company simulation",
+  "version": "0.1.0",
+  "publisher": "awear-internal",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "awear.openDashboard", "title": "AWEAR: Open Company Dashboard" }
+    ]
+  }
+}

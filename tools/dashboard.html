@@ -55,6 +55,16 @@
   .legend{display:flex;gap:18px;margin-top:12px;font-size:11px;color:var(--muted);flex-wrap:wrap}
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+  .ncard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;max-height:340px}
+  .ncard .aname{margin-bottom:8px}
+  .nfeed{flex:1;overflow-y:auto;font-size:12px;color:var(--muted);margin-bottom:8px}
+  .nmsg{background:rgba(123,92,255,.08);border-radius:8px;padding:6px 8px;margin-bottom:6px;line-height:1.4}
+  .nmsg .nwhen{font-size:10px;color:var(--muted);margin-top:2px}
+  .nrow{display:flex;gap:6px}
+  .nrow textarea{flex:1;resize:none;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--fg);font-family:inherit;font-size:12px;padding:8px;min-height:44px}
+  .nrow button{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;color:#fff;font-weight:800;font-size:12px;padding:0 16px;cursor:pointer}
+  .nrow button:disabled{opacity:.5;cursor:default}
 </style>
 </head>
 <body>
@@ -66,6 +76,7 @@
     <div class="tab active" data-view="cards">כרטיסים</div>
     <div class="tab" data-view="graph">מפת קשרים</div>
     <div class="tab" data-view="office">משרד תלת מימדי</div>
+    <div class="tab" data-view="notes">הערות ומסרים</div>
   </div>
 
   <div class="view active" id="view-cards">
@@ -92,6 +103,10 @@
       <span><span class="dot" style="background:#fbbf24"></span>בדיון בשולחן הישיבות</span>
       <span>גרור לסיבוב המצלמה · גלגלת לזום</span>
     </div>
+  </div>
+
+  <div class="view" id="view-notes">
+    <div id="notesGrid" class="grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))"></div>
   </div>
 
   <footer>מתעדכן אוטומטית כל 5 שניות · המספרים נשלפים מתוך session transcripts אמיתיים — לא מוערכים</footer>
@@ -232,6 +247,58 @@ async function refresh(){
   document.getElementById('unattr').textContent = u.length ? `⚠ ${u.length} דיספאצ'ים לא זוהו לסוכן ספציפי (בדיקה ידנית): ${u.map(x=>x.description).join(', ')}` : '';
 
   buildGraph(data);
+  renderNotes(data);
+}
+
+function fmtWhen(iso){
+  const d = new Date(iso);
+  return d.toLocaleString('he-IL');
+}
+
+async function sendNote(persona, textarea){
+  const text = textarea.value.trim();
+  if(!text) return;
+  textarea.disabled = true;
+  await fetch('/api/notes/' + persona, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({text}),
+  });
+  textarea.value = '';
+  textarea.disabled = false;
+  refresh();
+}
+
+function renderNotes(data){
+  const grid = document.getElementById('notesGrid');
+  // preserve anything mid-typing across the 5s auto-refresh
+  const drafts = {};
+  grid.querySelectorAll('textarea').forEach(t => { drafts[t.dataset.persona] = t.value; });
+
+  const order = Object.keys(NAME_LABELS);
+  grid.innerHTML = order.map(id => {
+    const a = data.agents[id];
+    const notes = (a && a.notes) || [];
+    const feed = notes.length
+      ? notes.slice().reverse().map(n => `<div class="nmsg">${n.text}<div class="nwhen">${fmtWhen(n.at)}</div></div>`).join('')
+      : `<div style="opacity:.5">אין הערות עדיין</div>`;
+    return `<div class="ncard">
+      <div class="aname">${NAME_LABELS[id]||id}</div>
+      <div class="nfeed">${feed}</div>
+      <div class="nrow">
+        <textarea data-persona="${id}" placeholder="כתוב הערה או הנחיה ל${NAME_LABELS[id]||id}..."></textarea>
+        <button data-persona="${id}">שלח</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('textarea').forEach(t => { if(drafts[t.dataset.persona]) t.value = drafts[t.dataset.persona]; });
+  grid.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const ta = grid.querySelector(`textarea[data-persona="${btn.dataset.persona}"]`);
+      sendNote(btn.dataset.persona, ta);
+    });
+  });
 }
 
 refresh();

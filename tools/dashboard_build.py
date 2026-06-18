@@ -17,6 +17,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_PATH = os.path.join(REPO_ROOT, "agents", "dashboard_data.json")
 LIVE_STATUS_PATH = os.path.join(REPO_ROOT, "agents", "live_status.json")
 MEETING_STATUS_PATH = os.path.join(REPO_ROOT, "agents", "meeting_status.json")
+NOTES_PATH = os.path.join(REPO_ROOT, "agents", "agent_notes.json")
 
 # Known roster -- name -> department, matched against dispatch descriptions/prompts.
 ROSTER = {
@@ -167,9 +168,17 @@ def load_meeting_status():
     return {"in_meeting": False, "attendees": [], "topic": None, "started_at": None}
 
 
+def load_notes():
+    if os.path.exists(NOTES_PATH):
+        with open(NOTES_PATH, encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
 def build():
     dispatches = extract_dispatches()
     live = load_live_status()
+    notes = load_notes()
 
     per_agent = {}
     unattributed = []
@@ -226,6 +235,7 @@ def build():
             agg["last_active"] = max(t["completed_at"] for t in agg["tasks"] if t["completed_at"])
         else:
             agg["last_active"] = None
+        agg["notes"] = notes.get(name, [])
 
     company_totals = {
         "total_dispatches": sum(a["total_dispatches"] for a in per_agent.values()),
