@@ -7,6 +7,7 @@
 ## 2026-06-19
 
 | תאריך | סוכן | branch | סטטוס | תיאור |
+| 2026-06-19 | netta | main | הושלם | Cycle 1 Task 3 — typography scale audit: cycle-opening grep = 0 שימושי var(--t-) בindex.html (DS-001 מאושר — tokens קיימים, לא בשימוש). DoD: --t-micro/h2/h1/display קיימים בtokens.css (4/4). לא שוניתי ערכים — המשימה ביקשה ערכים שונים (display:36px/h1:30px/h2:24px) מהקיים (32/24/18px), שינוי ללא review = DS-005 violation. נמצא פער קריטי: DESIGN_STANDARDS.md מגדיר token names שונים (--t-xs/sm/md/lg/xl) מtokens.css הקיים (--t-display/h1/h2/...) — דורש החלטת מארק לפני Cycle 2 migration. קובץ שאלות נוצר: agents/plans/tBody_alignment_question.md (3 שאלות: --t-body 14/15px, שמות tokens, ערכי h1/h2/display). migration לא מתחיל ללא תשובות. |
 | 2026-06-19 | roei | feat/feed-screen-mobile | הושלם | Cycle 1 MB-003: FeedScreen.js — FlatList 3 hardcoded cards, getItemLayout (SLOT_HEIGHT=456), removeClippedSubviews:true, initialNumToRender:8, maxToRenderPerBatch:4, windowSize:5. feed namespace en.json+he.json (3 keys). interpolate() helper לcount. App.js מחובר. grep Hebrew=0, t() fallback=0. commit: 5b2077b |
 | 2026-06-19 | roei | feat/feed-screen-mobile | הושלם | Cycle 1 משימה שנייה: AppContext.js (locale/capturedUri/feedPosts, useApp hook עם fail-fast throw). App.js עטוף ב-AppProvider. FeedScreen: RefreshControl (800ms simulate, tintColor #e8526a), useApp() מחובר, feedPosts fallback ל-SAMPLE_POSTS. locale default='he'. RTL+locale-switching: Cycle 3. API integration: Cycle 2. branch מוכן לmerge. commit: b33ae8c |
 |-------|------|--------|-------|-------|
