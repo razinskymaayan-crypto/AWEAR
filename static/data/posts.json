@@ -1,0 +1,402 @@
+[
+  {
+    "id": "post_001",
+    "user_id": "user_001",
+    "image_url": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "שוק הפשפשים ביפו הוציא הכל היום 🧥 — ג'קט ג'ינס משנות ה-90, חצאית שיפון, מגפיים מעור. total: ₪85",
+    "likes": 412,
+    "comments": 34,
+    "items_tagged": ["prod_015", "prod_032"],
+    "created_at": "2026-06-17T10:15:00Z"
+  },
+  {
+    "id": "post_002",
+    "user_id": "user_001",
+    "image_url": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Sunday vintage haul ✨ — כולם שואלים איפה קניתי את הכובע. תשובה: שוק הכרמל, ₪20 מהמוכר עם הזקן הלבן",
+    "likes": 287,
+    "comments": 19,
+    "items_tagged": ["prod_041"],
+    "created_at": "2026-06-10T14:30:00Z"
+  },
+  {
+    "id": "post_003",
+    "user_id": "user_002",
+    "image_url": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "100% thrifted outfit, 0% guilt 🌿 | שמלת קיץ מ-yad2, חגורת עור מחנות יד שנייה ברחוב אלנבי. slow fashion is the only fashion",
+    "likes": 843,
+    "comments": 61,
+    "items_tagged": ["prod_007", "prod_019"],
+    "created_at": "2026-06-18T09:00:00Z"
+  },
+  {
+    "id": "post_004",
+    "user_id": "user_002",
+    "image_url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "The capsule edit — 5 pieces, 14 days of outfits. thread coming soon 🧵",
+    "likes": 1204,
+    "comments": 98,
+    "items_tagged": ["prod_002", "prod_008", "prod_021"],
+    "created_at": "2026-06-05T11:45:00Z"
+  },
+  {
+    "id": "post_005",
+    "user_id": "user_003",
+    "image_url": "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "30-item capsule, month 3 update — תוצאות: פחות החלטות, יותר סגנון. highly recommend",
+    "likes": 318,
+    "comments": 27,
+    "items_tagged": ["prod_003", "prod_044"],
+    "created_at": "2026-06-16T08:20:00Z"
+  },
+  {
+    "id": "post_006",
+    "user_id": "user_003",
+    "image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "New addition to the capsule: white linen trousers. versatile, breathable, timeless. what's in your capsule?",
+    "likes": 245,
+    "comments": 22,
+    "items_tagged": ["prod_011"],
+    "created_at": "2026-06-08T16:00:00Z"
+  },
+  {
+    "id": "post_007",
+    "user_id": "user_004",
+    "image_url": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "All black, all day. תל אביב × ברלין energy | oversized blazer + wide-leg trousers + chunky boots",
+    "likes": 1560,
+    "comments": 87,
+    "items_tagged": ["prod_012", "prod_028", "prod_035"],
+    "created_at": "2026-06-17T18:30:00Z"
+  },
+  {
+    "id": "post_008",
+    "user_id": "user_004",
+    "image_url": "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Street style @ שדרות רוטשילד — documenting the real TLV fashion week, no tickets required",
+    "likes": 2100,
+    "comments": 143,
+    "items_tagged": ["prod_039"],
+    "created_at": "2026-06-12T13:00:00Z"
+  },
+  {
+    "id": "post_009",
+    "user_id": "user_005",
+    "image_url": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Today's fit, total budget: ₪48 💃 — חולצה ₪12, חצאית ₪25, אקססוריז ₪11. Budget fashion is an art form",
+    "likes": 567,
+    "comments": 45,
+    "items_tagged": ["prod_006", "prod_018"],
+    "created_at": "2026-06-15T12:00:00Z"
+  },
+  {
+    "id": "post_010",
+    "user_id": "user_005",
+    "image_url": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Y2K thrift find of the week 💿 — rhinestone belt + cargo pants + platform boots. 2003 called, we answered",
+    "likes": 734,
+    "comments": 52,
+    "items_tagged": ["prod_024", "prod_037"],
+    "created_at": "2026-06-09T10:30:00Z"
+  },
+  {
+    "id": "post_011",
+    "user_id": "user_006",
+    "image_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Oxford shirt, chinos, loafers — the Italian formula, adapted for TLV heat ☀️ | linen everything",
+    "likes": 289,
+    "comments": 18,
+    "items_tagged": ["prod_005", "prod_016"],
+    "created_at": "2026-06-18T07:45:00Z"
+  },
+  {
+    "id": "post_012",
+    "user_id": "user_006",
+    "image_url": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "שישי אחרי הצהריים fit — טרנינג בגזרה slim + ספורטיביות + כובע כומתה. casual never looked so intentional",
+    "likes": 198,
+    "comments": 14,
+    "items_tagged": ["prod_029"],
+    "created_at": "2026-06-06T15:00:00Z"
+  },
+  {
+    "id": "post_013",
+    "user_id": "user_007",
+    "image_url": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "New drop just landed 📦 — Jordan 1s + cargo shorts + graphic tee. clean or nah?",
+    "likes": 4320,
+    "comments": 312,
+    "items_tagged": ["prod_001", "prod_014", "prod_033"],
+    "created_at": "2026-06-19T08:00:00Z"
+  },
+  {
+    "id": "post_014",
+    "user_id": "user_007",
+    "image_url": "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Haifa port vibes 🌊 | windbreaker + baggy denim + fresh Dunks. the sea, the fit, the vibe — everything aligned",
+    "likes": 5870,
+    "comments": 421,
+    "items_tagged": ["prod_022", "prod_040"],
+    "created_at": "2026-06-11T17:30:00Z"
+  },
+  {
+    "id": "post_015",
+    "user_id": "user_008",
+    "image_url": "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Editorial mood today 📸 — draped blazer, asymmetric hem skirt, sculptural bag. rented all three, full price vibes",
+    "likes": 891,
+    "comments": 67,
+    "items_tagged": ["prod_009", "prod_026"],
+    "created_at": "2026-06-14T14:00:00Z"
+  },
+  {
+    "id": "post_016",
+    "user_id": "user_008",
+    "image_url": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Color theory lesson of the day: burnt orange + sage green + rust. autumn in a mediterranean summer 🍂",
+    "likes": 1034,
+    "comments": 79,
+    "items_tagged": ["prod_013", "prod_031"],
+    "created_at": "2026-06-07T11:00:00Z"
+  },
+  {
+    "id": "post_017",
+    "user_id": "user_009",
+    "image_url": "https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "יום שישי בבלינסון 🌸 — שמלת פשתן, סנדלי עור, שיער קלוע. מרגישה כמו תמונה של Pinterest",
+    "likes": 143,
+    "comments": 11,
+    "items_tagged": ["prod_017"],
+    "created_at": "2026-06-13T09:30:00Z"
+  },
+  {
+    "id": "post_018",
+    "user_id": "user_009",
+    "image_url": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Silver rings for every finger 💍 | boho stack update — new additions from the Jaffa flea",
+    "likes": 98,
+    "comments": 8,
+    "items_tagged": ["prod_042"],
+    "created_at": "2026-06-04T16:45:00Z"
+  },
+  {
+    "id": "post_019",
+    "user_id": "user_010",
+    "image_url": "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Pre-workout fit check ✅ | Nike tech fleece + Air Max 97 + wireless earbuds. gym to street in 2 minutes flat",
+    "likes": 678,
+    "comments": 38,
+    "items_tagged": ["prod_004", "prod_023"],
+    "created_at": "2026-06-16T06:00:00Z"
+  },
+  {
+    "id": "post_020",
+    "user_id": "user_010",
+    "image_url": "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Summer court fit 🏀 | mesh shorts + oversized jersey + Jordan 3s. the heat won't stop the drip",
+    "likes": 812,
+    "comments": 56,
+    "items_tagged": ["prod_010", "prod_036"],
+    "created_at": "2026-06-08T19:00:00Z"
+  },
+  {
+    "id": "post_021",
+    "user_id": "user_011",
+    "image_url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Charity shop haul from Nachalat Binyamin market 🇬🇧→🇮🇱 | London girl finds her best pieces in TLV, who knew",
+    "likes": 756,
+    "comments": 48,
+    "items_tagged": ["prod_027", "prod_043"],
+    "created_at": "2026-06-17T13:15:00Z"
+  },
+  {
+    "id": "post_022",
+    "user_id": "user_011",
+    "image_url": "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Overdressed for the beach, underdressed for the party — the eternal TLV dilemma. floral midi dress solved both",
+    "likes": 934,
+    "comments": 72,
+    "items_tagged": ["prod_020"],
+    "created_at": "2026-06-10T20:00:00Z"
+  },
+  {
+    "id": "post_023",
+    "user_id": "user_012",
+    "image_url": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Scandi capsule, summer edition ☀️ | cream linen set + minimal leather mules + zero jewelry. less is always more",
+    "likes": 1870,
+    "comments": 104,
+    "items_tagged": ["prod_002", "prod_011", "prod_030"],
+    "created_at": "2026-06-18T11:00:00Z"
+  },
+  {
+    "id": "post_024",
+    "user_id": "user_012",
+    "image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Swedish heritage: invest in quality, wear forever. This linen blazer is 4 years old and still the best piece I own",
+    "likes": 2340,
+    "comments": 167,
+    "items_tagged": ["prod_025"],
+    "created_at": "2026-06-12T10:00:00Z"
+  },
+  {
+    "id": "post_025",
+    "user_id": "user_013",
+    "image_url": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Tokyo layers in TLV heat — yes this is four shirts. yes it works. trust the process 🇯🇵",
+    "likes": 523,
+    "comments": 41,
+    "items_tagged": ["prod_038", "prod_045"],
+    "created_at": "2026-06-15T16:30:00Z"
+  },
+  {
+    "id": "post_026",
+    "user_id": "user_013",
+    "image_url": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Avant-garde doesn't mean unwearable — proof: this deconstructed coat worn to the shuk. heads turned. worth it",
+    "likes": 687,
+    "comments": 55,
+    "items_tagged": ["prod_034"],
+    "created_at": "2026-06-06T12:00:00Z"
+  },
+  {
+    "id": "post_027",
+    "user_id": "user_014",
+    "image_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "São Paulo heat prepared me for TLV summers 🇧🇷🇮🇱 | graphic tee + tailored shorts + fresh sneakers. the formula",
+    "likes": 2340,
+    "comments": 178,
+    "items_tagged": ["prod_001", "prod_016"],
+    "created_at": "2026-06-19T07:30:00Z"
+  },
+  {
+    "id": "post_028",
+    "user_id": "user_014",
+    "image_url": "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Collab dropping soon 🔥 — can't say with who yet but the teaser is this fit. stay tuned @everyone",
+    "likes": 4560,
+    "comments": 289,
+    "items_tagged": ["prod_022", "prod_033"],
+    "created_at": "2026-06-11T20:00:00Z"
+  },
+  {
+    "id": "post_029",
+    "user_id": "user_015",
+    "image_url": "https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Wildflower walk in the Galilee 🌾 — prairie dress, wicker basket, bare feet on the path. cottagecore is a lifestyle",
+    "likes": 398,
+    "comments": 29,
+    "items_tagged": ["prod_017", "prod_042"],
+    "created_at": "2026-06-14T08:00:00Z"
+  },
+  {
+    "id": "post_030",
+    "user_id": "user_015",
+    "image_url": "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Saturday farmer's market fit 🧺 | linen overalls + floral blouse + straw hat. Berlin vibes in Moshav Beit Yitzhak",
+    "likes": 467,
+    "comments": 33,
+    "items_tagged": ["prod_007", "prod_020"],
+    "created_at": "2026-06-07T09:15:00Z"
+  },
+  {
+    "id": "post_031",
+    "user_id": "user_016",
+    "image_url": "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Quiet luxury lesson: the bag should cost more than the outfit. this one cost more than my rent. no regrets 👜",
+    "likes": 5600,
+    "comments": 341,
+    "items_tagged": ["prod_009", "prod_025"],
+    "created_at": "2026-06-18T14:00:00Z"
+  },
+  {
+    "id": "post_032",
+    "user_id": "user_016",
+    "image_url": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Paris methodology, TLV execution 🇫🇷 | trench coat in June. yes, the AC is that aggressive. no, I won't apologize",
+    "likes": 4230,
+    "comments": 278,
+    "items_tagged": ["prod_012", "prod_030"],
+    "created_at": "2026-06-09T12:30:00Z"
+  },
+  {
+    "id": "post_033",
+    "user_id": "user_017",
+    "image_url": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Harajuku in Hadar 🇯🇵 | 6 layers, 3 prints, 1 confident human. Tokyo taught me that rules are optional",
+    "likes": 1230,
+    "comments": 88,
+    "items_tagged": ["prod_038", "prod_044", "prod_045"],
+    "created_at": "2026-06-17T15:00:00Z"
+  },
+  {
+    "id": "post_034",
+    "user_id": "user_017",
+    "image_url": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Y2K + Harajuku crossover fit 💿🌸 | baby tee under mesh top, plaid mini, platform loafers. chaos is the aesthetic",
+    "likes": 1560,
+    "comments": 112,
+    "items_tagged": ["prod_024", "prod_037"],
+    "created_at": "2026-06-04T18:00:00Z"
+  },
+  {
+    "id": "post_035",
+    "user_id": "user_018",
+    "image_url": "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Jerusalem stone backdrop + dark academia fit = perfection 📚 | wool turtleneck in June because commitment",
+    "likes": 712,
+    "comments": 54,
+    "items_tagged": ["prod_003", "prod_028"],
+    "created_at": "2026-06-16T11:30:00Z"
+  },
+  {
+    "id": "post_036",
+    "user_id": "user_018",
+    "image_url": "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Library OOTD 📖 | plaid blazer + high-waist trousers + Oxford shoes + attitude. dress like you're in a Donna Tartt novel",
+    "likes": 845,
+    "comments": 63,
+    "items_tagged": ["prod_005", "prod_026"],
+    "created_at": "2026-06-10T13:00:00Z"
+  },
+  {
+    "id": "post_037",
+    "user_id": "user_019",
+    "image_url": "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Lagos prints + London tailoring + TLV energy 🌍 | Ankara shirt tucked into slacks. this is what globalisation looks like",
+    "likes": 3450,
+    "comments": 234,
+    "items_tagged": ["prod_013", "prod_016"],
+    "created_at": "2026-06-18T10:30:00Z"
+  },
+  {
+    "id": "post_038",
+    "user_id": "user_019",
+    "image_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Avant-garde menswear at its most wearable — structured coat, wide trousers, statement shoes. 📍 Rothschild Blvd",
+    "likes": 2870,
+    "comments": 198,
+    "items_tagged": ["prod_034", "prod_039"],
+    "created_at": "2026-06-05T17:00:00Z"
+  },
+  {
+    "id": "post_039",
+    "user_id": "user_020",
+    "image_url": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "2003 called and I picked up 💿 | baby tee + low-rise baggy jeans + butterfly clips. Y2K revival is NOT a phase",
+    "likes": 987,
+    "comments": 76,
+    "items_tagged": ["prod_006", "prod_024"],
+    "created_at": "2026-06-17T17:00:00Z"
+  },
+  {
+    "id": "post_040",
+    "user_id": "user_020",
+    "image_url": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&h=750&q=80",
+    "caption": "Matching set era 🌸 | velour tracksuit + platform sneakers + tiny sunglasses. if Paris Hilton lived in TLV this is it",
+    "likes": 1120,
+    "comments": 89,
+    "items_tagged": ["prod_004", "prod_018"],
+    "created_at": "2026-06-11T14:00:00Z"
+  }
+]

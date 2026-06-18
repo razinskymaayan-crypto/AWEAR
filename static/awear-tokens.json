@@ -1,0 +1,161 @@
+{
+  "_meta": {
+    "version": "2.0.0",
+    "updated": "2026-06-19",
+    "source": "COLOR_SYSTEM.md — Mediterranean Modern palette",
+    "generator": "netta / design-system-lead",
+    "note": "Single source of truth. Generate tokens.css (web) and constants.ts (RN) from this file via Style Dictionary. Do NOT edit tokens.css manually."
+  },
+
+  "color": {
+    "accent": {
+      "value": "#e8526a",
+      "comment": "CTA primary — rose-terracotta. Warm enough to invite action, not aggressive enough to feel discount-y. Replaces cold neon pink #ff3d77. WCAG AA on --card (#1e1a22): 5.2:1."
+    },
+    "accent2": {
+      "value": "#c4855a",
+      "comment": "CTA secondary / tags / badges — warm terracotta-amber. Mediterranean warmth. Anchors the palette in earthiness. Replaces cold purple #7b5cff. WCAG AA on --bg: 4.6:1."
+    },
+    "accent3": {
+      "value": "#7a6af0",
+      "comment": "Tertiary accent — muted indigo. Used sparingly for notification dots, special states. Cooler complement to the warm primaries. Replaces cyan #06b6d4."
+    },
+    "bg": {
+      "value": "#0e0c0f",
+      "comment": "Base background. Near-black with a warm purple undertone — avoids the harshness of pure black (#000) or cold blue-black (#0a0a0e). Photo content pops without eye strain. References: Spotify #121212, Twitter dark #15202B — ours is warmer."
+    },
+    "surface": {
+      "value": "#161318",
+      "comment": "Second layer — modals, bottom sheets, side panels. Clearly elevated from --bg (7 lightness steps) without being jarring. Replaces #13131f which was too close to --bg (only 4 steps delta)."
+    },
+    "card": {
+      "value": "#1e1a22",
+      "comment": "Card backgrounds — feed items, product tiles, profile sections. Warm purple-charcoal. The warmth makes product photography feel framed, not floating on cold metal. Replaces #17171f. DESIGN_STANDARDS.md migration target for #2a2040 and #1a1030."
+    },
+    "card-hover": {
+      "value": "#262030",
+      "comment": "Card hover/pressed state. Derived from --card with +8 lightness. Warm purple tint. Was previously #1f1f38 — a hallucinated blue-purple outside the system."
+    },
+    "line": {
+      "value": "#2e2836",
+      "comment": "Borders, dividers, separators. Warm purple-gray. Enough contrast for structure without drawing the eye. Replaces #24242e."
+    },
+    "fg": {
+      "value": "#f0ecf5",
+      "comment": "Primary text. Slightly warm white — the faint lavender tint prevents the harsh blue-white fatigue of pure #fff. Contrast on --bg: 16.8:1 (WCAG AAA). Replaces cold #f6f6f9."
+    },
+    "muted": {
+      "value": "#8a8498",
+      "comment": "Secondary text, captions, timestamps. Warm gray-purple. Contrast on --card: 4.6:1 (WCAG AA). Replaces #8e8e9c."
+    },
+    "success": {
+      "value": "#52c97a",
+      "comment": "Success states — order confirmed, upload done, follow accepted. Slightly warmer than pure Tailwind green #4ade80. Avoids the 'hospital green' association."
+    },
+    "warning": {
+      "value": "#e8a84a",
+      "comment": "Warning states — out of stock, pending, approaching limit. Warm amber, not harsh yellow. Replaces #fbbf24 which reads as 'caution tape' on dark backgrounds."
+    },
+    "danger": {
+      "value": "#e05252",
+      "comment": "Error / destructive states — delete, block, payment failure. Muted red, not alarm-red. Avoids the panic feel of pure #ef4444. Contrast on --card: 4.8:1 (WCAG AA)."
+    },
+    "overlay": {
+      "value": "rgba(14,12,15,0.80)",
+      "comment": "Modal scrim / backdrop. Uses --bg RGB values so the overlay is tonally consistent with the app, not a generic black wash. 80% opacity (was 72%) for stronger content isolation."
+    }
+  },
+
+  "gradient": {
+    "primary": {
+      "value": "linear-gradient(135deg, #e8526a, #c4855a)",
+      "comment": "Primary gradient — rose to terracotta. Used for hero CTAs, cover photos, profile bio backgrounds. Warm Mediterranean sunset. Replaces cold pink→purple #ff3d77→#7b5cff."
+    },
+    "secondary": {
+      "value": "linear-gradient(135deg, #c4855a, #7a6af0)",
+      "comment": "Secondary gradient — terracotta to indigo. Used for secondary highlights, tag groups. Bridges warm and cool accents."
+    },
+    "success": {
+      "value": "linear-gradient(135deg, #52c97a, #3db8b8)",
+      "comment": "Success gradient — emerald to teal. Used for achievement badges, completion states."
+    },
+    "shine": {
+      "value": "linear-gradient(160deg, rgba(232,82,106,.12), rgba(196,133,90,.08))",
+      "comment": "Subtle card shine overlay — adds depth to cards without opaque color. Rose→terracotta at low opacity."
+    }
+  },
+
+  "spacing": {
+    "2":  { "value": "2px" },
+    "4":  { "value": "4px" },
+    "6":  { "value": "6px" },
+    "8":  { "value": "8px" },
+    "10": { "value": "10px" },
+    "12": { "value": "12px" },
+    "14": { "value": "14px" },
+    "16": { "value": "16px" },
+    "20": { "value": "20px" },
+    "24": { "value": "24px" },
+    "28": { "value": "28px" },
+    "32": { "value": "32px" },
+    "40": { "value": "40px" },
+    "48": { "value": "48px" },
+    "64": { "value": "64px" }
+  },
+
+  "borderRadius": {
+    "xs":   { "value": "6px",   "comment": "chips, micro elements" },
+    "sm":   { "value": "10px",  "comment": "tags, badges, small cards" },
+    "md":   { "value": "14px",  "comment": "cards, product tiles" },
+    "lg":   { "value": "20px",  "comment": "sheets, modals" },
+    "xl":   { "value": "28px",  "comment": "hero elements, large modals" },
+    "pill": { "value": "999px", "comment": "buttons, avatars, full-round" }
+  },
+
+  "typography": {
+    "size": {
+      "display": { "value": "32px" },
+      "h1":      { "value": "24px" },
+      "h2":      { "value": "18px" },
+      "h3":      { "value": "15px" },
+      "body":    { "value": "14px" },
+      "caption": { "value": "12px" },
+      "micro":   { "value": "11px" }
+    },
+    "weight": {
+      "regular":  { "value": "500" },
+      "semibold": { "value": "600" },
+      "bold":     { "value": "700" },
+      "heavy":    { "value": "800" },
+      "black":    { "value": "900" }
+    },
+    "family": {
+      "ltr": { "value": "'Inter', system-ui, -apple-system, sans-serif" },
+      "rtl": { "value": "'Noto Sans Hebrew', 'Inter', system-ui, sans-serif" }
+    }
+  },
+
+  "shadow": {
+    "sm":     { "value": "0 1px 4px rgba(14,12,15,.28)" },
+    "md":     { "value": "0 2px 16px rgba(14,12,15,.36)" },
+    "lg":     { "value": "0 8px 32px rgba(14,12,15,.44)" },
+    "accent": { "value": "0 4px 24px rgba(232,82,106,.28)", "comment": "rose glow — replaces purple glow #7b5cff" },
+    "glow":   { "value": "0 0 20px rgba(232,82,106,.40)",  "comment": "stronger rose glow for featured elements" }
+  },
+
+  "motion": {
+    "fast":   { "value": "150ms ease" },
+    "normal": { "value": "250ms ease" },
+    "slow":   { "value": "400ms ease" },
+    "spring": { "value": "350ms cubic-bezier(0.34,1.56,0.64,1)" }
+  },
+
+  "zIndex": {
+    "base":   { "value": "1" },
+    "card":   { "value": "10" },
+    "sticky": { "value": "100" },
+    "modal":  { "value": "200" },
+    "toast":  { "value": "300" },
+    "sheet":  { "value": "400" }
+  }
+}

@@ -116,6 +116,21 @@
 **לקח:** --fg ו--surface מוגדרים ב-tokens.css — אבל אם tokens.css לא נטען, טקסט שחור על רקע שחור. "מוגדר בקובץ חיצוני" ≠ בטוח.
 **מנגנון:** כל token שמשתמשים בו בdynamic context — fallback ב-:root פנימי.
 
+### DS-005 | token קיים ≠ token נכון — ערכים גם זקוקים ל-review
+**מקור:** netta / color-system v2 (2026-06-19)
+**לקח:** tokens.css וawear-tokens.json היו קיימים עם ערכים — אבל הערכים עצמם היו שגויים: two near-identical elevation layers (bg/surface delta של 4), saturated cold accents על dark background קר = nightclub app לא fashion app, hallucinated colors (#2a2040, #1a1030) שנכנסו לקוד כי הצבעים הקיימים לא ספקו את הצורך הוויזואלי. token system עם ערכים לא-נבדוקים מזמין deviation.
+**מנגנון:** כל עדכון token → WCAG contrast check + screenshot comparison לפני merge. לא "ערך שונה" — "ערך נבדק".
+
+### DS-006 | emoji עוקפות icon system קיים — הבעיה היא bypass, לא היעדר system
+**מקור:** mark_ux_research (2026-06-19) — מחקר icon system
+**לקח:** AWEAR יש icon system מלא (`icon(name, size)` + ICONS object, 40+ icons). הבעיה היא emoji שנכתבו ישירות בHTML: sf-tabs, hq-btn, an-sec-title, rewards array, CAT_EMOJI. OW-005 חוזר בדיוק — system קיים ולא בשימוש.
+**מנגנון (דולצ'ה):** לפני כל כתיבת UI string — "האם זה emoji?" → `icon()`. גבאנה בודקת: grep על sf-tab, hq-btn, an-sec-title, cmp-slot = 0 emoji.
+
+### DS-007 | icon library CDN — לא נדרש כשיש inline SVG system
+**מקור:** mark_ux_research (2026-06-19) — icon system research
+**לקח:** Lucide CDN הנכון לfashion apps, אבל AWEAR יש custom ICONS object שעובד. להוסיף CDN בשביל icons שכבר קיימים = overhead מיותר. icon חדש שחסר → SVG path מ-lucide.dev ל-ICONS object.
+**מנגנון:** icon חדש → הוסף SVG path ל-ICONS object. CDN = רק אם ICONS object מגיע ל-50+ icons ומנוהל ידנית.
+
 ---
 
 ## ○ SOCIAL FEATURES — שירה
@@ -171,6 +186,11 @@
 **מקור:** jeff_retrospective (2026-06-19)
 **לקח:** "מה ג'ף צריך להחליט היום? מה כבר מואצל?" — שאלה זו מנקה עמימות, מונעת centralization, ומאפשרת delegation אמיתי. בלי השאלה — הכל מגיע לג'ף, וזה צוואר בקבוק מוסווה כניהול.
 **מנגנון:** השאלה הזו היא הדבר הראשון בכל cycle, לפני כל dispatch.
+
+### CE-002 | בעיה מבנית = שלוש שכבות בו-זמנית, לא תיקון סדרתי
+**מקור:** management_meeting_design_crisis (2026-06-19)
+**לקח:** ישיבת design crisis חשפה שהבעיה אינה שכבה אחת — היא משוואה: data עם emoji כ-default + CSS ללא enforcement + "done" שמוגדר כ-"עובד" ולא כ-"נראה כמו Instagram" = מוצר שנראה כמו wireframe. תיקון שכבה אחת בלבד מחזיר לאותו מקום. בעיות מבניות דורשות פתרון מקביל לכל השכבות.
+**מנגנון:** בישיבת root cause — שאל "כמה שכבות יש לבעיה?" לפני שמחליטים מה לתקן. אם יותר משכבה אחת — הגדר action item לכל שכבה בנפרד, ועם owner נפרד.
 
 ---
 

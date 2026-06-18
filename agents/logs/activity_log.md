@@ -57,6 +57,8 @@
 
 **⚠ ממצא מערכתי חדש:** כל 4 ה-worktrees בסיבוב הזה פיצלו מאותה נקודה ישנה (`290667f`) — כולל אלו שנשלחו **אחרי** commits מאוחרים יותר היו כבר על main. זה לא מקרי בודד — זה דפוס. נראה שיצירת ה-worktree לא תמיד מתבססת על main העדכני בזמן השיגור. דורש בדיקה של סטיב/תהליך השיגור עצמו, לא רק תיקון prompt חד-פעמי.
 
+| 2026-06-19 | ג'ף | CEO | ישיבת מנהלים — design crisis: אבחון root cause, הכרעות על data/enforcement/done, 7 כללי Instagram, action items לדולצ'ה/גבאנה/נטה/מארק | **הושלם — State B** (ג'ף ניהל + עדכן DESIGN_STANDARDS.md בעצמו) | `docs/DESIGN_STANDARDS.md` עודכן, `agents/logs/management_meeting_design_crisis_2026-06-19.md` נוצר, `agents/learnings.md` (CE-002) נוסף |
+
 ---
 
 ## איך זה עובד בפועל
