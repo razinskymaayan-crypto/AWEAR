@@ -10,3 +10,5 @@
 |-------|------|--------|-------|-------|
 | 2026-06-19 | sam | feat/cycle-1-backend | הושלם | Cycle 1 Phase 4: rate limiting (analyze:5/min, outfit:10/min, chat:20/min) + structured request logging middleware ב-app.py. commit: 33b0465 |
 | 2026-06-19 | oren | fix/look-total-usd | הושלם חלקית | BE-002: 2/3 מקומות תוקנו — שורות 2118, 2150 (look grid + shop-look button): ₪ → $. שורה 2305 (feed buy button) דחויה: post.price (ILS) \|\| look_total_usd (USD) fallback — דורש החלטת schema מסאם לפני שינוי סימן. commit: 7244a7b |
+| 2026-06-19 | steve | feat/cycle-1-data-integration | approved + merged | Cycle 1: חיבור data files לUI — loadFeedData + loadProducts עם async/await תקין, fallback ל-SEED_POSTS/SHOP_SEED, schema mapping תואם renderFeed/renderShopGrid. נמזג ל-main. הערת חוב: renderShopGrid מציג ₪${it.price} אבל price=price_estimate_usd (דולר) — BE-002 חוב ידוע, cycle הבא. |
+| 2026-06-19 | dana | fix/camera-compression-onpress | הושלם | Cycle 1 MB-004: expo-image-manipulator@^56.0.19 הותקן, compressForUpload(uri) נוסף (resize 1080px, JPEG 0.7, target <400KB), capturedPrimaryButton קיבל onPress עם compress→navigate('Wardrobe', { newImageUri }). commit: 00a8d05 |
