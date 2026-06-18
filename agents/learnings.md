@@ -100,6 +100,7 @@
 **מקור:** netta_retrospective (2026-06-19)
 **לקח:** 402 שורות hardcoded font-size. 226 hardcoded hex values. token system קיים — לא בשימוש. "יש לנו tokens" ≠ "הקוד משתמש בהם". גרסה הבאה של "אנחנו token-based" חייבת לכלול grep מספרי.
 **מנגנון (נטה):** cycle-opening grep: `grep -c "var(--t-" static/index.html`. תעד. P0 migration: #2a2040, #1a1030 (13 הופעות).
+**עודכן 2026-06-19 — cycle 1:** --text/--bg2 נוספו כ-aliases לindex.html הקיים (35 הופעות כל אחד — backward compat, לא שבירה). --t-* scale הורחבה: נוספו --t-title (20px), --t-lead (17px), --t-small (13px). migration מ-hardcoded font-size מתוכנן ל-Cycle 2.
 
 ### DS-002 | P0-filers עוברים self-check לפני גבאנה
 **מקור:** gabbana_retrospective (2026-06-19)

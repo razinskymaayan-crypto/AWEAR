@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": "2.0.0",
-    "updated": "2026-06-19",
+    "updated": "2026-06-19 cycle-1",
     "source": "COLOR_SYSTEM.md — Mediterranean Modern palette",
     "generator": "netta / design-system-lead",
     "note": "Single source of truth. Generate tokens.css (web) and constants.ts (RN) from this file via Style Dictionary. Do NOT edit tokens.css manually."
@@ -67,6 +67,14 @@
     "overlay": {
       "value": "rgba(14,12,15,0.80)",
       "comment": "Modal scrim / backdrop. Uses --bg RGB values so the overlay is tonally consistent with the app, not a generic black wash. 80% opacity (was 72%) for stronger content isolation."
+    },
+    "text": {
+      "value": "#fbfbfd",
+      "comment": "Backward-compat alias. 35 usages in index.html pre-date --fg. Slightly cooler than --fg (#f0ecf5) — preserved as-is to avoid visual shift during migration. Cycle 2: migrate all --text usages to --fg and deprecate."
+    },
+    "bg2": {
+      "value": "#161318",
+      "comment": "Backward-compat alias = --surface. 35 usages in index.html pre-date --surface. Identical value — safe alias. Cycle 2: migrate all --bg2 usages to --surface and deprecate."
     }
   },
 
@@ -118,13 +126,16 @@
 
   "typography": {
     "size": {
-      "display": { "value": "32px" },
-      "h1":      { "value": "24px" },
-      "h2":      { "value": "18px" },
-      "h3":      { "value": "15px" },
-      "body":    { "value": "14px" },
-      "caption": { "value": "12px" },
-      "micro":   { "value": "11px" }
+      "display": { "value": "32px", "comment": "Hero headers, splash screens" },
+      "h1":      { "value": "24px", "comment": "Screen titles, primary headings" },
+      "h2":      { "value": "18px", "comment": "Section headings" },
+      "h3":      { "value": "15px", "comment": "Card titles, sub-headings" },
+      "title":   { "value": "20px", "comment": "Modal titles, prominent labels — added cycle 1" },
+      "lead":    { "value": "17px", "comment": "Intro paragraphs, featured body text — added cycle 1" },
+      "body":    { "value": "14px", "comment": "Default body text. 402 hardcoded occurrences targeted for --t-body migration (Cycle 2)" },
+      "small":   { "value": "13px", "comment": "Compact labels, secondary info — added cycle 1" },
+      "caption": { "value": "12px", "comment": "Timestamps, helper text, secondary captions" },
+      "micro":   { "value": "11px", "comment": "Badges, notification counts, fine print" }
     },
     "weight": {
       "regular":  { "value": "500" },
