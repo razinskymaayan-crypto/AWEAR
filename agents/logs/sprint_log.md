@@ -27,7 +27,7 @@
 ### הושלם היום
 - תיקון תקרית 2: `RW_KEY`/`LEVELS` TDZ crash שתקע את מסך הבית — הוזזו ההגדרות לפני `renderHome()`. אומת ב-Playwright headless (לא ניחוש): 0 console errors, `#home-wrap` מתמלא, screenshot מאשר.
 - תיקון תקרית 1 (מהיום הקודם): reactions/comments נסתרים בכרטיסי פיד — `position: absolute` + bottom sheet לתגובות במקום inline.
-- `agents/postmortem_2026-06-17.md` — ניתוח שורש לשתי התקריות, החלטות, ownership.
+- `agents/logs/postmortem_2026-06-17.md` — ניתוח שורש לשתי התקריות, החלטות, ownership.
 - `daily_model.md` — נוסף **Iron Rule #9**: כל commit שמשנה רינדור חייב הרצת דפדפן אמיתי (Playwright) לפני merge, לא רק JS syntax.
 - `.claude/skills/verify-rendering/SKILL.md` — project skill קבוע: Playwright מותקן בפרויקט (venv312), דרך מתועדת לבדוק רינדור תוך פחות מ-10 שניות, כדי שכלל #9 יהיה ניתן ליישום בפועל ולא רק על הנייר.
 

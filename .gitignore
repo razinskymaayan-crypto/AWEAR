@@ -23,4 +23,7 @@ venv312/
 .tg_inbox
 
 # Dashboard — regenerated on every request, not source of truth
-agents/dashboard_data.json
+agents/data/dashboard_data.json
+
+# graphify — generated knowledge graph, regenerate with `graphify update .`
+graphify-out/

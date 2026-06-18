@@ -1,7 +1,7 @@
 # Product Decisions — Currency & i18n Open Questions
 
 Author: Ayalon (Product Director) · Date: 2026-06-18
-Source docs: `agents/oren_currency_plan_2026-06-18.md`, `agents/roei_i18n_plan_2026-06-18.md`
+Source docs: `agents/plans/oren_currency_plan_2026-06-18.md`, `agents/plans/roei_i18n_plan_2026-06-18.md`
 Status: DECIDED — engineering is unblocked on every item below.
 
 ---
