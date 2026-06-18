@@ -2222,7 +2222,7 @@
   }
 
   // ---- Feed ----
-  const SEED_POSTS=[
+  let SEED_POSTS=[
     {id:'s1',user:'noa.styles', name:'נועה',verified:true, caption:'לוק קיצי לבית קפה ☕️',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress'],items:[{category:'top',name:'חולצת קרופ לבנה',price_estimate_usd:79,q:'white cropped tee'},{category:'bottoms',name:'מכנס בייקר בז',price_estimate_usd:159,q:'beige baker trousers'},{category:'shoes',name:'סניקרס לבנות',price_estimate_usd:220,q:'white leather sneakers'},{category:'accessory',name:'משקפי שמש',price_estimate_usd:89,q:'trendy sunglasses'}]},
     {id:'s2',user:'yael_fits',  name:'יעל', verified:false,caption:'סטריטוור עכשווי ✨',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes'],items:[{category:'top',name:'טי אוברסייז',price_estimate_usd:99,q:'oversized graphic tee'},{category:'bottoms',name:'קרגו פראשוט',price_estimate_usd:159,q:'parachute cargo pants'},{category:'shoes',name:'אדידס סמבה',price_estimate_usd:449,q:'adidas samba'},{category:'accessory',name:'כובע בייסבול',price_estimate_usd:69,q:'baseball cap'}]},
     {id:'s3',user:'mika.thrift',name:'מיקה',verified:true, caption:'יד שנייה במצב מעולה ♻️',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag'],items:[{category:'top',name:'חולצה משומשת',price_estimate_usd:45,q:'vintage shirt'},{category:'bottoms',name:'גינס מאם',price_estimate_usd:89,q:'vintage mom jeans'},{category:'bag',name:'תיק כתף',price_estimate_usd:60,q:'vintage shoulder bag'}]},
@@ -2231,6 +2231,99 @@
     {id:'s6',user:'dana.edit',  name:'דנה', verified:false,caption:'office but make it cute 💼',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag'],items:[{category:'dress',name:'שמלת בלייזר',price_estimate_usd:320,q:'blazer dress'},{category:'shoes',name:'מוקסינים',price_estimate_usd:199,q:'leather loafers'},{category:'bag',name:'תיק מובנה',price_estimate_usd:240,q:'structured work bag'}]},
     {id:'s7',user:'lia.threads',name:'ליה', verified:true, caption:'beach day ready 🌊',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms'],items:[{category:'top',name:'טופ ביקיני',price_estimate_usd:69,q:'bikini top'},{category:'bottoms',name:'מכנס פשתן',price_estimate_usd:120,q:'linen beach pants'},{category:'accessory',name:'כובע קש',price_estimate_usd:79,q:'straw hat'}]},
   ];
+
+  // ---- Data loaders (products.json / profiles.json / posts.json) ----
+  // loadFeedData: maps posts.json + profiles.json → SEED_POSTS schema
+  // On fetch failure → returns null → fallback to hardcoded SEED_POSTS above
+  async function loadFeedData() {
+    try {
+      const [profilesRes, postsRes] = await Promise.all([
+        fetch('/static/data/profiles.json'),
+        fetch('/static/data/posts.json')
+      ]);
+      if (!profilesRes.ok || !postsRes.ok) return null;
+      const profiles = await profilesRes.json();
+      const posts    = await postsRes.json();
+
+      const profileMap = {};
+      profiles.forEach(p => { profileMap[p.id] = p; });
+
+      const GRADS = [
+        'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',
+        'linear-gradient(160deg,#a18cd1,#fbc2eb)',
+        'linear-gradient(160deg,#84fab0,#8fd3f4)',
+        'linear-gradient(160deg,#fccb90,#d57eeb)',
+        'linear-gradient(160deg,#5ee7df,#b490ca)',
+        'linear-gradient(160deg,#f8ceec,#a29bfe)',
+        'linear-gradient(160deg,#89f7fe,#66a6ff)',
+        'linear-gradient(160deg,#fddb92,#d1fdff)',
+        'linear-gradient(160deg,#e0c3fc,#8ec5fc)',
+        'linear-gradient(160deg,#f093fb,#f5576c)',
+      ];
+
+      return posts.map((post, idx) => {
+        const user = profileMap[post.user_id] || {};
+        const tags = (user.style_tags || []).map(t => t.toLowerCase());
+        return {
+          id:       post.id,
+          user:     user.username   || ('user_' + idx),
+          name:     user.display_name || user.username || 'Unknown',
+          verified: user.verified   || false,
+          caption:  post.caption    || '',
+          tags:     tags,
+          mtags:    tags,
+          price:    post.likes ? Math.round(post.likes / 20) * 10 : 120,
+          img:      post.image_url  || null,
+          grad:     GRADS[idx % GRADS.length],
+          likes:    post.likes      || 0,
+          trend:    Math.min(99, 70 + (post.likes ? Math.floor(post.likes / 50) : 0)),
+          earn:     Math.round((post.likes || 100) / 80),
+          items:    (post.items_tagged || []).slice(0, 4).map(pid => ({
+            category: 'top',
+            name:     pid,
+            price_estimate_usd: 0,
+            q: pid
+          }))
+        };
+      });
+    } catch(e) {
+      console.warn('[AWEAR] loadFeedData failed:', e.message);
+      return null;
+    }
+  }
+
+  // loadProducts: maps products.json → SHOP_SEED schema
+  // On fetch failure → returns null → fallback to hardcoded SHOP_SEED below
+  async function loadProducts() {
+    try {
+      const res = await fetch('/static/data/products.json');
+      if (!res.ok) return null;
+      const products = await res.json();
+      if (!Array.isArray(products) || !products.length) return null;
+
+      return products.map((p, idx) => ({
+        id:         p.id,
+        name:       p.name,
+        brand:      p.brand  || '',
+        store:      p.brand  || '',
+        category:   p.category,
+        emoji:      '',
+        image_url:  p.image_url || null,
+        color:      p.color  || '',
+        price:      p.price_estimate_usd,
+        orig:       p.price_estimate_usd,
+        price_estimate_usd: p.price_estimate_usd,
+        style_tags: p.tags   || [],
+        in_stock:   p.in_stock !== false,
+        search_query: p.search_query || p.name,
+        badge:      p.in_stock ? 'חדש' : 'אזל',
+        score:      80 + (idx % 20),
+      }));
+    } catch(e) {
+      console.warn('[AWEAR] loadProducts failed:', e.message);
+      return null;
+    }
+  }
 
   function loadSet(k){try{return new Set(JSON.parse(localStorage.getItem(k))||[]);}catch(e){return new Set();}}
   function saveSet(k,s){localStorage.setItem(k,JSON.stringify([...s]));}
@@ -4622,8 +4715,39 @@
     bindFeedMoreMenu(host);
   };
 
-  renderCloset();
-  renderFeed();
+  // ---- Async data init: fetch JSON data files and wire into app arrays ----
+  // Runs after DOM ready; falls back to hardcoded seeds if fetch fails (no silent errors).
+  (async function initDataFromFiles() {
+    try {
+      const [feedData, productData] = await Promise.all([
+        loadFeedData(),
+        loadProducts()
+      ]);
+
+      if (feedData && feedData.length) {
+        // Prepend JSON posts before hardcoded seed posts so real data comes first
+        SEED_POSTS = [...feedData, ...SEED_POSTS];
+        console.info('[AWEAR] feed loaded from JSON:', feedData.length, 'posts. Total:', SEED_POSTS.length);
+      } else {
+        console.warn('[AWEAR] loadFeedData returned null — using hardcoded SEED_POSTS (' + SEED_POSTS.length + ' posts)');
+      }
+
+      if (productData && productData.length) {
+        // Prepend JSON products to SHOP_SEED so explore/shop shows real data
+        SHOP_SEED = [...productData, ...SHOP_SEED];
+        console.info('[AWEAR] products loaded from JSON:', productData.length, 'products. Total:', SHOP_SEED.length);
+      } else {
+        console.warn('[AWEAR] loadProducts returned null — using hardcoded SHOP_SEED (' + SHOP_SEED.length + ' products)');
+      }
+    } catch(e) {
+      // Outer safety net — should never reach here since both loaders catch internally
+      console.error('[AWEAR] initDataFromFiles unexpected error:', e.message);
+    } finally {
+      // Always render — with real data or fallback
+      renderCloset();
+      renderFeed();
+    }
+  })();
 
   // ===== ADMIN DASHBOARD =====
   const ADMIN_LOG_KEY = 'awear_admin_log';
@@ -4787,7 +4911,7 @@
   function stylistChat(name) { showToast(`💬 פותחת צ׳אט עם ${name}...`); }
 
   // ===== SHOPPING FEED =====
-  const SHOP_SEED = [
+  let SHOP_SEED = [
     {id:'s1',  name:'ג׳ינס ווש בגזרה ישרה', emoji:'👖', category:'bottoms',  price:220, orig:380, style_tags:['y2k','denim','casual'],    brand:'Zara',      store:'זארה',       badge:'חם🔥',  score:95},
     {id:'s2',  name:'טופ קרופ קטיפתי',       emoji:'👕', category:'top',      price:89,  orig:89,  style_tags:['minimal','elegant'],          brand:'H&M',       store:'HM',         badge:'חדש',   score:88},
     {id:'s3',  name:'מיני חצאית פלסה',       emoji:'👗', category:'bottoms',  price:160, orig:249, style_tags:['y2k','going-out','bold'],      brand:'SHEIN',     store:'שיין',       badge:'מבצע',  score:91},
