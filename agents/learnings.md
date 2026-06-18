@@ -133,6 +133,11 @@
 **לקח:** Lucide CDN הנכון לfashion apps, אבל AWEAR יש custom ICONS object שעובד. להוסיף CDN בשביל icons שכבר קיימים = overhead מיותר. icon חדש שחסר → SVG path מ-lucide.dev ל-ICONS object.
 **מנגנון:** icon חדש → הוסף SVG path ל-ICONS object. CDN = רק אם ICONS object מגיע ל-50+ icons ומנוהל ידנית.
 
+### DS-008 | static HTML vs JS template — icon() רק ב-template literals
+**מקור:** dolce — P0 fix cycle 1 (2026-06-19)
+**לקח:** `icon()` function מחזירה string — עובדת רק בJS template literals בתוך JS functions. ב-static HTML sections (שורות מחוץ ל-JS) — `${icon(...)}` ייכתב כטקסט ולא יפורש. headers שנמצאים ב-static HTML חייבים: (א) inline SVG ישיר, או (ב) JS init function שמחליפה textContent ב-innerHTML עם icon().
+**מנגנון:** לפני כל emoji → icon() — בדוק אם הקוד ב-JS template literal (function). Static HTML → inline SVG. JS template → icon().
+
 ---
 
 ## ○ SOCIAL FEATURES — שירה
@@ -146,6 +151,12 @@
 **מקור:** shira_retrospective (2026-06-19)
 **לקח:** `/api/moderate` קיים. `moderateCommentAsync()` קיים. לא נבדקו חיה עם curl. זה OW-002 ברמת הsocial domain.
 **מנגנון (שירה):** לפני כל "הושלם" על feature של API — curl test + תיעוד response.
+
+### SF-003 | ANTHROPIC_API_KEY חסר = moderation fail-open — P0
+**מקור:** שירה (גילוי) + סאם (אימות), Cycle 1 Phase 4, 2026-06-19
+**לקח:** /api/moderate מחזיר `{"fallback":true}` על כל input כשהמפתח חסר — כל תוכן, כולל harmful, עובר ללא בדיקה. זה לא "כשל שקט" — זה "אין moderation בכלל". גילוי מאוחר כי לא הייתה בדיקת env בהפעלה.
+**מנגנון:** (1) app.py — בדיקת `ANTHROPIC_API_KEY` ב-startup + log WARNING מפורש אם חסר; (2) pre-deploy checklist: env vars required; (3) Steve/Jeff — set secret בprod env לפני כל deploy.
+**status 2026-06-19:** agents/logs/api_key_alert.md נוצר. action item פתוח ל-Steve/Jeff.
 
 ---
 
