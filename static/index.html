@@ -379,6 +379,16 @@
   .edit-cancel { width: 100%; padding: 12px; background: none; border: 0; color: var(--muted);
     font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; }
 
+  /* ---- language switcher (edit-profile modal) ---- */
+  .lang-switch-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .lang-switch-icon { color: var(--accent2); flex-shrink: 0; display: flex; }
+  .lang-switch-opts { flex: 1; display: flex; gap: 8px; background: rgba(255,255,255,.05);
+    border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
+  .lang-opt-btn { flex: 1; padding: 9px 0; border: 0; border-radius: 9px; background: none;
+    color: var(--muted); font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer;
+    transition: background .15s, color .15s; }
+  .lang-opt-btn.sel { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+
   /* ---- profile photo in ig-head ---- */
   .ig-ava { position: relative; }
   .ig-ava-photo { position: absolute; inset: 3px; z-index: 1; border-radius: 50%; object-fit: cover; width: calc(100% - 6px); height: calc(100% - 6px); }
@@ -1354,11 +1364,11 @@
   </main>
 
   <nav>
-    <button data-view="home" class="active"><span class="ico" id="nav-ico-home"></span>בית</button>
-    <button data-view="explore"><span class="ico" id="nav-ico-explore"></span>חיפוש</button>
+    <button data-view="home" class="active"><span class="ico" id="nav-ico-home"></span><span data-i18n="nav.home">בית</span></button>
+    <button data-view="explore"><span class="ico" id="nav-ico-explore"></span><span data-i18n="nav.explore">חיפוש</span></button>
     <button class="fab" id="capture-btn"><span id="nav-ico-fab"></span></button>
-    <button data-view="feed"><span class="ico" id="nav-ico-feed"></span>פיד</button>
-    <button data-view="closet"><span class="ico" id="nav-ico-closet"></span>ארון</button>
+    <button data-view="feed"><span class="ico" id="nav-ico-feed"></span><span data-i18n="nav.feed">פיד</span></button>
+    <button data-view="closet"><span class="ico" id="nav-ico-closet"></span><span data-i18n="nav.closet">ארון</span></button>
   </nav>
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
@@ -1366,10 +1376,10 @@
 
   <!-- Onboarding -->
   <div id="onboarding" class="onboarding" style="display:none">
-    <button class="onb-skip" id="onb-skip">דלגי</button>
+    <button class="onb-skip" id="onb-skip" data-i18n="onboarding.skip">דלגי</button>
     <div id="onb-content"></div>
     <div class="onb-progress" id="onb-dots"></div>
-    <button class="onb-next" id="onb-next">המשך</button>
+    <button class="onb-next" id="onb-next" data-i18n="onboarding.continue">המשך</button>
   </div>
 
   <!-- Edit Profile Modal -->
@@ -1385,6 +1395,13 @@
       <div class="edit-field"><label>שם משתמש</label><input id="edit-handle" type="text" placeholder="handle" maxlength="20"></div>
       <div class="edit-field"><label>עיר</label><input id="edit-city" type="text" placeholder="תל אביב" maxlength="20"></div>
       <div class="edit-field"><label>ביו</label><textarea id="edit-bio" placeholder="כתבי משהו על הסטייל שלך..."></textarea></div>
+      <div class="lang-switch-row">
+        <span class="lang-switch-icon" id="lang-switch-icon"></span>
+        <div class="lang-switch-opts">
+          <button type="button" class="lang-opt-btn" data-lang-opt="he" id="lang-opt-he">עברית</button>
+          <button type="button" class="lang-opt-btn" data-lang-opt="en" id="lang-opt-en">English</button>
+        </div>
+      </div>
       <button class="edit-save" id="edit-save-btn">שמור</button>
       <button class="edit-cancel" id="edit-cancel-btn">ביטול</button>
     </div>
@@ -1400,6 +1417,68 @@
 </div>
 
 <script>
+  // ---- i18n: locale + strings, loaded synchronously BEFORE any render function runs ----
+  // Deliberately synchronous (XHR, not fetch) so LOCALE/STRINGS/t() are fully ready
+  // before renderHome()/showOnboarding() etc. execute later in this same script block.
+  // This sidesteps the exact load-order/TDZ bug class from the 2026-06-17 postmortem:
+  // an async fetch here would let render functions run against an empty STRINGS object.
+  let LOCALE = (localStorage.getItem('awear_locale') || (navigator.language||'he').slice(0,2));
+  if (LOCALE !== 'he' && LOCALE !== 'en') LOCALE = 'he';
+  let STRINGS = {};
+  function loadStrings(locale) {
+    try {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', `/static/i18n/${locale}.json`, false); // false = synchronous
+      xhr.send(null);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        STRINGS = JSON.parse(xhr.responseText);
+      }
+    } catch (e) {
+      console.error('loadStrings failed', e);
+    }
+  }
+  loadStrings(LOCALE);
+
+  function t(key, vars) {
+    const val = key.split('.').reduce((o,k) => (o && o[k] !== undefined) ? o[k] : undefined, STRINGS);
+    let s = (val !== undefined) ? val : key; // loud fallback: show the key, never blank
+    if (vars) Object.entries(vars).forEach(([k,v]) => { s = String(s).replace(`{${k}}`, v); });
+    return s;
+  }
+
+  function applyDocumentDirection() {
+    document.documentElement.lang = LOCALE;
+    document.documentElement.dir = (LOCALE === 'he') ? 'rtl' : 'ltr';
+  }
+  applyDocumentDirection();
+
+  // Walks every element with a data-i18n attribute and sets its textContent from t().
+  // Used for static markup (nav, onboarding chrome) that exists before any JS render
+  // call — the JS-rendered screens (home, onboarding slides) call t() directly instead.
+  function applyStaticI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = t(el.dataset.i18n);
+    });
+  }
+  applyStaticI18n();
+
+  function setLocale(locale) {
+    if (locale !== 'he' && locale !== 'en') return;
+    if (locale === LOCALE) return;
+    LOCALE = locale;
+    localStorage.setItem('awear_locale', locale);
+    loadStrings(LOCALE);
+    applyDocumentDirection();
+    applyStaticI18n();
+    renderHome();
+    if (typeof renderOnbSlide === 'function' && document.getElementById('onboarding') &&
+        document.getElementById('onboarding').style.display !== 'none') {
+      renderOnbSlide();
+    }
+    document.querySelectorAll('[data-lang-opt]').forEach(b =>
+      b.classList.toggle('sel', b.dataset.langOpt === LOCALE));
+  }
+
   const fileInput  = document.getElementById('file-input');
   const closetBody = document.getElementById('closet-body');
   const modal      = document.getElementById('purchase-modal');
@@ -2383,10 +2462,10 @@
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const now = new Date();
     const hour = now.getHours();
-    const greet = hour < 5 ? 'לילה טוב' : hour < 12 ? 'בוקר טוב' : hour < 17 ? 'צהריים טובים' : 'ערב טוב';
-    const name = prof.name ? prof.name.split(' ')[0] : 'אופנאית';
-    const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-    const dateStr = 'יום ' + DAYS[now.getDay()] + ' · ' + now.toLocaleDateString('he-IL',{day:'numeric',month:'long'});
+    const greet = hour < 5 ? t('home.greeting_night') : hour < 12 ? t('home.greeting_morning') : hour < 17 ? t('home.greeting_noon') : t('home.greeting_evening');
+    const name = prof.name ? prof.name.split(' ')[0] : t('home.greeting_name_fallback');
+    const dateLocale = LOCALE === 'he' ? 'he-IL' : 'en-US';
+    const dateStr = now.toLocaleDateString(dateLocale, {weekday:'long', day:'numeric', month:'long'});
 
     const tops    = wardrobe.filter(i => i.category === 'top');
     const bottoms = wardrobe.filter(i => i.category === 'bottoms' || i.category === 'dress');
@@ -2420,11 +2499,11 @@
           <div class="hw-temp" id="hw-temp">26°</div>
           <div class="hw-cond" id="hw-cond">☀️ ${esc(prof.city || '')}</div>
         </div>
-        <div class="hw-event">לוק מחכה לך 👇</div>
+        <div class="hw-event">${t('home.look_waiting')}</div>
       </div>
 
       ${hasOutfits ? `
-      <div class="home-sec-label">✨ הלוק של היום</div>
+      <div class="home-sec-label">✨ ${t('home.outfit_today')}</div>
       <div class="home-outfit-row" id="ho-row">
         ${outfits.map((o,i) => {
           // Real product photography (productImage()), not an emoji stack on a flat
@@ -2436,37 +2515,37 @@
               ${productImage(o.bottom, 'ho-top-img')}
             </div>
             <div class="ho-info">
-              <div class="ho-name">לוק ${i+1}</div>
+              <div class="ho-name">${t('home.look_n', {n: i+1})}</div>
               <div class="ho-sub">${esc(names)}</div>
             </div>
           </div>`;
         }).join('')}
       </div>
       <div class="home-actions">
-        <button class="ha-btn ha-primary" id="ha-wore">✓ לבשתי</button>
-        <button class="ha-btn ha-secondary" onclick="showView('closet')">הארון שלי</button>
+        <button class="ha-btn ha-primary" id="ha-wore">✓ ${t('home.wore_it')}</button>
+        <button class="ha-btn ha-secondary" onclick="showView('closet')">${t('home.my_closet_btn')}</button>
       </div>
       ` : `
       <div class="home-scan-prompt" id="hsp" onclick="document.getElementById('file-input').click()">
         <div class="hsp-icon">${icon('camera',22)}</div>
-        <div class="hsp-title">סרקי את הלוק של היום</div>
-        <div class="hsp-sub">AI מזהה את הבגדים ובונה לך<br>ארון דיגיטלי תוך שניות</div>
+        <div class="hsp-title">${t('home.scan_title')}</div>
+        <div class="hsp-sub">${t('home.scan_sub')}</div>
       </div>
       `}
 
-      <div class="home-sec-label">📊 הארון שלי</div>
+      <div class="home-sec-label">${t('home.wardrobe_section')}</div>
       <div class="home-stats-row">
         <div class="hs-stat" onclick="showView('analytics')">
           <div class="hs-num">${totalItems}</div>
-          <div class="hs-label">פריטים</div>
+          <div class="hs-label">${t('home.stat_items')}</div>
         </div>
         <div class="hs-stat" onclick="showView('analytics')">
           <div class="hs-num">${totalValue > 999 ? '₪'+(totalValue/1000).toFixed(1)+'K' : totalValue ? '₪'+totalValue : '—'}</div>
-          <div class="hs-label">שווי ארון</div>
+          <div class="hs-label">${t('home.stat_value')}</div>
         </div>
         <div class="hs-stat" onclick="showView('analytics')">
           <div class="hs-num">${totalWears}</div>
-          <div class="hs-label">לבישות</div>
+          <div class="hs-label">${t('home.stat_wears')}</div>
         </div>
       </div>
 
@@ -2477,11 +2556,11 @@
         const hasPhoto = !!(prof.photo);
         const hasFeed = loadFeedPosts().length > 0;
         const steps = [
-          {done: wardrobe.length > 0, label: 'סרקי פריט לארון', action: "document.getElementById('file-input').click()", pts: 25},
-          {done: onboarded, label: 'מלאי את הסטייל-קוויז', action: "showView('onboarding')", pts: 25},
-          {done: hasName, label: 'הוסיפי שם פרופיל', action: "showView('closet')", pts: 20},
-          {done: hasPhoto, label: 'הוסיפי תמונת פרופיל', action: "showView('closet')", pts: 15},
-          {done: hasFeed, label: 'שתפי לוק לפיד', action: "showView('feed')", pts: 15},
+          {done: wardrobe.length > 0, label: t('home.step_scan_item'), action: "document.getElementById('file-input').click()", pts: 25},
+          {done: onboarded, label: t('home.step_style_quiz'), action: "showView('onboarding')", pts: 25},
+          {done: hasName, label: t('home.step_add_name'), action: "showView('closet')", pts: 20},
+          {done: hasPhoto, label: t('home.step_add_photo'), action: "showView('closet')", pts: 15},
+          {done: hasFeed, label: t('home.step_share_feed'), action: "showView('feed')", pts: 15},
         ];
         const donePts = steps.filter(s => s.done).reduce((a,s) => a + s.pts, 0);
         const totalPts = steps.reduce((a,s) => a + s.pts, 0);
@@ -2489,7 +2568,7 @@
         const nextStep = steps.find(s => !s.done);
         if (completePct < 100) {
           return `
-          <div class="home-sec-label">🎯 פרופיל שלך — ${completePct}% הושלם</div>
+          <div class="home-sec-label">🎯 ${t('home.profile_pct_title', {pct: completePct})}</div>
           <div onclick="${nextStep ? nextStep.action : ''}" style="margin:0 18px 16px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 16px;cursor:pointer">
             <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:10px">
               <div style="height:100%;width:${completePct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px"></div>
@@ -2497,8 +2576,8 @@
             ${nextStep ? `<div style="display:flex;align-items:center;gap:10px">
               <div style="font-size:22px">⚡</div>
               <div style="flex:1">
-                <div style="font-size:13px;font-weight:800">הצעד הבא: ${esc(nextStep.label)}</div>
-                <div style="font-size:11px;color:var(--accent);font-weight:700;margin-top:2px">+${nextStep.pts} נקודות</div>
+                <div style="font-size:13px;font-weight:800">${esc(t('home.next_step_label', {step: nextStep.label}))}</div>
+                <div style="font-size:11px;color:var(--accent);font-weight:700;margin-top:2px">+${nextStep.pts} ${t('home.points_suffix')}</div>
               </div>
               <div style="font-size:18px;color:var(--muted)">›</div>
             </div>` : ''}
@@ -2521,7 +2600,7 @@
         ];
         const todayChallenge = DAILY[new Date().getDay() % DAILY.length];
         return `
-        <div class="home-sec-label">🎯 אתגר יומי</div>
+        <div class="home-sec-label">🎯 ${t('home.challenge_section')}</div>
         <div style="margin:0 18px 16px;background:linear-gradient(135deg,rgba(123,92,255,.15),rgba(255,61,119,.1));border:1px solid rgba(123,92,255,.25);border-radius:20px;padding:16px;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="font-size:32px">${todayChallenge.icon}</div>
@@ -2542,7 +2621,7 @@
         </div>`;
       })()}
 
-      <div class="home-sec-label">⚡ פעולות מהירות</div>
+      <div class="home-sec-label">⚡ ${t('home.quick_actions')}</div>
       <div class="home-quick" style="overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;padding-bottom:4px">
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('outfits')"><span class="hq-icon">✨</span>Outfit AI</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('shopping')"><span class="hq-icon">🛍️</span>Shopping</button>
@@ -3827,19 +3906,24 @@
   // productImage(), an editorial/lifestyle prompt instead of a white-cutout product shot.
   // This replaces the old single-icon-on-empty-gradient layout per the 2026-06-18 board
   // decision (Instagram/Pinterest density + Chanel/LV/Fendi cinematic-photo restraint).
-  const ONB_SLIDES = [
-    { q:'editorial fashion photography, full body shot, curated streetwear outfit, urban backdrop, golden hour light, magazine editorial style, cinematic',
-      kicker:'AWEAR', title:'מערכת הפעלה לסטייל שלך', desc:'לא עוד ארון בגדים — גרף אופנה אישי שמבין מה יש לך ומה הולך עם מה.' },
-    { q:'editorial fashion photography, flatlay of curated clothing items on neutral textured surface, soft natural light, magazine style, minimal composition',
-      kicker:'סריקה', title:'סרקי. ה-AI מזהה הכל', desc:'צילום אחד של הלוק היומי — וכל פריט מזוהה, נספר ונכנס לארון הדיגיטלי שלך.' },
-    { q:'editorial fashion photography, woman in upscale boutique holding garment, soft window light, cinematic minimal composition, muted tones',
-      kicker:'קנייה ומכירה', title:'קני חכם. מכרי מה שחסר', desc:'כל פריט בפיד מקבל Compatibility Score מיידי — ומה שלא לובשת, ה-AI עוזר למכור.' },
-  ];
+  // Copy is generated by a function (not a load-time constant) so switching locale via
+  // setLocale() and re-calling renderOnbSlide() picks up the new language immediately.
+  function getOnbSlides() {
+    return [
+      { q:'editorial fashion photography, full body shot, curated streetwear outfit, urban backdrop, golden hour light, magazine editorial style, cinematic',
+        kicker:t('onboarding.slide1_kicker'), title:t('onboarding.slide1_title'), desc:t('onboarding.slide1_desc') },
+      { q:'editorial fashion photography, flatlay of curated clothing items on neutral textured surface, soft natural light, magazine style, minimal composition',
+        kicker:t('onboarding.slide2_kicker'), title:t('onboarding.slide2_title'), desc:t('onboarding.slide2_desc') },
+      { q:'editorial fashion photography, woman in upscale boutique holding garment, soft window light, cinematic minimal composition, muted tones',
+        kicker:t('onboarding.slide3_kicker'), title:t('onboarding.slide3_title'), desc:t('onboarding.slide3_desc') },
+    ];
+  }
 
   // Extended quiz: 5 steps
-  const QUIZ_STEPS = [
+  function getQuizSteps() {
+    return [
     {
-      type: 'choice', q: 'מה הוייב שלך?', hint: 'בחרי עד 2', multi: true,
+      type: 'choice', q: t('onboarding.quiz_vibe_q'), hint: t('onboarding.quiz_vibe_hint'), multi: true,
       key: 'styleVibes',
       opts: [
         {icon:'sparkle',label:'Y2K',sub:'טרנדי & רטרו'},
@@ -3849,37 +3933,37 @@
       ]
     },
     {
-      type: 'choice', q: 'מה המטרה העיקרית שלך?', hint: 'בחרי אחת', multi: false,
+      type: 'choice', q: t('onboarding.quiz_goal_q'), hint: t('onboarding.quiz_goal_hint'), multi: false,
       key: 'goal',
       opts: [
-        {icon:'shirt',label:'להתלבש טוב יותר',sub:'לוקים ורעיונות'},
-        {icon:'coins',label:'לחסוך כסף',sub:'CPW & smart buys'},
-        {icon:'tag',label:'למכור בגדים',sub:'Marketplace'},
-        {icon:'box',label:'ארון קפסולה',sub:'פחות, טוב יותר'},
+        {icon:'shirt',label:t('onboarding.quiz_goal_opt_dress_better'),sub:t('onboarding.quiz_goal_opt_dress_better_sub')},
+        {icon:'coins',label:t('onboarding.quiz_goal_opt_save_money'),sub:'CPW & smart buys'},
+        {icon:'tag',label:t('onboarding.quiz_goal_opt_sell_clothes'),sub:'Marketplace'},
+        {icon:'box',label:t('onboarding.quiz_goal_opt_capsule'),sub:t('onboarding.quiz_goal_opt_capsule_sub')},
       ]
     },
     {
-      type: 'choice', q: 'מה התקציב החודשי לביגוד?', hint: 'בחרי אחת', multi: false,
+      type: 'choice', q: t('onboarding.quiz_budget_q'), hint: t('onboarding.quiz_budget_hint'), multi: false,
       key: 'budget',
       opts: [
-        {icon:'cash',label:'עד ₪200',sub:'חכמה'},
-        {icon:'receipt',label:'₪200–500',sub:'בינוני'},
-        {icon:'diamond',label:'₪500–1000',sub:'לוקסוס'},
-        {icon:'crown',label:'₪1000+',sub:'כל מה שרוצה'},
+        {icon:'cash',label:'עד ₪200',sub:t('onboarding.quiz_budget_opt_smart')},
+        {icon:'receipt',label:'₪200–500',sub:t('onboarding.quiz_budget_opt_medium')},
+        {icon:'diamond',label:'₪500–1000',sub:t('onboarding.quiz_budget_opt_luxury')},
+        {icon:'crown',label:'₪1000+',sub:t('onboarding.quiz_budget_opt_anything')},
       ]
     },
     {
-      type: 'choice', q: 'איפה את בעיקר קונה?', hint: 'בחרי עד 2', multi: true,
+      type: 'choice', q: t('onboarding.quiz_source_q'), hint: t('onboarding.quiz_source_hint'), multi: true,
       key: 'shopSource',
       opts: [
         {icon:'globe',label:'ASOS / Zara',sub:'online'},
-        {icon:'storefront',label:'H&M / Mango',sub:'רשת בינלאומית'},
-        {icon:'leaf',label:'יד שנייה',sub:'Depop / Vinted'},
-        {icon:'flame',label:'הכל',sub:'כל מקור'},
+        {icon:'storefront',label:'H&M / Mango',sub:t('onboarding.quiz_source_opt_intl_chain')},
+        {icon:'leaf',label:t('onboarding.quiz_source_opt_secondhand'),sub:'Depop / Vinted'},
+        {icon:'flame',label:t('onboarding.quiz_source_opt_everything'),sub:''},
       ]
     },
     {
-      type: 'choice', q: 'מה המידה שלך?', hint: 'כדי שנציג המלצות מדויקות', multi: false,
+      type: 'choice', q: t('onboarding.quiz_size_q'), hint: t('onboarding.quiz_size_hint'), multi: false,
       key: 'size',
       opts: [
         {text:'XS/S',label:'XS / S',sub:'34–36'},
@@ -3889,10 +3973,11 @@
       ]
     },
     {
-      type: 'text', q: 'מה שמך?', hint: 'כדי שנתייחס אלייך אישית',
-      key: 'name', placeholder: 'שמי...',
+      type: 'text', q: t('onboarding.quiz_name_q'), hint: t('onboarding.quiz_name_hint'),
+      key: 'name', placeholder: t('onboarding.quiz_name_placeholder'),
     },
-  ];
+    ];
+  }
 
   let onbStep = 0, quizStep = 0, quizAnswers = {};
 
@@ -3903,7 +3988,7 @@
   function finishOnboarding() {
     localStorage.setItem(ONBOARDING_KEY, '1');
     const prof = loadProfile();
-    QUIZ_STEPS.forEach((step, i) => {
+    getQuizSteps().forEach((step, i) => {
       if (!quizAnswers[i]) return;
       if (step.type === 'text') {
         prof[step.key] = quizAnswers[i];
@@ -3918,7 +4003,8 @@
   }
 
   function renderOnbSlide() {
-    const total = ONB_SLIDES.length + QUIZ_STEPS.length;
+    const onbSlides = getOnbSlides(), quizSteps = getQuizSteps();
+    const total = onbSlides.length + quizSteps.length;
     const cur = onbStep;
     // dots
     document.getElementById('onb-dots').innerHTML =
@@ -3927,9 +4013,9 @@
 
     const nextBtn = document.getElementById('onb-next');
 
-    if (onbStep < ONB_SLIDES.length) {
-      const s = ONB_SLIDES[onbStep];
-      const isFinalIntro = onbStep === ONB_SLIDES.length - 1;
+    if (onbStep < onbSlides.length) {
+      const s = onbSlides[onbStep];
+      const isFinalIntro = onbStep === onbSlides.length - 1;
       document.getElementById('onb-content').innerHTML = `
         <div class="onb-slide">
           <div class="onb-photo-wrap">${editorialImage(s.q, s.title, 'onb-photo')}</div>
@@ -3942,14 +4028,14 @@
           </div>
         </div>`;
       nextBtn.classList.toggle('onb-next-final', isFinalIntro);
-      nextBtn.textContent = isFinalIntro ? 'בואי נמשיך' : 'המשך';
+      nextBtn.textContent = isFinalIntro ? t('onboarding.slide3_btn') : t('onboarding.continue');
     } else {
       nextBtn.classList.remove('onb-next-final');
-      const qi = onbStep - ONB_SLIDES.length;
-      const step = QUIZ_STEPS[qi];
+      const qi = onbStep - onbSlides.length;
+      const step = quizSteps[qi];
       quizStep = qi;
       const sel = quizAnswers[qi] || new Set();
-      const isLast = onbStep === ONB_SLIDES.length + QUIZ_STEPS.length - 1;
+      const isLast = onbStep === onbSlides.length + quizSteps.length - 1;
 
       if (step.type === 'text') {
         document.getElementById('onb-content').innerHTML = `
@@ -3990,12 +4076,12 @@
         });
       }
       if (isLast) nextBtn.classList.add('onb-next-final');
-      nextBtn.textContent = isLast ? 'בואי נתחיל' : 'המשך';
+      nextBtn.textContent = isLast ? t('onboarding.lets_go') : t('onboarding.continue');
     }
   }
 
   document.getElementById('onb-next').addEventListener('click', () => {
-    const total = ONB_SLIDES.length + QUIZ_STEPS.length;
+    const total = getOnbSlides().length + getQuizSteps().length;
     if (onbStep < total - 1) { onbStep++; renderOnbSlide(); }
     else finishOnboarding();
   });
@@ -4019,8 +4105,16 @@
     prev.innerHTML = prof.photo
       ? `<img src="${attr(prof.photo)}" alt="">`
       : icon('user', 32);
+    document.querySelectorAll('[data-lang-opt]').forEach(b =>
+      b.classList.toggle('sel', b.dataset.langOpt === LOCALE));
     editOverlay.classList.add('show');
   }
+
+  document.getElementById('lang-switch-icon').innerHTML = icon('globe', 20);
+  document.getElementById('lang-opt-he').addEventListener('click', () => setLocale('he'));
+  document.getElementById('lang-opt-en').addEventListener('click', () => setLocale('en'));
+  document.querySelectorAll('[data-lang-opt]').forEach(b =>
+    b.classList.toggle('sel', b.dataset.langOpt === LOCALE));
 
   document.getElementById('edit-cancel-btn').addEventListener('click',()=>editOverlay.classList.remove('show'));
   editOverlay.addEventListener('click',e=>{ if(e.target===editOverlay) editOverlay.classList.remove('show'); });
