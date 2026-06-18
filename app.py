@@ -25,7 +25,14 @@ from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from pydantic import BaseModel
 
-from google_services import create_calendar_event, schedule_agent_meeting, send_summary_email
+# Google integrations are optional — if the deps/creds aren't installed, the core
+# demo must still run. Degrade to no-ops instead of crashing the whole server.
+try:
+    from google_services import create_calendar_event, schedule_agent_meeting, send_summary_email
+except Exception:  # noqa: BLE001 — missing google libs/creds shouldn't break the app
+    def _google_unavailable(*_a, **_k):
+        raise RuntimeError("Google integration not configured on this machine")
+    create_calendar_event = schedule_agent_meeting = send_summary_email = _google_unavailable
 
 load_dotenv()  # loads ANTHROPIC_API_KEY from .env
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -1422,8 +1422,10 @@
   // before renderHome()/showOnboarding() etc. execute later in this same script block.
   // This sidesteps the exact load-order/TDZ bug class from the 2026-06-17 postmortem:
   // an async fetch here would let render functions run against an empty STRINGS object.
-  let LOCALE = (localStorage.getItem('awear_locale') || (navigator.language||'he').slice(0,2));
-  if (LOCALE !== 'he' && LOCALE !== 'en') LOCALE = 'he';
+  // International app: default to English unless the user explicitly picked a locale
+  // via the toggle (persisted in localStorage). Hebrew is opt-in, not the default.
+  let LOCALE = (localStorage.getItem('awear_locale') || 'en');
+  if (LOCALE !== 'he' && LOCALE !== 'en') LOCALE = 'en';
   let STRINGS = {};
   function loadStrings(locale) {
     try {
