@@ -615,28 +615,41 @@
   .store-scope { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
   .store-arrow { color: var(--muted); font-size: 16px; flex-shrink: 0; }
 
-  /* ---- Onboarding ---- */
+  /* ---- Onboarding ----
+     Redesigned 2026-06-18 per board decision (board_meeting_2026-06-18_design_quality.md):
+     the old layout was a single centered icon on an empty gradient void -- "feels cheap"
+     diagnosis was lack of imagery/density, not a token problem. This replaces it with a
+     full-bleed editorial photo per slide (same real-photo source as productImage(), an
+     editorial/lifestyle prompt instead of a white-cutout product shot) + restrained
+     bottom-anchored typography over a scrim, IG/Pinterest density + Chanel/LV/Fendi
+     cinematic-photo restraint. Quiet outlined CTA by default; gradient reserved for the
+     single final "start" action, not every slide. */
   .onboarding { position: absolute; inset: 0; z-index: 100; display: flex; flex-direction: column;
-    background: radial-gradient(140% 120% at 50% 0%, #1a1030 0%, #0a0a0e 100%);
-    overflow: hidden; }
-  .onb-slide { flex: 1; display: flex; flex-direction: column; align-items: center;
-    justify-content: flex-start; padding: 48px 28px 0; text-align: center; }
-  .onb-logo { font-family: "Poppins", sans-serif; font-weight: 800; font-size: 32px; letter-spacing: -1px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 6px; }
-  .onb-sub { color: var(--muted); font-size: 14px; font-weight: 600; margin-bottom: 40px; }
-  .onb-emoji { display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: var(--accent2); filter: drop-shadow(0 12px 28px rgba(123,92,255,.45)); }
-  .onb-title { font-size: 26px; font-weight: 900; letter-spacing: -.5px; line-height: 1.2; margin-bottom: 12px; }
-  .onb-desc { color: rgba(246,246,249,.7); font-size: 15px; line-height: 1.6; max-width: 290px; }
-  .onb-progress { display: flex; gap: 6px; margin-top: 32px; }
-  .onb-dot { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: all .3s; }
-  .onb-dot.active { width: 22px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
-  .onb-next { position: absolute; bottom: 40px; left: 28px; right: 28px;
-    padding: 16px; border: 0; border-radius: 18px; font-family: inherit; font-size: 16px; font-weight: 900;
-    color: #fff; cursor: pointer; background: linear-gradient(135deg, var(--accent), var(--accent2));
-    box-shadow: 0 10px 30px rgba(255,61,119,.4); transition: transform .14s; }
-  .onb-next:active { transform: scale(.97); }
-  .onb-skip { position: absolute; top: 18px; left: 20px; background: none; border: 0; color: var(--muted);
+    background: var(--bg); overflow: hidden; }
+  .onb-slide { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  .onb-photo-wrap { position: absolute; inset: 0; background: var(--bg2); overflow: hidden; }
+  .onb-photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .5s ease; }
+  .onb-photo-wrap img.loaded { opacity: 1; }
+  .onb-photo-wrap .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, var(--card), var(--bg)); color: rgba(255,255,255,.25); }
+  .onb-scrim { position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(10,10,14,.55) 0%, rgba(10,10,14,.1) 32%, rgba(10,10,14,.6) 64%, rgba(10,10,14,.97) 100%); }
+  .onb-top { position: relative; z-index: 2; padding: 18px 20px 0; display: flex; align-items: center; justify-content: space-between; }
+  .onb-logo { font-family: "Poppins", sans-serif; font-weight: 800; font-size: 19px; letter-spacing: -.3px; color: #fff; }
+  .onb-content-bottom { position: relative; z-index: 2; margin-top: auto; padding: 0 28px 116px; text-align: start; }
+  .onb-kicker { color: rgba(255,255,255,.62); font-size: 11px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 10px; }
+  .onb-title { font-size: 26px; font-weight: 900; letter-spacing: -.5px; line-height: 1.25; margin-bottom: 10px; color: #fff; }
+  .onb-desc { color: rgba(255,255,255,.78); font-size: 15px; line-height: 1.6; max-width: 320px; font-weight: 600; }
+  .onb-progress { position: relative; z-index: 2; display: flex; gap: 6px; padding: 0 28px; margin-bottom: 16px; }
+  .onb-dot { height: 3px; flex: 1; border-radius: 2px; background: rgba(255,255,255,.22); transition: background .3s; }
+  .onb-dot.active { background: #fff; }
+  .onb-next { position: absolute; bottom: 40px; left: 28px; right: 28px; z-index: 3;
+    padding: 16px; border: 1.5px solid rgba(255,255,255,.85); border-radius: 14px; font-family: inherit; font-size: 15px; font-weight: 800;
+    color: #fff; cursor: pointer; background: rgba(255,255,255,.08); backdrop-filter: blur(6px); transition: transform .14s, background .15s; }
+  .onb-next:active { transform: scale(.97); background: rgba(255,255,255,.18); }
+  .onb-next.onb-next-final { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent;
+    box-shadow: 0 10px 30px rgba(255,61,119,.4); }
+  .onb-skip { position: absolute; top: 18px; left: 20px; z-index: 3; background: none; border: 0; color: rgba(255,255,255,.75);
     font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; padding: 8px; }
 
   /* ---- Style Quiz ---- */
@@ -1022,10 +1035,15 @@
   .home-sec-label { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; padding: 4px 18px 10px; }
   .home-outfit-row { display: flex; gap: 10px; padding: 0 18px 14px; overflow-x: auto; scrollbar-width: none; }
   .home-outfit-row::-webkit-scrollbar { display: none; }
-  .ho-card { flex-shrink: 0; width: 118px; background: var(--card); border-radius: 18px; border: 2px solid var(--line); overflow: hidden; cursor: pointer; transition: all .18s; }
+  .ho-card { flex-shrink: 0; width: 128px; background: var(--card); border-radius: 18px; border: 2px solid var(--line); overflow: hidden; cursor: pointer; transition: all .18s; }
   .ho-card.sel { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
   .ho-card:active { transform: scale(.96); }
-  .ho-top { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 32px; background: linear-gradient(160deg, #2a2040, #1a1030); letter-spacing: -4px; }
+  /* real product photography, not an emoji stack on a flat gradient -- the outfit preview
+     is a small two-up collage of the actual scanned items (top over bottom). */
+  .ho-top { height: 160px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--bg2); overflow: hidden; }
+  .ho-top-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .35s ease; background: var(--bg2); }
+  .ho-top-img.loaded { opacity: 1; }
+  .ho-top .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg2); color: rgba(255,255,255,.22); }
   .ho-info { padding: 8px 10px 10px; }
   .ho-name { font-size: 12px; font-weight: 800; line-height: 1.2; }
   .ho-sub { font-size: 10px; color: var(--muted); margin-top: 3px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1045,7 +1063,8 @@
   .hq-icon { font-size: 22px; }
   .home-scan-prompt { margin: 0 18px 16px; background: linear-gradient(135deg, rgba(255,61,119,.1), rgba(123,92,255,.1)); border: 1.5px dashed rgba(255,61,119,.4); border-radius: 20px; padding: 24px 20px; text-align: center; cursor: pointer; transition: all .18s; }
   .home-scan-prompt:active { transform: scale(.98); }
-  .hsp-icon { font-size: 36px; margin-bottom: 8px; }
+  .hsp-icon { display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; width: 44px; height: 44px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
   .hsp-title { font-size: 15px; font-weight: 900; margin-bottom: 6px; }
   .hsp-sub { font-size: 12px; color: var(--muted); font-weight: 600; line-height: 1.5; }
   .compat-banner { margin: 0 18px 14px; border-radius: 18px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; background: linear-gradient(135deg, rgba(255,61,119,.12), rgba(123,92,255,.12)); border: 1px solid rgba(123,92,255,.3); }
@@ -1468,6 +1487,18 @@
       '?width=400&height=500&nologo=true';
     return `<img class="pi-img ${cls||''}" src="${attr(url)}" alt="${attr((it&&it.name)||'')}" loading="lazy" `+
       `data-cat="${attr((it&&it.category)||'')}" onload="this.classList.add('loaded')" onerror="this.onerror=null;imgFallback(this)">`;
+  }
+  // ---- real editorial/lifestyle photos (same Pollinations source + fallback contract as
+  // productImage(), but a cinematic editorial prompt instead of a white-cutout product shot --
+  // used for full-bleed hero imagery like onboarding, never for garment thumbnails). ----
+  function editorialImage(q, alt, cls){
+    const url = 'https://image.pollinations.ai/prompt/' +
+      encodeURIComponent((q || 'fashion editorial photography') + ', high detail, photorealistic') +
+      '?width=780&height=1000&nologo=true';
+    // data-cat intentionally omitted -- imgFallback()/catIcon() default to a clean
+    // hanger glyph when no garment category applies (this is a lifestyle photo, not a product shot).
+    return `<img class="pi-img ${cls||''}" src="${attr(url)}" alt="${attr(alt||'')}" loading="lazy" `+
+      `onload="this.classList.add('loaded')" onerror="this.onerror=null;imgFallback(this)">`;
   }
 
   function esc(s)  { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
@@ -2396,10 +2427,14 @@
       <div class="home-sec-label">✨ הלוק של היום</div>
       <div class="home-outfit-row" id="ho-row">
         ${outfits.map((o,i) => {
-          const emojis = [CAT_EMOJI[o.top.category]||'👕', CAT_EMOJI[o.bottom.category]||'👖', o.shoe ? (CAT_EMOJI.shoes||'👟') : ''].join('');
+          // Real product photography (productImage()), not an emoji stack on a flat
+          // gradient -- a small top/bottom collage of the actual scanned wardrobe items.
           const names = [o.top.name, o.bottom.name, o.shoe?.name].filter(Boolean).slice(0,2).join(' + ');
           return `<div class="ho-card${i===0?' sel':''}" data-idx="${i}">
-            <div class="ho-top">${emojis}</div>
+            <div class="ho-top">
+              ${productImage(o.top, 'ho-top-img')}
+              ${productImage(o.bottom, 'ho-top-img')}
+            </div>
             <div class="ho-info">
               <div class="ho-name">לוק ${i+1}</div>
               <div class="ho-sub">${esc(names)}</div>
@@ -2413,7 +2448,7 @@
       </div>
       ` : `
       <div class="home-scan-prompt" id="hsp" onclick="document.getElementById('file-input').click()">
-        <div class="hsp-icon">📸</div>
+        <div class="hsp-icon">${icon('camera',22)}</div>
         <div class="hsp-title">סרקי את הלוק של היום</div>
         <div class="hsp-sub">AI מזהה את הבגדים ובונה לך<br>ארון דיגיטלי תוך שניות</div>
       </div>
@@ -3788,10 +3823,17 @@
 
   // ---- Onboarding ----
   const ONBOARDING_KEY = 'awear_onboarded';
+  // Each slide leads with a real full-bleed editorial photo -- same Pollinations source as
+  // productImage(), an editorial/lifestyle prompt instead of a white-cutout product shot.
+  // This replaces the old single-icon-on-empty-gradient layout per the 2026-06-18 board
+  // decision (Instagram/Pinterest density + Chanel/LV/Fendi cinematic-photo restraint).
   const ONB_SLIDES = [
-    { icon:'hanger', title:'Fashion Operating System', desc:'AWEAR הוא לא סתם ארון בגדים — זה מערכת הפעלה אישית לכל החלטת אופנה שלך.' },
-    { icon:'camera', title:'סרקי. AI יזהה הכל.', desc:'צלמי את הלוק שלך כל יום — AI מזהה כל פריט, בונה לך גרף אופנה אישי, ומציע לוקים חדשים.' },
-    { icon:'cash', title:'קני חכם. מכרי מה שחסר.', desc:'כל פריט בפיד הופך לקנייה מיידית עם Compatibility Score. מה שלא לובשת — AI עוזר לך למכור.' },
+    { q:'editorial fashion photography, full body shot, curated streetwear outfit, urban backdrop, golden hour light, magazine editorial style, cinematic',
+      kicker:'AWEAR', title:'מערכת הפעלה לסטייל שלך', desc:'לא עוד ארון בגדים — גרף אופנה אישי שמבין מה יש לך ומה הולך עם מה.' },
+    { q:'editorial fashion photography, flatlay of curated clothing items on neutral textured surface, soft natural light, magazine style, minimal composition',
+      kicker:'סריקה', title:'סרקי. ה-AI מזהה הכל', desc:'צילום אחד של הלוק היומי — וכל פריט מזוהה, נספר ונכנס לארון הדיגיטלי שלך.' },
+    { q:'editorial fashion photography, woman in upscale boutique holding garment, soft window light, cinematic minimal composition, muted tones',
+      kicker:'קנייה ומכירה', title:'קני חכם. מכרי מה שחסר', desc:'כל פריט בפיד מקבל Compatibility Score מיידי — ומה שלא לובשת, ה-AI עוזר למכור.' },
   ];
 
   // Extended quiz: 5 steps
@@ -3887,16 +3929,22 @@
 
     if (onbStep < ONB_SLIDES.length) {
       const s = ONB_SLIDES[onbStep];
+      const isFinalIntro = onbStep === ONB_SLIDES.length - 1;
       document.getElementById('onb-content').innerHTML = `
         <div class="onb-slide">
-          <div class="onb-logo">AWEAR</div>
-          <div class="onb-sub">הארון של Gen-Z</div>
-          <div class="onb-emoji">${icon(s.icon,64)}</div>
-          <div class="onb-title">${s.title}</div>
-          <div class="onb-desc">${s.desc}</div>
+          <div class="onb-photo-wrap">${editorialImage(s.q, s.title, 'onb-photo')}</div>
+          <div class="onb-scrim"></div>
+          <div class="onb-top"><div class="onb-logo">AWEAR</div></div>
+          <div class="onb-content-bottom">
+            <div class="onb-kicker">${esc(s.kicker)}</div>
+            <div class="onb-title">${esc(s.title)}</div>
+            <div class="onb-desc">${esc(s.desc)}</div>
+          </div>
         </div>`;
-      nextBtn.textContent = onbStep === ONB_SLIDES.length - 1 ? 'בואי נמשיך ✨' : 'המשך';
+      nextBtn.classList.toggle('onb-next-final', isFinalIntro);
+      nextBtn.textContent = isFinalIntro ? 'בואי נמשיך' : 'המשך';
     } else {
+      nextBtn.classList.remove('onb-next-final');
       const qi = onbStep - ONB_SLIDES.length;
       const step = QUIZ_STEPS[qi];
       quizStep = qi;
@@ -3941,7 +3989,8 @@
           });
         });
       }
-      nextBtn.textContent = isLast ? 'בואי נתחיל 🚀' : 'המשך';
+      if (isLast) nextBtn.classList.add('onb-next-final');
+      nextBtn.textContent = isLast ? 'בואי נתחיל' : 'המשך';
     }
   }
 
