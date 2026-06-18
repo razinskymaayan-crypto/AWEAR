@@ -699,7 +699,7 @@
   .ex-card { border-radius: 18px; overflow: hidden; background: var(--card); position: relative; cursor: pointer; aspect-ratio: 3/4; }
   .ex-card:active { transform: scale(.97); }
   .ex-card-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-    font-size: 56px; background: linear-gradient(160deg, #2a2040, #1a1030); }
+    font-size: 56px; background: linear-gradient(160deg, var(--card), var(--bg)); }
   .ex-card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 12px 12px;
     background: linear-gradient(transparent, rgba(0,0,0,.75)); }
   .ex-card-name { font-size: 13px; font-weight: 900; color: #fff; line-height: 1.2; }
@@ -718,7 +718,7 @@
     padding: 12px 14px; cursor: pointer; transition: all .18s; }
   .ex-result-row:active { transform: scale(.98); background: rgba(255,255,255,.07); }
   .ex-result-emoji { font-size: 28px; width: 44px; height: 44px; border-radius: 12px; overflow: hidden;
-    background: linear-gradient(135deg,#2a2040,#1a1030); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    background: linear-gradient(135deg,var(--card),var(--bg)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .ex-result-name { font-size: 14px; font-weight: 800; color: var(--text); }
   .ex-result-cat { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
 
@@ -776,7 +776,7 @@
   .pc-featured-row::-webkit-scrollbar { display: none; }
   .pc-featured-card { flex-shrink: 0; width: 150px; background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
   .pc-featured-card:active { transform: scale(.97); }
-  .pc-feat-cover { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; background: linear-gradient(160deg, #2a2040, #1a1030); }
+  .pc-feat-cover { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; background: linear-gradient(160deg, var(--card), var(--bg)); }
   .pc-feat-info { padding: 10px 12px 12px; }
   .pc-feat-name { font-size: 13px; font-weight: 900; }
   .pc-feat-handle { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
@@ -802,7 +802,7 @@
   .sr-header { padding: 16px 18px 6px; }
   .sr-title { font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
   .sr-period { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
-  .sr-hero { margin: 10px 18px 14px; background: linear-gradient(135deg, #1a1030, #201540); border: 1px solid rgba(123,92,255,.3); border-radius: 22px; padding: 20px; }
+  .sr-hero { margin: 10px 18px 14px; background: linear-gradient(135deg, var(--bg), var(--card)); border: 1px solid rgba(123,92,255,.3); border-radius: 22px; padding: 20px; }
   .sr-hero-title { font-size: 13px; font-weight: 800; color: var(--accent2); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 12px; }
   .sr-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .sr-hero-stat { }
@@ -896,7 +896,7 @@
   .sf-grid { flex:1; overflow-y:auto; padding:0 18px 80px; display:grid; grid-template-columns:1fr 1fr; gap:12px; align-content:start; }
   .sf-card { background:var(--card); border-radius:18px; overflow:hidden; border:1px solid var(--line); cursor:pointer; transition:transform .15s; }
   .sf-card:active { transform:scale(.97); }
-  .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; font-size:52px; background:linear-gradient(160deg,#2a2040,#1a1030); position:relative; }
+  .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; font-size:52px; background:linear-gradient(160deg,var(--card),var(--bg)); position:relative; }
   .sf-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:900; padding:3px 8px; border-radius:10px; }
   .sf-badge.deal { background:#ef4444; }
   .sf-badge.new { background:#4ade80; color:#000; }
@@ -924,7 +924,7 @@
   .cmp-slot-empty-icon { font-size: 32px; opacity: .5; }
   .cmp-slot-empty-text { font-size: 12px; font-weight: 700; color: var(--muted); }
   .cmp-slot-content { width: 100%; display: flex; flex-direction: column; }
-  .cmp-slot-img { height: 120px; display: flex; align-items: center; justify-content: center; font-size: 48px; background: linear-gradient(160deg,#2a2040,#1a1030); }
+  .cmp-slot-img { height: 120px; display: flex; align-items: center; justify-content: center; font-size: 48px; background: linear-gradient(160deg,var(--card),var(--bg)); }
   .cmp-slot-info { padding: 10px 12px 12px; }
   .cmp-slot-name { font-size: 13px; font-weight: 800; }
   .cmp-slot-price { font-size: 14px; font-weight: 900; color: var(--accent); margin-top: 4px; }
@@ -943,7 +943,7 @@
   .rw-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
   .rw-header { padding: 16px 18px 10px; }
   .rw-title { font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
-  .rw-points-card { margin: 4px 18px 16px; background: linear-gradient(135deg, #1a1030 0%, #201540 60%, #2a1030 100%); border-radius: 24px; padding: 22px 20px; border: 1px solid rgba(123,92,255,.35); }
+  .rw-points-card { margin: 4px 18px 16px; background: linear-gradient(135deg, var(--bg) 0%, var(--card) 60%, var(--bg) 100%); border-radius: 24px; padding: 22px 20px; border: 1px solid rgba(123,92,255,.35); }
   .rw-pts-num { font-size: 48px; font-weight: 900; letter-spacing: -2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
   .rw-pts-label { font-size: 13px; color: rgba(246,246,249,.7); font-weight: 700; margin-top: 4px; }
   .rw-level-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
@@ -959,7 +959,7 @@
   .rw-action-done { font-size: 11px; color: #4ade80; font-weight: 700; }
   .rw-perks-list { display: flex; flex-direction: column; gap: 10px; padding: 0 18px; }
   .rw-perk { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 16px; padding: 14px; border: 1px solid var(--line); }
-  .rw-perk-icon { font-size: 24px; width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg,#2a2040,#1a1030); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rw-perk-icon { font-size: 24px; width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg,var(--card),var(--bg)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .rw-perk-info { flex: 1; }
   .rw-perk-name { font-size: 13px; font-weight: 800; }
   .rw-perk-desc { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
@@ -999,7 +999,7 @@
   .mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px; }
   .mp-item { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
   .mp-item:active { transform: scale(.97); }
-  .mp-item-img { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; background: linear-gradient(160deg, #2a2040, #1a1030); position: relative; }
+  .mp-item-img { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; background: linear-gradient(160deg, var(--card), var(--bg)); position: relative; }
   .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 20px; }
   .mp-item-badge.new { background: var(--accent); color: #fff; }
   .mp-item-badge.like-new { background: #4ade80; color: #0a0a0e; }
@@ -1026,7 +1026,7 @@
   .wl-list { display: flex; flex-direction: column; gap: 10px; padding: 0 18px; }
   .wl-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 18px; padding: 14px; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
   .wl-item:active { transform: scale(.98); }
-  .wl-item-ico { font-size: 28px; width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg,#2a2040,#1a1030); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .wl-item-ico { font-size: 28px; width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg,var(--card),var(--bg)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .wl-item-info { flex: 1; min-width: 0; }
   .wl-item-name { font-size: 14px; font-weight: 800; }
   .wl-item-price { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 3px; }
@@ -1045,7 +1045,7 @@
   .home-greeting { font-size: 23px; font-weight: 900; letter-spacing: -.4px; }
   .home-greeting em { font-style: normal; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .home-date { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
-  .home-weather-card { margin: 4px 18px 14px; background: linear-gradient(135deg, #1a1030, #201540); border: 1px solid rgba(123,92,255,.3); border-radius: 20px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; }
+  .home-weather-card { margin: 4px 18px 14px; background: linear-gradient(135deg, var(--bg), var(--card)); border: 1px solid rgba(123,92,255,.3); border-radius: 20px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; }
   .hw-temp { font-size: 34px; font-weight: 900; letter-spacing: -1px; }
   .hw-cond { font-size: 13px; color: rgba(246,246,249,.65); font-weight: 600; margin-top: 2px; }
   .hw-event { font-size: 11px; color: var(--accent2); font-weight: 800; background: rgba(123,92,255,.18); padding: 6px 12px; border-radius: 20px; }
@@ -1097,7 +1097,7 @@
   .an-box { flex: 1; background: var(--card); border-radius: 18px; border: 1px solid var(--line); padding: 14px 8px; text-align: center; }
   .an-box-num { font-size: 20px; font-weight: 900; letter-spacing: -.5px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .an-box-label { font-size: 10px; color: var(--muted); font-weight: 700; margin-top: 4px; }
-  .an-cpw-card { margin: 0 18px 14px; background: linear-gradient(135deg, #1a1030, #201540); border: 1px solid rgba(123,92,255,.3); border-radius: 20px; padding: 20px; text-align: center; }
+  .an-cpw-card { margin: 0 18px 14px; background: linear-gradient(135deg, var(--bg), var(--card)); border: 1px solid rgba(123,92,255,.3); border-radius: 20px; padding: 20px; text-align: center; }
   .an-cpw-val { font-size: 38px; font-weight: 900; letter-spacing: -1px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .an-cpw-label { font-size: 13px; color: var(--muted); font-weight: 700; margin-top: 6px; }
   .an-section { padding: 4px 18px 14px; }
@@ -1170,7 +1170,7 @@
   .mp-item-img img, .sf-card-img img, .ex-card-bg img, .ex-result-emoji img {
     width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit; background: #fff; }
   .mp-item-img .img-fallback, .sf-card-img .img-fallback, .ex-card-bg .img-fallback, .ex-result-emoji .img-fallback {
-    background: linear-gradient(160deg, #2a2040, #1a1030); color: var(--muted); font-size: 28px; }
+    background: linear-gradient(160deg, var(--card), var(--bg)); color: var(--muted); font-size: 28px; }
   .sheet-look-emoji { overflow: hidden; border-radius: 9px; background: #fbfbfd; }
   .sheet-look-emoji .img-fallback { background: #fbfbfd; color: #b8b8c4; }
 </style>
@@ -1237,14 +1237,14 @@
     <section id="shopping" class="view">
       <div class="sf-wrap">
         <div class="sf-header">
-          <div class="sf-title">🛍️ Shopping</div>
+          <div class="sf-title" style="display:flex;align-items:center;gap:8px"><span class="ic-svg" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8h12l-.9 11a1 1 0 0 1-1 .9H7.9a1 1 0 0 1-1-.9L6 8Z" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></span> Shopping</div>
           <div class="sf-sub">AI בחר עבורך — על בסיס הסגנון והארון שלך</div>
         </div>
         <div class="sf-tabs" id="sf-tabs">
-          <button class="sf-tab active" data-tab="recommended">✨ בשבילך</button>
-          <button class="sf-tab" data-tab="trending">🔥 Trending</button>
-          <button class="sf-tab" data-tab="missing">🎯 חסר לך</button>
-          <button class="sf-tab" data-tab="deals">💸 מבצעים</button>
+          <button class="sf-tab active" data-tab="recommended" data-icon="sparkle">בשבילך</button>
+          <button class="sf-tab" data-tab="trending" data-icon="flame">Trending</button>
+          <button class="sf-tab" data-tab="missing" data-icon="target">חסר לך</button>
+          <button class="sf-tab" data-tab="deals" data-icon="tag">מבצעים</button>
         </div>
         <div class="sf-grid" id="sf-grid"></div>
       </div>
@@ -1260,19 +1260,19 @@
         <div class="cmp-slots">
           <div class="cmp-slot" id="cmp-slot-a" onclick="openCmpPicker('a')">
             <div class="cmp-slot-empty">
-              <div class="cmp-slot-empty-icon">👗</div>
+              <div class="cmp-slot-empty-icon"><span class="ic-svg" style="width:32px;height:32px;opacity:.5" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 6.2a2 2 0 1 1 1.4 1.9c-.5.2-.9.6-.9 1.2v.8"/><path d="M12 10.5 4.5 16a1 1 0 0 0 .6 1.8h13.8A1 1 0 0 0 19.5 16L12 10.5Z" stroke-linejoin="round"/></svg></span></div>
               <div class="cmp-slot-empty-text">+ בחרי פריט ראשון</div>
             </div>
           </div>
           <div class="cmp-slot" id="cmp-slot-b" onclick="openCmpPicker('b')">
             <div class="cmp-slot-empty">
-              <div class="cmp-slot-empty-icon">👗</div>
+              <div class="cmp-slot-empty-icon"><span class="ic-svg" style="width:32px;height:32px;opacity:.5" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 6.2a2 2 0 1 1 1.4 1.9c-.5.2-.9.6-.9 1.2v.8"/><path d="M12 10.5 4.5 16a1 1 0 0 0 .6 1.8h13.8A1 1 0 0 0 19.5 16L12 10.5Z" stroke-linejoin="round"/></svg></span></div>
               <div class="cmp-slot-empty-text">+ בחרי פריט שני</div>
             </div>
           </div>
         </div>
         <div class="cmp-vs">VS</div>
-        <button class="cmp-btn" id="cmp-go" onclick="runCompare()" style="display:none">⚡ השוו עכשיו</button>
+        <button class="cmp-btn" id="cmp-go" onclick="runCompare()" style="display:none;align-items:center;gap:7px">${icon('sparkle',16)} השוו עכשיו</button>
         <div class="cmp-result" id="cmp-result"></div>
       </div>
     </section>
@@ -1281,7 +1281,7 @@
     <section id="outfits" class="view">
       <div class="og-wrap" id="og-wrap">
         <div class="og-header">
-          <div class="og-title">✨ Outfit Generator</div>
+          <div class="og-title" style="display:flex;align-items:center;gap:8px"><span class="ic-svg" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l1.7 4.8L18.5 9.5l-4.8 1.7L12 16l-1.7-4.8L5.5 9.5l4.8-1.7L12 3Z" stroke-linejoin="round"/><path d="M18.5 15l.7 2 .8 2-2-.7-2-.8 2-.7.5-1.8Z" stroke-linejoin="round"/></svg></span> Outfit Generator</div>
           <div class="og-sub">תארי את הצורך שלך — AI יבנה לוקים מהארון</div>
         </div>
         <div class="og-input-row">
@@ -1296,7 +1296,7 @@
     <!-- WISHLIST -->
     <section id="wishlist" class="view">
       <div class="wl-wrap" id="wl-wrap">
-        <div class="wl-header">💫 Wishlist</div>
+        <div class="wl-header" style="display:flex;align-items:center;gap:8px"><span class="ic-svg" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21l-6-3.6L6 21V4.5Z" stroke-linejoin="round"/></svg></span> Wishlist</div>
         <div class="wl-add-row">
           <input class="wl-add-input" id="wl-input" placeholder="הוסיפי פריט לרשימה..." />
           <button class="wl-add-btn" id="wl-add-btn">+ הוסיפי</button>
@@ -1310,9 +1310,9 @@
     <section id="chat" class="view">
       <div class="chat-outer" id="chat-outer">
         <div class="chat-header">
-          <div class="chat-header-avatar">💅</div>
+          <div class="chat-header-avatar"><span class="ic-svg" style="width:18px;height:18px;color:#fff" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></span></div>
           <div>
-            <div style="font-size:14px;font-weight:900">אביגיל ✨</div>
+            <div style="font-size:14px;font-weight:900">אביגיל</div>
             <div style="font-size:11px;color:var(--muted);font-weight:600">הסטייליסטית שלך · מחובר</div>
           </div>
         </div>
@@ -1354,7 +1354,7 @@
       <div class="feed-top">
         <div class="feed-tabs">
           <button class="ftab active" data-tab="foryou">בשבילי</button>
-          <button class="ftab" data-tab="inspiration">יש לי ✨</button>
+          <button class="ftab" data-tab="inspiration">יש לי</button>
           <button class="ftab" data-tab="following">עוקבת</button>
         </div>
         <div class="feed-filters" id="feed-filters">
@@ -1545,6 +1545,15 @@
     storefront:'<path d="M4 9.5 5 4h14l1 5.5" stroke-linejoin="round"/><path d="M4 9.5a2.2 2.2 0 0 0 4.4.3 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4-.3" stroke-linejoin="round"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/>',
     more:'<circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>',
     blockUser:'<circle cx="12" cy="12" r="8.5"/><path d="M6.5 17.5 17.5 6.5" stroke-linecap="round"/>',
+    calendar:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/>',
+    video:'<path d="M15 10l4.5-3v10L15 14v-4z" stroke-linejoin="round"/><rect x="3" y="8" width="12" height="8" rx="2"/>',
+    barChart:'<path d="M4 18V10M9 18V6M14 18V12M19 18V8" stroke-linecap="round"/>',
+    list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+    scale:'<path d="M12 3v18M5 21h14M3 7h6M15 7h6M3 7l3 6a3 3 0 0 0 6 0L9 7M15 7l3 6a3 3 0 0 0 6 0L21 7" stroke-linejoin="round"/>',
+    award:'<circle cx="12" cy="9" r="6"/><path d="M8.5 14.5 7 21l5-2 5 2-1.5-6.5" stroke-linejoin="round"/>',
+    target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>',
+    cart:'<path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.4 6.5h12.8M7 13 5.4 5M10 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM17 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" stroke-linejoin="round"/>',
+    chat:'<path d="M14 9a3 3 0 0 1-3 3H6l-4 4V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4Z" stroke-linejoin="round"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -2140,10 +2149,10 @@
     else body=`
       ${!wardrobe.length ? `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;gap:12px">
-          <div style="font-size:64px;line-height:1">👗✨</div>
+          <div style="color:var(--accent2)">${icon('hanger', 60)}</div>
           <div style="font-size:18px;font-weight:900;letter-spacing:-.3px">הארון שלך מחכה</div>
           <div style="font-size:13px;color:var(--muted);font-weight:600;line-height:1.6;max-width:240px">סרקי את הלוק הראשון שלך — ה-AI יזהה את הפריטים ויבנה את הארון האישי שלך</div>
-          <button onclick="document.getElementById('file-input').click()" style="margin-top:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;border-radius:16px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">📸 סרקי לוק ראשון</button>
+          <button onclick="document.getElementById('file-input').click()" style="margin-top:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;border-radius:16px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:8px">${icon('camera', 18)} סרקי לוק ראשון</button>
         </div>` : `
       ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size:11.5px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">⚠️ הסריקה האחרונה הייתה במצב דמו — AI לא היה זמין, אלו פריטי הדגמה</div>`:''}
       ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
@@ -2576,7 +2585,7 @@
               <div style="height:100%;width:${completePct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px"></div>
             </div>
             ${nextStep ? `<div style="display:flex;align-items:center;gap:10px">
-              <div style="font-size:22px">⚡</div>
+              <div style="color:var(--accent)">${icon('sparkle',22)}</div>
               <div style="flex:1">
                 <div style="font-size:13px;font-weight:800">${esc(t('home.next_step_label', {step: nextStep.label}))}</div>
                 <div style="font-size:11px;color:var(--accent);font-weight:700;margin-top:2px">+${nextStep.pts} ${t('home.points_suffix')}</div>
@@ -2595,17 +2604,17 @@
         const curLevel  = [...LEVELS].reverse().find(l => pts >= l.min) || LEVELS[0];
         const pct = nextLevel.min > curLevel.min ? Math.round(((pts - curLevel.min) / (nextLevel.min - curLevel.min)) * 100) : 100;
         const DAILY = [
-          {icon:'📸', text:'סרקי פריט חדש לארון', pts:20},
-          {icon:'✨', text:'צרי לוק עם ה-AI', pts:15},
-          {icon:'💬', text:'שאלי את אביגיל משהו', pts:10},
-          {icon:'🛒', text:'פרסמי פריט למכירה', pts:25},
+          {icon:'camera', text:'סרקי פריט חדש לארון', pts:20},
+          {icon:'sparkle', text:'צרי לוק עם ה-AI', pts:15},
+          {icon:'chat', text:'שאלי את אביגיל משהו', pts:10},
+          {icon:'cart', text:'פרסמי פריט למכירה', pts:25},
         ];
         const todayChallenge = DAILY[new Date().getDay() % DAILY.length];
         return `
         <div class="home-sec-label">${t('home.challenge_section')}</div>
         <div style="margin:0 18px 16px;background:linear-gradient(135deg,rgba(123,92,255,.15),rgba(255,61,119,.1));border:1px solid rgba(123,92,255,.25);border-radius:20px;padding:16px;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div style="font-size:32px">${todayChallenge.icon}</div>
+            <div style="color:var(--accent2)">${icon(todayChallenge.icon, 32)}</div>
             <div style="flex:1">
               <div style="font-size:13px;font-weight:800">${esc(todayChallenge.text)}</div>
               <div style="font-size:11px;color:var(--accent2);font-weight:700;margin-top:3px">+${todayChallenge.pts} נקודות</div>
@@ -2625,17 +2634,17 @@
 
       <div class="home-sec-label">${t('home.quick_actions')}</div>
       <div class="home-quick" style="overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;padding-bottom:4px">
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('outfits')"><span class="hq-icon">✨</span>Outfit AI</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('shopping')"><span class="hq-icon">🛍️</span>Shopping</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('chat')"><span class="hq-icon">💅</span>אביגיל</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('stylists')"><span class="hq-icon">🧑‍🎨</span>סטייליסטים</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('analytics')"><span class="hq-icon">📊</span>אנליטיקס</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('wishlist')"><span class="hq-icon">💫</span>Wishlist</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('marketplace')"><span class="hq-icon">🛒</span>Marketplace</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('compare')"><span class="hq-icon">⚖️</span>השוואה</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('rewards')"><span class="hq-icon">🏆</span>Rewards</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('sustainability')"><span class="hq-icon">🌿</span>Eco</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('seasonal')"><span class="hq-icon">📋</span>עונה</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('outfits')"><span class="hq-icon">${icon('sparkle', 20)}</span>Outfit AI</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('shopping')"><span class="hq-icon">${icon('bag', 20)}</span>Shopping</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('chat')"><span class="hq-icon">${icon('chat', 20)}</span>אביגיל</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('stylists')"><span class="hq-icon">${icon('user', 20)}</span>סטייליסטים</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('analytics')"><span class="hq-icon">${icon('barChart', 20)}</span>אנליטיקס</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('wishlist')"><span class="hq-icon">${icon('bookmark', 20)}</span>Wishlist</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('marketplace')"><span class="hq-icon">${icon('cart', 20)}</span>Marketplace</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('compare')"><span class="hq-icon">${icon('scale', 20)}</span>השוואה</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('rewards')"><span class="hq-icon">${icon('award', 20)}</span>Rewards</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('sustainability')"><span class="hq-icon">${icon('leaf', 20)}</span>Eco</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('seasonal')"><span class="hq-icon">${icon('list', 20)}</span>עונה</button>
       </div>
     `;
 
@@ -2699,7 +2708,7 @@
     const el = document.getElementById('analytics-wrap');
 
     if (!wardrobe.length) {
-      el.innerHTML = `<div class="an-header">📊 אנליטיקס</div><div class="an-empty">📭 הארון ריק עדיין<br><span style="font-size:12px;font-weight:500;opacity:.6">סרקי לוק ראשון כדי לראות סטטיסטיקות</span></div>`;
+      el.innerHTML = `<div class="an-header" style="display:flex;align-items:center;gap:8px">${icon('barChart',20)} אנליטיקס</div><div class="an-empty">${icon('hanger',36)} הארון ריק עדיין<br><span style="font-size:12px;font-weight:500;opacity:.6">סרקי לוק ראשון כדי לראות סטטיסטיקות</span></div>`;
       return;
     }
 
@@ -2724,7 +2733,7 @@
     const leastWorn  = sortedByWear.filter(i => (i.wear_count||0) === 0).slice(0,3);
 
     el.innerHTML = `
-      <div class="an-header">📊 אנליטיקס</div>
+      <div class="an-header" style="display:flex;align-items:center;gap:8px">${icon('barChart',20)} אנליטיקס</div>
       <div class="an-hero">
         <div class="an-box"><div class="an-box-num">${totalItems}</div><div class="an-box-label">פריטים</div></div>
         <div class="an-box"><div class="an-box-num">${totalValue > 999 ? '₪'+(totalValue/1000).toFixed(1)+'K' : '₪'+totalValue}</div><div class="an-box-label">שווי ארון</div></div>
@@ -2738,7 +2747,7 @@
       </div>` : ''}
 
       <div class="an-section">
-        <div class="an-sec-title">🎨 הצבעים שלי</div>
+        <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('flower',16)} הצבעים שלי</div>
         ${topColors.map(([color, count]) => {
           const pct = Math.round((count/totalItems)*100);
           return `<div class="an-bar-row">
@@ -2750,7 +2759,7 @@
       </div>
 
       <div class="an-section">
-        <div class="an-sec-title">👗 לפי קטגוריה</div>
+        <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('hanger',16)} לפי קטגוריה</div>
         ${topCats.map(([cat, count]) => {
           const pct = Math.round((count/totalItems)*100);
           return `<div class="an-bar-row">
@@ -2763,10 +2772,10 @@
 
       ${mostWorn.length ? `
       <div class="an-section">
-        <div class="an-sec-title">🔥 הכי נלבש</div>
+        <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('flame',16)} הכי נלבש</div>
         ${mostWorn.map(i => `
           <div class="an-item-row">
-            <div class="an-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
+            <div class="an-item-ico">${icon(catIcon(i.category), 22)}</div>
             <div style="flex:1;min-width:0">
               <div class="an-item-name">${esc(i.name)}</div>
               <div class="an-item-sub">${i.wear_count} לבישות</div>
@@ -2777,10 +2786,10 @@
 
       ${leastWorn.length ? `
       <div class="an-section">
-        <div class="an-sec-title">💤 אף פעם לא נלבש</div>
+        <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('tag',16)} אף פעם לא נלבש</div>
         ${leastWorn.map(i => `
           <div class="an-item-row">
-            <div class="an-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
+            <div class="an-item-ico">${icon(catIcon(i.category), 22)}</div>
             <div style="flex:1;min-width:0">
               <div class="an-item-name">${esc(i.name)}</div>
               <div class="an-item-sub">$${i.price_estimate_usd||0} בארון · מעולם לא נלבש</div>
@@ -2789,7 +2798,7 @@
           </div>`).join('')}
       </div>
       <div class="an-section">
-        <button class="ha-btn ha-primary" style="width:100%" onclick="runDeclutter()">🧹 Smart Declutter — AI מנקה את הארון</button>
+        <button class="ha-btn ha-primary" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px" onclick="runDeclutter()">${icon('sparkle',16)} Smart Declutter — AI מנקה את הארון</button>
       </div>` : ''}
     `;
   }
@@ -2831,7 +2840,7 @@
     ogLoading = true;
     document.getElementById('og-input').value = occasion;
     const resultEl = document.getElementById('og-result');
-    resultEl.innerHTML = `<div class="og-loading"><div class="og-loading-spinner">✨</div><div style="margin-top:12px;font-size:14px;font-weight:700;color:var(--muted)">בונה לוקים...</div></div>`;
+    resultEl.innerHTML = `<div class="og-loading"><div class="spinner" style="margin:0 auto"></div><div style="margin-top:12px;font-size:14px;font-weight:700;color:var(--muted)">בונה לוקים...</div></div>`;
 
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const prof = loadProfile();
@@ -2923,10 +2932,10 @@
             <div class="og-outfit-items">
               ${(o.items||[]).map(item => `
                 <div class="og-item-row">
-                  <div class="og-item-ico">${CAT_EMOJI[item.category]||'👕'}</div>
+                  <div class="og-item-ico">${icon(catIcon(item.category), 22)}</div>
                   <div class="og-item-info">
                     <div class="og-item-name">${esc(item.name)}</div>
-                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '⚡ חסר — שקלי לקנות' : '✓ יש בארון'}</div>
+                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '+ חסר — שקלי לקנות' : '✓ יש בארון'}</div>
                   </div>
                 </div>`).join('')}
             </div>
@@ -3076,7 +3085,7 @@
     const circularScore = Math.min(30, soldItems * 6);
     const total = Math.round(reuseScore + cpwScore + circularScore);
 
-    const grade = total >= 80 ? 'A 🌿 מצוין' : total >= 60 ? 'B 🌱 טוב' : total >= 40 ? 'C 🔄 בינוני' : 'D ⚠️ שפר';
+    const grade = total >= 80 ? 'A — מצוין' : total >= 60 ? 'B — טוב' : total >= 40 ? 'C — בינוני' : 'D — שפר';
     const gradeColor = total >= 80 ? '#4ade80' : total >= 60 ? '#86efac' : total >= 40 ? '#fbbf24' : '#f87171';
 
     const tips = [];
@@ -3086,7 +3095,7 @@
     if (total >= 70) tips.push(`הארון שלך מנוצל יפה — את בדרך הנכונה!`);
 
     el.innerHTML = `
-      <div class="sus-header">🌿 Sustainability Score</div>
+      <div class="sus-header" style="display:flex;align-items:center;gap:8px">${icon('leaf',20)} Sustainability Score</div>
       <div class="sus-score-card">
         <div class="sus-score-num" style="color:${gradeColor}">${total}</div>
         <div class="sus-score-label">ציון קיימות</div>
@@ -3145,7 +3154,7 @@
     const el = document.getElementById('mp-wrap');
     el.innerHTML = `
       <div class="mp-header">
-        <div class="mp-title">🛒 Marketplace</div>
+        <div class="mp-title" style="display:flex;align-items:center;gap:8px">${icon('storefront',20)} Marketplace</div>
         <button class="mp-sell-btn" id="mp-sell-open">+ מכרי פריט</button>
       </div>
       <div class="mp-tabs">
@@ -3209,13 +3218,13 @@
       const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
       const suggestions = wardrobe.slice(0, 3);
       return `<div style="text-align:center;padding:32px 20px 16px;color:var(--muted)">
-        <div style="font-size:36px;margin-bottom:12px">📦</div>
+        <div style="color:var(--muted);margin-bottom:12px">${icon('box', 36)}</div>
         <div style="font-size:14px;font-weight:700;color:var(--fg)">עוד לא מכרת פריטים</div>
         <div style="font-size:12px;margin-top:6px;opacity:.7">לחצי על "+ מכרי פריט" כדי להתחיל</div>
       </div>
       ${suggestions.length ? `<div style="padding:0 16px 8px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">מהארון שלך — כדאי למכור?</div>
         ${suggestions.map(item => `<div onclick="openSellFormWithItem(${JSON.stringify(JSON.stringify(item))})" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer">
-          <div style="font-size:26px">${item.emoji||'👗'}</div>
+          <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0">${productImage(item)}</div>
           <div style="flex:1"><div style="font-size:13px;font-weight:700">${esc(item.name||'פריט')}</div><div style="font-size:11px;color:var(--muted)">מחיר מוצע: $${Math.round((item.price_estimate_usd||200)*0.5)}</div></div>
           <div style="font-size:11px;font-weight:700;color:var(--accent);background:rgba(139,92,246,.12);padding:4px 10px;border-radius:20px">מכרי</div>
         </div>`).join('')}</div>` : ''}`;
@@ -3231,7 +3240,7 @@
       </div>
       <div class="mp-grid">${mine.map(item => `
       <div class="mp-item" style="position:relative">
-        <div class="mp-item-img">${item.emoji||'👗'}<div class="mp-item-badge like-new">שלי</div></div>
+        <div class="mp-item-img">${productImage(item)}<div class="mp-item-badge like-new">שלי</div></div>
         <div class="mp-item-info">
           <div class="mp-item-name">${esc(item.name)}</div>
           <div class="mp-item-price">₪${item.price}</div>
@@ -3256,7 +3265,7 @@
 
   function renderSwap() {
     return `<div style="text-align:center;padding:40px 20px">
-      <div style="font-size:40px;margin-bottom:12px">🔄</div>
+      <div style="color:var(--muted);margin-bottom:12px">${icon('users', 40)}</div>
       <div style="font-size:15px;font-weight:900;margin-bottom:8px">החלפת פריטים בקרוב</div>
       <div style="font-size:13px;color:var(--muted);font-weight:600">גרסה 2 — Swap עם ארונות של חברות</div>
     </div>`;
@@ -3272,10 +3281,10 @@
     const prefillEmoji = prefill ? (prefill.emoji || CAT_EMOJIS[prefillCat] || '👗') : '👗';
 
     card.innerHTML = `
-      <div style="padding:18px 20px 6px;font-size:17px;font-weight:900">📦 מכרי פריט</div>
+      <div style="padding:18px 20px 6px;font-size:17px;font-weight:900;display:flex;align-items:center;gap:8px">${icon('tag',18)} מכרי פריט</div>
       <div class="mp-sell-form">
         ${prefill ? `<div style="display:flex;align-items:center;gap:10px;background:rgba(139,92,246,.1);border-radius:12px;padding:10px 14px;margin-bottom:4px">
-          <div style="font-size:28px">${prefillEmoji}</div>
+          <div style="color:var(--accent2)">${icon(catIcon(prefillCat), 28)}</div>
           <div style="font-size:12px;font-weight:700;color:var(--accent)">ממוין מהארון שלך ✓</div>
         </div>` : ''}
         <div>
@@ -3493,9 +3502,9 @@
 
     if (!wardrobe.length) {
       el.innerHTML = `
-        <div class="sr-header"><div class="sr-title">📋 דו"ח עונה</div><div class="sr-period">${esc(season)}</div></div>
+        <div class="sr-header"><div class="sr-title" style="display:flex;align-items:center;gap:7px">${icon('list',18)} דו"ח עונה</div><div class="sr-period">${esc(season)}</div></div>
         <div style="text-align:center;padding:60px 20px;color:var(--muted)">
-          <div style="font-size:40px;margin-bottom:12px">📭</div>
+          <div style="margin-bottom:12px">${icon('hanger',40)}</div>
           <div style="font-size:14px;font-weight:700">אין עדיין נתונים</div>
           <div style="font-size:12px;margin-top:6px;opacity:.7">סרקי לוקים לאורך העונה</div>
         </div>`;
@@ -3523,7 +3532,7 @@
 
     el.innerHTML = `
       <div class="sr-header">
-        <div class="sr-title">📋 דו"ח עונה</div>
+        <div class="sr-title" style="display:flex;align-items:center;gap:7px">${icon('list',18)} דו"ח עונה</div>
         <div class="sr-period">${esc(season)}</div>
       </div>
       <div class="sr-hero">
@@ -3555,11 +3564,11 @@
 
       ${top3.length ? `
       <div class="sr-section">
-        <div class="sr-sec-title">🔥 הכי נלבש בעונה</div>
+        <div class="sr-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('flame',16)} הכי נלבש בעונה</div>
         ${top3.map((i,idx) => `
           <div class="sr-item-row">
             <div class="sr-rank">${idx+1}</div>
-            <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
+            <div class="sr-item-ico">${icon(catIcon(i.category), 22)}</div>
             <div style="flex:1;min-width:0">
               <div class="sr-item-name">${esc(i.name)}</div>
               <div class="sr-item-meta">${i.wear_count} לבישות · CPW $${i.price_estimate_usd && i.wear_count ? Math.round(i.price_estimate_usd/i.wear_count) : '—'}</div>
@@ -3569,11 +3578,11 @@
 
       ${bottom3.length ? `
       <div class="sr-section">
-        <div class="sr-sec-title">💤 לא נלבש בכלל</div>
+        <div class="sr-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('tag',16)} לא נלבש בכלל</div>
         ${bottom3.map(i => `
           <div class="sr-item-row">
-            <div class="sr-rank" style="font-size:12px">😴</div>
-            <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
+            <div class="sr-rank" style="font-size:12px;color:var(--muted)">&mdash;</div>
+            <div class="sr-item-ico">${icon(catIcon(i.category), 22)}</div>
             <div style="flex:1;min-width:0">
               <div class="sr-item-name">${esc(i.name)}</div>
               <div class="sr-item-meta">$${i.price_estimate_usd||0} בארון · 0 לבישות</div>
@@ -3582,8 +3591,8 @@
       </div>` : ''}
 
       <div class="sr-action-row">
-        <button class="ha-btn ha-primary" style="flex:1" onclick="runDeclutter()">🧹 נקי את הארון</button>
-        <button class="ha-btn ha-secondary" style="flex:1" onclick="showView('analytics')">📊 אנליטיקס</button>
+        <button class="ha-btn ha-primary" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px" onclick="runDeclutter()">${icon('sparkle',15)} נקי את הארון</button>
+        <button class="ha-btn ha-secondary" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px" onclick="showView('analytics')">${icon('barChart',15)} אנליטיקס</button>
       </div>`;
   }
 
@@ -3614,11 +3623,11 @@
     const modal = document.getElementById('purchase-modal');
     const card  = document.getElementById('modal-card');
     card.innerHTML = `
-      <div style="padding:20px 20px 0;font-size:17px;font-weight:900">🧹 Smart Declutter</div>
+      <div style="padding:20px 20px 0;font-size:17px;font-weight:900;display:flex;align-items:center;gap:8px">${icon('sparkle',18)} Smart Declutter</div>
       <div style="padding:6px 20px 14px;font-size:12px;color:var(--muted);font-weight:600">AI ממליץ לשחרר ${suggestions.length} פריטים</div>
       <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;max-height:320px;overflow-y:auto">
         ${suggestions.map(s => `
-          <div style="background:#17171f;border-radius:14px;padding:12px 14px;border:1px solid #24242e">
+          <div style="background:var(--card);border-radius:14px;padding:12px 14px;border:1px solid var(--line)">
             <div style="font-size:14px;font-weight:800;margin-bottom:4px">${esc(s.name)}</div>
             <div style="font-size:11px;color:#8e8e9c;font-weight:600;margin-bottom:6px">${esc(s.reason)}</div>
             <div style="display:flex;gap:8px">
@@ -3676,7 +3685,7 @@
       const suggestions = SHOP_SEED.filter(s => s.score > 88).slice(0,4);
       list.innerHTML = `
         <div class="wl-empty">
-          <div class="wl-empty-icon">💭</div>
+          <div class="wl-empty-icon">${icon('bookmark', 44)}</div>
           <div class="wl-empty-text">הרשימה ריקה</div>
           <div class="wl-empty-sub">הוסיפי פריטים שאת רוצה לקנות — או השתמשי בהצעות:</div>
         </div>
@@ -3960,7 +3969,7 @@
       html += `<div style="font-size:11px;font-weight:800;color:var(--muted);padding:0 0 8px;letter-spacing:.4px">מהארון שלך</div>`;
       html += wardHits.map(it => `
         <div class="ex-result-row" onclick="openSheetItem(${JSON.stringify({name:it.name,category:it.category,emoji:it.emoji,style_tags:it.style_tags||[]})})">
-          <div class="ex-result-emoji">${it.emoji||CAT_EMOJI[it.category]||'👗'}</div>
+          <div class="ex-result-emoji">${productImage(it)}</div>
           <div><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(catLabel(it.category))}</div></div>
         </div>`).join('');
     }
@@ -4359,7 +4368,7 @@
         const openBtn = document.querySelector(`[data-comment-open="${postId}"]`);
         if (openBtn) {
           const cnt = getPostComments(postId).length;
-          openBtn.textContent = cnt ? `💬 ${cnt}` : '💬';
+          openBtn.innerHTML = `${icon('chat',16)} ${cnt||''}`;
         }
         logAdminEvent('comment_hidden', postId + ': "' + comment.text.slice(0,40) + '" — severity high, removed by moderation');
       } else if (data.severity === 'medium') {
@@ -4376,7 +4385,7 @@
     const r = getPostReactions(postId);
     const comments = getPostComments(postId);
     const viewCount = Math.floor(Math.random() * 800 + 40);
-    const commentLabel = comments.length ? `💬 ${comments.length}` : '💬';
+    const commentLabel = comments.length ? `${icon('chat',16)} ${comments.length}` : icon('chat',16);
     return `
       <div class="fc-reactions" data-post="${postId}">
         ${REACTION_SET.map(e => `
@@ -4433,7 +4442,7 @@
       const openBtn = document.querySelector(`[data-comment-open="${postId}"]`);
       if (openBtn) {
         const cnt = getPostComments(postId).length;
-        openBtn.textContent = `💬 ${cnt}`;
+        openBtn.innerHTML = `${icon('chat',16)} ${cnt}`;
       }
       // Optimistic display happens above; moderation runs async and only
       // acts (hide/flag) if it comes back harmful — never blocks the UI.
@@ -4602,7 +4611,7 @@
       const wardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
       if(!wardrobe.length){
         const em=document.createElement('div');em.className='feed-empty';
-        em.innerHTML=`<div style="font-size:48px;text-align:center">🪄</div><p style="margin-top:12px;font-weight:800">סרקי לוק ראשון<br/>כדי לראות כמה מהלוק כבר יש לך</p>`;
+        em.innerHTML=`<div style="text-align:center;color:var(--accent2)">${icon('hanger',48)}</div><p style="margin-top:12px;font-weight:800">סרקי לוק ראשון<br/>כדי לראות כמה מהלוק כבר יש לך</p>`;
         host.appendChild(em); return;
       }
       const wardTags=new Set(wardrobe.flatMap(i=>(i.style_tags||[]).map(t=>t.toLowerCase())));
@@ -4665,22 +4674,22 @@
     const topCats  = Object.entries(catMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
     const maxCat   = topCats[0]?.[1]||1;
     const kpis = [
-      {icon:'👤',num:todayEvts.length>0?'1':'0',label:'DAU',sub:`D7: ${d7Evts.length} פעולות`},
-      {icon:'💰',num:wardValue>999?'₪'+(wardValue/1000).toFixed(1)+'K':'₪'+wardValue,label:'Wardrobe Value',sub:`${wardrobe.length} פריטים`},
-      {icon:'📸',num:wardrobe.length,label:'Items Scanned',sub:`${scanEvts} סקאנים`},
-      {icon:'✨',num:ogEvts,label:'Outfit Gens',sub:'AI מגנרטור'},
-      {icon:'📉',num:totalW>0?'₪'+Math.round(wardValue/totalW):'—',label:'CPW Avg',sub:`${totalW} לבישות`},
-      {icon:'🛒',num:shelf.length+mp.length,label:'For Sale',sub:`${buyEvts} buy intents`},
+      {icon:'user',num:todayEvts.length>0?'1':'0',label:'DAU',sub:`D7: ${d7Evts.length} פעולות`},
+      {icon:'coins',num:wardValue>999?'₪'+(wardValue/1000).toFixed(1)+'K':'₪'+wardValue,label:'Wardrobe Value',sub:`${wardrobe.length} פריטים`},
+      {icon:'camera',num:wardrobe.length,label:'Items Scanned',sub:`${scanEvts} סקאנים`},
+      {icon:'sparkle',num:ogEvts,label:'Outfit Gens',sub:'AI מגנרטור'},
+      {icon:'receipt',num:totalW>0?'₪'+Math.round(wardValue/totalW):'—',label:'CPW Avg',sub:`${totalW} לבישות`},
+      {icon:'cart',num:shelf.length+mp.length,label:'For Sale',sub:`${buyEvts} buy intents`},
     ];
     const recentLog = log.slice(0,10);
     el.innerHTML = `
-      <div class="adm-header"><div class="adm-title">📊 Admin Dashboard</div><div class="adm-badge">INTERNAL</div></div>
-      <div class="adm-kpi-grid">${kpis.map(k=>`<div class="adm-kpi"><div class="adm-kpi-icon">${k.icon}</div><div class="adm-kpi-num">${esc(String(k.num))}</div><div class="adm-kpi-label">${esc(k.label)}</div><div class="adm-kpi-sub">${esc(k.sub)}</div></div>`).join('')}</div>
-      <div class="adm-section"><div class="adm-sec-title">🌿 Sustainability</div></div>
+      <div class="adm-header"><div class="adm-title" style="display:flex;align-items:center;gap:8px">${icon('barChart',20)} Admin Dashboard</div><div class="adm-badge">INTERNAL</div></div>
+      <div class="adm-kpi-grid">${kpis.map(k=>`<div class="adm-kpi"><div class="adm-kpi-icon">${icon(k.icon,20)}</div><div class="adm-kpi-num">${esc(String(k.num))}</div><div class="adm-kpi-label">${esc(k.label)}</div><div class="adm-kpi-sub">${esc(k.sub)}</div></div>`).join('')}</div>
+      <div class="adm-section"><div class="adm-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('leaf',16)} Sustainability</div></div>
       <div class="adm-grade-card"><div class="adm-grade-letter" style="color:${susColor}">${susGrade}</div><div class="adm-grade-info"><div class="adm-grade-label">${susScore}/100</div><div class="adm-grade-sub">Reuse: ${reuseR}% · Sold: ${mp.length} · CPW: ₪${Math.round(avgCPW)||'—'}</div></div></div>
-      <div class="adm-section"><div class="adm-sec-title">👗 Categories</div>${topCats.length?topCats.map(([cat,cnt])=>`<div class="adm-bar-row"><div class="adm-bar-lbl">${esc(cat)}</div><div class="adm-bar-track"><div class="adm-bar-fill" style="width:${Math.round((cnt/maxCat)*100)}%"></div></div><div class="adm-bar-val">${cnt}</div></div>`).join(''):'<div style="color:var(--muted);font-size:13px">ארון ריק</div>'}</div>
-      <div class="adm-section"><div class="adm-sec-title">⚡ Event Log</div>${recentLog.length?recentLog.map(e=>{const t=new Date(e.ts).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});return`<div class="adm-event-row"><div class="adm-ev-dot"></div><div class="adm-ev-text">${esc(e.label)}</div><div class="adm-ev-time">${t}</div></div>`;}).join(''):'<div style="color:var(--muted);font-size:13px;padding:12px 0">אין אירועים עדיין</div>'}</div>
-      <div class="adm-export-row"><button class="adm-export-btn primary" onclick="adminExportCSV()">📥 Export CSV</button><button class="adm-export-btn secondary" onclick="adminClearLog()">🗑 Reset Log</button></div>
+      <div class="adm-section"><div class="adm-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('hanger',16)} Categories</div>${topCats.length?topCats.map(([cat,cnt])=>`<div class="adm-bar-row"><div class="adm-bar-lbl">${esc(cat)}</div><div class="adm-bar-track"><div class="adm-bar-fill" style="width:${Math.round((cnt/maxCat)*100)}%"></div></div><div class="adm-bar-val">${cnt}</div></div>`).join(''):'<div style="color:var(--muted);font-size:13px">ארון ריק</div>'}</div>
+      <div class="adm-section"><div class="adm-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('list',16)} Event Log</div>${recentLog.length?recentLog.map(e=>{const t=new Date(e.ts).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});return`<div class="adm-event-row"><div class="adm-ev-dot"></div><div class="adm-ev-text">${esc(e.label)}</div><div class="adm-ev-time">${t}</div></div>`;}).join(''):'<div style="color:var(--muted);font-size:13px;padding:12px 0">אין אירועים עדיין</div>'}</div>
+      <div class="adm-export-row"><button class="adm-export-btn primary" onclick="adminExportCSV()" style="display:inline-flex;align-items:center;gap:6px">${icon('arrowUp',15)} Export CSV</button><button class="adm-export-btn secondary" onclick="adminClearLog()" style="display:inline-flex;align-items:center;gap:6px">${icon('alert',15)} Reset Log</button></div>
     `;
   }
 
@@ -4720,26 +4729,26 @@
     if (!el) return;
     el.innerHTML = `
       <div class="styl-header">
-        <div class="styl-title">💅 סטייליסטים</div>
+        <div class="styl-title" style="display:flex;align-items:center;gap:8px">${icon('users',20)} סטייליסטים</div>
         <div class="styl-sub">הזמיני פגישה אישית עם סטייליסטית מקצועית</div>
       </div>
       <div class="styl-grid">
         ${STYLISTS_SEED.map(s => `
           <div class="styl-card">
             <div class="styl-top">
-              <div class="styl-avatar" style="background:${s.avatar_bg}">${esc(s.emoji)}</div>
+              <div class="styl-avatar" style="background:${s.avatar_bg}">${esc(s.name.split(' ').map(w=>w[0]).join('').slice(0,2))}</div>
               <div class="styl-info">
                 <div class="styl-name">${esc(s.name)}</div>
                 <div class="styl-spec">${esc(s.spec)}</div>
-                <div class="styl-price">${esc(s.price)} · ⭐ ${esc(s.rating)} · ${s.sessions} פגישות</div>
+                <div class="styl-price" style="display:flex;align-items:center;gap:3px">${esc(s.price)} · <span style="color:#fbbf24">${icon('diamond',12)}</span> ${esc(s.rating)} · ${s.sessions} פגישות</div>
               </div>
               <div class="styl-avail ${s.avail?'open':'busy'}">${s.avail?'זמינה':'עסוקה'}</div>
             </div>
             <div class="styl-tags">${s.tags.map(t=>`<div class="styl-tag">${esc(t)}</div>`).join('')}</div>
             <div class="styl-actions">
-              <button class="styl-btn primary" onclick="openBooking('${attr(s.id)}','${attr(s.name)}')" ${s.avail?'':'disabled style="opacity:.4"'}>📅 הזמיני</button>
-              <button class="styl-btn secondary" onclick="stylistVideoCall('${attr(s.name)}')">📹 וידאו</button>
-              <button class="styl-btn secondary" onclick="stylistChat('${attr(s.name)}')">💬 צ׳אט</button>
+              <button class="styl-btn primary" onclick="openBooking('${attr(s.id)}','${attr(s.name)}')" ${s.avail?'':'disabled style="opacity:.4"'} style="display:inline-flex;align-items:center;gap:5px">${icon('calendar',15)} הזמיני</button>
+              <button class="styl-btn secondary" onclick="stylistVideoCall('${attr(s.name)}')" style="display:inline-flex;align-items:center;gap:5px">${icon('video',15)} וידאו</button>
+              <button class="styl-btn secondary" onclick="stylistChat('${attr(s.name)}')" style="display:inline-flex;align-items:center;gap:5px">${icon('chat',15)} צ׳אט</button>
             </div>
           </div>`).join('')}
       </div>
@@ -4754,14 +4763,14 @@
     overlay.className = 'book-overlay';
     overlay.innerHTML = `
       <div class="book-sheet">
-        <div class="book-title">📅 הזמנת פגישה עם ${esc(name)}</div>
+        <div class="book-title" style="display:flex;align-items:center;gap:8px">${icon('calendar',18)} הזמנת פגישה עם ${esc(name)}</div>
         <div class="book-field"><div class="book-label">שם מלא</div><input class="book-input" id="book-nm" placeholder="שמי..." /></div>
         <div class="book-field"><div class="book-label">תאריך</div><input class="book-input" id="book-dt" type="date" /></div>
         <div class="book-field"><div class="book-label">סוג פגישה</div>
           <select class="book-input" id="book-type">
-            <option value="video">📹 וידאו קול</option>
-            <option value="chat">💬 צ׳אט טקסט</option>
-            <option value="home">🏠 ביקור בית</option>
+            <option value="video">וידאו קול</option>
+            <option value="chat">צ׳אט טקסט</option>
+            <option value="home">ביקור בית</option>
           </select>
         </div>
         <button class="book-submit" onclick="submitBooking('${attr(name)}')">אשרי פגישה ✓</button>
@@ -4855,6 +4864,11 @@
   function initShoppingFeed() {
     sfInited = true;
     document.getElementById('sf-tabs').querySelectorAll('.sf-tab').forEach(btn => {
+      // Inject icon prefix from data-icon attribute
+      const iconName = btn.dataset.icon;
+      if (iconName) {
+        btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:5px;vertical-align:middle">${icon(iconName, 14)} ${btn.textContent.trim()}</span>`;
+      }
       btn.addEventListener('click', () => {
         sfTab = btn.dataset.tab;
         document.getElementById('sf-tabs').querySelectorAll('.sf-tab').forEach(b => b.classList.toggle('active', b===btn));
@@ -4895,7 +4909,7 @@
               <div class="sf-price">₪${it.price}</div>
               ${disc ? `<div class="sf-orig">₪${it.orig}</div><div class="sf-discount">-${disc}%</div>` : ''}
             </div>
-            ${compatTxt ? `<div class="sf-compat">✨ ${esc(compatTxt)}</div>` : ''}
+            ${compatTxt ? `<div class="sf-compat" style="display:flex;align-items:center;gap:4px">${icon('sparkle',12)} ${esc(compatTxt)}</div>` : ''}
           </div>
         </div>`;
     }).join('');
@@ -4922,8 +4936,9 @@
   function initCompare() {
     cmpInited = false;
     cmpItems = {a: null, b: null};
-    document.getElementById('cmp-slot-a').innerHTML = `<div class="cmp-slot-empty"><div class="cmp-slot-empty-icon">👗</div><div class="cmp-slot-empty-text">+ בחרי פריט ראשון</div></div>`;
-    document.getElementById('cmp-slot-b').innerHTML = `<div class="cmp-slot-empty"><div class="cmp-slot-empty-icon">👗</div><div class="cmp-slot-empty-text">+ בחרי פריט שני</div></div>`;
+    const hangerSVG = `<span class="ic-svg" style="width:32px;height:32px;opacity:.5" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 6.2a2 2 0 1 1 1.4 1.9c-.5.2-.9.6-.9 1.2v.8"/><path d="M12 10.5 4.5 16a1 1 0 0 0 .6 1.8h13.8A1 1 0 0 0 19.5 16L12 10.5Z" stroke-linejoin="round"/></svg></span>`;
+    document.getElementById('cmp-slot-a').innerHTML = `<div class="cmp-slot-empty"><div class="cmp-slot-empty-icon">${hangerSVG}</div><div class="cmp-slot-empty-text">+ בחרי פריט ראשון</div></div>`;
+    document.getElementById('cmp-slot-b').innerHTML = `<div class="cmp-slot-empty"><div class="cmp-slot-empty-icon">${hangerSVG}</div><div class="cmp-slot-empty-text">+ בחרי פריט שני</div></div>`;
     document.getElementById('cmp-go').style.display = 'none';
     document.getElementById('cmp-result').innerHTML = '';
     const slotA = document.getElementById('cmp-slot-a');
@@ -4988,7 +5003,7 @@
     slotEl.classList.add('filled');
     slotEl.innerHTML = `
       <div class="cmp-slot-content">
-        <div class="cmp-slot-img">${esc(item.emoji||CAT_EMOJI[item.category]||'👗')}</div>
+        <div class="cmp-slot-img">${productImage(item)}</div>
         <div class="cmp-slot-info">
           <div class="cmp-slot-name">${esc(item.name||'פריט')}</div>
           <div class="cmp-slot-price">${item.price_estimate_usd||item.price ? '$'+(item.price_estimate_usd||item.price) : 'מחיר לא ידוע'}</div>
