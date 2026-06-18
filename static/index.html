@@ -133,7 +133,7 @@
     filter: drop-shadow(0 8px 7px rgba(0,0,0,.22)); }
   .ptile .pname { color: #14141a; font-size: 12.5px; font-weight: 800; line-height: 1.25; margin-top: 8px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ptile .pbrand { color: #9a9aa5; font-size: 10px; font-weight: 700; margin-top: 2px;
+  .ptile .pbrand { color: #9a9aa5; font-size: 11px; font-weight: 700; margin-top: 2px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ptile .pprice { color: #14141a; font-size: 14px; font-weight: 900; margin-top: 5px; font-family: "Poppins", sans-serif; }
   .ptile .pacts { display: flex; gap: 6px; margin-top: 10px; }
@@ -209,7 +209,7 @@
     padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(6px); }
   .trend-badge { background: rgba(0,0,0,.6); color: #fff; font-size: 12px; font-weight: 900;
     padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(6px); margin-inline-start: auto; }
-  .fc-more-btn { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  .fc-more-btn { width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
     background: rgba(0,0,0,.6); border: 0; border-radius: 50%; color: #fff; cursor: pointer; backdrop-filter: blur(6px); }
   .fc-more-btn:active { background: rgba(0,0,0,.8); }
 
@@ -288,10 +288,10 @@
     display: inline-flex; align-items: center; cursor: pointer;
     color: rgba(255,255,255,.3); transition: color 150ms ease; }
   .fc-comment-report:hover, .fc-comment-report:active { color: rgba(255,255,255,.7); }
-  .fc-comment-text { font-size: 13px; color: var(--fg); line-height: 1.4; }
+  .fc-comment-text { font-size: 13px; color: var(--text); line-height: 1.4; }
   .fc-comment-input-row { display: flex; gap: 8px; margin-top: 12px; }
-  .fc-comment-input { flex: 1; background: var(--surface); border: 1px solid var(--line);
-    border-radius: 999px; padding: 9px 16px; font-size: 13px; color: var(--fg);
+  .fc-comment-input { flex: 1; background: var(--card); border: 1px solid var(--line);
+    border-radius: 999px; padding: 9px 16px; font-size: 13px; color: var(--text);
     font-family: inherit; outline: none; }
   .fc-comment-send { background: var(--accent); border: none; border-radius: 999px;
     padding: 9px 18px; font-size: 13px; font-weight: 800; color: #fff;
@@ -2072,7 +2072,7 @@
     const compat = wardrobe.length > 1 ? calcCompatScore(it, wardrobe.filter(i => i.name !== it.name)) : null;
     card.innerHTML = `
       <div style="position:relative;padding:18px 20px 0">
-        <div style="font-size:48px;text-align:center;margin-bottom:8px">${it.emoji || '👗'}</div>
+        <div style="height:140px;border-radius:16px;overflow:hidden;background:var(--card);margin-bottom:8px">${productImage(it)}</div>
         <div style="font-size:18px;font-weight:900;text-align:center">${esc(it.name)}</div>
         <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:4px">${esc(it.brand_vibe||'')}${it.category ? ' · ' + esc(it.category) : ''}</div>
         ${compat ? `<div style="text-align:center;margin-top:8px"><span style="background:rgba(139,92,246,.15);color:var(--accent);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">${compat.pct}% התאמה לארון</span></div>` : ''}
@@ -2082,11 +2082,11 @@
         <div style="font-size:22px;font-weight:900;text-align:center;margin-top:12px;color:var(--accent)">₪${it.price_estimate_usd || '—'}</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:14px 20px 20px">
-        <button onclick="openAbigailWithItem('${attr(it.name)}')" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">✨ שאלי את אביגיל מה ללבוש</button>
+        <button onclick="openAbigailWithItem('${attr(it.name)}')" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">Ask Abigail what to wear</button>
         <div style="display:flex;gap:8px">
-          <button onclick="openSellFormWithItem('${attr(JSON.stringify(it))}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">🏷️ מכרי</button>
-          <button onclick="addToWishlistFromSeed('${attr(it.name)}','${attr(it.emoji||'👗')}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">💭 לרשימה</button>
-          <button onclick="document.getElementById('purchase-modal').classList.remove('show')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">✕ סגרי</button>
+          <button onclick="openSellFormWithItem('${attr(JSON.stringify(it))}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Sell</button>
+          <button onclick="addToWishlistFromSeed('${attr(it.name)}','${attr(it.emoji||'')}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Wishlist</button>
+          <button onclick="document.getElementById('purchase-modal').classList.remove('show')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Close</button>
         </div>
       </div>`;
     modal.classList.add('show');
@@ -2177,8 +2177,6 @@
       </div>
       <div class="ig-stats">
         <div><b>${feed.length}</b><span>לוקים</span></div>
-        <div><b>1.2K</b><span>עוקבים</span></div>
-        <div><b>340</b><span>עוקבת</span></div>
         <div><b style="display:inline-flex;align-items:center;gap:3px;color:var(--accent)">${icon('flame',16)}${meta.trend_score!=null?esc(meta.trend_score):'—'}</b><span>טרנדיות</span></div>
       </div>
       <div class="ig-bio"><b>${wardrobe.length} פריטים</b> בארון · שווי ~₪${closetValue.toLocaleString()}${meta.overall_style?' · '+esc(meta.overall_style):''}</div>
@@ -4965,17 +4963,17 @@
         <div style="font-size:18px;font-weight:900;margin-bottom:14px;color:#fff;">בחרי פריט ${slot === 'a' ? 'ראשון' : 'שני'}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           ${allItems.map((it, idx) => `
-            <div onclick="selectCmpItem('${slot}',${idx},'${attr(JSON.stringify(it).replace(/'/g,"\\'"))}')" style="background:#1a1030;border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid #2a2040;transition:all .15s;">
-              <div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:36px;background:linear-gradient(160deg,#2a2040,#1a1030);">${esc(it.emoji||CAT_EMOJI[it.category]||'👗')}</div>
+            <div onclick="selectCmpItem('${slot}',${idx},'${attr(JSON.stringify(it).replace(/'/g,"\\'"))}')" style="background:var(--bg);border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid var(--card);transition:all .15s;">
+              <div style="height:80px;overflow:hidden;background:var(--card);">${productImage(it)}</div>
               <div style="padding:8px 10px;">
-                <div style="font-size:12px;font-weight:800;color:#fff;">${esc(it.name||'פריט')}</div>
-                <div style="font-size:11px;color:#a78bfa;margin-top:3px;">${it.price_estimate_usd || it.price ? '₪'+(it.price_estimate_usd||it.price) : ''} · ${esc(it._src)}</div>
+                <div style="font-size:12px;font-weight:800;color:var(--text);">${esc(it.name||'Item')}</div>
+                <div style="font-size:11px;color:var(--accent2);margin-top:3px;">${it.price_estimate_usd || it.price ? '₪'+(it.price_estimate_usd||it.price) : ''} · ${esc(it._src)}</div>
               </div>
             </div>
           `).join('')}
         </div>
       </div>
-      <button onclick="this.closest('div[style]').remove()" style="margin:0 16px 24px;padding:12px;background:#2a2040;border:0;border-radius:14px;color:#fff;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer;">ביטול</button>
+      <button onclick="this.closest('div[style]').remove()" style="margin:0 16px 24px;padding:12px;background:var(--card);border:0;border-radius:14px;color:var(--text);font-family:inherit;font-size:14px;font-weight:900;cursor:pointer;">Cancel</button>
     `;
     overlay.dataset.slot = slot;
     overlay.dataset.items = JSON.stringify(allItems);
