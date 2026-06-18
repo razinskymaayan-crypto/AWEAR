@@ -15,17 +15,53 @@ Then open http://localhost:8000
 import base64
 import io
 import json
+import logging
+import time
 import traceback
 import urllib.parse
+from collections import defaultdict
 from typing import Optional
 
 import anthropic
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi import FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from pydantic import BaseModel
+
+# ---------------------------------------------------------------------------
+# Structured logging
+# ---------------------------------------------------------------------------
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger("awear")
+
+# ---------------------------------------------------------------------------
+# In-memory rate limiter (per-IP, per-endpoint)
+# ---------------------------------------------------------------------------
+
+_rate_store: dict[str, list[float]] = defaultdict(list)
+RATE_WINDOW = 60  # seconds
+
+
+def check_rate_limit(client_ip: str, endpoint: str, limit: int) -> bool:
+    """Return True if the request is allowed, False if the limit is exceeded.
+
+    Sliding window: only timestamps within the last RATE_WINDOW seconds count.
+    Thread-safety note: FastAPI runs in a single-process async event loop for
+    this demo, so a plain dict is safe here. Switch to Redis for multi-worker.
+    """
+    key = f"{client_ip}:{endpoint}"
+    now = time.time()
+    _rate_store[key] = [t for t in _rate_store[key] if now - t < RATE_WINDOW]
+    if len(_rate_store[key]) >= limit:
+        return False
+    _rate_store[key].append(now)
+    return True
 
 # Google integrations are optional — if the deps/creds aren't installed, the core
 # demo must still run. Degrade to no-ops instead of crashing the whole server.
@@ -46,6 +82,33 @@ MAX_EDGE = 1024  # downscale long edge to control cost + latency
 # keeping a live pitch from hanging.
 client = anthropic.Anthropic(timeout=25.0)  # reads ANTHROPIC_API_KEY from the environment
 app = FastAPI(title="AWEAR demo")
+
+
+# ---------------------------------------------------------------------------
+# Request logging middleware — logs every HTTP request with method, path,
+# status code, and duration in milliseconds.
+# ---------------------------------------------------------------------------
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start = time.time()
+    status_code = 500
+    try:
+        response = await call_next(request)
+        status_code = response.status_code
+        return response
+    except Exception as exc:
+        logger.exception("Unhandled exception during %s %s", request.method, request.url.path)
+        raise
+    finally:
+        duration = round((time.time() - start) * 1000)
+        logger.info(
+            "%s %s -> %s (%dms)",
+            request.method,
+            request.url.path,
+            status_code,
+            duration,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -280,7 +343,12 @@ def _downscale_to_base64(raw: bytes) -> tuple[str, str]:
 
 
 @app.post("/api/analyze")
-async def analyze(photo: UploadFile):
+async def analyze(request: Request, photo: UploadFile):
+    ip = request.client.host if request.client else "unknown"
+    if not check_rate_limit(ip, "analyze", limit=5):
+        logger.warning("Rate limit exceeded: analyze from %s", ip)
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
+
     raw = await photo.read()
     if not raw:
         raise HTTPException(status_code=400, detail="Empty file")
@@ -431,8 +499,12 @@ class OutfitRequest(BaseModel):
 
 
 @app.post("/api/outfit/generate")
-async def generate_outfit(data: OutfitRequest):
+async def generate_outfit(request: Request, data: OutfitRequest):
     """Generate outfit suggestions for a given occasion using the user's wardrobe."""
+    ip = request.client.host if request.client else "unknown"
+    if not check_rate_limit(ip, "outfit_generate", limit=10):
+        logger.warning("Rate limit exceeded: outfit/generate from %s", ip)
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
     wardrobe_desc = ", ".join(
         f"{it.get('name','')} ({it.get('category','')})"
         for it in data.wardrobe[:30]
@@ -523,8 +595,12 @@ class StylistMessage(BaseModel):
 
 
 @app.post("/api/stylist/chat")
-async def stylist_chat(data: StylistMessage):
+async def stylist_chat(request: Request, data: StylistMessage):
     """AI Stylist: answers fashion questions with optional wardrobe context."""
+    ip = request.client.host if request.client else "unknown"
+    if not check_rate_limit(ip, "stylist_chat", limit=20):
+        logger.warning("Rate limit exceeded: stylist/chat from %s", ip)
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
     system = (
         "You are Abigail, the AI stylist inside AWEAR — a global fashion app. "
         "You help users style their wardrobe, suggest outfits, and give honest fashion advice. "
