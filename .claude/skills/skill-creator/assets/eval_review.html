@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trigger Eval Review — __SKILL_NAME_PLACEHOLDER__</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         background: #0d0d12; color: #e0e0e8; min-height: 100vh; }
+  header { background: #17171f; border-bottom: 1px solid #24242e;
+           padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+  header h1 { font-size: 14px; font-weight: 500; color: #8080a0; }
+  header span { font-size: 14px; font-weight: 600; color: #c0c0e8; }
+  .badge { font-size: 11px; padding: 3px 8px; border-radius: 4px;
+           background: #1e1e2e; color: #6060a0; margin-left: auto; }
+
+  .main { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+  .desc-box { background: #14141e; border: 1px solid #2a2a3a; border-radius: 8px;
+              padding: 14px 16px; margin-bottom: 24px; }
+  .desc-label { font-size: 11px; color: #5050a0; margin-bottom: 6px; text-transform: uppercase;
+                letter-spacing: .05em; }
+  .desc-text { font-size: 13px; color: #9090b8; line-height: 1.5; }
+
+  .controls { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; }
+  .add-btn { padding: 7px 16px; background: #2020a0; border: none; border-radius: 6px;
+             color: #c0c0ff; font-size: 13px; cursor: pointer; transition: background .15s; }
+  .add-btn:hover { background: #3030b0; }
+  .filter-btn { padding: 6px 14px; background: transparent; border: 1px solid #2a2a3a;
+                border-radius: 6px; color: #6060a0; font-size: 12px; cursor: pointer;
+                transition: all .15s; }
+  .filter-btn.active { border-color: #4040a0; color: #a0a0d0; background: #1a1a2e; }
+  .count { font-size: 12px; color: #5050a0; margin-left: auto; }
+
+  .eval-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .eval-row { background: #14141e; border: 1px solid #1e1e2a; border-radius: 8px;
+              padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px;
+              transition: border-color .15s; }
+  .eval-row:hover { border-color: #2a2a3e; }
+  .eval-row.trigger { border-left: 3px solid #3a7a3a; }
+  .eval-row.no-trigger { border-left: 3px solid #7a3a3a; }
+
+  .toggle-btn { flex-shrink: 0; width: 100px; padding: 5px 0; border-radius: 5px;
+                font-size: 11px; font-weight: 600; cursor: pointer; border: none;
+                text-align: center; transition: all .15s; }
+  .toggle-btn.trigger { background: #1a3a1a; color: #60c060; }
+  .toggle-btn.trigger:hover { background: #1e481e; }
+  .toggle-btn.no-trigger { background: #3a1a1a; color: #c06060; }
+  .toggle-btn.no-trigger:hover { background: #481e1e; }
+
+  .query-input { flex: 1; background: transparent; border: none; color: #c0c0d8;
+                 font-size: 13px; line-height: 1.4; resize: none; outline: none;
+                 font-family: inherit; padding: 2px 0; min-height: 20px; }
+  .query-input::placeholder { color: #4040a0; }
+
+  .del-btn { flex-shrink: 0; background: transparent; border: none; color: #4040a0;
+             font-size: 16px; cursor: pointer; padding: 2px 6px; border-radius: 4px;
+             transition: color .15s; line-height: 1; }
+  .del-btn:hover { color: #c06060; }
+
+  .submit-section { margin-top: 24px; display: flex; gap: 12px; align-items: center; }
+  .export-btn { padding: 10px 28px; background: #3030a0; border: none; border-radius: 8px;
+                color: #e0e0ff; font-size: 14px; font-weight: 600; cursor: pointer;
+                transition: background .15s; }
+  .export-btn:hover { background: #4040c0; }
+  .help-text { font-size: 12px; color: #5050a0; line-height: 1.5; }
+
+  .empty-state { text-align: center; padding: 48px; color: #5050a0; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Trigger Eval —</h1>
+  <span>__SKILL_NAME_PLACEHOLDER__</span>
+  <div class="badge">description optimization</div>
+</header>
+
+<div class="main">
+  <div class="desc-box">
+    <div class="desc-label">Current Description</div>
+    <div class="desc-text">__SKILL_DESCRIPTION_PLACEHOLDER__</div>
+  </div>
+
+  <div class="controls">
+    <button class="add-btn" onclick="addQuery()">+ Add Query</button>
+    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+    <button class="filter-btn" onclick="setFilter('trigger', this)">Should Trigger</button>
+    <button class="filter-btn" onclick="setFilter('no-trigger', this)">Should NOT Trigger</button>
+    <span class="count" id="count-display">0 queries</span>
+  </div>
+
+  <div class="eval-list" id="eval-list">
+    <div class="empty-state" id="empty-state">No queries yet. Click "+ Add Query" to start.</div>
+  </div>
+
+  <div class="submit-section">
+    <button class="export-btn" onclick="exportEvalSet()">Export Eval Set</button>
+    <div class="help-text">
+      Downloads <code style="color:#8080c0">eval_set.json</code>. Pass to
+      <code style="color:#8080c0">run_loop.py --eval-set</code>.
+    </div>
+  </div>
+</div>
+
+<script>
+const SKILL_NAME = "__SKILL_NAME_PLACEHOLDER__";
+let filter = 'all';
+let nextId = 1;
+
+// Pre-populate with the eval data from Claude
+const INITIAL_DATA = __EVAL_DATA_PLACEHOLDER__;
+
+function initData() {
+  if (!Array.isArray(INITIAL_DATA) || INITIAL_DATA.length === 0) return;
+  const list = document.getElementById('eval-list');
+  const empty = document.getElementById('empty-state');
+  if (empty) empty.remove();
+
+  for (const item of INITIAL_DATA) {
+    addRowFromData(item.query, item.should_trigger);
+  }
+}
+
+function addQuery() {
+  const empty = document.getElementById('empty-state');
+  if (empty) empty.remove();
+  addRowFromData('', true);
+}
+
+function addRowFromData(query, shouldTrigger) {
+  const id = nextId++;
+  const row = document.createElement('div');
+  row.className = `eval-row ${shouldTrigger ? 'trigger' : 'no-trigger'}`;
+  row.dataset.id = id;
+  row.dataset.shouldTrigger = shouldTrigger ? '1' : '0';
+
+  row.innerHTML = `
+    <button class="toggle-btn ${shouldTrigger ? 'trigger' : 'no-trigger'}"
+            onclick="toggleTrigger(${id})" title="Click to toggle">
+      ${shouldTrigger ? '✓ TRIGGER' : '✗ NO TRIGGER'}
+    </button>
+    <textarea class="query-input" placeholder="Type the user query..." rows="1"
+              oninput="autoResize(this)">${escHtml(query)}</textarea>
+    <button class="del-btn" onclick="deleteRow(${id})" title="Delete">×</button>
+  `;
+
+  document.getElementById('eval-list').appendChild(row);
+  updateFilter();
+  updateCount();
+
+  const ta = row.querySelector('.query-input');
+  autoResize(ta);
+  if (!query) ta.focus();
+}
+
+function toggleTrigger(id) {
+  const row = document.querySelector(`[data-id="${id}"]`);
+  const current = row.dataset.shouldTrigger === '1';
+  const next = !current;
+  row.dataset.shouldTrigger = next ? '1' : '0';
+  row.className = `eval-row ${next ? 'trigger' : 'no-trigger'}`;
+  const btn = row.querySelector('.toggle-btn');
+  btn.className = `toggle-btn ${next ? 'trigger' : 'no-trigger'}`;
+  btn.textContent = next ? '✓ TRIGGER' : '✗ NO TRIGGER';
+  updateFilter();
+}
+
+function deleteRow(id) {
+  const row = document.querySelector(`[data-id="${id}"]`);
+  row.remove();
+  updateCount();
+  if (document.querySelectorAll('.eval-row').length === 0) {
+    const list = document.getElementById('eval-list');
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.id = 'empty-state';
+    empty.textContent = 'No queries yet. Click "+ Add Query" to start.';
+    list.appendChild(empty);
+  }
+}
+
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = ta.scrollHeight + 'px';
+}
+
+function setFilter(f, btn) {
+  filter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateFilter();
+}
+
+function updateFilter() {
+  document.querySelectorAll('.eval-row').forEach(row => {
+    const isTrigger = row.dataset.shouldTrigger === '1';
+    let show = filter === 'all'
+      || (filter === 'trigger' && isTrigger)
+      || (filter === 'no-trigger' && !isTrigger);
+    row.style.display = show ? 'flex' : 'none';
+  });
+  updateCount();
+}
+
+function updateCount() {
+  const rows = document.querySelectorAll('.eval-row');
+  const triggers = [...rows].filter(r => r.dataset.shouldTrigger === '1').length;
+  const noTriggers = rows.length - triggers;
+  document.getElementById('count-display').textContent =
+    `${rows.length} queries (${triggers} trigger, ${noTriggers} no-trigger)`;
+}
+
+function collectEvals() {
+  const rows = document.querySelectorAll('.eval-row');
+  const evals = [];
+  rows.forEach(row => {
+    const query = row.querySelector('.query-input').value.trim();
+    if (!query) return;
+    evals.push({
+      query,
+      should_trigger: row.dataset.shouldTrigger === '1',
+    });
+  });
+  return evals;
+}
+
+function exportEvalSet() {
+  const evals = collectEvals();
+  if (evals.length === 0) {
+    alert('No queries to export. Add some first.');
+    return;
+  }
+  const data = JSON.stringify(evals, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `eval_set_${SKILL_NAME}.json`;
+  a.click();
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'n' && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault();
+    addQuery();
+  }
+});
+
+initData();
+</script>
+</body>
+</html>
