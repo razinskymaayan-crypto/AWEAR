@@ -1,1 +1,5 @@
-{}
+{
+  "dana": {"status":"running","task":"camera preview + capture pipeline","started_at":"2026-06-18T09:30:00"},
+  "steve": {"status":"running","task":"register 11 subagents + investigate worktree-splitting root cause","started_at":"2026-06-18T09:30:00"},
+  "oren": {"status":"running","task":"currency display fix: ILS→USD in all price views + CPW thresholds","started_at":"2026-06-18T09:30:00"}
+}
