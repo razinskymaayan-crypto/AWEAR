@@ -126,6 +126,14 @@ function fmtAgo(iso){
   return Math.floor(diff/86400)+' ימים';
 }
 
+// In the VS Code extension this same file is loaded directly into a
+// webview (no separate HTTP origin) -- the extension host injects
+// window.__VSCODE_MODE__ before this script runs and talks to us via
+// postMessage instead of fetch, since webviews block insecure
+// http://127.0.0.1 requests as mixed content. Same UI, two transports.
+const VSCODE = !!window.__VSCODE_MODE__;
+const vscodeApi = VSCODE ? acquireVsCodeApi() : null;
+
 let network = null;
 
 function buildGraph(data){
@@ -200,8 +208,13 @@ document.querySelectorAll('.tab').forEach(tab => {
 
 let lastData = null;
 async function refresh(){
+  if(VSCODE){ vscodeApi.postMessage({type:'requestData'}); return; }
   const res = await fetch('/api/data');
   const data = await res.json();
+  applyData(data);
+}
+
+function applyData(data){
   lastData = data;
   document.getElementById('updated').textContent = 'עודכן: ' + new Date(data.generated_at).toLocaleString('he-IL');
 
@@ -248,6 +261,14 @@ async function refresh(){
 
   buildGraph(data);
   renderNotes(data);
+  if(window.__office3d) window.__office3d.applyData(data);
+}
+
+if(VSCODE){
+  window.addEventListener('message', (event) => {
+    const msg = event.data;
+    if(msg && msg.type === 'data') applyData(msg.payload);
+  });
 }
 
 function fmtWhen(iso){
@@ -259,6 +280,12 @@ async function sendNote(persona, textarea){
   const text = textarea.value.trim();
   if(!text) return;
   textarea.disabled = true;
+  if(VSCODE){
+    vscodeApi.postMessage({type:'note', persona, text});
+    textarea.value = '';
+    textarea.disabled = false;
+    return;
+  }
   await fetch('/api/notes/' + persona, {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
@@ -302,7 +329,7 @@ function renderNotes(data){
 }
 
 refresh();
-setInterval(refresh, 5000);
+if(!VSCODE) setInterval(refresh, 5000);
 </script>
 
 <script type="module">
@@ -487,10 +514,11 @@ function animate(){
   renderer.render(scene, camera);
 }
 
-async function refreshOffice(){
+let lastOfficeData = null;
+
+function applyOfficeData(data){
+  lastOfficeData = data;
   if(!initialized) return;
-  const res = await fetch('/api/data');
-  const data = await res.json();
   const meeting = data.meeting || {in_meeting:false, attendees:[]};
   let seatIdx = 0;
   for(const [id, a] of Object.entries(avatars)){
@@ -514,12 +542,11 @@ window.__office3d = {
   onShow(){
     if(!initialized){
       initScene();
+      if(lastOfficeData) applyOfficeData(lastOfficeData);
     }
-    refreshOffice();
-  }
+  },
+  applyData: applyOfficeData,
 };
-
-setInterval(() => { if(initialized) refreshOffice(); }, 5000);
 </script>
 </body>
 </html>

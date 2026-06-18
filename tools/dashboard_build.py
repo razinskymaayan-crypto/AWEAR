@@ -262,5 +262,10 @@ def build():
 
 
 if __name__ == "__main__":
+    import sys
     data = build()
-    print(json.dumps(data["company_totals"], indent=2))
+    if "--json" in sys.argv:
+        # full payload, for the VS Code extension (no HTTP server involved)
+        print(json.dumps(data, ensure_ascii=False))
+    else:
+        print(json.dumps(data["company_totals"], indent=2))
