@@ -1,4 +1,5 @@
 import en from './en.json';
+import he from './he.json';
 
 // Minimal i18n lookup. AWEAR is English-default per the global-first pivot
 // (see BUSINESS_PLAN.md / agents/*); this intentionally does not add
@@ -6,7 +7,7 @@ import en from './en.json';
 // tracked as future scope (see mobile/README.md). Its only job right now
 // is to make sure no screen copy is hardcoded inline, so adding locales
 // later is a data change, not a rewrite.
-const STRINGS = { en };
+const STRINGS = { en, he };
 const DEFAULT_LOCALE = 'en';
 
 /**
