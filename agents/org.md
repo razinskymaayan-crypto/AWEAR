@@ -18,11 +18,9 @@
 | ג׳ף | [jeff.md](jeff.md) | CEO / Founder | אסטרטגיה, קצב, גיוס משאבים, מנהיגות צוות |
 | איילון | [ayalon.md](ayalon.md) | Product Director | roadmap, אפיון, קול המשתמש, PRD |
 | סטיב | [steve.md](steve.md) | CTO | ארכיטקטורה, תשתית, איכות קוד, אבטחה |
-| מארק | [mark-dev-agent.md](mark-dev-agent.md) | Dev Agent (Frontend)* | ממשק משתמש, ארון דיגיטלי, פרופיל |
+| מארק | [mark-dev-agent.md](mark-dev-agent.md) | **Head of Design** (הוכרע ע"י כרמל ב-18.06.2026) | מוביל את צוות העיצוב — דולצ'ה (ביצוע) וגבאנה (QA) תחתיו |
 | וראן | [varan.md](varan.md) | Mobile Developer | פיתוח מובייל, פיד, חוויית משתמש |
 | סאם | [sam.md](sam.md) | Backend Developer | שרת, API, בסיסי נתונים, אמינות |
-
-\* יש חוסר עקביות מתועד בין `org.md` (Dev Agent) לבין מסמכים אחרים שמתייחסים למארק כ-Head of Design — לא נפתר, דורש הבהרת כרמל.
 
 ## צוותים (כפופים להנהלה הבכירה למעלה — לא לדירקטוריון ישירות)
 
