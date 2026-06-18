@@ -33,6 +33,46 @@ ROSTER = {
     "steve":   "backend",
 }
 
+# Static structure for the connection map -- who reports to whom (hierarchy)
+# and who does real peer review with whom (peer). This doesn't change with
+# activity; it's the org chart from COMPANY_OPERATING_MANUAL.md as data.
+ORG_NODES = {
+    "board": {"label": "דירקטוריון\nכרמל + מעיין", "kind": "board"},
+    "jeff":  {"label": "ג'ף — CEO", "kind": "ceo"},
+    "ayalon": {"label": "איילון", "kind": "head"},
+    "steve":  {"label": "סטיב", "kind": "head"},
+    "mark":   {"label": "מארק", "kind": "head"},
+    "varan":  {"label": "וראן", "kind": "head"},
+    "shira":  {"label": "שירה", "kind": "ic"},
+    "sam":    {"label": "סאם", "kind": "ic"},
+    "oren":   {"label": "אורן", "kind": "ic"},
+    "dolce":  {"label": "דולצ'ה", "kind": "ic"},
+    "gabbana": {"label": "גבאנה", "kind": "ic"},
+    "netta":  {"label": "נטה", "kind": "ic"},
+    "dana":   {"label": "דנה", "kind": "ic"},
+    "roei":   {"label": "רועי", "kind": "ic"},
+}
+
+ORG_EDGES = [
+    ("board", "jeff", "hierarchy"),
+    ("jeff", "ayalon", "hierarchy"),
+    ("jeff", "steve", "hierarchy"),
+    ("jeff", "mark", "hierarchy"),
+    ("jeff", "varan", "hierarchy"),
+    ("ayalon", "shira", "hierarchy"),
+    ("steve", "sam", "hierarchy"),
+    ("steve", "oren", "hierarchy"),
+    ("mark", "dolce", "hierarchy"),
+    ("mark", "gabbana", "hierarchy"),
+    ("mark", "netta", "hierarchy"),
+    ("varan", "dana", "hierarchy"),
+    ("varan", "roei", "hierarchy"),
+    ("dolce", "gabbana", "peer"),
+    ("dolce", "netta", "peer"),
+    ("dana", "roei", "peer"),
+    ("oren", "sam", "peer"),
+]
+
 USAGE_RE = re.compile(
     r"agentId:\s*`?([a-zA-Z0-9]+)`?.*?<usage>\s*subagent_tokens:\s*(\d+)\s*tool_uses:\s*(\d+)\s*duration_ms:\s*(\d+)",
     re.S,
@@ -191,6 +231,8 @@ def build():
         "agents": per_agent,
         "company_totals": company_totals,
         "unattributed": unattributed,
+        "org_nodes": ORG_NODES,
+        "org_edges": ORG_EDGES,
     }
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
