@@ -1,4 +1,5 @@
 ---
+name: verify-rendering
 description: Verify AWEAR's static SPA actually renders in a real browser (not just JS syntax check) — loads a screen via headless Playwright, captures console/page errors, and screenshots it. Required before merging any commit that touches static/index.html rendering (DOM/CSS/JS), per daily_model.md Iron Rule #9.
 ---
 
@@ -13,7 +14,7 @@ through JavaScriptCore) only proves the code *parses* — it does not catch:
   execution that references a `const` declared later in the file)
 - Any other runtime error that only surfaces when the DOM actually exists
 
-Both bugs fixed on 2026-06-17 ([postmortem](../../../agents/postmortem_2026-06-17.md))
+Both bugs fixed on 2026-06-17 ([postmortem](../../../agents/logs/postmortem_2026-06-17.md))
 were exactly this class of bug, and both passed JS syntax checks cleanly.
 
 ## Dev server

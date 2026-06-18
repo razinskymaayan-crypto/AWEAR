@@ -1,5 +1,6 @@
 ---
-description: When to stop and escalate vs. push through. The stall-escalation protocol for AWEAR agents — how to recognize a stall, what to report, and what NOT to do when blocked.
+name: stall-escalation
+description: Stop-and-escalate protocol for AWEAR agents. Use when blocked, about to bypass an Iron Rule, or after two failed attempts at the same step. Covers how to write a stop report, the escalation path (you → team lead → Jeff → Carmel), and what NOT to do when stuck.
 ---
 
 # Stall-Escalation Protocol

@@ -1,5 +1,6 @@
 ---
-description: Safe checklist before renaming any backend field, endpoint, or data key. Prevents breaking frontend/mobile callers. Based on the price_estimate_ils→usd incident that broke 54 places in static/index.html.
+name: backend-rename-safety
+description: Use before renaming any field, endpoint, or key in app.py or schema.sql. Prevents silent breakage across static/index.html and mobile/ — the price_estimate_ils→usd incident broke 54 callers with no console errors. Trigger whenever a backend rename is discussed or planned.
 ---
 
 # Backend Rename Safety Checklist

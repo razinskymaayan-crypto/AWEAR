@@ -1,4 +1,5 @@
 ---
+name: js-tzdead-zone
 description: Prevent JavaScript Temporal Dead Zone (TDZ) crashes — const/let are NOT hoisted. Use before adding new constants/variables to static/index.html, especially in global scope or near render functions called early.
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: container-css-check
 description: Before adding any HTML element to an existing container in static/index.html, audit the container's CSS (overflow, position, z-index, stacking context). Prevents elements from being invisible due to CSS layering.
 ---
 

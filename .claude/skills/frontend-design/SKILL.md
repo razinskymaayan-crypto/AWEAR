@@ -1,7 +1,6 @@
 ---
 name: frontend-design
 description: Create distinctive, production-grade frontend interfaces for AWEAR with high design quality. Use when building web components, pages, or UI elements in static/index.html or mobile/. Generates creative, polished code within AWEAR's established design system — not from scratch.
-license: Complete terms in LICENSE.txt
 ---
 
 This skill guides creation of distinctive, production-grade frontend interfaces for AWEAR that

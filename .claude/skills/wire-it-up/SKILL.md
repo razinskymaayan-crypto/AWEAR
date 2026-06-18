@@ -1,5 +1,6 @@
 ---
-description: "File exists" is not "feature works". Use this checklist after creating any new file, system, or API field to verify it is actually connected and used. Covers tokens, i18n, API response fields, and config.
+name: wire-it-up
+description: "File exists" is not "feature connected". Use after creating any new CSS file, i18n file, API field, config, or endpoint to verify the system actually uses it. Covers link tags, t() calls, frontend field reads, and import chains.
 ---
 
 # Wire It Up — Verify the Connection, Not Just the File

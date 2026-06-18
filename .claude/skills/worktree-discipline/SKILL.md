@@ -1,5 +1,6 @@
 ---
-description: Correct worktree isolation discipline. How to verify you're in the right worktree, avoid writing to the main repo, and prevent stale-HEAD forks. Iron Rule #14 enforcement.
+name: worktree-discipline
+description: Worktree isolation discipline — Iron Rule #14. Use at the start of every task to verify you're in the correct worktree (not the main repo), before writing any file. Also covers stale-HEAD detection and what to do if Edit/Write refuses to work in your worktree.
 ---
 
 # Worktree Discipline — Iron Rule #14
