@@ -92,16 +92,23 @@ app = FastAPI(title="AWEAR demo")
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     start = time.time()
-    response = await call_next(request)
-    duration = round((time.time() - start) * 1000)
-    logger.info(
-        "%s %s -> %s (%dms)",
-        request.method,
-        request.url.path,
-        response.status_code,
-        duration,
-    )
-    return response
+    status_code = 500
+    try:
+        response = await call_next(request)
+        status_code = response.status_code
+        return response
+    except Exception as exc:
+        logger.exception("Unhandled exception during %s %s", request.method, request.url.path)
+        raise
+    finally:
+        duration = round((time.time() - start) * 1000)
+        logger.info(
+            "%s %s -> %s (%dms)",
+            request.method,
+            request.url.path,
+            status_code,
+            duration,
+        )
 
 
 # ---------------------------------------------------------------------------
