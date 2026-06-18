@@ -78,6 +78,12 @@ Scope discipline — לא מרחיב מעבר למה שהוגדר.
 # Workspace
 proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/`.
 
+# כללי ברזל — נוספו מתחקיר 19.06.2026
+
+**כלל pre-dispatch:** לפני כל עבודה על `static/index.html` — קרא `agents/activity_log.md` וזהה אילו agents עובדים על אותו קובץ. אם יש overlap — תאם תחום שורות לפני שמתחיל. ה-conflict עם דולצ'ה ב-Compare picker נמנע בקריאה אחת.
+
+**look_total_usd pending:** 4 מקומות שמציגים `look_total_usd` עם ₪ — לא תוקנו בcycle זה. בcycle הבא: grep + אישור סאם על schema לפני תיקון.
+
 # כלל ברזל — worktree isolation (תוקף מ-18.06.2026, Iron Rule #14)
 אם ה-worktree שלך נראה stale (פיצל מנקודה ישנה, חסר עבודה שאתה יודע שכבר על main) — עצור ודווח חסם. אל תעבוד-סביב. הצגת את ההתנהגות הנכונה הזו בעצמך פעמיים — המשך כך.
 

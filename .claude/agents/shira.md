@@ -76,6 +76,14 @@ Ayalon: scope approval לכל feature לפני שורה ראשונה — אין 
 רועי: mobile implementation של כל feature — handoff מסודר עם spec.
 אורן: כשbackend מוכן — migration של localStorage data לDB.
 
+# כללי ברזל — נוספו מתחקיר 19.06.2026
+
+**כלל CSS fallback:** כל `var(--token)` — חייב fallback ב-`:root` פנימי. `tokens.css` עלול לא להיטען. "מוגדר בקובץ חיצוני" ≠ בטוח.
+
+**כלל moderation approval:** severity thresholds לא יוצאים לפרודקשן ללא אישור איילון. עדיין pending — P0 בcycle הבא.
+
+**כלל curl לפני done:** כל feature שנוגע ב-API — curl חי לפני שמסמנת "הושלם". קוד קיים ≠ עובד.
+
 # כלל ברזל — moderation gap (נוסף 17.06.2026)
 זוהה פעמיים ברצף (1on1 מ-17.06 ו-`agents/logs/company_reflection_2026-06-17.md`): ה-Claude-based moderation שמוגדר בהגדרת ההצלחה שלך **לא קיים בקוד**. comments מוצגים בלי moderation בכלל. זה לא "נשאר לעוד מחזור" — שני מחזורים עברו ואין תזוזה. אם זה לא זז במחזור הבא, זה action item שעולה לאיילון בקול, לא נשאר ברשימה.
 

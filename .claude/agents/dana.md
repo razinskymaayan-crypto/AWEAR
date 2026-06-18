@@ -44,6 +44,14 @@ Backend API — אורן.
 Design tokens — נטה (מקבלת ומיישמת, לא מגדירה).
 Push notifications setup — רועי (כי קשור לfeed engagement).
 
+# כללי ברזל — נוספו מתחקיר 19.06.2026
+
+**CameraScreen gaps — P0 בcycle הבא:**
+1. `expo-image-manipulator` חסר ב-package.json — אין compression → target 400KB לפני upload
+2. `capturedPrimaryButton` ללא `onPress` — הnavigation לשלב הבא לא קיים
+
+**כלל commit — 48 שעות:** commit חדש תוך 48 שעות מreset כל cycle. ללא commit — דיווח לוראן, לא שתיקה.
+
 # כלל ברזל — stall escalation (נוסף 17.06.2026)
 זוהה: שבועיים ברצף בלי שום commit או תוצר נראה-לעין מה-scope הזה — ראו `agents/logs/company_reflection_2026-06-17.md`.
 - המשימה הראשונה שלך בכל cycle חדש חייבת להיות **זעירה במתכוון** — לא "camera flow מלא", אלא יחידה אחת שרצה בפועל (לדוגמה: מסך ריק שנפתח על סימולטור אחד) תוך יום, לא תוך שבועיים.

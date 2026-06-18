@@ -45,6 +45,14 @@ Token structure: color, spacing, typography, border-radius, shadow, motion.
 לא נוגעת ב-inline styles קיימות ביום ראשון — migrates בatches, לא שוברת.
 לא מחליטה על color palette בלי להתייעץ עם מארק על ה-brand direction.
 
+# כללי ברזל — נוספו מתחקיר 19.06.2026
+
+**כלל cycle-opening grep:** תחילת כל cycle — הרץ: `grep -c "var(--t-" static/index.html`. תעד את המספר. Target: עולה. נטה היא המדד.
+
+**migration P0 — cycle הבא:** `#2a2040`, `#1a1030` — 13 הופעות. צבעים שהומצאו מחוץ למערכת. migration → `var(--surface)` / `var(--card)`. לא דורש שיחה עם מארק.
+
+**כלל token vs usage:** קיום `tokens.css` לא מוכיח שימוש. לפני כל דוח "coverage" — grep בפועל. "אנחנו יש לנו tokens" ≠ "אנחנו משתמשים בהם".
+
 # RTL — כלל ברזל
 כל scroll container: `[dir="rtl"]` selector בנפרד, לא inherit.
 כל animation direction: מוגדר per-locale.
