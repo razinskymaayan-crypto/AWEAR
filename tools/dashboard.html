@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>AWEAR — Company Dashboard</title>
+<style>
+  :root{
+    --bg:#0a0a0e; --card:#17171f; --card-hover:#1f1f38; --line:#24242e;
+    --accent:#ff3d77; --accent2:#7b5cff; --fg:#f6f6f9; --muted:#8e8e9c;
+    --success:#4ade80; --warning:#fbbf24; --danger:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,-apple-system,sans-serif;padding:32px;}
+  h1{font-size:24px;font-weight:900;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:28px}
+  .totals{display:flex;gap:16px;margin-bottom:32px;flex-wrap:wrap}
+  .tcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;min-width:150px}
+  .tcard .num{font-size:28px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tcard .label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+  .dept{margin-bottom:28px}
+  .dept h2{font-size:14px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .acard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;transition:border-color .15s}
+  .acard:hover{border-color:var(--accent2)}
+  .acard.zero{opacity:.55}
+  .ahead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .aname{font-size:15px;font-weight:800}
+  .badge{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.4px}
+  .badge.idle{background:rgba(142,142,156,.15);color:var(--muted)}
+  .badge.running{background:rgba(74,222,128,.15);color:var(--success);animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  .arow{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+  .arow b{color:var(--fg);font-weight:700}
+  .bar{height:5px;border-radius:3px;background:var(--line);margin-top:10px;overflow:hidden}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .3s}
+  .current{margin-top:10px;font-size:11px;color:var(--success);background:rgba(74,222,128,.08);border-radius:8px;padding:6px 8px;line-height:1.4}
+  .last{font-size:10px;color:var(--muted);margin-top:8px}
+  details{margin-top:8px}
+  summary{font-size:11px;color:var(--accent2);cursor:pointer;font-weight:700}
+  .task{font-size:11px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--line)}
+  .task b{color:var(--fg)}
+  .unattr{font-size:11px;color:var(--warning);margin-top:24px}
+  footer{margin-top:32px;color:var(--muted);font-size:11px}
+</style>
+</head>
+<body>
+  <h1>AWEAR — Company Dashboard</h1>
+  <div class="sub" id="updated">טוען...</div>
+  <div class="totals" id="totals"></div>
+  <div id="depts"></div>
+  <div class="unattr" id="unattr"></div>
+  <footer>מתעדכן אוטומטית כל 5 שניות · המספרים נשלפים מתוך session transcripts אמיתיים — לא מוערכים</footer>
+
+<script>
+const DEPT_LABELS = {design:'Design', mobile:'Mobile', backend:'Backend', product:'Product', unknown:'לא ידוע'};
+const NAME_LABELS = {shira:'שירה', ayalon:'איילון', dolce:'דולצ\'ה', gabbana:'גבאנה', netta:'נטה', mark:'מארק',
+  dana:'דנה', roei:'רועי', varan:'וראן', sam:'סאם', oren:'אורן', steve:'סטיב'};
+
+function fmtNum(n){ return n.toLocaleString('en-US'); }
+function fmtAgo(iso){
+  if(!iso) return 'אין נתון';
+  const d = new Date(iso); const diff = (Date.now()-d.getTime())/1000;
+  if(diff<60) return 'עכשיו';
+  if(diff<3600) return Math.floor(diff/60)+' דק׳';
+  if(diff<86400) return Math.floor(diff/3600)+' שעות';
+  return Math.floor(diff/86400)+' ימים';
+}
+
+async function refresh(){
+  const res = await fetch('/api/data');
+  const data = await res.json();
+  document.getElementById('updated').textContent = 'עודכן: ' + new Date(data.generated_at).toLocaleString('he-IL');
+
+  const t = data.company_totals;
+  document.getElementById('totals').innerHTML = `
+    <div class="tcard"><div class="num">${fmtNum(t.total_dispatches)}</div><div class="label">משימות שוגרו</div></div>
+    <div class="tcard"><div class="num">${fmtNum(t.total_tokens)}</div><div class="label">טוקנים נצרכו</div></div>
+    <div class="tcard"><div class="num">${fmtNum(t.total_tool_uses)}</div><div class="label">קריאות כלים</div></div>
+  `;
+
+  const maxTokens = Math.max(1, ...Object.values(data.agents).map(a=>a.total_tokens));
+  const byDept = {};
+  for(const [name, a] of Object.entries(data.agents)){
+    (byDept[a.department] = byDept[a.department]||[]).push([name, a]);
+  }
+
+  let html = '';
+  for(const dept of ['design','mobile','backend','product']){
+    const agents = (byDept[dept]||[]).sort((a,b)=>b[1].total_tokens-a[1].total_tokens);
+    if(!agents.length) continue;
+    html += `<div class="dept"><h2>${DEPT_LABELS[dept]}</h2><div class="grid">`;
+    for(const [name, a] of agents){
+      const pct = Math.round(100*a.total_tokens/maxTokens);
+      html += `<div class="acard ${a.total_dispatches===0?'zero':''}">
+        <div class="ahead">
+          <div class="aname">${NAME_LABELS[name]||name}</div>
+          <div class="badge ${a.status}">${a.status==='running'?'עובד כרגע':'לא פעיל'}</div>
+        </div>
+        <div class="arow"><span>משימות</span><b>${a.total_dispatches}</b></div>
+        <div class="arow"><span>טוקנים</span><b>${fmtNum(a.total_tokens)}</b></div>
+        <div class="arow"><span>קריאות כלים</span><b>${a.total_tool_uses}</b></div>
+        <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
+        ${a.current_task?`<div class="current">🟢 ${a.current_task}</div>`:''}
+        <div class="last">פעילות אחרונה: ${fmtAgo(a.last_active)}</div>
+        ${a.tasks.length?`<details><summary>${a.tasks.length} משימות</summary>${a.tasks.map(tk=>`<div class="task"><b>${tk.description||'—'}</b><br>${fmtNum(tk.tokens)} tokens · ${tk.tool_uses} tool calls</div>`).join('')}</details>`:''}
+      </div>`;
+    }
+    html += `</div></div>`;
+  }
+  document.getElementById('depts').innerHTML = html;
+
+  const u = data.unattributed.filter(x => x.description);
+  document.getElementById('unattr').textContent = u.length ? `⚠ ${u.length} דיספאצ'ים לא זוהו לסוכן ספציפי (בדיקה ידנית): ${u.map(x=>x.description).join(', ')}` : '';
+}
+
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>

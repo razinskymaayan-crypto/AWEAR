@@ -21,3 +21,6 @@ __pycache__/
 venv312/
 .tg_chat
 .tg_inbox
+
+# Dashboard — regenerated on every request, not source of truth
+agents/dashboard_data.json
