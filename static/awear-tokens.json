@@ -52,6 +52,10 @@
       "value": "#52c97a",
       "comment": "Success states — order confirmed, upload done, follow accepted. Slightly warmer than pure Tailwind green #4ade80. Avoids the 'hospital green' association."
     },
+    "success-surface": {
+      "value": "rgba(82,201,122,.12)",
+      "comment": "Success background layer — sustainability badges, earning cards (P1-6 Gabbana). Derived from --success (#52c97a) at 12% opacity. Note: brief referenced #4ade80 (Tailwind) but system uses #52c97a — using system value for consistency."
+    },
     "warning": {
       "value": "#e8a84a",
       "comment": "Warning states — out of stock, pending, approaching limit. Warm amber, not harsh yellow. Replaces #fbbf24 which reads as 'caution tape' on dark backgrounds."
@@ -139,8 +143,8 @@
     "sm":     { "value": "0 1px 4px rgba(14,12,15,.28)" },
     "md":     { "value": "0 2px 16px rgba(14,12,15,.36)" },
     "lg":     { "value": "0 8px 32px rgba(14,12,15,.44)" },
-    "accent": { "value": "0 4px 24px rgba(232,82,106,.28)", "comment": "rose glow — replaces purple glow #7b5cff" },
-    "glow":   { "value": "0 0 20px rgba(232,82,106,.40)",  "comment": "stronger rose glow for featured elements" }
+    "accent": { "value": "0 4px 20px rgba(232,82,106,.32)", "comment": "rose glow — replaces purple glow #7b5cff. updated cycle 1: 20px spread, .32 opacity (was 24px/.28)" },
+    "glow":   { "value": "0 0 20px rgba(232,82,106,.45)",  "comment": "stronger rose glow for featured elements" }
   },
 
   "motion": {

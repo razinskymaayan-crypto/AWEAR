@@ -219,6 +219,7 @@ inro.social/blog/instagram-layout, raw.studio/tiktok-ux, beamoore.ca/depop-redes
 - הפלטה החדשה כבר ב-`static/tokens.css`
 **מקורות שנצרכו:**
 uxcel.com/blog/color-palettes-social-networks, wisernotify.com/blog/cta-colors, fireart.studio/dark-mode-ui, buyitinisrael.com/design-trends-2025, mobbin.com/depop-colors, heatmap.com/color-psychology-cta, gendesigns.ai/dark-mode-guide
+**עודכן 19.06.2026 — cycle 1:** shadow-accent עודכן ל-rose rgba בcycle 1 (מ-`rgba(123,92,255,.32)` → `rgba(232,82,106,.32)`). shadow-glow מסונכרן בו-זמנית. נוסף --success-surface. עדכון מקביל ב-tokens.css וב-awear-tokens.json.
 
 ### R-003 | מערכת Icons לAWEAR
 **תאריך:** 19.06.2026 | **מבצע:** מארק | **קובץ:** `docs/ICON_SYSTEM.md`

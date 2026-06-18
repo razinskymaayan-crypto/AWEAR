@@ -17,7 +17,8 @@
   --line:          #2e2836;
   --fg:            #f0ecf5;
   --muted:         #8a8498;
-  --success:       #52c97a;
+  --success:         #52c97a;
+  --success-surface: rgba(82,201,122,.12);
   --warning:       #e8a84a;
   --danger:        #e05252;
   --overlay:       rgba(14,12,15,0.80);
@@ -76,8 +77,8 @@
   --shadow-sm:     0 1px 4px rgba(0,0,0,.24);
   --shadow-md:     0 2px 16px rgba(0,0,0,.32);
   --shadow-lg:     0 8px 32px rgba(0,0,0,.40);
-  --shadow-accent: 0 4px 24px rgba(123,92,255,.32);
-  --shadow-glow:   0 0 20px rgba(123,92,255,.45);
+  --shadow-accent: 0 4px 20px rgba(232,82,106,.32);
+  --shadow-glow:   0 0 20px rgba(232,82,106,.45);
 
   /* ── Motion ───────────────────────────────────────────── */
   --motion-fast:   150ms ease;
