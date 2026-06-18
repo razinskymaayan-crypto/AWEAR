@@ -13,6 +13,12 @@
     "capturedPreviewRetake": "Retake",
     "capturedPreviewUse": "Use photo"
   },
+  "wardrobe": {
+    "newItem": "Just added",
+    "emptyTitle": "Your closet is empty",
+    "emptyBody": "Scan your first outfit to build your digital wardrobe",
+    "cta": "Scan a look"
+  },
   "cameraPermission": {
     "iosUsageDescription": "AWEAR uses your camera to scan clothing into your digital wardrobe.",
     "title": "See your wardrobe, instantly",
