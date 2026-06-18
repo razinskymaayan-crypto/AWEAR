@@ -194,6 +194,62 @@
 
 ---
 
+## ○ RESEARCH — מחקרים שנעשו. לפני שעושים מחקר חדש — בדוק כאן קודם.
+
+> **כלל:** אם הנושא כבר נחקר — קרא את ה-doc. אל תשחזר מחקר שכבר קיים.
+
+### R-001 | UX של רשתות חברתיות — Instagram, TikTok, Pinterest, Depop, Vinted
+**תאריך:** 19.06.2026 | **מבצע:** מארק
+**קובץ:** `docs/UX_RESEARCH.md`
+**תמצית:**
+- ניווט נוכחי (Home/חיפוש/FAB/פיד/ארון) תואם את הפרדיגמה — אין צורך לשנות סדר
+- פיד לוקים: masonry 2-col (4:5 ratio) — לא grid ריבועי
+- Marketplace card חסר: condition badge, size, seller handle, heart button
+- 5 מיקרו-אינטראקציות P0: double-tap like, skeleton loading, swipe-to-dismiss sheets, shared element transition, filter chips horizontal scroll
+- Pinterest/TikTok onboarding: ≤5 screens, value demonstration לפני sign-up
+
+### R-002 | פסיכולוגיה של צבע לאפליקציות אופנה
+**תאריך:** 19.06.2026 | **מבצע:** נטה
+**קובץ:** `docs/COLOR_SYSTEM.md`
+**תמצית:**
+- Dark mode = תשתית ויזואלית: תמונות בולטות, תחושת premium. Dark-gray חם (#1a1625) עדיף על שחור טהור
+- Accessible premium = חמימות מדיטרנית, לא Nordic קר — rose/terracotta לקהל ישראלי 18-35
+- Dual accent: action חם (rose #e8526a = like/buy/follow) + ארגון (terracotta #c4714a = tag/category/price)
+- CTA: saturation 60-70% = premium invitation. >80% = flash sale perception
+- הפלטה החדשה כבר ב-`static/tokens.css`
+
+### R-003 | מערכת Icons לAWEAR
+**תאריך:** 19.06.2026 | **מבצע:** מארק
+**קובץ:** `docs/ICON_SYSTEM.md`
+**תמצית:**
+- AWEAR כבר יש `ICONS` object + `icon()` function — לא צריך library חיצונית
+- טבלת החלפות מלאה: כל emoji ב-UI chrome → `icon()` call ספציפי
+- `CAT_EMOJI` object (שורה ~1598) — לבטל. `catIcon()` מחליף. 3 קריאות נשארו (שורות ~3268, ~3963, ~3218)
+- Stroke weight: 1.5px עקבי. Hit targets: ≥44px
+
+### R-004 | כללי עיצוב AWEAR — 7 כללים קונקרטיים
+**תאריך:** 19.06.2026 | **מבצע:** ג'ף + ישיבת מנהלים
+**קובץ:** `docs/DESIGN_STANDARDS.md`
+**תמצית:**
+- אפס emoji ב-UI chrome (grep לאימות)
+- כל product card = `productImage()` — לא gradient/character
+- background = token בלבד — `#2a2040`/`#1a1030` = פסילה
+- typography: 5 גדלים + `var(--t-*)` חובה
+- רשת 8pt — כל ערך מחוצה לרשימה דורש הסבר
+- כל אינטראקציה = `:active` feedback
+- שאלת העל: "יעלה ב-Instagram story?" — שורה חובה בכל PR של גבאנה
+
+### R-005 | מאגר מוצרי אופנה + פרופילים
+**תאריך:** 19.06.2026 | **מבצע:** general agents
+**קבצים:** `static/data/products.json`, `static/data/profiles.json`, `static/data/posts.json`
+**תמצית:**
+- 65 מוצרים ב-6 קטגוריות (נעליים/מכנסיים/חולצות/ג'קטים/אקססוריז/שמלות) — URLs מאומתים
+- 20 פרופילים פיקטיביים (10 ישראליים, 10 בינלאומיים) — תמונות מ-randomuser.me
+- 40 פוסטים לפיד — 2 לכל פרופיל — תמונות Unsplash fashion/outfit
+- ראה `static/data/README.md` לתיעוד המבנה
+
+---
+
 ## ○ כיצד להוסיף לקח חדש
 
 1. בחר סעיף מתאים (OW / MG / BE / DS / SF / MB / PR / CE)
