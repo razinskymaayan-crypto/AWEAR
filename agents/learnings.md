@@ -86,6 +86,7 @@
 **מקור:** oren_retrospective (2026-06-19)
 **לקח:** 4 מקומות ב-index.html שמציגים `look_total_usd` עם ₪ — לא כוסו בcycle 19.06. זה חוב ידוע, לא surprise.
 **מנגנון (אורן + סאם):** cycle הבא — grep על look_total_usd, אישור סאם על schema, תיקון.
+**עודכן 2026-06-19 — Cycle 1:** grep מצא 3 מקומות (לא 4). תוקנו 2: שורות 2118 (look grid), 2150 (shop-look button). נותר פתוח: שורה 2305 — `post.price (ILS) || look_total_usd (USD)` — fallback מעורב. שינוי סימן ₪→$ ישבור תצוגת ILS. דורש: (1) סאם מחליט אם `look_total_usd` יוסר מה-fallback chain, (2) או שמוסיפים הגיון ליבה שבוחר סימן לפי מקור הערך. commit: 7244a7b, worktree: fix/look-total-usd.
 
 ### BE-003 | schema owner = סאם. integration = אורן. לא מתחלפים.
 **מקור:** oren_retrospective (2026-06-19)
