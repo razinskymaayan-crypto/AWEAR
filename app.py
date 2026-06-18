@@ -52,7 +52,7 @@ class ClothingItem(BaseModel):
     style_tags: list[str]   # e.g. ["casual", "streetwear", "y2k"]
     resale_potential: str   # low | medium | high  (Layer 3: sell hook)
     search_query: str       # precise EN shopping query, e.g. "white ribbed cropped tee"
-    price_estimate_ils: int  # estimated retail price in ILS
+    price_estimate_usd: int  # estimated retail price in USD
 
 
 class OutfitAnalysis(BaseModel):
@@ -83,7 +83,7 @@ SYSTEM_PROMPT = (
     "For each item: name, dominant color, material guess, brand_vibe (actual brand if visible, else aesthetic), "
     "style tags (global fashion vocabulary: y2k, streetwear, minimal, vintage, preppy, coastal, etc.), "
     "resale potential, search_query (precise English for global retailers), "
-    "price_estimate_ils (estimated retail price in USD — use integer).\n\n"
+    "price_estimate_usd (estimated retail price in USD — use integer).\n\n"
     "Then summarize the overall look in English and produce `stylist_tip` — "
     "one short, actionable styling suggestion in English. "
     "If you can confidently detect the user's language from any visible text or context, use that language instead."
@@ -101,6 +101,59 @@ SYSTEM_PROMPT = (
 # ---------------------------------------------------------------------------
 
 AFFILIATE_TAG = "awear"  # replace with the real network publisher id once signed
+
+# Resale / commission economics — canonicalized per Ayalon's product decision
+# (agents/ayalon_product_decisions_2026-06-18.md, decision #3). These were previously
+# scattered as inconsistent literals (40%/50%/60%) across app.py and static/index.html;
+# this is now the single source of truth on the backend. They are two independent
+# numbers, not competing definitions: the seller's suggested resale price is
+# RESALE_SUGGESTION_PCT of the original estimated price, and AWEAR_COMMISSION_PCT is
+# the cut AWEAR takes on top of the eventual sale price.
+RESALE_SUGGESTION_PCT = 0.5   # suggested resale price = 50% of original price estimate
+AWEAR_COMMISSION_PCT = 0.15   # AWEAR's commission on a completed resale, on top of the above
+
+# ---------------------------------------------------------------------------
+# Currency — static reference rates, NOT live FX.
+#
+# Per Ayalon's product decision (agents/ayalon_product_decisions_2026-06-18.md, decision #2):
+# canonical storage/estimate currency across the app is USD (see ClothingItem.price_estimate_usd
+# and SYSTEM_PROMPT above). These are fixed, hand-maintained approximate rates for converting
+# a USD estimate into other currencies for *display* purposes only — they are NOT pulled from
+# a live FX API and will drift from the real market rate over time. That's an intentional v1
+# scope call, not an oversight: live/paid FX is explicitly NOT approved (needs a separate
+# budget/vendor decision with Jeff/the board) since these are "shop the look" price estimates,
+# not real payment-processing amounts. Revisit (cron-refresh, or a real FX API) only if
+# conversion-accuracy complaints actually show up — see Ayalon's doc for the exact trigger.
+#
+# This is intentionally NOT wired into every endpoint yet — it's the primitive other
+# endpoints/the frontend can adopt incrementally as multi-currency display work continues.
+CURRENCY_BASE = "USD"
+
+# Approximate units of each currency per 1 USD. Update occasionally (manually, or via a
+# future cron job) — do not treat as authoritative for real transactions.
+STATIC_FX_RATES_PER_USD = {
+    "USD": 1.0,
+    "EUR": 0.92,
+    "GBP": 0.79,
+    "ILS": 3.7,
+    "CAD": 1.36,
+    "AUD": 1.52,
+    "JPY": 156.0,
+}
+
+
+def convert_from_usd(amount_usd: float, to_currency: str) -> float:
+    """Convert a USD amount to `to_currency` using the static reference table above.
+
+    Display-only helper — not suitable for real payment/settlement math. Raises
+    ValueError for an unsupported currency rather than silently returning the wrong
+    number (fail loud, not silently).
+    """
+    code = to_currency.upper()
+    if code not in STATIC_FX_RATES_PER_USD:
+        raise ValueError(f"Unsupported currency: {to_currency!r}")
+    return amount_usd * STATIC_FX_RATES_PER_USD[code]
+
 
 # (display name, search URL template, scope) — all global, zero approval required.
 RETAILERS = [
@@ -132,15 +185,15 @@ _DEMO_OUTFITS = [
         "items": [
             {"category": "top", "name": "White Ribbed Crop Top", "color": "white",
              "material_guess": "cotton", "brand_vibe": "Zara", "style_tags": ["minimal", "y2k"],
-             "resale_potential": "medium", "search_query": "white ribbed cropped sleeveless tank top women", "price_estimate_ils": 25},
+             "resale_potential": "medium", "search_query": "white ribbed cropped sleeveless tank top women", "price_estimate_usd": 25},
             {"category": "bottoms", "name": "Barrel-Leg Light Wash Denim", "color": "light blue",
              "material_guess": "denim", "brand_vibe": "Levi's",
              "style_tags": ["denim", "y2k", "casual"], "resale_potential": "high",
-             "search_query": "barrel leg light wash jeans women", "price_estimate_ils": 80},
+             "search_query": "barrel leg light wash jeans women", "price_estimate_usd": 80},
             {"category": "shoes", "name": "Adidas Samba OG White", "color": "white/black",
              "material_guess": "leather", "brand_vibe": "Adidas",
              "style_tags": ["retro", "sporty", "iconic"], "resale_potential": "high",
-             "search_query": "adidas samba og white black sneakers", "price_estimate_ils": 120},
+             "search_query": "adidas samba og white black sneakers", "price_estimate_usd": 120},
         ],
         "overall_style": "Y2K Minimal",
         "occasion": "Everyday / Coffee shop",
@@ -153,15 +206,15 @@ _DEMO_OUTFITS = [
             {"category": "outerwear", "name": "Oversized Camel Blazer", "color": "camel",
              "material_guess": "wool blend", "brand_vibe": "& Other Stories",
              "style_tags": ["preppy", "minimal", "smart-casual"], "resale_potential": "high",
-             "search_query": "oversized camel blazer women wool", "price_estimate_ils": 150},
+             "search_query": "oversized camel blazer women wool", "price_estimate_usd": 150},
             {"category": "bottoms", "name": "Straight-Leg Black Trousers", "color": "black",
              "material_guess": "polyester blend", "brand_vibe": "COS",
              "style_tags": ["minimal", "office", "classic"], "resale_potential": "medium",
-             "search_query": "straight leg black tailored trousers women", "price_estimate_ils": 70},
+             "search_query": "straight leg black tailored trousers women", "price_estimate_usd": 70},
             {"category": "shoes", "name": "Pointed-Toe Leather Mules", "color": "black",
              "material_guess": "leather", "brand_vibe": "Mango",
              "style_tags": ["minimal", "elegant"], "resale_potential": "medium",
-             "search_query": "pointed toe black leather mules women", "price_estimate_ils": 60},
+             "search_query": "pointed toe black leather mules women", "price_estimate_usd": 60},
         ],
         "overall_style": "Minimal Chic",
         "occasion": "Office / Dinner",
@@ -174,19 +227,19 @@ _DEMO_OUTFITS = [
             {"category": "top", "name": "Vintage Band Graphic Tee", "color": "black",
              "material_guess": "cotton", "brand_vibe": "vintage",
              "style_tags": ["streetwear", "vintage", "grunge"], "resale_potential": "high",
-             "search_query": "vintage black band graphic tee oversized", "price_estimate_ils": 35},
+             "search_query": "vintage black band graphic tee oversized", "price_estimate_usd": 35},
             {"category": "bottoms", "name": "Baggy Cargo Pants Khaki", "color": "khaki",
              "material_guess": "cotton twill", "brand_vibe": "Carhartt",
              "style_tags": ["streetwear", "utility", "y2k"], "resale_potential": "high",
-             "search_query": "baggy cargo pants khaki women utility", "price_estimate_ils": 90},
+             "search_query": "baggy cargo pants khaki women utility", "price_estimate_usd": 90},
             {"category": "shoes", "name": "New Balance 550 White Cream", "color": "white/cream",
              "material_guess": "leather", "brand_vibe": "New Balance",
              "style_tags": ["retro", "sporty", "streetwear"], "resale_potential": "high",
-             "search_query": "new balance 550 white cream sneakers", "price_estimate_ils": 110},
+             "search_query": "new balance 550 white cream sneakers", "price_estimate_usd": 110},
             {"category": "bag", "name": "Mini Crossbody Black Canvas", "color": "black",
              "material_guess": "canvas", "brand_vibe": "streetwear",
              "style_tags": ["streetwear", "everyday"], "resale_potential": "low",
-             "search_query": "mini black canvas crossbody bag streetwear", "price_estimate_ils": 30},
+             "search_query": "mini black canvas crossbody bag streetwear", "price_estimate_usd": 30},
         ],
         "overall_style": "Urban Streetwear",
         "occasion": "Weekend / Street",
@@ -268,8 +321,8 @@ async def analyze(photo: UploadFile):
     look_total = 0
     for item in result["items"]:
         item["buy_options"] = build_buy_options(item["search_query"])
-        look_total += item.get("price_estimate_ils") or 0
-    result["look_total_ils"] = look_total
+        look_total += item.get("price_estimate_usd") or 0
+    result["look_total_usd"] = look_total
     return result
 
 
@@ -423,13 +476,14 @@ async def smart_declutter(data: DeclutterRequest):
         return {"suggestions": []}
 
     items_desc = "\n".join(
-        f"- {it.get('name','?')} ({it.get('category','?')}) {it.get('price_estimate_ils',0)}"
+        f"- {it.get('name','?')} ({it.get('category','?')}) {it.get('price_estimate_usd',0)}"
         for it in unused[:20]
     )
     system = (
         "You are AWEAR's AI wardrobe manager, serving users worldwide. Review this list "
         "of items that were never worn. For each item, suggest: action (sell/donate/recycle), "
-        "a short reason, price_suggestion (60% of the original price for resale). "
+        f"a short reason, price_suggestion ({round(RESALE_SUGGESTION_PCT * 100)}% of the "
+        "original price for resale). "
         "Reply in the same language the item names are written in (default to English if unsure). "
         'Return JSON only: {"suggestions": [{"name":"...","action":"sell","reason":"...","price_suggestion":120}]}'
     )
@@ -448,7 +502,7 @@ async def smart_declutter(data: DeclutterRequest):
         return {"suggestions": [
             {"name": it.get("name","?"), "action": "sell",
              "reason": "never worn",
-             "price_suggestion": round((it.get("price_estimate_ils") or 100) * 0.4)}
+             "price_suggestion": round((it.get("price_estimate_usd") or 100) * RESALE_SUGGESTION_PCT)}
             for it in unused[:5]
         ]}
 
