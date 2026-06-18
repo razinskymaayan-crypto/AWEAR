@@ -2115,7 +2115,7 @@
     if(!feed.length) return `<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('image',44)}</div>עדיין לא שיתפת לוקים.<br/>צלמי תלבושת ושתפי אותה לפיד<br/>כדי שתופיע כאן בפרופיל שלך.</div>`;
     return `<div class="looks-grid">${feed.map(p=>`<div class="look-cell" data-goto-feed="1">
       ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
-      <div class="lc-meta">${esc(p.item_count||0)} פריטים${p.look_total_usd?' · ₪'+esc(p.look_total_usd):''}</div>
+      <div class="lc-meta">${esc(p.item_count||0)} פריטים${p.look_total_usd?' · $'+esc(p.look_total_usd):''}</div>
     </div>`).join('')}</div>`;}
 
   function forSaleHTML(){
@@ -2147,7 +2147,7 @@
         </div>` : `
       ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size:11.5px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">⚠️ הסריקה האחרונה הייתה במצב דמו — AI לא היה זמין, אלו פריטי הדגמה</div>`:''}
       ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
-      ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} קני את הלוק האחרון · ~₪${esc(meta.look_total_usd)}</button>`:''}
+      ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} קני את הלוק האחרון · ~$${esc(meta.look_total_usd)}</button>`:''}
       <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>
       ${closetShelvesHTML(wardrobe)}`}`;
 
