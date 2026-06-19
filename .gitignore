@@ -28,3 +28,6 @@ agents/data/dashboard_data.json
 
 # graphify — generated knowledge graph, regenerate with `graphify update .`
 graphify-out/
+
+# Runtime SQLite DB — generated at startup, not source of truth
+data/awear.db
