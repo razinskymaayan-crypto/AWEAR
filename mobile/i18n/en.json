@@ -83,6 +83,7 @@
     "deniedRetryBody": "Camera access is required to scan your wardrobe. Allow it to continue."
   },
   "feed": {
+    "title": "Feed",
     "likes": "{{count}} likes",
     "comments": "{{count}} comments",
     "forYou": "For You",
