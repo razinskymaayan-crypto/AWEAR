@@ -44,3 +44,18 @@
 ## cycle-opening grep — Cycle 1:
 `grep -c "var(--t-" static/index.html` = **0** (ראה DS-001 בlearnings.md)
 target cycle 2: עולה (migration מתחיל)
+
+---
+
+**הערה:** audit רץ לפני merge של fix/cycle-1-p0-visual.
+לאחר merge (commit 4cd0156 — דולצ'ה): `#1a1030=0`, `#2a2040=0`.
+אומת: `grep -c "#1a1030\|#2a2040" static/index.html` → **0** (19.06.2026).
+הנתונים בטבלה למעלה (13 ו-9 הופעות) משקפים את ה-snapshot שלפני התיקון — שמורים כbaseline היסטורי.
+
+## Cycle 2 Migration — #4ade80 / #34d399 → var(--success):
+**תאריך:** 19.06.2026 | **branch:** feat/success-token-migration
+**DoD:** `grep -c "#4ade80\|#34d399" static/index.html` → **0**
+- נוסף `--success-dark: #22c55e` ל-tokens.css (gradients/hover)
+- 30 הופעות הוחלפו — כולן success/earning context. אין gradients דקורטיביים שנשארו
+- rgba של הgreens הישנים (rgba(74,222,128,X) ו-rgba(52,211,153,X)) עודכנו ל-rgba(82,201,122,X) תואם --success
+- #86efac (lighter grade tier) — נשאר בכוונה: מייצג tier בינוני-גבוה בscale (≥60), נפרד מ-var(--success) (≥80)

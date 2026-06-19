@@ -149,10 +149,10 @@
   .look-cell img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .look-cell .lc-meta { position: absolute; inset: auto 0 0 0; padding: 16px 8px 7px; font-size: 10.5px;
     font-weight: 800; color: #fff; background: linear-gradient(0deg, rgba(0,0,0,.72), transparent); }
-  .earn { background: linear-gradient(135deg, rgba(52,211,153,.18), rgba(123,92,255,.12));
-    border: 1px solid rgba(52,211,153,.25); border-radius: 18px; padding: 16px; margin-bottom: 20px; }
+  .earn { background: linear-gradient(135deg, rgba(82,201,122,.18), rgba(123,92,255,.12));
+    border: 1px solid rgba(82,201,122,.25); border-radius: 18px; padding: 16px; margin-bottom: 20px; }
   .earn .top { display: flex; align-items: baseline; gap: 8px; }
-  .earn .big-num { font-weight: 900; font-size: 26px; color: #34d399; }
+  .earn .big-num { font-weight: 900; font-size: 26px; color: var(--success); }
   .earn .ttl { font-weight: 800; font-size: 13.5px; }
   .earn p { color: rgba(246,246,249,.7); font-size: 12.5px; line-height: 1.5; margin-top: 6px; }
   .shelf-empty { text-align: center; color: var(--muted); padding: 40px 26px; font-size: 13.5px; line-height: 1.6; }
@@ -166,7 +166,7 @@
   .listing .info .sub { color: var(--muted); font-size: 11px; margin-top: 3px; }
   .listing .ask { text-align: end; flex-shrink: 0; }
   .listing .ask .p { font-weight: 900; font-size: 14px; }
-  .listing .ask .live { font-size: 9.5px; font-weight: 800; color: #34d399; }
+  .listing .ask .live { font-size: 9.5px; font-weight: 800; color: var(--success); }
   .listing .ask .live::before { content: "● "; }
   .listing .rm { background: none; border: 0; color: var(--muted); font-size: 18px; cursor: pointer;
     font-family: inherit; padding: 0 2px; flex-shrink: 0; }
@@ -259,7 +259,7 @@
   .fc-match { display: inline-flex; align-items: center;
     background: linear-gradient(135deg, rgba(123,92,255,.85), rgba(255,61,119,.85));
     color: #fff; font-size: 11.5px; font-weight: 900; padding: 5px 12px; border-radius: 20px; }
-  .fc-earn { font-size: 11px; color: #34d399; font-weight: 700; margin-top: 6px; }
+  .fc-earn { font-size: 11px; color: var(--success); font-weight: 700; margin-top: 6px; }
 
   /* ---- Reactions (Shira — fixed: absolute positioning inside overflow:hidden card) ---- */
   .fc-reactions { position: absolute; bottom: 82px; left: 0; right: 0; z-index: 7;
@@ -315,7 +315,7 @@
   .modal-card .big { font-size: 48px; margin-bottom: 12px; }
   .modal-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
   .modal-card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
-  .modal-card .earn-line { color: #34d399; font-size: 13px; font-weight: 800; margin-top: 8px; }
+  .modal-card .earn-line { color: var(--success); font-size: 13px; font-weight: 800; margin-top: 8px; }
   .modal-card .close { margin-top: 20px; padding: 11px 26px; border: 0; border-radius: 13px;
     font-weight: 800; cursor: pointer; color: #fff; font-family: inherit; font-size: 14px;
     background: linear-gradient(135deg, var(--accent), var(--accent2)); }
@@ -748,7 +748,7 @@
   .og-item-info { flex: 1; }
   .og-item-name { font-size: 13px; font-weight: 800; }
   .og-item-status { font-size: 11px; margin-top: 2px; font-weight: 600; }
-  .og-item-have { color: #4ade80; }
+  .og-item-have { color: var(--success); }
   .og-item-need { color: var(--accent); }
   .og-outfit-tip { margin: 0 14px 12px; background: rgba(123,92,255,.1); border-radius: 12px; padding: 10px 12px; font-size: 12px; font-weight: 600; color: rgba(246,246,249,.8); line-height: 1.5; }
   .og-loading { text-align: center; padding: 40px 20px; }
@@ -832,10 +832,10 @@
   .adm-kpi-sub { font-size:11px;color:rgba(246,246,249,.5);font-weight:600; }
   .adm-section { padding:4px 18px 14px; }
   .adm-sec-title { font-size:13px;font-weight:900;margin-bottom:10px; }
-  .adm-grade-card { margin:0 18px 14px;border-radius:20px;padding:18px 20px;background:linear-gradient(135deg,#0d1f10,#122018);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;gap:16px; }
-  .adm-grade-letter { font-size:52px;font-weight:900;line-height:1;color:#4ade80; }
+  .adm-grade-card { margin:0 18px 14px;border-radius:20px;padding:18px 20px;background:linear-gradient(135deg,#0d1f10,#122018);border:1px solid rgba(82,201,122,.3);display:flex;align-items:center;gap:16px; }
+  .adm-grade-letter { font-size:52px;font-weight:900;line-height:1;color:var(--success); }
   .adm-grade-info { flex:1; }
-  .adm-grade-label { font-size:13px;font-weight:900;color:#4ade80; }
+  .adm-grade-label { font-size:13px;font-weight:900;color:var(--success); }
   .adm-grade-sub { font-size:11px;color:rgba(246,246,249,.55);font-weight:600;margin-top:4px;line-height:1.5; }
   .adm-bar-row { display:flex;align-items:center;gap:10px;margin-bottom:9px; }
   .adm-bar-lbl { font-size:11.5px;font-weight:700;width:70px;flex-shrink:0;text-align:right; }
@@ -865,7 +865,7 @@
   .styl-spec { font-size:11px;color:var(--muted);font-weight:700;margin-top:2px; }
   .styl-price { font-size:13px;font-weight:900;color:var(--accent);margin-top:4px; }
   .styl-avail { font-size:10px;font-weight:800;padding:3px 9px;border-radius:10px;flex-shrink:0; }
-  .styl-avail.open { background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.3); }
+  .styl-avail.open { background:var(--success-surface);color:var(--success);border:1px solid rgba(82,201,122,.3); }
   .styl-avail.busy { background:rgba(255,100,100,.1);color:#f87171;border:1px solid rgba(255,100,100,.2); }
   .styl-tags { display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 12px; }
   .styl-tag { font-size:10px;font-weight:800;padding:3px 9px;border-radius:8px;background:rgba(123,92,255,.12);color:var(--accent2);border:1px solid rgba(123,92,255,.2); }
@@ -899,7 +899,7 @@
   .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; font-size:52px; background:linear-gradient(160deg,var(--card),var(--bg)); position:relative; }
   .sf-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:900; padding:3px 8px; border-radius:10px; }
   .sf-badge.deal { background:#ef4444; }
-  .sf-badge.new { background:#4ade80; color:#000; }
+  .sf-badge.new { background:var(--success); color:#000; }
   .sf-badge.missing { background:#f59e0b; color:#000; }
   .sf-card-body { padding:10px 12px 12px; }
   .sf-card-name { font-size:13px; font-weight:800; line-height:1.3; }
@@ -907,7 +907,7 @@
   .sf-price-row { display:flex; align-items:center; gap:6px; margin-top:6px; }
   .sf-price { font-size:14px; font-weight:900; color:var(--accent); }
   .sf-orig { font-size:11px; color:var(--muted); text-decoration:line-through; }
-  .sf-discount { font-size:10px; font-weight:900; color:#4ade80; }
+  .sf-discount { font-size:10px; font-weight:900; color:var(--success); }
   .sf-compat { font-size:10px; font-weight:700; color:var(--accent2); margin-top:4px; }
   .sf-empty { grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--muted); font-size:13px; font-weight:700; }
 
@@ -936,8 +936,8 @@
   .cmp-row-label { width: 90px; padding: 12px 10px; font-size: 11px; font-weight: 800; color: var(--muted); flex-shrink: 0; letter-spacing: .3px; text-align: right; background: rgba(255,255,255,.03); border-left: 1px solid var(--line); }
   .cmp-row-a { flex: 1; padding: 12px 10px; font-size: 13px; font-weight: 700; text-align: center; }
   .cmp-row-b { flex: 1; padding: 12px 10px; font-size: 13px; font-weight: 700; text-align: center; }
-  .cmp-row-a.winner, .cmp-row-b.winner { color: #4ade80; font-weight: 900; }
-  .cmp-verdict { margin: 6px 18px 0; background: linear-gradient(135deg, rgba(74,222,128,.12), rgba(123,92,255,.12)); border-radius: 16px; padding: 14px 16px; border: 1px solid rgba(74,222,128,.3); font-size: 13px; font-weight: 700; line-height: 1.5; }
+  .cmp-row-a.winner, .cmp-row-b.winner { color: var(--success); font-weight: 900; }
+  .cmp-verdict { margin: 6px 18px 0; background: linear-gradient(135deg, rgba(82,201,122,.12), rgba(123,92,255,.12)); border-radius: 16px; padding: 14px 16px; border: 1px solid rgba(82,201,122,.3); font-size: 13px; font-weight: 700; line-height: 1.5; }
 
   /* ---- Rewards ---- */
   .rw-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
@@ -956,7 +956,7 @@
   .rw-action-icon { font-size: 24px; }
   .rw-action-name { font-size: 13px; font-weight: 800; }
   .rw-action-pts { font-size: 12px; color: var(--accent2); font-weight: 800; }
-  .rw-action-done { font-size: 11px; color: #4ade80; font-weight: 700; }
+  .rw-action-done { font-size: 11px; color: var(--success); font-weight: 700; }
   .rw-perks-list { display: flex; flex-direction: column; gap: 10px; padding: 0 18px; }
   .rw-perk { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 16px; padding: 14px; border: 1px solid var(--line); }
   .rw-perk-icon { font-size: 24px; width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg,var(--card),var(--bg)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -971,17 +971,17 @@
   /* ---- Sustainability Score ---- */
   .sus-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
   .sus-header { padding: 16px 18px 10px; font-size: 20px; font-weight: 900; }
-  .sus-score-card { margin: 4px 18px 16px; border-radius: 24px; padding: 22px; background: linear-gradient(135deg, #0d1f10, #122018); border: 1px solid rgba(74,222,128,.3); }
-  .sus-score-num { font-size: 56px; font-weight: 900; letter-spacing: -2px; color: #4ade80; line-height: 1; }
+  .sus-score-card { margin: 4px 18px 16px; border-radius: 24px; padding: 22px; background: linear-gradient(135deg, #0d1f10, #122018); border: 1px solid rgba(82,201,122,.3); }
+  .sus-score-num { font-size: 56px; font-weight: 900; letter-spacing: -2px; color: var(--success); line-height: 1; }
   .sus-score-label { font-size: 13px; color: rgba(246,246,249,.6); font-weight: 700; margin-top: 4px; }
-  .sus-score-grade { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; margin-top: 10px; background: rgba(74,222,128,.2); color: #4ade80; }
+  .sus-score-grade { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; margin-top: 10px; background: var(--success-surface); color: var(--success); }
   .sus-metric { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
   .sus-metric-icon { font-size: 20px; width: 36px; text-align: center; flex-shrink: 0; }
   .sus-metric-info { flex: 1; }
   .sus-metric-name { font-size: 13px; font-weight: 800; }
   .sus-metric-sub { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
-  .sus-metric-val { font-size: 14px; font-weight: 900; color: #4ade80; flex-shrink: 0; }
-  .sus-tip { margin: 0 18px 12px; background: rgba(74,222,128,.08); border-radius: 14px; border-left: 3px solid #4ade80; padding: 12px 14px; font-size: 13px; font-weight: 600; color: rgba(246,246,249,.85); line-height: 1.5; }
+  .sus-metric-val { font-size: 14px; font-weight: 900; color: var(--success); flex-shrink: 0; }
+  .sus-tip { margin: 0 18px 12px; background: var(--success-surface); border-radius: 14px; border-left: 3px solid var(--success); padding: 12px 14px; font-size: 13px; font-weight: 600; color: rgba(246,246,249,.85); line-height: 1.5; }
 
   /* ---- Marketplace ---- */
   .mp-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
@@ -1002,7 +1002,7 @@
   .mp-item-img { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; background: linear-gradient(160deg, var(--card), var(--bg)); position: relative; }
   .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 20px; }
   .mp-item-badge.new { background: var(--accent); color: #fff; }
-  .mp-item-badge.like-new { background: #4ade80; color: #0a0a0e; }
+  .mp-item-badge.like-new { background: var(--success); color: #0a0a0e; }
   .mp-item-badge.used { background: var(--accent2); color: #fff; }
   .mp-item-info { padding: 10px 12px 12px; }
   .mp-item-name { font-size: 13px; font-weight: 800; line-height: 1.2; }
@@ -1691,7 +1691,7 @@
     logAdminEvent('buy_intent', 'פתחה שיט: ' + (it.name||'פריט'));
     const stores = itemStores(it);
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:#34d399;font-weight:700;margin-top:8px;text-align:center">
+      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success);font-weight:700;margin-top:8px;text-align:center">
            ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על הרכישה הזאת
          </p>` : '';
     const wardrobe4compat = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
@@ -1867,7 +1867,7 @@
       </div>`;
     }).join('');
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:#34d399;font-weight:700;margin-top:4px;text-align:center">
+      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success);font-weight:700;margin-top:4px;text-align:center">
            ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על כל קנייה
          </p>` : '';
 
@@ -1948,7 +1948,7 @@
     modalCard.innerHTML = '<div class="spinner"></div><h3>מפרסמת את ' + esc(label) + ' למכירה…</h3><p>ה-AI מתמחר לפי ביקוש בשוק היד-שנייה</p>';
     setTimeout(() => {
       addListing({ name:label, price:Number(price)||0, category:cat||'' });
-      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:#34d399">' + icon('cash',48) + '</div><h3>פורסם למכירה!</h3>' +
+      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:var(--success)">' + icon('cash',48) + '</div><h3>פורסם למכירה!</h3>' +
         '<p>' + esc(label) + ' עכשיו במדף המכירה בפרופיל שלך<br/>מחיר מומלץ: ₪' + esc(price) + ' · עמלת Awear 15%</p>' +
         '<button class="close">לפרופיל</button>';
       modalCard.querySelector('.close').addEventListener('click', () => { modal.classList.remove('show'); showView('closet'); });
@@ -2136,7 +2136,7 @@
         <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div></div>
         <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
         <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button></div>`).join('')
-      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:#34d399">${icon('cash',44)}</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`;
+      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--success)">${icon('cash',44)}</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`;
     return earnCard+listings;
   }
 
@@ -2539,7 +2539,7 @@
   // ---- Rewards & Gamification (hoisted above renderHome — TDZ fix) ----
   const RW_KEY = 'awear_rewards';
   const LEVELS = [
-    {name:'מתחילה', icon:'leaf', min:0, color:'#4ade80'},
+    {name:'מתחילה', icon:'leaf', min:0, color:'var(--success)'},
     {name:'סטייליסטית', icon:'sparkle', min:100, color:'var(--accent2)'},
     {name:'מובילת טרנד', icon:'flame', min:300, color:'var(--accent)'},
     {name:'Fashion Icon', icon:'crown', min:600, color:'#f59e0b'},
@@ -3061,7 +3061,7 @@
 
   function compatScoreHTML(item, wardrobe) {
     const {pct, matches} = calcCompatScore(item, wardrobe);
-    const color = pct >= 80 ? '#4ade80' : pct >= 60 ? 'var(--accent2)' : 'var(--accent)';
+    const color = pct >= 80 ? 'var(--success)' : pct >= 60 ? 'var(--accent2)' : 'var(--accent)';
     const label = pct >= 80 ? 'מתאים מצוין לארון!' : pct >= 60 ? 'מתאים טוב' : 'מתאים חלקית';
     return `
       <div class="compat-score-bar">
@@ -3179,7 +3179,7 @@
     const total = Math.round(reuseScore + cpwScore + circularScore);
 
     const grade = total >= 80 ? 'A — מצוין' : total >= 60 ? 'B — טוב' : total >= 40 ? 'C — בינוני' : 'D — שפר';
-    const gradeColor = total >= 80 ? '#4ade80' : total >= 60 ? '#86efac' : total >= 40 ? '#fbbf24' : '#f87171';
+    const gradeColor = total >= 80 ? 'var(--success)' : total >= 60 ? '#86efac' : total >= 40 ? '#fbbf24' : '#f87171';
 
     const tips = [];
     if (reuseRate < 70) tips.push(`${unworn} פריטים מעולם לא נלבשו — לבשי אותם או מכרי`);
@@ -3325,7 +3325,7 @@
     const totalEarnings = mine.reduce((s,i) => s + (Number(i.price)||0), 0);
     return `
       <div style="padding:14px 16px 0">
-        <div style="background:linear-gradient(135deg,#4ade80,#22d3ee);border-radius:14px;padding:14px 16px;color:#000;margin-bottom:14px">
+        <div style="background:var(--grad-success);border-radius:14px;padding:14px 16px;color:#000;margin-bottom:14px">
           <div style="font-size:11px;font-weight:700;opacity:.7">פוטנציאל הכנסה</div>
           <div style="font-size:26px;font-weight:900">₪${totalEarnings.toLocaleString()}</div>
           <div style="font-size:11px;font-weight:600;opacity:.8">${mine.length} פריטים פעילים</div>
@@ -3337,7 +3337,7 @@
         <div class="mp-item-info">
           <div class="mp-item-name">${esc(item.name)}</div>
           <div class="mp-item-price">₪${item.price}</div>
-          <div class="mp-item-seller" style="color:#4ade80">פעיל ✓</div>
+          <div class="mp-item-seller" style="color:var(--success)">פעיל ✓</div>
           <button onclick="deleteMySell('${item.id}')" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,.15);border:none;border-radius:8px;padding:3px 7px;font-size:11px;font-weight:700;color:#ef4444;cursor:pointer">הסר</button>
         </div>
       </div>`).join('')}</div>`;
@@ -3724,7 +3724,7 @@
             <div style="font-size:14px;font-weight:800;margin-bottom:4px">${esc(s.name)}</div>
             <div style="font-size:11px;color:#8e8e9c;font-weight:600;margin-bottom:6px">${esc(s.reason)}</div>
             <div style="display:flex;gap:8px">
-              <span style="padding:4px 10px;background:rgba(74,222,128,.15);border-radius:20px;font-size:11px;font-weight:800;color:#4ade80">${esc(s.action)} • ₪${s.price_suggestion||0}</span>
+              <span style="padding:4px 10px;background:var(--success-surface);border-radius:20px;font-size:11px;font-weight:800;color:var(--success)">${esc(s.action)} • ₪${s.price_suggestion||0}</span>
             </div>
           </div>`).join('')}
       </div>
@@ -4074,7 +4074,7 @@
         return `
         <div class="ex-result-row" onclick="openSheetSingle({name:'${attr(it.name)}',category:'${attr(it.category)}',emoji:'${attr(it.emoji)}',style_tags:${JSON.stringify(it.style_tags)},price_estimate_usd:${it.price}},0,null)">
           <div class="ex-result-emoji">${productImage(it)}</div>
-          <div style="flex:1"><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(it.brand)} · ₪${it.price}${disc?` <span style="color:#4ade80">-${disc}%</span>`:''}</div></div>
+          <div style="flex:1"><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(it.brand)} · ₪${it.price}${disc?` <span style="color:var(--success)">-${disc}%</span>`:''}</div></div>
           ${it.badge?`<div style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;background:rgba(255,61,119,.15);color:var(--accent)">${esc(it.badge)}</div>`:''}
         </div>`;
       }).join('');
@@ -4792,7 +4792,7 @@
     const cpwScore = avgCPW>0?Math.min(30,30*(50/avgCPW)):0;
     const susScore = Math.round((reuseR/100)*40+cpwScore+Math.min(30,mp.length*6));
     const susGrade = susScore>=80?'A':susScore>=60?'B':susScore>=40?'C':'D';
-    const susColor = susScore>=80?'#4ade80':susScore>=60?'#86efac':susScore>=40?'#fbbf24':'#f87171';
+    const susColor = susScore>=80?'var(--success)':susScore>=60?'#86efac':susScore>=40?'#fbbf24':'#f87171';
     const catMap   = {};
     wardrobe.forEach(i=>{const c=catLabel(i.category||'other');catMap[c]=(catMap[c]||0)+1;});
     const topCats  = Object.entries(catMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
@@ -5218,7 +5218,7 @@
         <div class="cmp-row-label" style="color:var(--text);">פריט</div>
         <div class="cmp-row-a" style="font-size:11px;font-weight:700;text-align:center;padding:8px;color:var(--muted);">${nameB}</div>
       </div>
-      <div class="cmp-verdict">${verdictText.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#4ade80">$1</strong>')}</div>
+      <div class="cmp-verdict">${verdictText.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--success)">$1</strong>')}</div>
       <div style="display:flex;gap:10px;margin-top:4px;">
         <button onclick="initCompare()" style="flex:1;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;color:var(--muted);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;">השוואה חדשה</button>
       </div>
