@@ -16,9 +16,11 @@ import base64
 import io
 import json
 import logging
+import os
 import time
 import traceback
 import urllib.parse
+import warnings
 from collections import defaultdict
 from typing import Optional
 
@@ -73,6 +75,19 @@ except Exception:  # noqa: BLE001 — missing google libs/creds shouldn't break 
     create_calendar_event = schedule_agent_meeting = send_summary_email = _google_unavailable
 
 load_dotenv()  # loads ANTHROPIC_API_KEY from .env
+
+# ---------------------------------------------------------------------------
+# Startup validation
+# ---------------------------------------------------------------------------
+
+_api_key = os.getenv("ANTHROPIC_API_KEY")
+if not _api_key:
+    warnings.warn(
+        "ANTHROPIC_API_KEY not set — /api/moderate running in fail-open mode. "
+        "Set the key in .env before production deploy.",
+        RuntimeWarning,
+        stacklevel=2,
+    )
 
 MODEL = "claude-opus-4-8"
 MAX_EDGE = 1024  # downscale long edge to control cost + latency
@@ -667,6 +682,74 @@ async def moderate_comment(data: CommentModerationRequest):
     except Exception as e:
         print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"harmful": False, "severity": "none", "fallback": True}
+
+
+# ---------------------------------------------------------------------------
+# Likes persistence — SQLite (replaces previous in-memory _likes_store dict)
+# ---------------------------------------------------------------------------
+
+import sqlite3
+from pathlib import Path
+
+DB_PATH = Path("data/awear.db")
+DB_PATH.parent.mkdir(exist_ok=True)
+
+# Posts cache — loaded from static/data/posts.json at startup.
+# Used by toggle_like to resolve base_likes for a post.
+try:
+    _posts_cache: list[dict] = json.loads(
+        Path("static/data/posts.json").read_text(encoding="utf-8")
+    )
+except Exception:
+    _posts_cache = []
+
+
+def _get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def _init_db():
+    with _get_db() as db:
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS likes (
+                post_id TEXT NOT NULL,
+                user_key TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (post_id, user_key)
+            )
+        """)
+
+
+_init_db()
+
+
+@app.post("/api/posts/{post_id}/like")
+async def toggle_like(post_id: str, request: Request):
+    user_key = request.client.host
+
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM likes WHERE post_id=? AND user_key=?",
+            (post_id, user_key)
+        ).fetchone()
+
+        if existing:
+            db.execute("DELETE FROM likes WHERE post_id=? AND user_key=?", (post_id, user_key))
+            liked = False
+        else:
+            db.execute("INSERT INTO likes (post_id, user_key) VALUES (?, ?)", (post_id, user_key))
+            liked = True
+
+        count = db.execute("SELECT COUNT(*) FROM likes WHERE post_id=?", (post_id,)).fetchone()[0]
+
+    post = next((p for p in _posts_cache if p["id"] == post_id), None)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    base_likes = post.get("likes", 0)
+    return {"post_id": post_id, "liked": liked, "likes": base_likes + count}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
