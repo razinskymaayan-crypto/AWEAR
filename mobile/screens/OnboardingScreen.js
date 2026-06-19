@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useRef, useState } from 'react';
 import {
   Dimensions,
@@ -11,7 +12,7 @@ import { t } from '../i18n';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-const STEPS = ['welcome', 'styleQuiz', 'camera'];
+const STEPS = ['screen1', 'screen2', 'screen3'];
 
 export default function OnboardingScreen({ navigation }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -19,14 +20,23 @@ export default function OnboardingScreen({ navigation }) {
 
   const isLast = activeIndex === STEPS.length - 1;
 
+  async function handleFinish() {
+    await AsyncStorage.setItem('onboarding_complete', 'true');
+    navigation.navigate('Feed');
+  }
+
   function handleNext() {
     if (isLast) {
-      navigation.navigate('CameraPermission');
+      handleFinish();
       return;
     }
     const next = activeIndex + 1;
     listRef.current?.scrollToIndex({ index: next, animated: true });
     setActiveIndex(next);
+  }
+
+  function handleSkip() {
+    handleFinish();
   }
 
   function handleScroll(event) {
@@ -41,7 +51,11 @@ export default function OnboardingScreen({ navigation }) {
     return (
       <View style={styles.slide}>
         {/* Icon placeholder — will be replaced with SVG icon in Cycle 3 */}
-        <View style={styles.iconPlaceholder} accessibilityRole="image" accessibilityLabel={t(`onboarding.${stepKey}.title`)} />
+        <View
+          style={styles.iconPlaceholder}
+          accessibilityRole="image"
+          accessibilityLabel={t(`onboarding.${stepKey}.title`)}
+        />
         <Text style={styles.title}>{t(`onboarding.${stepKey}.title`)}</Text>
         <Text style={styles.body}>{t(`onboarding.${stepKey}.body`)}</Text>
       </View>
@@ -50,6 +64,13 @@ export default function OnboardingScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* Skip — hidden on last screen */}
+      {!isLast && (
+        <Pressable style={styles.skipButton} onPress={handleSkip}>
+          <Text style={styles.skipText}>{t('onboarding.skip')}</Text>
+        </Pressable>
+      )}
+
       <FlatList
         ref={listRef}
         data={STEPS}
@@ -81,7 +102,7 @@ export default function OnboardingScreen({ navigation }) {
       <View style={styles.footer}>
         <Pressable style={styles.ctaButton} onPress={handleNext}>
           <Text style={styles.ctaText}>
-            {isLast ? t('onboarding.ctaFinal') : t('onboarding.ctaNext')}
+            {isLast ? t('onboarding.start') : t('onboarding.next')}
           </Text>
         </Pressable>
       </View>
@@ -91,6 +112,20 @@ export default function OnboardingScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0e0c0f' },
+
+  /* Skip */
+  skipButton: {
+    alignSelf: 'flex-end',
+    paddingHorizontal: 24,
+    paddingTop: 56,
+    paddingBottom: 8,
+    minHeight: 44,
+    justifyContent: 'center',
+  },
+  skipText: {
+    color: '#8a8a9a',
+    fontSize: 15,
+  },
 
   /* Slide */
   slide: {
@@ -146,6 +181,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
+    minHeight: 44,
   },
   ctaText: { color: '#fbfbfd', fontSize: 16, fontWeight: '700' },
 });

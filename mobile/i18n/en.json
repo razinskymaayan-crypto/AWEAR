@@ -29,6 +29,21 @@
   "onboarding": {
     "ctaNext": "Continue",
     "ctaFinal": "Start scanning",
+    "skip": "Skip",
+    "next": "Continue",
+    "start": "Let's start",
+    "screen1": {
+      "title": "Welcome to AWEAR",
+      "body": "Your wardrobe, your style"
+    },
+    "screen2": {
+      "title": "What is your style?",
+      "body": "We will help you discover it"
+    },
+    "screen3": {
+      "title": "You are ready!",
+      "body": "Let's begin"
+    },
     "welcome": {
       "title": "Welcome to AWEAR",
       "body": "Your digital wardrobe, wherever you go. Scan clothes, discover looks, and build your personal style."
