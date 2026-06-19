@@ -13,6 +13,12 @@
     "capturedPreviewRetake": "צלם שוב",
     "capturedPreviewUse": "השתמש בתמונה"
   },
+  "wardrobe": {
+    "newItem": "נוסף כעת",
+    "emptyTitle": "הארון שלך ריק",
+    "emptyBody": "סרקי לוק ראשון כדי לבנות את המלתחה הדיגיטלית שלך",
+    "cta": "סרקי לוק"
+  },
   "cameraPermission": {
     "iosUsageDescription": "AWEAR משתמשת במצלמה שלך כדי לסרוק בגדים לארון הדיגיטלי שלך.",
     "title": "ראי את הארון שלך, מיידית",
