@@ -16,6 +16,7 @@ import base64
 import io
 import json
 import logging
+import sqlite3
 import time
 import traceback
 import urllib.parse
@@ -832,6 +833,83 @@ async def get_post(post_id: str):
         raise HTTPException(status_code=404, detail="Post not found")
     likes_extra = len(_likes_store.get(post_id, set()))
     return {**post, "likes": post.get("likes", 0) + likes_extra}
+
+
+# ---------------------------------------------------------------------------
+# User stats endpoint
+# ---------------------------------------------------------------------------
+
+# Inline SQLite helpers — duplicated from feat/sqlite-likes intentionally.
+# Once feat/sqlite-likes is merged these become the canonical implementation.
+# DB_PATH is relative to the CWD at server startup (project root).
+DB_PATH = Path("data/awear.db")
+
+
+def _get_db() -> sqlite3.Connection:
+    """Open a SQLite connection with Row factory. Caller is responsible for close()."""
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+@app.get("/api/users/{user_id}/stats")
+async def get_user_stats(user_id: str):
+    """Compute lightweight stats for a user profile.
+
+    Returns:
+        user_id: str
+        post_count: int  — number of posts by this user
+        followers: int   — from profiles.json relationships (v1: static)
+        following: int   — from profiles.json relationships (v1: static)
+        total_likes: int — sum of likes across all user posts (from post_likes
+                           SQLite table if available; falls back to in-memory
+                           _likes_store when feat/sqlite-likes is not yet merged)
+    """
+    # --- 404 guard: profile must exist ---
+    profile = next((p for p in _profiles_cache if p.get("id") == user_id), None)
+    if not profile:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # --- post_count ---
+    user_posts = [p for p in _posts_cache if p.get("user_id") == user_id]
+    post_count = len(user_posts)
+
+    # --- followers / following (v1: static from JSON) ---
+    followers = len(profile.get("followers", []))
+    following = len(profile.get("following", []))
+
+    # --- total_likes ---
+    post_ids = [p["id"] for p in user_posts]
+    total_likes = 0
+
+    if post_ids:
+        # Attempt SQLite first (available after feat/sqlite-likes is merged).
+        # Falls back to in-memory _likes_store if the table does not exist yet.
+        try:
+            conn = _get_db()
+            try:
+                placeholders = ",".join("?" * len(post_ids))
+                row = conn.execute(
+                    f"SELECT COUNT(*) FROM post_likes WHERE post_id IN ({placeholders})",
+                    post_ids,
+                ).fetchone()
+                total_likes = row[0] if row else 0
+            finally:
+                conn.close()
+        except sqlite3.OperationalError:
+            # post_likes table not yet created — fall back to in-memory store.
+            total_likes = sum(
+                len(_likes_store.get(pid, set())) for pid in post_ids
+            )
+
+    return {
+        "user_id": user_id,
+        "post_count": post_count,
+        "followers": followers,
+        "following": following,
+        "total_likes": total_likes,
+    }
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
