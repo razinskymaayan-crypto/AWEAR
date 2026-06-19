@@ -778,4 +778,60 @@ async def get_profile(user_id: str):
     return profile
 
 
+# ---------------------------------------------------------------------------
+# Social layer — Likes
+# ---------------------------------------------------------------------------
+
+# In-memory likes store (migration-ready to DB via oren).
+# Structure: { post_id: set of user_keys }
+_likes_store: dict = {}
+
+
+@app.post("/api/posts/{post_id}/like")
+async def toggle_like(post_id: str, request: Request):
+    """Toggle like on a post. Identified by IP (v1 — no auth).
+
+    Returns:
+        post_id: str
+        liked: bool — the NEW state after toggle (True = now liked)
+        likes: int  — total like count (base from posts data + in-memory delta)
+    """
+    # Guard: request.client can be None behind certain reverse proxies.
+    user_key = (request.client.host if request.client else None) or "anonymous"
+
+    if post_id not in _likes_store:
+        # Init entry; validate post exists if we have a cache.
+        if _posts_cache:
+            post = next((p for p in _posts_cache if p["id"] == post_id), None)
+            if post is None:
+                raise HTTPException(status_code=404, detail="Post not found")
+        _likes_store[post_id] = set()
+
+    already_liked = user_key in _likes_store[post_id]
+    if already_liked:
+        _likes_store[post_id].discard(user_key)
+    else:
+        _likes_store[post_id].add(user_key)
+
+    post = next((p for p in _posts_cache if p["id"] == post_id), {"likes": 0})
+    base_likes = post.get("likes", 0)
+    total_likes = base_likes + len(_likes_store[post_id])
+
+    return {
+        "post_id": post_id,
+        "liked": not already_liked,
+        "likes": total_likes,
+    }
+
+
+@app.get("/api/posts/{post_id}")
+async def get_post(post_id: str):
+    """Return a single post by id, with live like count merged in."""
+    post = next((p for p in _posts_cache if p["id"] == post_id), None)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    likes_extra = len(_likes_store.get(post_id, set()))
+    return {**post, "likes": post.get("likes", 0) + likes_extra}
+
+
 app.mount("/static", StaticFiles(directory="static"), name="static")

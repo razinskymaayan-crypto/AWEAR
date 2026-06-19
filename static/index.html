@@ -1604,8 +1604,6 @@
   function attr(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
   function fmtN(n) { n=Number(n)||0; return n>=1000?(n/1000).toFixed(1).replace('.0','')+'K':''+n; }
 
-  const CAT_EMOJI = {top:'👕',bottoms:'👖',dress:'👗',outerwear:'🧥',shoes:'👟',bag:'👜',accessory:'💍',jewelry:'💎',hat:'🧢'};
-
   // ---- navigation ----
   document.querySelectorAll('nav button[data-view]').forEach(b =>
     b.addEventListener('click', () => showView(b.dataset.view)));
@@ -3367,11 +3365,9 @@
   function openSellForm(prefill) {
     const modal = document.getElementById('purchase-modal');
     const card  = document.getElementById('modal-card');
-    const CAT_EMOJIS = {top:'👕',bottoms:'👖',shoes:'👟',bag:'👜',outerwear:'🧥',dress:'👗',hat:'🧢',other:'✨'};
     const prefillName = prefill ? (prefill.name || '') : '';
     const prefillPrice = prefill ? Math.round((prefill.price_estimate_usd || 200) * 0.5) : '';
     const prefillCat = prefill ? (prefill.category || 'other') : 'other';
-    const prefillEmoji = prefill ? (prefill.emoji || CAT_EMOJIS[prefillCat] || '👗') : '👗';
 
     card.innerHTML = `
       <div style="padding:18px 20px 6px;font-size:17px;font-weight:900;display:flex;align-items:center;gap:8px">${icon('tag',18)} מכרי פריט</div>
@@ -3387,7 +3383,7 @@
         <div>
           <div class="mp-form-label">קטגוריה</div>
           <select class="mp-form-input" id="sf-cat">
-            ${Object.entries(CAT_EMOJIS).map(([k,v]) => `<option value="${k}" ${k===prefillCat?'selected':''}>${v} ${k==='top'?'חולצות':k==='bottoms'?'מכנסיים':k==='shoes'?'נעליים':k==='bag'?'תיקים':k==='outerwear'?'מעילים':k==='dress'?'שמלות':k==='hat'?'כובעים':'אחר'}</option>`).join('')}
+            ${[['top','חולצות'],['bottoms','מכנסיים'],['shoes','נעליים'],['bag','תיקים'],['outerwear','מעילים'],['dress','שמלות'],['hat','כובעים'],['other','אחר']].map(([k,v]) => `<option value="${k}" ${k===prefillCat?'selected':''}>${v}</option>`).join('')}
           </select>
         </div>
         <div class="mp-price-row">
@@ -3428,9 +3424,8 @@
       const condition = document.getElementById('sf-condition').value;
       const cat = document.getElementById('sf-cat').value;
       if (!name) { showToast('חסר שם פריט'); return; }
-      const emoji = prefillEmoji || CAT_EMOJIS[cat] || '👗';
       const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
-      mine.unshift({id:'u'+Date.now(), name, price, condition, emoji, category: cat, seller:'@אני', orig: price*2, style_tags: prefill?.style_tags || []});
+      mine.unshift({id:'u'+Date.now(), name, price, condition, category: cat, seller:'@אני', orig: price*2, style_tags: prefill?.style_tags || []});
       localStorage.setItem(MP_KEY, JSON.stringify(mine));
       modal.classList.remove('show');
       logAdminEvent('sell', 'פרסמה: ' + name + ' ₪' + price);
@@ -3517,7 +3512,7 @@
     const visibleUsers = SEED_USERS.filter(u => !isBlocked(u.id));
     const blockedEntries = Object.entries(blockedUsers);
     el.innerHTML = `
-      <div class="pc-header">👥 ארונות ציבוריים</div>
+      <div class="pc-header">${icon('users',18)} ארונות ציבוריים</div>
       <div class="pc-section-label">מובחרים</div>
       <div class="pc-featured-row">
         ${visibleUsers.slice(0,4).map(u => `
