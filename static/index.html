@@ -129,7 +129,7 @@
     cursor: pointer; display: flex; flex-direction: column; box-shadow: 0 8px 18px rgba(0,0,0,.32);
     transition: transform .15s; }
   .ptile:active { transform: scale(.97); }
-  .ptile .pimg { height: 88px; display: flex; align-items: center; justify-content: center; font-size: 54px;
+  .ptile .pimg { height: 88px; display: flex; align-items: center; justify-content: center;
     filter: drop-shadow(0 8px 7px rgba(0,0,0,.22)); }
   .ptile .pname { color: #14141a; font-size: 12.5px; font-weight: 800; line-height: 1.25; margin-top: 8px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -954,7 +954,7 @@
   .pc-featured-row::-webkit-scrollbar { display: none; }
   .pc-featured-card { flex-shrink: 0; width: 150px; background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
   .pc-featured-card:active { transform: scale(.97); }
-  .pc-feat-cover { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; background: linear-gradient(160deg, var(--card), var(--bg)); }
+  .pc-feat-cover { height: 160px; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, var(--card), var(--bg)); }
   .pc-feat-info { padding: 10px 12px 12px; }
   .pc-feat-name { font-size: 13px; font-weight: 900; }
   .pc-feat-handle { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
@@ -1074,7 +1074,7 @@
   .sf-grid { flex:1; overflow-y:auto; padding:0 18px 80px; display:grid; grid-template-columns:1fr 1fr; gap:12px; align-content:start; }
   .sf-card { background:var(--card); border-radius:18px; overflow:hidden; border:1px solid var(--line); cursor:pointer; transition:transform .15s; }
   .sf-card:active { transform:scale(.97); }
-  .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; font-size:52px; background:linear-gradient(160deg,var(--card),var(--bg)); position:relative; }
+  .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,var(--card),var(--bg)); position:relative; }
   .sf-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:900; padding:3px 8px; border-radius:10px; }
   .sf-badge.deal { background:#ef4444; }
   .sf-badge.new { background:#4ade80; color:#000; }
@@ -1177,7 +1177,7 @@
   .mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px; }
   .mp-item { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
   .mp-item:active { transform: scale(.97); }
-  .mp-item-img { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; background: linear-gradient(160deg, var(--card), var(--bg)); position: relative; }
+  .mp-item-img { height: 160px; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, var(--card), var(--bg)); position: relative; }
   .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 20px; }
   .mp-item-badge.new { background: var(--accent); color: #fff; }
   .mp-item-badge.like-new { background: #4ade80; color: #0a0a0e; }
@@ -2532,7 +2532,7 @@
           <div style="font-size:13px;color:var(--muted);font-weight:600;line-height:1.6;max-width:240px">סרקי את הלוק הראשון שלך — ה-AI יזהה את הפריטים ויבנה את הארון האישי שלך</div>
           <button onclick="document.getElementById('file-input').click()" style="margin-top:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;border-radius:16px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:8px">${icon('camera', 18)} סרקי לוק ראשון</button>
         </div>` : `
-      ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size:11.5px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">⚠️ הסריקה האחרונה הייתה במצב דמו — AI לא היה זמין, אלו פריטי הדגמה</div>`:''}
+      ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size:11.5px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">${icon('alertTriangle',14)} הסריקה האחרונה הייתה במצב דמו — AI לא היה זמין, אלו פריטי הדגמה</div>`:''}
       ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
       ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} קני את הלוק האחרון · ~₪${esc(meta.look_total_usd)}</button>`:''}
       <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>
@@ -2580,7 +2580,7 @@
     if(newItems.length) logAdminEvent('scan', 'סרקה ' + newItems.length + ' פריטים — ' + (newItems[0]?.name||''));
     renderCloset();
     if(newItems.length){
-      const base=(newItems[0]?.emoji||'✨') + ' ' + (newItems[0]?.name||'') + ' נוסף לארון ✓';
+      const base=(newItems[0]?.name||'פריט') + ' נוסף לארון';
       showToast(data.mode==='demo' ? base + ' (מצב דמו — AI לא היה זמין)' : base);
     }
   }
@@ -3007,7 +3007,7 @@
         }).join('')}
       </div>
       <div class="home-actions">
-        <button class="ha-btn ha-primary" id="ha-wore">✓ ${t('home.wore_it')}</button>
+        <button class="ha-btn ha-primary" id="ha-wore">${icon('check',16)} ${t('home.wore_it')}</button>
         <button class="ha-btn ha-secondary" onclick="showView('closet')">${t('home.my_closet_btn')}</button>
       </div>
       ` : `
@@ -3146,8 +3146,8 @@
             if (match) match.wear_count = (match.wear_count || 0) + 1;
           });
           localStorage.setItem('awear_wardrobe', JSON.stringify(wardrobe2));
-          showToast('נרשם! הלוק נשמר ✓');
-          haWore.textContent = '✓ נשמר!';
+          showToast('נרשם! הלוק נשמר');
+          haWore.textContent = 'נשמר';
           haWore.disabled = true;
         }
       });
@@ -3409,7 +3409,7 @@
                   <div class="og-item-ico">${icon(catIcon(item.category), 22)}</div>
                   <div class="og-item-info">
                     <div class="og-item-name">${esc(item.name)}</div>
-                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '+ חסר — שקלי לקנות' : '✓ יש בארון'}</div>
+                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '+ חסר — שקלי לקנות' : 'יש בארון'}</div>
                   </div>
                 </div>`).join('')}
             </div>
@@ -3583,7 +3583,7 @@
         ${[
           {icon:'♻️', name:'ניצול ארון', sub:`${totalItems-unworn}/${totalItems} פריטים נלבשו`, val: reuseRate+'%'},
           {icon:'💚', name:'יד שנייה', sub:`${soldItems} פריטים נמכרו ב-Marketplace`, val: soldItems+''},
-          {icon:'📉', name:'Cost Per Wear', sub:`ממוצע ₪${Math.round(avgCPW)||0} ללבישה`, val: avgCPW < 30 ? '✓ יפה' : '↑'},
+          {icon:'📉', name:'Cost Per Wear', sub:`ממוצע ₪${Math.round(avgCPW)||0} ללבישה`, val: avgCPW < 30 ? 'מעולה' : '↑'},
           {icon:'🌍', name:'פחמן שנחסך', sub:`בהשוואה לרכישה חדשה`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
         ].map(m => `
           <div class="sus-metric">
@@ -3600,14 +3600,14 @@
   // ---- Marketplace ----
   const MP_KEY = 'awear_marketplace';
   const MP_SEED = [
-    {id:'mp1', name:'ג׳ינס בארל לייט', emoji:'👖', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'כחול'},
-    {id:'mp2', name:'מעיל עור שחור וינטג׳', emoji:'🧥', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'שחור'},
-    {id:'mp3', name:'סניקרס Adidas Samba לבן', emoji:'👟', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'לבן'},
-    {id:'mp4', name:'מיני בג׳ שחור', emoji:'👜', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'שחור'},
-    {id:'mp5', name:'חולצת קרופ ריב שמנת', emoji:'👕', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'שמנת'},
-    {id:'mp6', name:'חצאית מידי סאטן', emoji:'👗', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'ירוק'},
-    {id:'mp7', name:'כובע בייסבול שחור', emoji:'🧢', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'שחור'},
-    {id:'mp8', name:'מכנסי קרגו בז׳', emoji:'👖', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'בז׳'},
+    {id:'mp1', name:'ג׳ינס בארל לייט', search_query:'barrel jeans light wash denim', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'כחול'},
+    {id:'mp2', name:'מעיל עור שחור וינטג׳', search_query:'black vintage leather jacket', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'שחור'},
+    {id:'mp3', name:'סניקרס Adidas Samba לבן', search_query:'Adidas Samba white sneakers', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'לבן'},
+    {id:'mp4', name:'מיני בג׳ שחור', search_query:'black mini bag crossbody', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'שחור'},
+    {id:'mp5', name:'חולצת קרופ ריב שמנת', search_query:'cream rib knit crop top', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'שמנת'},
+    {id:'mp6', name:'חצאית מידי סאטן', search_query:'green satin midi skirt formal', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'ירוק'},
+    {id:'mp7', name:'כובע בייסבול שחור', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'שחור'},
+    {id:'mp8', name:'מכנסי קרגו בז׳', search_query:'beige cargo pants utility', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'בז׳'},
   ];
   let mpTab = 'browse', mpFilter = 'all';
 
@@ -3718,7 +3718,7 @@
         <div class="mp-item-info">
           <div class="mp-item-name">${esc(item.name)}</div>
           <div class="mp-item-price">₪${item.price}</div>
-          <div class="mp-item-seller" style="color:#4ade80">פעיל ✓</div>
+          <div class="mp-item-seller" style="color:#4ade80;display:flex;align-items:center;gap:4px">${icon('check',12)} פעיל</div>
           <button onclick="deleteMySell('${item.id}')" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,.15);border:none;border-radius:8px;padding:3px 7px;font-size:11px;font-weight:700;color:#ef4444;cursor:pointer">הסר</button>
         </div>
       </div>`).join('')}</div>`;
@@ -3757,7 +3757,7 @@
       <div class="mp-sell-form">
         ${prefill ? `<div style="display:flex;align-items:center;gap:10px;background:rgba(139,92,246,.1);border-radius:12px;padding:10px 14px;margin-bottom:4px">
           <div style="color:var(--accent2)">${icon(catIcon(prefillCat), 28)}</div>
-          <div style="font-size:12px;font-weight:700;color:var(--accent)">ממוין מהארון שלך ✓</div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:4px">${icon('check',12)} ממוין מהארון שלך</div>
         </div>` : ''}
         <div>
           <div class="mp-form-label">שם הפריט</div>
@@ -3884,7 +3884,7 @@
       const nowBlocked = !already;
       setBlocked(key, label, nowBlocked);
       logAdminEvent(nowBlocked ? 'block_user' : 'unblock_user', `${nowBlocked ? 'חסמה' : 'הסירה חסימה מ'}: ${label} (${key})`);
-      showToast(nowBlocked ? `נחסם ✓ ${label}` : `הוסרה חסימה מ-${label}`);
+      showToast(nowBlocked ? `נחסם: ${label}` : `הוסרה חסימה מ-${label}`);
       overlay.remove();
       if (onDone) onDone(nowBlocked);
     });
@@ -3944,7 +3944,7 @@
         localStorage.setItem('awear_follows', JSON.stringify(followState));
         btn.textContent = followState[uid] ? 'עוקבת' : '+ עקבי';
         btn.classList.toggle('following', !!followState[uid]);
-        showToast(followState[uid] ? 'עוקבת ✓' : 'הפסקת לעקוב');
+        showToast(followState[uid] ? 'עכשיו עוקבת' : 'הפסקת לעקוב');
       });
     });
 
@@ -5205,7 +5205,7 @@
     const a        = document.createElement('a');
     a.href=url;a.download='awear_wardrobe.csv';a.click();
     URL.revokeObjectURL(url);
-    showToast('CSV exported ✓');
+    showToast('CSV יוצא בהצלחה');
   }
 
   function adminClearLog() {
@@ -5275,7 +5275,7 @@
             <option value="home">ביקור בית</option>
           </select>
         </div>
-        <button class="book-submit" onclick="submitBooking('${attr(name)}')">אשרי פגישה ✓</button>
+        <button class="book-submit" onclick="submitBooking('${attr(name)}')">${icon('check',16)} אשרי פגישה</button>
         <button class="book-cancel" onclick="document.getElementById('book-overlay-el').remove()">ביטול</button>
       </div>`;
     document.body.appendChild(overlay);
@@ -5289,7 +5289,7 @@
     if (!nm || !dt) { showToast('מלאי את כל הפרטים'); return; }
     document.getElementById('book-overlay-el')?.remove();
     const typeLabel = type === 'video' ? 'וידאו' : type === 'chat' ? 'צ׳אט' : 'ביקור בית';
-    showToast(`✓ פגישת ${typeLabel} עם ${name} נקבעה!`);
+    showToast(`פגישת ${typeLabel} עם ${name} נקבעה`);
     logAdminEvent('booking', `פגישה עם ${name} — ${typeLabel} ב-${dt}`);
     addRewardPoints(50, 'booking');
   }
