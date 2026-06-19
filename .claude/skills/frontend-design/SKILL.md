@@ -14,13 +14,13 @@ include context about the purpose, audience, or technical constraints.
 AWEAR has an established visual system. You do not choose fonts, colors, or spacing from scratch.
 
 **Sources of truth (read in this order):**
-1. `docs/DESIGN_STANDARDS.md` — canonical standards, enforced by Gabbana with zero compromise
-2. `static/tokens.css` — all CSS variables (`--bg`, `--card`, `--accent`, `--text`, etc.)
+1. `docs/VISUAL_VISION.md` — Design Master Plan: vision, colors, typography, motion, grid, DoD
+2. `static/tokens.css` — all CSS variables (`--bg`, `--card`, `--accent`, `--fg`, etc.)
 3. `awear-tokens.json` — design token values, synced to `tokens.css`
 
 **Hard rules:**
 - Use `var(--token-name)` for every color, spacing, radius, shadow, and z-index value
-- Do not introduce new font families — the type system is already defined in `DESIGN_STANDARDS.md`
+- Do not introduce new font families — the type system is defined in `docs/VISUAL_VISION.md`
 - Do not hardcode hex values, px values for spacing, or color literals anywhere in new code
 - Do not use `!important` to override the token system
 
@@ -30,8 +30,7 @@ If a token you need doesn't exist, **propose it to Netta** — do not improvise 
 
 Before coding, understand the context:
 - **Purpose**: What problem does this interface solve? Who uses it?
-- **Tone**: AWEAR's aesthetic is dark, editorial, fashion-forward. The existing palette, typography,
-  and spacing already encode this — your job is to express it, not reinvent it.
+- **Tone**: AWEAR = accessible luxury, editorial, photo-first, warm (not cold/tech). References: Instagram · Pinterest · Zara. The existing palette, typography, and spacing encode this — your job is to express it, not reinvent it.
 - **Constraints**: `static/index.html` (vanilla JS/HTML/CSS SPA), React Native (`mobile/`), or both.
 - **Differentiation**: What makes this screen or component genuinely useful and visually precise
   within the AWEAR world? Aim for that.

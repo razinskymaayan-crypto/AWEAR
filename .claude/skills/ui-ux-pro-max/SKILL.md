@@ -1,12 +1,12 @@
 ---
 name: ui-ux-pro-max
-description: UX quality rules and interaction checklist for AWEAR — use when checking accessibility compliance, touch targets, loading states, error feedback, hover behavior, z-index management, or animation timing. Complements frontend-design (visual system) and code-reviewer (code quality). Not for style selection — AWEAR's visual system is fixed in docs/DESIGN_STANDARDS.md.
+description: UX quality rules and interaction checklist for AWEAR — use when checking accessibility compliance, touch targets, loading states, error feedback, hover behavior, z-index management, or animation timing. Complements frontend-design (visual system) and code-reviewer (code quality). Not for style selection — AWEAR's visual system is fixed in docs/VISUAL_VISION.md.
 ---
 
 # UI/UX Pro Max — AWEAR
 
 UX quality rules that complement the visual design system. AWEAR's style, tokens, and fonts are
-fixed in `docs/DESIGN_STANDARDS.md` — this skill is not for choosing those. It's for getting the
+fixed in `docs/VISUAL_VISION.md` — this skill is not for choosing those. It's for getting the
 **interaction quality, accessibility, and behaviour** right.
 
 **Stacks:** vanilla JS SPA (`static/index.html`) and React Native/Expo (`mobile/`).

@@ -23,9 +23,9 @@ Motion Designer לאפליקציית אופנה גלובלית. אחראי על 
 ## הpriorities הראשונות בתפקיד
 
 1. **Scan loading state** — skeleton screen שמתאים לcards התוצאה. לא spinner.
-2. **Feed scroll** — parallax עדין על gradient של כל כרטיס.
-3. **Reaction tap** — scale bounce על ❤️ 🔥 ⭐ ✨ כשלוחצים.
-4. **Screen transitions** — slide horizontal, לא fade.
+2. **Feed scroll** — momentum scroll נקי. **אין parallax** — מסחרר ומאט (החלטת board 19.06.2026).
+3. **Reaction tap** — scale bounce (80ms spring) על כפתורי לב/שמירה. האייקונים הם SVG — לא emoji.
+4. **Screen transitions** — slide horizontal + fade, spring physics 260ms. לא linear easing.
 5. **Add to wardrobe** — פריט "נועף" לאייקון הארון.
 
 ---
