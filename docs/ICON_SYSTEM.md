@@ -1,6 +1,8 @@
-# AWEAR — Icon System
+> ⚠️ **מסמך זה הוחלף.** ה-authority הוא **[docs/VISUAL_VISION.md](VISUAL_VISION.md)** — Design Master Plan (חלק ו׳).
+> קובץ זה נשמר כ-reference לרשימת החלפות emoji ספציפיות.
+
+# AWEAR — Icon System [ARCHIVED]
 **גרסה: 1.0 | תאריך: 19.06.2026 | כותב: מארק (Head of Design)**
-**מטרה:** החלפת כל emoji כ-UI icons בsystem מוגדר, עקבי ומקצועי. דולצ'ה מיישמת על בסיס מסמך זה.
 
 ---
 

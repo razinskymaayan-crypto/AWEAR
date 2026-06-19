@@ -1,4 +1,7 @@
-# AWEAR Color System — v2.0
+> ⚠️ **מסמך זה הוחלף.** ה-authority הוא **[docs/VISUAL_VISION.md](VISUAL_VISION.md)** — Design Master Plan.
+> קובץ זה נשמר כ-reference היסטורי בלבד.
+
+# AWEAR Color System — v2.0 [ARCHIVED]
 *בעלות: נטה (Design System Lead) | אושר: APPROVED — מארק, 2026-06-19 | תאריך: 2026-06-19*
 
 ---
@@ -17,8 +20,8 @@ Nykaa, Glossier, ו-Pinterest משתמשות בגוון ורוד/rose לCTA כי
 **4. Accent דואלי = שפה חברתית.**
 TikTok: pink (#EE1D52) + turquoise (#69C9D0). Instagram: gradient חם. שניהם משתמשים בשני accents שנמתחים בין חמים לקרירים — כי social interaction לא חד-ממדית. לייק = גסטורה חמה (ורוד). תגית = ניווט קוגניטיבי (צבע שני, מנטרל יותר). AWEAR: accent (rose) = action חמה, accent2 (terracotta) = ארגון/tags.
 
-**5. ישראל 2025: Mediterranean Modern.**
-טרנד עיצוב ישראלי 2024-2025 (buyitinisrael.com, tinaallmendinger.com) זז מ-gray קר → spice tones: terracotta, paprika, chrysanthemum stone. לא Nordic minimalism, לא American loud. חמימות ים-תיכונית עם precision מודרנית. זה בדיוק ה-gap שקיים בפלטה הנוכחית של AWEAR — קרירה ואנונימית. הקהל הישראלי 18-35 מזהה חמימות כ-authentic, לא כ-cheap.
+**5. Mediterranean Modern — Global.**
+AWEAR היא global-first (קהל 16-50 מכל העולם) — לא ישראל בלבד. ה-spice tones: terracotta, camel, paprika — אינם "ישראלים" אלא universal warm. Mediterranean Modern מרגיש authentic ולא cheap בכל שוק. הנגדה ל-cold digital (סגול/ציאן) שנוקטות אפליקציות tech — אנחנו fashion, לא fintech.
 
 ---
 
@@ -132,15 +135,22 @@ TikTok: pink (#EE1D52) + turquoise (#69C9D0). Instagram: gradient חם. שניה
 
 ---
 
-## Light Mode — תכנון עתידי
+## Light Mode — מתוכנן לCycle 3 (החלטת board 19.06.2026)
 
-הפלטה תוכננה עם light mode בחשבון. כאשר מתווסף:
-- `--bg` ← `#faf8f5` (warm off-white, לא pure white)
-- `--card` ← `#ffffff`
-- `--surface` ← `#f2eef8`
-- `--fg` ← `#1a1520`
-- `--muted` ← `#6b6480`
-- accents נשארים זהים — rose ו-terracotta עובדים על שניהם.
+Light + Dark auto לפי מכשיר — שני המצבים חייבים להרגיש premium באותה מידה.
+
+| Token | Dark | Light | הנמקה |
+|-------|------|-------|-------|
+| `--bg` | `#0d0b09` | `#faf8f5` | שמנת חמה — לא pure white |
+| `--surface` | `#161310` | `#f2ede6` | layer שני |
+| `--card` | `#1e1a16` | `#ffffff` | card טהור על רקע שמנת |
+| `--fg` | `#f2ede6` | `#1a1714` | שחור חם — לא #000000 |
+| `--muted` | `#7a7068` | `#7a7068` | אותו ערך בשני המצבים |
+| `--line` | `#2a2520` | `#e8e4de` | border חמה |
+| `--accent` | `#c4785a` | `#b86a4a` | terracotta עמוקה יותר לlight (contrast) |
+| `--accent2` | `#8b7355` | `#7a6245` | camel עמוקה יותר לlight |
+
+*accent ו-accent2 הם הפלטה המתוכננת לCycle 3 — שונים מהvalues הנוכחיים המיושמים (#e8526a, #c4855a). ראה VISUAL_VISION.md.*
 
 ---
 

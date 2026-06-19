@@ -34,7 +34,7 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 |------|-------|
 | Design tokens (web) | `static/tokens.css` |
 | Token mirror (RN) | `mobile/theme/tokens.js` (imports from `awear-tokens.json`) |
-| Design standards | `docs/DESIGN_STANDARDS.md` |
+| Design master plan | `docs/VISUAL_VISION.md` ← single source of truth |
 | Domain knowledge | `.claude/agents/knowledge/ds.md` / `be.md` / `mb.md` / `sf.md` / `mg.md` |
 | Research index | `.claude/agents/knowledge/research.md` — check before doing any research |
 | Activity log | `.claude/agents/activity_log.md` (last 20 entries — check for concurrent file edits) |

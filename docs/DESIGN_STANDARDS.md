@@ -1,7 +1,7 @@
-# AWEAR — תקני עיצוב (Design Standards)
+> ⚠️ **מסמך זה הוחלף.** ה-authority הוא **[docs/VISUAL_VISION.md](VISUAL_VISION.md)** — Design Master Plan שמכיל הכל.
+> קובץ זה נשמר כ-reference היסטורי בלבד.
 
-המסמך הזה אוכף את הכללים. לחזון ולפילוסופיה — קרא **[docs/VISUAL_VISION.md](VISUAL_VISION.md)** קודם.
-**Dolce** (ביצוע) מיישמת לפיו, **Gabbana** (QA) אוכפת אותו, **מארק** קובע כיוון כשיש ספק.
+# AWEAR — תקני עיצוב (Design Standards) [ARCHIVED]
 
 ## העיקרון העליון
 **"האם זה היה עולה לאוויר בחברת מוצר מובילה (Instagram / Pinterest / Zara)?"**
@@ -31,11 +31,12 @@
 - **מיפוי:** `#2a2040` → `var(--card)` | `#1a1030` → `var(--bg2)` | gradients על surfaces → `linear-gradient(var(--bg2), var(--card))`.
 - **כלל כללי:** כל `background:` שאינו `var(--*)` או gradient של tokens קיימים — P0.
 
-### כלל 4 — typography scale של 5 גדלים בלבד
-11 / 13 / 15 / 19 / 26px. אין גדלים אחרים. אין hardcoded `font-size` — רק `var(--t-*)`.
+### כלל 4 — typography scale בלבד — אין גדלים אחרים
+אין hardcoded `font-size` — רק `var(--t-*)`.
 - **פקודת אימות post-migration:** `grep "font-size" static/index.html | grep -v "var(--t-"` = 0.
 - **בינתיים (עד migration):** כל PR חדש שמוסיף `font-size` שלא ב-scale — חסום.
-- **tokens:** `--t-xs: 11px` | `--t-sm: 13px` | `--t-md: 15px` | `--t-lg: 19px` | `--t-xl: 26px`.
+- **tokens (שמות נכונים):** `--t-micro:11px` | `--t-caption:12px` | `--t-small:13px` | `--t-body:14px` | `--t-h3:15px` | `--t-lead:17px` | `--t-h2:18px` | `--t-title:20px` | `--t-h1:24px` | `--t-display:32px`
+- **אזהרה:** `--t-sm`, `--t-md`, `--t-lg` — לא קיימים. שימוש בהם שבירה שקטה.
 
 ### כלל 5 — רשת 8pt
 כל `padding`, `margin`, `gap` = כפולה של 4px מהרשימה: 4 / 8 / 12 / 16 / 24 / 32px.
@@ -53,7 +54,7 @@
 **"אם AWEAR הייתה מפרסמת screenshot מהמסך הזה ב-Instagram story של הברנד — האם הייתה מתביישת?"**
 - אם כן — חוסמת. מגיבה עם: מה בדיוק לא עובר, ומה צריך להשתנות.
 - כל PR שגבאנה חותמת עליו כולל שורה: `Visual QA: עבר שאלת העל / לא עבר — [סיבה]`.
-- זו לא subjectivity — זו הסטנדרט. Instagram/TikTok/Pinterest עולות עם תוכן אמיתי, scale נכון, אפס placeholder.
+- זו לא subjectivity — זו הסטנדרט. Instagram/Pinterest/Zara עולות עם תוכן אמיתי, scale נכון, אפס placeholder.
 
 ---
 
@@ -68,18 +69,29 @@
 6. **חדש 19.06.2026** — `emoji` field כ-display default ב-data objects של מוצרים.
 
 ## Design Tokens (להשתמש בהם בלבד)
-- צבעים: `--bg #0a0a0e` · `--bg2 #111118` · `--card #17171f` · `--line #24242e` · `--text #f6f6f9` · `--muted #8e8e9c` · `--accent #ff3d77` (ורוד) · `--accent2 #7b5cff` (סגול).
-- פעולה ראשית = גרדיאנט `accent→accent2`. בלי צבעים מומצאים מחוץ ל-tokens.
-- **אכיפה:** `scripts/build-tokens.js` מייצר את `tokens.css` מ-`awear-tokens.json`. אין edit ידני של `tokens.css`.
+ה-source of truth הוא `static/tokens.css`. הערכים הנוכחיים המיושמים:
+- `--bg:#0e0c0f` · `--surface:#161318` · `--card:#1e1a22` · `--card-hover:#262030`
+- `--fg:#f0ecf5` · `--muted:#8a8498` · `--line:#2e2836`
+- `--accent:#e8526a` · `--accent2:#c4855a` · `--accent3:#7a6af0`
+- `--success:#52c97a` · `--warning:#e8a84a` · `--danger:#e05252`
+
+**Light mode** — auto לפי מכשיר (החלטת board 19.06.2026). ראה `docs/VISUAL_VISION.md` לערכים המתוכננים לCycle 3.
+**פלטה עתידית (Cycle 3):** מעבר ל-terracotta/camel — ראה `docs/VISUAL_VISION.md` למפרט המלא.
+בלי צבעים מחוץ ל-tokens. אין edit ידני של `tokens.css` — רק דרך `awear-tokens.json`.
 
 ## טיפוגרפיה
-- גופנים: Heebo (גוף, עברית), Poppins (לוגו/מספרים בלבד).
-- סקאלה: 5 גדלים — 11 / 13 / 15 / 19 / 26px. בלי גדלים אקראיים, בלי טקסט מתחת ל-11px.
-- משקלים: 600 / 800 / 900 בלבד.
-- **tokens:** `var(--t-xs)` / `var(--t-sm)` / `var(--t-md)` / `var(--t-lg)` / `var(--t-xl)` — בלבד.
+- **Headlines (EN):** DM Serif Display — editorial voice, אלגנטי.
+- **Body + labels:** Inter (EN) | Heebo (עברית, RTL).
+- **מחירים ומספרים:** Poppins — precision, tabular feel.
+- סקאלה: 10 גדלים, tokens בלבד — `--t-micro` עד `--t-display`. בלי גדלים אקראיים.
+- משקלים: 400 (DM Serif) / 400–500 (Inter) / 600 (Poppins numbers). אין 700+ בגוף טקסט.
+- **tokens בשמות הנכונים:** `var(--t-micro)` / `var(--t-caption)` / `var(--t-small)` / `var(--t-body)` / `var(--t-h3)` / `var(--t-lead)` / `var(--t-h2)` / `var(--t-title)` / `var(--t-h1)` / `var(--t-display)`
 
 ## מרווחים ופריסה
-- רשת 8pt: 4 / 8 / 12 / 16 / 24 / 32px. רדיוסים: 10–16–22px לפי היררכיה.
+- רשת 8pt: 4 / 8 / 12 / 16 / 24 / 32px. **tokens:** `--space-1` עד `--space-6`.
+- רדיוסים: `--r-xs:6px` / `--r-sm:10px` / `--r-md:14px` / `--r-lg:20px` / `--r-xl:28px` / `--r-pill:999px`.
+- **Grid:** 2 עמודות לfeed ו-wardrobe. 3 עמודות לprofile בלבד.
+- **Aspect ratio:** 4:5 portrait לכל product/outfit card. 1:1 לprofile thumbnails.
 - מסגרת מובייל `.phone` 390px, RTL מלא. כל מסך — פעולה ראשית אחת ברורה.
 
 ## אייקונים
@@ -92,7 +104,11 @@
 - **אין `emoji` field כ-display** — `search_query` בלבד.
 
 ## תנועה
-- מעברים 150–250ms, easing נעים. `:active` feedback לכל אלמנט אינטראקטיבי. תנועה בעלת מטרה, לא קישוט.
+- **Tap feedback:** 80ms — `scale(0.96) + opacity 0.85`. מיידי, מרגיש responsive.
+- **Card open / screen transition:** 260–320ms, spring physics (לא linear easing).
+- **Pull-to-refresh:** bounce — exaggerated spring.
+- **עיקרון:** תנועה מספרת מידע, לא מקשטת. אין parallax, אין fade-in decorative.
+- `:active` CSS state חובה לכל `<button>` ו-`onclick`. minimum: `scale(0.97) opacity(0.75)`.
 
 ## Definition of Done (לפני מסירה)
 - [ ] אין אימוג'י מקלדת ב-UI; כל האייקונים SVG אחידים (`grep "item.emoji\|\.qo-emoji\|\.tc-emoji" index.html` = 0).
@@ -105,5 +121,5 @@
 
 ---
 
-*עודכן: 19.06.2026 — לאחר ישיבת מנהלים design crisis. מאשר: ג'ף (CEO), מארק (Head of Design).*
-*גרסה קודמת: 18.06.2026*
+*עודכן: 19.06.2026 (v2) — visual vision approved by board. מאשר: ג'ף (CEO), מארק (Head of Design).*
+*לחזון המלא: `docs/VISUAL_VISION.md`*
