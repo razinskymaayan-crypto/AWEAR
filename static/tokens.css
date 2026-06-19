@@ -33,7 +33,8 @@
   --grad-success:  linear-gradient(135deg, #52c97a, #3db8b8);
   --grad-shine:    linear-gradient(160deg, rgba(232,82,106,.12), rgba(196,133,90,.08));
 
-  /* ── Spacing ──────────────────────────────────────────── */
+  /* ── Spacing — 8pt grid ──────────────────────────────── */
+  /* Primary tokens: --sp-{px-value} */
   --sp-2:   2px;
   --sp-4:   4px;
   --sp-6:   6px;
@@ -49,6 +50,18 @@
   --sp-40: 40px;
   --sp-48: 48px;
   --sp-64: 64px;
+
+  /* Semantic aliases: --space-{step} → --sp-{px-value} (8pt grid steps) */
+  /* step 1=4px, 2=8px, 3=12px, 4=16px, 5=20px, 6=24px, 8=32px, 10=40px, 12=48px */
+  --space-1:  var(--sp-4);
+  --space-2:  var(--sp-8);
+  --space-3:  var(--sp-12);
+  --space-4:  var(--sp-16);
+  --space-5:  var(--sp-20);
+  --space-6:  var(--sp-24);
+  --space-8:  var(--sp-32);
+  --space-10: var(--sp-40);
+  --space-12: var(--sp-48);
 
   /* ── Border Radius ────────────────────────────────────── */
   --r-xs:   6px;
