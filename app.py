@@ -1018,4 +1018,42 @@ async def get_follow_status(user_id: str, request: Request):
     return {"user_id": user_id, "following": row is not None}
 
 
+@app.get("/api/search")
+async def search(q: str, limit: int = 20):
+    """
+    Cross-entity search. q = query string.
+    Searches products (name, brand, category), posts (caption, tags), profiles (display_name).
+    Returns combined results with entity_type field.
+    """
+    if not q or len(q.strip()) < 2:
+        raise HTTPException(status_code=400, detail="query must be at least 2 characters")
+
+    q_lower = q.lower().strip()
+    results = []
+
+    # Products
+    for p in _products_cache:
+        if any(q_lower in str(p.get(f, "")).lower()
+               for f in ["name", "brand", "category", "color"]):
+            results.append({**p, "entity_type": "product"})
+
+    # Posts
+    for p in _posts_cache:
+        caption = p.get("caption", "")
+        tags = " ".join(p.get("tags", []))
+        if q_lower in caption.lower() or q_lower in tags.lower():
+            results.append({**p, "entity_type": "post"})
+
+    # Profiles
+    for p in _profiles_cache:
+        if q_lower in p.get("display_name", "").lower() or q_lower in p.get("username", "").lower():
+            results.append({**p, "entity_type": "profile"})
+
+    return {
+        "query": q,
+        "items": results[:limit],
+        "total": len(results),
+    }
+
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
