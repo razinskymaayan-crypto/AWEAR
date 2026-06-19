@@ -106,3 +106,22 @@
 [dir="rtl"], :lang(he), :lang(ar) {
   font-family: var(--font-rtl);
 }
+
+/* ── Utilities ────────────────────────────────────────── */
+
+/* Loading spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--card);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+.spinner-sm { width: 14px; height: 14px; }
+.spinner-lg { width: 32px; height: 32px; border-width: 3px; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
