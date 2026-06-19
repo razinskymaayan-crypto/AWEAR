@@ -88,6 +88,11 @@
 **מנגנון (אורן + סאם):** cycle הבא — grep על look_total_usd, אישור סאם על schema, תיקון.
 **עודכן 2026-06-19 — Cycle 1:** grep מצא 3 מקומות (לא 4). תוקנו 2: שורות 2118 (look grid), 2150 (shop-look button). נותר פתוח: שורה 2305 — `post.price (ILS) || look_total_usd (USD)` — fallback מעורב. שינוי סימן ₪→$ ישבור תצוגת ILS. דורש: (1) סאם מחליט אם `look_total_usd` יוסר מה-fallback chain, (2) או שמוסיפים הגיון ליבה שבוחר סימן לפי מקור הערך. commit: 7244a7b, worktree: fix/look-total-usd.
 
+### BE-004 | in-memory store → SQLite: DB_PATH.parent.mkdir + init_db() בstartup
+**מקור:** sam, Cycle 2 (2026-06-19) — _likes_store migration
+**לקח:** כל in-memory dict שמכיל state שמשנה משתמשים = חוב שנשמד ב-restart. pattern migration: (1) init_db() → CREATE TABLE IF NOT EXISTS; (2) _get_db() עם row_factory + parameterized queries; (3) init_db() נקרא בstartup event לפני שאר האתחול; (4) data/ directory נוצר עם mkdir(parents=True, exist_ok=True). commit קיים — לא "כבר עשינו בעבר" אלא "תבנית פעילה".
+**מנגנון:** לפני כל in-memory store חדש — שאל "האם נתון זה צריך לשרוד restart?" אם כן → SQLite מהיום הראשון.
+
 ### BE-003 | schema owner = סאם. integration = אורן. לא מתחלפים.
 **מקור:** oren_retrospective (2026-06-19)
 **לקח:** אורן מצא בעיות schema (look_total_usd), סאם ביצע. הסדר נכון. אך: אורן לא מחליט על schema, סאם לא מחליט על integration. הגבול ברור — ולא משתנה תחת לחץ.
@@ -132,6 +137,11 @@
 **מקור:** mark_ux_research (2026-06-19) — icon system research
 **לקח:** Lucide CDN הנכון לfashion apps, אבל AWEAR יש custom ICONS object שעובד. להוסיף CDN בשביל icons שכבר קיימים = overhead מיותר. icon חדש שחסר → SVG path מ-lucide.dev ל-ICONS object.
 **מנגנון:** icon חדש → הוסף SVG path ל-ICONS object. CDN = רק אם ICONS object מגיע ל-50+ icons ומנוהל ידנית.
+
+### DS-009 | font-size legacy CSS = placeholder ghost בלי placeholder נראה
+**מקור:** dolce — P0-A fix cycle 2 (2026-06-19), מארק audit
+**לקח:** `font-size:52px` ב-`.sf-card-img` ו-`.mp-item-img` נשאר מתקופת emoji-placeholder. CSS container עם font-size גדולה = potential ghost גלוי כאשר JS לא נטען / תמונה נכשלת ו-fallback לא מחזיר SVG. הbinding הנכון קיים — אבל CSS stale גורם ל-P0 בדיקה.
+**מנגנון:** כל CSS class של image container — בדוק אם יש `font-size` שלא שייכת ל-icon פעיל. אם `productImage()` binding קיים → `font-size` על הcontainer מיותרת ומסוכנת.
 
 ### DS-008 | static HTML vs JS template — icon() רק ב-template literals
 **מקור:** dolce — P0 fix cycle 1 (2026-06-19)
@@ -284,3 +294,13 @@ pkgpulse.com/lucide-vs-heroicons, allsvgicons.com/best-svg-icon-libraries-2026, 
 ---
 
 *עודכן לאחרונה: 19.06.2026 — לאחר תחקיר עצמי של כל 13 הסוכנים*
+
+## CE-002 — Design CEO lesson: tokens ≠ visual progress (19.06.2026)
+
+**מה קרה:** הדירקטוריון (כרמל) נתן פידבק: "לא שיניתם כמעט כלום בנראות". עשינו token system (DS), עשינו hex audit, עשינו color research — אבל המסכים עצמם נראו אותו דבר.
+
+**הלקח:** token system הוא infrastructure. משתמש לא רואה CSS variables — הוא רואה layout, spacing, typography, depth. אפשר לעשות token migration מושלם בלי שהמשתמש ירגיש שום דבר.
+
+**כלל להבא:** בכל cycle שיש בו design work — הגדר success metric ויזואלי: "screenshot שהיית שולח לאינסטגרם" ולא "grep -c hex = 0". גבאנה + ג'ף מאשרים screenshot comparison לפני סגירת cycle.
+
+**action שנלקח:** Redesign sprint על Home + Feed. Mark כתב visual_redesign_brief.md עם 3 P0 קונקרטיים. Dolce תממש layout, spacing, hierarchy — לא רק tokens.
