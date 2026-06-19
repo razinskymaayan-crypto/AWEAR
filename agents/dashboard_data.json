@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-19T09:14:43.295662+00:00",
+  "generated_at": "2026-06-19T10:52:55.568896+00:00",
   "agents": {
     "sam": {
       "department": "backend",
@@ -337,10 +337,10 @@
     },
     "steve": {
       "department": "backend",
-      "total_dispatches": 1,
-      "total_tokens": 36939,
-      "total_tool_uses": 17,
-      "total_duration_ms": 103827,
+      "total_dispatches": 2,
+      "total_tokens": 141252,
+      "total_tool_uses": 180,
+      "total_duration_ms": 1233887,
       "tasks": [
         {
           "description": "Steve investigates worktree isolation failures",
@@ -349,12 +349,20 @@
           "duration_ms": 103827,
           "completed_at": "2026-06-18T10:25:16.470Z",
           "agentId": "acc4074074707844f"
+        },
+        {
+          "description": "Steve merges all 15 pending worktree branches into main",
+          "tokens": 104313,
+          "tool_uses": 163,
+          "duration_ms": 1130060,
+          "completed_at": "2026-06-19T10:45:06.377Z",
+          "agentId": "aef186c9ca0617557"
         }
       ],
       "status": "idle",
       "current_task": null,
       "running_since": null,
-      "last_active": "2026-06-18T10:25:16.470Z",
+      "last_active": "2026-06-19T10:45:06.377Z",
       "notes": []
     },
     "mark": {
@@ -385,9 +393,9 @@
     }
   },
   "company_totals": {
-    "total_dispatches": 27,
-    "total_tokens": 1398193,
-    "total_tool_uses": 1180,
+    "total_dispatches": 28,
+    "total_tokens": 1502506,
+    "total_tool_uses": 1343,
     "unattributed_dispatches": 2
   },
   "unattributed": [

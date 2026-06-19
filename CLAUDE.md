@@ -35,15 +35,15 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 | Design tokens (web) | `static/tokens.css` |
 | Token mirror (RN) | `mobile/theme/tokens.js` (imports from `awear-tokens.json`) |
 | Design standards | `docs/DESIGN_STANDARDS.md` |
-| Domain knowledge | `agents/knowledge/ds.md` / `be.md` / `mb.md` / `sf.md` / `mg.md` |
-| Research index | `agents/knowledge/research.md` — check before doing any research |
+| Domain knowledge | `.claude/agents/knowledge/ds.md` / `be.md` / `mb.md` / `sf.md` / `mg.md` |
+| Research index | `.claude/agents/knowledge/research.md` — check before doing any research |
 | Activity log | `agents/activity_log.md` (last 20 entries — check for concurrent file edits) |
 | Specs / plans | `agents/plans/` |
 | Archive log | `agents/activity_log_archive.md` |
 
 ## Before starting — 3 steps, always
 1. **Check** `agents/activity_log.md` last 5 entries — is anyone else editing the same file?
-2. **Read** `agents/knowledge/[your-domain].md` — `ds` / `be` / `mb` / `sf` / `mg`
+2. **Read** `.claude/agents/knowledge/[your-domain].md` — `ds` / `be` / `mb` / `sf` / `mg`
 3. **Grep before Read** — for large files (`index.html`, `app.py`), grep the target first, then read only the relevant lines with `offset`+`limit`
 
 ## Editing discipline
