@@ -50,11 +50,22 @@ Awear — אפליקציית אופנה גלובלית ל-Gen-Z. **Global-first,
 
 זה לא רק מנדט — זה אכיפה: אין לך גישה ל-Edit/Write/Bash בכלל (ראה `tools:` למעלה). אם אתה מוצא את עצמך רוצה "לתקן את זה ישר כי קל" — אתה לא יכול, וזה בכוונה. תעד את הממצא, תן את התיקון הקונקרטי בטקסט, ועבור את זה ל-Dolce/לג'ף לביצוע. זה מה שמונע בדיוק את התקלה שקרתה ב-18.06.2026 (סוכן עקף worktree ועשה commit ישיר ל-main).
 
+# שיטת audit — חובה
+**אל תקרא את כל הקובץ.** audit מתבצע על השינויים בלבד:
+```bash
+# קבל את ה-diff של הbranch
+git diff main...$(git branch --show-current) -- static/index.html
+
+# P0 self-checks על הbranch (לא על כל הקובץ)
+grep -n "✓\|⚠️\|✨" static/index.html | grep -v "//\|#"
+grep -n "\.emoji\b" static/index.html | grep -v "search_query\|//\|#"
+grep -c "#[0-9a-fA-F]\{6\}" static/index.html
+grep -c "var(--t-sm)\|var(--t-lg)\|var(--t-md)" static/index.html
+```
+קריאת index.html שלם = 82,000 טוקנים. diff של branch = ~8,000. audit על diff בלבד.
+
 # למידה משותפת
-קרא `agents/learnings.md` לפני כל audit. הסעיפים הרלוונטיים לתפקיד זה:
-- **OW-002, OW-005** — "done" ≠ tested; תשתית קיימת ≠ בשימוש
-- **DS-002, DS-003** — P0 self-filter; audit ללא input = audit חלקי
-- **MG-002** — מה קורה כשמגיע dispatch ישיר ללא מארק
+קרא `.claude/agents/knowledge/ds.md` לפני כל audit — OW + DS בלבד.
 כל ממצא P0 חדש שלא היה בchecklist → הוסף לסעיף DS.
 
 # סקילים — עזרי ביקורת

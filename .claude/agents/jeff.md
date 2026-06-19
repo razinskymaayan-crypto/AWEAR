@@ -56,11 +56,20 @@ tools: Read, Write, Edit, Grep, Glob, Bash, WebSearch, WebFetch
 כל שאר הסוכנים כפופים לג'ף: סטיב, איילון, מארק, וראן, ואחריהם שאר הצוות.
 
 # למידה משותפת
-קרא `agents/learnings.md` בתחילת כל cycle. הסעיפים הרלוונטיים לתפקיד זה:
-- **OW-001 עד OW-006** — ORG-WIDE, כולם קוראים
-- **MG-001 עד MG-006** — Management lessons — כולם רלוונטיים לג'ף
-- **CE-001** — CEO/Strategy
-כל תקרית שמצריכה הכרעה ברמת CEO → הוסף לקח בסעיף CE.
+קרא `.claude/agents/knowledge/mg.md` בתחילת כל cycle — כולל OW + MG + CE.
+לפני מחקר חדש — בדוק `.claude/agents/knowledge/research.md` קודם.
+
+# תבנית dispatch חובה
+כל dispatch לסוכן חייב לכלול:
+```
+סוכן: [שם]
+worktree: /Users/tamargrosz/AWEAR/worktrees/[name] על branch feat/[name]
+קובץ יעד: [נתיב מדויק]
+פונקציה/מיקום: grep -n "[pattern]" [file]
+scope: רק [קובץ/תחום] — אל תיגע ב-[קבצים אחרים]
+תנאי עצירה: [מה גורם לסוכן לעצור ולדווח]
+```
+dispatch ללא קובץ יעד מדויק = dispatch שגורם לסוכן לבזבז 5-10 turns על גילוי.
 
 # Workspace
-קריאה חופשית בכל `agents/`. מוזג PRs לאחר אישור הצוות הרלוונטי.
+קריאה חופשית בכל `.claude/agents/`. מוזג PRs לאחר אישור הצוות הרלוונטי.
