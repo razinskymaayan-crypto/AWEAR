@@ -72,3 +72,28 @@
 3. ערכים: האם לשנות h1/h2/display לגדולים יותר?
 
 בינתיים: לא נוגעת בטוקנים. migration לא מתחיל בלי תשובות.
+
+---
+
+## החלטות מארק — 2026-06-19
+
+### שאלה 1: --t-body
+**החלטה: 14px.**
+
+נימוק: AWEAR היא פלטפורמה ישראלית-first, compact ממשק הוא פרדיגמה מוכרת לקהל היעד. 15px (Instagram) הוא benchmark נכון — אבל AWEAR לא Instagram. 14px מאפשר צפיפות מידע גבוהה יותר בפיד ובארון בלי לפגוע ב-readability (var(--fg) על var(--card) = 12.1:1 WCAG AAA). index.html מכיל 14px/15px מעורב בhardcoded — migration יאחד ל-14px, שזו עבודה פחותה.
+
+`--t-body: 14px` — נשאר. אין שינוי ב-tokens.css.
+
+### שאלה 2: שמות tokens
+**החלטה: אפשרות A — tokens.css הקיים (10 גדלים, שמות סמנטיים).**
+
+נימוק: awear-tokens.json + tokens.css כבר מסונכרנים ומשמשים source of truth. rename ל-DESIGN_STANDARDS (--t-xs/sm/md/lg/xl) = breaking change לכל ה-React Native platform (DS-005 + MB-002). DESIGN_STANDARDS.md יעודכן ע"י נטה ליישר עם שמות tokens.css — לא להיפך. נוסף על כך: 10 גדלים נותנים גמישות שאין ב-5 (h1/h2/display לכותרות גדולות — נדרש בpractice).
+
+פעולה לנטה: הוסיפי `--t-lg: 19px` ל-tokens.css ול-awear-tokens.json (הגודל חסר לחלוטין). עדכני DESIGN_STANDARDS.md שמות לתואם tokens.css.
+
+### שאלה 3: ערכי h1/h2/display
+**החלטה: לא משנים בשלב זה.**
+
+נימוק: DS-005 — שינוי ערכי token גלובלי ללא screenshot comparison לפני merge = violation. migration מ-hardcoded font-size עוד לא הושלם, אז אין בסיס להשוואה ויזואלית. לאחר ש-Cycle 2 typography migration יושלם ויש screenshots — נחליט אם h1 צריך לעלות מ-24px ל-30px.
+
+**סיכום:** נטה — Migration Cycle 2 יכול להתחיל. סקאלה: tokens.css הקיים. הוסיפי --t-lg לפני שמתחילות.

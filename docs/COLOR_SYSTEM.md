@@ -1,5 +1,5 @@
 # AWEAR Color System — v2.0
-*בעלות: נטה (Design System Lead) | אושר: ממתין לחתימת מארק | תאריך: 2026-06-19*
+*בעלות: נטה (Design System Lead) | אושר: APPROVED — מארק, 2026-06-19 | תאריך: 2026-06-19*
 
 ---
 
