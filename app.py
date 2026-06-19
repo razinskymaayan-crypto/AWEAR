@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 import anthropic
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Request, UploadFile
+from fastapi import Body, FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
@@ -1399,6 +1399,121 @@ async def update_me(user_id: str, request: Request):
 
     logger.info("User updated: %s — fields: %s", user_id, list(fields.keys()))
     return {"user_id": user_id, "updated": list(fields.keys())}
+
+
+# ---------------------------------------------------------------------------
+# Marketplace Filter Assistant — AI-powered item matching
+# ---------------------------------------------------------------------------
+
+@app.post("/api/marketplace/assist")
+async def marketplace_assist(request: Request, body: dict = Body(...)):
+    """AI-powered marketplace filter: ranks items against user query + wardrobe context.
+
+    Input body:
+      query    — free-text user intent (required)
+      wardrobe — list of user's closet items (optional, capped at 15)
+      items    — marketplace items to rank (optional, capped at 20)
+
+    Returns:
+      matches  — list of {id, score (0-100), reason} sorted descending by score
+      message  — friendly summary in the same language as the query
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+
+    if not check_rate_limit(user_key, "marketplace_assist", 20):
+        logger.warning("Rate limit exceeded: marketplace_assist from %s", user_key)
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait a moment.")
+
+    query: str = (body.get("query") or "").strip()
+    if not query:
+        raise HTTPException(status_code=400, detail="query is required")
+
+    wardrobe: list = body.get("wardrobe") or []
+    items: list = body.get("items") or []
+
+    # -----------------------------------------------------------------------
+    # Demo fallback — keyword-based matching when Claude is unavailable
+    # -----------------------------------------------------------------------
+    def _demo_fallback() -> dict:
+        keyword_map = {
+            "date":    ["dress", "top", "outerwear"],
+            "casual":  ["top", "bottoms"],
+            "party":   ["dress", "outerwear"],
+            "work":    ["tops", "bottoms", "outerwear"],
+            "beach":   ["swimwear", "tops", "bottoms"],
+            "formal":  ["dress", "outerwear"],
+        }
+        query_lower = query.lower()
+        target_cats: list[str] = []
+        for kw, cats in keyword_map.items():
+            if kw in query_lower:
+                target_cats.extend(cats)
+
+        matches = []
+        for item in items[:20]:
+            item_cat = (item.get("category") or "").lower()
+            if not target_cats or any(c in item_cat for c in target_cats):
+                matches.append({
+                    "id": item.get("id", ""),
+                    "score": 75,
+                    "reason": "matches your style request",
+                })
+        matches = matches[:6]
+        return {
+            "matches": matches,
+            "message": f"Found {len(matches)} items that may suit your request.",
+            "demo": True,
+        }
+
+    # -----------------------------------------------------------------------
+    # Claude call
+    # -----------------------------------------------------------------------
+    system = (
+        "You are AWEAR's fashion AI. The user has a personal wardrobe and is shopping. "
+        "Given their query and wardrobe context, identify which marketplace items best match. "
+        "Return JSON only: "
+        '{"matches": [{"id": "...", "score": 0-100, "reason": "one short sentence"}], '
+        '"message": "friendly summary in same language as query"} '
+        "Items with score 0 should be excluded."
+    )
+    user_msg = (
+        f"User query: {query}\n\n"
+        f"Their wardrobe items: {json.dumps(wardrobe[:15], ensure_ascii=False)}\n\n"
+        f"Available marketplace items: {json.dumps(items[:20], ensure_ascii=False)}\n\n"
+        "Match items to the query considering: occasion, style compatibility with wardrobe, "
+        "colors, categories."
+    )
+
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=800,
+            system=system,
+            messages=[{"role": "user", "content": user_msg}],
+        )
+        raw = response.content[0].text.strip()
+        # Strip markdown fences if present
+        if raw.startswith("```"):
+            raw = "\n".join(raw.split("\n")[1:]).rstrip("`").strip()
+        parsed = json.loads(raw)
+
+        matches = [
+            m for m in parsed.get("matches", [])
+            if isinstance(m, dict) and int(m.get("score", 0)) > 0
+        ]
+        matches.sort(key=lambda m: int(m.get("score", 0)), reverse=True)
+
+        logger.info(
+            "marketplace_assist: query=%r user=%s items_in=%d matches=%d",
+            query, user_key, len(items), len(matches),
+        )
+        return {
+            "matches": matches,
+            "message": parsed.get("message", f"Found {len(matches)} matching items."),
+        }
+    except Exception as e:
+        logger.warning("marketplace_assist Claude error (%s) — using demo fallback", e)
+        return _demo_fallback()
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

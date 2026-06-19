@@ -11,7 +11,7 @@
      (e.g. --accent, --bg, --card) keeps the inline value below (cascade order), so this
      link is zero-risk — it only adds the token categories not yet defined inline
      (spacing, radius, motion, z-index, shadow) for future use. -->
-<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="/static/tokens.css">
 <style>
   :root {
     --bg: #0a0a0e; --bg2: #111118; --card: #17171f;
@@ -1198,7 +1198,7 @@
   .sus-score-label { font-size: var(--t-small); color: rgba(246,246,249,.6); font-weight: 700; margin-top: 4px; }
   .sus-score-grade { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: var(--t-caption); font-weight: 900; margin-top: 10px; background: var(--success-surface); color: var(--success); }
   .sus-metric { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
-  .sus-metric-icon { font-size: var(--t-title,20px); width: 36px; text-align: center; flex-shrink: 0; }
+  .sus-metric-icon { width: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--muted); }
   .sus-metric-info { flex: 1; }
   .sus-metric-name { font-size: var(--t-small); font-weight: 800; }
   .sus-metric-sub { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 2px; }
@@ -1207,25 +1207,21 @@
 
   /* ---- Marketplace ---- */
   .mp-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
-  .mp-header { padding: 14px 18px 8px; display: flex; align-items: center; justify-content: space-between; }
+  .mp-header { padding: 14px 16px 8px; display: flex; align-items: center; justify-content: space-between; }
   .mp-title { font-size: var(--t-title,20px); font-weight: 900; letter-spacing: -.4px; }
   .mp-sell-btn { padding: 8px 16px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; border-radius: 20px; font-family: inherit; font-size: var(--t-caption); font-weight: 900; color: #fff; cursor: pointer; transition: transform .15s; }
   .mp-sell-btn:active { transform: scale(.95); }
-  .mp-tabs { display: flex; gap: 0; padding: 0 18px 12px; }
-  .mp-tab { flex: 1; padding: 9px; text-align: center; font-size: var(--t-small); font-weight: 800; color: var(--muted); border-bottom: 2px solid var(--line); cursor: pointer; transition: all .18s; font-family: inherit; background: none; border-top: none; border-left: none; border-right: none; }
-  .mp-tab.active { color: var(--text); border-bottom-color: var(--accent); }
-  .mp-filters { display: flex; gap: 7px; padding: 0 18px 12px; overflow-x: auto; scrollbar-width: none; }
+  .mp-filters { display: flex; gap: 7px; padding: 0 16px 12px; overflow-x: auto; scrollbar-width: none; }
   .mp-filters::-webkit-scrollbar { display: none; }
-  .mp-filter { flex-shrink: 0; padding: 6px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: var(--t-caption); font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; transition: all .18s; }
-  .mp-filter.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: #fff; }
-  .mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px; }
+  .mp-filter { flex-shrink: 0; padding: 6px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: var(--t-caption); font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 44px; }
+  .mp-filter.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: var(--bg, #0e0c0f); }
+  .mp-badge-active { background: var(--accent3); color: var(--fg, #f0ecf5); border-radius: var(--r-pill); font-size: var(--t-micro); font-weight: 800; padding: 3px 8px; }
+  .mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 16px; }
   .mp-item { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
   .mp-item:active { transform: scale(.97); }
-  .mp-item-img { height: 160px; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, var(--card), var(--bg)); position: relative; }
+  .mp-item-img { aspect-ratio: 4/5; display: flex; align-items: center; justify-content: center; background: linear-gradient(110deg, var(--card) 30%, var(--card-hover) 50%, var(--card) 70%); background-size: 200% 100%; animation: shimmer 1.6s infinite; position: relative; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
   .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 20px; }
-  .mp-item-badge.new { background: var(--accent); color: #fff; }
-  .mp-item-badge.like-new { background: var(--success); color: #0a0a0e; }
-  .mp-item-badge.used { background: var(--accent2); color: #fff; }
   .mp-item-info { padding: 10px 12px 12px; }
   .mp-item-name { font-size: var(--t-small); font-weight: 800; line-height: 1.2; }
   .mp-item-price { font-size: var(--t-h3,15px); font-weight: 900; color: var(--accent); margin-top: 5px; }
@@ -1237,6 +1233,60 @@
   .mp-form-input:focus { border-color: var(--accent); }
   .mp-price-row { display: flex; gap: 10px; align-items: flex-end; }
   .mp-ai-price { padding: 8px 14px; background: rgba(123,92,255,.15); border: 1.5px solid var(--accent2); border-radius: 12px; font-size: var(--t-caption); font-weight: 800; color: var(--accent2); cursor: pointer; white-space: nowrap; font-family: inherit; }
+
+  /* ---- Marketplace Segment ---- */
+  .mp-segment { display: flex; gap: 4px; background: var(--card); border-radius: var(--r-pill); margin: 0 16px 12px; padding: 4px; }
+  .mp-seg-btn { flex: 1; padding: 13px 10px; text-align: center; font-size: var(--t-small); font-weight: 800; color: var(--muted); border-radius: var(--r-pill); cursor: pointer; transition: all .2s; font-family: inherit; background: none; border: none; }
+  .mp-seg-btn.active-sh { background: var(--accent2); color: var(--bg); }
+  .mp-seg-btn.active-new { background: var(--accent3); color: var(--fg, #f0ecf5); }
+  .mp-seg-btn.active-sell { background: var(--accent); color: var(--bg); }
+
+  /* ---- Marketplace Card — New Items ---- */
+  .mp-item-shop-btn { display: block; width: 100%; margin-top: 8px; padding: 7px 0; background: var(--accent3); border: none; border-radius: var(--r-pill); font-family: inherit; font-size: var(--t-caption); font-weight: 900; color: #fff; cursor: pointer; transition: transform .15s; }
+  .mp-item-shop-btn:active { transform: scale(.96); }
+  .mp-item-brand { font-size: var(--t-micro); font-weight: 800; color: var(--accent3); margin-top: 3px; letter-spacing: .3px; text-transform: uppercase; }
+
+  /* ---- Marketplace Badge — Secondhand ---- */
+  .mp-item-badge.secondhand { background: var(--accent2); color: #fff; opacity: .9; }
+
+  /* ---- Marketplace Sell — Hidden state ---- */
+  .mp-sell-hidden { display: none !important; }
+
+  /* ---- Marketplace Condition Chips ---- */
+  .mp-cond-row { display: flex; gap: 8px; padding: 0 16px 10px; overflow-x: auto; scrollbar-width: none; }
+  .mp-cond-row::-webkit-scrollbar { display: none; }
+  .mp-cond-chip { flex-shrink: 0; padding: 7px 18px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--line,#2e2836); background: none; color: var(--muted,#8a8498); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 44px; display: inline-flex; align-items: center; gap: 5px; }
+  .mp-cond-chip.active { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); border-color: var(--fg,#f0ecf5); }
+  .mp-closet-chip { border-color: var(--accent3,#7a6af0); color: var(--accent3,#7a6af0); }
+  .mp-closet-chip.active { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); border-color: var(--accent3,#7a6af0); }
+  /* ---- Marketplace Empty States ---- */
+  .mp-empty { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 48px 20px; color: var(--muted,#8a8498); text-align: center; font-size: var(--t-body,14px); }
+  .mp-empty-cta { margin-top: 4px; padding: 10px 24px; background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-small,13px); font-weight: 700; cursor: pointer; min-height: 44px; transition: opacity .15s; }
+  .mp-empty-cta:active { opacity: .8; }
+
+  /* ---- Marketplace Condition Badges ---- */
+  .mp-item-badge.brand-new { background: var(--success,#52c97a); color: var(--bg,#0e0c0f); }
+  .mp-item-badge.preloved { background: none; border: 1.5px solid var(--accent2,#c4855a); color: var(--accent2,#c4855a); font-weight: 900; }
+
+  /* ---- Marketplace Buy Button ---- */
+  .mp-buy-btn { display: block; width: 100%; margin-top: 8px; padding: 8px 0; background: var(--fg,#f0ecf5); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 900; color: var(--bg,#0e0c0f); cursor: pointer; transition: all .15s; min-height: 48px; }
+  .mp-buy-btn:active { transform: scale(.96); opacity: .85; }
+
+  /* ---- Marketplace Filter Assistant ---- */
+  .mp-assist-bar { padding: 0 16px 12px; }
+  .mp-assist-input-row { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1.5px solid var(--line); border-radius: var(--r-pill); padding: 10px 14px; transition: border .18s; }
+  .mp-assist-input-row:focus-within { border-color: var(--accent3); }
+  .mp-assist-input { flex: 1; background: none; border: none; outline: none; font-family: inherit; font-size: var(--t-small); color: var(--text); }
+  .mp-assist-input::placeholder { color: var(--muted); }
+  .mp-assist-btn { background: var(--accent3); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; flex-shrink: 0; transition: transform .15s; }
+  .mp-assist-btn:active { transform: scale(.92); }
+  .mp-assist-clear { background: none; border: none; color: var(--muted); font-size: var(--t-body); cursor: pointer; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .mp-assist-msg { font-size: var(--t-caption); color: var(--accent3); font-weight: 700; margin-top: 8px; padding: 0 4px; }
+
+  /* ---- Marketplace Compat Badge ---- */
+  .mp-compat-btn { cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: color-mix(in srgb, var(--accent2) 12%, transparent); border-radius: var(--r-pill); transition: background .15s; }
+  .mp-compat-btn:hover { background: color-mix(in srgb, var(--accent2) 22%, transparent); }
+  .mp-compat-btn:active { opacity: .7; }
 
   /* ---- Wishlist ---- */
   .wl-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
@@ -1549,7 +1599,7 @@
   .chat-msg.user { align-self: flex-end; align-items: flex-end; }
   .chat-bubble { padding: 11px 14px; border-radius: 18px; font-size: var(--t-body); font-weight: 600; line-height: 1.55; }
   .chat-msg.bot .chat-bubble { background: var(--card); border: 1px solid var(--line); border-bottom-right-radius: 5px; }
-  .chat-msg.user .chat-bubble { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border-bottom-left-radius: 5px; }
+  .chat-msg.user .chat-bubble { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: var(--fg, #f0ecf5); font-weight: 700; border-bottom-left-radius: 5px; }
   .chat-time { font-size: var(--t-micro,11px); color: var(--muted); font-weight: 600; padding: 0 4px; }
   .chat-typing-wrap { align-self: flex-start; }
   .chat-typing-bubble { display: flex; gap: 5px; align-items: center; padding: 12px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; border-bottom-right-radius: 5px; }
@@ -1564,12 +1614,12 @@
   .typing-bubble .typing-dot:nth-child(3) { animation-delay: .4s; }
   .chat-presets { display: flex; gap: 7px; padding: 8px 14px 6px; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }
   .chat-presets::-webkit-scrollbar { display: none; }
-  .chat-preset { flex-shrink: 0; padding: 7px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: var(--t-caption); font-weight: 700; color: var(--text); cursor: pointer; white-space: nowrap; font-family: inherit; transition: all .18s; }
-  .chat-preset:active { border-color: var(--accent); background: rgba(255,61,119,.1); }
+  .chat-preset { flex-shrink: 0; padding: 7px 14px; min-height: 44px; display: inline-flex; align-items: center; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: var(--t-caption); font-weight: 700; color: var(--text); cursor: pointer; white-space: nowrap; font-family: inherit; transition: all .18s; }
+  .chat-preset:active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
   .chat-input-row { display: flex; gap: 8px; padding: 8px 14px 16px; border-top: 1px solid var(--line); flex-shrink: 0; }
-  .chat-input { flex: 1; background: var(--card); border: 1.5px solid var(--line); border-radius: 22px; padding: 11px 16px; font-family: inherit; font-size: var(--t-body); color: var(--text); outline: none; direction: rtl; transition: border .18s; }
+  .chat-input { flex: 1; background: var(--card); border: 1.5px solid var(--line); border-radius: 22px; padding: 11px 16px; font-family: inherit; font-size: var(--t-body); color: var(--text); outline: none; transition: border .18s; }
   .chat-input:focus { border-color: var(--accent); }
-  .chat-send-btn { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: transform .15s; }
+  .chat-send-btn { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: transform .15s; }
   .chat-send-btn:active { transform: scale(.92); }
 
   /* ---- icon system ---- */
@@ -1583,11 +1633,11 @@
   /* ---- real product images ---- */
   .pimg img, .sheet-hero-img img, .sheet-look-emoji img, .listing .ic img {
     width: 100%; height: 100%; object-fit: contain; display: block; border-radius: inherit;
-    background: #fff; }
+    background: var(--surface, #161318); }
   .pimg img { object-fit: contain; }
   /* fallback line-art icon shown when product photo fails to load */
   .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-    color: #b8b8c4; background: linear-gradient(160deg, #f3f3f7, #e8e8ef); border-radius: inherit; }
+    color: var(--muted, #8a8498); background: var(--card, #1e1a22); border-radius: inherit; }
   .sheet-hero-img .img-fallback, .listing .ic .img-fallback {
     background: linear-gradient(135deg, var(--card), var(--bg)); color: var(--muted); }
   /* Marketplace / Shopping Feed / Explore — real product photo replacing emoji placeholder */
@@ -1742,14 +1792,14 @@
         <div class="chat-header">
           <div class="chat-header-avatar"><span class="ic-svg" style="width:18px;height:18px;color:#fff" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></span></div>
           <div>
-            <div style="font-size:var(--t-body);font-weight:900">Avigail</div>
+            <div style="font-size:var(--t-body);font-weight:900">Abigail</div>
             <div style="font-size:var(--t-micro);color:var(--muted);font-weight:600">Your stylist · online</div>
           </div>
         </div>
         <div class="chat-messages" id="chat-messages"></div>
         <div class="chat-presets" id="chat-presets"></div>
         <div class="chat-input-row">
-          <input class="chat-input" id="chat-input" placeholder="Ask your stylist..." />
+          <input class="chat-input" id="chat-input" placeholder="Ask your stylist..." dir="auto" />
           <button class="chat-send-btn" id="chat-send"></button>
         </div>
       </div>
@@ -3164,7 +3214,7 @@
         const DAILY = [
           {icon:'camera', text:'Scan a new item to your closet', pts:20},
           {icon:'sparkle', text:'Create a look with AI', pts:15},
-          {icon:'chat', text:'Ask Avigail something', pts:10},
+          {icon:'chat', text:'Ask Abigail something', pts:10},
           {icon:'cart', text:'List an item for sale', pts:25},
         ];
         const todayChallenge = DAILY[new Date().getDay() % DAILY.length];
@@ -3194,7 +3244,7 @@
       <div class="home-quick" style="overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;padding-bottom:4px">
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('outfits')"><span class="hq-icon">${icon('sparkle', 20)}</span>Outfit AI</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('shopping')"><span class="hq-icon">${icon('bag', 20)}</span>Shopping</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('chat')"><span class="hq-icon">${icon('chat', 20)}</span>Avigail</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('chat')"><span class="hq-icon">${icon('chat', 20)}</span>Abigail</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('stylists')"><span class="hq-icon">${icon('user', 20)}</span>Stylists</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('analytics')"><span class="hq-icon">${icon('barChart', 20)}</span>Analytics</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('wishlist')"><span class="hq-icon">${icon('bookmark', 20)}</span>Wishlist</button>
@@ -3498,7 +3548,7 @@
                   </div>
                 </div>`).join('')}
             </div>
-            ${o.tip ? `<div class="og-outfit-tip">💡 ${esc(o.tip)}</div>` : ''}
+            ${o.tip ? `<div class="og-outfit-tip">${icon('sparkle',14)} ${esc(o.tip)}</div>` : ''}
           </div>`).join('')}
       </div>`;
   }
@@ -3552,7 +3602,7 @@
     rw.points += act.pts * (count || 1);
     rw.actions[action] = (rw.actions[action] || 0) + (count || 1);
     saveRewards(rw);
-    showToast(`+${act.pts} points! 🎉`);
+    showToast(`+${act.pts} points!`);
   }
 
   function renderRewards() {
@@ -3645,7 +3695,8 @@
     const total = Math.round(reuseScore + cpwScore + circularScore);
 
     const grade = total >= 80 ? 'A — Excellent' : total >= 60 ? 'B — Good' : total >= 40 ? 'C — Average' : 'D — Needs work';
-    const gradeColor = total >= 80 ? 'var(--success)' : total >= 60 ? '#86efac' : total >= 40 ? '#fbbf24' : '#f87171';
+    const gradeColor = total >= 80 ? 'var(--success)' : total >= 60 ? 'var(--success)' : total >= 40 ? 'var(--warning)' : 'var(--danger)';
+    const gradeBg = `color-mix(in srgb, ${gradeColor} 12%, transparent)`;
 
     const tips = [];
     if (reuseRate < 70) tips.push(`${unworn} items have never been worn — wear them or sell them`);
@@ -3658,21 +3709,21 @@
       <div class="sus-score-card">
         <div class="sus-score-num" style="color:${gradeColor}">${total}</div>
         <div class="sus-score-label">Sustainability score</div>
-        <div class="sus-score-grade" style="background:${gradeColor}20;color:${gradeColor}">${grade}</div>
+        <div class="sus-score-grade" style="background:${gradeBg};color:${gradeColor}">${grade}</div>
       </div>
 
-      ${tips.map(t => `<div class="sus-tip">💡 ${esc(t)}</div>`).join('')}
+      ${tips.map(t => `<div class="sus-tip">${icon('sparkle',14)} ${esc(t)}</div>`).join('')}
 
       <div style="padding:4px 18px 14px">
         <div style="font-size:var(--t-small);font-weight:900;margin-bottom:12px">Metrics</div>
         ${[
-          {icon:'♻️', name:'ניצול ארון', sub:`${totalItems-unworn}/${totalItems} פריטים נלבשו`, val: reuseRate+'%'},
-          {icon:'💚', name:'יד שנייה', sub:`${soldItems} פריטים נמכרו ב-Marketplace`, val: soldItems+''},
-          {icon:'📉', name:'Cost Per Wear', sub:`ממוצע ₪${Math.round(avgCPW)||0} ללבישה`, val: avgCPW < 30 ? 'מעולה' : '↑'},
-          {icon:'🌍', name:'פחמן שנחסך', sub:`בהשוואה לרכישה חדשה`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
+          {icon:'leaf', name:'ניצול ארון', sub:`${totalItems-unworn}/${totalItems} פריטים נלבשו`, val: reuseRate+'%'},
+          {icon:'heart', name:'יד שנייה', sub:`${soldItems} פריטים נמכרו ב-Marketplace`, val: soldItems+''},
+          {icon:'barChart', name:'Cost Per Wear', sub:`ממוצע ₪${Math.round(avgCPW)||0} ללבישה`, val: avgCPW < 30 ? 'מעולה' : '↑'},
+          {icon:'globe', name:'פחמן שנחסך', sub:`בהשוואה לרכישה חדשה`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
         ].map(m => `
           <div class="sus-metric">
-            <div class="sus-metric-icon">${m.icon}</div>
+            <div class="sus-metric-icon">${icon(m.icon, 20)}</div>
             <div class="sus-metric-info">
               <div class="sus-metric-name">${esc(m.name)}</div>
               <div class="sus-metric-sub">${esc(m.sub)}</div>
@@ -3694,73 +3745,198 @@
     {id:'mp7', name:'כובע בייסבול שחור', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'שחור'},
     {id:'mp8', name:'מכנסי קרגו בז׳', search_query:'beige cargo pants utility', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'בז׳'},
   ];
-  let mpTab = 'browse', mpFilter = 'all';
+  const MP_NEW_SEED = [
+    {id:'n1', name:'Wide Leg Trousers', search_query:'zara wide leg black trousers fashion', category:'bottoms', price:59, brand:'Zara', style_tags:['minimal','chic'], isNew:true},
+    {id:'n2', name:'Linen Blazer', search_query:'hm premium linen blazer cream oversized', category:'outerwear', price:79, brand:'H&M', style_tags:['chic','office'], isNew:true},
+    {id:'n3', name:'Satin Slip Dress', search_query:'asos satin slip midi dress green', category:'dress', price:45, brand:'ASOS', style_tags:['romantic','evening'], isNew:true},
+    {id:'n4', name:'Air Force 1', search_query:'nike air force 1 white sneakers', category:'shoes', price:199, brand:'Nike', style_tags:['retro','casual'], isNew:true},
+    {id:'n5', name:'Oversized Linen Shirt', search_query:'cos linen white shirt oversized minimal', category:'top', price:65, brand:'COS', style_tags:['minimal','summer'], isNew:true},
+    {id:'n6', name:'Leather Belt Bag', search_query:'mango leather belt bag brown crossbody', category:'bag', price:49, brand:'Mango', style_tags:['everyday','utility'], isNew:true},
+  ];
+  let mpTab = 'shop', mpFilter = 'all', mpCondFilter = 'all';
+  let mpAssistQuery = '', mpAssistMsg = '', mpAssistIds = null; // null = no filter, array = filtered ids
+  let mpClosetFilter = false; // true = show only items with compat score >= 50%
 
   function loadMPListings() {
     const user = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
-    return [...user, ...MP_SEED];
+    return [...user, ...MP_NEW_SEED, ...MP_SEED];
   }
 
   function renderMarketplace() {
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
-    const listings = loadMPListings();
-    const categories = ['all','top','bottoms','shoes','bag','outerwear'];
-    const catLabels = {all:'All',top:'Tops',bottoms:'Bottoms',shoes:'Shoes',bag:'Bags',outerwear:'Outerwear'};
 
-    let filtered = listings;
-    if (mpFilter !== 'all') filtered = listings.filter(i => i.category === mpFilter);
+    const allListings = loadMPListings();
+    let filtered = allListings;
+    if (mpCondFilter === 'new') filtered = filtered.filter(i => i.isNew);
+    if (mpCondFilter === 'preloved') filtered = filtered.filter(i => !i.isNew);
+    if (mpFilter !== 'all') filtered = filtered.filter(i => i.category === mpFilter);
+    if (mpAssistIds !== null) filtered = filtered.filter(i => mpAssistIds.includes(i.id));
+    if (mpClosetFilter) {
+      const closetItems = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+      if (closetItems.length > 0) {
+        filtered = filtered.filter(item => {
+          const compat = calcCompatScore(item, closetItems);
+          return compat && compat.pct >= 50;
+        });
+      }
+    }
 
     const el = document.getElementById('mp-wrap');
     el.innerHTML = `
       <div class="mp-header">
-        <div class="mp-title" style="display:flex;align-items:center;gap:8px">${icon('storefront',20)} Marketplace</div>
-        <button class="mp-sell-btn" id="mp-sell-open">+ Sell an item</button>
+        <div class="mp-title">${icon('storefront',20)} Marketplace</div>
+        ${mpTab === 'shop' ? `<button class="mp-sell-btn" id="mp-sell-open">+ Sell</button>` : ''}
       </div>
-      <div class="mp-tabs">
-        <button class="mp-tab${mpTab==='browse'?' active':''}" data-tab="browse">Shop</button>
-        <button class="mp-tab${mpTab==='sell'?' active':''}" data-tab="sell">My listings</button>
-        <button class="mp-tab${mpTab==='swap'?' active':''}" data-tab="swap">Swap</button>
+      <div class="mp-segment">
+        <button class="mp-seg-btn${mpTab==='shop'?' active-sh':''}" data-tab="shop">Shop</button>
+        <button class="mp-seg-btn${mpTab==='sell'?' active-sell':''}" data-tab="sell">My Listings</button>
       </div>
-      ${mpTab === 'browse' ? `
-      <div class="mp-filters">
-        ${categories.map(c => `<button class="mp-filter${mpFilter===c?' active':''}" data-cat="${c}">${catLabels[c]}</button>`).join('')}
-      </div>
-      <div class="mp-grid">
-        ${filtered.map(item => {
-          const compat = wardrobe.length ? calcCompatScore(item, wardrobe) : null;
-          const cond = item.condition === 'new' ? 'New' : item.condition === 'like-new' ? 'Like new' : 'Used';
-          return `<div class="mp-item" data-id="${item.id}">
-            <div class="mp-item-img">
-              ${productImage(item)}
-              <div class="mp-item-badge ${item.condition}">${esc(cond)}</div>
-            </div>
-            <div class="mp-item-info">
-              <div class="mp-item-name">${esc(item.name)}</div>
-              <div class="mp-item-price">₪${item.price} <span style="font-size:var(--t-micro);font-weight:600;color:var(--muted);text-decoration:line-through">₪${item.orig}</span></div>
-              <div class="mp-item-seller">${esc(item.seller)}</div>
-              ${compat ? `<div class="mp-item-compat">${compat.pct}% closet match</div>` : ''}
-            </div>
-          </div>`;
-        }).join('')}
-      </div>` : mpTab === 'sell' ? renderMySells() : renderSwap()}
+      ${mpTab === 'shop' ? `<div class="mp-assist-bar">
+        <div class="mp-assist-input-row">
+          ${icon('sparkle', 16)}
+          <input class="mp-assist-input" id="mp-assist-input" placeholder="Ask me to find something…" value="${mpAssistQuery||''}" />
+          ${mpAssistQuery ? `<button class="mp-assist-clear" id="mp-assist-clear">×</button>` : ''}
+          <button class="mp-assist-btn" id="mp-assist-submit">${icon('arrowRight', 16)}</button>
+        </div>
+        ${mpAssistMsg ? `<div class="mp-assist-msg">${esc(mpAssistMsg)}</div>` : ''}
+      </div>` : ''}
+      ${mpTab === 'shop' ? renderMPShopGrid(filtered, wardrobe) : renderMySells()}
     `;
 
     // Tabs
-    el.querySelectorAll('.mp-tab').forEach(btn => btn.addEventListener('click', () => {
-      mpTab = btn.dataset.tab; renderMarketplace();
+    el.querySelectorAll('.mp-seg-btn').forEach(btn => btn.addEventListener('click', () => {
+      mpTab = btn.dataset.tab; mpFilter = 'all'; mpCondFilter = 'all';
+      mpAssistQuery = ''; mpAssistMsg = ''; mpAssistIds = null; mpClosetFilter = false;
+      renderMarketplace();
     }));
 
-    // Filters
+    // Condition chips (closet chip is toggle, others are exclusive)
+    el.querySelectorAll('.mp-cond-chip').forEach(btn => btn.addEventListener('click', () => {
+      if (btn.dataset.filter === 'closet') {
+        mpClosetFilter = !mpClosetFilter;
+      } else {
+        mpCondFilter = btn.dataset.cond || 'all';
+      }
+      renderMarketplace();
+    }));
+
+    // Category filters
     el.querySelectorAll('.mp-filter').forEach(btn => btn.addEventListener('click', () => {
       mpFilter = btn.dataset.cat; renderMarketplace();
     }));
 
+    // Buy button — event delegation via data-id on parent card
+    el.addEventListener('click', e => {
+      const btn = e.target.closest('.mp-buy-btn');
+      if (!btn) return;
+      e.stopPropagation();
+      const card = btn.closest('.mp-item');
+      if (!card) return;
+      handleMPBuy(card.dataset.id, card.dataset.isnew === 'true');
+    });
+
+    // Delete listing button — event delegation
+    el.addEventListener('click', e => {
+      const del = e.target.closest('.mp-delete-btn');
+      if (del) { deleteMySell(del.dataset.id); }
+    });
+
     // Sell button
     el.querySelector('#mp-sell-open')?.addEventListener('click', openSellForm);
 
-    // Item click → buy sheet
-    el.querySelectorAll('.mp-item').forEach(card => card.addEventListener('click', () => {
-      const id = card.dataset.id;
+    // AI assist bar
+    el.querySelector('#mp-assist-submit')?.addEventListener('click', runMPAssist);
+    el.querySelector('#mp-assist-input')?.addEventListener('keydown', e => { if (e.key === 'Enter') runMPAssist(); });
+    el.querySelector('#mp-assist-clear')?.addEventListener('click', () => {
+      mpAssistQuery = ''; mpAssistMsg = ''; mpAssistIds = null; renderMarketplace();
+    });
+
+    // Suggest-card event delegation (replaces inline onclick)
+    el.addEventListener('click', e => {
+      const sc = e.target.closest('.mp-suggest-card');
+      if (sc) { try { openSellFormWithItem(JSON.stringify(JSON.parse(sc.dataset.item))); } catch(err){} }
+    });
+
+    // Compat overlay badge — replaces inline onclick
+    el.addEventListener('click', e => {
+      const compatBtn = e.target.closest('[data-action="compat-overlay"]');
+      if (compatBtn) { e.stopPropagation(); openCompatOverlay(compatBtn.dataset.id); return; }
+
+      const closeModal = e.target.closest('[data-action="close-modal"]');
+      if (closeModal) { document.getElementById('purchase-modal')?.classList.remove('show'); return; }
+
+      const goWardrobe = e.target.closest('[data-action="go-wardrobe"]');
+      if (goWardrobe) { showView('wardrobe'); return; }
+    });
+  }
+
+  function renderMPShopGrid(items, wardrobe) {
+    const categories = ['all','top','bottoms','shoes','bag','outerwear','dress'];
+    const catLabels = {all:'All',top:'Tops',bottoms:'Bottoms',shoes:'Shoes',bag:'Bags',outerwear:'Outerwear',dress:'Dresses'};
+    const wardrobeForEmpty = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const condChipsHtml = `
+      <div class="mp-cond-row">
+        <button class="mp-cond-chip${mpCondFilter==='all'?' active':''}" data-cond="all">All</button>
+        <button class="mp-cond-chip${mpCondFilter==='new'?' active':''}" data-cond="new">New</button>
+        <button class="mp-cond-chip${mpCondFilter==='preloved'?' active':''}" data-cond="preloved">Pre-loved</button>
+        <button class="mp-cond-chip mp-closet-chip${mpClosetFilter?' active':''}" data-filter="closet">${icon('sparkle', 12)} Matches My Closet</button>
+      </div>`;
+    const catFiltersHtml = `
+      <div class="mp-filters">
+        ${categories.map(c => `<button class="mp-filter${mpFilter===c?' active':''}" data-cat="${c}">${catLabels[c]}</button>`).join('')}
+      </div>`;
+    if (!items.length) {
+      let emptyHtml;
+      if (mpClosetFilter && wardrobeForEmpty.length === 0) {
+        emptyHtml = `<div class="mp-empty">
+          ${icon('wardrobe', 36)}
+          <div>Add items to your closet to unlock Closet Match</div>
+          <button class="mp-empty-cta" data-action="go-wardrobe">Open Wardrobe</button>
+        </div>`;
+      } else if (mpClosetFilter) {
+        emptyHtml = `<div class="mp-empty">
+          ${icon('search', 36)}
+          <div>No items match your closet right now</div>
+          <div style="font-size:var(--t-caption);color:var(--muted);margin-top:4px">Try removing filters or check back later</div>
+        </div>`;
+      } else {
+        emptyHtml = `<div style="text-align:center;padding:48px 20px;color:var(--muted)">
+          <div style="margin-bottom:12px">${icon('search',36)}</div>
+          <div style="font-size:var(--t-body);font-weight:700;color:var(--fg)">No items in this category</div>
+          <div style="font-size:var(--t-caption);margin-top:6px">Try a different filter</div>
+        </div>`;
+      }
+      return condChipsHtml + catFiltersHtml + emptyHtml;
+    }
+    return condChipsHtml + catFiltersHtml + `
+      <div class="mp-grid">
+        ${items.map(item => {
+          const compat = (!item.isNew && wardrobe.length) ? calcCompatScore(item, wardrobe) : null;
+          const badgeClass = item.isNew ? 'brand-new' : 'preloved';
+          const badgeText = item.isNew ? 'New' : 'Pre-loved';
+          const brandOrSeller = item.isNew ? item.brand : item.seller;
+          return `<div class="mp-item" data-id="${item.id}" data-isnew="${!!item.isNew}">
+            <div class="mp-item-img">
+              ${productImage(item)}
+              <div class="mp-item-badge ${badgeClass}">${esc(badgeText)}</div>
+            </div>
+            <div class="mp-item-info">
+              <div class="mp-item-name">${esc(item.name)}</div>
+              <div class="${item.isNew ? 'mp-item-brand' : 'mp-item-seller'}">${esc(brandOrSeller||'')}</div>
+              <div class="mp-item-price">₪${item.price}${!item.isNew && item.orig ? ` <span style="font-size:var(--t-micro);color:var(--muted);text-decoration:line-through">₪${item.orig}</span>` : ''}</div>
+              ${compat ? `<div class="mp-item-compat mp-compat-btn" data-action="compat-overlay" data-id="${item.id}">${icon('sparkle',12)} ${compat.pct}% closet match</div>` : ''}
+              <button class="mp-buy-btn">${item.isNew ? 'Shop at '+esc(item.brand) : 'Buy Now'}</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }
+
+  function handleMPBuy(id, isNew) {
+    if (isNew === 'true') {
+      const item = MP_NEW_SEED.find(i => i.id === id);
+      if (item) showToast('Opening ' + item.brand + ' store…');
+    } else {
       const item = loadMPListings().find(i => i.id === id);
       if (!item) return;
       openSheetSingle({
@@ -3768,7 +3944,68 @@
         brand_vibe: item.seller, price_estimate_usd: item.price,
         search_query: item.name, style_tags: item.style_tags || [],
       }, null, null);
-    }));
+    }
+  }
+
+  function openCompatOverlay(itemId) {
+    const item = loadMPListings().find(i => i.id === itemId);
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    if (!item || !wardrobe.length) return;
+    const compat = calcCompatScore(item, wardrobe);
+    const top3 = compat?.matches?.slice(0,3) || wardrobe.slice(0,3);
+
+    const modal = document.getElementById('purchase-modal');
+    const card = document.getElementById('modal-card');
+    card.innerHTML = `
+      <div style="padding:20px">
+        <div style="font-size:var(--t-h3);font-weight:900;margin-bottom:4px">${icon('sparkle',16)} ${compat?.pct||'?'}% Closet Match</div>
+        <div style="font-size:var(--t-caption);color:var(--muted);margin-bottom:16px">This pairs with ${top3.length} items you already own</div>
+        <div style="display:grid;grid-template-columns:repeat(${Math.min(top3.length+1,4)},1fr);gap:8px;margin-bottom:16px">
+          ${top3.map(w=>`<div style="border-radius:var(--r-md);overflow:hidden;aspect-ratio:1;background:var(--card)">
+            ${productImage(w)}
+            <div style="padding:4px 6px;font-size:var(--t-micro);font-weight:700;color:var(--muted)">${esc(w.name||'')}</div>
+          </div>`).join('')}
+          <div style="border-radius:var(--r-md);overflow:hidden;aspect-ratio:1;background:var(--card);border:2px solid var(--accent)">
+            ${productImage(item)}
+            <div style="padding:4px 6px;font-size:var(--t-micro);font-weight:800;color:var(--accent)">This item</div>
+          </div>
+        </div>
+        <button class="mp-buy-btn" data-action="close-modal">Got it!</button>
+      </div>`;
+    modal.classList.add('show');
+  }
+
+  async function runMPAssist() {
+    const q = document.getElementById('mp-assist-input')?.value?.trim();
+    if (!q) return;
+    mpAssistQuery = q;
+    mpAssistMsg = 'Searching…';
+    mpAssistIds = null;
+    renderMarketplace();
+
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const items = loadMPListings();
+
+    try {
+      const res = await fetch('/api/marketplace/assist', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ query: q, wardrobe: wardrobe.slice(0,10), items })
+      });
+      const data = await res.json();
+      mpAssistIds = (data.matches || []).filter(m => m.score > 30).map(m => m.id);
+      mpAssistMsg = data.message || `Found ${mpAssistIds.length} items for you`;
+    } catch {
+      // client-side fallback
+      const kw = q.toLowerCase();
+      mpAssistIds = items.filter(i =>
+        (i.style_tags||[]).some(t => kw.includes(t)) ||
+        kw.includes(i.category||'') ||
+        (i.name||'').toLowerCase().split(' ').some(w => kw.includes(w))
+      ).map(i => i.id);
+      mpAssistMsg = `Found ${mpAssistIds.length} items matching your request`;
+    }
+    renderMarketplace();
   }
 
   function renderMySells() {
@@ -3782,29 +4019,29 @@
         <div style="font-size:var(--t-caption);margin-top:6px;opacity:.7">Tap "+ Sell an item" to get started</div>
       </div>
       ${suggestions.length ? `<div style="padding:0 16px 8px"><div style="font-size:var(--t-caption);font-weight:700;color:var(--muted);margin-bottom:8px">From your closet — worth selling?</div>
-        ${suggestions.map(item => `<div onclick="openSellFormWithItem(${JSON.stringify(JSON.stringify(item))})" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer">
+        ${suggestions.map(item => `<div class="mp-suggest-card" data-item='${attr(JSON.stringify(item))}' style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer">
           <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0">${productImage(item)}</div>
           <div style="flex:1"><div style="font-size:var(--t-small);font-weight:700">${esc(item.name||'Item')}</div><div style="font-size:var(--t-micro);color:var(--muted)">Suggested price: $${Math.round((item.price_estimate_usd||200)*0.5)}</div></div>
-          <div style="font-size:var(--t-micro);font-weight:700;color:var(--accent);background:rgba(139,92,246,.12);padding:4px 10px;border-radius:20px">Sell</div>
+          <div style="font-size:var(--t-micro);font-weight:700;color:var(--accent);background:color-mix(in srgb, var(--accent3) 12%, transparent);padding:4px 10px;border-radius:20px">Sell</div>
         </div>`).join('')}</div>` : ''}`;
     }
     const totalEarnings = mine.reduce((s,i) => s + (Number(i.price)||0), 0);
     return `
       <div style="padding:14px 16px 0">
-        <div style="background:var(--grad-success);border-radius:14px;padding:14px 16px;color:#000;margin-bottom:14px">
+        <div style="background:var(--grad-success);border-radius:14px;padding:14px 16px;color:var(--bg);margin-bottom:14px">
           <div style="font-size:var(--t-micro);font-weight:700;opacity:.7">Earnings potential</div>
-          <div style="font-size: var(--t-h1,26px);font-weight:900">₪${totalEarnings.toLocaleString()}</div>
+          <div style="font-size: var(--t-h1,24px);font-weight:900">₪${totalEarnings.toLocaleString()}</div>
           <div style="font-size:var(--t-micro);font-weight:600;opacity:.8">${mine.length} active listings</div>
         </div>
       </div>
       <div class="mp-grid">${mine.map(item => `
       <div class="mp-item" style="position:relative">
-        <div class="mp-item-img">${productImage(item)}<div class="mp-item-badge like-new">Mine</div></div>
+        <div class="mp-item-img">${productImage(item)}<span class="mp-badge-active">Active</span></div>
         <div class="mp-item-info">
           <div class="mp-item-name">${esc(item.name)}</div>
           <div class="mp-item-price">₪${item.price}</div>
-          <div class="mp-item-seller" style="color:#4ade80;display:flex;align-items:center;gap:4px">${icon('check',12)} פעיל</div>
-          <button onclick="deleteMySell('${item.id}')" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,.15);border:none;border-radius:8px;padding:3px 7px;font-size:11px;font-weight:700;color:#ef4444;cursor:pointer">הסר</button>
+          <div class="mp-item-seller" style="color:var(--success);display:flex;align-items:center;gap:4px">${icon('check',12)} פעיל</div>
+          <button class="mp-delete-btn" data-id="${item.id}" style="position:absolute;top:6px;right:6px;background:color-mix(in srgb,var(--danger) 12%,transparent);border:none;border-radius:8px;min-height:44px;padding:6px 12px;font-size:var(--t-micro);font-weight:700;color:var(--danger);cursor:pointer">הסר</button>
         </div>
       </div>`).join('')}</div>`;
   }
@@ -3820,14 +4057,6 @@
   function openSellFormWithItem(jsonStr) {
     const item = JSON.parse(jsonStr);
     openSellForm(item);
-  }
-
-  function renderSwap() {
-    return `<div style="text-align:center;padding:40px 20px">
-      <div style="color:var(--muted);margin-bottom:12px">${icon('users', 40)}</div>
-      <div style="font-size: var(--t-h3,15px);font-weight:900;margin-bottom:8px">Item swapping coming soon</div>
-      <div style="font-size:var(--t-small);color:var(--muted);font-weight:600">V2 — Swap with your friends' closets</div>
-    </div>`;
   }
 
   function openSellForm(prefill) {
@@ -3870,7 +4099,7 @@
           </select>
         </div>
         <div style="display:flex;gap:8px">
-          <button class="ha-btn ha-primary" style="flex:1" id="sf-submit">List for sale 🚀</button>
+          <button class="ha-btn ha-primary" style="flex:1" id="sf-submit">${icon('tag',16)} List for sale</button>
           <button class="ha-btn ha-secondary" style="flex:1" onclick="document.getElementById('purchase-modal').classList.remove('show')">Cancel</button>
         </div>
       </div>`;
@@ -3900,7 +4129,7 @@
       addRewardPoints(25, 'sell_listing');
       mpTab = 'sell';
       renderMarketplace();
-      showToast('Item listed! 🎉 +25 points');
+      showToast('Item listed! +25 points');
     });
   }
 
@@ -4115,7 +4344,7 @@
 
       ${insights.map(ins => `
       <div class="sr-insight-card">
-        <div class="sr-insight-text">💡 ${esc(ins)}</div>
+        <div class="sr-insight-text">${icon('sparkle',14)} ${esc(ins)}</div>
       </div>`).join('')}
 
       ${top3.length ? `
@@ -4203,7 +4432,7 @@
     if (!wl.find(i => i.name === name)) {
       wl.unshift({id: Date.now(), name, addedAt: new Date().toLocaleDateString('he-IL')});
       saveWishlist(wl);
-      showToast('Added to Wishlist 💫');
+      showToast('Added to Wishlist');
     }
   }
 
@@ -4231,7 +4460,7 @@
         saveWishlist(wl2);
         addInput.value = '';
         renderWishlist();
-        showToast('Added to Wishlist 💫');
+        showToast('Added to Wishlist');
       };
       addBtn.addEventListener('click', doAdd);
       addInput.addEventListener('keydown', e => { if(e.key==='Enter') doAdd(); });
@@ -4281,10 +4510,12 @@
 
   // ---- AI Stylist Chat ----
   const CHAT_PRESETS = [
-    "What's missing from my closet?","I need a look for a date tonight",
-    'Build me a capsule wardrobe','Which shoes would go with this?',
-    'How do I dress for a job interview?','How much do I spend on clothes?',
-    "What's trending right now?",'Help me organize my closet',
+    'What to wear for a date night?',
+    'Job interview outfit',
+    'Casual brunch look',
+    'First day of work',
+    'Beach day outfit',
+    'What matches my black jeans?',
   ];
   let chatInited = false;
   let chatHistory = [];
@@ -4315,11 +4546,11 @@
       let greeting;
       if (wardrobe.length >= 2) {
         const sample = wardrobe.slice(0, 2).map(i => i.name).join(' and ');
-        greeting = "Hey babe! 💅 I'm Abigail, your stylist. I saw you've got " + sample + ' in your closet — such a cute combo! Tell me what\'s on your mind and I\'ll sort it out ✨';
+        greeting = "Hey! I'm Abigail, your personal stylist. I see you've got " + sample + " in your closet — great combo. What would you like to wear today?";
       } else if (wardrobe.length === 1) {
-        greeting = "Hey! 💅 I'm Abigail, your stylist. I saw you added " + wardrobe[0].name + ' to your closet — great taste! Let\'s build looks around it ✨';
+        greeting = "Hi! I'm Abigail, your stylist. I see you added " + wardrobe[0].name + " to your closet — nice taste. Let's build looks around it.";
       } else {
-        greeting = "Hey babe! 💅 I'm Abigail — your personal stylist at AWEAR. Snap a few clothes into your closet and I'll build you looks that make you feel like a queen. What's your question? ✨";
+        greeting = "Hi! I'm Abigail, your personal stylist at AWEAR. Add some clothes to your closet and I'll build outfits that work for your life. What's on your mind?";
       }
       addChatMsg('bot', greeting);
     }
@@ -4370,34 +4601,34 @@
       });
       const data = await res.json();
       hideChatTyping();
-      addChatMsg('bot', data.answer || 'Try again in a moment 🙏');
+      addChatMsg('bot', data.answer || 'Try again in a moment');
     } catch(_) {
       hideChatTyping();
       const wardrobe2 = JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
       const hasW = wardrobe2.length > 0;
       const itemName = hasW ? wardrobe2[0].name : null;
       const ABIGAIL_FALLBACKS = [
-        {keys:['date','evening','night'], reply: itemName ? `For a date I'd take your ${itemName} with a satin midi dress and a kitten heel — a combo that never fails 🔥` : 'For a date — satin midi dress + kitten heel + mini bag. Always works 🔥'},
-        {keys:['interview','work','professional'], reply:'For an interview: straight black trousers + a tucked-in white shirt + a low heel. Clean, confident, winning 💼'},
-        {keys:['missing','what do i need','need','buy'], reply:'3 things almost always missing: white sneakers, a denim jacket, and a utility piece. They create dozens of looks 👟'},
-        {keys:['capsule','capsule wardrobe','minimalist'], reply:'Capsule wardrobe: 2 pairs of jeans, 3 basics, one versatile dress, one coat, 2 pairs of shoes, a black bag. 12 pieces — ∞ looks ✨'},
-        {keys:['shoes','sneakers','heel','shoe'], reply:'Most useful: white sneakers (for everything), brown Chelsea boots for winter, nude heels for events. Three pairs that cover it all 👟'},
-        {keys:['trend','hot','what\'s in','right now'], reply:'The hottest trends right now: barrel jeans, white Adidas Samba, a leather jacket, a mini bag, and cottage core with lace 🔥'},
-        {keys:['price','how much','expensive','cheap','budget','spend'], reply:'Stylist wisdom: invest in shoes and a bag, save on clothes. 20% of your closet = 80% of your looks 💡'},
-        {keys:['y2k','retro','vintage'], reply:'Y2K now: low-rise denim + crop top + big hoops + a tiny bag. You don\'t need it all — one Y2K piece is enough 💿'},
-        {keys:['black','all black'], reply:'All black is the easiest win: play with textures — leather + velvet + matte. That\'s what makes it interesting 🖤'},
-        {keys:['winter','cold','fall','autumn'], reply:'For winter: layers are key! A bodysuit + linen shirt + leather jacket + a big coat. Warm + cool 🧥'},
-        {keys:['summer','hot','heat'], reply:'Summer in the city: linen, linen, linen. It breathes and doesn\'t wrinkle. A midi dress + leather sandals = perfect ☀️'},
-        {keys:['what to wear','don\'t know','help'], reply: hasW ? `Let's build a look from your closet! Tell me — where to? Morning/evening? Casual or a bit more? 🪄` : 'Tell me a little about yourself — where to? What style do you love? And I\'ll tell you what to wear 💕'},
-        {keys:['organize','organise','closet'], reply:'To organize your closet: the AWEAR Marie Kondo version — take everything out, sort by category, keep only what you\'ve worn in the last 6 months. Whatever\'s left — sell it 🌿'},
-        {keys:['sell','selling','depop'], reply:'Before you sell: shoot on a white background, natural light, 3 angles. Price = 30-40% of the original. A clear title with size and brand 📸'},
+        {keys:['date','evening','night'], reply: itemName ? `For a date I'd take your ${itemName} with a satin midi dress and a kitten heel — a combo that never fails.` : 'For a date — satin midi dress + kitten heel + mini bag. Always works.'},
+        {keys:['interview','work','professional'], reply:'For an interview: straight black trousers + a tucked-in white shirt + a low heel. Clean, confident, winning.'},
+        {keys:['missing','what do i need','need','buy'], reply:'3 things almost always missing: white sneakers, a denim jacket, and a utility piece. They create dozens of looks.'},
+        {keys:['capsule','capsule wardrobe','minimalist'], reply:'Capsule wardrobe: 2 pairs of jeans, 3 basics, one versatile dress, one coat, 2 pairs of shoes, a black bag. 12 pieces — endless looks.'},
+        {keys:['shoes','sneakers','heel','shoe'], reply:'Most useful: white sneakers (for everything), brown Chelsea boots for winter, nude heels for events. Three pairs that cover it all.'},
+        {keys:['trend','hot','what\'s in','right now'], reply:'The hottest trends right now: barrel jeans, white Adidas Samba, a leather jacket, a mini bag, and cottage core with lace.'},
+        {keys:['price','how much','expensive','cheap','budget','spend'], reply:'Stylist wisdom: invest in shoes and a bag, save on clothes. 20% of your closet = 80% of your looks.'},
+        {keys:['y2k','retro','vintage'], reply:'Y2K now: low-rise denim + crop top + big hoops + a tiny bag. You don\'t need it all — one Y2K piece is enough.'},
+        {keys:['black','all black'], reply:'All black is the easiest win: play with textures — leather + velvet + matte. That\'s what makes it interesting.'},
+        {keys:['winter','cold','fall','autumn'], reply:'For winter: layers are key. A bodysuit + linen shirt + leather jacket + a big coat. Warm and cool.'},
+        {keys:['summer','hot','heat'], reply:'Summer in the city: linen, linen, linen. It breathes and doesn\'t wrinkle. A midi dress + leather sandals = perfect.'},
+        {keys:['what to wear','don\'t know','help'], reply: hasW ? 'Let\'s build a look from your closet! Tell me — where to? Morning/evening? Casual or a bit more?' : 'Tell me a little about yourself — where to? What style do you love? And I\'ll tell you what to wear.'},
+        {keys:['organize','organise','closet'], reply:'To organize your closet: the AWEAR Marie Kondo version — take everything out, sort by category, keep only what you\'ve worn in the last 6 months. Whatever\'s left — sell it.'},
+        {keys:['sell','selling','depop'], reply:'Before you sell: shoot on a white background, natural light, 3 angles. Price = 30-40% of the original. A clear title with size and brand.'},
       ];
       const lq = q.toLowerCase();
       const match = ABIGAIL_FALLBACKS.find(f => f.keys.some(k => lq.includes(k)));
       const defaultReplies = [
-        'Great question! Tell me more — for which occasion? What\'s your usual style? 💕',
-        'I\'m here! Give me a few more details so I can help you better 🌟',
-        hasW ? `With your closet we have tons of options — tell me what you need and we'll create a look! ✨` : 'Let\'s get started — scan an item into your closet and I\'ll help you build looks 🪄',
+        'Great question! Tell me more — for which occasion? What\'s your usual style?',
+        'I\'m here! Give me a few more details so I can help you better.',
+        hasW ? `With your closet we have tons of options — tell me what you need and we'll create a look!` : 'Let\'s get started — scan an item into your closet and I\'ll help you build looks.',
       ];
       addChatMsg('bot', match ? match.reply : defaultReplies[Math.floor(Math.random()*defaultReplies.length)]);
     }
@@ -4544,7 +4775,7 @@
     }
 
     if (!html) {
-      list.innerHTML = `<div style="text-align:center;color:var(--muted);padding:32px 0;font-size:var(--t-body);font-weight:700">No results found 🔍<br><span style="font-size:var(--t-caption);font-weight:500">Try a style, color, or brand</span></div>`;
+      list.innerHTML = `<div style="text-align:center;color:var(--muted);padding:32px 0;font-size:var(--t-body);font-weight:700">${icon('search',28)}<br>No results found<br><span style="font-size:var(--t-caption);font-weight:500">Try a style, color, or brand</span></div>`;
       return;
     }
     list.innerHTML = html;
@@ -4824,6 +5055,7 @@
   const REACTIONS_KEY = 'awear_reactions';
   const COMMENTS_KEY  = 'awear_comments';
   const REACTION_SET  = ['❤️','🔥','⭐','✨'];
+  const REACTION_ICONS = {'❤️':'heartFill','🔥':'flame','⭐':'sparkle','✨':'sparkle'};
 
   function loadReactions() {
     try { return JSON.parse(localStorage.getItem(REACTIONS_KEY) || '{}'); } catch(e) { return {}; }
@@ -4946,7 +5178,7 @@
       <div class="fc-reactions" data-post="${postId}">
         ${REACTION_SET.map(e => `
           <button class="fc-reaction-btn${r.mine===e?' reacted':''}" data-react="${e}" data-post="${postId}">
-            ${e}<span class="rc-count">${r.counts[e]||0}</span>
+            ${icon(REACTION_ICONS[e]||'heart',14)}<span class="rc-count">${r.counts[e]||0}</span>
           </button>`).join('')}
         <button class="fc-reaction-btn" data-comment-open="${postId}" style="gap:4px">
           ${commentLabel}
@@ -5458,8 +5690,8 @@
     addRewardPoints(50, 'booking');
   }
 
-  function stylistVideoCall(name) { showToast(`📹 Connecting to video with ${name}...`); }
-  function stylistChat(name) { showToast(`💬 Opening chat with ${name}...`); }
+  function stylistVideoCall(name) { showToast(`Connecting to video with ${name}...`); }
+  function stylistChat(name) { showToast(`Opening chat with ${name}...`); }
 
   // ===== SHOPPING FEED =====
   let SHOP_SEED = [
