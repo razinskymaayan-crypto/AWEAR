@@ -105,5 +105,15 @@
 **לקח:** audit של index.html השלם עולה ~82,000 טוקנים. audit של `git diff main...branch -- static/index.html` עולה ~8,000 טוקנים ומכסה את כל השינויים בפועל. קריאת קובץ שלם = בדיקת קוד שלא נגעו בו.
 **מנגנון:** `git diff main...$(git branch --show-current) -- static/index.html` → audit רק על השינויים. לאחר מכן grep הbranch הספציפי לP0 criteria.
 
+### DS-014 | Light mode — החלטה סופית, לא "עתידי"
+**מקור:** visual vision session — board (2026-06-19)
+**לקח:** Light + Dark mode auto לפי מכשיר — החלטת board, לא feature אופציונלי. כל קומפוננט חדש שנכתב ב-Cycle 3 ואילך חייב לעבוד בשני המצבים. hardcoded color על רקע שלא מושפע מ-prefers-color-scheme = P0.
+**מנגנון:** כל CSS color שמשתמש ב-token → עובד אוטומטית. כל hardcoded hex → שבירה בlight mode. Cycle 3 migration כולל: הוספת `@media (prefers-color-scheme: light)` ל-tokens.css.
+
+### DS-015 | benchmark נכון: Instagram + Pinterest + Zara (לא TikTok/Depop/Linear)
+**מקור:** visual vision session — board (2026-06-19)
+**לקח:** AWEAR = יוקרה נגישה, editorial, photo-first. הbenchmark הנכון: Instagram (community + photo), Pinterest (discovery + aspiration), Zara (accessible aspiration). TikTok = too loud. Depop = too grungy. Linear = tech, לא fashion. כל החלטת עיצוב נמדדת מול שלושת אלה, לא מול tech apps.
+**מנגנון:** שאלת העל של גבאנה מתעדכנת מ-"Instagram story" ל-"Instagram/Pinterest/Zara story".
+
 ---
 
