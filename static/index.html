@@ -2245,12 +2245,14 @@
   async function loadFeedData() {
     try {
       const [profilesRes, postsRes] = await Promise.all([
-        fetch('/static/data/profiles.json'),
-        fetch('/static/data/posts.json')
+        fetch('/api/profiles?limit=20'),
+        fetch('/api/posts?limit=40')
       ]);
       if (!profilesRes.ok || !postsRes.ok) return null;
-      const profiles = await profilesRes.json();
-      const posts    = await postsRes.json();
+      const profilesData = await profilesRes.json();
+      const postsData    = await postsRes.json();
+      const profiles = profilesData.items || profilesData;
+      const posts    = postsData.items    || postsData;
 
       const profileMap = {};
       profiles.forEach(p => { profileMap[p.id] = p; });
@@ -2303,9 +2305,10 @@
   // On fetch failure → returns null → fallback to hardcoded SHOP_SEED below
   async function loadProducts() {
     try {
-      const res = await fetch('/static/data/products.json');
+      const res = await fetch('/api/products?limit=100');
       if (!res.ok) return null;
-      const products = await res.json();
+      const data = await res.json();
+      const products = data.items || data;
       if (!Array.isArray(products) || !products.length) return null;
 
       return products.map((p, idx) => ({
