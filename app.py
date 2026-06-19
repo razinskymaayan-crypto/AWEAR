@@ -16,9 +16,12 @@ import base64
 import io
 import json
 import logging
+import os
+import sqlite3
 import time
 import traceback
 import urllib.parse
+import warnings
 from collections import defaultdict
 from pathlib import Path
 from typing import Optional
@@ -76,6 +79,19 @@ except Exception:  # noqa: BLE001 — missing google libs/creds shouldn't break 
     create_calendar_event = schedule_agent_meeting = send_summary_email = _google_unavailable
 
 load_dotenv()  # loads ANTHROPIC_API_KEY from .env
+
+# ---------------------------------------------------------------------------
+# Startup validation
+# ---------------------------------------------------------------------------
+
+_api_key = os.getenv("ANTHROPIC_API_KEY")
+if not _api_key:
+    warnings.warn(
+        "ANTHROPIC_API_KEY not set — /api/moderate running in fail-open mode. "
+        "Set the key in .env before production deploy.",
+        RuntimeWarning,
+        stacklevel=2,
+    )
 
 MODEL = "claude-opus-4-8"
 MAX_EDGE = 1024  # downscale long edge to control cost + latency
@@ -779,49 +795,59 @@ async def get_profile(user_id: str):
 
 
 # ---------------------------------------------------------------------------
-# Social layer — Likes
+# Likes persistence — SQLite (replaces previous in-memory _likes_store dict)
 # ---------------------------------------------------------------------------
 
-# In-memory likes store (migration-ready to DB via oren).
-# Structure: { post_id: set of user_keys }
-_likes_store: dict = {}
+DB_PATH = Path("data/awear.db")
+DB_PATH.parent.mkdir(exist_ok=True)
+
+
+def _get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def _init_db():
+    with _get_db() as db:
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS likes (
+                post_id TEXT NOT NULL,
+                user_key TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (post_id, user_key)
+            )
+        """)
+
+
+_init_db()
 
 
 @app.post("/api/posts/{post_id}/like")
 async def toggle_like(post_id: str, request: Request):
-    """Toggle like on a post. Identified by IP (v1 — no auth).
+    user_key = request.client.host
 
-    Returns:
-        post_id: str
-        liked: bool — the NEW state after toggle (True = now liked)
-        likes: int  — total like count (base from posts data + in-memory delta)
-    """
-    # Guard: request.client can be None behind certain reverse proxies.
-    user_key = (request.client.host if request.client else None) or "anonymous"
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM likes WHERE post_id=? AND user_key=?",
+            (post_id, user_key)
+        ).fetchone()
 
-    if post_id not in _likes_store:
-        # Init entry; validate post exists if we have a cache.
-        if _posts_cache:
-            post = next((p for p in _posts_cache if p["id"] == post_id), None)
-            if post is None:
-                raise HTTPException(status_code=404, detail="Post not found")
-        _likes_store[post_id] = set()
+        if existing:
+            db.execute("DELETE FROM likes WHERE post_id=? AND user_key=?", (post_id, user_key))
+            liked = False
+        else:
+            db.execute("INSERT INTO likes (post_id, user_key) VALUES (?, ?)", (post_id, user_key))
+            liked = True
 
-    already_liked = user_key in _likes_store[post_id]
-    if already_liked:
-        _likes_store[post_id].discard(user_key)
-    else:
-        _likes_store[post_id].add(user_key)
+        count = db.execute("SELECT COUNT(*) FROM likes WHERE post_id=?", (post_id,)).fetchone()[0]
 
-    post = next((p for p in _posts_cache if p["id"] == post_id), {"likes": 0})
+    post = next((p for p in _posts_cache if p["id"] == post_id), None)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+
     base_likes = post.get("likes", 0)
-    total_likes = base_likes + len(_likes_store[post_id])
-
-    return {
-        "post_id": post_id,
-        "liked": not already_liked,
-        "likes": total_likes,
-    }
+    return {"post_id": post_id, "liked": liked, "likes": base_likes + count}
 
 
 @app.get("/api/posts/{post_id}")
@@ -830,7 +856,10 @@ async def get_post(post_id: str):
     post = next((p for p in _posts_cache if p["id"] == post_id), None)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
-    likes_extra = len(_likes_store.get(post_id, set()))
+    with _get_db() as db:
+        likes_extra = db.execute(
+            "SELECT COUNT(*) FROM likes WHERE post_id=?", (post_id,)
+        ).fetchone()[0]
     return {**post, "likes": post.get("likes", 0) + likes_extra}
 
 
