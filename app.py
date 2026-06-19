@@ -13,11 +13,14 @@ Then open http://localhost:8000
 """
 
 import base64
+import datetime
+import hashlib
 import io
 import json
 import logging
 import os
 import sqlite3
+import uuid
 import time
 import traceback
 import urllib.parse
@@ -738,6 +741,18 @@ def init_db() -> None:
                 PRIMARY KEY (post_id, user_key)
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id TEXT PRIMARY KEY,
+                username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL,
+                display_name TEXT DEFAULT '',
+                bio TEXT DEFAULT '',
+                avatar_url TEXT DEFAULT '',
+                created_at REAL
+            )
+        """)
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 
@@ -1260,6 +1275,130 @@ async def mark_all_read(user_id: str):
     for n in _notifications_store.get(user_id, []):
         n["read"] = True
     return {"status": "ok"}
+
+
+# ---------------------------------------------------------------------------
+# Auth — users table in SQLite (Cycle 2).
+#
+# Passwords: SHA-256 hash (NOT bcrypt yet — Cycle 3 will upgrade to bcrypt).
+# Tokens: user_id as placeholder token (NO JWT yet — Cycle 3).
+# Schema owner: Sam. Integration owner: Oren.
+# ---------------------------------------------------------------------------
+
+def _pw_hash(password: str) -> str:
+    """SHA-256 hash of password. NOT bcrypt — Cycle 3 will upgrade."""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
+@app.post("/api/auth/register")
+async def register(request: Request):
+    """Register a new user.
+
+    Required body fields: username, email, password.
+    Returns {user_id, token (=user_id placeholder), username}.
+    400 if any field missing or password < 6 chars.
+    409 if username or email already exists.
+    """
+    body = await request.json()
+    username = (body.get("username") or "").strip()
+    email = (body.get("email") or "").strip()
+    password = body.get("password") or ""
+
+    if not username or not email or not password:
+        raise HTTPException(status_code=400, detail="username, email, password required")
+    if len(password) < 6:
+        raise HTTPException(status_code=400, detail="password must be at least 6 characters")
+
+    user_id = f"user_{username}_{int(time.time())}"
+    pw_hash = _pw_hash(password)
+
+    with _get_db() as db:
+        try:
+            db.execute(
+                """
+                INSERT INTO users (id, username, email, password_hash, display_name, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (user_id, username, email, pw_hash, username, time.time()),
+            )
+        except Exception as exc:
+            # sqlite3.IntegrityError: UNIQUE constraint failed
+            if "UNIQUE" in str(exc) or "IntegrityError" in type(exc).__name__:
+                raise HTTPException(status_code=409, detail="username or email already exists")
+            raise
+
+    logger.info("New user registered: %s (%s)", user_id, username)
+    return {"user_id": user_id, "token": user_id, "username": username}
+
+
+@app.post("/api/auth/login")
+async def login(request: Request):
+    """Authenticate a user by email + password.
+
+    Returns {user_id, token (=user_id placeholder), username}.
+    401 if credentials are invalid.
+    """
+    body = await request.json()
+    email = (body.get("email") or "").strip()
+    password = body.get("password") or ""
+    pw_hash = _pw_hash(password)
+
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT id, username FROM users WHERE email=? AND password_hash=?",
+            (email, pw_hash),
+        ).fetchone()
+
+    if not row:
+        raise HTTPException(status_code=401, detail="invalid credentials")
+
+    logger.info("User login: %s", row[0])
+    return {"user_id": row[0], "token": row[0], "username": row[1]}
+
+
+@app.get("/api/auth/me/{user_id}")
+async def get_me(user_id: str):
+    """Return the full user object for user_id. 404 if not found."""
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT id, username, email, display_name, bio, avatar_url, created_at FROM users WHERE id=?",
+            (user_id,),
+        ).fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="User not found")
+    return dict(row)
+
+
+@app.patch("/api/auth/me/{user_id}")
+async def update_me(user_id: str, request: Request):
+    """Update allowed profile fields for user_id.
+
+    Allowed fields: display_name (≤50 chars), bio (≤150 chars), avatar_url (≤500 chars).
+    Unknown fields are silently ignored.
+    Returns {user_id, updated: [field_names]}.
+    400 if no valid fields provided.
+    """
+    body = await request.json()
+    fields = {}
+    if "display_name" in body:
+        fields["display_name"] = str(body["display_name"])[:50]
+    if "bio" in body:
+        fields["bio"] = str(body["bio"])[:150]
+    if "avatar_url" in body:
+        fields["avatar_url"] = str(body["avatar_url"])[:500]
+
+    if not fields:
+        raise HTTPException(status_code=400, detail="no valid fields to update")
+
+    set_clause = ", ".join(f"{k}=?" for k in fields)
+    with _get_db() as db:
+        db.execute(
+            f"UPDATE users SET {set_clause} WHERE id=?",
+            (*fields.values(), user_id),
+        )
+
+    logger.info("User updated: %s — fields: %s", user_id, list(fields.keys()))
+    return {"user_id": user_id, "updated": list(fields.keys())}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
