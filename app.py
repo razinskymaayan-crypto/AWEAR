@@ -14,9 +14,11 @@ Then open http://localhost:8000
 
 import base64
 import datetime
+import hashlib
 import io
 import json
 import logging
+import sqlite3
 import uuid
 import time
 import traceback
@@ -781,79 +783,162 @@ async def get_profile(user_id: str):
 
 
 # ---------------------------------------------------------------------------
-# Auth — in-memory user store (skeleton for Cycle 2).
+# SQLite — shared DB for all persistent state (likes, saves, users).
+# DB_PATH is created once; _get_db() returns a connection with row_factory.
+# ---------------------------------------------------------------------------
+
+DB_PATH = Path("data/awear.db")
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+
+def _get_db():
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+# ---------------------------------------------------------------------------
+# Auth — users table in SQLite (Cycle 2).
 #
-# NOTE: this is intentionally in-memory only. No passwords, no tokens, no
-# sessions. This is a skeleton so Dana's editProfile onPress has a real
-# endpoint to wire up. Cycle 3 will add proper auth (JWT/OAuth).
+# Passwords: SHA-256 hash (NOT bcrypt yet — Cycle 3 will upgrade to bcrypt).
+# Tokens: user_id as placeholder token (NO JWT yet — Cycle 3).
 # Schema owner: Sam. Integration owner: Oren.
 # ---------------------------------------------------------------------------
 
-_users_store: dict = {}  # user_id → user dict
+def _init_users_table():
+    """Create users table if not exists. Called once at module load."""
+    with _get_db() as db:
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id TEXT PRIMARY KEY,
+                username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL,
+                display_name TEXT DEFAULT '',
+                bio TEXT DEFAULT '',
+                avatar_url TEXT DEFAULT '',
+                created_at REAL
+            )
+        """)
 
 
-def _get_current_user(user_id: str) -> Optional[dict]:
-    return _users_store.get(user_id)
+_init_users_table()
+
+
+def _pw_hash(password: str) -> str:
+    """SHA-256 hash of password. NOT bcrypt — Cycle 3 will upgrade."""
+    return hashlib.sha256(password.encode()).hexdigest()
 
 
 @app.post("/api/auth/register")
 async def register(request: Request):
-    """Register a new user by username.
+    """Register a new user.
 
-    Returns the new user_id and the full user object.
-    400 if username is too short; 409 if username is already taken.
+    Required body fields: username, email, password.
+    Returns {user_id, token (=user_id placeholder), username}.
+    400 if any field missing or password < 6 chars.
+    409 if username or email already exists.
     """
     body = await request.json()
-    username = body.get("username", "").strip()
-    if not username or len(username) < 3:
-        raise HTTPException(status_code=400, detail="Username must be at least 3 characters")
+    username = (body.get("username") or "").strip()
+    email = (body.get("email") or "").strip()
+    password = body.get("password") or ""
 
-    # Check uniqueness — O(n) is fine for demo scale
-    for u in _users_store.values():
-        if u.get("username") == username:
-            raise HTTPException(status_code=409, detail="Username already taken")
+    if not username or not email or not password:
+        raise HTTPException(status_code=400, detail="username, email, password required")
+    if len(password) < 6:
+        raise HTTPException(status_code=400, detail="password must be at least 6 characters")
 
-    user_id = f"user_{uuid.uuid4().hex[:8]}"
-    user = {
-        "id": user_id,
-        "username": username,
-        "display_name": body.get("display_name", username),
-        "bio": body.get("bio", ""),
-        "avatar_url": body.get("avatar_url", ""),
-        "created_at": datetime.datetime.utcnow().isoformat(),
-    }
-    _users_store[user_id] = user
+    user_id = f"user_{username}_{int(time.time())}"
+    pw_hash = _pw_hash(password)
+
+    with _get_db() as db:
+        try:
+            db.execute(
+                """
+                INSERT INTO users (id, username, email, password_hash, display_name, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (user_id, username, email, pw_hash, username, time.time()),
+            )
+        except Exception as exc:
+            # sqlite3.IntegrityError: UNIQUE constraint failed
+            if "UNIQUE" in str(exc) or "IntegrityError" in type(exc).__name__:
+                raise HTTPException(status_code=409, detail="username or email already exists")
+            raise
+
     logger.info("New user registered: %s (%s)", user_id, username)
-    return {"user_id": user_id, "user": user}
+    return {"user_id": user_id, "token": user_id, "username": username}
+
+
+@app.post("/api/auth/login")
+async def login(request: Request):
+    """Authenticate a user by email + password.
+
+    Returns {user_id, token (=user_id placeholder), username}.
+    401 if credentials are invalid.
+    """
+    body = await request.json()
+    email = (body.get("email") or "").strip()
+    password = body.get("password") or ""
+    pw_hash = _pw_hash(password)
+
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT id, username FROM users WHERE email=? AND password_hash=?",
+            (email, pw_hash),
+        ).fetchone()
+
+    if not row:
+        raise HTTPException(status_code=401, detail="invalid credentials")
+
+    logger.info("User login: %s", row[0])
+    return {"user_id": row[0], "token": row[0], "username": row[1]}
 
 
 @app.get("/api/auth/me/{user_id}")
 async def get_me(user_id: str):
     """Return the full user object for user_id. 404 if not found."""
-    user = _get_current_user(user_id)
-    if not user:
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT id, username, email, display_name, bio, avatar_url, created_at FROM users WHERE id=?",
+            (user_id,),
+        ).fetchone()
+    if not row:
         raise HTTPException(status_code=404, detail="User not found")
-    return user
+    return dict(row)
 
 
 @app.patch("/api/auth/me/{user_id}")
 async def update_me(user_id: str, request: Request):
     """Update allowed profile fields for user_id.
 
-    Allowed fields: display_name, bio, avatar_url.
-    Unknown fields are silently ignored (no 400 on extra keys).
-    Returns the updated user object.
+    Allowed fields: display_name (≤50 chars), bio (≤150 chars), avatar_url (≤500 chars).
+    Unknown fields are silently ignored.
+    Returns {user_id, updated: [field_names]}.
+    400 if no valid fields provided.
     """
-    user = _get_current_user(user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
     body = await request.json()
-    allowed_fields = {"display_name", "bio", "avatar_url"}
-    updates = {k: v for k, v in body.items() if k in allowed_fields}
-    _users_store[user_id].update(updates)
-    logger.info("User updated: %s — fields: %s", user_id, list(updates.keys()))
-    return _users_store[user_id]
+    fields = {}
+    if "display_name" in body:
+        fields["display_name"] = str(body["display_name"])[:50]
+    if "bio" in body:
+        fields["bio"] = str(body["bio"])[:150]
+    if "avatar_url" in body:
+        fields["avatar_url"] = str(body["avatar_url"])[:500]
+
+    if not fields:
+        raise HTTPException(status_code=400, detail="no valid fields to update")
+
+    set_clause = ", ".join(f"{k}=?" for k in fields)
+    with _get_db() as db:
+        db.execute(
+            f"UPDATE users SET {set_clause} WHERE id=?",
+            (*fields.values(), user_id),
+        )
+
+    logger.info("User updated: %s — fields: %s", user_id, list(fields.keys()))
+    return {"user_id": user_id, "updated": list(fields.keys())}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
