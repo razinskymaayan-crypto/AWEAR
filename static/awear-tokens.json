@@ -98,6 +98,7 @@
   },
 
   "spacing": {
+    "_comment": "Primary tokens keyed by px value. Semantic aliases (space-N) added cycle 2 — 8pt grid steps for web + RN parity.",
     "2":  { "value": "2px" },
     "4":  { "value": "4px" },
     "6":  { "value": "6px" },
@@ -112,7 +113,19 @@
     "32": { "value": "32px" },
     "40": { "value": "40px" },
     "48": { "value": "48px" },
-    "64": { "value": "64px" }
+    "64": { "value": "64px" },
+    "semantic": {
+      "_comment": "8pt grid steps. step × 4px = px value. CSS: var(--space-N). RN: SPACE[N].",
+      "space-1":  { "value": "4px",  "comment": "step 1 — hairline spacing, icon internal padding" },
+      "space-2":  { "value": "8px",  "comment": "step 2 — tight spacing, chip padding, icon gap" },
+      "space-3":  { "value": "12px", "comment": "step 3 — compact elements, list item padding" },
+      "space-4":  { "value": "16px", "comment": "step 4 — default component padding, card gutter" },
+      "space-5":  { "value": "20px", "comment": "step 5 — medium section spacing" },
+      "space-6":  { "value": "24px", "comment": "step 6 — section padding, modal padding" },
+      "space-8":  { "value": "32px", "comment": "step 8 — large section gap, hero padding" },
+      "space-10": { "value": "40px", "comment": "step 10 — xl spacing, screen-level padding" },
+      "space-12": { "value": "48px", "comment": "step 12 — xxl spacing, bottom safe area" }
+    }
   },
 
   "borderRadius": {
