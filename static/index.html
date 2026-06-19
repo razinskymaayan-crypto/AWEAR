@@ -24,7 +24,7 @@
   .phone { width: 390px; height: 844px; max-width: 100vw; max-height: 100vh;
     background: linear-gradient(180deg, var(--bg2), var(--bg)); position: relative; overflow: hidden;
     display: flex; flex-direction: column; border-radius: 30px;
-    box-shadow: 0 30px 80px rgba(232,82,106,.24), 0 0 0 1px rgba(255,255,255,.04); }
+    box-shadow: 0 30px 80px rgba(232,82,106,.28), 0 0 0 1px rgba(255,255,255,.04); }
   @media (max-width: 430px) { .phone { border-radius: 0; height: 100vh; } }
 
   header { padding: 18px 20px 12px; display: flex; align-items: center; justify-content: space-between;
@@ -129,7 +129,7 @@
     cursor: pointer; display: flex; flex-direction: column; box-shadow: 0 8px 18px rgba(0,0,0,.32);
     transition: transform .15s; }
   .ptile:active { transform: scale(.97); }
-  .ptile .pimg { height: 88px; display: flex; align-items: center; justify-content: center; font-size: var(--t-display,54px);
+  .ptile .pimg { height: 88px; display: flex; align-items: center; justify-content: center;
     filter: drop-shadow(0 8px 7px rgba(0,0,0,.22)); }
   .ptile .pname { color: #14141a; font-size: var(--t-caption,12px); font-weight: 800; line-height: 1.25; margin-top: 8px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -149,14 +149,14 @@
   .look-cell img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .look-cell .lc-meta { position: absolute; inset: auto 0 0 0; padding: 16px 8px 7px; font-size: var(--t-micro,11px);
     font-weight: 800; color: #fff; background: linear-gradient(0deg, rgba(0,0,0,.72), transparent); }
-  .earn { background: linear-gradient(135deg, rgba(82,201,122,.18), rgba(123,92,255,.12));
-    border: 1px solid rgba(82,201,122,.25); border-radius: 18px; padding: 16px; margin-bottom: 20px; }
+  .earn { background: linear-gradient(135deg, var(--success-surface, rgba(52,211,153,.18)), rgba(123,92,255,.12));
+    border: 1px solid var(--success-surface, rgba(52,211,153,.25)); border-radius: 18px; padding: 16px; margin-bottom: 20px; }
   .earn .top { display: flex; align-items: baseline; gap: 8px; }
-  .earn .big-num { font-weight: 900; font-size: var(--t-h1,26px); color: var(--success); }
-  .earn .ttl { font-weight: 800; font-size: var(--t-small,13px); }
-  .earn p { color: rgba(246,246,249,.7); font-size: var(--t-caption,12px); line-height: 1.5; margin-top: 6px; }
-  .shelf-empty { text-align: center; color: var(--muted); padding: 40px 26px; font-size: var(--t-small,13px); line-height: 1.6; }
-  .shelf-empty .big { font-size: var(--t-display,44px); margin-bottom: 12px; }
+  .earn .big-num { font-weight: 900; font-size: 26px; color: var(--success, #34d399); }
+  .earn .ttl { font-weight: 800; font-size: 13.5px; }
+  .earn p { color: rgba(246,246,249,.7); font-size: 12.5px; line-height: 1.5; margin-top: 6px; }
+  .shelf-empty { text-align: center; color: var(--muted); padding: 40px 26px; font-size: 13.5px; line-height: 1.6; }
+  .shelf-empty .big { font-size: 44px; margin-bottom: 12px; }
   .listing { display: flex; align-items: center; gap: 12px; background: var(--card);
     border: 1px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 10px; }
   .listing .ic { width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0; font-size: var(--t-h1,24px);
@@ -165,8 +165,8 @@
   .listing .info .nm { font-weight: 800; font-size: var(--t-small,13px); line-height: 1.25; }
   .listing .info .sub { color: var(--muted); font-size: var(--t-micro); margin-top: 3px; }
   .listing .ask { text-align: end; flex-shrink: 0; }
-  .listing .ask .p { font-weight: 900; font-size: var(--t-body); }
-  .listing .ask .live { font-size: var(--t-micro,9px); font-weight: 800; color: var(--success); }
+  .listing .ask .p { font-weight: 900; font-size: 14px; }
+  .listing .ask .live { font-size: 9.5px; font-weight: 800; color: var(--success, #34d399); }
   .listing .ask .live::before { content: "● "; }
   .listing .rm { background: none; border: 0; color: var(--muted); font-size: var(--t-h2,18px); cursor: pointer;
     font-family: inherit; padding: 0 2px; flex-shrink: 0; }
@@ -186,11 +186,23 @@
   .feed-scroll { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
   .feed-scroll::-webkit-scrollbar { display: none; }
 
-  .feed-card-full { position: relative; height: 100%; scroll-snap-align: start; overflow: hidden; background: #111; }
+  .feed-card-full {
+    position: relative;
+    /* 4:5 aspect ratio per spec — but in snap-scroll full-height context keep height:100% */
+    height: 100%;
+    scroll-snap-align: start;
+    overflow: hidden;
+    background: var(--bg);
+  }
   .feed-card-full.is-mine { outline: 2px solid rgba(255,61,119,.5); outline-offset: -2px; }
 
   .fcbg { position: absolute; inset: 0; }
-  .fcbg .feed-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .fcbg .feed-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 0; /* card is full-bleed */
+  }
 
   /* double-tap heart burst */
   .heart-burst { position: absolute; top: 46%; left: 50%; z-index: 6; font-size: var(--t-display,100px);
@@ -205,13 +217,43 @@
 
   .fc-top { position: absolute; top: 14px; left: 14px; right: 14px;
     display: flex; justify-content: space-between; align-items: flex-start; z-index: 5; }
-  .mine-tag { background: rgba(255,61,119,.95); color: #fff; font-size: var(--t-micro); font-weight: 900;
-    padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(6px); }
-  .trend-badge { background: rgba(0,0,0,.6); color: #fff; font-size: var(--t-caption); font-weight: 900;
-    padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(6px); margin-inline-start: auto; }
-  .fc-more-btn { width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,.6); border: 0; border-radius: 50%; color: #fff; cursor: pointer; backdrop-filter: blur(6px); }
-  .fc-more-btn:active { background: rgba(0,0,0,.8); }
+  .mine-tag {
+    background: rgba(255,61,119,.92);
+    color: #fff;
+    font-size: var(--t-micro, 11px);
+    font-weight: 900;
+    padding: 6px 14px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.15);
+  }
+  .trend-badge {
+    background: rgba(0,0,0,.58);
+    color: #fff;
+    font-size: var(--t-micro, 11px);
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    margin-inline-start: auto;
+    border: 1px solid rgba(255,255,255,.1);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .fc-more-btn {
+    width: 44px; height: 44px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.58);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: background var(--motion-fast, 150ms ease);
+  }
+  .fc-more-btn:active { background: rgba(0,0,0,.82); transform: scale(.9); }
 
   /* old fc-actions hidden — replaced by fc-item-pills + fc-action-bar */
   .fc-actions { display: none; }
@@ -219,47 +261,124 @@
   /* ---- Item pills (right side) ---- */
   .fc-item-pills { position: absolute; right: 10px; top: 50%; transform: translateY(-55%);
     display: flex; flex-direction: column; gap: 8px; z-index: 5; max-height: 62%; overflow: hidden; }
-  .fc-pill { display: flex; flex-direction: column; align-items: center; gap: 3px;
-    background: rgba(0,0,0,.52); backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,.16); border-radius: 16px;
-    padding: 10px 8px; cursor: pointer; width: 62px;
-    transition: transform .14s, background .14s;
-    font-family: inherit; color: #fff; text-align: center; }
-  .fc-pill:active { transform: scale(.91); background: rgba(255,255,255,.16); }
-  .fc-pill-name { font-size: var(--t-micro,11px); font-weight: 800; line-height: 1.2;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50px; }
-  .fc-pill-price { font-size: var(--t-micro,11px); font-weight: 900; color: rgba(255,255,255,.75);
-    font-family: "Poppins", sans-serif; }
+  .fc-pill {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: rgba(0,0,0,.58); backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.14); border-radius: 16px;
+    padding: 10px 8px; cursor: pointer; width: 64px;
+    transition: transform var(--motion-fast, 150ms ease), background var(--motion-fast, 150ms ease);
+    font-family: inherit; color: #fff; text-align: center;
+  }
+  .fc-pill:active { transform: scale(.88); background: rgba(255,255,255,.14); }
+  .fc-pill-name {
+    font-size: var(--t-micro, 11px);
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 52px;
+  }
+  .fc-pill-price {
+    font-size: var(--t-micro, 11px);
+    font-weight: 900;
+    color: rgba(255,255,255,.82);
+    font-family: "Poppins", sans-serif;
+  }
 
   /* ---- Bottom action bar ---- */
-  .fc-action-bar { position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
-    display: flex; align-items: center;
-    padding: 8px 8px 12px;
-    background: linear-gradient(0deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.3) 70%, transparent 100%); }
-  .fca-btn { flex: 1; background: none; border: 0; color: #fff; font-family: inherit;
-    font-size: var(--t-micro); font-weight: 800; display: flex; flex-direction: column; align-items: center;
-    gap: 3px; cursor: pointer; padding: 4px 0; text-shadow: 0 1px 4px rgba(0,0,0,.7); }
-  .fca-ico { width: 42px; height: 42px; border-radius: 50%; background: rgba(0,0,0,.42);
-    backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center;
-    font-size: var(--t-title,20px); transition: transform .14s; border: 1px solid rgba(255,255,255,.12); }
-  .fca-btn:active .fca-ico { transform: scale(.84); }
-  .fca-btn.liked .fca-ico { background: rgba(255,61,119,.58); }
-  .fca-btn.saved .fca-ico { background: rgba(123,92,255,.58); }
-  .fca-btn.buy-btn .fca-ico { background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border: none; width: 46px; height: 46px; font-size: var(--t-h1,22px); }
+  .fc-action-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
+    display: flex; align-items: flex-end;
+    padding: 12px 8px 16px;
+    background: linear-gradient(0deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.4) 65%, transparent 100%);
+  }
+  .fca-btn {
+    flex: 1;
+    background: none; border: 0;
+    color: #fff;
+    font-family: inherit;
+    font-size: var(--t-micro, 11px);
+    font-weight: 800;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px 0;
+    text-shadow: 0 1px 4px rgba(0,0,0,.7);
+    min-height: 44px;
+    transition: opacity var(--motion-fast, 150ms ease);
+  }
+  .fca-ico {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(0,0,0,.48);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform var(--motion-fast, 150ms ease), background var(--motion-fast, 150ms ease);
+    border: 1px solid rgba(255,255,255,.12);
+    flex-shrink: 0;
+  }
+  .fca-btn:active .fca-ico { transform: scale(.82); }
+  /* liked state — accent fill */
+  .fca-btn.liked .fca-ico {
+    background: rgba(255,61,119,.65);
+    border-color: rgba(255,61,119,.5);
+  }
+  /* saved state — accent2 fill */
+  .fca-btn.saved .fca-ico {
+    background: rgba(123,92,255,.65);
+    border-color: rgba(123,92,255,.5);
+  }
+  /* buy CTA — gradient, slightly larger */
+  .fca-btn.buy-btn .fca-ico {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    width: 48px; height: 48px;
+    box-shadow: 0 4px 16px rgba(255,61,119,.45);
+  }
 
-  .fc-info { position: absolute; bottom: 130px; left: 0; right: 72px; padding: 16px 14px 0;
-    background: linear-gradient(0deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.3) 60%, transparent 100%); z-index: 5; }
-  .fc-user { font-weight: 900; font-size: var(--t-h3,15px); color: #fff; margin-bottom: 5px;
-    display: flex; align-items: center; gap: 6px; }
+  .fc-info {
+    position: absolute; bottom: 136px; left: 0; right: 68px;
+    padding: 20px 14px 0;
+    background: linear-gradient(0deg, rgba(0,0,0,.76) 0%, rgba(0,0,0,.38) 55%, transparent 100%);
+    z-index: 5;
+  }
+  /* Username row: avatar-like bold handle + timestamp */
+  .fc-user {
+    font-weight: 900;
+    font-size: var(--t-h3, 15px);
+    color: #fff;
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
   .fc-verified { color: var(--accent); display: inline-flex; align-items: center; }
-  .fc-caption { font-size: var(--t-small,13px); color: rgba(255,255,255,.9); line-height: 1.4; margin-bottom: 9px; }
+  .fc-caption {
+    font-size: var(--t-body, 14px);
+    color: rgba(255,255,255,.92);
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
   .fc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-  .ftag { font-size: var(--t-caption); color: rgba(255,255,255,.8); font-weight: 700; }
-  .fc-match { display: inline-flex; align-items: center;
-    background: linear-gradient(135deg, rgba(123,92,255,.85), rgba(255,61,119,.85));
-    color: #fff; font-size: var(--t-micro,11px); font-weight: 900; padding: 5px 12px; border-radius: 20px; }
-  .fc-earn { font-size: var(--t-micro); color: var(--success); font-weight: 700; margin-top: 6px; }
+  .ftag {
+    font-size: var(--t-small, 13px);
+    color: rgba(255,255,255,.78);
+    font-weight: 700;
+  }
+  /* Match badge — stronger visual */
+  .fc-match {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: linear-gradient(135deg, rgba(123,92,255,.88), rgba(255,61,119,.88));
+    color: #fff;
+    font-size: var(--t-micro, 11px);
+    font-weight: 900;
+    padding: 5px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(6px);
+  }
+  .fc-earn {
+    font-size: var(--t-micro, 11px);
+    color: var(--success, #52c97a);
+    font-weight: 700;
+    margin-top: 6px;
+    display: flex; align-items: center; gap: 4px;
+  }
 
   /* ---- Reactions (Shira — fixed: absolute positioning inside overflow:hidden card) ---- */
   .fc-reactions { position: absolute; bottom: 82px; left: 0; right: 0; z-index: 7;
@@ -296,14 +415,27 @@
   .fc-comment-send { background: var(--accent); border: none; border-radius: 999px;
     padding: 9px 18px; font-size: var(--t-small); font-weight: 800; color: #fff;
     cursor: pointer; font-family: inherit; }
-  .fc-own-badge { position: absolute; bottom: 138px; left: 14px; z-index: 6;
-    display: inline-flex; align-items: center; gap: 4px;
-    background: rgba(0,0,0,.52); backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,.18); border-radius: 20px;
-    padding: 5px 11px; font-size: var(--t-micro); font-weight: 800; color: rgba(255,255,255,.88); }
-  .feed-empty { height: 100%; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; color: var(--muted); text-align: center; padding: 40px; }
-  .feed-empty .big { font-size: var(--t-display,50px); margin-bottom: 14px; }
+  .fc-own-badge {
+    position: absolute; bottom: 144px; left: 14px; z-index: 6;
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(0,0,0,.58); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.15); border-radius: 999px;
+    padding: 6px 12px;
+    font-size: var(--t-micro, 11px);
+    font-weight: 800;
+    color: rgba(255,255,255,.9);
+  }
+  .feed-empty {
+    height: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    text-align: center;
+    padding: 40px;
+    gap: 12px;
+  }
+  .feed-empty .big { font-size: var(--t-display, 32px); margin-bottom: 4px; }
+  .feed-empty p { font-size: var(--t-body, 14px); font-weight: 600; }
 
   /* ---- modal ---- */
   .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: none;
@@ -312,10 +444,10 @@
   .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px;
     padding: 28px 22px; text-align: center; width: 100%; animation: pop .25s ease; }
   @keyframes pop { from { transform: scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
-  .modal-card .big { font-size: var(--t-display,48px); margin-bottom: 12px; }
-  .modal-card h3 { font-size: var(--t-lead,19px); font-weight: 800; margin-bottom: 6px; }
-  .modal-card p { color: var(--muted); font-size: var(--t-body); line-height: 1.6; }
-  .modal-card .earn-line { color: var(--success); font-size: var(--t-small); font-weight: 800; margin-top: 8px; }
+  .modal-card .big { font-size: 48px; margin-bottom: 12px; }
+  .modal-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
+  .modal-card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+  .modal-card .earn-line { color: var(--success, #34d399); font-size: 13px; font-weight: 800; margin-top: 8px; }
   .modal-card .close { margin-top: 20px; padding: 11px 26px; border: 0; border-radius: 13px;
     font-weight: 800; cursor: pointer; color: #fff; font-family: inherit; font-size: var(--t-body);
     background: linear-gradient(135deg, var(--accent), var(--accent2)); }
@@ -329,27 +461,74 @@
   input[type=file] { display: none; }
 
   /* ---- Feed tabs ---- */
-  .feed-top { display: flex; flex-direction: column; flex-shrink: 0;
-    background: rgba(10,10,14,.95); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--line); z-index: 5; }
-  .feed-tabs { display: flex; padding: 4px 20px 0; }
-  .ftab { flex: 1; background: none; border: 0; color: var(--muted); font-family: inherit;
-    font-size: var(--t-body); font-weight: 800; padding: 10px 0; cursor: pointer; position: relative; transition: color .15s; }
+  .feed-top {
+    display: flex; flex-direction: column; flex-shrink: 0;
+    background: rgba(10,10,14,.96);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+    z-index: 5;
+  }
+  .feed-tabs { display: flex; padding: 4px 16px 0; }
+  .ftab {
+    flex: 1;
+    background: none; border: 0;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: var(--t-body, 14px);
+    font-weight: 800;
+    padding: 12px 0;
+    cursor: pointer;
+    position: relative;
+    transition: color var(--motion-fast, 150ms ease);
+    min-height: 44px;
+  }
   .ftab.active { color: var(--text); }
-  .ftab.active::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 32px; height: 2.5px; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; }
+  .ftab.active::after {
+    content: '';
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 24px; height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
 
   /* ---- Stories bar ---- */
-  .stories-bar { display: flex; gap: 14px; padding: 12px 14px 10px; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }
+  .stories-bar {
+    display: flex; gap: 12px;
+    padding: 12px 16px 10px;
+    overflow-x: auto; scrollbar-width: none; flex-shrink: 0;
+  }
   .stories-bar::-webkit-scrollbar { display: none; }
-  .story-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex-shrink: 0; }
-  .story-ring { width: 58px; height: 58px; border-radius: 50%; padding: 2.5px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2)); flex-shrink: 0; }
+  .story-item {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 5px; cursor: pointer; flex-shrink: 0;
+    transition: transform var(--motion-fast, 150ms ease);
+  }
+  .story-item:active { transform: scale(.9); }
+  .story-ring {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    padding: 2.5px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    flex-shrink: 0;
+  }
   .story-ring.seen { background: var(--line); }
-  .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg2);
-    border: 2.5px solid var(--bg2); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: var(--t-h1,24px); }
-  .story-name { font-size: var(--t-micro,11px); font-weight: 700; color: rgba(246,246,249,.8);
-    max-width: 62px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .story-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: var(--bg2);
+    border: 2.5px solid var(--bg2);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .story-inner img { width: 100%; height: 100%; object-fit: cover; }
+  .story-initials { font-size: var(--t-sm, 13px); font-weight: 700; color: var(--fg, #fbfbfd); line-height: 1; letter-spacing: 0; }
+  .story-name {
+    font-size: var(--t-micro, 11px);
+    font-weight: 700;
+    color: var(--muted);
+    max-width: 60px; text-align: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
 
   /* ---- Edit profile modal ---- */
   .edit-modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.75);
@@ -896,8 +1075,8 @@
   .sf-grid { flex:1; overflow-y:auto; padding:0 18px 80px; display:grid; grid-template-columns:1fr 1fr; gap:12px; align-content:start; }
   .sf-card { background:var(--card); border-radius:18px; overflow:hidden; border:1px solid var(--line); cursor:pointer; transition:transform .15s; }
   .sf-card:active { transform:scale(.97); }
-  .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,var(--card),var(--bg)); position:relative; overflow:hidden; }
-  .sf-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size: var(--t-micro,11px); font-weight:900; padding:3px 8px; border-radius:10px; }
+  .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,var(--card),var(--bg)); position:relative; }
+  .sf-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:900; padding:3px 8px; border-radius:10px; }
   .sf-badge.deal { background:#ef4444; }
   .sf-badge.new { background:var(--success); color:#000; }
   .sf-badge.missing { background:#f59e0b; color:#000; }
@@ -999,8 +1178,8 @@
   .mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px; }
   .mp-item { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
   .mp-item:active { transform: scale(.97); }
-  .mp-item-img { height: 160px; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, var(--card), var(--bg)); position: relative; overflow: hidden; }
-  .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: var(--t-micro,11px); font-weight: 900; padding: 3px 8px; border-radius: 20px; }
+  .mp-item-img { height: 160px; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, var(--card), var(--bg)); position: relative; }
+  .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 20px; }
   .mp-item-badge.new { background: var(--accent); color: #fff; }
   .mp-item-badge.like-new { background: var(--success); color: #0a0a0e; }
   .mp-item-badge.used { background: var(--accent2); color: #fff; }
@@ -1041,49 +1220,251 @@
 
   /* ---- Home Screen ---- */
   .home-wrap { display: flex; flex-direction: column; gap: 0; padding-bottom: 8px; }
-  .home-greeting-section { padding: 16px 18px 10px; }
-  .home-greeting { font-size: var(--t-h1,23px); font-weight: 900; letter-spacing: -.4px; }
-  .home-greeting em { font-style: normal; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .home-date { font-size: var(--t-caption); color: var(--muted); font-weight: 600; margin-top: 4px; }
-  .home-weather-card { margin: 4px 18px 14px; background: linear-gradient(135deg, var(--bg), var(--card)); border: 1px solid rgba(123,92,255,.3); border-radius: 20px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; }
-  .hw-temp { font-size: var(--t-display,34px); font-weight: 900; letter-spacing: -1px; }
-  .hw-cond { font-size: var(--t-small); color: rgba(246,246,249,.65); font-weight: 600; margin-top: 2px; }
-  .hw-event { font-size: var(--t-micro); color: var(--accent2); font-weight: 800; background: rgba(123,92,255,.18); padding: 6px 12px; border-radius: 20px; }
-  .home-sec-label { font-size: var(--t-micro); font-weight: 800; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; padding: 4px 18px 10px; }
-  .home-outfit-row { display: flex; gap: 10px; padding: 0 18px 14px; overflow-x: auto; scrollbar-width: none; }
+  .home-greeting-section { padding: 24px 18px 12px; }
+  .home-greeting {
+    font-size: var(--t-h1, 24px);
+    font-weight: 900;
+    letter-spacing: -.5px;
+    line-height: 1.2;
+  }
+  .home-greeting em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .home-date {
+    font-size: var(--t-small, 13px);
+    color: var(--muted);
+    font-weight: 600;
+    margin-top: 6px;
+    letter-spacing: .1px;
+  }
+
+  /* Weather card — accent border, deeper card */
+  .home-weather-card {
+    margin: 8px 16px 16px;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 16px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-md, 0 2px 16px rgba(0,0,0,.32));
+  }
+  .hw-temp {
+    font-size: var(--t-display, 32px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    font-family: "Poppins", sans-serif;
+  }
+  .hw-cond {
+    font-size: var(--t-small, 13px);
+    color: var(--muted);
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .hw-event {
+    font-size: var(--t-micro, 11px);
+    color: var(--accent);
+    font-weight: 800;
+    background: rgba(255,61,119,.12);
+    border: 1px solid rgba(255,61,119,.22);
+    padding: 8px 14px;
+    border-radius: 999px;
+  }
+
+  /* Section labels — cleaner hierarchy */
+  .home-sec-label {
+    font-size: var(--t-micro, 11px);
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    padding: 8px 18px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .home-sec-label::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Outfit cards */
+  .home-outfit-row { display: flex; gap: 12px; padding: 0 18px 16px; overflow-x: auto; scrollbar-width: none; }
   .home-outfit-row::-webkit-scrollbar { display: none; }
-  .ho-card { flex-shrink: 0; width: 128px; background: var(--card); border-radius: 18px; border: 2px solid var(--line); overflow: hidden; cursor: pointer; transition: all .18s; }
-  .ho-card.sel { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-  .ho-card:active { transform: scale(.96); }
-  /* real product photography, not an emoji stack on a flat gradient -- the outfit preview
-     is a small two-up collage of the actual scanned items (top over bottom). */
-  .ho-top { height: 160px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--bg2); overflow: hidden; }
+  .ho-card {
+    flex-shrink: 0;
+    width: 132px;
+    background: var(--card);
+    border-radius: 16px;
+    border: 1.5px solid var(--line);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform var(--motion-fast, 150ms ease), box-shadow var(--motion-fast, 150ms ease), border-color var(--motion-fast, 150ms ease);
+    box-shadow: var(--shadow-sm, 0 1px 4px rgba(0,0,0,.24));
+  }
+  .ho-card.sel {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-accent, 0 4px 20px rgba(255,61,119,.32));
+  }
+  .ho-card:active { transform: scale(.95); }
+  .ho-top { height: 164px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--bg2); overflow: hidden; }
   .ho-top-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .35s ease; background: var(--bg2); }
   .ho-top-img.loaded { opacity: 1; }
   .ho-top .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg2); color: rgba(255,255,255,.22); }
-  .ho-info { padding: 8px 10px 10px; }
-  .ho-name { font-size: var(--t-caption); font-weight: 800; line-height: 1.2; }
-  .ho-sub { font-size: var(--t-micro,11px); color: var(--muted); margin-top: 3px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ho-info { padding: 10px 10px 12px; }
+  .ho-name {
+    font-size: var(--t-small, 13px);
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .ho-sub {
+    font-size: var(--t-micro, 11px);
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Action buttons */
   .home-actions { display: flex; gap: 8px; padding: 0 18px 16px; }
-  .ha-btn { flex: 1; padding: 13px 0; border-radius: 14px; font-family: inherit; font-size: var(--t-small); font-weight: 800; border: 0; cursor: pointer; transition: all .18s; }
-  .ha-btn:active { transform: scale(.97); }
-  .ha-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; box-shadow: 0 6px 20px rgba(255,61,119,.35); }
-  .ha-secondary { background: var(--card); color: var(--text); border: 1.5px solid var(--line); }
-  .home-stats-row { display: flex; gap: 10px; padding: 0 18px 16px; }
-  .hs-stat { flex: 1; background: var(--card); border-radius: 16px; border: 1px solid var(--line); padding: 14px 10px; text-align: center; cursor: pointer; transition: all .18s; }
-  .hs-stat:active { transform: scale(.97); }
-  .hs-num { font-size: var(--t-title,20px); font-weight: 900; letter-spacing: -.5px; }
-  .hs-label { font-size: var(--t-micro,11px); color: var(--muted); font-weight: 700; margin-top: 4px; letter-spacing: .3px; }
-  .home-quick { display: flex; gap: 10px; padding: 0 18px 16px; }
-  .hq-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; font-family: inherit; font-size: var(--t-micro); font-weight: 800; color: var(--text); cursor: pointer; transition: all .18s; }
-  .hq-btn:active { transform: scale(.96); border-color: var(--accent); }
-  .hq-icon { font-size: var(--t-h1,22px); }
-  .home-scan-prompt { margin: 0 18px 16px; background: linear-gradient(135deg, rgba(255,61,119,.1), rgba(123,92,255,.1)); border: 1.5px dashed rgba(255,61,119,.4); border-radius: 20px; padding: 24px 20px; text-align: center; cursor: pointer; transition: all .18s; }
+  .ha-btn {
+    flex: 1;
+    padding: 14px 0;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: var(--t-small, 13px);
+    font-weight: 800;
+    border: 0;
+    cursor: pointer;
+    transition: transform var(--motion-fast, 150ms ease), box-shadow var(--motion-fast, 150ms ease);
+    min-height: 48px;
+  }
+  .ha-btn:active { transform: scale(.97); opacity: .9; }
+  .ha-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(255,61,119,.35);
+  }
+  .ha-primary:active { box-shadow: 0 2px 8px rgba(255,61,119,.25); }
+  .ha-secondary {
+    background: var(--card);
+    color: var(--text);
+    border: 1.5px solid var(--line);
+  }
+
+  /* Stats row */
+  .home-stats-row { display: flex; gap: 8px; padding: 0 18px 16px; }
+  .hs-stat {
+    flex: 1;
+    background: var(--card);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.05);
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform var(--motion-fast, 150ms ease), box-shadow var(--motion-fast, 150ms ease);
+    box-shadow: var(--shadow-sm, 0 1px 4px rgba(0,0,0,.24));
+  }
+  .hs-stat:active { transform: scale(.96); }
+  .hs-num {
+    font-size: var(--t-title, 20px);
+    font-weight: 900;
+    letter-spacing: -.5px;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hs-label {
+    font-size: var(--t-micro, 11px);
+    color: var(--muted);
+    font-weight: 700;
+    margin-top: 6px;
+    letter-spacing: .2px;
+  }
+
+  /* Quick actions — horizontal scroll strip */
+  .home-quick { display: flex; gap: 8px; padding: 0 18px 16px; }
+  .hq-btn {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 12px 12px;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: var(--t-micro, 11px);
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    transition: transform var(--motion-fast, 150ms ease), border-color var(--motion-fast, 150ms ease), box-shadow var(--motion-fast, 150ms ease);
+    min-width: 68px;
+    min-height: 72px;
+    box-shadow: var(--shadow-sm, 0 1px 4px rgba(0,0,0,.24));
+  }
+  .hq-btn:active {
+    transform: scale(.94);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(255,61,119,.3);
+  }
+  .hq-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.06);
+    color: var(--accent);
+  }
+
+  /* Empty / scan prompt */
+  .home-scan-prompt {
+    margin: 0 16px 16px;
+    background: linear-gradient(135deg, rgba(255,61,119,.08), rgba(123,92,255,.08));
+    border: 1.5px dashed rgba(255,61,119,.35);
+    border-radius: 16px;
+    padding: 28px 20px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform var(--motion-fast, 150ms ease), box-shadow var(--motion-fast, 150ms ease);
+  }
   .home-scan-prompt:active { transform: scale(.98); }
-  .hsp-icon { display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; width: 44px; height: 44px; border-radius: 14px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
-  .hsp-title { font-size: var(--t-h3,15px); font-weight: 900; margin-bottom: 6px; }
-  .hsp-sub { font-size: var(--t-caption); color: var(--muted); font-weight: 600; line-height: 1.5; }
+  .hsp-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(255,61,119,.4);
+  }
+  .hsp-title {
+    font-size: var(--t-h3, 15px);
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .hsp-sub {
+    font-size: var(--t-small, 13px);
+    color: var(--muted);
+    font-weight: 500;
+    line-height: 1.55;
+  }
   .compat-banner { margin: 0 18px 14px; border-radius: 18px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; background: linear-gradient(135deg, rgba(255,61,119,.12), rgba(123,92,255,.12)); border: 1px solid rgba(123,92,255,.3); }
   .compat-ring { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--t-h3,16px); font-weight: 900; flex-shrink: 0; }
   .compat-info { flex: 1; }
@@ -1689,8 +2070,8 @@
     logAdminEvent('buy_intent', 'Opened sheet: ' + (it.name||'item'));
     const stores = itemStores(it);
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size: var(--t-micro,11px);color:var(--success);font-weight:700;margin-top:8px;text-align:center">
-           ${icon('diamond',14)} @${esc(influencerUser)} earns ₪${esc(earnAmt)} on this purchase
+      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success, #34d399);font-weight:700;margin-top:8px;text-align:center">
+           ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על הרכישה הזאת
          </p>` : '';
     const wardrobe4compat = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const csHTML = wardrobe4compat.length ? compatScoreHTML(it, wardrobe4compat) : '';
@@ -1865,8 +2246,8 @@
       </div>`;
     }).join('');
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size: var(--t-micro,11px);color:var(--success);font-weight:700;margin-top:4px;text-align:center">
-           ${icon('diamond',14)} @${esc(influencerUser)} earns ₪${esc(earnAmt)} on every purchase
+      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success, #34d399);font-weight:700;margin-top:4px;text-align:center">
+           ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על כל קנייה
          </p>` : '';
 
     sheetBody.innerHTML = `
@@ -1946,9 +2327,9 @@
     modalCard.innerHTML = '<div class="spinner"></div><h3>Listing ' + esc(label) + ' for sale…</h3><p>AI is pricing it based on secondhand market demand</p>';
     setTimeout(() => {
       addListing({ name:label, price:Number(price)||0, category:cat||'' });
-      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:var(--success)">' + icon('cash',48) + '</div><h3>Listed for sale!</h3>' +
-        '<p>' + esc(label) + ' is now on the sale shelf in your profile<br/>Suggested price: ₪' + esc(price) + ' · Awear fee 15%</p>' +
-        '<button class="close">To profile</button>';
+      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:var(--success, #34d399)">' + icon('cash',48) + '</div><h3>פורסם למכירה!</h3>' +
+        '<p>' + esc(label) + ' עכשיו במדף המכירה בפרופיל שלך<br/>מחיר מומלץ: ₪' + esc(price) + ' · עמלת Awear 15%</p>' +
+        '<button class="close">לפרופיל</button>';
       modalCard.querySelector('.close').addEventListener('click', () => { modal.classList.remove('show'); showView('closet'); });
     }, 1300);
   }
@@ -2082,9 +2463,9 @@
       <div style="display:flex;flex-direction:column;gap:8px;padding:14px 20px 20px">
         <button onclick="openAbigailWithItem('${attr(it.name)}')" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;font-family:inherit;font-size:var(--t-body);font-weight:900;color:#fff;cursor:pointer">Ask Abigail what to wear</button>
         <div style="display:flex;gap:8px">
-          <button onclick="openSellFormWithItem('${attr(JSON.stringify(it))}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:var(--t-small);font-weight:700;cursor:pointer">Sell</button>
-          <button onclick="addToWishlistFromSeed('${attr(it.name)}','${attr(it.emoji||'')}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:var(--t-small);font-weight:700;cursor:pointer">Wishlist</button>
-          <button onclick="document.getElementById('purchase-modal').classList.remove('show')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:var(--t-small);font-weight:700;cursor:pointer">Close</button>
+          <button onclick="openSellFormWithItem('${attr(JSON.stringify(it))}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Sell</button>
+          <button onclick="addToWishlistFromSeed('${attr(it.name)}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Wishlist</button>
+          <button onclick="document.getElementById('purchase-modal').classList.remove('show')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Close</button>
         </div>
       </div>`;
     modal.classList.add('show');
@@ -2131,10 +2512,10 @@
       <p>${shelf.length} items for sale · worth ₪${shelfTotal.toLocaleString()} · net after Awear's 15% fee</p></div>`:'';
     const listings=shelf.length
       ?shelf.map(it=>`<div class="listing"><div class="ic">${productImage(it)}</div>
-        <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">AI-priced by demand in the secondhand market</div></div>
-        <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">Live</div></div>
-        <button class="rm" data-rm="${attr(it.ts)}" title="Remove">×</button></div>`).join('')
-      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--success)">${icon('cash',44)}</div>You haven't listed any items yet.<br/>Open your closet and tap "Sell" on an item.</div>`;
+        <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div></div>
+        <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
+        <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button></div>`).join('')
+      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--success, #34d399)">${icon('cash',44)}</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`;
     return earnCard+listings;
   }
 
@@ -2152,10 +2533,10 @@
           <div style="font-size:var(--t-small);color:var(--muted);font-weight:600;line-height:1.6;max-width:240px">Scan your first look — AI will detect the pieces and build your personal closet</div>
           <button onclick="document.getElementById('file-input').click()" style="margin-top:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;border-radius:16px;font-family:inherit;font-size:var(--t-body);font-weight:900;color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:8px">${icon('camera', 18)} Scan first look</button>
         </div>` : `
-      ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size: var(--t-micro,11px);font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">⚠️ Your last scan ran in demo mode — AI was unavailable, these are sample items</div>`:''}
-      ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} AI Stylist · what to wear</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
-      ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="Latest look" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} Shop the latest look · ~$${esc(meta.look_total_usd)}</button>`:''}
-      <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} Share this look to the feed</button>
+      ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size:11.5px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">${icon('alertTriangle',14)} הסריקה האחרונה הייתה במצב דמו — AI לא היה זמין, אלו פריטי הדגמה</div>`:''}
+      ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
+      ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} קני את הלוק האחרון · ~₪${esc(meta.look_total_usd)}</button>`:''}
+      <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>
       ${closetShelvesHTML(wardrobe)}`}`;
 
 
@@ -2200,8 +2581,8 @@
     if(newItems.length) logAdminEvent('scan', 'Scanned ' + newItems.length + ' items — ' + (newItems[0]?.name||''));
     renderCloset();
     if(newItems.length){
-      const base=(newItems[0]?.emoji||'✨') + ' ' + (newItems[0]?.name||'') + ' added to your closet ✓';
-      showToast(data.mode==='demo' ? base + ' (demo mode — AI was unavailable)' : base);
+      const base=(newItems[0]?.name||'פריט') + ' נוסף לארון';
+      showToast(data.mode==='demo' ? base + ' (מצב דמו — AI לא היה זמין)' : base);
     }
   }
 
@@ -2628,14 +3009,14 @@
 
     document.getElementById('home-wrap').innerHTML = `
       <div class="home-greeting-section">
-        <div class="home-greeting">${esc(greet)}, <em>${esc(name)} ✨</em></div>
+        <div class="home-greeting">${esc(greet)}, <em>${esc(name)}</em></div>
         <div class="home-date">${esc(dateStr)}</div>
       </div>
 
       <div class="home-weather-card">
         <div>
           <div class="hw-temp" id="hw-temp">26°</div>
-          <div class="hw-cond" id="hw-cond">☀️ ${esc(prof.city || '')}</div>
+          <div class="hw-cond" id="hw-cond">${esc(prof.city || 'Weather')}</div>
         </div>
         <div class="hw-event">${t('home.look_waiting')}</div>
       </div>
@@ -2660,7 +3041,7 @@
         }).join('')}
       </div>
       <div class="home-actions">
-        <button class="ha-btn ha-primary" id="ha-wore">✓ ${t('home.wore_it')}</button>
+        <button class="ha-btn ha-primary" id="ha-wore">${icon('check',16)} ${t('home.wore_it')}</button>
         <button class="ha-btn ha-secondary" onclick="showView('closet')">${t('home.my_closet_btn')}</button>
       </div>
       ` : `
@@ -2707,17 +3088,17 @@
         if (completePct < 100) {
           return `
           <div class="home-sec-label">${t('home.profile_pct_title', {pct: completePct})}</div>
-          <div onclick="${nextStep ? nextStep.action : ''}" style="margin:0 18px 16px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 16px;cursor:pointer">
-            <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:10px">
-              <div style="height:100%;width:${completePct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px"></div>
+          <div onclick="${nextStep ? nextStep.action : ''}" style="margin:0 16px 16px;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px;cursor:pointer;box-shadow:0 2px 16px rgba(0,0,0,.24)">
+            <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:12px">
+              <div style="height:100%;width:${completePct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s ease"></div>
             </div>
-            ${nextStep ? `<div style="display:flex;align-items:center;gap:10px">
+            ${nextStep ? `<div style="display:flex;align-items:center;gap:12px">
               <div style="color:var(--accent)">${icon('sparkle',22)}</div>
               <div style="flex:1">
-                <div style="font-size:var(--t-small);font-weight:800">${esc(t('home.next_step_label', {step: nextStep.label}))}</div>
-                <div style="font-size:var(--t-micro);color:var(--accent);font-weight:700;margin-top:2px">+${nextStep.pts} ${t('home.points_suffix')}</div>
+                <div style="font-size:var(--t-small,13px);font-weight:800">${esc(t('home.next_step_label', {step: nextStep.label}))}</div>
+                <div style="font-size:var(--t-micro,11px);color:var(--accent);font-weight:700;margin-top:4px">+${nextStep.pts} ${t('home.points_suffix')}</div>
               </div>
-              <div style="font-size: var(--t-h2,18px);color:var(--muted)">›</div>
+              <div style="font-size:var(--t-h3,15px);color:var(--muted)">›</div>
             </div>` : ''}
           </div>`;
         }
@@ -2739,21 +3120,21 @@
         const todayChallenge = DAILY[new Date().getDay() % DAILY.length];
         return `
         <div class="home-sec-label">${t('home.challenge_section')}</div>
-        <div style="margin:0 18px 16px;background:linear-gradient(135deg,rgba(123,92,255,.15),rgba(255,61,119,.1));border:1px solid rgba(123,92,255,.25);border-radius:20px;padding:16px;">
+        <div style="margin:0 16px 16px;background:linear-gradient(135deg,rgba(123,92,255,.12),rgba(255,61,119,.08));border:1px solid rgba(123,92,255,.2);border-radius:16px;padding:16px;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div style="color:var(--accent2)">${icon(todayChallenge.icon, 32)}</div>
+            <div style="color:var(--accent2)">${icon(todayChallenge.icon, 28)}</div>
             <div style="flex:1">
-              <div style="font-size:var(--t-small);font-weight:800">${esc(todayChallenge.text)}</div>
-              <div style="font-size:var(--t-micro);color:var(--accent2);font-weight:700;margin-top:3px">+${todayChallenge.pts} points</div>
+              <div style="font-size:var(--t-small,13px);font-weight:800">${esc(todayChallenge.text)}</div>
+              <div style="font-size:var(--t-micro,11px);color:var(--accent2);font-weight:700;margin-top:4px">+${todayChallenge.pts} נקודות</div>
             </div>
           </div>
           <div style="margin-top:12px;">
-            <div style="display:flex;justify-content:space-between;font-size: var(--t-micro,11px);font-weight:700;color:var(--muted);margin-bottom:5px">
-              <span style="display:inline-flex;align-items:center;gap:3px">${icon(curLevel.icon,12)} ${esc(curLevel.name)} · ${pts} pts</span>
-              <span>${esc(nextLevel.name)} ${nextLevel.min} pts</span>
+            <div style="display:flex;justify-content:space-between;font-size:var(--t-micro,11px);font-weight:700;color:var(--muted);margin-bottom:6px">
+              <span style="display:inline-flex;align-items:center;gap:4px">${icon(curLevel.icon,12)} ${esc(curLevel.name)} · ${pts} נק׳</span>
+              <span>${esc(nextLevel.name)} ${nextLevel.min} נק׳</span>
             </div>
             <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden">
-              <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s"></div>
+              <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s ease"></div>
             </div>
           </div>
         </div>`;
@@ -2799,8 +3180,8 @@
             if (match) match.wear_count = (match.wear_count || 0) + 1;
           });
           localStorage.setItem('awear_wardrobe', JSON.stringify(wardrobe2));
-          showToast('Logged! Look saved ✓');
-          haWore.textContent = '✓ Saved!';
+          showToast('נרשם! הלוק נשמר');
+          haWore.textContent = 'נשמר';
           haWore.disabled = true;
         }
       });
@@ -2818,9 +3199,9 @@
         .then(d => {
           if (!d.current_weather) return;
           const t = Math.round(d.current_weather.temperature);
-          const codes = {0:'☀️ Sunny',1:'🌤️ Clear',2:'⛅ Partly cloudy',3:'☁️ Cloudy',
-            45:'🌫️ Fog',61:'🌧️ Rain',63:'🌧️ Rain',80:'🌦️ Showers',95:'⛈️ Storm'};
-          const cond = codes[d.current_weather.weathercode] || '🌡️';
+          const codes = {0:'שמש',1:'בהיר',2:'מעונן חלקית',3:'מעונן',
+            45:'ערפל',61:'גשם',63:'גשם',80:'ממטרים',95:'סופה'};
+          const cond = codes[d.current_weather.weathercode] || 'מזג אוויר';
           const tempEl = document.getElementById('hw-temp');
           const condEl = document.getElementById('hw-cond');
           if (tempEl) tempEl.textContent = t + '°';
@@ -3063,7 +3444,7 @@
                   <div class="og-item-ico">${icon(catIcon(item.category), 22)}</div>
                   <div class="og-item-info">
                     <div class="og-item-name">${esc(item.name)}</div>
-                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '+ Missing — consider buying' : '✓ In your closet'}</div>
+                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '+ חסר — שקלי לקנות' : 'יש בארון'}</div>
                   </div>
                 </div>`).join('')}
             </div>
@@ -3188,7 +3569,7 @@
         if (rw2.points < cost) { showToast('Not enough points'); return; }
         rw2.points -= cost;
         saveRewards(rw2);
-        showToast('Perk redeemed! ✨');
+        showToast('הטבה מומשה!');
         renderRewards();
       });
     });
@@ -3235,10 +3616,10 @@
       <div style="padding:4px 18px 14px">
         <div style="font-size:var(--t-small);font-weight:900;margin-bottom:12px">Metrics</div>
         ${[
-          {icon:'♻️', name:'Closet utilization', sub:`${totalItems-unworn}/${totalItems} items worn`, val: reuseRate+'%'},
-          {icon:'💚', name:'Secondhand', sub:`${soldItems} items sold on Marketplace`, val: soldItems+''},
-          {icon:'📉', name:'Cost Per Wear', sub:`Average ₪${Math.round(avgCPW)||0} per wear`, val: avgCPW < 30 ? '✓ Nice' : '↑'},
-          {icon:'🌍', name:'Carbon saved', sub:`Compared to buying new`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
+          {icon:'♻️', name:'ניצול ארון', sub:`${totalItems-unworn}/${totalItems} פריטים נלבשו`, val: reuseRate+'%'},
+          {icon:'💚', name:'יד שנייה', sub:`${soldItems} פריטים נמכרו ב-Marketplace`, val: soldItems+''},
+          {icon:'📉', name:'Cost Per Wear', sub:`ממוצע ₪${Math.round(avgCPW)||0} ללבישה`, val: avgCPW < 30 ? 'מעולה' : '↑'},
+          {icon:'🌍', name:'פחמן שנחסך', sub:`בהשוואה לרכישה חדשה`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
         ].map(m => `
           <div class="sus-metric">
             <div class="sus-metric-icon">${m.icon}</div>
@@ -3254,14 +3635,14 @@
   // ---- Marketplace ----
   const MP_KEY = 'awear_marketplace';
   const MP_SEED = [
-    {id:'mp1', name:'Light barrel jeans', emoji:'👖', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'Blue'},
-    {id:'mp2', name:'Vintage black leather jacket', emoji:'🧥', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'Black'},
-    {id:'mp3', name:'White Adidas Samba sneakers', emoji:'👟', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'White'},
-    {id:'mp4', name:'Black mini bag', emoji:'👜', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'Black'},
-    {id:'mp5', name:'Cream ribbed crop top', emoji:'👕', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'Cream'},
-    {id:'mp6', name:'Satin midi skirt', emoji:'👗', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'Green'},
-    {id:'mp7', name:'Black baseball cap', emoji:'🧢', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'Black'},
-    {id:'mp8', name:'Beige cargo pants', emoji:'👖', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'Beige'},
+    {id:'mp1', name:'ג׳ינס בארל לייט', search_query:'barrel jeans light wash denim', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'כחול'},
+    {id:'mp2', name:'מעיל עור שחור וינטג׳', search_query:'black vintage leather jacket', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'שחור'},
+    {id:'mp3', name:'סניקרס Adidas Samba לבן', search_query:'Adidas Samba white sneakers', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'לבן'},
+    {id:'mp4', name:'מיני בג׳ שחור', search_query:'black mini bag crossbody', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'שחור'},
+    {id:'mp5', name:'חולצת קרופ ריב שמנת', search_query:'cream rib knit crop top', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'שמנת'},
+    {id:'mp6', name:'חצאית מידי סאטן', search_query:'green satin midi skirt formal', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'ירוק'},
+    {id:'mp7', name:'כובע בייסבול שחור', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'שחור'},
+    {id:'mp8', name:'מכנסי קרגו בז׳', search_query:'beige cargo pants utility', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'בז׳'},
   ];
   let mpTab = 'browse', mpFilter = 'all';
 
@@ -3372,8 +3753,8 @@
         <div class="mp-item-info">
           <div class="mp-item-name">${esc(item.name)}</div>
           <div class="mp-item-price">₪${item.price}</div>
-          <div class="mp-item-seller" style="color:var(--success)">Active ✓</div>
-          <button onclick="deleteMySell('${item.id}')" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,.15);border:none;border-radius:8px;padding:3px 7px;font-size:var(--t-micro);font-weight:700;color:#ef4444;cursor:pointer">Remove</button>
+          <div class="mp-item-seller" style="color:#4ade80;display:flex;align-items:center;gap:4px">${icon('check',12)} פעיל</div>
+          <button onclick="deleteMySell('${item.id}')" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,.15);border:none;border-radius:8px;padding:3px 7px;font-size:11px;font-weight:700;color:#ef4444;cursor:pointer">הסר</button>
         </div>
       </div>`).join('')}</div>`;
   }
@@ -3411,7 +3792,7 @@
       <div class="mp-sell-form">
         ${prefill ? `<div style="display:flex;align-items:center;gap:10px;background:rgba(139,92,246,.1);border-radius:12px;padding:10px 14px;margin-bottom:4px">
           <div style="color:var(--accent2)">${icon(catIcon(prefillCat), 28)}</div>
-          <div style="font-size:var(--t-caption);font-weight:700;color:var(--accent)">Filled in from your closet ✓</div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:4px">${icon('check',12)} ממוין מהארון שלך</div>
         </div>` : ''}
         <div>
           <div class="mp-form-label">Item name</div>
@@ -3537,8 +3918,8 @@
     overlay.querySelector('.book-submit').addEventListener('click', () => {
       const nowBlocked = !already;
       setBlocked(key, label, nowBlocked);
-      logAdminEvent(nowBlocked ? 'block_user' : 'unblock_user', `${nowBlocked ? 'Blocked' : 'Unblocked'}: ${label} (${key})`);
-      showToast(nowBlocked ? `Blocked ✓ ${label}` : `Unblocked ${label}`);
+      logAdminEvent(nowBlocked ? 'block_user' : 'unblock_user', `${nowBlocked ? 'חסמה' : 'הסירה חסימה מ'}: ${label} (${key})`);
+      showToast(nowBlocked ? `נחסם: ${label}` : `הוסרה חסימה מ-${label}`);
       overlay.remove();
       if (onDone) onDone(nowBlocked);
     });
@@ -3598,7 +3979,7 @@
         localStorage.setItem('awear_follows', JSON.stringify(followState));
         btn.textContent = followState[uid] ? 'Following' : '+ Follow';
         btn.classList.toggle('following', !!followState[uid]);
-        showToast(followState[uid] ? 'Following ✓' : 'Unfollowed');
+        showToast(followState[uid] ? 'עכשיו עוקבת' : 'הפסקת לעקוב');
       });
     });
 
@@ -3724,10 +4105,10 @@
   // ---- Smart Declutter ----
   async function runDeclutter() {
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
-    if (!wardrobe.length) { showToast('Your closet is empty — nothing to clean'); return; }
-    showToast('AI is analyzing your closet... ✨');
+    if (!wardrobe.length) { showToast('הארון ריק — אין מה לנקות'); return; }
+    showToast('AI מנתח את הארון...');
     const candidates = wardrobe.filter(i => (i.wear_count||0) === 0);
-    if (!candidates.length) { showToast('Everything gets worn — your closet is perfectly used! 🎉'); return; }
+    if (!candidates.length) { showToast('הכל נלבש — הארון מנוצל מעולה!'); return; }
     try {
       const res = await fetch('/api/declutter', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -3816,7 +4197,7 @@
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;padding:0 18px">
           ${suggestions.map(s => `
-            <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;cursor:pointer" onclick="addToWishlistFromSeed('${attr(s.name)}','${attr(s.emoji)}')">
+            <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;cursor:pointer" onclick="addToWishlistFromSeed('${attr(s.name)}')">
               <div style="width:44px;height:44px;border-radius:12px;overflow:hidden;flex-shrink:0">${productImage(s)}</div>
               <div style="flex:1"><div style="font-size:var(--t-small);font-weight:800">${esc(s.name)}</div><div style="font-size:var(--t-micro);color:var(--muted);font-weight:600">${esc(s.brand)} · ₪${s.price}</div></div>
               <div style="font-size: var(--t-title,20px);color:var(--accent)">+</div>
@@ -3858,13 +4239,13 @@
   let chatInited = false;
   let chatHistory = [];
 
-  function addToWishlistFromSeed(name, emoji) {
+  function addToWishlistFromSeed(name) {
     const wl = loadWishlist();
-    if (wl.some(i => i.name === name)) { showToast('Already on your list 💫'); return; }
-    wl.unshift({id: Date.now(), name, emoji, addedAt: new Date().toLocaleDateString('he-IL')});
+    if (wl.some(i => i.name === name)) { showToast('כבר ברשימה'); return; }
+    wl.unshift({id: Date.now(), name, addedAt: new Date().toLocaleDateString('he-IL')});
     saveWishlist(wl);
     renderWishlist();
-    showToast(emoji + ' ' + name + ' added to your list 💫');
+    showToast(name + ' נוסף לרשימה');
   }
 
   function initChat() {
@@ -4093,7 +4474,7 @@
     if (wardHits.length) {
       html += `<div style="font-size:var(--t-micro);font-weight:800;color:var(--muted);padding:0 0 8px;letter-spacing:.4px">From your closet</div>`;
       html += wardHits.map(it => `
-        <div class="ex-result-row" onclick="openSheetItem(${JSON.stringify({name:it.name,category:it.category,emoji:it.emoji,style_tags:it.style_tags||[]})})">
+        <div class="ex-result-row" onclick="openSheetItem(${JSON.stringify({name:it.name,category:it.category,style_tags:it.style_tags||[]})})">
           <div class="ex-result-emoji">${productImage(it)}</div>
           <div><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(catLabel(it.category))}</div></div>
         </div>`).join('');
@@ -4104,7 +4485,7 @@
       html += shopHits.map(it => {
         const disc = it.orig > it.price ? Math.round((1-it.price/it.orig)*100) : 0;
         return `
-        <div class="ex-result-row" onclick="openSheetSingle({name:'${attr(it.name)}',category:'${attr(it.category)}',emoji:'${attr(it.emoji)}',style_tags:${JSON.stringify(it.style_tags)},price_estimate_usd:${it.price}},0,null)">
+        <div class="ex-result-row" onclick="openSheetSingle({name:'${attr(it.name)}',category:'${attr(it.category)}',style_tags:${JSON.stringify(it.style_tags)},price_estimate_usd:${it.price}},0,null)">
           <div class="ex-result-emoji">${productImage(it)}</div>
           <div style="flex:1"><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(it.brand)} · ₪${it.price}${disc?` <span style="color:var(--success)">-${disc}%</span>`:''}</div></div>
           ${it.badge?`<div style="font-size: var(--t-micro,11px);font-weight:800;padding:2px 7px;border-radius:8px;background:rgba(255,61,119,.15);color:var(--accent)">${esc(it.badge)}</div>`:''}
@@ -4381,13 +4762,13 @@
 
   // ---- Stories data ----
   const STORIES = [
-    {id:'st0', name:'Add story', emoji:'➕', seen:false, isAdd:true},
-    {id:'st1', name:'Y2K Challenge', emoji:'✨', seen:false},
-    {id:'st2', name:'Noa', emoji:'🌸', seen:false},
-    {id:'st3', name:'Yael', emoji:'💜', seen:true},
-    {id:'st4', name:'Daily Minimal', emoji:'🤍', seen:false},
-    {id:'st5', name:'Mika', emoji:'♻️', seen:true},
-    {id:'st6', name:'Streetwear', emoji:'🔥', seen:false},
+    {id:'st0', name:'הוסיפי סטורי', initials:'+', color:'var(--card)', seen:false, isAdd:true},
+    {id:'st1', name:'Y2K Challenge', initials:'YK', color:'linear-gradient(135deg, var(--accent2), var(--accent))', seen:false},
+    {id:'st2', name:'נועה',          initials:'נו', color:'linear-gradient(135deg, var(--accent), #c45a8e)', seen:false},
+    {id:'st3', name:'יעל',           initials:'יע', color:'linear-gradient(135deg, #7b5cf5, var(--accent))', seen:true},
+    {id:'st4', name:'מינימל יום',    initials:'מי', color:'linear-gradient(135deg, var(--accent2), var(--accent))', seen:false},
+    {id:'st5', name:'מיקה',          initials:'מק', color:'linear-gradient(135deg, var(--accent), #c45a8e)', seen:true},
+    {id:'st6', name:'Streetwear',    initials:'SW', color:'linear-gradient(135deg, #7b5cf5, var(--accent))', seen:false},
   ];
   // ===== REACTIONS + COMMENTS (Shira) =====
   const REACTIONS_KEY = 'awear_reactions';
@@ -4671,7 +5052,7 @@
       const seen = !s.isAdd && seenStories.has(s.id);
       return `<div class="story-item" data-story="${attr(s.id)}">
         <div class="story-ring${seen?' seen':''}">
-          <div class="story-inner">${s.emoji}</div>
+          <div class="story-inner" style="background:${s.color||'var(--card)'}"><span class="story-initials">${s.initials||''}</span></div>
         </div>
         <span class="story-name">${esc(s.name)}</span>
       </div>`;
@@ -4859,7 +5240,7 @@
     const a        = document.createElement('a');
     a.href=url;a.download='awear_wardrobe.csv';a.click();
     URL.revokeObjectURL(url);
-    showToast('CSV exported ✓');
+    showToast('CSV יוצא בהצלחה');
   }
 
   function adminClearLog() {
@@ -4872,12 +5253,12 @@
 
   // ===== STYLIST MARKETPLACE =====
   const STYLISTS_SEED = [
-    {id:'st1', name:'Maya Cohen', emoji:'👩‍🎨', avatar_bg:'linear-gradient(135deg,#f472b6,#a855f7)', spec:'Y2K & Streetwear', price:'₪150/hr', tags:['Y2K','Streetwear','Gen-Z'], avail:true,  rating:'4.9', sessions:234},
-    {id:'st2', name:'Noa Levi',   emoji:'✨',   avatar_bg:'linear-gradient(135deg,#818cf8,#6366f1)', spec:'Minimal & Elegant', price:'₪200/hr', tags:['Minimal','Business','Bridal'], avail:true,  rating:'5.0', sessions:189},
-    {id:'st3', name:'Shira Bar',  emoji:'🖤',   avatar_bg:'linear-gradient(135deg,#1a1a2e,#16213e)', spec:'Dark & Edgy',       price:'₪120/hr', tags:['Edgy','Rock','Alternative'], avail:false, rating:'4.7', sessions:98},
-    {id:'st4', name:'Tamar Raz',  emoji:'🌸',   avatar_bg:'linear-gradient(135deg,#f9a8d4,#fbbf24)', spec:'Cottage Core & Boho', price:'₪130/hr', tags:['Cottage Core','Boho','Romantic'], avail:true,  rating:'4.8', sessions:156},
-    {id:'st5', name:'Dana Katz',  emoji:'💼',   avatar_bg:'linear-gradient(135deg,#0ea5e9,#6366f1)', spec:'Corporate & Power', price:'₪250/hr', tags:['Business','Formal','Power Dressing'], avail:true,  rating:'4.9', sessions:312},
-    {id:'st6', name:'Lior Mizrahi',emoji:'🔥',  avatar_bg:'linear-gradient(135deg,#f59e0b,#ef4444)', spec:'Trendy & Bold',      price:'₪180/hr', tags:['Trendy','Bold','Going Out'], avail:false, rating:'4.6', sessions:77},
+    {id:'st1', name:'Maya Cohen',   avatar_bg:'linear-gradient(135deg,#f472b6,#a855f7)', spec:'Y2K & Streetwear',     price:'₪150/שעה', tags:['Y2K','Streetwear','Gen-Z'],          avail:true,  rating:'4.9', sessions:234},
+    {id:'st2', name:'Noa Levi',     avatar_bg:'linear-gradient(135deg,#818cf8,#6366f1)', spec:'Minimal & Elegant',    price:'₪200/שעה', tags:['Minimal','Business','Bridal'],       avail:true,  rating:'5.0', sessions:189},
+    {id:'st3', name:'Shira Bar',    avatar_bg:'linear-gradient(135deg,#1a1a2e,#16213e)', spec:'Dark & Edgy',          price:'₪120/שעה', tags:['Edgy','Rock','Alternative'],         avail:false, rating:'4.7', sessions:98},
+    {id:'st4', name:'Tamar Raz',    avatar_bg:'linear-gradient(135deg,#f9a8d4,#fbbf24)', spec:'Cottage Core & Boho',  price:'₪130/שעה', tags:['Cottage Core','Boho','Romantic'],    avail:true,  rating:'4.8', sessions:156},
+    {id:'st5', name:'Dana Katz',    avatar_bg:'linear-gradient(135deg,#0ea5e9,#6366f1)', spec:'Corporate & Power',    price:'₪250/שעה', tags:['Business','Formal','Power Dressing'],avail:true,  rating:'4.9', sessions:312},
+    {id:'st6', name:'Lior Mizrahi', avatar_bg:'linear-gradient(135deg,#f59e0b,#ef4444)', spec:'Trendy & Bold',        price:'₪180/שעה', tags:['Trendy','Bold','Going Out'],         avail:false, rating:'4.6', sessions:77},
   ];
 
   function renderStylistMarketplace() {
@@ -4929,8 +5310,8 @@
             <option value="home">Home visit</option>
           </select>
         </div>
-        <button class="book-submit" onclick="submitBooking('${attr(name)}')">Confirm session ✓</button>
-        <button class="book-cancel" onclick="document.getElementById('book-overlay-el').remove()">Cancel</button>
+        <button class="book-submit" onclick="submitBooking('${attr(name)}')">${icon('check',16)} אשרי פגישה</button>
+        <button class="book-cancel" onclick="document.getElementById('book-overlay-el').remove()">ביטול</button>
       </div>`;
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
@@ -4942,9 +5323,9 @@
     const type = document.getElementById('book-type')?.value;
     if (!nm || !dt) { showToast('Please fill in all the details'); return; }
     document.getElementById('book-overlay-el')?.remove();
-    const typeLabel = type === 'video' ? 'video' : type === 'chat' ? 'chat' : 'home visit';
-    showToast(`✓ ${typeLabel} session with ${name} booked!`);
-    logAdminEvent('booking', `Session with ${name} — ${typeLabel} on ${dt}`);
+    const typeLabel = type === 'video' ? 'וידאו' : type === 'chat' ? 'צ׳אט' : 'ביקור בית';
+    showToast(`פגישת ${typeLabel} עם ${name} נקבעה`);
+    logAdminEvent('booking', `פגישה עם ${name} — ${typeLabel} ב-${dt}`);
     addRewardPoints(50, 'booking');
   }
 
@@ -4953,26 +5334,26 @@
 
   // ===== SHOPPING FEED =====
   let SHOP_SEED = [
-    {id:'s1',  name:'Straight-leg washed jeans', emoji:'👖', category:'bottoms',  price:220, orig:380, style_tags:['y2k','denim','casual'],    brand:'Zara',      store:'Zara',       badge:'Hot🔥',  score:95},
-    {id:'s2',  name:'Velvet crop top',       emoji:'👕', category:'top',      price:89,  orig:89,  style_tags:['minimal','elegant'],          brand:'H&M',       store:'H&M',         badge:'New',   score:88},
-    {id:'s3',  name:'Pleated mini skirt',       emoji:'👗', category:'bottoms',  price:160, orig:249, style_tags:['y2k','going-out','bold'],      brand:'SHEIN',     store:'SHEIN',       badge:'Sale',  score:91},
-    {id:'s4',  name:'Oversized denim jacket',    emoji:'🧥', category:'outerwear',price:310, orig:310, style_tags:['streetwear','denim','casual'],  brand:'Pull&Bear', store:'Pull&Bear',     badge:'Hot🔥',  score:87},
-    {id:'s5',  name:'Classic white sneakers',    emoji:'👟', category:'shoes',    price:299, orig:420, style_tags:['minimal','streetwear','white'], brand:'adidas',    store:'adidas',      badge:'Sale',  score:93},
-    {id:'s6',  name:'Canvas tote bag',         emoji:'👜', category:'bag',      price:140, orig:140, style_tags:['minimal','casual','neutral'],   brand:'Mango',     store:'Mango',       badge:'New',   score:82},
-    {id:'s7',  name:'Floral midi dress',     emoji:'👗', category:'dress',    price:195, orig:290, style_tags:['cottage-core','romantic'],      brand:'ASOS',      store:'ASOS',       badge:'Sale',  score:89},
-    {id:'s8',  name:'Relaxed linen shirt',        emoji:'👕', category:'top',      price:120, orig:120, style_tags:['minimal','linen','casual'],     brand:'Bershka',   store:'Bershka',      badge:'New',   score:84},
-    {id:'s9',  name:'Y2K track pants',       emoji:'👖', category:'bottoms',  price:175, orig:240, style_tags:['y2k','sporty','streetwear'],    brand:'Nike',      store:'Nike',      badge:'Hot🔥',  score:96},
-    {id:'s10', name:'Gold hoop earrings',         emoji:'💎', category:'jewelry',  price:65,  orig:65,  style_tags:['minimal','elegant','gold'],     brand:'ASOS',      store:'ASOS',       badge:'New',   score:78},
-    {id:'s11', name:'Oversized blazer',        emoji:'🧥', category:'outerwear',price:380, orig:520, style_tags:['elegant','streetwear','power'],  brand:'Zara',      store:'Zara',       badge:'Sale',  score:90},
-    {id:'s12', name:'Patent leather mules',          emoji:'👟', category:'shoes',    price:210, orig:210, style_tags:['elegant','minimal','summer'],   brand:'Mango',     store:'Mango',       badge:'New',   score:85},
-    {id:'s13', name:'Y2K ringer tee',        emoji:'👕', category:'top',      price:95,  orig:140, style_tags:['y2k','retro','casual'],          brand:'SHEIN',     store:'SHEIN',       badge:'Sale',  score:88},
-    {id:'s14', name:'Mini baguette bag',           emoji:'👜', category:'bag',      price:250, orig:380, style_tags:['y2k','going-out','bold'],        brand:'Zara',      store:'Zara',       badge:'Sale',  score:86},
-    {id:'s15', name:'Black fishnet socks',        emoji:'💍', category:'accessory',price:35,  orig:35,  style_tags:['y2k','edgy','streetwear'],       brand:'H&M',       store:'H&M',         badge:'Hot🔥',  score:92},
-    {id:'s16', name:'Satin slip dress',         emoji:'👗', category:'dress',    price:280, orig:400, style_tags:['elegant','going-out','romantic'], brand:'ASOS',      store:'ASOS',       badge:'Sale',  score:91},
-    {id:'s17', name:'Beige bucket hat',           emoji:'🧢', category:'hat',      price:80,  orig:80,  style_tags:['casual','streetwear','minimal'], brand:'Pull&Bear', store:'Pull&Bear',     badge:'New',   score:80},
-    {id:'s18', name:'Green cargo pants',      emoji:'👖', category:'bottoms',  price:195, orig:260, style_tags:['streetwear','cargo','casual'],   brand:'Bershka',   store:'Bershka',      badge:'Sale',  score:87},
-    {id:'s19', name:'Structured corset top',        emoji:'👕', category:'top',      price:150, orig:150, style_tags:['y2k','going-out','bold','sexy'], brand:'SHEIN',     store:'SHEIN',       badge:'Hot🔥',  score:94},
-    {id:'s20', name:'Platform sneakers',         emoji:'👟', category:'shoes',    price:350, orig:480, style_tags:['y2k','chunky','bold','streetwear'],brand:'adidas', store:'adidas',      badge:'Sale',  score:89},
+    {id:'s1',  name:'ג׳ינס ווש בגזרה ישרה', search_query:'washed straight leg jeans women', category:'bottoms',  price:220, orig:380, style_tags:['y2k','denim','casual'],    brand:'Zara',      store:'זארה',       badge:'חם',  score:95},
+    {id:'s2',  name:'טופ קרופ קטיפתי',       search_query:'velvet crop top women',           category:'top',      price:89,  orig:89,  style_tags:['minimal','elegant'],          brand:'H&M',       store:'HM',         badge:'חדש', score:88},
+    {id:'s3',  name:'מיני חצאית פלסה',       search_query:'pleated mini skirt women',        category:'bottoms',  price:160, orig:249, style_tags:['y2k','going-out','bold'],      brand:'SHEIN',     store:'שיין',       badge:'מבצע',score:91},
+    {id:'s4',  name:'ז׳קט דנים אוברסייז',    search_query:'oversized denim jacket women',    category:'outerwear',price:310, orig:310, style_tags:['streetwear','denim','casual'],  brand:'Pull&Bear', store:'פול&בר',     badge:'חם',  score:87},
+    {id:'s5',  name:'סנקרס לבנות קלאסיק',    search_query:'classic white sneakers women',    category:'shoes',    price:299, orig:420, style_tags:['minimal','streetwear','white'], brand:'adidas',    store:'אדידס',      badge:'מבצע',score:93},
+    {id:'s6',  name:'תיק קאנבס טוט',         search_query:'canvas tote bag',                 category:'bag',      price:140, orig:140, style_tags:['minimal','casual','neutral'],   brand:'Mango',     store:'מנגו',       badge:'חדש', score:82},
+    {id:'s7',  name:'שמלת מידי פרחונית',     search_query:'floral midi dress women',         category:'dress',    price:195, orig:290, style_tags:['cottage-core','romantic'],      brand:'ASOS',      store:'ASOS',       badge:'מבצע',score:89},
+    {id:'s8',  name:'חולצת לינן רחבה',        search_query:'oversized linen shirt women',     category:'top',      price:120, orig:120, style_tags:['minimal','linen','casual'],     brand:'Bershka',   store:'ברשקה',      badge:'חדש', score:84},
+    {id:'s9',  name:'מכנסי טרנינג Y2K',       search_query:'Y2K track pants women',           category:'bottoms',  price:175, orig:240, style_tags:['y2k','sporty','streetwear'],    brand:'Nike',      store:'נייקי',      badge:'חם',  score:96},
+    {id:'s10', name:'עגילי הוגס זהב',         search_query:'gold hoop earrings',              category:'jewelry',  price:65,  orig:65,  style_tags:['minimal','elegant','gold'],     brand:'ASOS',      store:'ASOS',       badge:'חדש', score:78},
+    {id:'s11', name:'בלייזר אוברסייז',        search_query:'oversized blazer women',          category:'outerwear',price:380, orig:520, style_tags:['elegant','streetwear','power'],  brand:'Zara',      store:'זארה',       badge:'מבצע',score:90},
+    {id:'s12', name:'כפכפי עור לקה',          search_query:'patent leather mule sandals women',category:'shoes',   price:210, orig:210, style_tags:['elegant','minimal','summer'],   brand:'Mango',     store:'מנגו',       badge:'חדש', score:85},
+    {id:'s13', name:'חולצת רינגר Y2K',        search_query:'Y2K ringer tee women',            category:'top',      price:95,  orig:140, style_tags:['y2k','retro','casual'],          brand:'SHEIN',     store:'שיין',       badge:'מבצע',score:88},
+    {id:'s14', name:'מיני תיק בגט',           search_query:'mini baguette bag women',         category:'bag',      price:250, orig:380, style_tags:['y2k','going-out','bold'],        brand:'Zara',      store:'זארה',       badge:'מבצע',score:86},
+    {id:'s15', name:'גרבי רשת שחורות',        search_query:'black fishnet tights',            category:'accessory',price:35,  orig:35,  style_tags:['y2k','edgy','streetwear'],       brand:'H&M',       store:'HM',         badge:'חם',  score:92},
+    {id:'s16', name:'שמלת סאטן סליפ',         search_query:'satin slip dress women elegant',  category:'dress',    price:280, orig:400, style_tags:['elegant','going-out','romantic'], brand:'ASOS',      store:'ASOS',       badge:'מבצע',score:91},
+    {id:'s17', name:'כובע דלי בז׳',           search_query:'beige bucket hat',                category:'hat',      price:80,  orig:80,  style_tags:['casual','streetwear','minimal'], brand:'Pull&Bear', store:'פול&בר',     badge:'חדש', score:80},
+    {id:'s18', name:'מכנסי קרגו ירוקים',      search_query:'green cargo pants women',         category:'bottoms',  price:195, orig:260, style_tags:['streetwear','cargo','casual'],   brand:'Bershka',   store:'ברשקה',      badge:'מבצע',score:87},
+    {id:'s19', name:'טופ קורסט מובנה',        search_query:'structured corset top women',     category:'top',      price:150, orig:150, style_tags:['y2k','going-out','bold','sexy'], brand:'SHEIN',     store:'שיין',       badge:'חם',  score:94},
+    {id:'s20', name:'סניקרס פלטפורמה',         search_query:'platform chunky sneakers women',  category:'shoes',    price:350, orig:480, style_tags:['y2k','chunky','bold','streetwear'],brand:'adidas', store:'אדידס',      badge:'מבצע',score:89},
   ];
 
   let sfTab = 'recommended', sfInited = false;
@@ -5078,7 +5459,6 @@
     openSheetSingle({
       name: it.name,
       category: it.category,
-      emoji: it.emoji,
       style_tags: it.style_tags,
       color: '',
       price_estimate_usd: it.price,
