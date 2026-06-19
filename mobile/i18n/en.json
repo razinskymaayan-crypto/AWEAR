@@ -17,7 +17,13 @@
     "newItem": "Just added",
     "emptyTitle": "Your closet is empty",
     "emptyBody": "Scan your first outfit to build your digital wardrobe",
-    "cta": "Scan a look"
+    "cta": "Scan a look",
+    "looks": "Looks",
+    "followers": "Followers",
+    "following": "Following",
+    "filter_all": "All",
+    "filter_recent": "Recent",
+    "filter_saved": "Saved"
   },
   "profile": {
     "posts": "Posts",
@@ -43,6 +49,7 @@
   "feed": {
     "likes": "{{count}} likes",
     "comments": "{{count}} comments",
-    "forYou": "For You"
+    "forYou": "For You",
+    "error": "Could not load feed. Pull down to retry."
   }
 }

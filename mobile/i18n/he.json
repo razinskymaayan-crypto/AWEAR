@@ -17,7 +17,13 @@
     "newItem": "נוסף כעת",
     "emptyTitle": "הארון שלך ריק",
     "emptyBody": "סרקי לוק ראשון כדי לבנות את המלתחה הדיגיטלית שלך",
-    "cta": "סרקי לוק"
+    "cta": "סרקי לוק",
+    "looks": "לוקים",
+    "followers": "עוקבים",
+    "following": "עוקב/ת",
+    "filter_all": "הכל",
+    "filter_recent": "אחרונים",
+    "filter_saved": "שמורים"
   },
   "profile": {
     "posts": "לוקים",
@@ -43,6 +49,7 @@
   "feed": {
     "likes": "{{count}} לייקים",
     "comments": "{{count}} תגובות",
-    "forYou": "בשבילך"
+    "forYou": "בשבילך",
+    "error": "לא ניתן לטעון את הפיד. משכי למטה לנסות שוב."
   }
 }
