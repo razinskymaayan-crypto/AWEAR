@@ -23,5 +23,8 @@ __pycache__/
 data/awear.db
 agents/data/dashboard_data.json
 
+# Local tools — binaries, not source
+tools/
+
 # OS
 .DS_Store
