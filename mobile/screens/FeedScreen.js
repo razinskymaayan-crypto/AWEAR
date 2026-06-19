@@ -1,7 +1,18 @@
-import React, { useState, useCallback } from 'react';
-import { FlatList, RefreshControl, View, Image, Text, StyleSheet } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import {
+  FlatList,
+  RefreshControl,
+  View,
+  Image,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 import { t } from '../i18n';
 import { useApp } from '../contexts/AppContext';
+
+// API base — single source of truth. Change this for staging/prod.
+const API_BASE = 'http://localhost:8000';
 
 // CARD_HEIGHT is fixed so getItemLayout can skip measurement entirely.
 // 36 (avatar) + 12*2 (header padding) + 360 (image) + 12*2 (footer padding)
@@ -20,41 +31,23 @@ function interpolate(str, vars) {
   );
 }
 
-// 3 hardcoded post cards — no API, no network, no spinner.
-// Images are Unsplash fashion photos; avatars from randomuser.me.
-// Real data integration tracked separately (cycle 2+, pending backend schema).
-const SAMPLE_POSTS = [
-  {
-    id: 'post_001',
-    user: 'noa.style',
-    avatar: 'https://randomuser.me/api/portraits/women/1.jpg',
-    image:
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80',
-    caption: 'Minimal fit, maximum confidence.',
-    likes: 234,
-    comments: 12,
-  },
-  {
-    id: 'post_002',
-    user: 'maya.fits',
-    avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
-    image:
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&q=80',
-    caption: 'Vintage vibes all day.',
-    likes: 891,
-    comments: 45,
-  },
-  {
-    id: 'post_003',
-    user: 'shira_looks',
-    avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
-    image:
-      'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80',
-    caption: 'Street style TLV.',
-    likes: 1205,
-    comments: 67,
-  },
-];
+// normalizePost maps the API shape {id, user_id, image_url, caption, likes, ...}
+// to the PostCard shape {id, user, avatar, image, caption, likes, comments}.
+// Avatar: backend does not yet return avatar_url — fall back to randomuser.me
+// keyed on user_id so each user always gets the same avatar until auth lands.
+// comments: not in API v1 — default to 0 until comments endpoint ships.
+function normalizePost(apiPost) {
+  const seed = (apiPost.user_id || '').replace(/\D/g, '').slice(-2) || '1';
+  return {
+    id: apiPost.id,
+    user: apiPost.user_id || 'unknown',
+    avatar: `https://randomuser.me/api/portraits/women/${seed}.jpg`,
+    image: apiPost.image_url,
+    caption: apiPost.caption || '',
+    likes: apiPost.likes || 0,
+    comments: apiPost.comments || 0,
+  };
+}
 
 // PostCard renders a single feed post.
 // Image dimensions are explicit — no reflow, no layout thrash.
@@ -92,6 +85,20 @@ function PostCard({ item }) {
   );
 }
 
+// fetchPosts: GET /api/posts?limit=20&offset=0
+// Returns normalized post array on success, throws on network/HTTP error.
+async function fetchPosts(offset = 0) {
+  const url = `${API_BASE}/api/posts?limit=20&offset=${offset}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`/api/posts returned ${response.status}`);
+  }
+  const data = await response.json();
+  // Backend shape: { items: [...], total: N, limit: 20, offset: 0 }
+  const items = Array.isArray(data.items) ? data.items : [];
+  return items.map(normalizePost);
+}
+
 // FeedScreen: FlatList with performance settings required from day 1.
 // getItemLayout: O(1) scroll calculation — critical for large feeds.
 // removeClippedSubviews: unmounts off-screen views on Android (memory).
@@ -99,31 +106,69 @@ function PostCard({ item }) {
 // maxToRenderPerBatch: 4 caps per-frame JS work during fast scroll.
 // windowSize: 5 = 2.5 screens above + 2.5 below the viewport.
 //
-// pull-to-refresh: RefreshControl with 800ms simulated delay.
-// Future: onRefresh will call GET /api/posts and update feedPosts in AppContext.
-// tintColor/#e8526a = AWEAR rose accent (from tokens, not hardcoded by choice —
-// RefreshControl does not support CSS variables, so the hex must be literal here).
+// States:
+//   loading — initial fetch in progress → ActivityIndicator center
+//   error   — fetch failed → inline error text, no crash
+//   data    — posts from /api/posts, stored in AppContext.feedPosts
+//
+// pull-to-refresh: re-fetches offset=0, replaces feedPosts in context.
+// tintColor/#e8526a = AWEAR rose accent — RefreshControl does not support CSS
+// variables, so the hex must be a literal value here (not a token reference).
 export default function FeedScreen() {
-  // AppContext: locale drives future t(key, locale) calls; feedPosts will hold
-  // API results when backend integration lands (Cycle 2).
-  const { locale, feedPosts, setFeedPosts } = useApp();
+  const { feedPosts, setFeedPosts } = useApp();
+  const [loading, setLoading] = useState(feedPosts.length === 0);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState(null);
+
+  // loadPosts: fetches /api/posts and updates AppContext.
+  // On failure sets error string; does not throw — screen never crashes.
+  const loadPosts = useCallback(async () => {
+    setError(null);
+    try {
+      const posts = await fetchPosts(0);
+      setFeedPosts(posts);
+    } catch (err) {
+      setError(t('feed.error'));
+    }
+  }, [setFeedPosts]);
+
+  // Fetch on mount — only if AppContext is empty (avoids redundant network call
+  // when navigating back to FeedScreen after data already loaded).
+  useEffect(() => {
+    if (feedPosts.length === 0) {
+      setLoading(true);
+      loadPosts().finally(() => setLoading(false));
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    // Simulate network latency. Replace with fetch('/api/posts') in Cycle 2.
-    // feedPosts is available in AppContext — API results will call setFeedPosts.
-    await new Promise((r) => setTimeout(r, 800));
+    await loadPosts();
     setRefreshing(false);
-  }, [setFeedPosts]);
+  }, [loadPosts]);
 
-  // Use feedPosts from context when populated (future API); fall back to
-  // SAMPLE_POSTS so the screen is never empty on first load or offline.
-  const data = feedPosts.length > 0 ? feedPosts : SAMPLE_POSTS;
+  // Loading state: ActivityIndicator centered, shown only on first load.
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#e8526a" />
+      </View>
+    );
+  }
+
+  // Error state: inline message, no crash.
+  // User can pull-to-refresh to retry.
+  if (error && feedPosts.length === 0) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
-      data={data}
+      data={feedPosts}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <PostCard item={item} />}
       getItemLayout={(_, index) => ({
@@ -152,6 +197,18 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     backgroundColor: '#12101a',
+  },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#12101a',
+  },
+  errorText: {
+    color: '#fbfbfd',
+    fontSize: 14,
+    textAlign: 'center',
+    paddingHorizontal: 24,
   },
   card: {
     marginBottom: CARD_MARGIN,

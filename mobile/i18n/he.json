@@ -26,6 +26,12 @@
     "addLook": "הוסיפי לוק",
     "editProfile": "ערכי פרופיל"
   },
+  "feed": {
+    "title": "פיד",
+    "likes": "{{count}} לייקים",
+    "comments": "{{count}} תגובות",
+    "error": "לא ניתן לטעון פוסטים. משכי למטה לניסיון חוזר."
+  },
   "cameraPermission": {
     "iosUsageDescription": "AWEAR משתמשת במצלמה שלך כדי לסרוק בגדים לארון הדיגיטלי שלך.",
     "title": "ראי את הארון שלך, מיידית",
