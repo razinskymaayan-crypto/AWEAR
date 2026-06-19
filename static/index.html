@@ -4973,7 +4973,7 @@
       </div>`;
     document.body.appendChild(sheet);
 
-    sheet.querySelector('.fc-comment-send').addEventListener('click', () => {
+    sheet.querySelector('.fc-comment-send').addEventListener('click', async () => {
       const input = sheet.querySelector('.fc-comment-input');
       if (!input.value.trim() || !_commentsPostId) return;
       if (isCommentRateLimited()) {
@@ -4981,28 +4981,48 @@
         return;
       }
       const postId = _commentsPostId;
-      const comment = addComment(postId, input.value);
-      if (!comment) return;
+      const text = input.value.trim();
+
+      // Optimistic display — show comment immediately before API responds.
+      const localComment = addComment(postId, text);
+      if (!localComment) return;
       recordCommentPost();
       const newItem = document.createElement('div');
       newItem.className = 'fc-comment-item';
-      newItem.dataset.commentId = comment.id;
+      newItem.dataset.commentId = localComment.id;
       newItem.innerHTML = `<div class="fc-comment-row">
           <div class="fc-comment-user">@you</div>
-          <button class="fc-comment-report" data-report-comment="${esc(comment.id)}" aria-label="Report comment">${icon('flag',14)}</button>
+          <button class="fc-comment-report" data-report-comment="${esc(localComment.id)}" aria-label="Report comment">${icon('flag',14)}</button>
         </div>
-        <div class="fc-comment-text">${esc(input.value)}</div>`;
-      sheet.querySelector('.cs-list').appendChild(newItem);
+        <div class="fc-comment-text">${esc(text)}</div>`;
+      const csList = sheet.querySelector('.cs-list');
+      // Remove "No comments yet" placeholder if present.
+      const placeholder = csList.querySelector('div:not(.fc-comment-item)');
+      if (placeholder) placeholder.remove();
+      csList.appendChild(newItem);
       input.value = '';
-      // Update comment count button in card
+
+      // Update comment count button in card.
       const openBtn = document.querySelector(`[data-comment-open="${postId}"]`);
       if (openBtn) {
         const cnt = getPostComments(postId).length;
         openBtn.innerHTML = `${icon('chat',16)} ${cnt}`;
       }
-      // Optimistic display happens above; moderation runs async and only
-      // acts (hide/flag) if it comes back harmful — never blocks the UI.
-      moderateCommentAsync(postId, comment, sheet.querySelector('.cs-list'));
+
+      // POST to API — persists the comment server-side.
+      // Fails silently: local copy already stored in localStorage above.
+      try {
+        await fetch(`/api/posts/${encodeURIComponent(postId)}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+        });
+      } catch (_e) {
+        // API unreachable — comment survives in localStorage only.
+      }
+
+      // Moderation runs async; only acts if harmful (never blocks UI).
+      moderateCommentAsync(postId, localComment, csList);
     });
 
     // Report a single comment — tap anywhere in the list, delegate to the flag button
@@ -5032,20 +5052,46 @@
     return sheet;
   }
 
-  function openCommentsSheet(postId) {
+  // Renders a single comment item — used by both openCommentsSheet and the
+  // optimistic send path so the DOM structure is always identical.
+  function _commentItemHTML(c) {
+    const username = c.user_key ? '@' + esc(c.user_key.split('.').join('')) : '@' + esc(c.user || 'you');
+    return `<div class="fc-comment-item" data-comment-id="${esc(c.id||'')}">
+      <div class="fc-comment-row">
+        <div class="fc-comment-user">${username}</div>
+        <button class="fc-comment-report" data-report-comment="${esc(c.id||'')}" aria-label="Report comment">${icon('flag',14)}</button>
+      </div>
+      <div class="fc-comment-text">${esc(c.text)}</div>
+    </div>`;
+  }
+
+  // Opens the comments bottom sheet for postId.
+  // API-first: fetches GET /api/posts/{id}/comments (200ms timeout fallback).
+  // Falls back to localStorage if the API is unreachable.
+  async function openCommentsSheet(postId) {
     const sheet = ensureCommentsSheet();
     _commentsPostId = postId;
-    const comments = getPostComments(postId);
     const list = sheet.querySelector('.cs-list');
-    list.innerHTML = comments.map(c => `
-      <div class="fc-comment-item" data-comment-id="${esc(c.id||'')}">
-        <div class="fc-comment-row">
-          <div class="fc-comment-user">@${esc(c.user)}</div>
-          <button class="fc-comment-report" data-report-comment="${esc(c.id||'')}" aria-label="Report comment">${icon('flag',14)}</button>
-        </div>
-        <div class="fc-comment-text">${esc(c.text)}</div>
-      </div>`).join('') || `<div style="color:rgba(255,255,255,.35);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
+    // Show sheet immediately with local data (instant feel), then refresh from API.
+    const localComments = getPostComments(postId);
+    list.innerHTML = localComments.length
+      ? localComments.map(_commentItemHTML).join('')
+      : `<div style="color:rgba(255,255,255,.35);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
     sheet.classList.add('open');
+
+    // Async API fetch — replaces local view with server state.
+    try {
+      const res = await fetch(`/api/posts/${encodeURIComponent(postId)}/comments`);
+      if (res.ok) {
+        const data = await res.json();
+        const items = data.items || [];
+        list.innerHTML = items.length
+          ? items.map(_commentItemHTML).join('')
+          : `<div style="color:rgba(255,255,255,.35);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
+      }
+    } catch (_e) {
+      // API unreachable — local data already shown, keep it.
+    }
   }
 
   function closeCommentsSheet() {
