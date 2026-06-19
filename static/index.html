@@ -2299,10 +2299,10 @@
           <div class="fca-ico">${icon('flag',21)}</div><span>דווחי</span>
         </button>
         <button class="fca-btn buy-btn buy-action"
-            data-label="${attr(lbl)}" data-price="${attr(post.price||post.look_total_usd||0)}"
+            data-label="${attr(lbl)}" data-price="${attr(post.look_total_usd||0)}"
             data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
           <div class="fca-ico">${icon('bag',22)}</div>
-          <span>₪${esc(post.price||post.look_total_usd||0)}</span>
+          <span>$${esc(post.look_total_usd||0)}</span>
         </button>
       </div>
       ${ownBadge}
@@ -2344,7 +2344,7 @@
     if(post && post.items && post.items.length){
       const total=post.items.reduce((s,x)=>s+(Number(x.price_estimate_usd||x.price)||0),0);
       openSheetLook(post.name?('לוק של '+post.name):(post.caption||fallbackLabel||'הלוק'),
-        post.items, price||post.price||post.look_total_usd||total, earn||post.earn||0, user||post.user||'');
+        post.items, price||post.look_total_usd||total, earn||post.earn||0, user||post.user||'');
       return true;
     }
     return false;
