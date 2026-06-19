@@ -908,6 +908,13 @@ async def toggle_like(post_id: str, request: Request):
             (post_id,),
         ).fetchone()[0]
 
+    # Emit notification to post owner when a new like is added (not on unlike).
+    # SF-004: direct function call — no HTTP to avoid ASGI deadlock.
+    if liked and _posts_cache:
+        post_obj = next((p for p in _posts_cache if p["id"] == post_id), None)
+        if post_obj:
+            _emit_notification(post_obj.get("user_id", ""), "like", user_key, post_id)
+
     return {
         "post_id": post_id,
         "liked": liked,
@@ -1202,6 +1209,57 @@ async def get_comments(post_id: str, limit: int = 20, offset: int = 0):
         "items": comments[offset: offset + limit],
         "total": len(comments),
     }
+
+
+# ---------------------------------------------------------------------------
+# In-memory notifications store
+# Structure: { user_id: [ {id, type, from_user_key, post_id, created_at, read}, ... ] }
+# SF-004: _emit_notification is called directly (NOT via HTTP) to avoid ASGI deadlock.
+# ---------------------------------------------------------------------------
+
+_notifications_store: dict = {}
+
+
+def _emit_notification(user_id: str, notif_type: str, from_key: str, post_id: str = None):
+    """Internal helper — call directly from other endpoints (NOT via HTTP — SF-004)."""
+    import datetime
+    if not user_id:
+        # No owner to notify — skip silently.
+        return
+    notif = {
+        "id": f"n_{user_id}_{len(_notifications_store.get(user_id, []))}",
+        "type": notif_type,        # "like" | "comment" | "follow"
+        "from_user_key": from_key,
+        "post_id": post_id,
+        "created_at": datetime.datetime.utcnow().isoformat(),
+        "read": False,
+    }
+    _notifications_store.setdefault(user_id, []).append(notif)
+    logger.info(
+        "notification emitted: user=%s type=%s from=%s post=%s",
+        user_id, notif_type, from_key, post_id,
+    )
+
+
+@app.get("/api/notifications/{user_id}")
+async def get_notifications(user_id: str, limit: int = 20, unread_only: bool = False):
+    """Return recent notifications for a user, newest first."""
+    notifs = _notifications_store.get(user_id, [])
+    if unread_only:
+        notifs = [n for n in notifs if not n["read"]]
+    return {
+        "items": notifs[-limit:][::-1],
+        "total": len(notifs),
+        "unread": sum(1 for n in notifs if not n["read"]),
+    }
+
+
+@app.post("/api/notifications/{user_id}/read-all")
+async def mark_all_read(user_id: str):
+    """Mark all notifications as read for a user."""
+    for n in _notifications_store.get(user_id, []):
+        n["read"] = True
+    return {"status": "ok"}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
