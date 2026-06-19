@@ -480,13 +480,17 @@
 
   /* ── Skeleton Loading System ─────────────────────────────────────────── */
   /* DS-004: fallback values defined here so skeleton works even if tokens.css fails to load */
+  :root {
+    --skeleton-base: var(--card, #1e1a22);
+    --skeleton-highlight: var(--card-hover, #262030);
+  }
   .skeleton {
-    background: var(--card, #17171f);
+    background: var(--skeleton-base);
     background-image: linear-gradient(
       90deg,
-      var(--card, #17171f) 0%,
-      rgba(255,255,255,.06) 50%,
-      var(--card, #17171f) 100%
+      var(--skeleton-base) 0%,
+      var(--skeleton-highlight) 50%,
+      var(--skeleton-base) 100%
     );
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.5s ease-in-out infinite;
