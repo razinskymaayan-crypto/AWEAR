@@ -2,6 +2,17 @@
   "app": {
     "name": "AWEAR"
   },
+  "camera": {
+    "closeButton": "Close",
+    "flashOff": "Flash off",
+    "flashOn": "Flash on",
+    "flashAuto": "Flash auto",
+    "captureButton": "Capture",
+    "scanning": "Scanning...",
+    "capturedPreviewTitle": "Photo captured",
+    "capturedPreviewRetake": "Retake",
+    "capturedPreviewUse": "Use photo"
+  },
   "cameraPermission": {
     "iosUsageDescription": "AWEAR uses your camera to scan clothing into your digital wardrobe.",
     "title": "See your wardrobe, instantly",

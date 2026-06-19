@@ -209,6 +209,9 @@
     padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(6px); }
   .trend-badge { background: rgba(0,0,0,.6); color: #fff; font-size: 12px; font-weight: 900;
     padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(6px); margin-inline-start: auto; }
+  .fc-more-btn { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.6); border: 0; border-radius: 50%; color: #fff; cursor: pointer; backdrop-filter: blur(6px); }
+  .fc-more-btn:active { background: rgba(0,0,0,.8); }
 
   /* old fc-actions hidden — replaced by fc-item-pills + fc-action-bar */
   .fc-actions { display: none; }
@@ -789,6 +792,10 @@
   .pc-tag { font-size: 11px; color: var(--accent2); font-weight: 800; margin-top: 4px; }
   .pc-follow-btn { padding: 7px 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; border-radius: 20px; font-family: inherit; font-size: 12px; font-weight: 800; color: #fff; cursor: pointer; flex-shrink: 0; transition: all .18s; }
   .pc-follow-btn.following { background: var(--card); color: var(--muted); border: 1.5px solid var(--line); }
+  .pc-more-btn { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; border-radius: 50%; color: var(--muted); cursor: pointer; margin-right: 2px; }
+  .pc-more-btn:active { background: var(--card); }
+  .pc-row-blocked .pc-name { color: var(--muted); }
+  .pc-blocked-list:empty { display: none; }
 
   /* ---- Seasonal Report ---- */
   .sr-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
@@ -1536,6 +1543,8 @@
     minimal:'<circle cx="12" cy="12" r="7.5"/><path d="M8.2 12h7.6"/>',
     globe:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.3 3.7 5.4 3.7 8.5s-1.3 6.2-3.7 8.5c-2.4-2.3-3.7-5.4-3.7-8.5s1.3-6.2 3.7-8.5Z" stroke-linejoin="round"/>',
     storefront:'<path d="M4 9.5 5 4h14l1 5.5" stroke-linejoin="round"/><path d="M4 9.5a2.2 2.2 0 0 0 4.4.3 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4-.3" stroke-linejoin="round"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/>',
+    more:'<circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>',
+    blockUser:'<circle cx="12" cy="12" r="8.5"/><path d="M6.5 17.5 17.5 6.5" stroke-linecap="round"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -2269,10 +2278,11 @@
         ${(it.price_estimate_usd||it.price)?`<span class="fc-pill-price">₪${esc(it.price_estimate_usd||it.price)}</span>`:''}
       </button>`).join('');
 
+    const moreBtn = isMine ? '' : `<button class="fc-more-btn" data-more-user="${attr(post.user||'')}" aria-label="עוד אפשרויות">${icon('more',18)}</button>`;
     return `<div class="feed-card-full${isMine?' is-mine':''}" data-id="${attr(post.id||'')}">
       <div class="fcbg" style="background:${attr(post.grad||'linear-gradient(160deg,#a18cd1,#fbc2eb)')}">${bgImg}</div>
       <div class="heart-burst">${icon('heartFill',100)}</div>
-      <div class="fc-top">${mineBadge}<span class="trend-badge" style="display:inline-flex;align-items:center;gap:5px">${icon('flame',14)} ${esc(post.trend||80)}</span></div>
+      <div class="fc-top">${mineBadge}<div style="display:flex;align-items:center;gap:8px"><span class="trend-badge" style="display:inline-flex;align-items:center;gap:5px">${icon('flame',14)} ${esc(post.trend||80)}</span>${moreBtn}</div></div>
 
       ${pillsHTML?`<div class="fc-item-pills">${pillsHTML}</div>`:''}
 
@@ -2321,12 +2331,13 @@
         grad:p.photo?null:'linear-gradient(160deg,#a18cd1,#fbc2eb)',img:p.photo||null,tags:p.tags||[],trend:95},true);
       host.appendChild(wrap.firstElementChild);
     });
-    let seeds=SEED_POSTS;
+    let seeds=SEED_POSTS.filter(p=>!isBlocked(p.user));
     if(activeFilter!=='all') seeds=seeds.filter(p=>(p.tags||[]).includes(activeFilter));
     if(!seeds.length&&!loadFeedPosts().length){
       host.innerHTML=`<div class="feed-empty"><div class="big" style="display:flex;justify-content:center">${icon('search',50)}</div><p>No looks in this style yet</p></div>`;return;
     }
     seeds.forEach(post=>{const wrap=document.createElement('div');wrap.innerHTML=feedCardHTML(post,false);host.appendChild(wrap.firstElementChild);});
+    bindFeedMoreMenu(host);
   }
 
   // ---- feed interactions ----
@@ -3351,13 +3362,75 @@
   ];
   let followState = JSON.parse(localStorage.getItem('awear_follows') || '{}');
 
+  // ---- Blocking (Shira) ----
+  // Same persistence pattern as followState: a plain object keyed by a
+  // user-identifying string, mirrored to localStorage on every change.
+  // This app has no real backend session model, so "blocking" is a local
+  // client-side filter on what's shown to the current device's user — not
+  // a server-side relationship. Two disjoint demo identities exist in this
+  // file (public-closet directory users like "u1"/"@noalevi" vs feed-post
+  // authors like "noa.styles") with no shared key between them, so block
+  // entries are keyed generically by whatever handle/id identifies the
+  // person on the surface the block was triggered from, and store a
+  // display label so the management list can render something readable
+  // regardless of which surface it came from.
+  const BLOCKED_KEY = 'awear_blocked';
+  let blockedUsers = JSON.parse(localStorage.getItem(BLOCKED_KEY) || '{}');
+
+  function isBlocked(key) { return !!blockedUsers[key]; }
+
+  function setBlocked(key, label, blocked) {
+    if (blocked) {
+      blockedUsers[key] = { label: label || key, ts: Date.now() };
+    } else {
+      delete blockedUsers[key];
+    }
+    localStorage.setItem(BLOCKED_KEY, JSON.stringify(blockedUsers));
+  }
+
+  // Shared confirm sheet for blocking — reuses the .book-overlay/.book-sheet
+  // pattern already used for the stylist booking modal, so it matches the
+  // app's existing lightweight-modal convention instead of introducing a new one.
+  function confirmBlockUser(key, label, onDone) {
+    const existing = document.getElementById('block-overlay-el');
+    if (existing) existing.remove();
+    const already = isBlocked(key);
+    const overlay = document.createElement('div');
+    overlay.id = 'block-overlay-el';
+    overlay.className = 'book-overlay';
+    overlay.innerHTML = `
+      <div class="book-sheet">
+        <div class="book-title" style="display:flex;align-items:center;gap:8px">${icon('blockUser',20)} ${already ? 'הסרת חסימה מ' : 'חסימת'} ${esc(label)}?</div>
+        <div style="font-size:13px;color:var(--muted);font-weight:600;line-height:1.5;margin-bottom:16px">
+          ${already
+            ? 'הלוקים שלה יחזרו להופיע בפיד שלך.'
+            : 'לא תראי יותר לוקים או תוכן ממשתמשת זו בפיד שלך, והיא תועבר לרשימת החסומים בארון הציבורי.'}
+        </div>
+        <button class="book-submit" style="background:${already ? 'linear-gradient(135deg,var(--accent),var(--accent2))' : 'linear-gradient(135deg,#ef4444,#b91c1c)'}">${already ? 'הסירי חסימה' : 'חסמי משתמשת'}</button>
+        <button class="book-cancel">ביטול</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+    overlay.querySelector('.book-cancel').addEventListener('click', () => overlay.remove());
+    overlay.querySelector('.book-submit').addEventListener('click', () => {
+      const nowBlocked = !already;
+      setBlocked(key, label, nowBlocked);
+      logAdminEvent(nowBlocked ? 'block_user' : 'unblock_user', `${nowBlocked ? 'חסמה' : 'הסירה חסימה מ'}: ${label} (${key})`);
+      showToast(nowBlocked ? `נחסם ✓ ${label}` : `הוסרה חסימה מ-${label}`);
+      overlay.remove();
+      if (onDone) onDone(nowBlocked);
+    });
+  }
+
   function renderPublicClosets() {
     const el = document.getElementById('pc-wrap');
+    const visibleUsers = SEED_USERS.filter(u => !isBlocked(u.id));
+    const blockedEntries = Object.entries(blockedUsers);
     el.innerHTML = `
       <div class="pc-header">👥 Public closets</div>
       <div class="pc-section-label">Featured</div>
       <div class="pc-featured-row">
-        ${SEED_USERS.slice(0,4).map(u => `
+        ${visibleUsers.slice(0,4).map(u => `
           <div class="pc-featured-card" data-uid="${u.id}">
             <div class="pc-feat-cover">${u.cover}</div>
             <div class="pc-feat-info">
@@ -3369,7 +3442,7 @@
       </div>
       <div class="pc-section-label">Everyone</div>
       <div class="pc-list">
-        ${SEED_USERS.map(u => {
+        ${visibleUsers.map(u => {
           const isFollowing = followState[u.id] ?? u.following;
           return `<div class="pc-row">
             <div class="pc-avatar">${u.avatar}</div>
@@ -3379,11 +3452,24 @@
               <div class="pc-tag">${esc(u.vibe)}</div>
             </div>
             <button class="pc-follow-btn${isFollowing?' following':''}" data-uid="${u.id}">${isFollowing?'Following':'+ Follow'}</button>
+            <button class="pc-more-btn" data-more-uid="${u.id}" data-more-label="${attr(u.name)}" aria-label="More options">${icon('more',18)}</button>
           </div>`;
         }).join('')}
+      </div>
+      <div class="pc-section-label">משתמשות חסומות</div>
+      <div class="pc-list pc-blocked-list">
+        ${blockedEntries.length ? blockedEntries.map(([key, b]) => `
+          <div class="pc-row pc-row-blocked">
+            <div class="pc-avatar" style="opacity:.45">${icon('blockUser',20)}</div>
+            <div class="pc-info">
+              <div class="pc-name">${esc(b.label)}</div>
+              <div class="pc-tag" style="color:#ef4444">חסומה — לא מוצגת בפיד</div>
+            </div>
+            <button class="pc-follow-btn following" data-unblock-key="${attr(key)}" data-unblock-label="${attr(b.label)}">הסירי חסימה</button>
+          </div>`).join('') : `<div style="color:var(--muted);font-size:13px;padding:8px 16px 4px">אין משתמשות חסומות</div>`}
       </div>`;
 
-    el.querySelectorAll('.pc-follow-btn').forEach(btn => {
+    el.querySelectorAll('.pc-follow-btn[data-uid]').forEach(btn => {
       btn.addEventListener('click', () => {
         const uid = btn.dataset.uid;
         followState[uid] = !followState[uid];
@@ -3391,6 +3477,20 @@
         btn.textContent = followState[uid] ? 'Following' : '+ Follow';
         btn.classList.toggle('following', !!followState[uid]);
         showToast(followState[uid] ? 'Following ✓' : 'Unfollowed');
+      });
+    });
+
+    el.querySelectorAll('.pc-more-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const uid = btn.dataset.moreUid, label = btn.dataset.moreLabel;
+        confirmBlockUser(uid, label, () => renderPublicClosets());
+      });
+    });
+
+    el.querySelectorAll('[data-unblock-key]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        confirmBlockUser(btn.dataset.unblockKey, btn.dataset.unblockLabel, () => { renderPublicClosets(); renderFeed(); });
       });
     });
   }
@@ -4426,6 +4526,20 @@
     });
   }
 
+  // Per-card "more" button on feed posts (Shira) — currently exposes only
+  // "block this user". Additional per-post moderation actions (e.g. report)
+  // can hang off this same icon/handler later without changing the binding.
+  function bindFeedMoreMenu(host) {
+    host.querySelectorAll('.fc-more-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const userHandle = btn.dataset.moreUser;
+        if (!userHandle) return;
+        confirmBlockUser(userHandle, '@' + userHandle, () => renderFeed());
+      });
+    });
+  }
+
   let seenStories = new Set(JSON.parse(localStorage.getItem('awear_stories_seen')||'[]'));
 
   function renderStories(){
@@ -4494,7 +4608,7 @@
         grad:p.photo?null:'linear-gradient(160deg,#a18cd1,#fbc2eb)',img:p.photo||null,tags:p.tags||[],trend:95},true);
       host.appendChild(wrap.firstElementChild);
     });
-    let seeds=SEED_POSTS;
+    let seeds=SEED_POSTS.filter(p=>!isBlocked(p.user));
     if(activeFilter!=='all') seeds=seeds.filter(p=>(p.tags||[]).includes(activeFilter));
     if(activeTab==='inspiration'){
       const wardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
@@ -4517,6 +4631,7 @@
     }
     seeds.forEach(post=>{const wrap=document.createElement('div');wrap.innerHTML=feedCardHTML(post,false);host.appendChild(wrap.firstElementChild);});
     bindReactions(host);
+    bindFeedMoreMenu(host);
   };
 
   renderCloset();

@@ -1,0 +1,30 @@
+{
+  "app": {
+    "name": "AWEAR"
+  },
+  "camera": {
+    "closeButton": "סגור",
+    "flashOff": "פלאש כבוי",
+    "flashOn": "פלאש דלוק",
+    "flashAuto": "פלאש אוטומטי",
+    "captureButton": "צלם",
+    "scanning": "סורק...",
+    "capturedPreviewTitle": "תמונה נלכדה",
+    "capturedPreviewRetake": "צלם שוב",
+    "capturedPreviewUse": "השתמש בתמונה"
+  },
+  "cameraPermission": {
+    "iosUsageDescription": "AWEAR משתמשת במצלמה שלך כדי לסרוק בגדים לארון הדיגיטלי שלך.",
+    "title": "ראי את הארון שלך, מיידית",
+    "body": "AWEAR משתמשת במצלמה שלך כדי לסרוק פריטי לבוש ולבנות ארון דיגיטלי ולקבל רעיונות ללוקים. אנחנו משתמשות במצלמה רק כשבוחרים לסרוק.",
+    "allowButton": "אפשר גישה למצלמה",
+    "continueButton": "המשך",
+    "openSettingsButton": "פתח הגדרות",
+    "checkingStatus": "בודקת גישה למצלמה...",
+    "grantedTitle": "גישה למצלמה פעילה",
+    "grantedBody": "הכל מוכן. AWEAR יכולה לסרוק בגדים כשתרצי.",
+    "deniedTitle": "גישה למצלמה כבויה",
+    "deniedBody": "סריקת הארון צריכה את המצלמה. ניתן להפעיל בהגדרות המכשיר.",
+    "deniedRetryBody": "נדרשת גישה למצלמה כדי לסרוק את הארון. אפשרי כדי להמשיך."
+  }
+}

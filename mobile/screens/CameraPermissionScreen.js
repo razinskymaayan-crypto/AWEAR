@@ -1,5 +1,5 @@
 import { useCameraPermissions } from 'expo-camera';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Linking, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { t } from '../i18n';
@@ -7,11 +7,25 @@ import { color, radius, spacing, typography } from '../theme/tokens';
 
 // Single onboarding screen: camera permission request.
 // Scope (see mobile/README.md): one screen, one permission flow.
-// Deliberately no camera preview and no capture pipeline yet — that is the
-// next task, not this one.
-export default function CameraPermissionScreen() {
+//
+// Props:
+//   onPermissionGranted — called as soon as `permission.granted` becomes true.
+//     Passed in from App.js to navigate to CameraScreen. Optional: if absent
+//     the screen stays visible in granted state (useful in isolation / Storybook).
+//   navigation — React Navigation shim from App.js (unused here directly, but
+//     accepted to keep the signature consistent with other screens).
+export default function CameraPermissionScreen({ onPermissionGranted, navigation }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [requesting, setRequesting] = useState(false);
+
+  // Navigate away as soon as permission is confirmed granted.
+  // Using useEffect rather than calling inside the render branch means the
+  // callback fires exactly once when the status changes, not on every re-render.
+  useEffect(() => {
+    if (permission?.granted && onPermissionGranted) {
+      onPermissionGranted();
+    }
+  }, [permission?.granted, onPermissionGranted]);
 
   // expo-camera returns null on first render while it checks the existing
   // permission state — treat that as its own (brief) loading state rather
