@@ -32,6 +32,11 @@
     "addLook": "Add Look",
     "editProfile": "Edit Profile"
   },
+  "editProfile": {
+    "displayName": "Display Name",
+    "bio": "Bio",
+    "save": "Save Changes"
+  },
   "cameraPermission": {
     "iosUsageDescription": "AWEAR uses your camera to scan clothing into your digital wardrobe.",
     "title": "See your wardrobe, instantly",
