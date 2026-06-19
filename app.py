@@ -863,4 +863,64 @@ async def get_post(post_id: str):
     return {**post, "likes": post.get("likes", 0) + likes_extra}
 
 
+# ---------------------------------------------------------------------------
+# Comments — in-memory store (pre-DB, migration-ready)
+# { post_id: [ {id, user_key, text, created_at}, ... ] }
+# ---------------------------------------------------------------------------
+
+_comments_store: dict = {}
+
+
+@app.post("/api/posts/{post_id}/comments")
+async def add_comment(post_id: str, request: Request):
+    body = await request.json()
+    text = body.get("text", "").strip()
+    if not text or len(text) > 500:
+        raise HTTPException(status_code=400, detail="text required, max 500 chars")
+
+    # validate post exists
+    if _posts_cache:
+        post = next((p for p in _posts_cache if p["id"] == post_id), None)
+        if post is None:
+            raise HTTPException(status_code=404, detail="Post not found")
+
+    # moderation — direct call to moderate_comment() to avoid HTTP self-call deadlock
+    try:
+        mod_result = await moderate_comment(CommentModerationRequest(text=text))
+        # fallback:true means API key missing — fail-open per SF-003
+        if not mod_result.get("fallback", False):
+            if mod_result.get("harmful", False):
+                severity = mod_result.get("severity", "high")
+                logger.warning(
+                    "comment_rejected post=%s severity=%s preview=%r",
+                    post_id, severity, text[:80],
+                )
+                raise HTTPException(status_code=400, detail="content rejected")
+    except HTTPException:
+        raise
+    except Exception as e:
+        # moderation error — fail-open, log internally
+        logger.error("moderation_error post=%s err=%s", post_id, e)
+
+    user_key = (request.client.host if request.client else None) or "anon"
+    comment = {
+        "id": f"c_{post_id}_{len(_comments_store.get(post_id, []))}",
+        "user_key": user_key,
+        "text": text,
+        "created_at": __import__("datetime").datetime.utcnow().isoformat(),
+    }
+    _comments_store.setdefault(post_id, []).append(comment)
+    logger.info("comment_added post=%s id=%s", post_id, comment["id"])
+    return comment
+
+
+@app.get("/api/posts/{post_id}/comments")
+async def get_comments(post_id: str, limit: int = 20, offset: int = 0):
+    comments = _comments_store.get(post_id, [])
+    return {
+        "items": comments[offset: offset + limit],
+        "total": len(comments),
+    }
+
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
