@@ -45,10 +45,23 @@
     "comments": "{{count}} comments",
     "forYou": "For You"
   },
-  "wardrobe": {
-    "newItem": "Just added",
-    "emptyTitle": "Your closet is empty",
-    "emptyBody": "Scan your first outfit to build your digital wardrobe",
-    "cta": "Scan a look"
+  "marketplace": {
+    "title": "Marketplace",
+    "search": "Search",
+    "empty": "No items yet",
+    "condition": {
+      "likenew": "Like New",
+      "good": "Good",
+      "fair": "Fair"
+    },
+    "category": {
+      "all": "All",
+      "shoes": "Shoes",
+      "pants": "Pants",
+      "shirts": "Shirts",
+      "jackets": "Jackets",
+      "accessories": "Accessories",
+      "dresses": "Dresses"
+    }
   }
 }

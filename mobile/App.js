@@ -6,6 +6,7 @@ import { AppProvider } from './contexts/AppContext';
 
 import CameraScreen from './screens/CameraScreen';
 import FeedScreen from './screens/FeedScreen';
+import MarketplaceScreen from './screens/MarketplaceScreen';
 import WardrobeScreen from './screens/WardrobeScreen';
 
 // Tab bar colors sourced from design tokens (tokens.css).
@@ -51,6 +52,11 @@ export default function App() {
             name="Wardrobe"
             component={WardrobeScreen}
             options={{ tabBarLabel: 'Closet' }}
+          />
+          <Tab.Screen
+            name="Marketplace"
+            component={MarketplaceScreen}
+            options={{ tabBarLabel: 'Shop' }}
           />
         </Tab.Navigator>
       </NavigationContainer>

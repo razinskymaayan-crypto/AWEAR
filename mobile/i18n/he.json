@@ -45,10 +45,23 @@
     "comments": "{{count}} תגובות",
     "forYou": "בשבילך"
   },
-  "wardrobe": {
-    "newItem": "נוסף כעת",
-    "emptyTitle": "הארון שלך ריק",
-    "emptyBody": "סרקי לוק ראשון כדי לבנות את המלתחה הדיגיטלית שלך",
-    "cta": "סרקי לוק"
+  "marketplace": {
+    "title": "מרקטפלייס",
+    "search": "חיפוש",
+    "empty": "אין פריטים עדיין",
+    "condition": {
+      "likenew": "כמו חדש",
+      "good": "טוב",
+      "fair": "סביר"
+    },
+    "category": {
+      "all": "הכל",
+      "shoes": "נעליים",
+      "pants": "מכנסיים",
+      "shirts": "חולצות",
+      "jackets": "ג'קטים",
+      "accessories": "אקססוריז",
+      "dresses": "שמלות"
+    }
   }
 }
