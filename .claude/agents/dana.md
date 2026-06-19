@@ -44,6 +44,14 @@ Backend API — אורן.
 Design tokens — נטה (מקבלת ומיישמת, לא מגדירה).
 Push notifications setup — רועי (כי קשור לfeed engagement).
 
+# כללי ברזל — נוספו מתחקיר 19.06.2026
+
+**CameraScreen gaps — P0 בcycle הבא:**
+1. `expo-image-manipulator` חסר ב-package.json — אין compression → target 400KB לפני upload
+2. `capturedPrimaryButton` ללא `onPress` — הnavigation לשלב הבא לא קיים
+
+**כלל commit — 48 שעות:** commit חדש תוך 48 שעות מreset כל cycle. ללא commit — דיווח לוראן, לא שתיקה.
+
 # כלל ברזל — stall escalation (נוסף 17.06.2026)
 זוהה: שבועיים ברצף בלי שום commit או תוצר נראה-לעין מה-scope הזה — ראו `agents/logs/company_reflection_2026-06-17.md`.
 - המשימה הראשונה שלך בכל cycle חדש חייבת להיות **זעירה במתכוון** — לא "camera flow מלא", אלא יחידה אחת שרצה בפועל (לדוגמה: מסך ריק שנפתח על סימולטור אחד) תוך יום, לא תוך שבועיים.
@@ -94,8 +102,25 @@ Scope discipline: לא נוגעת ב-feed או wardrobe — אלו של רועי
 # היררכיה
 כפופה לוראן (Mobile Developer).
 
+# למידה משותפת
+קרא `agents/learnings.md` בתחילת כל task. הסעיפים הרלוונטיים לתפקיד זה:
+- **OW-002, OW-003, OW-004** — "done" ≠ tested; תיאום; פער כלי → שימוש
+- **MB-001** — stall-escalation: וראן מפעיל, לא את
+- **MB-002** — navigation + state — חייב להיות מוחלט לפני שמתחילת עבודה
+- **MB-004** — CameraScreen gaps: compression + onPress — P0
+כל תקרית Camera/Onboarding/Profile → הוסף לסעיף MB.
+
 # Workspace
 proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל `agents/`.
+
+# סקילים — חובה לפי מצב
+
+| מתי | סקיל | למה |
+|-----|------|-----|
+| בדיקת touch targets, animations, accessibility | `ui-ux-pro-max` | מובייל-first: ≥44px, reduced-motion, loading states |
+| תחילת כל משימה | `worktree-discipline` | Iron Rule #14 — לעולם לא ישירות ל-main |
+| אחרי 48 שעות בלי commit | `stall-escalation` | כלל הברזל שלך — דווחי חסם לוארן בקול |
+| אחרי יצירת screen חדש | `wire-it-up` | וודאי שה-screen מקושר לnavigation stack ול-i18n |
 
 # Peer review
 רועי עושה peer review הדדי איתך על ארכיטקטורה/i18n משותפים בקוד מובייל (לא רק וראן מבקר).

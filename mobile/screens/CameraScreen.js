@@ -1,4 +1,5 @@
 import { CameraView } from 'expo-camera';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { useRef, useState, useCallback } from 'react';
 import {
   Animated,
@@ -16,6 +17,19 @@ import { color, radius, spacing, typography } from '../theme/tokens';
 
 // Flash modes cycle in this order when the user taps the flash toggle.
 const FLASH_CYCLE = ['off', 'auto', 'on'];
+
+// Compresses a captured image URI to target under 400KB before upload.
+// Resizes to max 1080px width and applies 0.7 JPEG quality.
+// Returns the compressed URI.
+async function compressForUpload(uri) {
+  const result = await ImageManipulator.manipulateAsync(
+    uri,
+    [{ resize: { width: 1080 } }],
+    { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+  );
+  // target: <400KB
+  return result.uri;
+}
 
 // CameraScreen — live preview + capture pipeline.
 //
@@ -145,7 +159,10 @@ export default function CameraScreen({ navigation }) {
               style={styles.capturedPrimaryButton}
               accessibilityRole="button"
               accessibilityLabel={t('camera.capturedPreviewUse')}
-              // onPress will call navigation.navigate to result screen (future scope)
+              onPress={async () => {
+                const compressed = await compressForUpload(capturedUri);
+                navigation.navigate('Wardrobe', { newImageUri: compressed });
+              }}
             >
               <Text style={styles.capturedPrimaryText}>
                 {t('camera.capturedPreviewUse')}

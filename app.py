@@ -14,16 +14,60 @@ Then open http://localhost:8000
 
 import base64
 import io
+import json
+import logging
+import os
+import sqlite3
+import time
+import traceback
 import urllib.parse
+import warnings
+from collections import defaultdict
+from pathlib import Path
 from typing import Optional
+
+logger = logging.getLogger(__name__)
 
 import anthropic
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi import FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from pydantic import BaseModel
+
+# ---------------------------------------------------------------------------
+# Structured logging
+# ---------------------------------------------------------------------------
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger("awear")
+
+# ---------------------------------------------------------------------------
+# In-memory rate limiter (per-IP, per-endpoint)
+# ---------------------------------------------------------------------------
+
+_rate_store: dict[str, list[float]] = defaultdict(list)
+RATE_WINDOW = 60  # seconds
+
+
+def check_rate_limit(client_ip: str, endpoint: str, limit: int) -> bool:
+    """Return True if the request is allowed, False if the limit is exceeded.
+
+    Sliding window: only timestamps within the last RATE_WINDOW seconds count.
+    Thread-safety note: FastAPI runs in a single-process async event loop for
+    this demo, so a plain dict is safe here. Switch to Redis for multi-worker.
+    """
+    key = f"{client_ip}:{endpoint}"
+    now = time.time()
+    _rate_store[key] = [t for t in _rate_store[key] if now - t < RATE_WINDOW]
+    if len(_rate_store[key]) >= limit:
+        return False
+    _rate_store[key].append(now)
+    return True
 
 # Google integrations are optional — if the deps/creds aren't installed, the core
 # demo must still run. Degrade to no-ops instead of crashing the whole server.
@@ -36,6 +80,19 @@ except Exception:  # noqa: BLE001 — missing google libs/creds shouldn't break 
 
 load_dotenv()  # loads ANTHROPIC_API_KEY from .env
 
+# ---------------------------------------------------------------------------
+# Startup validation
+# ---------------------------------------------------------------------------
+
+_api_key = os.getenv("ANTHROPIC_API_KEY")
+if not _api_key:
+    warnings.warn(
+        "ANTHROPIC_API_KEY not set — /api/moderate running in fail-open mode. "
+        "Set the key in .env before production deploy.",
+        RuntimeWarning,
+        stacklevel=2,
+    )
+
 MODEL = "claude-opus-4-8"
 MAX_EDGE = 1024  # downscale long edge to control cost + latency
 
@@ -44,6 +101,33 @@ MAX_EDGE = 1024  # downscale long edge to control cost + latency
 # keeping a live pitch from hanging.
 client = anthropic.Anthropic(timeout=25.0)  # reads ANTHROPIC_API_KEY from the environment
 app = FastAPI(title="AWEAR demo")
+
+
+# ---------------------------------------------------------------------------
+# Request logging middleware — logs every HTTP request with method, path,
+# status code, and duration in milliseconds.
+# ---------------------------------------------------------------------------
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start = time.time()
+    status_code = 500
+    try:
+        response = await call_next(request)
+        status_code = response.status_code
+        return response
+    except Exception as exc:
+        logger.exception("Unhandled exception during %s %s", request.method, request.url.path)
+        raise
+    finally:
+        duration = round((time.time() - start) * 1000)
+        logger.info(
+            "%s %s -> %s (%dms)",
+            request.method,
+            request.url.path,
+            status_code,
+            duration,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -278,7 +362,12 @@ def _downscale_to_base64(raw: bytes) -> tuple[str, str]:
 
 
 @app.post("/api/analyze")
-async def analyze(photo: UploadFile):
+async def analyze(request: Request, photo: UploadFile):
+    ip = request.client.host if request.client else "unknown"
+    if not check_rate_limit(ip, "analyze", limit=5):
+        logger.warning("Rate limit exceeded: analyze from %s", ip)
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
+
     raw = await photo.read()
     if not raw:
         raise HTTPException(status_code=400, detail="Empty file")
@@ -320,7 +409,8 @@ async def analyze(photo: UploadFile):
             raise ValueError("empty parse")
         result = response.parsed_output.model_dump()
         result["mode"] = "live"
-    except Exception:  # noqa: BLE001 — auth/api/parse failure -> graceful demo fallback
+    except Exception as e:  # noqa: BLE001 — auth/api/parse failure -> graceful demo fallback
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         result = _demo_analysis()
         result["mode"] = "demo"
 
@@ -428,8 +518,12 @@ class OutfitRequest(BaseModel):
 
 
 @app.post("/api/outfit/generate")
-async def generate_outfit(data: OutfitRequest):
+async def generate_outfit(request: Request, data: OutfitRequest):
     """Generate outfit suggestions for a given occasion using the user's wardrobe."""
+    ip = request.client.host if request.client else "unknown"
+    if not check_rate_limit(ip, "outfit_generate", limit=10):
+        logger.warning("Rate limit exceeded: outfit/generate from %s", ip)
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
     wardrobe_desc = ", ".join(
         f"{it.get('name','')} ({it.get('category','')})"
         for it in data.wardrobe[:30]
@@ -460,14 +554,14 @@ async def generate_outfit(data: OutfitRequest):
                 ),
             }],
         )
-        import json as _json
         text = response.content[0].text.strip()
         # strip markdown fences if present
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:])
             text = text.rstrip("`").strip()
-        return _json.loads(text)
-    except Exception:
+        return json.loads(text)
+    except Exception as e:
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"outfits": []}
 
 
@@ -500,12 +594,12 @@ async def smart_declutter(data: DeclutterRequest):
             system=system,
             messages=[{"role": "user", "content": f"Unworn items:\n{items_desc}"}],
         )
-        import json as _json
         text = response.content[0].text.strip()
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:]).rstrip("`").strip()
-        return _json.loads(text)
-    except Exception:
+        return json.loads(text)
+    except Exception as e:
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"suggestions": [
             {"name": it.get("name","?"), "action": "sell",
              "reason": "never worn",
@@ -520,8 +614,12 @@ class StylistMessage(BaseModel):
 
 
 @app.post("/api/stylist/chat")
-async def stylist_chat(data: StylistMessage):
+async def stylist_chat(request: Request, data: StylistMessage):
     """AI Stylist: answers fashion questions with optional wardrobe context."""
+    ip = request.client.host if request.client else "unknown"
+    if not check_rate_limit(ip, "stylist_chat", limit=20):
+        logger.warning("Rate limit exceeded: stylist/chat from %s", ip)
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
     system = (
         "You are Abigail, the AI stylist inside AWEAR — a global fashion app. "
         "You help users style their wardrobe, suggest outfits, and give honest fashion advice. "
@@ -541,7 +639,8 @@ async def stylist_chat(data: StylistMessage):
             }],
         )
         return {"answer": response.content[0].text}
-    except Exception:
+    except Exception as e:
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"answer": "AI stylist unavailable right now 🙏 try again in a moment"}
 
 
@@ -576,18 +675,591 @@ async def moderate_comment(data: CommentModerationRequest):
             system=system,
             messages=[{"role": "user", "content": data.text}],
         )
-        import json as _json
         text = response.content[0].text.strip()
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:]).rstrip("`").strip()
-        parsed = _json.loads(text)
+        parsed = json.loads(text)
         severity = parsed.get("severity", "none")
         if severity not in ("none", "medium", "high"):
             severity = "none"
         return {"harmful": bool(parsed.get("harmful", False)), "severity": severity}
     except Exception as e:
-        print(f"[moderate] fallback to severity=none due to: {e}")
+        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         return {"harmful": False, "severity": "none", "fallback": True}
+
+
+# ---------------------------------------------------------------------------
+# Data API — products / posts / profiles
+# ---------------------------------------------------------------------------
+
+PRODUCTS_PATH = Path("static/data/products.json")
+POSTS_PATH = Path("static/data/posts.json")
+PROFILES_PATH = Path("static/data/profiles.json")
+
+# ---------------------------------------------------------------------------
+# SQLite — persistent storage for social data (likes, etc.)
+# ---------------------------------------------------------------------------
+
+DB_PATH = Path("data/awear.db")
+
+
+def _get_db() -> sqlite3.Connection:
+    """Open a connection to the SQLite DB. row_factory enables dict-like row access."""
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db() -> None:
+    """Create tables if they don't exist yet. Safe to call on every startup."""
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with _get_db() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS post_likes (
+                post_id   TEXT NOT NULL,
+                user_key  TEXT NOT NULL,
+                created_at TEXT DEFAULT (datetime('now')),
+                PRIMARY KEY (post_id, user_key)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS follows (
+                follower_key      TEXT NOT NULL,
+                followed_user_id  TEXT NOT NULL,
+                created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (follower_key, followed_user_id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS saves (
+                post_id    TEXT NOT NULL,
+                user_key   TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (post_id, user_key)
+            )
+        """)
+        conn.commit()
+    logger.info("DB init complete: %s", DB_PATH)
+
+# In-memory caches — loaded once at startup, not on every request.
+# Mutation is intentionally absent: these are read-only fixtures for the demo.
+_products_cache: list = []
+_posts_cache: list = []
+_profiles_cache: list = []
+
+
+@app.on_event("startup")
+async def load_data_files():
+    """Load JSON fixtures into memory once so every request is O(n) filter, not disk I/O.
+    Also initialises the SQLite DB schema on first run.
+    """
+    global _products_cache, _posts_cache, _profiles_cache
+    # DB init first — guaranteed before any request is served.
+    init_db()
+    try:
+        with open(PRODUCTS_PATH) as f:
+            _products_cache = json.load(f)
+        with open(POSTS_PATH) as f:
+            _posts_cache = json.load(f)
+        with open(PROFILES_PATH) as f:
+            _profiles_cache = json.load(f)
+        logger.info(
+            "Data loaded: %d products, %d posts, %d profiles",
+            len(_products_cache), len(_posts_cache), len(_profiles_cache),
+        )
+    except Exception as e:
+        # Log the error but don't crash — the endpoints will return empty lists
+        # and the main analyze/scan flow continues to work.
+        logger.error("Failed to load data files: %s", e)
+
+
+@app.get("/api/products")
+async def get_products(
+    category: Optional[str] = None,
+    color: Optional[str] = None,
+    in_stock: Optional[bool] = None,
+    limit: int = 50,
+    offset: int = 0,
+):
+    """Return paginated products with optional filtering by category, color, and stock status."""
+    products = _products_cache
+
+    if category:
+        products = [p for p in products if p.get("category") == category]
+    if color:
+        products = [p for p in products if p.get("color") == color]
+    if in_stock is not None:
+        products = [p for p in products if p.get("in_stock") == in_stock]
+
+    total = len(products)
+    return {
+        "items": products[offset: offset + limit],
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
+
+
+@app.get("/api/categories")
+async def get_categories():
+    """Return unique product categories with counts — for Marketplace filter chips."""
+    counts: dict[str, int] = {}
+    for p in _products_cache:
+        cat = p.get("category")
+        if cat:
+            counts[cat] = counts.get(cat, 0) + 1
+    return {
+        "items": [{"name": k, "count": v} for k, v in sorted(counts.items())],
+        "total": len(counts),
+    }
+
+
+@app.get("/api/posts")
+async def get_posts(
+    user_id: Optional[str] = None,
+    limit: int = 20,
+    offset: int = 0,
+):
+    """Return paginated posts, optionally filtered by user_id."""
+    posts = _posts_cache
+
+    if user_id:
+        posts = [p for p in posts if p.get("user_id") == user_id]
+
+    total = len(posts)
+    return {
+        "items": posts[offset: offset + limit],
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
+
+
+@app.get("/api/profiles")
+async def get_profiles(limit: int = 20, offset: int = 0):
+    """Return paginated profiles."""
+    profiles = _profiles_cache
+    total = len(profiles)
+    return {
+        "items": profiles[offset: offset + limit],
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
+
+
+@app.get("/api/profiles/{user_id}")
+async def get_profile(user_id: str):
+    """Return a single profile by user_id. 404 if not found."""
+    profile = next((p for p in _profiles_cache if p.get("id") == user_id), None)
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return profile
+
+
+# ---------------------------------------------------------------------------
+# Social layer — Likes (SQLite-backed, survives server restarts)
+# ---------------------------------------------------------------------------
+
+
+@app.post("/api/posts/{post_id}/like")
+async def toggle_like(post_id: str, request: Request):
+    """Toggle like on a post. Identified by IP (v1 — no auth).
+
+    Persisted in SQLite post_likes table — survives server restarts.
+
+    Returns:
+        post_id: str
+        liked: bool — the NEW state after toggle (True = now liked)
+        likes: int  — total like count from DB
+    """
+    # Guard: request.client can be None behind certain reverse proxies. (MG-005)
+    user_key = (request.client.host if request.client else None) or "anonymous"
+
+    # Validate post exists if we have a cache.
+    if _posts_cache:
+        post = next((p for p in _posts_cache if p["id"] == post_id), None)
+        if post is None:
+            raise HTTPException(status_code=404, detail="Post not found")
+
+    with _get_db() as conn:
+        existing = conn.execute(
+            "SELECT 1 FROM post_likes WHERE post_id = ? AND user_key = ?",
+            (post_id, user_key),
+        ).fetchone()
+
+        if existing:
+            conn.execute(
+                "DELETE FROM post_likes WHERE post_id = ? AND user_key = ?",
+                (post_id, user_key),
+            )
+            liked = False
+        else:
+            conn.execute(
+                "INSERT INTO post_likes (post_id, user_key) VALUES (?, ?)",
+                (post_id, user_key),
+            )
+            liked = True
+
+        conn.commit()
+
+        total_likes = conn.execute(
+            "SELECT COUNT(*) FROM post_likes WHERE post_id = ?",
+            (post_id,),
+        ).fetchone()[0]
+
+    # Emit notification to post owner when a new like is added (not on unlike).
+    # SF-004: direct function call — no HTTP to avoid ASGI deadlock.
+    if liked and _posts_cache:
+        post_obj = next((p for p in _posts_cache if p["id"] == post_id), None)
+        if post_obj:
+            _emit_notification(post_obj.get("user_id", ""), "like", user_key, post_id)
+
+    return {
+        "post_id": post_id,
+        "liked": liked,
+        "likes": total_likes,
+    }
+
+
+@app.get("/api/posts/{post_id}")
+async def get_post(post_id: str):
+    """Return a single post by id, with persistent like count from DB."""
+    post = next((p for p in _posts_cache if p["id"] == post_id), None)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    with _get_db() as conn:
+        db_likes = conn.execute(
+            "SELECT COUNT(*) FROM post_likes WHERE post_id = ?",
+            (post_id,),
+        ).fetchone()[0]
+
+    return {**post, "likes": db_likes}
+
+
+# ---------------------------------------------------------------------------
+# User stats endpoint
+# ---------------------------------------------------------------------------
+
+@app.get("/api/users/{user_id}/stats")
+async def get_user_stats(user_id: str):
+    """Compute lightweight stats for a user profile.
+
+    Returns:
+        user_id: str
+        post_count: int  — number of posts by this user
+        followers: int   — from profiles.json relationships (v1: static)
+        following: int   — from profiles.json relationships (v1: static)
+        total_likes: int — sum of likes across all user posts (SQLite post_likes)
+    """
+    # --- 404 guard: profile must exist ---
+    profile = next((p for p in _profiles_cache if p.get("id") == user_id), None)
+    if not profile:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # --- post_count ---
+    user_posts = [p for p in _posts_cache if p.get("user_id") == user_id]
+    post_count = len(user_posts)
+
+    # --- followers / following (v1: static from JSON) ---
+    followers = len(profile.get("followers", []))
+    following = len(profile.get("following", []))
+
+    # --- total_likes via SQLite ---
+    post_ids = [p["id"] for p in user_posts]
+    total_likes = 0
+
+    if post_ids:
+        placeholders = ",".join("?" * len(post_ids))
+        with _get_db() as conn:
+            row = conn.execute(
+                f"SELECT COUNT(*) FROM post_likes WHERE post_id IN ({placeholders})",
+                post_ids,
+            ).fetchone()
+            total_likes = row[0] if row else 0
+
+    return {
+        "user_id": user_id,
+        "post_count": post_count,
+        "followers": followers,
+        "following": following,
+        "total_likes": total_likes,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Follow / Unfollow — SQLite persistence (BE-004: in-memory → SQLite)
+# ---------------------------------------------------------------------------
+
+@app.post("/api/users/{user_id}/follow")
+async def toggle_follow(user_id: str, request: Request):
+    """Toggle follow status for a user. Returns new follow state + follower count."""
+    follower_key = (request.client.host if request.client else None) or "anon"
+
+    # Validate target user exists
+    target = next((p for p in _profiles_cache if p.get("id") == user_id), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM follows WHERE follower_key=? AND followed_user_id=?",
+            (follower_key, user_id),
+        ).fetchone()
+
+        if existing:
+            db.execute(
+                "DELETE FROM follows WHERE follower_key=? AND followed_user_id=?",
+                (follower_key, user_id),
+            )
+            following = False
+        else:
+            db.execute(
+                "INSERT INTO follows (follower_key, followed_user_id) VALUES (?, ?)",
+                (follower_key, user_id),
+            )
+            following = True
+
+        follow_delta = db.execute(
+            "SELECT COUNT(*) FROM follows WHERE followed_user_id=?", (user_id,)
+        ).fetchone()[0]
+
+    base_followers = len(target.get("followers", []))
+    return {
+        "user_id": user_id,
+        "following": following,
+        "followers": base_followers + follow_delta,
+    }
+
+
+@app.get("/api/users/{user_id}/follow-status")
+async def get_follow_status(user_id: str, request: Request):
+    """Return current follow status for the requesting client."""
+    follower_key = (request.client.host if request.client else None) or "anon"
+
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT 1 FROM follows WHERE follower_key=? AND followed_user_id=?",
+            (follower_key, user_id),
+        ).fetchone()
+
+    return {"user_id": user_id, "following": row is not None}
+
+
+@app.get("/api/search")
+async def search(q: str, limit: int = 20):
+    """
+    Cross-entity search. q = query string.
+    Searches products (name, brand, category), posts (caption, tags), profiles (display_name).
+    Returns combined results with entity_type field.
+    """
+    if not q or len(q.strip()) < 2:
+        raise HTTPException(status_code=400, detail="query must be at least 2 characters")
+
+    q_lower = q.lower().strip()
+    results = []
+
+    # Products
+    for p in _products_cache:
+        if any(q_lower in str(p.get(f, "")).lower()
+               for f in ["name", "brand", "category", "color"]):
+            results.append({**p, "entity_type": "product"})
+
+    # Posts
+    for p in _posts_cache:
+        caption = p.get("caption", "")
+        tags = " ".join(p.get("tags", []))
+        if q_lower in caption.lower() or q_lower in tags.lower():
+            results.append({**p, "entity_type": "post"})
+
+    # Profiles
+    for p in _profiles_cache:
+        if q_lower in p.get("display_name", "").lower() or q_lower in p.get("username", "").lower():
+            results.append({**p, "entity_type": "profile"})
+
+    return {
+        "query": q,
+        "items": results[:limit],
+        "total": len(results),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Save / Bookmark — SQLite persistence (mirrors likes pattern, BE-004)
+# ---------------------------------------------------------------------------
+
+@app.post("/api/posts/{post_id}/save")
+async def toggle_save(post_id: str, request: Request):
+    """Toggle bookmark for a post. Returns current saved state.
+
+    Uses IP-based user identification (v1, same as likes).
+    404 when _posts_cache is populated but post_id is not found.
+    When cache is empty (startup race), we allow the toggle without a 404
+    so the endpoint doesn't break before the first load_data_files completes.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+
+    if _posts_cache:
+        post = next((p for p in _posts_cache if p["id"] == post_id), None)
+        if post is None:
+            raise HTTPException(status_code=404, detail="Post not found")
+
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM saves WHERE post_id=? AND user_key=?",
+            (post_id, user_key),
+        ).fetchone()
+
+        if existing:
+            db.execute(
+                "DELETE FROM saves WHERE post_id=? AND user_key=?",
+                (post_id, user_key),
+            )
+            saved = False
+        else:
+            db.execute(
+                "INSERT INTO saves (post_id, user_key) VALUES (?, ?)",
+                (post_id, user_key),
+            )
+            saved = True
+
+    return {"post_id": post_id, "saved": saved}
+
+
+@app.get("/api/users/{user_id}/saves")
+async def get_saves(user_id: str, request: Request):
+    """Return all posts saved by this user (identified by IP, v1).
+
+    user_id path param is reserved for future auth — v1 uses the caller's IP
+    so the endpoint shape is already correct for Cycle 3 auth migration.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+
+    with _get_db() as db:
+        rows = db.execute(
+            "SELECT post_id FROM saves WHERE user_key=? ORDER BY created_at DESC",
+            (user_key,),
+        ).fetchall()
+
+    saved_ids = {row["post_id"] for row in rows}
+    saved_posts = [p for p in _posts_cache if p["id"] in saved_ids]
+    return {"items": saved_posts, "total": len(saved_posts)}
+
+
+# ---------------------------------------------------------------------------
+# Categories
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Comments — in-memory store (pre-DB, migration-ready)
+# { post_id: [ {id, user_key, text, created_at}, ... ] }
+# ---------------------------------------------------------------------------
+
+_comments_store: dict = {}
+
+
+@app.post("/api/posts/{post_id}/comments")
+async def add_comment(post_id: str, request: Request):
+    body = await request.json()
+    text = body.get("text", "").strip()
+    if not text or len(text) > 500:
+        raise HTTPException(status_code=400, detail="text required, max 500 chars")
+
+    # validate post exists
+    if _posts_cache:
+        post = next((p for p in _posts_cache if p["id"] == post_id), None)
+        if post is None:
+            raise HTTPException(status_code=404, detail="Post not found")
+
+    # moderation — direct call to moderate_comment() to avoid HTTP self-call deadlock
+    try:
+        mod_result = await moderate_comment(CommentModerationRequest(text=text))
+        # fallback:true means API key missing — fail-open per SF-003
+        if not mod_result.get("fallback", False):
+            if mod_result.get("harmful", False):
+                severity = mod_result.get("severity", "high")
+                logger.warning(
+                    "comment_rejected post=%s severity=%s preview=%r",
+                    post_id, severity, text[:80],
+                )
+                raise HTTPException(status_code=400, detail="content rejected")
+    except HTTPException:
+        raise
+    except Exception as e:
+        # moderation error — fail-open, log internally
+        logger.error("moderation_error post=%s err=%s", post_id, e)
+
+    user_key = (request.client.host if request.client else None) or "anon"
+    comment = {
+        "id": f"c_{post_id}_{len(_comments_store.get(post_id, []))}",
+        "user_key": user_key,
+        "text": text,
+        "created_at": __import__("datetime").datetime.utcnow().isoformat(),
+    }
+    _comments_store.setdefault(post_id, []).append(comment)
+    logger.info("comment_added post=%s id=%s", post_id, comment["id"])
+    return comment
+
+
+@app.get("/api/posts/{post_id}/comments")
+async def get_comments(post_id: str, limit: int = 20, offset: int = 0):
+    comments = _comments_store.get(post_id, [])
+    return {
+        "items": comments[offset: offset + limit],
+        "total": len(comments),
+    }
+
+
+# ---------------------------------------------------------------------------
+# In-memory notifications store
+# Structure: { user_id: [ {id, type, from_user_key, post_id, created_at, read}, ... ] }
+# SF-004: _emit_notification is called directly (NOT via HTTP) to avoid ASGI deadlock.
+# ---------------------------------------------------------------------------
+
+_notifications_store: dict = {}
+
+
+def _emit_notification(user_id: str, notif_type: str, from_key: str, post_id: str = None):
+    """Internal helper — call directly from other endpoints (NOT via HTTP — SF-004)."""
+    import datetime
+    if not user_id:
+        # No owner to notify — skip silently.
+        return
+    notif = {
+        "id": f"n_{user_id}_{len(_notifications_store.get(user_id, []))}",
+        "type": notif_type,        # "like" | "comment" | "follow"
+        "from_user_key": from_key,
+        "post_id": post_id,
+        "created_at": datetime.datetime.utcnow().isoformat(),
+        "read": False,
+    }
+    _notifications_store.setdefault(user_id, []).append(notif)
+    logger.info(
+        "notification emitted: user=%s type=%s from=%s post=%s",
+        user_id, notif_type, from_key, post_id,
+    )
+
+
+@app.get("/api/notifications/{user_id}")
+async def get_notifications(user_id: str, limit: int = 20, unread_only: bool = False):
+    """Return recent notifications for a user, newest first."""
+    notifs = _notifications_store.get(user_id, [])
+    if unread_only:
+        notifs = [n for n in notifs if not n["read"]]
+    return {
+        "items": notifs[-limit:][::-1],
+        "total": len(notifs),
+        "unread": sum(1 for n in notifs if not n["read"]),
+    }
+
+
+@app.post("/api/notifications/{user_id}/read-all")
+async def mark_all_read(user_id: str):
+    """Mark all notifications as read for a user."""
+    for n in _notifications_store.get(user_id, []):
+        n["read"] = True
+    return {"status": "ok"}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

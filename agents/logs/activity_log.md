@@ -57,6 +57,12 @@
 
 **⚠ ממצא מערכתי חדש:** כל 4 ה-worktrees בסיבוב הזה פיצלו מאותה נקודה ישנה (`290667f`) — כולל אלו שנשלחו **אחרי** commits מאוחרים יותר היו כבר על main. זה לא מקרי בודד — זה דפוס. נראה שיצירת ה-worktree לא תמיד מתבססת על main העדכני בזמן השיגור. דורש בדיקה של סטיב/תהליך השיגור עצמו, לא רק תיקון prompt חד-פעמי.
 
+| 2026-06-19 | ג'ף | CEO | ישיבת מנהלים — design crisis: אבחון root cause, הכרעות על data/enforcement/done, 7 כללי Instagram, action items לדולצ'ה/גבאנה/נטה/מארק | **הושלם — State B** (ג'ף ניהל + עדכן DESIGN_STANDARDS.md בעצמו) | `docs/DESIGN_STANDARDS.md` עודכן, `agents/logs/management_meeting_design_crisis_2026-06-19.md` נוצר, `agents/learnings.md` (CE-002) נוסף |
+| 2026-06-19 | אורן | Integration (תחת סטיב) | Cycle 1 Phase 4: חיבור data files לUI — products.json (65) + profiles.json (20) + posts.json (40) → SHOP_SEED + SEED_POSTS | **הושלם — ממתין למיזוג** — pre-commit hook עבר (JS syntax OK), fallback מלא לhardcoded seeds, fail-loud logging, renderFeed moved to finally{} | ענף `feat/cycle-1-data-integration`, commit `a93977d`, worktree `/Users/tamargrosz/oren-data-integration` |
+| 2026-06-19 | נטה | Design System (תחת מארק) | Cycle 1 Phase 4: עדכון tokens.css — shadow-accent → rose rgba, תיקון shadow-glow בו-זמנית, הוספת --success-surface. עדכון מקביל awear-tokens.json. עדכון R-002 ב-learnings.md | **הושלם — מוזג ישירות ל-main** (שינוי קטן, לא feature) | static/tokens.css, static/awear-tokens.json, agents/learnings.md |
+| 2026-06-19 | וראן | Mobile Lead | Cycle 1 Phase 4: הכרעת ארכיטקטורה מובייל — navigation stack, state management, data types; dispatch לדנה + רועי | **הושלם** — navigation shim קיים + React Navigation בהמשך; Context API; PostCard + UserProfile types מוגדרים; dispatch ברור עם Definition of Done לדנה (compression + onPress→Wardrobe) ולרועי (FeedScreen + getItemLayout), 24h deadline | `agents/plans/mobile_architecture_cycle1.md` |
+| 2026-06-19 | שירה | Social Features (תחת איילון) | Cycle 1: הצעת thresholds ל-moderation — pending אישור איילון. curl test: endpoint מגיב, Claude API fallback (API key לא זמין בסביבה) → content מזיק עובר כ-none עם `"fallback":true`. **זה gap פתוח — לא "הושלם"** עד שאיילון מאשר thresholds + API key תקין בפרודקשן | `agents/plans/moderation_thresholds_proposal.md` — **ממתין לאישור איילון על 3 שאלות פתוחות** |
+
 ---
 
 ## איך זה עובד בפועל
