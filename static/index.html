@@ -477,6 +477,33 @@
   @keyframes pi-shimmer { from { background-position: 220% 0; } to { background-position: -220% 0; } }
   .pi-img { opacity: 0; transition: opacity .35s ease; }
   .pi-img.loaded { opacity: 1; }
+
+  /* ── Skeleton Loading System ─────────────────────────────────────────── */
+  /* DS-004: fallback values defined here so skeleton works even if tokens.css fails to load */
+  .skeleton {
+    background: var(--card, #17171f);
+    background-image: linear-gradient(
+      90deg,
+      var(--card, #17171f) 0%,
+      rgba(255,255,255,.06) 50%,
+      var(--card, #17171f) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: inherit;
+  }
+  @keyframes skeleton-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  /* Card skeleton — matches feed-card and sf-card aspect ratios */
+  .skeleton-card { width: 100%; aspect-ratio: 4/5; border-radius: 12px; }
+  /* Text line skeletons */
+  .skeleton-text { height: 14px; border-radius: 4px; margin: 6px 0; width: 100%; }
+  .skeleton-text.short { width: 60%; }
+  .skeleton-text.xshort { width: 35%; }
+  /* Avatar circle */
+  .skeleton-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; }
   .item-match-invite { font-size: 11px; font-weight: 700; }
   .item-hero .img-fallback { width: 100%; height: 100%; background: #fbfbfd; color: #b8b8c4; }
   .item-hero-cat { position: absolute; top: 12px; right: 12px; z-index: 2;
@@ -4695,7 +4722,7 @@
       const wardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
       if(!wardrobe.length){
         const em=document.createElement('div');em.className='feed-empty';
-        em.innerHTML=`<div style="font-size:48px;text-align:center">🪄</div><p style="margin-top:12px;font-weight:800">סרקי לוק ראשון<br/>כדי לראות כמה מהלוק כבר יש לך</p>`;
+        em.innerHTML=`<div style="display:flex;justify-content:center;color:var(--muted)">${icon('sparkle',52)}</div><p style="margin-top:12px;font-weight:800">סרקי לוק ראשון<br/>כדי לראות כמה מהלוק כבר יש לך</p>`;
         host.appendChild(em); return;
       }
       const wardTags=new Set(wardrobe.flatMap(i=>(i.style_tags||[]).map(t=>t.toLowerCase())));
@@ -4715,9 +4742,42 @@
     bindFeedMoreMenu(host);
   };
 
+  // ── Skeleton helpers ──────────────────────────────────────────────────────
+  // Returns HTML for a single product card skeleton (matches sf-card / wardrobe card)
+  function skeletonCard() {
+    return `<div class="skeleton skeleton-card" aria-hidden="true"></div>`;
+  }
+
+  // Returns HTML for a full feed card skeleton (header + image + text lines)
+  function skeletonFeedCard() {
+    return `
+      <div class="feed-card" style="padding:16px" aria-hidden="true">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+          <div class="skeleton skeleton-avatar"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+            <div class="skeleton skeleton-text" style="width:42%"></div>
+            <div class="skeleton skeleton-text xshort"></div>
+          </div>
+        </div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-text" style="margin-top:12px;width:80%"></div>
+        <div class="skeleton skeleton-text short"></div>
+      </div>`;
+  }
+
   // ---- Async data init: fetch JSON data files and wire into app arrays ----
   // Runs after DOM ready; falls back to hardcoded seeds if fetch fails (no silent errors).
   (async function initDataFromFiles() {
+    // Show skeletons immediately — frame 1, before any fetch
+    const feedHost = document.getElementById('feed-scroll');
+    if (feedHost) {
+      feedHost.innerHTML = Array(6).fill(0).map(() => skeletonFeedCard()).join('');
+    }
+    const shopGrid = document.getElementById('sf-grid');
+    if (shopGrid) {
+      shopGrid.innerHTML = Array(8).fill(0).map(() => skeletonCard()).join('');
+    }
+
     try {
       const [feedData, productData] = await Promise.all([
         loadFeedData(),
@@ -4995,7 +5055,7 @@
     const items = buildShopFeed(sfTab, wardrobe, profile);
 
     if (!items.length) {
-      grid.innerHTML = `<div class="sf-empty">אין פריטים בקטגוריה זו כרגע 🌀</div>`;
+      grid.innerHTML = `<div class="sf-empty">אין פריטים בקטגוריה זו כרגע</div>`;
       return;
     }
 
@@ -5019,7 +5079,7 @@
               <div class="sf-price">₪${it.price}</div>
               ${disc ? `<div class="sf-orig">₪${it.orig}</div><div class="sf-discount">-${disc}%</div>` : ''}
             </div>
-            ${compatTxt ? `<div class="sf-compat">✨ ${esc(compatTxt)}</div>` : ''}
+            ${compatTxt ? `<div class="sf-compat">${icon('sparkle',12)} ${esc(compatTxt)}</div>` : ''}
           </div>
         </div>`;
     }).join('');
