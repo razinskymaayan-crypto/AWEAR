@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { FlatList, RefreshControl, View, Image, Text, StyleSheet } from 'react-native';
 import { t } from '../i18n';
 import { useApp } from '../contexts/AppContext';
+import { colors, typography, spacing, radii } from '../tokens';
 
 // CARD_HEIGHT is fixed so getItemLayout can skip measurement entirely.
 // 36 (avatar) + 12*2 (header padding) + 360 (image) + 12*2 (footer padding)
@@ -101,8 +102,8 @@ function PostCard({ item }) {
 //
 // pull-to-refresh: RefreshControl with 800ms simulated delay.
 // Future: onRefresh will call GET /api/posts and update feedPosts in AppContext.
-// tintColor/#e8526a = AWEAR rose accent (from tokens, not hardcoded by choice —
-// RefreshControl does not support CSS variables, so the hex must be literal here).
+// tintColor = colors.accent (rose). RefreshControl accepts JS string values directly,
+// so token reference works here — no CSS variable limitation in React Native.
 export default function FeedScreen() {
   // AppContext: locale drives future t(key, locale) calls; feedPosts will hold
   // API results when backend integration lands (Cycle 2).
@@ -140,8 +141,8 @@ export default function FeedScreen() {
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-          tintColor="#e8526a"
-          colors={['#e8526a']}
+          tintColor={colors.accent}
+          colors={[colors.accent]}
         />
       }
     />
@@ -151,30 +152,30 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   list: {
     flex: 1,
-    backgroundColor: '#12101a',
+    backgroundColor: colors.surface,  // --surface (#161318) — feed background layer
   },
   card: {
     marginBottom: CARD_MARGIN,
-    backgroundColor: '#1e1a22',
+    backgroundColor: colors.card,  // --card (#1e1a22)
     // No shadow — shadows are expensive on Android and not in spec for feed cards
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    gap: 8,
+    paddingHorizontal: spacing.s3,  // 12
+    paddingVertical: spacing.s3,    // 12
+    gap: spacing.s2,                // 8
   },
   avatar: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: radii.pill,  // 999 — fully circular at any explicit width/height
     // explicit width/height = no layout measurement = no reflow
   },
   username: {
-    color: '#fbfbfd',
+    color: colors.fg,               // --text (#fbfbfd)
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: typography.body,      // 14
   },
   image: {
     width: '100%',
@@ -182,16 +183,16 @@ const styles = StyleSheet.create({
     // explicit height matches CARD_HEIGHT calculation
   },
   footer: {
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.s3,  // 12
+    paddingVertical: spacing.s3,    // 12
   },
   caption: {
-    color: '#fbfbfd',
-    fontSize: 14,
-    marginBottom: 4,
+    color: colors.fg,               // --text (#fbfbfd)
+    fontSize: typography.body,      // 14
+    marginBottom: spacing.s1,       // 4
   },
   stats: {
-    color: '#8a8a9a',
-    fontSize: 12,
+    color: colors.muted,            // --muted (#8a8498) — nearest token to #8a8a9a
+    fontSize: typography.caption,   // 12
   },
 });
