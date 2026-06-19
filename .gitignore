@@ -2,6 +2,9 @@
 .env
 .env.*
 *.key
+google_credentials.json
+google_token.json
+client_secret_*.json
 
 # Python virtual envs
 .venv/
@@ -16,8 +19,9 @@ __pycache__/
 .tg_chat
 .tg_inbox
 
-# Runtime data
+# Runtime data — regenerated, not source of truth
 data/awear.db
+agents/data/dashboard_data.json
 
 # OS
 .DS_Store
