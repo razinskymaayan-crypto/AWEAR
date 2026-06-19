@@ -2453,6 +2453,38 @@
     return false;
   }
 
+  // ---- like API integration ----
+  // Called after optimistic UI update. Syncs with /api/posts/{id}/like and updates count from server.
+  // Fail loud: any API error is shown to user — no silent failure (Oren principle).
+  async function togglePostLike(postId,btn){
+    if(!postId)return;
+    try{
+      const res=await fetch(`/api/posts/${encodeURIComponent(postId)}/like`,{method:'POST'});
+      if(!res.ok){
+        // server rejected — revert optimistic state and inform user
+        const errText=await res.text().catch(()=>'שגיאת שרת');
+        showToast(`שגיאה בלייק (${res.status})`);
+        console.error('[like] API error',res.status,errText);
+        // revert: flip the like state back
+        const isNowLiked=btn.classList.contains('liked');
+        if(isNowLiked){LIKES.delete(postId);}else{LIKES.add(postId);}
+        saveSet('awear_likes',LIKES);
+        const ico=btn.querySelector('.fca-ico');
+        const revOn=LIKES.has(postId);
+        ico.innerHTML=icon(revOn?'heartFill':'heart',22);
+        btn.classList.toggle('liked',revOn);
+        return;
+      }
+      const data=await res.json();
+      // sync count from server (authoritative)
+      const cnt=btn.querySelector('span');
+      if(cnt&&typeof data.likes==='number')cnt.textContent=fmtN(data.likes);
+    }catch(err){
+      showToast('לא ניתן להתחבר לשרת');
+      console.error('[like] fetch failed',err);
+    }
+  }
+
   feedScroll.addEventListener('click',e=>{
     // item pill — open item detail sheet
     const pill=e.target.closest('.fc-pill');
@@ -2483,6 +2515,7 @@
       action.classList.toggle('liked',on);
       if(cnt)cnt.textContent=fmtN((post.likes||0)+(on?1:0));
       if(on){ico.style.transform='scale(1.35)';setTimeout(()=>ico.style.transform='',200);}
+      togglePostLike(id,action);
     }
     if(type==='save'){
       const on=!SAVED.has(id);
