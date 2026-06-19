@@ -13,6 +13,13 @@
     "capturedPreviewRetake": "צלם שוב",
     "capturedPreviewUse": "השתמש בתמונה"
   },
+  "profile": {
+    "posts": "לוקים",
+    "followers": "עוקבים",
+    "following": "עוקב",
+    "addLook": "הוסיפי לוק",
+    "editProfile": "ערכי פרופיל"
+  },
   "cameraPermission": {
     "iosUsageDescription": "AWEAR משתמשת במצלמה שלך כדי לסרוק בגדים לארון הדיגיטלי שלך.",
     "title": "ראי את הארון שלך, מיידית",
