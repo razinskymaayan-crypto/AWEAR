@@ -89,12 +89,6 @@
     "forYou": "For You",
     "error": "Could not load feed. Pull down to retry."
   },
-  "wardrobe": {
-    "newItem": "Just added",
-    "emptyTitle": "Your closet is empty",
-    "emptyBody": "Scan your first outfit to build your digital wardrobe",
-    "cta": "Scan a look"
-  },
   "register": {
     "title": "Create Account",
     "email": "Email",
