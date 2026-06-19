@@ -19,6 +19,13 @@
     "emptyBody": "Scan your first outfit to build your digital wardrobe",
     "cta": "Scan a look"
   },
+  "profile": {
+    "posts": "Posts",
+    "followers": "Followers",
+    "following": "Following",
+    "addLook": "Add Look",
+    "editProfile": "Edit Profile"
+  },
   "cameraPermission": {
     "iosUsageDescription": "AWEAR uses your camera to scan clothing into your digital wardrobe.",
     "title": "See your wardrobe, instantly",
