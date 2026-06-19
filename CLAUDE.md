@@ -37,12 +37,12 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 | Design standards | `docs/DESIGN_STANDARDS.md` |
 | Domain knowledge | `.claude/agents/knowledge/ds.md` / `be.md` / `mb.md` / `sf.md` / `mg.md` |
 | Research index | `.claude/agents/knowledge/research.md` — check before doing any research |
-| Activity log | `agents/activity_log.md` (last 20 entries — check for concurrent file edits) |
-| Specs / plans | `agents/plans/` |
-| Archive log | `agents/activity_log_archive.md` |
+| Activity log | `.claude/agents/activity_log.md` (last 20 entries — check for concurrent file edits) |
+| Specs / plans | `.claude/agents/plans/` |
+| Archive log | `.claude/agents/activity_log_archive.md` |
 
 ## Before starting — 3 steps, always
-1. **Check** `agents/activity_log.md` last 5 entries — is anyone else editing the same file?
+1. **Check** `.claude/agents/activity_log.md` last 5 entries — is anyone else editing the same file?
 2. **Read** `.claude/agents/knowledge/[your-domain].md` — `ds` / `be` / `mb` / `sf` / `mg`
 3. **Grep before Read** — for large files (`index.html`, `app.py`), grep the target first, then read only the relevant lines with `offset`+`limit`
 
