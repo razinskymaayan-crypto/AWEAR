@@ -1,6 +1,7 @@
 # Secrets — never commit
 .env
 .env.*
+!.env.example
 *.key
 google_credentials.json
 google_token.json
