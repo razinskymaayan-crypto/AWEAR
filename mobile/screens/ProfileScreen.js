@@ -1,6 +1,9 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { t } from '../i18n';
+
+const API_BASE = 'http://localhost:8000';
+const DEFAULT_USER_ID = 'user_1'; // v1 — no auth yet
 
 const MOCK_PROFILE = {
   id: 'current_user',
@@ -8,23 +11,45 @@ const MOCK_PROFILE = {
   display_name: 'נועה',
   avatar_url: 'https://randomuser.me/api/portraits/women/44.jpg',
   bio: 'אוהבת מינימליזם ◦ תל אביב',
-  followers: 1240,
-  following: 380,
-  posts_count: 23,
   verified: false,
 };
 
 function StatBox({ label, value }) {
   return (
     <View style={styles.statBox}>
-      <Text style={styles.statValue}>{value.toLocaleString()}</Text>
+      <Text style={styles.statValue}>{Number(value || 0).toLocaleString()}</Text>
       <Text style={styles.statLabel}>{label}</Text>
     </View>
   );
 }
 
 export default function ProfileScreen({ navigation }) {
-  const p = MOCK_PROFILE;
+  const [profile, setProfile] = useState(null);
+  const [stats, setStats] = useState({ post_count: 0, followers: 0, following: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      fetch(`${API_BASE}/api/profiles/${DEFAULT_USER_ID}`).then(r => r.json()),
+      fetch(`${API_BASE}/api/users/${DEFAULT_USER_ID}/stats`).then(r => r.json()),
+    ])
+      .then(([profileData, statsData]) => {
+        setProfile(profileData);
+        setStats(statsData);
+      })
+      .catch(() => {
+        // silent fail — MOCK_PROFILE as fallback, stats remain zeroed
+        setProfile(MOCK_PROFILE);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator style={styles.loader} />;
+  }
+
+  const p = profile || MOCK_PROFILE;
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -35,11 +60,11 @@ export default function ProfileScreen({ navigation }) {
         {p.bio ? <Text style={styles.bio}>{p.bio}</Text> : null}
       </View>
 
-      {/* Stats */}
+      {/* Stats — from API, not MOCK */}
       <View style={styles.statsRow}>
-        <StatBox label={t('profile.posts')} value={p.posts_count} />
-        <StatBox label={t('profile.followers')} value={p.followers} />
-        <StatBox label={t('profile.following')} value={p.following} />
+        <StatBox label={t('profile.posts')} value={stats.post_count} />
+        <StatBox label={t('profile.followers')} value={stats.followers} />
+        <StatBox label={t('profile.following')} value={stats.following} />
       </View>
 
       {/* CTA */}
@@ -56,6 +81,7 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  loader: { flex: 1 },
   container: { flex: 1, backgroundColor: '#0e0c0f' },
   header: { alignItems: 'center', paddingVertical: 32, paddingHorizontal: 24 },
   avatar: { width: 88, height: 88, borderRadius: 44, marginBottom: 12 },
