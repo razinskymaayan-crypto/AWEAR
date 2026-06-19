@@ -45,7 +45,7 @@
 
 | מבקר | מה הוא בודק | כיצד |
 |------|-------------|------|
-| **גבאנה** | עיצוב + visual quality | audit לפי 7 כללי DESIGN_STANDARDS.md + שאלת העל: "יעלה ב-Instagram story?" |
+| **גבאנה** | עיצוב + visual quality | audit לפי VISUAL_VISION.md (חלק ט׳) + שאלת העל: "יעלה ב-Instagram/Pinterest/Zara story?" |
 | **סטיב** | קוד + ארכיטקטורה | checklist: SQL injection, TDZ, inline styles, 3-layer coverage |
 | **איילון** | חוויית משתמש + scope | "האם זה מה שמשתמשת 18-35 ת"א צריכה עכשיו?" |
 | **מארק** | כיוון עיצובי + עקביות | "האם זה עקבי עם design language שהגדרנו?" |

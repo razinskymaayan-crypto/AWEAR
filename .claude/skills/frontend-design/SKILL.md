@@ -52,7 +52,7 @@ Implement working code that is:
 ## Aesthetics — What to Focus On
 
 **Typography:**
-Use the type scale from `DESIGN_STANDARDS.md`. Hierarchy matters: one clear heading, one body
+Use the type scale from `VISUAL_VISION.md`. Hierarchy matters: one clear heading, one body
 weight, one accent weight per screen — no more. Avoid `font-weight: 500` everywhere (that's the
 typographic equivalent of no hierarchy).
 
@@ -73,7 +73,7 @@ create depth without complexity. Asymmetry is allowed; chaos is not.
 **Backgrounds and depth:**
 The established palette is dark. Within that: subtle gradients (`--bg` to `--card`), thin
 borders (`1px solid var(--line)`), and carefully layered shadows create atmosphere without
-violating the system. No grain overlays or noise textures unless explicitly in `DESIGN_STANDARDS.md`.
+violating the system. No grain overlays or noise textures unless explicitly in `VISUAL_VISION.md`.
 
 ## What to Avoid
 

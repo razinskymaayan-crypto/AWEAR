@@ -175,7 +175,7 @@ page.evaluate("document.documentElement.scrollWidth > document.documentElement.c
 - Body text: **minimum 16px** on mobile (anything below is a zoom trap)
 - Line height: **1.5–1.75** for paragraphs, 1.2–1.3 for headings
 - Line length: **65–75 characters max** — use `max-width: 65ch` on text containers
-- Use the type scale from `docs/DESIGN_STANDARDS.md`, never freehand sizes
+- Use the type scale from `docs/VISUAL_VISION.md` (חלק ג׳), never freehand sizes
 
 ```css
 /* ✅ Content containers with readable line length */

@@ -104,7 +104,7 @@ proposals שלך נכתבים ב-`agents/plans/`. קריאה חופשית בכל
 
 | מתי | סקיל | למה |
 |-----|------|-----|
-| בדיקת עקביות tokens בקוד SPA | `frontend-design` | הסטנדרט שאת אוכפת — `docs/DESIGN_STANDARDS.md`, `var(--token-name)` |
+| בדיקת עקביות tokens בקוד SPA | `frontend-design` | הסטנדרט שאת אוכפת — `docs/VISUAL_VISION.md`, `var(--token-name)` |
 | ביקורת PR שמוסיף CSS | `wire-it-up` | token file קיים ≠ CSS variable מחובר ב-HTML בפועל |
 | אחרי שינוי token גלובלי | `verify-rendering` | שינוי token אחד יכול לשבור ≥10 מסכים — Playwright לאחר כל שינוי גלובלי |
 

@@ -65,8 +65,8 @@ grep -n "\-\-bg" static/tokens.css static/index.html
 # Compare. If they differ, tokens.css is wrong, not index.html.
 ```
 
-For design tokens: `docs/DESIGN_STANDARDS.md` is the canonical truth. Tokens must match it.
-The running app (`static/index.html` inline styles) is not the source of truth — the standard doc is.
+For design tokens: `docs/VISUAL_VISION.md` is the canonical truth (Design Master Plan). Tokens must match it.
+The running app (`static/index.html` inline styles) is not the source of truth — the master plan is.
 
 ## The definition of "done"
 
