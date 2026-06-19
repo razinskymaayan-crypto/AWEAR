@@ -18,6 +18,7 @@
   --fg:            #f0ecf5;
   --muted:         #8a8498;
   --success:         #52c97a;
+  --success-dark:    #22c55e;  /* for gradients/hover */
   --success-surface: rgba(82,201,122,.12);
   --warning:       #e8a84a;
   --danger:        #e05252;
