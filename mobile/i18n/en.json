@@ -50,5 +50,13 @@
     "emptyTitle": "Your closet is empty",
     "emptyBody": "Scan your first outfit to build your digital wardrobe",
     "cta": "Scan a look"
+  },
+  "register": {
+    "title": "Create Account",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "cta": "Create Account",
+    "skip": "Continue without account"
   }
 }
