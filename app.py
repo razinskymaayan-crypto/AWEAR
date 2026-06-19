@@ -751,6 +751,20 @@ async def get_products(
     }
 
 
+@app.get("/api/categories")
+async def get_categories():
+    """Return unique product categories with counts — for Marketplace filter chips."""
+    counts: dict[str, int] = {}
+    for p in _products_cache:
+        cat = p.get("category")
+        if cat:
+            counts[cat] = counts.get(cat, 0) + 1
+    return {
+        "items": [{"name": k, "count": v} for k, v in sorted(counts.items())],
+        "total": len(counts),
+    }
+
+
 @app.get("/api/posts")
 async def get_posts(
     user_id: Optional[str] = None,
