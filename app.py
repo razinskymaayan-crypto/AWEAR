@@ -16,7 +16,6 @@ import base64
 import io
 import json
 import logging
-import os
 import sqlite3
 import time
 import traceback
@@ -696,6 +695,35 @@ PRODUCTS_PATH = Path("static/data/products.json")
 POSTS_PATH = Path("static/data/posts.json")
 PROFILES_PATH = Path("static/data/profiles.json")
 
+# ---------------------------------------------------------------------------
+# SQLite — persistent storage for social data (likes, etc.)
+# ---------------------------------------------------------------------------
+
+DB_PATH = Path("data/awear.db")
+
+
+def _get_db() -> sqlite3.Connection:
+    """Open a connection to the SQLite DB. row_factory enables dict-like row access."""
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db() -> None:
+    """Create tables if they don't exist yet. Safe to call on every startup."""
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with _get_db() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS post_likes (
+                post_id   TEXT NOT NULL,
+                user_key  TEXT NOT NULL,
+                created_at TEXT DEFAULT (datetime('now')),
+                PRIMARY KEY (post_id, user_key)
+            )
+        """)
+        conn.commit()
+    logger.info("DB init complete: %s", DB_PATH)
+
 # In-memory caches — loaded once at startup, not on every request.
 # Mutation is intentionally absent: these are read-only fixtures for the demo.
 _products_cache: list = []
@@ -705,8 +733,12 @@ _profiles_cache: list = []
 
 @app.on_event("startup")
 async def load_data_files():
-    """Load JSON fixtures into memory once so every request is O(n) filter, not disk I/O."""
+    """Load JSON fixtures into memory once so every request is O(n) filter, not disk I/O.
+    Also initialises the SQLite DB schema on first run.
+    """
     global _products_cache, _posts_cache, _profiles_cache
+    # DB init first — guaranteed before any request is served.
+    init_db()
     try:
         with open(PRODUCTS_PATH) as f:
             _products_cache = json.load(f)
@@ -795,72 +827,77 @@ async def get_profile(user_id: str):
 
 
 # ---------------------------------------------------------------------------
-# Likes persistence — SQLite (replaces previous in-memory _likes_store dict)
+# Social layer — Likes (SQLite-backed, survives server restarts)
 # ---------------------------------------------------------------------------
-
-DB_PATH = Path("data/awear.db")
-DB_PATH.parent.mkdir(exist_ok=True)
-
-
-def _get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-def _init_db():
-    with _get_db() as db:
-        db.execute("""
-            CREATE TABLE IF NOT EXISTS likes (
-                post_id TEXT NOT NULL,
-                user_key TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (post_id, user_key)
-            )
-        """)
-
-
-_init_db()
 
 
 @app.post("/api/posts/{post_id}/like")
 async def toggle_like(post_id: str, request: Request):
-    user_key = request.client.host
+    """Toggle like on a post. Identified by IP (v1 — no auth).
 
-    with _get_db() as db:
-        existing = db.execute(
-            "SELECT 1 FROM likes WHERE post_id=? AND user_key=?",
-            (post_id, user_key)
+    Persisted in SQLite post_likes table — survives server restarts.
+
+    Returns:
+        post_id: str
+        liked: bool — the NEW state after toggle (True = now liked)
+        likes: int  — total like count from DB
+    """
+    # Guard: request.client can be None behind certain reverse proxies. (MG-005)
+    user_key = (request.client.host if request.client else None) or "anonymous"
+
+    # Validate post exists if we have a cache.
+    if _posts_cache:
+        post = next((p for p in _posts_cache if p["id"] == post_id), None)
+        if post is None:
+            raise HTTPException(status_code=404, detail="Post not found")
+
+    with _get_db() as conn:
+        existing = conn.execute(
+            "SELECT 1 FROM post_likes WHERE post_id = ? AND user_key = ?",
+            (post_id, user_key),
         ).fetchone()
 
         if existing:
-            db.execute("DELETE FROM likes WHERE post_id=? AND user_key=?", (post_id, user_key))
+            conn.execute(
+                "DELETE FROM post_likes WHERE post_id = ? AND user_key = ?",
+                (post_id, user_key),
+            )
             liked = False
         else:
-            db.execute("INSERT INTO likes (post_id, user_key) VALUES (?, ?)", (post_id, user_key))
+            conn.execute(
+                "INSERT INTO post_likes (post_id, user_key) VALUES (?, ?)",
+                (post_id, user_key),
+            )
             liked = True
 
-        count = db.execute("SELECT COUNT(*) FROM likes WHERE post_id=?", (post_id,)).fetchone()[0]
+        conn.commit()
 
-    post = next((p for p in _posts_cache if p["id"] == post_id), None)
-    if not post:
-        raise HTTPException(status_code=404, detail="Post not found")
+        total_likes = conn.execute(
+            "SELECT COUNT(*) FROM post_likes WHERE post_id = ?",
+            (post_id,),
+        ).fetchone()[0]
 
-    base_likes = post.get("likes", 0)
-    return {"post_id": post_id, "liked": liked, "likes": base_likes + count}
+    return {
+        "post_id": post_id,
+        "liked": liked,
+        "likes": total_likes,
+    }
 
 
 @app.get("/api/posts/{post_id}")
 async def get_post(post_id: str):
-    """Return a single post by id, with live like count merged in."""
+    """Return a single post by id, with persistent like count from DB."""
     post = next((p for p in _posts_cache if p["id"] == post_id), None)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
-    with _get_db() as db:
-        likes_extra = db.execute(
-            "SELECT COUNT(*) FROM likes WHERE post_id=?", (post_id,)
+
+    with _get_db() as conn:
+        db_likes = conn.execute(
+            "SELECT COUNT(*) FROM post_likes WHERE post_id = ?",
+            (post_id,),
         ).fetchone()[0]
-    return {**post, "likes": post.get("likes", 0) + likes_extra}
+
+    return {**post, "likes": db_likes}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
