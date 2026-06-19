@@ -93,6 +93,11 @@
 **לקח:** כל in-memory dict שמכיל state שמשנה משתמשים = חוב שנשמד ב-restart. pattern migration: (1) init_db() → CREATE TABLE IF NOT EXISTS; (2) _get_db() עם row_factory + parameterized queries; (3) init_db() נקרא בstartup event לפני שאר האתחול; (4) data/ directory נוצר עם mkdir(parents=True, exist_ok=True). commit קיים — לא "כבר עשינו בעבר" אלא "תבנית פעילה".
 **מנגנון:** לפני כל in-memory store חדש — שאל "האם נתון זה צריך לשרוד restart?" אם כן → SQLite מהיום הראשון.
 
+### BE-005 | saves/bookmarks = SQLite מהיום הראשון, לא in-memory
+**מקור:** sam, feat/save-endpoint (2026-06-19) — LGTM confirmed
+**לקח:** saves, likes, comments = SQLite מיום 1, לא in-memory. כשdispatch מציע dict לנתון שuser מצפה שישרוד — זו נקודת בדיקה, לא הוראה עיוורת. dispatch הציע `_saves_store: dict = {}` (in-memory). שאלתי "האם נתון זה צריך לשרוד restart?" — כן, bookmarks הם נתון משמעותי למשתמש. הוחלט מהיום הראשון על SQLite. dict לא נכנס לקוד כלל.
+**מנגנון:** לפני כל store חדש — שאל את שאלת BE-004. אם התשובה "כן" או "אולי" — SQLite. dispatch שמציע dict = נקודת בדיקה, לא הוראה עיוורת.
+
 ### BE-003 | schema owner = סאם. integration = אורן. לא מתחלפים.
 **מקור:** oren_retrospective (2026-06-19)
 **לקח:** אורן מצא בעיות schema (look_total_usd), סאם ביצע. הסדר נכון. אך: אורן לא מחליט על schema, סאם לא מחליט על integration. הגבול ברור — ולא משתנה תחת לחץ.
@@ -147,6 +152,26 @@
 **מקור:** dolce — P0 fix cycle 1 (2026-06-19)
 **לקח:** `icon()` function מחזירה string — עובדת רק בJS template literals בתוך JS functions. ב-static HTML sections (שורות מחוץ ל-JS) — `${icon(...)}` ייכתב כטקסט ולא יפורש. headers שנמצאים ב-static HTML חייבים: (א) inline SVG ישיר, או (ב) JS init function שמחליפה textContent ב-innerHTML עם icon().
 **מנגנון:** לפני כל emoji → icon() — בדוק אם הקוד ב-JS template literal (function). Static HTML → inline SVG. JS template → icon().
+
+### DS-010 | search_query > emoji ב-data objects — productImage() לא משתמש ב-emoji
+**מקור:** dolce — P1-C fix cycle 2 (2026-06-19), Gabbana feedback
+**לקח:** SHOP_SEED items כללו `emoji:` field שלא שימש את `productImage()` (שמשתמש ב-`search_query || q || name`). emoji field ב-data objects = dead weight שגורם ל-grep false-positives ומסכן שישתמשו בו כ-fallback בטעות. search_query מדויק באנגלית = תמונת מוצר ממוקדת יותר מ-pollinations. badge strings עם emoji (badge:'חם🔥') = P0 — badge הוא UI chrome.
+**מנגנון:** כל data object עם product — חייב `search_query` (לא emoji). אם רואים `emoji:` ב-data object → מחק, הוסף `search_query`. badge strings שמכילים emoji → טקסט בלבד.
+
+### DS-012 | emoji בdata objects = time bomb — בדוק גם SF_ITEMS ו-STYLISTS_DATA
+**מקור:** dolce — P1-C fix cycle גבאנה (2026-06-19)
+**לקח:** תיקון MP_SEED emoji → search_query חשף שאותו pattern קיים ב-SF_ITEMS (20 פריטים) ו-STYLISTS_DATA (6 stylists) ובstories data (7 rows). cycle זה הוגבל ל-MP_SEED בלבד לפי scope מארק — אבל ה-debt ידוע ומתועד. toast strings עם ✓ גם הם P0-adjacent — נקיון שלהם לא מאחר.
+**מנגנון (cycle הבא):** `grep -n "emoji:'[^']" static/index.html` — SF_ITEMS ו-STYLISTS_DATA → replace עם `search_query` + `avatar_bg` (ל-stylists) בלבד. stories data → avatar initials fallback.
+
+### DS-011 | RefreshControl ב-RN — tokens עובדים, CSS vars לא
+**מקור:** netta — feat/rn-token-adoption (2026-06-19)
+**לקח:** FeedScreen.js ב-mobile כלל comment "hex חייב כי CSS vars לא נתמכות ב-RefreshControl". נכון לweb — שגוי לRN. `RefreshControl` מקבל JS string value — לכן `colors.accent` (מtokens.js) עובד ישירות, ללא CSS variable. ההבחנה: CSS var = web runtime, tokens.js = JS constants = עובדים בכל JS context.
+**מנגנון:** לפני כל "חייב hardcoded" ב-RN StyleSheet — שאל: "CSS var limitation, או JS string?" JS string → token עובד. CSS var → RN לא תומך, tokens.js כן.
+
+### DS-013 | Gabbana audit = git diff, לא קובץ שלם
+**מקור:** simulation probe — gabbana (2026-06-19)
+**לקח:** audit של index.html השלם עולה ~82,000 טוקנים. audit של `git diff main...branch -- static/index.html` עולה ~8,000 טוקנים ומכסה את כל השינויים בפועל.
+**מנגנון:** `git diff main...$(git branch --show-current) -- static/index.html` → audit רק על השינויים. לאחר מכן grep הbranch הספציפי לP0 criteria.
 
 ---
 
@@ -295,7 +320,7 @@ pkgpulse.com/lucide-vs-heroicons, allsvgicons.com/best-svg-icon-libraries-2026, 
 
 *עודכן לאחרונה: 19.06.2026 — לאחר תחקיר עצמי של כל 13 הסוכנים*
 
-## CE-002 — Design CEO lesson: tokens ≠ visual progress (19.06.2026)
+## CE-003 — Design CEO lesson: tokens ≠ visual progress (19.06.2026)
 
 **מה קרה:** הדירקטוריון (כרמל) נתן פידבק: "לא שיניתם כמעט כלום בנראות". עשינו token system (DS), עשינו hex audit, עשינו color research — אבל המסכים עצמם נראו אותו דבר.
 

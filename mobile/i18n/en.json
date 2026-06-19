@@ -44,11 +44,5 @@
     "likes": "{{count}} likes",
     "comments": "{{count}} comments",
     "forYou": "For You"
-  },
-  "wardrobe": {
-    "newItem": "Just added",
-    "emptyTitle": "Your closet is empty",
-    "emptyBody": "Scan your first outfit to build your digital wardrobe",
-    "cta": "Scan a look"
   }
 }
