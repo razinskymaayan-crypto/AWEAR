@@ -102,5 +102,24 @@
     "password": "Password",
     "cta": "Create Account",
     "skip": "Continue without account"
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "search": "Search",
+    "empty": "No items yet",
+    "condition": {
+      "likenew": "Like New",
+      "good": "Good",
+      "fair": "Fair"
+    },
+    "category": {
+      "all": "All",
+      "shoes": "Shoes",
+      "pants": "Pants",
+      "shirts": "Shirts",
+      "jackets": "Jackets",
+      "accessories": "Accessories",
+      "dresses": "Dresses"
+    }
   }
 }

@@ -102,5 +102,24 @@
     "password": "סיסמה",
     "cta": "צרי חשבון",
     "skip": "המשיכי ללא חשבון"
+  },
+  "marketplace": {
+    "title": "מרקטפלייס",
+    "search": "חיפוש",
+    "empty": "אין פריטים עדיין",
+    "condition": {
+      "likenew": "כמו חדש",
+      "good": "טוב",
+      "fair": "סביר"
+    },
+    "category": {
+      "all": "הכל",
+      "shoes": "נעליים",
+      "pants": "מכנסיים",
+      "shirts": "חולצות",
+      "jackets": "ג'קטים",
+      "accessories": "אקססוריז",
+      "dresses": "שמלות"
+    }
   }
 }
