@@ -36,7 +36,19 @@
     -webkit-text-fill-color: var(--muted); }
   .ava { width: 36px; height: 36px; border-radius: 50%; position: relative;
     background: linear-gradient(135deg, var(--accent2), var(--accent)); }
-  .ava::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--bg2); }
+  .ava::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--bg2, #161318); }
+  .notif-btn { position: relative; width: 36px; height: 36px; border-radius: 50%; background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text, #fbfbfd); flex-shrink: 0; }
+  .notif-btn:active { opacity: .7; }
+  .notif-badge { position: absolute; top: -2px; right: -2px; min-width: 16px; height: 16px; border-radius: 8px; background: var(--accent, #e8526a); color: #fff; font-size: 10px; font-weight: 900; display: none; align-items: center; justify-content: center; padding: 0 3px; line-height: 1; border: 1.5px solid var(--bg, #0e0c0f); }
+  #notif-panel { position: absolute; top: 66px; right: 14px; width: 280px; background: var(--card, #1e1a22); border-radius: 12px; padding: 12px; z-index: 200; display: none; max-height: 400px; overflow-y: auto; border: 1px solid var(--line, #2e2836); box-shadow: 0 8px 32px rgba(0,0,0,.4); }
+  #notif-panel.open { display: block; }
+  .notif-item { padding: 8px 0; border-bottom: 1px solid var(--line, #2e2836); display: flex; align-items: flex-start; gap: 8px; }
+  .notif-item:last-child { border-bottom: none; }
+  .notif-item.unread { background: rgba(232,82,106,.06); border-radius: 8px; padding: 8px; margin: 0 -4px; }
+  .notif-type { flex-shrink: 0; color: var(--accent, #e8526a); font-size: var(--t-body, 14px); }
+  .notif-text { flex: 1; font-size: var(--t-small, 13px); color: var(--text, #fbfbfd); font-weight: 600; }
+  .notif-time { font-size: var(--t-micro, 11px); color: var(--muted, #8a8498); white-space: nowrap; }
+  .notif-empty { color: var(--muted, #8a8498); text-align: center; padding: 16px; font-size: var(--t-small, 13px); }
 
   main { flex: 1; overflow-y: auto; padding: 4px 14px 96px; scrollbar-width: none; min-height: 0; }
   main::-webkit-scrollbar { display: none; }
@@ -1591,8 +1603,14 @@
 <div class="phone">
   <header>
     <div class="logo">AWEAR<span class="pin" id="header-city-pin"></span></div>
-    <div class="ava"></div>
+    <div style="display:flex;align-items:center;gap:10px;position:relative;">
+      <button class="notif-btn" id="notif-btn" aria-label="התראות" onclick="toggleNotifPanel()">
+        <span class="notif-badge" id="notif-badge" data-notif-badge></span>
+      </button>
+      <div class="ava"></div>
+    </div>
   </header>
+  <div id="notif-panel"></div>
 
   <main id="main">
     <!-- HOME SCREEN -->
@@ -1966,6 +1984,7 @@
     target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>',
     cart:'<path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.4 6.5h12.8M7 13 5.4 5M10 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM17 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" stroke-linejoin="round"/>',
     chat:'<path d="M14 9a3 3 0 0 1-3 3H6l-4 4V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4Z" stroke-linejoin="round"/>',
+    bell:'<path d="M6 10a6 6 0 0 1 12 0v3.5l1.5 2.5H4.5L6 13.5V10Z" stroke-linejoin="round"/><path d="M10 19a2 2 0 0 0 4 0"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -5700,6 +5719,94 @@
       </div>
     `;
   }
+
+  // ===== NOTIFICATIONS =====
+
+  function renderNotifPanel(items) {
+    const panel = document.getElementById('notif-panel');
+    if (!panel) return;
+    if (!items || items.length === 0) {
+      panel.innerHTML = '<p class="notif-empty">אין עדכונים</p>';
+      return;
+    }
+    panel.innerHTML = items.map(n => `
+      <div class="notif-item ${n.read ? '' : 'unread'}">
+        <span class="notif-type">${icon(n.type === 'like' ? 'heartFill' : 'chat', 16)}</span>
+        <span class="notif-text">${n.type === 'like' ? 'מישהו אהב את הלוק שלך' : esc(n.type)}</span>
+        <span class="notif-time">${new Date(n.created_at * 1000).toLocaleDateString('he')}</span>
+      </div>
+    `).join('');
+  }
+
+  async function loadNotifications() {
+    try {
+      const res = await fetch('/api/notifications/user_1?limit=20');
+      if (!res.ok) {
+        console.error('[AWEAR] loadNotifications HTTP error:', res.status);
+        return;
+      }
+      const data = await res.json();
+      const badge = document.getElementById('notif-badge');
+      if (badge) {
+        badge.textContent = data.unread || '';
+        badge.style.display = data.unread > 0 ? 'flex' : 'none';
+      }
+      const btn = document.getElementById('notif-btn');
+      if (btn && !btn.querySelector('.ic-svg')) {
+        btn.insertAdjacentHTML('afterbegin', icon('bell', 18));
+      }
+      renderNotifPanel(data.items || []);
+    } catch(e) {
+      console.error('[AWEAR] loadNotifications network error:', e.message);
+    }
+  }
+
+  async function markNotifsRead() {
+    try {
+      const res = await fetch('/api/notifications/user_1/read-all', { method: 'POST' });
+      if (!res.ok) {
+        console.error('[AWEAR] markNotifsRead HTTP error:', res.status);
+        return;
+      }
+      const badge = document.getElementById('notif-badge');
+      if (badge) badge.style.display = 'none';
+    } catch(e) {
+      console.error('[AWEAR] markNotifsRead network error:', e.message);
+    }
+  }
+
+  function toggleNotifPanel() {
+    const panel = document.getElementById('notif-panel');
+    if (!panel) return;
+    const isOpen = panel.classList.contains('open');
+    panel.classList.toggle('open');
+    if (!isOpen) {
+      markNotifsRead();
+    }
+  }
+
+  // close panel on outside click
+  document.addEventListener('click', function(e) {
+    const btn = document.getElementById('notif-btn');
+    const panel = document.getElementById('notif-panel');
+    if (!panel || !btn) return;
+    if (!btn.contains(e.target) && !panel.contains(e.target)) {
+      panel.classList.remove('open');
+    }
+  }, true);
+
+  // init bell icon (static HTML — inject via JS per DS-008)
+  (function initNotifBell() {
+    const btn = document.getElementById('notif-btn');
+    if (btn && !btn.querySelector('.ic-svg')) {
+      btn.insertAdjacentHTML('afterbegin', icon('bell', 18));
+    }
+  })();
+
+  // initial load + 30s session poll
+  loadNotifications();
+  setInterval(loadNotifications, 30000);
+
 </script>
 </body>
 </html>
