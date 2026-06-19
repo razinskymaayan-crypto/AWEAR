@@ -730,6 +730,14 @@ def init_db() -> None:
                 PRIMARY KEY (follower_key, followed_user_id)
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS saves (
+                post_id    TEXT NOT NULL,
+                user_key   TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (post_id, user_key)
+            )
+        """)
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 
@@ -1069,5 +1077,71 @@ async def search(q: str, limit: int = 20):
         "total": len(results),
     }
 
+
+# ---------------------------------------------------------------------------
+# Save / Bookmark — SQLite persistence (mirrors likes pattern, BE-004)
+# ---------------------------------------------------------------------------
+
+@app.post("/api/posts/{post_id}/save")
+async def toggle_save(post_id: str, request: Request):
+    """Toggle bookmark for a post. Returns current saved state.
+
+    Uses IP-based user identification (v1, same as likes).
+    404 when _posts_cache is populated but post_id is not found.
+    When cache is empty (startup race), we allow the toggle without a 404
+    so the endpoint doesn't break before the first load_data_files completes.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+
+    if _posts_cache:
+        post = next((p for p in _posts_cache if p["id"] == post_id), None)
+        if post is None:
+            raise HTTPException(status_code=404, detail="Post not found")
+
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM saves WHERE post_id=? AND user_key=?",
+            (post_id, user_key),
+        ).fetchone()
+
+        if existing:
+            db.execute(
+                "DELETE FROM saves WHERE post_id=? AND user_key=?",
+                (post_id, user_key),
+            )
+            saved = False
+        else:
+            db.execute(
+                "INSERT INTO saves (post_id, user_key) VALUES (?, ?)",
+                (post_id, user_key),
+            )
+            saved = True
+
+    return {"post_id": post_id, "saved": saved}
+
+
+@app.get("/api/users/{user_id}/saves")
+async def get_saves(user_id: str, request: Request):
+    """Return all posts saved by this user (identified by IP, v1).
+
+    user_id path param is reserved for future auth — v1 uses the caller's IP
+    so the endpoint shape is already correct for Cycle 3 auth migration.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+
+    with _get_db() as db:
+        rows = db.execute(
+            "SELECT post_id FROM saves WHERE user_key=? ORDER BY created_at DESC",
+            (user_key,),
+        ).fetchall()
+
+    saved_ids = {row["post_id"] for row in rows}
+    saved_posts = [p for p in _posts_cache if p["id"] in saved_ids]
+    return {"items": saved_posts, "total": len(saved_posts)}
+
+
+# ---------------------------------------------------------------------------
+# Categories
+# ---------------------------------------------------------------------------
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
