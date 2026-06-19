@@ -13,9 +13,11 @@ Then open http://localhost:8000
 """
 
 import base64
+import datetime
 import io
 import json
 import logging
+import uuid
 import time
 import traceback
 import urllib.parse
@@ -776,6 +778,82 @@ async def get_profile(user_id: str):
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
     return profile
+
+
+# ---------------------------------------------------------------------------
+# Auth — in-memory user store (skeleton for Cycle 2).
+#
+# NOTE: this is intentionally in-memory only. No passwords, no tokens, no
+# sessions. This is a skeleton so Dana's editProfile onPress has a real
+# endpoint to wire up. Cycle 3 will add proper auth (JWT/OAuth).
+# Schema owner: Sam. Integration owner: Oren.
+# ---------------------------------------------------------------------------
+
+_users_store: dict = {}  # user_id → user dict
+
+
+def _get_current_user(user_id: str) -> Optional[dict]:
+    return _users_store.get(user_id)
+
+
+@app.post("/api/auth/register")
+async def register(request: Request):
+    """Register a new user by username.
+
+    Returns the new user_id and the full user object.
+    400 if username is too short; 409 if username is already taken.
+    """
+    body = await request.json()
+    username = body.get("username", "").strip()
+    if not username or len(username) < 3:
+        raise HTTPException(status_code=400, detail="Username must be at least 3 characters")
+
+    # Check uniqueness — O(n) is fine for demo scale
+    for u in _users_store.values():
+        if u.get("username") == username:
+            raise HTTPException(status_code=409, detail="Username already taken")
+
+    user_id = f"user_{uuid.uuid4().hex[:8]}"
+    user = {
+        "id": user_id,
+        "username": username,
+        "display_name": body.get("display_name", username),
+        "bio": body.get("bio", ""),
+        "avatar_url": body.get("avatar_url", ""),
+        "created_at": datetime.datetime.utcnow().isoformat(),
+    }
+    _users_store[user_id] = user
+    logger.info("New user registered: %s (%s)", user_id, username)
+    return {"user_id": user_id, "user": user}
+
+
+@app.get("/api/auth/me/{user_id}")
+async def get_me(user_id: str):
+    """Return the full user object for user_id. 404 if not found."""
+    user = _get_current_user(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+@app.patch("/api/auth/me/{user_id}")
+async def update_me(user_id: str, request: Request):
+    """Update allowed profile fields for user_id.
+
+    Allowed fields: display_name, bio, avatar_url.
+    Unknown fields are silently ignored (no 400 on extra keys).
+    Returns the updated user object.
+    """
+    user = _get_current_user(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    body = await request.json()
+    allowed_fields = {"display_name", "bio", "avatar_url"}
+    updates = {k: v for k, v in body.items() if k in allowed_fields}
+    _users_store[user_id].update(updates)
+    logger.info("User updated: %s — fields: %s", user_id, list(updates.keys()))
+    return _users_store[user_id]
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
