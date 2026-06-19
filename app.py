@@ -722,6 +722,14 @@ def init_db() -> None:
                 PRIMARY KEY (post_id, user_key)
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS follows (
+                follower_key      TEXT NOT NULL,
+                followed_user_id  TEXT NOT NULL,
+                created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (follower_key, followed_user_id)
+            )
+        """)
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 
@@ -949,6 +957,65 @@ async def get_user_stats(user_id: str):
         "following": following,
         "total_likes": total_likes,
     }
+
+
+# ---------------------------------------------------------------------------
+# Follow / Unfollow — SQLite persistence (BE-004: in-memory → SQLite)
+# ---------------------------------------------------------------------------
+
+@app.post("/api/users/{user_id}/follow")
+async def toggle_follow(user_id: str, request: Request):
+    """Toggle follow status for a user. Returns new follow state + follower count."""
+    follower_key = (request.client.host if request.client else None) or "anon"
+
+    # Validate target user exists
+    target = next((p for p in _profiles_cache if p.get("id") == user_id), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM follows WHERE follower_key=? AND followed_user_id=?",
+            (follower_key, user_id),
+        ).fetchone()
+
+        if existing:
+            db.execute(
+                "DELETE FROM follows WHERE follower_key=? AND followed_user_id=?",
+                (follower_key, user_id),
+            )
+            following = False
+        else:
+            db.execute(
+                "INSERT INTO follows (follower_key, followed_user_id) VALUES (?, ?)",
+                (follower_key, user_id),
+            )
+            following = True
+
+        follow_delta = db.execute(
+            "SELECT COUNT(*) FROM follows WHERE followed_user_id=?", (user_id,)
+        ).fetchone()[0]
+
+    base_followers = len(target.get("followers", []))
+    return {
+        "user_id": user_id,
+        "following": following,
+        "followers": base_followers + follow_delta,
+    }
+
+
+@app.get("/api/users/{user_id}/follow-status")
+async def get_follow_status(user_id: str, request: Request):
+    """Return current follow status for the requesting client."""
+    follower_key = (request.client.host if request.client else None) or "anon"
+
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT 1 FROM follows WHERE follower_key=? AND followed_user_id=?",
+            (follower_key, user_id),
+        ).fetchone()
+
+    return {"user_id": user_id, "following": row is not None}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
