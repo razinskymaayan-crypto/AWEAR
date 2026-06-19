@@ -1,0 +1,23 @@
+# Secrets — never commit
+.env
+.env.*
+*.key
+
+# Python virtual envs
+.venv/
+venv/
+venv312/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Telegram local state
+.tg_chat
+.tg_inbox
+
+# Runtime data
+data/awear.db
+
+# OS
+.DS_Store
