@@ -26,6 +26,22 @@
     "addLook": "Add Look",
     "editProfile": "Edit Profile"
   },
+  "onboarding": {
+    "ctaNext": "Continue",
+    "ctaFinal": "Start scanning",
+    "welcome": {
+      "title": "Welcome to AWEAR",
+      "body": "Your digital wardrobe, wherever you go. Scan clothes, discover looks, and build your personal style."
+    },
+    "styleQuiz": {
+      "title": "Your style, your rules",
+      "body": "Tell us what you love and we will surface looks that match your taste — from your own closet and beyond."
+    },
+    "camera": {
+      "title": "Scan any item in seconds",
+      "body": "Point your camera at a clothing item and AWEAR adds it to your wardrobe instantly. Your camera stays private."
+    }
+  },
   "cameraPermission": {
     "iosUsageDescription": "AWEAR uses your camera to scan clothing into your digital wardrobe.",
     "title": "See your wardrobe, instantly",
