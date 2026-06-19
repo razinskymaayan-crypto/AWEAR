@@ -3534,7 +3534,7 @@
         if (rw2.points < cost) { showToast('אין מספיק נקודות'); return; }
         rw2.points -= cost;
         saveRewards(rw2);
-        showToast('הטבה מומשה! ✨');
+        showToast('הטבה מומשה!');
         renderRewards();
       });
     });
@@ -4071,9 +4071,9 @@
   async function runDeclutter() {
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     if (!wardrobe.length) { showToast('הארון ריק — אין מה לנקות'); return; }
-    showToast('AI מנתח את הארון... ✨');
+    showToast('AI מנתח את הארון...');
     const candidates = wardrobe.filter(i => (i.wear_count||0) === 0);
-    if (!candidates.length) { showToast('הכל נלבש — הארון מנוצל מעולה! 🎉'); return; }
+    if (!candidates.length) { showToast('הכל נלבש — הארון מנוצל מעולה!'); return; }
     try {
       const res = await fetch('/api/declutter', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -5299,26 +5299,26 @@
 
   // ===== SHOPPING FEED =====
   let SHOP_SEED = [
-    {id:'s1',  name:'ג׳ינס ווש בגזרה ישרה', emoji:'👖', category:'bottoms',  price:220, orig:380, style_tags:['y2k','denim','casual'],    brand:'Zara',      store:'זארה',       badge:'חם🔥',  score:95},
-    {id:'s2',  name:'טופ קרופ קטיפתי',       emoji:'👕', category:'top',      price:89,  orig:89,  style_tags:['minimal','elegant'],          brand:'H&M',       store:'HM',         badge:'חדש',   score:88},
-    {id:'s3',  name:'מיני חצאית פלסה',       emoji:'👗', category:'bottoms',  price:160, orig:249, style_tags:['y2k','going-out','bold'],      brand:'SHEIN',     store:'שיין',       badge:'מבצע',  score:91},
-    {id:'s4',  name:'ז׳קט דנים אוברסייז',    emoji:'🧥', category:'outerwear',price:310, orig:310, style_tags:['streetwear','denim','casual'],  brand:'Pull&Bear', store:'פול&בר',     badge:'חם🔥',  score:87},
-    {id:'s5',  name:'סנקרס לבנות קלאסיק',    emoji:'👟', category:'shoes',    price:299, orig:420, style_tags:['minimal','streetwear','white'], brand:'adidas',    store:'אדידס',      badge:'מבצע',  score:93},
-    {id:'s6',  name:'תיק קאנבס טוט',         emoji:'👜', category:'bag',      price:140, orig:140, style_tags:['minimal','casual','neutral'],   brand:'Mango',     store:'מנגו',       badge:'חדש',   score:82},
-    {id:'s7',  name:'שמלת מידי פרחונית',     emoji:'👗', category:'dress',    price:195, orig:290, style_tags:['cottage-core','romantic'],      brand:'ASOS',      store:'ASOS',       badge:'מבצע',  score:89},
-    {id:'s8',  name:'חולצת לינן רחבה',        emoji:'👕', category:'top',      price:120, orig:120, style_tags:['minimal','linen','casual'],     brand:'Bershka',   store:'ברשקה',      badge:'חדש',   score:84},
-    {id:'s9',  name:'מכנסי טרנינג Y2K',       emoji:'👖', category:'bottoms',  price:175, orig:240, style_tags:['y2k','sporty','streetwear'],    brand:'Nike',      store:'נייקי',      badge:'חם🔥',  score:96},
-    {id:'s10', name:'עגילי הוגס זהב',         emoji:'💎', category:'jewelry',  price:65,  orig:65,  style_tags:['minimal','elegant','gold'],     brand:'ASOS',      store:'ASOS',       badge:'חדש',   score:78},
-    {id:'s11', name:'בלייזר אוברסייז',        emoji:'🧥', category:'outerwear',price:380, orig:520, style_tags:['elegant','streetwear','power'],  brand:'Zara',      store:'זארה',       badge:'מבצע',  score:90},
-    {id:'s12', name:'כפכפי עור לקה',          emoji:'👟', category:'shoes',    price:210, orig:210, style_tags:['elegant','minimal','summer'],   brand:'Mango',     store:'מנגו',       badge:'חדש',   score:85},
-    {id:'s13', name:'חולצת רינגר Y2K',        emoji:'👕', category:'top',      price:95,  orig:140, style_tags:['y2k','retro','casual'],          brand:'SHEIN',     store:'שיין',       badge:'מבצע',  score:88},
-    {id:'s14', name:'מיני תיק בגט',           emoji:'👜', category:'bag',      price:250, orig:380, style_tags:['y2k','going-out','bold'],        brand:'Zara',      store:'זארה',       badge:'מבצע',  score:86},
-    {id:'s15', name:'גרבי רשת שחורות',        emoji:'💍', category:'accessory',price:35,  orig:35,  style_tags:['y2k','edgy','streetwear'],       brand:'H&M',       store:'HM',         badge:'חם🔥',  score:92},
-    {id:'s16', name:'שמלת סאטן סליפ',         emoji:'👗', category:'dress',    price:280, orig:400, style_tags:['elegant','going-out','romantic'], brand:'ASOS',      store:'ASOS',       badge:'מבצע',  score:91},
-    {id:'s17', name:'כובע דלי בז׳',           emoji:'🧢', category:'hat',      price:80,  orig:80,  style_tags:['casual','streetwear','minimal'], brand:'Pull&Bear', store:'פול&בר',     badge:'חדש',   score:80},
-    {id:'s18', name:'מכנסי קרגו ירוקים',      emoji:'👖', category:'bottoms',  price:195, orig:260, style_tags:['streetwear','cargo','casual'],   brand:'Bershka',   store:'ברשקה',      badge:'מבצע',  score:87},
-    {id:'s19', name:'טופ קורסט מובנה',        emoji:'👕', category:'top',      price:150, orig:150, style_tags:['y2k','going-out','bold','sexy'], brand:'SHEIN',     store:'שיין',       badge:'חם🔥',  score:94},
-    {id:'s20', name:'סניקרס פלטפורמה',         emoji:'👟', category:'shoes',    price:350, orig:480, style_tags:['y2k','chunky','bold','streetwear'],brand:'adidas', store:'אדידס',      badge:'מבצע',  score:89},
+    {id:'s1',  name:'ג׳ינס ווש בגזרה ישרה', search_query:'washed straight leg jeans women', category:'bottoms',  price:220, orig:380, style_tags:['y2k','denim','casual'],    brand:'Zara',      store:'זארה',       badge:'חם',  score:95},
+    {id:'s2',  name:'טופ קרופ קטיפתי',       search_query:'velvet crop top women',           category:'top',      price:89,  orig:89,  style_tags:['minimal','elegant'],          brand:'H&M',       store:'HM',         badge:'חדש', score:88},
+    {id:'s3',  name:'מיני חצאית פלסה',       search_query:'pleated mini skirt women',        category:'bottoms',  price:160, orig:249, style_tags:['y2k','going-out','bold'],      brand:'SHEIN',     store:'שיין',       badge:'מבצע',score:91},
+    {id:'s4',  name:'ז׳קט דנים אוברסייז',    search_query:'oversized denim jacket women',    category:'outerwear',price:310, orig:310, style_tags:['streetwear','denim','casual'],  brand:'Pull&Bear', store:'פול&בר',     badge:'חם',  score:87},
+    {id:'s5',  name:'סנקרס לבנות קלאסיק',    search_query:'classic white sneakers women',    category:'shoes',    price:299, orig:420, style_tags:['minimal','streetwear','white'], brand:'adidas',    store:'אדידס',      badge:'מבצע',score:93},
+    {id:'s6',  name:'תיק קאנבס טוט',         search_query:'canvas tote bag',                 category:'bag',      price:140, orig:140, style_tags:['minimal','casual','neutral'],   brand:'Mango',     store:'מנגו',       badge:'חדש', score:82},
+    {id:'s7',  name:'שמלת מידי פרחונית',     search_query:'floral midi dress women',         category:'dress',    price:195, orig:290, style_tags:['cottage-core','romantic'],      brand:'ASOS',      store:'ASOS',       badge:'מבצע',score:89},
+    {id:'s8',  name:'חולצת לינן רחבה',        search_query:'oversized linen shirt women',     category:'top',      price:120, orig:120, style_tags:['minimal','linen','casual'],     brand:'Bershka',   store:'ברשקה',      badge:'חדש', score:84},
+    {id:'s9',  name:'מכנסי טרנינג Y2K',       search_query:'Y2K track pants women',           category:'bottoms',  price:175, orig:240, style_tags:['y2k','sporty','streetwear'],    brand:'Nike',      store:'נייקי',      badge:'חם',  score:96},
+    {id:'s10', name:'עגילי הוגס זהב',         search_query:'gold hoop earrings',              category:'jewelry',  price:65,  orig:65,  style_tags:['minimal','elegant','gold'],     brand:'ASOS',      store:'ASOS',       badge:'חדש', score:78},
+    {id:'s11', name:'בלייזר אוברסייז',        search_query:'oversized blazer women',          category:'outerwear',price:380, orig:520, style_tags:['elegant','streetwear','power'],  brand:'Zara',      store:'זארה',       badge:'מבצע',score:90},
+    {id:'s12', name:'כפכפי עור לקה',          search_query:'patent leather mule sandals women',category:'shoes',   price:210, orig:210, style_tags:['elegant','minimal','summer'],   brand:'Mango',     store:'מנגו',       badge:'חדש', score:85},
+    {id:'s13', name:'חולצת רינגר Y2K',        search_query:'Y2K ringer tee women',            category:'top',      price:95,  orig:140, style_tags:['y2k','retro','casual'],          brand:'SHEIN',     store:'שיין',       badge:'מבצע',score:88},
+    {id:'s14', name:'מיני תיק בגט',           search_query:'mini baguette bag women',         category:'bag',      price:250, orig:380, style_tags:['y2k','going-out','bold'],        brand:'Zara',      store:'זארה',       badge:'מבצע',score:86},
+    {id:'s15', name:'גרבי רשת שחורות',        search_query:'black fishnet tights',            category:'accessory',price:35,  orig:35,  style_tags:['y2k','edgy','streetwear'],       brand:'H&M',       store:'HM',         badge:'חם',  score:92},
+    {id:'s16', name:'שמלת סאטן סליפ',         search_query:'satin slip dress women elegant',  category:'dress',    price:280, orig:400, style_tags:['elegant','going-out','romantic'], brand:'ASOS',      store:'ASOS',       badge:'מבצע',score:91},
+    {id:'s17', name:'כובע דלי בז׳',           search_query:'beige bucket hat',                category:'hat',      price:80,  orig:80,  style_tags:['casual','streetwear','minimal'], brand:'Pull&Bear', store:'פול&בר',     badge:'חדש', score:80},
+    {id:'s18', name:'מכנסי קרגו ירוקים',      search_query:'green cargo pants women',         category:'bottoms',  price:195, orig:260, style_tags:['streetwear','cargo','casual'],   brand:'Bershka',   store:'ברשקה',      badge:'מבצע',score:87},
+    {id:'s19', name:'טופ קורסט מובנה',        search_query:'structured corset top women',     category:'top',      price:150, orig:150, style_tags:['y2k','going-out','bold','sexy'], brand:'SHEIN',     store:'שיין',       badge:'חם',  score:94},
+    {id:'s20', name:'סניקרס פלטפורמה',         search_query:'platform chunky sneakers women',  category:'shoes',    price:350, orig:480, style_tags:['y2k','chunky','bold','streetwear'],brand:'adidas', store:'אדידס',      badge:'מבצע',score:89},
   ];
 
   let sfTab = 'recommended', sfInited = false;
