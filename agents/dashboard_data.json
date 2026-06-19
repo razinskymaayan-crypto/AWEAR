@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-18T23:33:32.599559+00:00",
+  "generated_at": "2026-06-19T09:14:43.295662+00:00",
   "agents": {
     "sam": {
       "department": "backend",
@@ -245,10 +245,10 @@
     },
     "dolce": {
       "department": "design",
-      "total_dispatches": 5,
-      "total_tokens": 355518,
-      "total_tool_uses": 274,
-      "total_duration_ms": 2784409,
+      "total_dispatches": 7,
+      "total_tokens": 398324,
+      "total_tool_uses": 313,
+      "total_duration_ms": 3056310,
       "tasks": [
         {
           "description": "Dolce/Gabbana Phase 2 icon mapping continuation",
@@ -289,12 +289,28 @@
           "duration_ms": 366725,
           "completed_at": "2026-06-18T23:11:17.354Z",
           "agentId": "a64eac8bcf355a929"
+        },
+        {
+          "description": "Pass Mark token corrections to running Dolce agent",
+          "tokens": 0,
+          "tool_uses": 6,
+          "duration_ms": 88115,
+          "completed_at": "2026-06-19T00:18:30.427Z",
+          "agentId": "a1c6a7da5158a01a5"
+        },
+        {
+          "description": "Pass Mark's P0 findings to Dolce's redesign sprint",
+          "tokens": 42806,
+          "tool_uses": 33,
+          "duration_ms": 183786,
+          "completed_at": "2026-06-19T07:11:08.366Z",
+          "agentId": "af1d59bc18ac8f2a6"
         }
       ],
       "status": "idle",
       "current_task": null,
       "running_since": null,
-      "last_active": "2026-06-18T23:11:17.354Z",
+      "last_active": "2026-06-19T07:11:08.366Z",
       "notes": []
     },
     "gabbana": {
@@ -369,9 +385,9 @@
     }
   },
   "company_totals": {
-    "total_dispatches": 25,
-    "total_tokens": 1355387,
-    "total_tool_uses": 1141,
+    "total_dispatches": 27,
+    "total_tokens": 1398193,
+    "total_tool_uses": 1180,
     "unattributed_dispatches": 2
   },
   "unattributed": [
