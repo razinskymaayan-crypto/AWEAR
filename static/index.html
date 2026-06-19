@@ -1231,13 +1231,13 @@
       <div class="sf-wrap">
         <div class="sf-header">
           <div class="sf-title">🛍️ Shopping</div>
-          <div class="sf-sub">AI בחר עבורך — על בסיס הסגנון והארון שלך</div>
+          <div class="sf-sub">AI picks for you — based on your style and closet</div>
         </div>
         <div class="sf-tabs" id="sf-tabs">
-          <button class="sf-tab active" data-tab="recommended">✨ בשבילך</button>
+          <button class="sf-tab active" data-tab="recommended">✨ For You</button>
           <button class="sf-tab" data-tab="trending">🔥 Trending</button>
-          <button class="sf-tab" data-tab="missing">🎯 חסר לך</button>
-          <button class="sf-tab" data-tab="deals">💸 מבצעים</button>
+          <button class="sf-tab" data-tab="missing">🎯 Missing</button>
+          <button class="sf-tab" data-tab="deals">💸 Deals</button>
         </div>
         <div class="sf-grid" id="sf-grid"></div>
       </div>
@@ -1247,25 +1247,25 @@
     <section id="compare" class="view">
       <div class="cmp-wrap" id="cmp-wrap">
         <div class="cmp-header">
-          <div class="cmp-title">השוואה לפני קנייה</div>
-          <div class="cmp-sub">בחרי 2 פריטים — AI יחשב מה עדיף עבורך</div>
+          <div class="cmp-title">Compare before you buy</div>
+          <div class="cmp-sub">Pick 2 items — AI figures out which is better for you</div>
         </div>
         <div class="cmp-slots">
           <div class="cmp-slot" id="cmp-slot-a" onclick="openCmpPicker('a')">
             <div class="cmp-slot-empty">
               <div class="cmp-slot-empty-icon">👗</div>
-              <div class="cmp-slot-empty-text">+ בחרי פריט ראשון</div>
+              <div class="cmp-slot-empty-text">+ Pick first item</div>
             </div>
           </div>
           <div class="cmp-slot" id="cmp-slot-b" onclick="openCmpPicker('b')">
             <div class="cmp-slot-empty">
               <div class="cmp-slot-empty-icon">👗</div>
-              <div class="cmp-slot-empty-text">+ בחרי פריט שני</div>
+              <div class="cmp-slot-empty-text">+ Pick second item</div>
             </div>
           </div>
         </div>
         <div class="cmp-vs">VS</div>
-        <button class="cmp-btn" id="cmp-go" onclick="runCompare()" style="display:none">⚡ השוו עכשיו</button>
+        <button class="cmp-btn" id="cmp-go" onclick="runCompare()" style="display:none">⚡ Compare now</button>
         <div class="cmp-result" id="cmp-result"></div>
       </div>
     </section>
@@ -1275,11 +1275,11 @@
       <div class="og-wrap" id="og-wrap">
         <div class="og-header">
           <div class="og-title">✨ Outfit Generator</div>
-          <div class="og-sub">תארי את הצורך שלך — AI יבנה לוקים מהארון</div>
+          <div class="og-sub">Tell us what you need — AI builds looks from your closet</div>
         </div>
         <div class="og-input-row">
-          <input class="og-input" id="og-input" placeholder='למשל: "יש לי דייט הערב"' />
-          <button class="og-go" id="og-go">צרי</button>
+          <input class="og-input" id="og-input" placeholder='e.g. "I have a date tonight"' />
+          <button class="og-go" id="og-go">Create</button>
         </div>
         <div class="og-scenarios" id="og-scenarios"></div>
         <div id="og-result"></div>
@@ -1291,8 +1291,8 @@
       <div class="wl-wrap" id="wl-wrap">
         <div class="wl-header">💫 Wishlist</div>
         <div class="wl-add-row">
-          <input class="wl-add-input" id="wl-input" placeholder="הוסיפי פריט לרשימה..." />
-          <button class="wl-add-btn" id="wl-add-btn">+ הוסיפי</button>
+          <input class="wl-add-input" id="wl-input" placeholder="Add an item to your list..." />
+          <button class="wl-add-btn" id="wl-add-btn">+ Add</button>
         </div>
         <div style="height:12px"></div>
         <div class="wl-list" id="wl-list"></div>
@@ -1305,14 +1305,14 @@
         <div class="chat-header">
           <div class="chat-header-avatar">💅</div>
           <div>
-            <div style="font-size:14px;font-weight:900">אביגיל ✨</div>
-            <div style="font-size:11px;color:var(--muted);font-weight:600">הסטייליסטית שלך · מחובר</div>
+            <div style="font-size:14px;font-weight:900">Abigail ✨</div>
+            <div style="font-size:11px;color:var(--muted);font-weight:600">Your stylist · online</div>
           </div>
         </div>
         <div class="chat-messages" id="chat-messages"></div>
         <div class="chat-presets" id="chat-presets"></div>
         <div class="chat-input-row">
-          <input class="chat-input" id="chat-input" placeholder="שאלי את הסטייליסט..." />
+          <input class="chat-input" id="chat-input" placeholder="Ask your stylist..." />
           <button class="chat-send-btn" id="chat-send"></button>
         </div>
       </div>
@@ -1324,19 +1324,19 @@
         <div class="ex-search-row">
           <div class="ex-search">
             <span class="si" id="ex-search-icon"></span>
-            <input type="text" id="ex-input" placeholder="חפשי סטייל, מותג, פריט..." />
+            <input type="text" id="ex-input" placeholder="Search style, brand, item..." />
           </div>
         </div>
         <div id="ex-default">
-          <div class="ex-section-label">ויב</div>
+          <div class="ex-section-label">Vibe</div>
           <div class="ex-vibes" id="ex-vibes"></div>
-          <div class="ex-section-label">טרנדינג</div>
+          <div class="ex-section-label">Trending</div>
           <div class="ex-trending-row" id="ex-trending"></div>
-          <div class="ex-section-label">לוקים מובחרים</div>
+          <div class="ex-section-label">Featured looks</div>
           <div class="ex-grid" id="ex-grid"></div>
         </div>
         <div id="ex-results" style="display:none">
-          <div class="ex-section-label" id="ex-results-label">תוצאות</div>
+          <div class="ex-section-label" id="ex-results-label">Results</div>
           <div class="ex-results" id="ex-results-list"></div>
         </div>
       </div>
@@ -1346,17 +1346,17 @@
     <section id="feed" class="view">
       <div class="feed-top">
         <div class="feed-tabs">
-          <button class="ftab active" data-tab="foryou">בשבילי</button>
-          <button class="ftab" data-tab="inspiration">יש לי ✨</button>
-          <button class="ftab" data-tab="following">עוקבת</button>
+          <button class="ftab active" data-tab="foryou">For You</button>
+          <button class="ftab" data-tab="inspiration">I Have ✨</button>
+          <button class="ftab" data-tab="following">Following</button>
         </div>
         <div class="feed-filters" id="feed-filters">
-          <button class="ff active" data-filter="all">הכל</button>
+          <button class="ff active" data-filter="all">All</button>
           <button class="ff" data-filter="y2k">Y2K</button>
           <button class="ff" data-filter="streetwear">Streetwear</button>
-          <button class="ff" data-filter="minimal">מינימל</button>
-          <button class="ff" data-filter="vintage">וינטג'</button>
-          <button class="ff" data-filter="secondhand">יד שנייה</button>
+          <button class="ff" data-filter="minimal">Minimal</button>
+          <button class="ff" data-filter="vintage">Vintage</button>
+          <button class="ff" data-filter="secondhand">Secondhand</button>
         </div>
       </div>
       <div class="feed-scroll" id="feed-scroll"></div>
@@ -1364,11 +1364,11 @@
   </main>
 
   <nav>
-    <button data-view="home" class="active"><span class="ico" id="nav-ico-home"></span><span data-i18n="nav.home">בית</span></button>
-    <button data-view="explore"><span class="ico" id="nav-ico-explore"></span><span data-i18n="nav.explore">חיפוש</span></button>
+    <button data-view="home" class="active"><span class="ico" id="nav-ico-home"></span><span data-i18n="nav.home">Home</span></button>
+    <button data-view="explore"><span class="ico" id="nav-ico-explore"></span><span data-i18n="nav.explore">Search</span></button>
     <button class="fab" id="capture-btn"><span id="nav-ico-fab"></span></button>
-    <button data-view="feed"><span class="ico" id="nav-ico-feed"></span><span data-i18n="nav.feed">פיד</span></button>
-    <button data-view="closet"><span class="ico" id="nav-ico-closet"></span><span data-i18n="nav.closet">ארון</span></button>
+    <button data-view="feed"><span class="ico" id="nav-ico-feed"></span><span data-i18n="nav.feed">Feed</span></button>
+    <button data-view="closet"><span class="ico" id="nav-ico-closet"></span><span data-i18n="nav.closet">Closet</span></button>
   </nav>
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
@@ -1376,25 +1376,25 @@
 
   <!-- Onboarding -->
   <div id="onboarding" class="onboarding" style="display:none">
-    <button class="onb-skip" id="onb-skip" data-i18n="onboarding.skip">דלגי</button>
+    <button class="onb-skip" id="onb-skip" data-i18n="onboarding.skip">Skip</button>
     <div id="onb-content"></div>
     <div class="onb-progress" id="onb-dots"></div>
-    <button class="onb-next" id="onb-next" data-i18n="onboarding.continue">המשך</button>
+    <button class="onb-next" id="onb-next" data-i18n="onboarding.continue">Continue</button>
   </div>
 
   <!-- Edit Profile Modal -->
   <div id="edit-profile-overlay" class="edit-modal-overlay">
     <div class="edit-modal">
-      <h3>עריכת פרופיל</h3>
+      <h3>Edit Profile</h3>
       <div class="edit-photo-row">
         <div class="edit-photo-circle"><div class="edit-photo-inner" id="edit-photo-preview"></div></div>
-        <button class="edit-photo-btn" id="edit-photo-btn">שנה תמונת פרופיל</button>
+        <button class="edit-photo-btn" id="edit-photo-btn">Change profile photo</button>
         <input type="file" id="edit-photo-input" accept="image/*">
       </div>
-      <div class="edit-field"><label>שם</label><input id="edit-name" type="text" placeholder="השם שלך" maxlength="30"></div>
-      <div class="edit-field"><label>שם משתמש</label><input id="edit-handle" type="text" placeholder="handle" maxlength="20"></div>
-      <div class="edit-field"><label>עיר</label><input id="edit-city" type="text" placeholder="תל אביב" maxlength="20"></div>
-      <div class="edit-field"><label>ביו</label><textarea id="edit-bio" placeholder="כתבי משהו על הסטייל שלך..."></textarea></div>
+      <div class="edit-field"><label>Name</label><input id="edit-name" type="text" placeholder="Your name" maxlength="30"></div>
+      <div class="edit-field"><label>Username</label><input id="edit-handle" type="text" placeholder="handle" maxlength="20"></div>
+      <div class="edit-field"><label>City</label><input id="edit-city" type="text" placeholder="Tel Aviv" maxlength="20"></div>
+      <div class="edit-field"><label>Bio</label><textarea id="edit-bio" placeholder="Write something about your style..."></textarea></div>
       <div class="lang-switch-row">
         <span class="lang-switch-icon" id="lang-switch-icon"></span>
         <div class="lang-switch-opts">
@@ -1402,13 +1402,13 @@
           <button type="button" class="lang-opt-btn" data-lang-opt="en" id="lang-opt-en">English</button>
         </div>
       </div>
-      <button class="edit-save" id="edit-save-btn">שמור</button>
-      <button class="edit-cancel" id="edit-cancel-btn">ביטול</button>
+      <button class="edit-save" id="edit-save-btn">Save</button>
+      <button class="edit-cancel" id="edit-cancel-btn">Cancel</button>
     </div>
   </div>
 
   <!-- Bottom Sheet -->
-  <div id="sheet-overlay" class="sheet-overlay" role="dialog" aria-modal="true" aria-label="קנייה"></div>
+  <div id="sheet-overlay" class="sheet-overlay" role="dialog" aria-modal="true" aria-label="Shop"></div>
   <div id="buy-sheet" class="sheet" aria-hidden="true">
     <div class="sheet-handle" aria-hidden="true"></div>
     <div class="sheet-scroll" id="sheet-body"></div>
@@ -1547,9 +1547,9 @@
   const CAT_ICON = { top:'shirt', dress:'hanger', bottoms:'shirt', outerwear:'hanger',
                      shoes:'bag', bag:'bag', accessory:'sparkle', jewelry:'diamond', hat:'tag' };
   function catIcon(cat){ return CAT_ICON[(cat||'').toLowerCase()] || 'hanger'; }
-  const CAT_LABEL = { top:'עליונית', dress:'שמלה', bottoms:'מכנסיים', outerwear:'מעיל',
-                      shoes:'נעליים', bag:'תיק', accessory:'אקססורי', jewelry:'תכשיט', hat:'כובע' };
-  function catLabel(cat){ return CAT_LABEL[(cat||'').toLowerCase()] || 'פריט'; }
+  const CAT_LABEL = { top:'Top', dress:'Dress', bottoms:'Bottoms', outerwear:'Outerwear',
+                      shoes:'Shoes', bag:'Bag', accessory:'Accessory', jewelry:'Jewelry', hat:'Hat' };
+  function catLabel(cat){ return CAT_LABEL[(cat||'').toLowerCase()] || 'Item'; }
 
   // ---- real product images (Pollinations, no key) with graceful SVG fallback ----
   // onerror -> imgFallback() swaps the broken <img> for a line-art garment icon,
@@ -1635,16 +1635,16 @@
   };
   function storeLogo(name){ return STORE_LOGOS[name] || (name||'').slice(0,3).toUpperCase(); }
   function scopeLabel(s){
-    if(s==='global') return 'שליחה בינלאומית';
-    if(s==='il')     return 'משלוח לישראל';
+    if(s==='global') return 'Ships internationally';
+    if(s==='il')     return 'Ships to Israel';
     return s || '';
   }
 
   function storeRowHTML(opt){
-    return `<a class="store-row" href="${attr(opt.url||'#')}" target="_blank" rel="noopener" aria-label="קני ב-${attr(opt.retailer)}">
+    return `<a class="store-row" href="${attr(opt.url||'#')}" target="_blank" rel="noopener" aria-label="Shop at ${attr(opt.retailer)}">
       <div class="store-logo">${esc(storeLogo(opt.retailer))}</div>
       <div style="flex:1;min-width:0">
-        <div class="store-name">${esc(opt.retailer||'חנות')}</div>
+        <div class="store-name">${esc(opt.retailer||'Store')}</div>
         <div class="store-scope">${esc(scopeLabel(opt.scope))}</div>
       </div>
       <span class="store-arrow">${icon('arrowOut', 16)}</span>
@@ -1670,11 +1670,11 @@
   }
 
   function openSheetSingle(it, earnAmt, influencerUser){
-    logAdminEvent('buy_intent', 'פתחה שיט: ' + (it.name||'פריט'));
+    logAdminEvent('buy_intent', 'Opened sheet: ' + (it.name||'item'));
     const stores = itemStores(it);
     const earnLine = (earnAmt && influencerUser)
       ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:#34d399;font-weight:700;margin-top:8px;text-align:center">
-           ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על הרכישה הזאת
+           ${icon('diamond',14)} @${esc(influencerUser)} earns ₪${esc(earnAmt)} on this purchase
          </p>` : '';
     const wardrobe4compat = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const csHTML = wardrobe4compat.length ? compatScoreHTML(it, wardrobe4compat) : '';
@@ -1690,18 +1690,18 @@
         </div>
       </div>
       ${earnLine}
-      ${stores.length ? `<div class="sheet-divider">או מצאי בחנויות</div>
+      ${stores.length ? `<div class="sheet-divider">or find it in stores</div>
         <div class="sheet-stores">${stores.map(storeRowHTML).join('')}</div>` : ''}
       <div style="height:16px"></div>`;
 
     const primary = stores[0];
     sheetFooter.innerHTML = primary
       ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
-            style="text-decoration:none" aria-label="קני ${attr(it.name)} ב-${attr(primary.retailer)}">
-           קני ב-${esc(primary.retailer)}
+            style="text-decoration:none" aria-label="Shop ${attr(it.name)} at ${attr(primary.retailer)}">
+           Shop at ${esc(primary.retailer)}
            <span class="sheet-buy-price">₪${esc(it.price_estimate_usd)}</span>
          </a>`
-      : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">אין קישור קנייה זמין לפריט זה עדיין</div>`;
+      : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">No shopping link available for this item yet</div>`;
 
     showSheet();
   }
@@ -1720,7 +1720,7 @@
     jewelry:   ['top','dress','outerwear'],
     hat:       ['top','dress','outerwear'],
   };
-  const COMBO_CAPTIONS = ['מתאים עם','לוק לערב','קז׳ואל ליום־יום','ערכה מהארון שלך'];
+  const COMBO_CAPTIONS = ['Pairs with','Evening look','Everyday casual','A look from your closet'];
   function itemTagSet(it){
     const s=new Set();((it&&it.style_tags)||[]).forEach(t=>s.add(String(t).toLowerCase()));
     if(it&&it.color) s.add(String(it.color).toLowerCase());
@@ -1770,7 +1770,7 @@
       const others=fallbackPool.filter(x=>x.name!==item.name && (x.category||'').toLowerCase()!==cat
         && !used.has(x.name+'|'+x.category));
       if(others.length){
-        combos.push({caption:'מהלוק הזה',pieces:others.slice(0,2),fromPost:true});
+        combos.push({caption:'From this look',pieces:others.slice(0,2),fromPost:true});
       }
     }
     return combos;
@@ -1778,7 +1778,7 @@
 
   function comboPieceHTML(it,isThis){
     return `<div class="combo-pc${isThis?' is-this':''}">
-      <div class="combo-thumb">${productImage(it)}${isThis?`<span class="combo-tag">הפריט</span>`:''}</div>
+      <div class="combo-thumb">${productImage(it)}${isThis?`<span class="combo-tag">This item</span>`:''}</div>
       <div class="combo-nm">${esc(it.name)}</div>
     </div>`;
   }
@@ -1794,17 +1794,17 @@
   // full item detail sheet: real photo -> match% -> closet combos (AI stylist) -> buy
   function openSheetItem(item, fallbackPool){
     const it=item||{};
-    logAdminEvent('buy_intent', 'פתחה שיט: ' + (it.name||'פריט'));
+    logAdminEvent('buy_intent', 'Opened sheet: ' + (it.name||'item'));
     const stores=itemStores(it);
     const hasCloset=loadWardrobe().length>0;
     const pct=matchPercent((it.style_tags||[]).concat(it.category?[it.category]:[]));
     const matchBadge = hasCloset
-      ? `<span class="item-match">${icon('sparkle',14)} <b>${pct}%</b> התאמה לארון</span>`
-      : `<span class="item-match item-match-invite">${icon('sparkle',14)} הוסיפי בגדים לארון לראות התאמה</span>`;
+      ? `<span class="item-match">${icon('sparkle',14)} <b>${pct}%</b> closet match</span>`
+      : `<span class="item-match item-match-invite">${icon('sparkle',14)} Add clothes to your closet to see your match</span>`;
     const combos=closetCombos(it,fallbackPool);
     const combosHTML = combos.length
       ? combos.map(c=>comboHTML(it,c)).join('')
-      : `<div class="combo-empty">${icon('hanger',32)}<div>צלמי עוד פריטים לארון שלך<br/>כדי שהסטייליסט יבנה לך לוקים מהבגדים שכבר יש לך.</div></div>`;
+      : `<div class="combo-empty">${icon('hanger',32)}<div>Snap more items into your closet<br/>so the stylist can build looks from clothes you already own.</div></div>`;
 
     sheetBody.innerHTML = `
       <div class="item-hero">
@@ -1817,19 +1817,19 @@
         <span class="item-price">₪${esc(it.price_estimate_usd||it.price||0)}</span>
         ${it.brand_vibe?`<span class="item-brand">${esc(it.brand_vibe)}</span>`:''}
       </div>
-      <div class="stylist-h2">${icon('sparkle',16)} הסטייליסט מציע</div>
-      <div class="stylist-sub">לוקים שמשלבים את הפריט עם הבגדים מהארון שלך</div>
+      <div class="stylist-h2">${icon('sparkle',16)} Stylist picks</div>
+      <div class="stylist-sub">Looks that pair this item with clothes from your closet</div>
       ${combosHTML}
       <div style="height:8px"></div>`;
 
     const primary=stores[0];
     sheetFooter.innerHTML = primary
       ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
-            style="text-decoration:none" aria-label="קני ${attr(it.name)} ב-${attr(primary.retailer)}">
-           קני ב-${esc(primary.retailer)}
+            style="text-decoration:none" aria-label="Shop ${attr(it.name)} at ${attr(primary.retailer)}">
+           Shop at ${esc(primary.retailer)}
            <span class="sheet-buy-price">₪${esc(it.price_estimate_usd||it.price||0)}</span>
          </a>`
-      : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">אין קישור קנייה זמין לפריט זה עדיין</div>`;
+      : `<div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">No shopping link available for this item yet</div>`;
 
     showSheet();
   }
@@ -1839,7 +1839,7 @@
     const rows = list.map(it => {
       const st = itemStores(it), url = st[0] ? st[0].url : '';
       const buy = url
-        ? `<a class="sheet-row-buy" href="${attr(url)}" target="_blank" rel="noopener" style="text-decoration:none">קני</a>`
+        ? `<a class="sheet-row-buy" href="${attr(url)}" target="_blank" rel="noopener" style="text-decoration:none">Shop</a>`
         : '';
       return `<div class="sheet-look-row">
         <div class="sheet-look-emoji">${productImage(it)}</div>
@@ -1850,16 +1850,16 @@
     }).join('');
     const earnLine = (earnAmt && influencerUser)
       ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:#34d399;font-weight:700;margin-top:4px;text-align:center">
-           ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על כל קנייה
+           ${icon('diamond',14)} @${esc(influencerUser)} earns ₪${esc(earnAmt)} on every purchase
          </p>` : '';
 
     sheetBody.innerHTML = `
       <div style="font-weight:900;font-size:15px;margin-bottom:14px;letter-spacing:-.2px">
-        ${esc(label)} · ${list.length} פריטים
+        ${esc(label)} · ${list.length} items
       </div>
       <div class="sheet-look-list">${rows}</div>
       <div class="sheet-total">
-        <span class="sheet-total-label">סה"כ הלוק</span>
+        <span class="sheet-total-label">Look total</span>
         <span class="sheet-total-amt">₪${esc(totalPrice)}</span>
       </div>
       ${earnLine}
@@ -1867,7 +1867,7 @@
 
     sheetFooter.innerHTML =
       `<div style="display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;color:var(--muted);font-size:12.5px;padding:6px 0 2px">
-         ${icon('bag',15)} קני כל פריט ישירות מהחנות שלו
+         ${icon('bag',15)} Shop each item directly from its store
        </div>`;
 
     showSheet();
@@ -1917,13 +1917,13 @@
   // ---- buy confirm (existing modal, unchanged) ----
   function buyConfirm(label, price, earnAmt, influencerUser) {
     modal.classList.add('show');
-    modalCard.innerHTML = '<div class="spinner"></div><h3>רוכשת את ' + esc(label) + '…</h3><p>Awear מבצעת את ההזמנה עבורך</p>';
+    modalCard.innerHTML = '<div class="spinner"></div><h3>Ordering ' + esc(label) + '…</h3><p>Awear is placing your order</p>';
     setTimeout(() => {
       const earnLine = (earnAmt && influencerUser)
-        ? `<div class="earn-line" style="display:flex;align-items:center;justify-content:center;gap:5px">${icon('check',14)} @${esc(influencerUser)} מרוויחה קרדיט ₪${esc(earnAmt)}</div>` : '';
-      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:#34d399">' + icon('checkCircle',52) + '</div><h3>ההזמנה אושרה!</h3>' +
-        '<p>' + esc(label) + ' בדרך אליך · שולם ₪' + esc(price) + '<br/>משלוח עד הבית תוך 3-5 ימים</p>' +
-        earnLine + '<button class="close">מעולה</button>';
+        ? `<div class="earn-line" style="display:flex;align-items:center;justify-content:center;gap:5px">${icon('check',14)} @${esc(influencerUser)} earns ₪${esc(earnAmt)} credit</div>` : '';
+      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:#34d399">' + icon('checkCircle',52) + '</div><h3>Order confirmed!</h3>' +
+        '<p>' + esc(label) + ' is on its way · paid ₪' + esc(price) + '<br/>Delivered to your door in 3-5 days</p>' +
+        earnLine + '<button class="close">Awesome</button>';
       modalCard.querySelector('.close').addEventListener('click', () => modal.classList.remove('show'));
     }, 1300);
   }
@@ -1936,12 +1936,12 @@
 
   function sellFlow(label, price, cat) {
     modal.classList.add('show');
-    modalCard.innerHTML = '<div class="spinner"></div><h3>מפרסמת את ' + esc(label) + ' למכירה…</h3><p>ה-AI מתמחר לפי ביקוש בשוק היד-שנייה</p>';
+    modalCard.innerHTML = '<div class="spinner"></div><h3>Listing ' + esc(label) + ' for sale…</h3><p>AI is pricing it based on secondhand market demand</p>';
     setTimeout(() => {
       addListing({ name:label, price:Number(price)||0, category:cat||'' });
-      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:#34d399">' + icon('cash',48) + '</div><h3>פורסם למכירה!</h3>' +
-        '<p>' + esc(label) + ' עכשיו במדף המכירה בפרופיל שלך<br/>מחיר מומלץ: ₪' + esc(price) + ' · עמלת Awear 15%</p>' +
-        '<button class="close">לפרופיל</button>';
+      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:#34d399">' + icon('cash',48) + '</div><h3>Listed for sale!</h3>' +
+        '<p>' + esc(label) + ' is now on your profile\'s for-sale shelf<br/>Suggested price: ₪' + esc(price) + ' · Awear fee 15%</p>' +
+        '<button class="close">View profile</button>';
       modalCard.querySelector('.close').addEventListener('click', () => { modal.classList.remove('show'); showView('closet'); });
     }, 1300);
   }
@@ -1950,7 +1950,7 @@
     const buyBtn = e.target.closest('[data-buy]');
     if (buyBtn && !buyBtn.classList.contains('buy-action')) {
       // "קני את הלוק" button (shop-look) — try to use wardrobe items for look sheet
-      const label = buyBtn.dataset.label || 'הלוק';
+      const label = buyBtn.dataset.label || 'the look';
       const price = buyBtn.dataset.price;
       const wardrobe = loadWardrobe();
       const meta = loadMeta();
@@ -1998,15 +1998,15 @@
   }
   fileInput.addEventListener('change', async () => {
     const file=fileInput.files[0]; if(!file) return;
-    closetBody.innerHTML='<div class="loading"><div class="spinner"></div><p>ה-AI מזהה את הפריטים שלך…</p></div>';
+    closetBody.innerHTML='<div class="loading"><div class="spinner"></div><p>AI is identifying your items…</p></div>';
     const photoP=readDataURL(file), fd=new FormData(); fd.append('photo',file);
     const ctrl=new AbortController(), timer=setTimeout(()=>ctrl.abort(),30000);
     try {
       const res=await fetch('/api/analyze',{method:'POST',body:fd,signal:ctrl.signal});
-      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'שגיאה '+res.status);}
+      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'Error '+res.status);}
       const data=await res.json(); data.photo=await photoP; addScan(data);
     } catch(err) {
-      closetBody.innerHTML='<div class="err" style="display:flex;align-items:center;gap:8px">'+icon('alert',18)+'<span>'+esc(err.name==='AbortError'?'הבקשה ארכה יותר מדי — נסי שוב':err.message)+'</span></div>';
+      closetBody.innerHTML='<div class="err" style="display:flex;align-items:center;gap:8px">'+icon('alert',18)+'<span>'+esc(err.name==='AbortError'?'The request took too long — please try again':err.message)+'</span></div>';
     } finally { clearTimeout(timer); }
     fileInput.value='';
   });
@@ -2016,7 +2016,7 @@
         FEED_KEY='awear_feed',LASTSCAN_KEY='awear_lastscan',PROFILE_KEY='awear_profile';
   const ls={load:k=>{try{return JSON.parse(localStorage.getItem(k))||null;}catch(e){return null;}},
             save:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
-  const loadProfile=()=>ls.load(PROFILE_KEY)||{name:'הסטייל שלי',handle:'me',city:'',bio:'',photo:null};
+  const loadProfile=()=>ls.load(PROFILE_KEY)||{name:'My Style',handle:'me',city:'',bio:'',photo:null};
   const saveProfile=v=>ls.save(PROFILE_KEY,v);
   const loadWardrobe=()=>ls.load(WARDROBE_KEY)||[];
   const saveWardrobe=v=>ls.save(WARDROBE_KEY,v);
@@ -2034,13 +2034,13 @@
 
   // ---- Dolce closet / profile ----
   const SHELF_GROUPS=[
-    {cats:['top'],                       title:'מדף עליוניות',   icon:'shirt'},
-    {cats:['dress'],                     title:'מדף שמלות',      icon:'hanger'},
-    {cats:['bottoms'],                   title:'מדף מכנסיים',    icon:'shirt'},
-    {cats:['outerwear'],                 title:'מדף מעילים',     icon:'hanger'},
-    {cats:['shoes'],                     title:'ארון נעליים',    icon:'bag'},
-    {cats:['bag'],                       title:'מדף תיקים',      icon:'bag'},
-    {cats:['accessory','jewelry','hat'], title:'מגירת אקססוריז', icon:'sparkle'},
+    {cats:['top'],                       title:'Tops',          icon:'shirt'},
+    {cats:['dress'],                     title:'Dresses',       icon:'hanger'},
+    {cats:['bottoms'],                   title:'Bottoms',       icon:'shirt'},
+    {cats:['outerwear'],                 title:'Outerwear',     icon:'hanger'},
+    {cats:['shoes'],                     title:'Shoes',         icon:'bag'},
+    {cats:['bag'],                       title:'Bags',          icon:'bag'},
+    {cats:['accessory','jewelry','hat'], title:'Accessories',   icon:'sparkle'},
   ];
   let profileTab='closet';
 
@@ -2049,8 +2049,8 @@
     <div class="pname">${esc(it.name)}</div><div class="pbrand">${esc(it.brand_vibe||'')}</div>
     <div class="pprice">₪${esc(it.price_estimate_usd)}</div>
     <div class="pacts">
-      <button class="pbuy" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_usd)}" onclick="event.stopPropagation()">קני</button>
-      <button class="psell" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_usd||0)*.5)}" onclick="event.stopPropagation()">מכרי</button>
+      <button class="pbuy" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_usd)}" onclick="event.stopPropagation()">Shop</button>
+      <button class="psell" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_usd||0)*.5)}" onclick="event.stopPropagation()">Sell</button>
     </div></div>`;}
 
   function openWardrobeItemDetail(name) {
@@ -2066,18 +2066,18 @@
         <div style="font-size:48px;text-align:center;margin-bottom:8px">${it.emoji || '👗'}</div>
         <div style="font-size:18px;font-weight:900;text-align:center">${esc(it.name)}</div>
         <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:4px">${esc(it.brand_vibe||'')}${it.category ? ' · ' + esc(it.category) : ''}</div>
-        ${compat ? `<div style="text-align:center;margin-top:8px"><span style="background:rgba(139,92,246,.15);color:var(--accent);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">${compat.pct}% התאמה לארון</span></div>` : ''}
+        ${compat ? `<div style="text-align:center;margin-top:8px"><span style="background:rgba(139,92,246,.15);color:var(--accent);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">${compat.pct}% closet match</span></div>` : ''}
         ${tags.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px">
           ${tags.map(t => `<span style="background:var(--card);border:1px solid var(--line);border-radius:20px;font-size:11px;font-weight:700;padding:3px 10px">${esc(t)}</span>`).join('')}
         </div>` : ''}
         <div style="font-size:22px;font-weight:900;text-align:center;margin-top:12px;color:var(--accent)">₪${it.price_estimate_usd || '—'}</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:14px 20px 20px">
-        <button onclick="openAbigailWithItem('${attr(it.name)}')" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">✨ שאלי את אביגיל מה ללבוש</button>
+        <button onclick="openAbigailWithItem('${attr(it.name)}')" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">✨ Ask Abigail what to wear</button>
         <div style="display:flex;gap:8px">
-          <button onclick="openSellFormWithItem('${attr(JSON.stringify(it))}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">🏷️ מכרי</button>
-          <button onclick="addToWishlistFromSeed('${attr(it.name)}','${attr(it.emoji||'👗')}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">💭 לרשימה</button>
-          <button onclick="document.getElementById('purchase-modal').classList.remove('show')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">✕ סגרי</button>
+          <button onclick="openSellFormWithItem('${attr(JSON.stringify(it))}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">🏷️ Sell</button>
+          <button onclick="addToWishlistFromSeed('${attr(it.name)}','${attr(it.emoji||'👗')}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">💭 Wishlist</button>
+          <button onclick="document.getElementById('purchase-modal').classList.remove('show')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">✕ Close</button>
         </div>
       </div>`;
     modal.classList.add('show');
@@ -2088,15 +2088,15 @@
     showView('chat');
     setTimeout(() => {
       const inp = document.getElementById('chat-input');
-      if (inp) { inp.value = 'מה אני יכולה ללבוש עם ' + name + '?'; inp.focus(); }
+      if (inp) { inp.value = 'What can I wear with ' + name + '?'; inp.focus(); }
     }, 300);
   }
 
 
   function closetShelvesHTML(wardrobe){
-    if(!wardrobe.length) return `<div class="hint"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('door',60)}</div><h2>הארון שלך עוד ריק</h2>
-      <p>צלמי תלבושת וה-AI יסדר כל פריט<br/>על המדף הנכון בארון שלך.</p>
-      <div class="cta" style="display:inline-flex;align-items:center;gap:5px">לחצי על ${icon('plus',15)} למטה כדי להתחיל</div></div>`;
+    if(!wardrobe.length) return `<div class="hint"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('door',60)}</div><h2>Your closet is still empty</h2>
+      <p>Snap an outfit and AI will sort every item<br/>onto the right shelf in your closet.</p>
+      <div class="cta" style="display:inline-flex;align-items:center;gap:5px">Tap ${icon('plus',15)} below to get started</div></div>`;
     const byCat={};
     wardrobe.forEach(it=>{const c=(it.category||'').toLowerCase();(byCat[c]=byCat[c]||[]).push(it);});
     const known=new Set(SHELF_GROUPS.flatMap(g=>g.cats));
@@ -2106,28 +2106,28 @@
       <div class="shelf-ledge"></div></div>`;
     let html=SHELF_GROUPS.map(g=>{const items=g.cats.flatMap(c=>byCat[c]||[]);return items.length?shelf(g.icon,g.title,items):'';}).join('');
     const others=wardrobe.filter(it=>!known.has((it.category||'').toLowerCase()));
-    if(others.length) html+=shelf('hanger','שונות',others);
+    if(others.length) html+=shelf('hanger','Other',others);
     return html;
   }
 
   function looksGridHTML(){
     const feed=loadFeedPosts();
-    if(!feed.length) return `<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('image',44)}</div>עדיין לא שיתפת לוקים.<br/>צלמי תלבושת ושתפי אותה לפיד<br/>כדי שתופיע כאן בפרופיל שלך.</div>`;
+    if(!feed.length) return `<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('image',44)}</div>You haven't shared any looks yet.<br/>Snap an outfit and share it to the feed<br/>so it shows up here on your profile.</div>`;
     return `<div class="looks-grid">${feed.map(p=>`<div class="look-cell" data-goto-feed="1">
       ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
-      <div class="lc-meta">${esc(p.item_count||0)} פריטים${p.look_total_usd?' · ₪'+esc(p.look_total_usd):''}</div>
+      <div class="lc-meta">${esc(p.item_count||0)} items${p.look_total_usd?' · ₪'+esc(p.look_total_usd):''}</div>
     </div>`).join('')}</div>`;}
 
   function forSaleHTML(){
     const shelf=loadShelf(),shelfTotal=shelf.reduce((s,it)=>s+(Number(it.price)||0),0),earnings=Math.round(shelfTotal*.85);
-    const earnCard=shelf.length?`<div class="earn"><div class="top"><span class="big-num">₪${earnings.toLocaleString()}</span><span class="ttl">פוטנציאל רווח</span></div>
-      <p>${shelf.length} פריטים במכירה · שווי ₪${shelfTotal.toLocaleString()} · נטו אחרי עמלת Awear 15%</p></div>`:'';
+    const earnCard=shelf.length?`<div class="earn"><div class="top"><span class="big-num">₪${earnings.toLocaleString()}</span><span class="ttl">earnings potential</span></div>
+      <p>${shelf.length} items for sale · worth ₪${shelfTotal.toLocaleString()} · net after Awear's 15% fee</p></div>`:'';
     const listings=shelf.length
       ?shelf.map(it=>`<div class="listing"><div class="ic">${productImage(it)}</div>
-        <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div></div>
-        <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
-        <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button></div>`).join('')
-      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:#34d399">${icon('cash',44)}</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`;
+        <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">Priced by AI based on secondhand market demand</div></div>
+        <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">live</div></div>
+        <button class="rm" data-rm="${attr(it.ts)}" title="Remove">×</button></div>`).join('')
+      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:#34d399">${icon('cash',44)}</div>You haven't listed any items yet.<br/>Open your closet and tap "Sell" on an item.</div>`;
     return earnCard+listings;
   }
 
@@ -2141,14 +2141,14 @@
       ${!wardrobe.length ? `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;gap:12px">
           <div style="font-size:64px;line-height:1">👗✨</div>
-          <div style="font-size:18px;font-weight:900;letter-spacing:-.3px">הארון שלך מחכה</div>
-          <div style="font-size:13px;color:var(--muted);font-weight:600;line-height:1.6;max-width:240px">סרקי את הלוק הראשון שלך — ה-AI יזהה את הפריטים ויבנה את הארון האישי שלך</div>
-          <button onclick="document.getElementById('file-input').click()" style="margin-top:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;border-radius:16px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">📸 סרקי לוק ראשון</button>
+          <div style="font-size:18px;font-weight:900;letter-spacing:-.3px">Your closet is waiting</div>
+          <div style="font-size:13px;color:var(--muted);font-weight:600;line-height:1.6;max-width:240px">Scan your first look — AI will identify the items and build your personal closet</div>
+          <button onclick="document.getElementById('file-input').click()" style="margin-top:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;border-radius:16px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer">📸 Scan first look</button>
         </div>` : `
-      ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size:11.5px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">⚠️ הסריקה האחרונה הייתה במצב דמו — AI לא היה זמין, אלו פריטי הדגמה</div>`:''}
-      ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
-      ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} קני את הלוק האחרון · ~₪${esc(meta.look_total_usd)}</button>`:''}
-      <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>
+      ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size:11.5px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">⚠️ Your last scan ran in demo mode — AI was unavailable, these are sample items</div>`:''}
+      ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} AI Stylist · what to wear</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
+      ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="last look" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} Shop the last look · ~₪${esc(meta.look_total_usd)}</button>`:''}
+      <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} Share your look to the feed</button>
       ${closetShelvesHTML(wardrobe)}`}`;
 
 
@@ -2160,23 +2160,23 @@
       <div class="ig-head">
         <div class="ig-ava">${profPhotoHTML}</div>
         <div class="ig-id">
-          <div class="ig-name">${esc(prof.name||'הסטייל שלי')}</div>
+          <div class="ig-name">${esc(prof.name||'My Style')}</div>
           <div class="ig-handle">@${esc(prof.handle||'me')}${prof.city?' · '+esc(prof.city):''}</div>
           ${prof.bio?`<div style="font-size:12px;color:rgba(246,246,249,.7);margin-top:4px;line-height:1.4">${esc(prof.bio)}</div>`:''}
-          <span class="ig-edit" id="edit-profile-btn">עריכת פרופיל</span>
+          <span class="ig-edit" id="edit-profile-btn">Edit profile</span>
         </div>
       </div>
       <div class="ig-stats">
-        <div><b>${feed.length}</b><span>לוקים</span></div>
-        <div><b>1.2K</b><span>עוקבים</span></div>
-        <div><b>340</b><span>עוקבת</span></div>
-        <div><b style="display:inline-flex;align-items:center;gap:3px;color:var(--accent)">${icon('flame',16)}${meta.trend_score!=null?esc(meta.trend_score):'—'}</b><span>טרנדיות</span></div>
+        <div><b>${feed.length}</b><span>looks</span></div>
+        <div><b>1.2K</b><span>followers</span></div>
+        <div><b>340</b><span>following</span></div>
+        <div><b style="display:inline-flex;align-items:center;gap:3px;color:var(--accent)">${icon('flame',16)}${meta.trend_score!=null?esc(meta.trend_score):'—'}</b><span>trend score</span></div>
       </div>
-      <div class="ig-bio"><b>${wardrobe.length} פריטים</b> בארון · שווי ~₪${closetValue.toLocaleString()}${meta.overall_style?' · '+esc(meta.overall_style):''}</div>
+      <div class="ig-bio"><b>${wardrobe.length} items</b> in closet · worth ~₪${closetValue.toLocaleString()}${meta.overall_style?' · '+esc(meta.overall_style):''}</div>
       <div class="seg">
-        <button data-seg="closet" class="${profileTab==='closet'?'on':''}">${icon('hanger',15)} הארון</button>
-        <button data-seg="looks"  class="${profileTab==='looks'?'on':''}">${icon('grid',15)} לוקים</button>
-        <button data-seg="forsale" class="${profileTab==='forsale'?'on':''}">${icon('tag',15)} למכירה</button>
+        <button data-seg="closet" class="${profileTab==='closet'?'on':''}">${icon('hanger',15)} Closet</button>
+        <button data-seg="looks"  class="${profileTab==='looks'?'on':''}">${icon('grid',15)} Looks</button>
+        <button data-seg="forsale" class="${profileTab==='forsale'?'on':''}">${icon('tag',15)} For Sale</button>
       </div>${body}`;
 
     document.getElementById('share-look')?.addEventListener('click',shareLookToFeed);
@@ -2192,11 +2192,11 @@
     const meta={overall_style:data.overall_style,occasion:data.occasion,trend_score:data.trend_score,
       summary:data.summary,stylist_tip:data.stylist_tip,look_total_usd:data.look_total_usd,mode:data.mode||'live'};
     saveMeta(meta); saveLastScan({photo:data.photo||null,items:newItems,meta});
-    if(newItems.length) logAdminEvent('scan', 'סרקה ' + newItems.length + ' פריטים — ' + (newItems[0]?.name||''));
+    if(newItems.length) logAdminEvent('scan', 'Scanned ' + newItems.length + ' items — ' + (newItems[0]?.name||''));
     renderCloset();
     if(newItems.length){
-      const base=(newItems[0]?.emoji||'✨') + ' ' + (newItems[0]?.name||'') + ' נוסף לארון ✓';
-      showToast(data.mode==='demo' ? base + ' (מצב דמו — AI לא היה זמין)' : base);
+      const base=(newItems[0]?.emoji||'✨') + ' ' + (newItems[0]?.name||'') + ' added to your closet ✓';
+      showToast(data.mode==='demo' ? base + ' (demo mode — AI was unavailable)' : base);
     }
   }
 
@@ -2212,26 +2212,26 @@
   }
 
   function shareLookToFeed(){
-    const scan=loadLastScan();if(!scan){showToast('צלמי לוק קודם כדי לשתף');return;}
+    const scan=loadLastScan();if(!scan){showToast('Scan a look first to share it');return;}
     const meta=scan.meta||{};
     const post={ts:Date.now(),id:'mine_'+Date.now(),photo:scan.photo||null,
-      caption:meta.overall_style||'הלוק שלי',occasion:meta.occasion||'',
+      caption:meta.overall_style||'My look',occasion:meta.occasion||'',
       item_count:(scan.items||[]).length,look_total_usd:meta.look_total_usd||0,
       items:(scan.items||[]).map(it=>({category:it.category,name:it.name,price_estimate_usd:it.price_estimate_usd,buy_options:it.buy_options||[],search_query:it.search_query})),
       tags:(scan.items||[]).reduce((acc,it)=>{(it.style_tags||[]).forEach(t=>acc.push(t));if(it.category)acc.push(it.category);return acc;},[])};
     const feed=loadFeedPosts();feed.unshift(post);saveFeedPosts(feed);
-    showToast('הלוק שותף לפיד');showView('feed');
+    showToast('Look shared to the feed');showView('feed');
   }
 
   // ---- Feed ----
   const SEED_POSTS=[
-    {id:'s1',user:'noa.styles', name:'נועה',verified:true, caption:'לוק קיצי לבית קפה ☕️',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress'],items:[{category:'top',name:'חולצת קרופ לבנה',price_estimate_usd:79,q:'white cropped tee'},{category:'bottoms',name:'מכנס בייקר בז',price_estimate_usd:159,q:'beige baker trousers'},{category:'shoes',name:'סניקרס לבנות',price_estimate_usd:220,q:'white leather sneakers'},{category:'accessory',name:'משקפי שמש',price_estimate_usd:89,q:'trendy sunglasses'}]},
-    {id:'s2',user:'yael_fits',  name:'יעל', verified:false,caption:'סטריטוור עכשווי ✨',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes'],items:[{category:'top',name:'טי אוברסייז',price_estimate_usd:99,q:'oversized graphic tee'},{category:'bottoms',name:'קרגו פראשוט',price_estimate_usd:159,q:'parachute cargo pants'},{category:'shoes',name:'אדידס סמבה',price_estimate_usd:449,q:'adidas samba'},{category:'accessory',name:'כובע בייסבול',price_estimate_usd:69,q:'baseball cap'}]},
-    {id:'s3',user:'mika.thrift',name:'מיקה',verified:true, caption:'יד שנייה במצב מעולה ♻️',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag'],items:[{category:'top',name:'חולצה משומשת',price_estimate_usd:45,q:'vintage shirt'},{category:'bottoms',name:'גינס מאם',price_estimate_usd:89,q:'vintage mom jeans'},{category:'bag',name:'תיק כתף',price_estimate_usd:60,q:'vintage shoulder bag'}]},
-    {id:'s4',user:'shir.daily', name:'שיר', verified:false,caption:'אאוטפיט ליום ראשון 🤍',        tags:['minimal','ootd'],            price:179,img:null,                 grad:'linear-gradient(160deg,#fccb90,#d57eeb)',         likes:3300,trend:88,earn:18,mtags:['minimal','everyday','ootd','dress','shoes'],items:[{category:'dress',name:'שמלת מידי',price_estimate_usd:179,q:'midi slip dress'},{category:'shoes',name:'נעלי בלרינה',price_estimate_usd:120,q:'ballet flats'},{category:'bag',name:'תיק מיני',price_estimate_usd:95,q:'mini bag'}]},
-    {id:'s5',user:'agam.x',     name:'אגם', verified:true, caption:'vintage vibes 🕶️',            tags:['vintage','retro'],           price:259,img:null,                 grad:'linear-gradient(160deg,#5ee7df,#b490ca)',         likes:4000,trend:94,earn:26,mtags:['vintage','retro','thrifted','accessory','outerwear'],items:[{category:'outerwear',name:'מעיל דנים',price_estimate_usd:199,q:'vintage denim jacket'},{category:'accessory',name:'משקפי רטרו',price_estimate_usd:79,q:'retro sunglasses'},{category:'shoes',name:'מגף קאובוי',price_estimate_usd:259,q:'cowboy boots'}]},
-    {id:'s6',user:'dana.edit',  name:'דנה', verified:false,caption:'office but make it cute 💼',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag'],items:[{category:'dress',name:'שמלת בלייזר',price_estimate_usd:320,q:'blazer dress'},{category:'shoes',name:'מוקסינים',price_estimate_usd:199,q:'leather loafers'},{category:'bag',name:'תיק מובנה',price_estimate_usd:240,q:'structured work bag'}]},
-    {id:'s7',user:'lia.threads',name:'ליה', verified:true, caption:'beach day ready 🌊',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms'],items:[{category:'top',name:'טופ ביקיני',price_estimate_usd:69,q:'bikini top'},{category:'bottoms',name:'מכנס פשתן',price_estimate_usd:120,q:'linen beach pants'},{category:'accessory',name:'כובע קש',price_estimate_usd:79,q:'straw hat'}]},
+    {id:'s1',user:'noa.styles', name:'Noa',verified:true, caption:'Summer cafe look ☕️',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress'],items:[{category:'top',name:'White cropped tee',price_estimate_usd:79,q:'white cropped tee'},{category:'bottoms',name:'Beige baker trousers',price_estimate_usd:159,q:'beige baker trousers'},{category:'shoes',name:'White sneakers',price_estimate_usd:220,q:'white leather sneakers'},{category:'accessory',name:'Sunglasses',price_estimate_usd:89,q:'trendy sunglasses'}]},
+    {id:'s2',user:'yael_fits',  name:'Yael', verified:false,caption:'Modern streetwear ✨',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes'],items:[{category:'top',name:'Oversized tee',price_estimate_usd:99,q:'oversized graphic tee'},{category:'bottoms',name:'Parachute cargo pants',price_estimate_usd:159,q:'parachute cargo pants'},{category:'shoes',name:'Adidas Samba',price_estimate_usd:449,q:'adidas samba'},{category:'accessory',name:'Baseball cap',price_estimate_usd:69,q:'baseball cap'}]},
+    {id:'s3',user:'mika.thrift',name:'Mika',verified:true, caption:'Secondhand, like new ♻️',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag'],items:[{category:'top',name:'Vintage shirt',price_estimate_usd:45,q:'vintage shirt'},{category:'bottoms',name:'Vintage mom jeans',price_estimate_usd:89,q:'vintage mom jeans'},{category:'bag',name:'Shoulder bag',price_estimate_usd:60,q:'vintage shoulder bag'}]},
+    {id:'s4',user:'shir.daily', name:'Shir', verified:false,caption:'Sunday outfit 🤍',        tags:['minimal','ootd'],            price:179,img:null,                 grad:'linear-gradient(160deg,#fccb90,#d57eeb)',         likes:3300,trend:88,earn:18,mtags:['minimal','everyday','ootd','dress','shoes'],items:[{category:'dress',name:'Midi dress',price_estimate_usd:179,q:'midi slip dress'},{category:'shoes',name:'Ballet flats',price_estimate_usd:120,q:'ballet flats'},{category:'bag',name:'Mini bag',price_estimate_usd:95,q:'mini bag'}]},
+    {id:'s5',user:'agam.x',     name:'Agam', verified:true, caption:'vintage vibes 🕶️',            tags:['vintage','retro'],           price:259,img:null,                 grad:'linear-gradient(160deg,#5ee7df,#b490ca)',         likes:4000,trend:94,earn:26,mtags:['vintage','retro','thrifted','accessory','outerwear'],items:[{category:'outerwear',name:'Denim jacket',price_estimate_usd:199,q:'vintage denim jacket'},{category:'accessory',name:'Retro sunglasses',price_estimate_usd:79,q:'retro sunglasses'},{category:'shoes',name:'Cowboy boots',price_estimate_usd:259,q:'cowboy boots'}]},
+    {id:'s6',user:'dana.edit',  name:'Dana', verified:false,caption:'office but make it cute 💼',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag'],items:[{category:'dress',name:'Blazer dress',price_estimate_usd:320,q:'blazer dress'},{category:'shoes',name:'Loafers',price_estimate_usd:199,q:'leather loafers'},{category:'bag',name:'Structured bag',price_estimate_usd:240,q:'structured work bag'}]},
+    {id:'s7',user:'lia.threads',name:'Lia', verified:true, caption:'beach day ready 🌊',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms'],items:[{category:'top',name:'Bikini top',price_estimate_usd:69,q:'bikini top'},{category:'bottoms',name:'Linen pants',price_estimate_usd:120,q:'linen beach pants'},{category:'accessory',name:'Straw hat',price_estimate_usd:79,q:'straw hat'}]},
   ];
 
   function loadSet(k){try{return new Set(JSON.parse(localStorage.getItem(k))||[]);}catch(e){return new Set();}}
@@ -2250,13 +2250,13 @@
     const liked=LIKES.has(post.id),saved=SAVED.has(post.id);
     const bgImg=post.img?`<img class="feed-img" src="${attr(post.img)}" alt="" onerror="this.style.display='none'">` :'';
     const tagPills=tags.map(t=>`<span class="ftag">#${esc(t)}</span>`).join('');
-    const mineBadge=isMine?`<span class="mine-tag" style="display:inline-flex;align-items:center;gap:4px">${icon('sparkle',13)} אני</span>`:`<span></span>`;
-    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn" style="display:flex;align-items:center;gap:5px">${icon('diamond',13)} @${esc(post.user)} תרוויח ₪${esc(post.earn)} על כל קנייה</div>`:'';
-    const lbl=post.name?'לוק של '+post.name:(post.caption||'הלוק');
+    const mineBadge=isMine?`<span class="mine-tag" style="display:inline-flex;align-items:center;gap:4px">${icon('sparkle',13)} You</span>`:`<span></span>`;
+    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn" style="display:flex;align-items:center;gap:5px">${icon('diamond',13)} @${esc(post.user)} earns ₪${esc(post.earn)} on every purchase</div>`:'';
+    const lbl=post.name?post.name+"'s look":(post.caption||'the look');
     // % of this look already in wardrobe
     const _ownWardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
     const _ownScore=_ownWardrobe.length?calcCompatScore({style_tags:tags},_ownWardrobe):{pct:0,matches:[]};
-    const ownBadge=_ownWardrobe.length?`<div class="fc-own-badge">${icon('hanger',12)} ${esc(_ownScore.pct)}% כבר בארון שלך</div>`:'';
+    const ownBadge=_ownWardrobe.length?`<div class="fc-own-badge">${icon('hanger',12)} ${esc(_ownScore.pct)}% already in your closet</div>`:'';
 
     // Item pills — right side, vertical stack
     const pillItems=(post.items||[]).slice(0,4);
@@ -2280,7 +2280,7 @@
         <div class="fc-user">@${esc(post.user||'me')}${post.verified?`<span class="fc-verified">${icon('checkCircle',14)}</span>`:''}</div>
         <div class="fc-caption">${esc(post.caption||'')}</div>
         <div class="fc-tags">${tagPills}</div>
-        <span class="fc-match">${matchPercent(mtags)}% התאמה לארון שלי</span>
+        <span class="fc-match">${matchPercent(mtags)}% match to my closet</span>
         ${earnLine}
       </div>
 
@@ -2291,13 +2291,13 @@
         </button>
         <button class="fca-btn${saved?' saved':''}" data-action="save" data-id="${attr(post.id||'')}">
           <div class="fca-ico">${icon(saved?'bookmarkFill':'bookmark',21)}</div>
-          <span>${saved?'נשמר':'שמרי'}</span>
+          <span>${saved?'Saved':'Save'}</span>
         </button>
         <button class="fca-btn" data-action="share">
-          <div class="fca-ico">${icon('share',21)}</div><span>שתפי</span>
+          <div class="fca-ico">${icon('share',21)}</div><span>Share</span>
         </button>
         <button class="fca-btn" data-action="report" data-id="${attr(post.id||'')}" aria-label="Report post">
-          <div class="fca-ico">${icon('flag',21)}</div><span>דווחי</span>
+          <div class="fca-ico">${icon('flag',21)}</div><span>Report</span>
         </button>
         <button class="fca-btn buy-btn buy-action"
             data-label="${attr(lbl)}" data-price="${attr(post.price||post.look_total_usd||0)}"
@@ -2324,7 +2324,7 @@
     let seeds=SEED_POSTS;
     if(activeFilter!=='all') seeds=seeds.filter(p=>(p.tags||[]).includes(activeFilter));
     if(!seeds.length&&!loadFeedPosts().length){
-      host.innerHTML=`<div class="feed-empty"><div class="big" style="display:flex;justify-content:center">${icon('search',50)}</div><p>אין לוקים בסגנון הזה עדיין</p></div>`;return;
+      host.innerHTML=`<div class="feed-empty"><div class="big" style="display:flex;justify-content:center">${icon('search',50)}</div><p>No looks in this style yet</p></div>`;return;
     }
     seeds.forEach(post=>{const wrap=document.createElement('div');wrap.innerHTML=feedCardHTML(post,false);host.appendChild(wrap.firstElementChild);});
   }
@@ -2343,7 +2343,7 @@
   function shopPostItems(post,fallbackLabel,price,earn,user){
     if(post && post.items && post.items.length){
       const total=post.items.reduce((s,x)=>s+(Number(x.price_estimate_usd||x.price)||0),0);
-      openSheetLook(post.name?('לוק של '+post.name):(post.caption||fallbackLabel||'הלוק'),
+      openSheetLook(post.name?(post.name+"'s look"):(post.caption||fallbackLabel||'the look'),
         post.items, price||post.price||post.look_total_usd||total, earn||post.earn||0, user||post.user||'');
       return true;
     }
@@ -2388,10 +2388,10 @@
       const ico=action.querySelector('.fca-ico'),cnt=action.querySelector('span');
       ico.innerHTML=icon(on?'bookmarkFill':'bookmark',21);
       action.classList.toggle('saved',on);
-      if(cnt)cnt.textContent=on?'נשמר':'שמרי';
-      showToast(on?'נשמר לרשימת המשאלות':'הוסר מהשמורים');
+      if(cnt)cnt.textContent=on?'Saved':'Save';
+      showToast(on?'Saved to your wishlist':'Removed from saved');
     }
-    if(type==='share')showToast('הקישור הועתק');
+    if(type==='share')showToast('Link copied');
     if(type==='report'){
       const post=feedPostById(id);
       reportContent('post', id, post?(post.caption||post.name||''):'');
@@ -2437,22 +2437,22 @@
   // ---- Rewards & Gamification (hoisted above renderHome — TDZ fix) ----
   const RW_KEY = 'awear_rewards';
   const LEVELS = [
-    {name:'מתחילה', icon:'leaf', min:0, color:'#4ade80'},
-    {name:'סטייליסטית', icon:'sparkle', min:100, color:'var(--accent2)'},
-    {name:'מובילת טרנד', icon:'flame', min:300, color:'var(--accent)'},
+    {name:'Beginner', icon:'leaf', min:0, color:'#4ade80'},
+    {name:'Stylist', icon:'sparkle', min:100, color:'var(--accent2)'},
+    {name:'Trendsetter', icon:'flame', min:300, color:'var(--accent)'},
     {name:'Fashion Icon', icon:'crown', min:600, color:'#f59e0b'},
   ];
   const PERKS = [
-    {name:'מנוי פרמיום חודש', desc:'ללא מודעות + ניתוחי AI מתקדמים', pts:500, icon:'diamond'},
-    {name:'ייעוץ סטייליסט', desc:'30 דקות עם סטייליסט אנושי', pts:300, icon:'sparkle'},
-    {name:'משלוח חינם', desc:'עבור קנייה ב-Marketplace', pts:150, icon:'box'},
-    {name:'עמלת מכירה 0%', desc:'פריט אחד ללא עמלה', pts:100, icon:'tag'},
+    {name:'1 month Premium', desc:'Ad-free + advanced AI insights', pts:500, icon:'diamond'},
+    {name:'Stylist consult', desc:'30 minutes with a human stylist', pts:300, icon:'sparkle'},
+    {name:'Free shipping', desc:'On a Marketplace purchase', pts:150, icon:'box'},
+    {name:'0% selling fee', desc:'One item, no commission', pts:100, icon:'tag'},
   ];
   const RW_ACTIONS = [
-    {key:'scan', name:'סריקת לוק', icon:'camera', pts:10, desc:'כל סריקה חדשה'},
-    {key:'wore', name:'לבשתי', icon:'hanger', pts:5, desc:'רישום לבישה יומי'},
-    {key:'sell', name:'מכרתי פריט', icon:'cash', pts:25, desc:'מכירה ב-Marketplace'},
-    {key:'refer', name:'הזמנת חברה', icon:'users', pts:50, desc:'חברה הצטרפה'},
+    {key:'scan', name:'Scan a look', icon:'camera', pts:10, desc:'Every new scan'},
+    {key:'wore', name:'Wore it', icon:'hanger', pts:5, desc:'Daily wear log'},
+    {key:'sell', name:'Sold an item', icon:'cash', pts:25, desc:'Sale on Marketplace'},
+    {key:'refer', name:'Referred a friend', icon:'users', pts:50, desc:'Friend joined'},
   ];
 
   // Auto-render home on load
@@ -2595,10 +2595,10 @@
         const curLevel  = [...LEVELS].reverse().find(l => pts >= l.min) || LEVELS[0];
         const pct = nextLevel.min > curLevel.min ? Math.round(((pts - curLevel.min) / (nextLevel.min - curLevel.min)) * 100) : 100;
         const DAILY = [
-          {icon:'📸', text:'סרקי פריט חדש לארון', pts:20},
-          {icon:'✨', text:'צרי לוק עם ה-AI', pts:15},
-          {icon:'💬', text:'שאלי את אביגיל משהו', pts:10},
-          {icon:'🛒', text:'פרסמי פריט למכירה', pts:25},
+          {icon:'📸', text:'Scan a new item into your closet', pts:20},
+          {icon:'✨', text:'Create a look with AI', pts:15},
+          {icon:'💬', text:'Ask Abigail something', pts:10},
+          {icon:'🛒', text:'List an item for sale', pts:25},
         ];
         const todayChallenge = DAILY[new Date().getDay() % DAILY.length];
         return `
@@ -2608,13 +2608,13 @@
             <div style="font-size:32px">${todayChallenge.icon}</div>
             <div style="flex:1">
               <div style="font-size:13px;font-weight:800">${esc(todayChallenge.text)}</div>
-              <div style="font-size:11px;color:var(--accent2);font-weight:700;margin-top:3px">+${todayChallenge.pts} נקודות</div>
+              <div style="font-size:11px;color:var(--accent2);font-weight:700;margin-top:3px">+${todayChallenge.pts} points</div>
             </div>
           </div>
           <div style="margin-top:12px;">
             <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:5px">
-              <span style="display:inline-flex;align-items:center;gap:3px">${icon(curLevel.icon,12)} ${esc(curLevel.name)} · ${pts} נק׳</span>
-              <span>${esc(nextLevel.name)} ${nextLevel.min} נק׳</span>
+              <span style="display:inline-flex;align-items:center;gap:3px">${icon(curLevel.icon,12)} ${esc(curLevel.name)} · ${pts} pts</span>
+              <span>${esc(nextLevel.name)} ${nextLevel.min} pts</span>
             </div>
             <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden">
               <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s"></div>
@@ -2627,15 +2627,15 @@
       <div class="home-quick" style="overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;padding-bottom:4px">
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('outfits')"><span class="hq-icon">✨</span>Outfit AI</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('shopping')"><span class="hq-icon">🛍️</span>Shopping</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('chat')"><span class="hq-icon">💅</span>אביגיל</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('stylists')"><span class="hq-icon">🧑‍🎨</span>סטייליסטים</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('analytics')"><span class="hq-icon">📊</span>אנליטיקס</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('chat')"><span class="hq-icon">💅</span>Abigail</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('stylists')"><span class="hq-icon">🧑‍🎨</span>Stylists</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('analytics')"><span class="hq-icon">📊</span>Analytics</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('wishlist')"><span class="hq-icon">💫</span>Wishlist</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('marketplace')"><span class="hq-icon">🛒</span>Marketplace</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('compare')"><span class="hq-icon">⚖️</span>השוואה</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('compare')"><span class="hq-icon">⚖️</span>Compare</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('rewards')"><span class="hq-icon">🏆</span>Rewards</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('sustainability')"><span class="hq-icon">🌿</span>Eco</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('seasonal')"><span class="hq-icon">📋</span>עונה</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('seasonal')"><span class="hq-icon">📋</span>Season</button>
       </div>
     `;
 
@@ -2650,7 +2650,7 @@
       });
     }
 
-    // "לבשתי" button
+    // "Wore it" button
     const haWore = document.getElementById('ha-wore');
     if (haWore) {
       haWore.addEventListener('click', () => {
@@ -2663,8 +2663,8 @@
             if (match) match.wear_count = (match.wear_count || 0) + 1;
           });
           localStorage.setItem('awear_wardrobe', JSON.stringify(wardrobe2));
-          showToast('נרשם! הלוק נשמר ✓');
-          haWore.textContent = '✓ נשמר!';
+          showToast('Logged! Look saved ✓');
+          haWore.textContent = '✓ Saved!';
           haWore.disabled = true;
         }
       });
@@ -2682,8 +2682,8 @@
         .then(d => {
           if (!d.current_weather) return;
           const t = Math.round(d.current_weather.temperature);
-          const codes = {0:'☀️ שמש',1:'🌤️ בהיר',2:'⛅ מעונן חלקית',3:'☁️ מעונן',
-            45:'🌫️ ערפל',61:'🌧️ גשם',63:'🌧️ גשם',80:'🌦️ ממטרים',95:'⛈️ סופה'};
+          const codes = {0:'☀️ Sunny',1:'🌤️ Clear',2:'⛅ Partly cloudy',3:'☁️ Cloudy',
+            45:'🌫️ Fog',61:'🌧️ Rain',63:'🌧️ Rain',80:'🌦️ Showers',95:'⛈️ Storm'};
           const cond = codes[d.current_weather.weathercode] || '🌡️';
           const tempEl = document.getElementById('hw-temp');
           const condEl = document.getElementById('hw-cond');
@@ -2699,7 +2699,7 @@
     const el = document.getElementById('analytics-wrap');
 
     if (!wardrobe.length) {
-      el.innerHTML = `<div class="an-header">📊 אנליטיקס</div><div class="an-empty">📭 הארון ריק עדיין<br><span style="font-size:12px;font-weight:500;opacity:.6">סרקי לוק ראשון כדי לראות סטטיסטיקות</span></div>`;
+      el.innerHTML = `<div class="an-header">📊 Analytics</div><div class="an-empty">📭 Your closet is still empty<br><span style="font-size:12px;font-weight:500;opacity:.6">Scan your first look to see your stats</span></div>`;
       return;
     }
 
@@ -2710,7 +2710,7 @@
 
     // Color distribution
     const colorMap = {};
-    wardrobe.forEach(i => { const c = (i.color||'אחר'); colorMap[c] = (colorMap[c]||0)+1; });
+    wardrobe.forEach(i => { const c = (i.color||'Other'); colorMap[c] = (colorMap[c]||0)+1; });
     const topColors = Object.entries(colorMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
 
     // Category distribution
@@ -2724,21 +2724,21 @@
     const leastWorn  = sortedByWear.filter(i => (i.wear_count||0) === 0).slice(0,3);
 
     el.innerHTML = `
-      <div class="an-header">📊 אנליטיקס</div>
+      <div class="an-header">📊 Analytics</div>
       <div class="an-hero">
-        <div class="an-box"><div class="an-box-num">${totalItems}</div><div class="an-box-label">פריטים</div></div>
-        <div class="an-box"><div class="an-box-num">${totalValue > 999 ? '₪'+(totalValue/1000).toFixed(1)+'K' : '₪'+totalValue}</div><div class="an-box-label">שווי ארון</div></div>
-        <div class="an-box"><div class="an-box-num">${totalWears}</div><div class="an-box-label">לבישות</div></div>
+        <div class="an-box"><div class="an-box-num">${totalItems}</div><div class="an-box-label">items</div></div>
+        <div class="an-box"><div class="an-box-num">${totalValue > 999 ? '₪'+(totalValue/1000).toFixed(1)+'K' : '₪'+totalValue}</div><div class="an-box-label">closet value</div></div>
+        <div class="an-box"><div class="an-box-num">${totalWears}</div><div class="an-box-label">wears</div></div>
       </div>
 
       ${avgCPW !== null ? `
       <div class="an-cpw-card">
         <div class="an-cpw-val">₪${avgCPW}</div>
-        <div class="an-cpw-label">עלות ממוצעת ללבישה · Cost Per Wear</div>
+        <div class="an-cpw-label">Average cost per wear</div>
       </div>` : ''}
 
       <div class="an-section">
-        <div class="an-sec-title">🎨 הצבעים שלי</div>
+        <div class="an-sec-title">🎨 My colors</div>
         ${topColors.map(([color, count]) => {
           const pct = Math.round((count/totalItems)*100);
           return `<div class="an-bar-row">
@@ -2750,7 +2750,7 @@
       </div>
 
       <div class="an-section">
-        <div class="an-sec-title">👗 לפי קטגוריה</div>
+        <div class="an-sec-title">👗 By category</div>
         ${topCats.map(([cat, count]) => {
           const pct = Math.round((count/totalItems)*100);
           return `<div class="an-bar-row">
@@ -2763,47 +2763,47 @@
 
       ${mostWorn.length ? `
       <div class="an-section">
-        <div class="an-sec-title">🔥 הכי נלבש</div>
+        <div class="an-sec-title">🔥 Most worn</div>
         ${mostWorn.map(i => `
           <div class="an-item-row">
             <div class="an-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="an-item-name">${esc(i.name)}</div>
-              <div class="an-item-sub">${i.wear_count} לבישות</div>
+              <div class="an-item-sub">${i.wear_count} wears</div>
             </div>
-            <div class="an-item-cpw">${i.price_estimate_usd && i.wear_count ? '₪'+Math.round(i.price_estimate_usd/i.wear_count)+'/ל׳' : ''}</div>
+            <div class="an-item-cpw">${i.price_estimate_usd && i.wear_count ? '₪'+Math.round(i.price_estimate_usd/i.wear_count)+'/wear' : ''}</div>
           </div>`).join('')}
       </div>` : ''}
 
       ${leastWorn.length ? `
       <div class="an-section">
-        <div class="an-sec-title">💤 אף פעם לא נלבש</div>
+        <div class="an-sec-title">💤 Never worn</div>
         ${leastWorn.map(i => `
           <div class="an-item-row">
             <div class="an-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="an-item-name">${esc(i.name)}</div>
-              <div class="an-item-sub">₪${i.price_estimate_usd||0} בארון · מעולם לא נלבש</div>
+              <div class="an-item-sub">₪${i.price_estimate_usd||0} in closet · never worn</div>
             </div>
-            <button class="ha-btn ha-secondary" style="padding:6px 12px;font-size:11px;border-radius:10px;white-space:nowrap;flex-shrink:0" onclick="addToWishlistFromItem('${attr(i.name)}')">למכירה</button>
+            <button class="ha-btn ha-secondary" style="padding:6px 12px;font-size:11px;border-radius:10px;white-space:nowrap;flex-shrink:0" onclick="addToWishlistFromItem('${attr(i.name)}')">Sell</button>
           </div>`).join('')}
       </div>
       <div class="an-section">
-        <button class="ha-btn ha-primary" style="width:100%" onclick="runDeclutter()">🧹 Smart Declutter — AI מנקה את הארון</button>
+        <button class="ha-btn ha-primary" style="width:100%" onclick="runDeclutter()">🧹 Smart Declutter — let AI clean out your closet</button>
       </div>` : ''}
     `;
   }
 
   // ---- Outfit Generator ----
   const OG_SCENARIOS = [
-    {icon:'heartFill',label:'דייט הערב'},
-    {icon:'briefcase',label:'ראיון עבודה'},
-    {icon:'plane',label:'טיול לאירופה'},
-    {icon:'gift',label:'מסיבת יום הולדת'},
-    {icon:'coffee',label:'בוקר קז׳ואל בעיר'},
-    {icon:'dumbbell',label:'אימון ספורט'},
-    {icon:'diamond',label:'אירוע פורמלי'},
-    {icon:'wave',label:'חוף הים'},
+    {icon:'heartFill',label:'Date tonight'},
+    {icon:'briefcase',label:'Job interview'},
+    {icon:'plane',label:'Trip to Europe'},
+    {icon:'gift',label:'Birthday party'},
+    {icon:'coffee',label:'Casual morning out'},
+    {icon:'dumbbell',label:'Workout'},
+    {icon:'diamond',label:'Formal event'},
+    {icon:'wave',label:'Beach day'},
   ];
 
   let ogLoading = false;
@@ -2831,7 +2831,7 @@
     ogLoading = true;
     document.getElementById('og-input').value = occasion;
     const resultEl = document.getElementById('og-result');
-    resultEl.innerHTML = `<div class="og-loading"><div class="og-loading-spinner">✨</div><div style="margin-top:12px;font-size:14px;font-weight:700;color:var(--muted)">בונה לוקים...</div></div>`;
+    resultEl.innerHTML = `<div class="og-loading"><div class="og-loading-spinner">✨</div><div style="margin-top:12px;font-size:14px;font-weight:700;color:var(--muted)">Building looks...</div></div>`;
 
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const prof = loadProfile();
@@ -2863,43 +2863,44 @@
     const bags    = wardrobe.filter(i => i.category === 'bag');
 
     const presets = {
-      'דייט': [
-        {name:'לוק רומנטי', tip:'הוסיפי עגילים זהב ובושם קל — ה-details מנצחים.', items:[
-          tops[0]||{name:'חולצה שקופה',category:'top',_missing:true},
-          bottoms[0]||{name:'חצאית מידי',category:'dress',_missing:true},
-          shoes[0]||{name:'עקב נמוך',category:'shoes',_missing:true},
+      'date': [
+        {name:'Romantic look', tip:'Add gold earrings and a light perfume — the details win.', items:[
+          tops[0]||{name:'Sheer blouse',category:'top',_missing:true},
+          bottoms[0]||{name:'Midi skirt',category:'dress',_missing:true},
+          shoes[0]||{name:'Low heel',category:'shoes',_missing:true},
         ]},
-        {name:'לוק אורבני', tip:'ג׳קט דנים מוסיף קשיחות — פרפקט לדייט casual.', items:[
-          tops[1]||tops[0]||{name:'טי-שירט בסיס',category:'top',_missing:true},
-          bottoms[1]||bottoms[0]||{name:'ג׳ינס slim',category:'bottoms',_missing:true},
-          shoes[0]||{name:'סניקרס לבן',category:'shoes',_missing:true},
-        ]},
-      ],
-      'ראיון': [
-        {name:'Business Professional', tip:'פרטים: שרשרת עדינה, ציפורניים נקיות. Less is more.', items:[
-          tops[0]||{name:'חולצה לבנה',category:'top',_missing:true},
-          bottoms[0]||{name:'מכנס שחור ישר',category:'bottoms',_missing:true},
-          shoes[0]||{name:'עקב קלאסי',category:'shoes',_missing:true},
-          bags[0]||{name:'תיק מקצועי',category:'bag',_missing:true},
+        {name:'Urban look', tip:'A denim jacket adds edge — perfect for a casual date.', items:[
+          tops[1]||tops[0]||{name:'Basic tee',category:'top',_missing:true},
+          bottoms[1]||bottoms[0]||{name:'Slim jeans',category:'bottoms',_missing:true},
+          shoes[0]||{name:'White sneakers',category:'shoes',_missing:true},
         ]},
       ],
-      'ספורט': [
-        {name:'Sport Chic', tip:'מגבת קטנה + בקבוק מים מותאם = שלם את הלוק.', items:[
-          tops[0]||{name:'קרופ ספורטיבי',category:'top',_missing:true},
-          bottoms[0]||{name:'לגינס',category:'bottoms',_missing:true},
-          shoes[0]||{name:'סניקרס ספורט',category:'shoes',_missing:true},
+      'interview': [
+        {name:'Business Professional', tip:'Details: a delicate necklace, clean nails. Less is more.', items:[
+          tops[0]||{name:'White shirt',category:'top',_missing:true},
+          bottoms[0]||{name:'Straight black trousers',category:'bottoms',_missing:true},
+          shoes[0]||{name:'Classic heel',category:'shoes',_missing:true},
+          bags[0]||{name:'Professional bag',category:'bag',_missing:true},
+        ]},
+      ],
+      'workout': [
+        {name:'Sport Chic', tip:'A small towel + a matching water bottle complete the look.', items:[
+          tops[0]||{name:'Sporty crop top',category:'top',_missing:true},
+          bottoms[0]||{name:'Leggings',category:'bottoms',_missing:true},
+          shoes[0]||{name:'Training sneakers',category:'shoes',_missing:true},
         ]},
       ],
     };
 
-    const key = Object.keys(presets).find(k => occasion.includes(k));
+    const occLower = (occasion||'').toLowerCase();
+    const key = Object.keys(presets).find(k => occLower.includes(k));
     return presets[key] || [{
-      name: 'לוק מושלם ל' + occasion,
-      tip: 'שלבי צבעים נייטרל עם פריט statement אחד — זה הסוד.',
+      name: 'Perfect look for ' + occasion,
+      tip: 'Mix neutral colors with one statement piece — that\'s the secret.',
       items: [
-        tops[0]||{name:'חולצה בסיס',category:'top',_missing:true},
-        bottoms[0]||{name:'מכנס מתאים',category:'bottoms',_missing:true},
-        shoes[0]||{name:'נעל מתאימה',category:'shoes',_missing:true},
+        tops[0]||{name:'Basic top',category:'top',_missing:true},
+        bottoms[0]||{name:'Matching bottoms',category:'bottoms',_missing:true},
+        shoes[0]||{name:'Matching shoes',category:'shoes',_missing:true},
       ],
     }];
   }
@@ -2907,18 +2908,18 @@
   function renderOutfitResults(outfits, occasion) {
     const el = document.getElementById('og-result');
     if (!outfits.length) {
-      el.innerHTML = `<div class="og-empty"><div class="og-empty-icon">🤔</div><div class="og-empty-text">לא הצלחתי לבנות לוק</div><div class="og-empty-sub">נסי לסרוק עוד פריטים לארון</div></div>`;
+      el.innerHTML = `<div class="og-empty"><div class="og-empty-icon">🤔</div><div class="og-empty-text">Couldn't build a look</div><div class="og-empty-sub">Try scanning more items into your closet</div></div>`;
       return;
     }
     el.innerHTML = `
-      <div style="padding:0 18px 10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">לוקים ל${esc(occasion)}</div>
+      <div style="padding:0 18px 10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Looks for ${esc(occasion)}</div>
       <div class="og-result-section">
         ${outfits.map((o,i) => `
           <div class="og-outfit-card">
             <div class="og-outfit-header">
               <div class="og-outfit-num">${i+1}</div>
-              <div class="og-outfit-name">${esc(o.name||'לוק '+(i+1))}</div>
-              ${o.match_pct ? `<div class="og-outfit-score">${o.match_pct}% מהארון</div>` : ''}
+              <div class="og-outfit-name">${esc(o.name||'Look '+(i+1))}</div>
+              ${o.match_pct ? `<div class="og-outfit-score">${o.match_pct}% from your closet</div>` : ''}
             </div>
             <div class="og-outfit-items">
               ${(o.items||[]).map(item => `
@@ -2926,7 +2927,7 @@
                   <div class="og-item-ico">${CAT_EMOJI[item.category]||'👕'}</div>
                   <div class="og-item-info">
                     <div class="og-item-name">${esc(item.name)}</div>
-                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '⚡ חסר — שקלי לקנות' : '✓ יש בארון'}</div>
+                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '⚡ Missing — consider buying' : '✓ In your closet'}</div>
                   </div>
                 </div>`).join('')}
             </div>
@@ -2960,7 +2961,7 @@
   function compatScoreHTML(item, wardrobe) {
     const {pct, matches} = calcCompatScore(item, wardrobe);
     const color = pct >= 80 ? '#4ade80' : pct >= 60 ? 'var(--accent2)' : 'var(--accent)';
-    const label = pct >= 80 ? 'מתאים מצוין לארון!' : pct >= 60 ? 'מתאים טוב' : 'מתאים חלקית';
+    const label = pct >= 80 ? 'Great match for your closet!' : pct >= 60 ? 'Good match' : 'Partial match';
     return `
       <div class="compat-score-bar">
         <div class="cs-label-row">
@@ -2984,7 +2985,7 @@
     rw.points += act.pts * (count || 1);
     rw.actions[action] = (rw.actions[action] || 0) + (count || 1);
     saveRewards(rw);
-    showToast(`+${act.pts} נקודות! 🎉`);
+    showToast(`+${act.pts} points! 🎉`);
   }
 
   function renderRewards() {
@@ -3008,26 +3009,26 @@
       <div class="rw-header"><div class="rw-title" style="display:flex;align-items:center;gap:7px">${icon('trophy',20)} Rewards</div></div>
       <div class="rw-points-card">
         <div class="rw-pts-num">${pts.toLocaleString()}</div>
-        <div class="rw-pts-label">נקודות AWEAR</div>
+        <div class="rw-pts-label">AWEAR points</div>
         <div class="rw-level-row">
           <div class="rw-level-badge" style="background:${level.color}20;color:${level.color};display:inline-flex;align-items:center;gap:5px">${icon(level.icon,14)} ${esc(level.name)}</div>
           <div class="rw-level-track"><div class="rw-level-fill" style="width:${progress}%"></div></div>
-          <div class="rw-level-next" style="display:inline-flex;align-items:center;gap:3px">${nextLevel ? nextLevel.min+' ל-'+icon(nextLevel.icon,12) : icon('crown',12)+' Max!'}</div>
+          <div class="rw-level-next" style="display:inline-flex;align-items:center;gap:3px">${nextLevel ? nextLevel.min+' to '+icon(nextLevel.icon,12) : icon('crown',12)+' Max!'}</div>
         </div>
       </div>
 
-      <div style="padding:0 18px 10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.6px;text-transform:uppercase">איך מרוויחים</div>
+      <div style="padding:0 18px 10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.6px;text-transform:uppercase">How to earn</div>
       <div class="rw-actions-grid">
         ${RW_ACTIONS.map(a => `
           <div class="rw-action">
             <div class="rw-action-icon">${icon(a.icon,22)}</div>
             <div class="rw-action-name">${esc(a.name)}</div>
-            <div class="rw-action-pts">+${a.pts} נקודות</div>
-            <div class="rw-action-done">${rw.actions[a.key]||0} פעמים</div>
+            <div class="rw-action-pts">+${a.pts} points</div>
+            <div class="rw-action-done">${rw.actions[a.key]||0} times</div>
           </div>`).join('')}
       </div>
 
-      <div style="padding:4px 18px 10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.6px;text-transform:uppercase">הטבות</div>
+      <div style="padding:4px 18px 10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.6px;text-transform:uppercase">Perks</div>
       <div class="rw-perks-list">
         ${PERKS.map(p => {
           const canRedeem = pts >= p.pts;
@@ -3038,7 +3039,7 @@
               <div class="rw-perk-desc">${esc(p.desc)}</div>
             </div>
             <button class="rw-perk-btn ${canRedeem?'unlocked':'locked'}" data-pts="${p.pts}" style="display:inline-flex;align-items:center;gap:4px">
-              ${canRedeem ? 'מממשי' : p.pts+''+icon('sparkle',11)}
+              ${canRedeem ? 'Redeem' : p.pts+''+icon('sparkle',11)}
             </button>
           </div>`;
         }).join('')}
@@ -3048,10 +3049,10 @@
       btn.addEventListener('click', () => {
         const cost = Number(btn.dataset.pts);
         const rw2 = loadRewards();
-        if (rw2.points < cost) { showToast('אין מספיק נקודות'); return; }
+        if (rw2.points < cost) { showToast('Not enough points'); return; }
         rw2.points -= cost;
         saveRewards(rw2);
-        showToast('הטבה מומשה! ✨');
+        showToast('Perk redeemed! ✨');
         renderRewards();
       });
     });
@@ -3076,32 +3077,32 @@
     const circularScore = Math.min(30, soldItems * 6);
     const total = Math.round(reuseScore + cpwScore + circularScore);
 
-    const grade = total >= 80 ? 'A 🌿 מצוין' : total >= 60 ? 'B 🌱 טוב' : total >= 40 ? 'C 🔄 בינוני' : 'D ⚠️ שפר';
+    const grade = total >= 80 ? 'A 🌿 Excellent' : total >= 60 ? 'B 🌱 Good' : total >= 40 ? 'C 🔄 Average' : 'D ⚠️ Needs work';
     const gradeColor = total >= 80 ? '#4ade80' : total >= 60 ? '#86efac' : total >= 40 ? '#fbbf24' : '#f87171';
 
     const tips = [];
-    if (reuseRate < 70) tips.push(`${unworn} פריטים מעולם לא נלבשו — לבשי אותם או מכרי`);
-    if (avgCPW > 50) tips.push(`עלות ללבישה גבוהה — לבשי יותר את מה שיש בארון`);
-    if (soldItems === 0) tips.push(`מכרי פריטים ב-Marketplace ותגדילי את ה-Sustainability Score שלך`);
-    if (total >= 70) tips.push(`הארון שלך מנוצל יפה — את בדרך הנכונה!`);
+    if (reuseRate < 70) tips.push(`${unworn} items have never been worn — wear them or sell them`);
+    if (avgCPW > 50) tips.push(`High cost per wear — wear what's already in your closet more often`);
+    if (soldItems === 0) tips.push(`Sell items on the Marketplace to boost your Sustainability Score`);
+    if (total >= 70) tips.push(`Your closet is well used — you're on the right track!`);
 
     el.innerHTML = `
       <div class="sus-header">🌿 Sustainability Score</div>
       <div class="sus-score-card">
         <div class="sus-score-num" style="color:${gradeColor}">${total}</div>
-        <div class="sus-score-label">ציון קיימות</div>
+        <div class="sus-score-label">Sustainability score</div>
         <div class="sus-score-grade" style="background:${gradeColor}20;color:${gradeColor}">${grade}</div>
       </div>
 
       ${tips.map(t => `<div class="sus-tip">💡 ${esc(t)}</div>`).join('')}
 
       <div style="padding:4px 18px 14px">
-        <div style="font-size:13px;font-weight:900;margin-bottom:12px">מדדים</div>
+        <div style="font-size:13px;font-weight:900;margin-bottom:12px">Metrics</div>
         ${[
-          {icon:'♻️', name:'ניצול ארון', sub:`${totalItems-unworn}/${totalItems} פריטים נלבשו`, val: reuseRate+'%'},
-          {icon:'💚', name:'יד שנייה', sub:`${soldItems} פריטים נמכרו ב-Marketplace`, val: soldItems+''},
-          {icon:'📉', name:'Cost Per Wear', sub:`ממוצע ₪${Math.round(avgCPW)||0} ללבישה`, val: avgCPW < 30 ? '✓ יפה' : '↑'},
-          {icon:'🌍', name:'פחמן שנחסך', sub:`בהשוואה לרכישה חדשה`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
+          {icon:'♻️', name:'Closet utilization', sub:`${totalItems-unworn}/${totalItems} items worn`, val: reuseRate+'%'},
+          {icon:'💚', name:'Secondhand', sub:`${soldItems} items sold on Marketplace`, val: soldItems+''},
+          {icon:'📉', name:'Cost Per Wear', sub:`Average ₪${Math.round(avgCPW)||0} per wear`, val: avgCPW < 30 ? '✓ Nice' : '↑'},
+          {icon:'🌍', name:'Carbon saved', sub:`Compared to buying new`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
         ].map(m => `
           <div class="sus-metric">
             <div class="sus-metric-icon">${m.icon}</div>
@@ -3117,14 +3118,14 @@
   // ---- Marketplace ----
   const MP_KEY = 'awear_marketplace';
   const MP_SEED = [
-    {id:'mp1', name:'ג׳ינס בארל לייט', emoji:'👖', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'כחול'},
-    {id:'mp2', name:'מעיל עור שחור וינטג׳', emoji:'🧥', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'שחור'},
-    {id:'mp3', name:'סניקרס Adidas Samba לבן', emoji:'👟', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'לבן'},
-    {id:'mp4', name:'מיני בג׳ שחור', emoji:'👜', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'שחור'},
-    {id:'mp5', name:'חולצת קרופ ריב שמנת', emoji:'👕', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'שמנת'},
-    {id:'mp6', name:'חצאית מידי סאטן', emoji:'👗', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'ירוק'},
-    {id:'mp7', name:'כובע בייסבול שחור', emoji:'🧢', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'שחור'},
-    {id:'mp8', name:'מכנסי קרגו בז׳', emoji:'👖', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'בז׳'},
+    {id:'mp1', name:'Light barrel jeans', emoji:'👖', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'Blue'},
+    {id:'mp2', name:'Vintage black leather jacket', emoji:'🧥', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'Black'},
+    {id:'mp3', name:'White Adidas Samba sneakers', emoji:'👟', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'White'},
+    {id:'mp4', name:'Black mini bag', emoji:'👜', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'Black'},
+    {id:'mp5', name:'Cream ribbed crop top', emoji:'👕', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'Cream'},
+    {id:'mp6', name:'Satin midi skirt', emoji:'👗', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'Green'},
+    {id:'mp7', name:'Black baseball cap', emoji:'🧢', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'Black'},
+    {id:'mp8', name:'Beige cargo pants', emoji:'👖', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'Beige'},
   ];
   let mpTab = 'browse', mpFilter = 'all';
 
@@ -3137,7 +3138,7 @@
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const listings = loadMPListings();
     const categories = ['all','top','bottoms','shoes','bag','outerwear'];
-    const catLabels = {all:'הכל',top:'חולצות',bottoms:'מכנסיים',shoes:'נעליים',bag:'תיקים',outerwear:'מעילים'};
+    const catLabels = {all:'All',top:'Tops',bottoms:'Bottoms',shoes:'Shoes',bag:'Bags',outerwear:'Outerwear'};
 
     let filtered = listings;
     if (mpFilter !== 'all') filtered = listings.filter(i => i.category === mpFilter);
@@ -3146,12 +3147,12 @@
     el.innerHTML = `
       <div class="mp-header">
         <div class="mp-title">🛒 Marketplace</div>
-        <button class="mp-sell-btn" id="mp-sell-open">+ מכרי פריט</button>
+        <button class="mp-sell-btn" id="mp-sell-open">+ Sell an item</button>
       </div>
       <div class="mp-tabs">
-        <button class="mp-tab${mpTab==='browse'?' active':''}" data-tab="browse">קנייה</button>
-        <button class="mp-tab${mpTab==='sell'?' active':''}" data-tab="sell">מכירה שלי</button>
-        <button class="mp-tab${mpTab==='swap'?' active':''}" data-tab="swap">החלפה</button>
+        <button class="mp-tab${mpTab==='browse'?' active':''}" data-tab="browse">Shop</button>
+        <button class="mp-tab${mpTab==='sell'?' active':''}" data-tab="sell">My listings</button>
+        <button class="mp-tab${mpTab==='swap'?' active':''}" data-tab="swap">Swap</button>
       </div>
       ${mpTab === 'browse' ? `
       <div class="mp-filters">
@@ -3160,7 +3161,7 @@
       <div class="mp-grid">
         ${filtered.map(item => {
           const compat = wardrobe.length ? calcCompatScore(item, wardrobe) : null;
-          const cond = item.condition === 'new' ? 'חדש' : item.condition === 'like-new' ? 'כמו חדש' : 'משומש';
+          const cond = item.condition === 'new' ? 'New' : item.condition === 'like-new' ? 'Like new' : 'Used';
           return `<div class="mp-item" data-id="${item.id}">
             <div class="mp-item-img">
               ${productImage(item)}
@@ -3170,7 +3171,7 @@
               <div class="mp-item-name">${esc(item.name)}</div>
               <div class="mp-item-price">₪${item.price} <span style="font-size:11px;font-weight:600;color:var(--muted);text-decoration:line-through">₪${item.orig}</span></div>
               <div class="mp-item-seller">${esc(item.seller)}</div>
-              ${compat ? `<div class="mp-item-compat">${compat.pct}% התאמה לארון</div>` : ''}
+              ${compat ? `<div class="mp-item-compat">${compat.pct}% closet match</div>` : ''}
             </div>
           </div>`;
         }).join('')}
@@ -3210,33 +3211,33 @@
       const suggestions = wardrobe.slice(0, 3);
       return `<div style="text-align:center;padding:32px 20px 16px;color:var(--muted)">
         <div style="font-size:36px;margin-bottom:12px">📦</div>
-        <div style="font-size:14px;font-weight:700;color:var(--fg)">עוד לא מכרת פריטים</div>
-        <div style="font-size:12px;margin-top:6px;opacity:.7">לחצי על "+ מכרי פריט" כדי להתחיל</div>
+        <div style="font-size:14px;font-weight:700;color:var(--fg)">You haven't listed anything yet</div>
+        <div style="font-size:12px;margin-top:6px;opacity:.7">Tap "+ Sell an item" to get started</div>
       </div>
-      ${suggestions.length ? `<div style="padding:0 16px 8px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">מהארון שלך — כדאי למכור?</div>
+      ${suggestions.length ? `<div style="padding:0 16px 8px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">From your closet — worth selling?</div>
         ${suggestions.map(item => `<div onclick="openSellFormWithItem(${JSON.stringify(JSON.stringify(item))})" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer">
           <div style="font-size:26px">${item.emoji||'👗'}</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:700">${esc(item.name||'פריט')}</div><div style="font-size:11px;color:var(--muted)">מחיר מוצע: ₪${Math.round((item.price_estimate_usd||200)*0.5)}</div></div>
-          <div style="font-size:11px;font-weight:700;color:var(--accent);background:rgba(139,92,246,.12);padding:4px 10px;border-radius:20px">מכרי</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700">${esc(item.name||'Item')}</div><div style="font-size:11px;color:var(--muted)">Suggested price: ₪${Math.round((item.price_estimate_usd||200)*0.5)}</div></div>
+          <div style="font-size:11px;font-weight:700;color:var(--accent);background:rgba(139,92,246,.12);padding:4px 10px;border-radius:20px">Sell</div>
         </div>`).join('')}</div>` : ''}`;
     }
     const totalEarnings = mine.reduce((s,i) => s + (Number(i.price)||0), 0);
     return `
       <div style="padding:14px 16px 0">
         <div style="background:linear-gradient(135deg,#4ade80,#22d3ee);border-radius:14px;padding:14px 16px;color:#000;margin-bottom:14px">
-          <div style="font-size:11px;font-weight:700;opacity:.7">פוטנציאל הכנסה</div>
+          <div style="font-size:11px;font-weight:700;opacity:.7">Earnings potential</div>
           <div style="font-size:26px;font-weight:900">₪${totalEarnings.toLocaleString()}</div>
-          <div style="font-size:11px;font-weight:600;opacity:.8">${mine.length} פריטים פעילים</div>
+          <div style="font-size:11px;font-weight:600;opacity:.8">${mine.length} active listings</div>
         </div>
       </div>
       <div class="mp-grid">${mine.map(item => `
       <div class="mp-item" style="position:relative">
-        <div class="mp-item-img">${item.emoji||'👗'}<div class="mp-item-badge like-new">שלי</div></div>
+        <div class="mp-item-img">${item.emoji||'👗'}<div class="mp-item-badge like-new">Mine</div></div>
         <div class="mp-item-info">
           <div class="mp-item-name">${esc(item.name)}</div>
           <div class="mp-item-price">₪${item.price}</div>
-          <div class="mp-item-seller" style="color:#4ade80">פעיל ✓</div>
-          <button onclick="deleteMySell('${item.id}')" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,.15);border:none;border-radius:8px;padding:3px 7px;font-size:11px;font-weight:700;color:#ef4444;cursor:pointer">הסר</button>
+          <div class="mp-item-seller" style="color:#4ade80">Active ✓</div>
+          <button onclick="deleteMySell('${item.id}')" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,.15);border:none;border-radius:8px;padding:3px 7px;font-size:11px;font-weight:700;color:#ef4444;cursor:pointer">Remove</button>
         </div>
       </div>`).join('')}</div>`;
   }
@@ -3246,7 +3247,7 @@
     const updated = mine.filter(i => i.id !== id);
     localStorage.setItem(MP_KEY, JSON.stringify(updated));
     renderMarketplace();
-    showToast('פריט הוסר מהמכירה');
+    showToast('Item removed from sale');
   }
 
   function openSellFormWithItem(jsonStr) {
@@ -3257,8 +3258,8 @@
   function renderSwap() {
     return `<div style="text-align:center;padding:40px 20px">
       <div style="font-size:40px;margin-bottom:12px">🔄</div>
-      <div style="font-size:15px;font-weight:900;margin-bottom:8px">החלפת פריטים בקרוב</div>
-      <div style="font-size:13px;color:var(--muted);font-weight:600">גרסה 2 — Swap עם ארונות של חברות</div>
+      <div style="font-size:15px;font-weight:900;margin-bottom:8px">Item swaps coming soon</div>
+      <div style="font-size:13px;color:var(--muted);font-weight:600">Version 2 — swap with friends' closets</div>
     </div>`;
   }
 
@@ -3272,52 +3273,52 @@
     const prefillEmoji = prefill ? (prefill.emoji || CAT_EMOJIS[prefillCat] || '👗') : '👗';
 
     card.innerHTML = `
-      <div style="padding:18px 20px 6px;font-size:17px;font-weight:900">📦 מכרי פריט</div>
+      <div style="padding:18px 20px 6px;font-size:17px;font-weight:900">📦 Sell an item</div>
       <div class="mp-sell-form">
         ${prefill ? `<div style="display:flex;align-items:center;gap:10px;background:rgba(139,92,246,.1);border-radius:12px;padding:10px 14px;margin-bottom:4px">
           <div style="font-size:28px">${prefillEmoji}</div>
-          <div style="font-size:12px;font-weight:700;color:var(--accent)">ממוין מהארון שלך ✓</div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent)">Pulled from your closet ✓</div>
         </div>` : ''}
         <div>
-          <div class="mp-form-label">שם הפריט</div>
-          <input class="mp-form-input" id="sf-name" placeholder='למשל: ג׳ינס Zara כחול' value="${attr(prefillName)}" />
+          <div class="mp-form-label">Item name</div>
+          <input class="mp-form-input" id="sf-name" placeholder='e.g. Blue Zara jeans' value="${attr(prefillName)}" />
         </div>
         <div>
-          <div class="mp-form-label">קטגוריה</div>
+          <div class="mp-form-label">Category</div>
           <select class="mp-form-input" id="sf-cat">
-            ${Object.entries(CAT_EMOJIS).map(([k,v]) => `<option value="${k}" ${k===prefillCat?'selected':''}>${v} ${k==='top'?'חולצות':k==='bottoms'?'מכנסיים':k==='shoes'?'נעליים':k==='bag'?'תיקים':k==='outerwear'?'מעילים':k==='dress'?'שמלות':k==='hat'?'כובעים':'אחר'}</option>`).join('')}
+            ${Object.entries(CAT_EMOJIS).map(([k,v]) => `<option value="${k}" ${k===prefillCat?'selected':''}>${v} ${k==='top'?'Tops':k==='bottoms'?'Bottoms':k==='shoes'?'Shoes':k==='bag'?'Bags':k==='outerwear'?'Outerwear':k==='dress'?'Dresses':k==='hat'?'Hats':'Other'}</option>`).join('')}
           </select>
         </div>
         <div class="mp-price-row">
           <div style="flex:1">
-            <div class="mp-form-label">מחיר (₪)</div>
+            <div class="mp-form-label">Price (₪)</div>
             <input class="mp-form-input" id="sf-price" type="number" placeholder="150" value="${prefillPrice}" />
           </div>
-          <button class="mp-ai-price" id="sf-ai-price">AI תמחור</button>
+          <button class="mp-ai-price" id="sf-ai-price">AI pricing</button>
         </div>
         <div>
-          <div class="mp-form-label">מצב</div>
+          <div class="mp-form-label">Condition</div>
           <select class="mp-form-input" id="sf-condition">
-            <option value="new">חדש</option>
-            <option value="like-new" selected>כמו חדש</option>
-            <option value="used">משומש</option>
+            <option value="new">New</option>
+            <option value="like-new" selected>Like new</option>
+            <option value="used">Used</option>
           </select>
         </div>
         <div style="display:flex;gap:8px">
-          <button class="ha-btn ha-primary" style="flex:1" id="sf-submit">פרסמי למכירה 🚀</button>
-          <button class="ha-btn ha-secondary" style="flex:1" onclick="document.getElementById('purchase-modal').classList.remove('show')">ביטול</button>
+          <button class="ha-btn ha-primary" style="flex:1" id="sf-submit">List for sale 🚀</button>
+          <button class="ha-btn ha-secondary" style="flex:1" onclick="document.getElementById('purchase-modal').classList.remove('show')">Cancel</button>
         </div>
       </div>`;
     modal.classList.add('show');
 
     document.getElementById('sf-ai-price').addEventListener('click', () => {
       const name = document.getElementById('sf-name').value;
-      if (!name) { showToast('הכניסי שם פריט קודם'); return; }
+      if (!name) { showToast('Enter an item name first'); return; }
       const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
       const match = wardrobe.find(i => i.name && name && i.name.includes(name.slice(0,4)));
       const suggested = match ? Math.round((match.price_estimate_usd || 200) * 0.5) : 150;
       document.getElementById('sf-price').value = suggested;
-      showToast(`AI מציע ₪${suggested} — 50% ממחיר קנייה`);
+      showToast(`AI suggests ₪${suggested} — 50% of retail price`);
     });
 
     document.getElementById('sf-submit').addEventListener('click', () => {
@@ -3325,17 +3326,17 @@
       const price = Number(document.getElementById('sf-price').value) || 150;
       const condition = document.getElementById('sf-condition').value;
       const cat = document.getElementById('sf-cat').value;
-      if (!name) { showToast('חסר שם פריט'); return; }
+      if (!name) { showToast('Item name is missing'); return; }
       const emoji = prefillEmoji || CAT_EMOJIS[cat] || '👗';
       const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
-      mine.unshift({id:'u'+Date.now(), name, price, condition, emoji, category: cat, seller:'@אני', orig: price*2, style_tags: prefill?.style_tags || []});
+      mine.unshift({id:'u'+Date.now(), name, price, condition, emoji, category: cat, seller:'@me', orig: price*2, style_tags: prefill?.style_tags || []});
       localStorage.setItem(MP_KEY, JSON.stringify(mine));
       modal.classList.remove('show');
-      logAdminEvent('sell', 'פרסמה: ' + name + ' ₪' + price);
+      logAdminEvent('sell', 'Listed: ' + name + ' ₪' + price);
       addRewardPoints(25, 'sell_listing');
       mpTab = 'sell';
       renderMarketplace();
-      showToast('פריט פורסם! 🎉 +25 נקודות');
+      showToast('Item listed! 🎉 +25 points');
     });
   }
 
@@ -3353,8 +3354,8 @@
   function renderPublicClosets() {
     const el = document.getElementById('pc-wrap');
     el.innerHTML = `
-      <div class="pc-header">👥 ארונות ציבוריים</div>
-      <div class="pc-section-label">מובחרים</div>
+      <div class="pc-header">👥 Public closets</div>
+      <div class="pc-section-label">Featured</div>
       <div class="pc-featured-row">
         ${SEED_USERS.slice(0,4).map(u => `
           <div class="pc-featured-card" data-uid="${u.id}">
@@ -3362,11 +3363,11 @@
             <div class="pc-feat-info">
               <div class="pc-feat-name">${esc(u.name)}</div>
               <div class="pc-feat-handle">${esc(u.handle)}</div>
-              <div class="pc-feat-items">${u.items} פריטים</div>
+              <div class="pc-feat-items">${u.items} items</div>
             </div>
           </div>`).join('')}
       </div>
-      <div class="pc-section-label">כולם</div>
+      <div class="pc-section-label">Everyone</div>
       <div class="pc-list">
         ${SEED_USERS.map(u => {
           const isFollowing = followState[u.id] ?? u.following;
@@ -3374,10 +3375,10 @@
             <div class="pc-avatar">${u.avatar}</div>
             <div class="pc-info">
               <div class="pc-name">${esc(u.name)}</div>
-              <div class="pc-handle">${esc(u.handle)} · ${u.items} פריטים</div>
+              <div class="pc-handle">${esc(u.handle)} · ${u.items} items</div>
               <div class="pc-tag">${esc(u.vibe)}</div>
             </div>
-            <button class="pc-follow-btn${isFollowing?' following':''}" data-uid="${u.id}">${isFollowing?'עוקבת':'+ עקבי'}</button>
+            <button class="pc-follow-btn${isFollowing?' following':''}" data-uid="${u.id}">${isFollowing?'Following':'+ Follow'}</button>
           </div>`;
         }).join('')}
       </div>`;
@@ -3387,9 +3388,9 @@
         const uid = btn.dataset.uid;
         followState[uid] = !followState[uid];
         localStorage.setItem('awear_follows', JSON.stringify(followState));
-        btn.textContent = followState[uid] ? 'עוקבת' : '+ עקבי';
+        btn.textContent = followState[uid] ? 'Following' : '+ Follow';
         btn.classList.toggle('following', !!followState[uid]);
-        showToast(followState[uid] ? 'עוקבת ✓' : 'הפסקת לעקוב');
+        showToast(followState[uid] ? 'Following ✓' : 'Unfollowed');
       });
     });
   }
@@ -3400,15 +3401,15 @@
     const el = document.getElementById('sr-wrap');
     const now = new Date();
     const month = now.getMonth();
-    const season = month < 3 ? 'חורף 2025' : month < 6 ? 'אביב 2026' : month < 9 ? 'קיץ 2026' : 'סתיו 2025';
+    const season = month < 3 ? 'Winter 2025' : month < 6 ? 'Spring 2026' : month < 9 ? 'Summer 2026' : 'Fall 2025';
 
     if (!wardrobe.length) {
       el.innerHTML = `
-        <div class="sr-header"><div class="sr-title">📋 דו"ח עונה</div><div class="sr-period">${esc(season)}</div></div>
+        <div class="sr-header"><div class="sr-title">📋 Season report</div><div class="sr-period">${esc(season)}</div></div>
         <div style="text-align:center;padding:60px 20px;color:var(--muted)">
           <div style="font-size:40px;margin-bottom:12px">📭</div>
-          <div style="font-size:14px;font-weight:700">אין עדיין נתונים</div>
-          <div style="font-size:12px;margin-top:6px;opacity:.7">סרקי לוקים לאורך העונה</div>
+          <div style="font-size:14px;font-weight:700">No data yet</div>
+          <div style="font-size:12px;margin-top:6px;opacity:.7">Scan looks throughout the season</div>
         </div>`;
       return;
     }
@@ -3427,34 +3428,34 @@
     const bottom3 = unworn.slice(0,3);
 
     const insights = [];
-    if (utilizationPct < 50) insights.push(`רק ${utilizationPct}% מהארון נלבש — שקלי לנקות ${unworn.length} פריטים לא בשימוש`);
-    if (unusedValue > 500) insights.push(`₪${unusedValue} שוכבים בארון ולא נלבשים — אפשר למכור ולהרוויח`);
-    if (avgCPW && avgCPW < 20) insights.push(`עלות ללבישה ממוצעת ₪${avgCPW} — מצוין! את מנצלת את הארון יפה`);
-    if (avgCPW && avgCPW > 100) insights.push(`עלות ללבישה גבוהה (₪${avgCPW}) — כדאי ללבוש יותר מה שיש`);
+    if (utilizationPct < 50) insights.push(`Only ${utilizationPct}% of your closet gets worn — consider clearing out ${unworn.length} unused items`);
+    if (unusedValue > 500) insights.push(`₪${unusedValue} is sitting unworn in your closet — you could sell it and earn`);
+    if (avgCPW && avgCPW < 20) insights.push(`Average cost per wear is ₪${avgCPW} — excellent! You're using your closet well`);
+    if (avgCPW && avgCPW > 100) insights.push(`High cost per wear (₪${avgCPW}) — try wearing what you already own more`);
 
     el.innerHTML = `
       <div class="sr-header">
-        <div class="sr-title">📋 דו"ח עונה</div>
+        <div class="sr-title">📋 Season report</div>
         <div class="sr-period">${esc(season)}</div>
       </div>
       <div class="sr-hero">
-        <div class="sr-hero-title">סיכום עונה</div>
+        <div class="sr-hero-title">Season summary</div>
         <div class="sr-hero-grid">
           <div class="sr-hero-stat">
             <div class="sr-hero-num">${utilizationPct}%</div>
-            <div class="sr-hero-label">ניצול הארון</div>
+            <div class="sr-hero-label">Closet utilization</div>
           </div>
           <div class="sr-hero-stat">
             <div class="sr-hero-num">${totalWears}</div>
-            <div class="sr-hero-label">לבישות סה"כ</div>
+            <div class="sr-hero-label">Total wears</div>
           </div>
           <div class="sr-hero-stat">
             <div class="sr-hero-num">₪${unusedValue}</div>
-            <div class="sr-hero-label">שכב בארון</div>
+            <div class="sr-hero-label">Sitting unworn</div>
           </div>
           <div class="sr-hero-stat">
             <div class="sr-hero-num">${avgCPW ? '₪'+avgCPW : '—'}</div>
-            <div class="sr-hero-label">CPW ממוצע</div>
+            <div class="sr-hero-label">Avg CPW</div>
           </div>
         </div>
       </div>
@@ -3466,45 +3467,45 @@
 
       ${top3.length ? `
       <div class="sr-section">
-        <div class="sr-sec-title">🔥 הכי נלבש בעונה</div>
+        <div class="sr-sec-title">🔥 Most worn this season</div>
         ${top3.map((i,idx) => `
           <div class="sr-item-row">
             <div class="sr-rank">${idx+1}</div>
             <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="sr-item-name">${esc(i.name)}</div>
-              <div class="sr-item-meta">${i.wear_count} לבישות · CPW ₪${i.price_estimate_usd && i.wear_count ? Math.round(i.price_estimate_usd/i.wear_count) : '—'}</div>
+              <div class="sr-item-meta">${i.wear_count} wears · CPW ₪${i.price_estimate_usd && i.wear_count ? Math.round(i.price_estimate_usd/i.wear_count) : '—'}</div>
             </div>
           </div>`).join('')}
       </div>` : ''}
 
       ${bottom3.length ? `
       <div class="sr-section">
-        <div class="sr-sec-title">💤 לא נלבש בכלל</div>
+        <div class="sr-sec-title">💤 Never worn</div>
         ${bottom3.map(i => `
           <div class="sr-item-row">
             <div class="sr-rank" style="font-size:12px">😴</div>
             <div class="sr-item-ico">${CAT_EMOJI[i.category]||'👕'}</div>
             <div style="flex:1;min-width:0">
               <div class="sr-item-name">${esc(i.name)}</div>
-              <div class="sr-item-meta">₪${i.price_estimate_usd||0} בארון · 0 לבישות</div>
+              <div class="sr-item-meta">₪${i.price_estimate_usd||0} in closet · 0 wears</div>
             </div>
           </div>`).join('')}
       </div>` : ''}
 
       <div class="sr-action-row">
-        <button class="ha-btn ha-primary" style="flex:1" onclick="runDeclutter()">🧹 נקי את הארון</button>
-        <button class="ha-btn ha-secondary" style="flex:1" onclick="showView('analytics')">📊 אנליטיקס</button>
+        <button class="ha-btn ha-primary" style="flex:1" onclick="runDeclutter()">🧹 Clean out your closet</button>
+        <button class="ha-btn ha-secondary" style="flex:1" onclick="showView('analytics')">📊 Analytics</button>
       </div>`;
   }
 
   // ---- Smart Declutter ----
   async function runDeclutter() {
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
-    if (!wardrobe.length) { showToast('הארון ריק — אין מה לנקות'); return; }
-    showToast('AI מנתח את הארון... ✨');
+    if (!wardrobe.length) { showToast('Your closet is empty — nothing to clean'); return; }
+    showToast('AI is analyzing your closet... ✨');
     const candidates = wardrobe.filter(i => (i.wear_count||0) === 0);
-    if (!candidates.length) { showToast('הכל נלבש — הארון מנוצל מעולה! 🎉'); return; }
+    if (!candidates.length) { showToast('Everything gets worn — your closet is perfectly used! 🎉'); return; }
     try {
       const res = await fetch('/api/declutter', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -3514,19 +3515,19 @@
       showDeclutterResults(data.suggestions || []);
     } catch(_) {
       const suggestions = candidates.slice(0,3).map(i => ({
-        name: i.name, action: 'מכירה', reason: 'לא נלבש אף פעם', price_suggestion: Math.round((i.price_estimate_usd||100)*0.4),
+        name: i.name, action: 'Sell', reason: 'Never worn', price_suggestion: Math.round((i.price_estimate_usd||100)*0.4),
       }));
       showDeclutterResults(suggestions);
     }
   }
 
   function showDeclutterResults(suggestions) {
-    if (!suggestions.length) { showToast('הארון נקי — אין צורך בניקוי'); return; }
+    if (!suggestions.length) { showToast('Your closet is clean — nothing to declutter'); return; }
     const modal = document.getElementById('purchase-modal');
     const card  = document.getElementById('modal-card');
     card.innerHTML = `
       <div style="padding:20px 20px 0;font-size:17px;font-weight:900">🧹 Smart Declutter</div>
-      <div style="padding:6px 20px 14px;font-size:12px;color:var(--muted);font-weight:600">AI ממליץ לשחרר ${suggestions.length} פריטים</div>
+      <div style="padding:6px 20px 14px;font-size:12px;color:var(--muted);font-weight:600">AI recommends letting go of ${suggestions.length} items</div>
       <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;max-height:320px;overflow-y:auto">
         ${suggestions.map(s => `
           <div style="background:#17171f;border-radius:14px;padding:12px 14px;border:1px solid #24242e">
@@ -3538,7 +3539,7 @@
           </div>`).join('')}
       </div>
       <div style="padding:16px 16px 20px">
-        <button class="ha-btn ha-primary" style="width:100%" onclick="document.getElementById('purchase-modal').classList.remove('show')">סגרי</button>
+        <button class="ha-btn ha-primary" style="width:100%" onclick="document.getElementById('purchase-modal').classList.remove('show')">Close</button>
       </div>`;
     modal.classList.add('show');
     card.querySelector('.ha-btn')?.addEventListener('click', () => modal.classList.remove('show'));
@@ -3549,7 +3550,7 @@
     if (!wl.find(i => i.name === name)) {
       wl.unshift({id: Date.now(), name, addedAt: new Date().toLocaleDateString('he-IL')});
       saveWishlist(wl);
-      showToast('נוסף ל-Wishlist 💫');
+      showToast('Added to Wishlist 💫');
     }
   }
 
@@ -3577,7 +3578,7 @@
         saveWishlist(wl2);
         addInput.value = '';
         renderWishlist();
-        showToast('נוסף ל-Wishlist 💫');
+        showToast('Added to Wishlist 💫');
       };
       addBtn.addEventListener('click', doAdd);
       addInput.addEventListener('keydown', e => { if(e.key==='Enter') doAdd(); });
@@ -3588,8 +3589,8 @@
       list.innerHTML = `
         <div class="wl-empty">
           <div class="wl-empty-icon">💭</div>
-          <div class="wl-empty-text">הרשימה ריקה</div>
-          <div class="wl-empty-sub">הוסיפי פריטים שאת רוצה לקנות — או השתמשי בהצעות:</div>
+          <div class="wl-empty-text">Your list is empty</div>
+          <div class="wl-empty-sub">Add items you want to buy — or pick from these suggestions:</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;padding:0 18px">
           ${suggestions.map(s => `
@@ -3608,8 +3609,8 @@
         <div class="wl-item-ico">${icon('sparkle',18)}</div>
         <div class="wl-item-info">
           <div class="wl-item-name">${esc(item.name)}</div>
-          <div class="wl-item-price">נוסף ${esc(item.addedAt)}</div>
-          ${wardrobe.length ? `<div class="wl-item-compat">התאמה לארון: ${compat.pct}%</div>` : ''}
+          <div class="wl-item-price">Added ${esc(item.addedAt)}</div>
+          ${wardrobe.length ? `<div class="wl-item-compat">Closet match: ${compat.pct}%</div>` : ''}
         </div>
         <button class="wl-item-del" data-id="${item.id}">×</button>
       </div>`;
@@ -3627,21 +3628,21 @@
 
   // ---- AI Stylist Chat ----
   const CHAT_PRESETS = [
-    'מה חסר לי בארון?','אני צריכה לוק לדייט הערב',
-    'בני לי ארון קפסולה','איזה נעליים יתאימו?',
-    'איך להתלבש לראיון עבודה?','כמה אני מבזבזת על ביגוד?',
-    'מה הטרנד עכשיו?','תעזרי לי לסדר ארון',
+    "What's missing from my closet?","I need a look for a date tonight",
+    'Build me a capsule wardrobe','Which shoes would go with this?',
+    'How do I dress for a job interview?','How much do I spend on clothes?',
+    "What's trending right now?",'Help me organize my closet',
   ];
   let chatInited = false;
   let chatHistory = [];
 
   function addToWishlistFromSeed(name, emoji) {
     const wl = loadWishlist();
-    if (wl.some(i => i.name === name)) { showToast('כבר ברשימה 💫'); return; }
+    if (wl.some(i => i.name === name)) { showToast('Already on your list 💫'); return; }
     wl.unshift({id: Date.now(), name, emoji, addedAt: new Date().toLocaleDateString('he-IL')});
     saveWishlist(wl);
     renderWishlist();
-    showToast(emoji + ' ' + name + ' נוסף לרשימה 💫');
+    showToast(emoji + ' ' + name + ' added to your list 💫');
   }
 
   function initChat() {
@@ -3660,12 +3661,12 @@
       const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
       let greeting;
       if (wardrobe.length >= 2) {
-        const sample = wardrobe.slice(0, 2).map(i => i.name).join(' ו-');
-        greeting = 'היי מותק! 💅 אני אביגיל, הסטייליסטית שלך. ראיתי שיש לך בארון ' + sample + ' — קומבינציה ממש חמודה! ספרי לי מה מציק לך ואעשה סדר ✨';
+        const sample = wardrobe.slice(0, 2).map(i => i.name).join(' and ');
+        greeting = "Hey babe! 💅 I'm Abigail, your stylist. I saw you've got " + sample + ' in your closet — such a cute combo! Tell me what\'s on your mind and I\'ll sort it out ✨';
       } else if (wardrobe.length === 1) {
-        greeting = 'היי! 💅 אני אביגיל, הסטייליסטית שלך. ראיתי שהוספת ' + wardrobe[0].name + ' לארון — טעם מצוין! בואי נבנה לוקים סביבו ✨';
+        greeting = "Hey! 💅 I'm Abigail, your stylist. I saw you added " + wardrobe[0].name + ' to your closet — great taste! Let\'s build looks around it ✨';
       } else {
-        greeting = 'היי מותק! 💅 אני אביגיל — הסטייליסטית האישית שלך ב-AWEAR. צלמי קצת בגדים לארון ואני אבנה לך לוקים שיגרמו לך להרגיש מלכה. מה שאלת? ✨';
+        greeting = "Hey babe! 💅 I'm Abigail — your personal stylist at AWEAR. Snap a few clothes into your closet and I'll build you looks that make you feel like a queen. What's your question? ✨";
       }
       addChatMsg('bot', greeting);
     }
@@ -3694,7 +3695,7 @@
     if (!el || document.getElementById('chat-typing')) return;
     const div = document.createElement('div');
     div.id = 'chat-typing'; div.className = 'chat-msg bot chat-typing-wrap';
-    div.innerHTML = `<div class="typing-bubble">אביגיל מקלידה<span class="tdots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span></div>`;
+    div.innerHTML = `<div class="typing-bubble">Abigail is typing<span class="tdots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span></div>`;
     el.appendChild(div);
     el.scrollTop = el.scrollHeight;
   }
@@ -3702,13 +3703,13 @@
 
   async function sendChatMsg(q) {
     if (!q) return;
-    logAdminEvent('chat', 'שאלה: ' + q.slice(0,40));
+    logAdminEvent('chat', 'Question: ' + q.slice(0,40));
     addChatMsg('user', q);
     showChatTyping();
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const ctx = wardrobe.length
-      ? 'הארון כולל: ' + wardrobe.map(i=>i.name).join(', ')
-      : 'הארון ריק כרגע';
+      ? 'Closet contains: ' + wardrobe.map(i=>i.name).join(', ')
+      : 'Closet is currently empty';
     try {
       const res = await fetch('/api/stylist/chat', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -3716,34 +3717,34 @@
       });
       const data = await res.json();
       hideChatTyping();
-      addChatMsg('bot', data.answer || 'נסי שוב עוד רגע 🙏');
+      addChatMsg('bot', data.answer || 'Try again in a moment 🙏');
     } catch(_) {
       hideChatTyping();
       const wardrobe2 = JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
       const hasW = wardrobe2.length > 0;
       const itemName = hasW ? wardrobe2[0].name : null;
       const ABIGAIL_FALLBACKS = [
-        {keys:['דייט','ערב','בחור','בחורה'], reply: itemName ? `לדייט אני הייתי לוקחת את ה${itemName} שלך עם שמלת מידי סאטן ועקב קיטי — שילוב שלא נכשל 🔥` : 'לדייט — שמלת מידי סאטן + עקב קיטי + מיני בג. תמיד עובד 🔥'},
-        {keys:['ראיון','עבודה','מקצועי'], reply:'לראיון: מכנס שחור straight + חולצה לבנה tucked-in + עקב נמוך. נקי, ביטחוני, מנצח 💼'},
-        {keys:['חסר','מה אין','צריך','קנות'], reply:'3 דברים שכמעט תמיד חסרים: סניקרס לבן, ג׳קט דנים, ויוטיליטי. הם יוצרים עשרות לוקים 👟'},
-        {keys:['קפסולה','ארון קפסולה','minimalist'], reply:'ארון קפסולה: 2 ג׳ינסים, 3 בסיסיות, שמלה רב-שימושית, מעיל אחד, 2 נעליים, תיק שחור. 12 פריטים — ∞ לוקים ✨'},
-        {keys:['נעליים','סניקרס','עקב','נעל'], reply:'הכי שימושי: סניקרס לבן (לכל), מגף צ׳לסי חום לחורף, עקב nude לאירועים. שלוש נעליים שמכסות הכל 👟'},
-        {keys:['טרנד','מה hot','מה in','עכשיו'], reply:'הטרנדים הכי hot עכשיו: ג׳ינס בארל, Adidas Samba לבן, ז׳קט עור, מיני בג, cottage core עם תחרות 🔥'},
-        {keys:['מחיר','כמה','יקר','זול','תקציב'], reply:'חכמה מסטייליסטית: השקיעי בנעליים ותיק, חסכי על בגדים. 20% מהארון שלך = 80% מהלוקים 💡'},
-        {keys:['Y2K','רטרו','וינטג'], reply:'Y2K now: לו-רייז דנים + קרופ טופ + הוגס גדולים + בג קטן. לא צריך את הכל — פריט אחד Y2K מספיק 💿'},
-        {keys:['שחור','all black','שחורה'], reply:'All black הכי קל ומנצח: שחק על טקסטורות — עור + קטיפה + מאט. זה מה שעושה את זה מעניין 🖤'},
-        {keys:['חורף','קר','סתיו'], reply:'לחורף: שכבות הן המפתח! גוף + חולצת לינן + ז׳קט עור + מעיל גדול. חם + מגניב 🧥'},
-        {keys:['קיץ','חם','חמסין'], reply:'קיץ ת"א: ליינן, ליינן, ליינן. פשתן מאוורר ולא מתקמט. שמלת מידי + כפכף עור = פרפקט ☀️'},
-        {keys:['מה ללבוש','לא יודעת','תעזרי'], reply: hasW ? `בואי נבנה לוק מהארון שלך! ספרי לי — לאן? בוקר/ערב? casual או קצת יותר? 🪄` : 'ספרי לי קצת על עצמך — לאן? מה הסגנון שאוהבת? ואגיד לך מה ללבוש 💕'},
-        {keys:['סדר','ארגון','ארון'], reply:'לסדר ארון: גרסת Marie Kondo AWEAR — הוצי הכל, ארגני לפי קטגוריה, השאירי רק מה שלבשת ב-6 חודשים האחרונים. מה שנשאר — מכירה 🌿'},
-        {keys:['מכירה','למכור','depop'], reply:'לפני שמוכרים: תצלמי על רקע לבן, אורי טבעי, 3 זוויות. מחיר = 30-40% ממחיר מקורי. כותרת ברורה עם מידה ומותג 📸'},
+        {keys:['date','evening','night'], reply: itemName ? `For a date I'd take your ${itemName} with a satin midi dress and a kitten heel — a combo that never fails 🔥` : 'For a date — satin midi dress + kitten heel + mini bag. Always works 🔥'},
+        {keys:['interview','work','professional'], reply:'For an interview: straight black trousers + a tucked-in white shirt + a low heel. Clean, confident, winning 💼'},
+        {keys:['missing','what do i need','need','buy'], reply:'3 things almost always missing: white sneakers, a denim jacket, and a utility piece. They create dozens of looks 👟'},
+        {keys:['capsule','capsule wardrobe','minimalist'], reply:'Capsule wardrobe: 2 pairs of jeans, 3 basics, one versatile dress, one coat, 2 pairs of shoes, a black bag. 12 pieces — ∞ looks ✨'},
+        {keys:['shoes','sneakers','heel','shoe'], reply:'Most useful: white sneakers (for everything), brown Chelsea boots for winter, nude heels for events. Three pairs that cover it all 👟'},
+        {keys:['trend','hot','what\'s in','right now'], reply:'The hottest trends right now: barrel jeans, white Adidas Samba, a leather jacket, a mini bag, and cottage core with lace 🔥'},
+        {keys:['price','how much','expensive','cheap','budget','spend'], reply:'Stylist wisdom: invest in shoes and a bag, save on clothes. 20% of your closet = 80% of your looks 💡'},
+        {keys:['y2k','retro','vintage'], reply:'Y2K now: low-rise denim + crop top + big hoops + a tiny bag. You don\'t need it all — one Y2K piece is enough 💿'},
+        {keys:['black','all black'], reply:'All black is the easiest win: play with textures — leather + velvet + matte. That\'s what makes it interesting 🖤'},
+        {keys:['winter','cold','fall','autumn'], reply:'For winter: layers are key! A bodysuit + linen shirt + leather jacket + a big coat. Warm + cool 🧥'},
+        {keys:['summer','hot','heat'], reply:'Summer in the city: linen, linen, linen. It breathes and doesn\'t wrinkle. A midi dress + leather sandals = perfect ☀️'},
+        {keys:['what to wear','don\'t know','help'], reply: hasW ? `Let's build a look from your closet! Tell me — where to? Morning/evening? Casual or a bit more? 🪄` : 'Tell me a little about yourself — where to? What style do you love? And I\'ll tell you what to wear 💕'},
+        {keys:['organize','organise','closet'], reply:'To organize your closet: the AWEAR Marie Kondo version — take everything out, sort by category, keep only what you\'ve worn in the last 6 months. Whatever\'s left — sell it 🌿'},
+        {keys:['sell','selling','depop'], reply:'Before you sell: shoot on a white background, natural light, 3 angles. Price = 30-40% of the original. A clear title with size and brand 📸'},
       ];
       const lq = q.toLowerCase();
       const match = ABIGAIL_FALLBACKS.find(f => f.keys.some(k => lq.includes(k)));
       const defaultReplies = [
-        'שאלה מעולה! ספרי לי עוד — לאיזה אירוע? מה הסגנון שלך בדרך כלל? 💕',
-        'אני כאן! תני לי קצת יותר פרטים כדי שאוכל לעזור לך טוב יותר 🌟',
-        hasW ? `עם הארון שלך יש לנו המון אפשרויות — ספרי מה הצורך וניצור לוק! ✨` : 'בואי נתחיל — סרקי פריט לארון ואז אעזור לך לבנות לוקים 🪄',
+        'Great question! Tell me more — for which occasion? What\'s your usual style? 💕',
+        'I\'m here! Give me a few more details so I can help you better 🌟',
+        hasW ? `With your closet we have tons of options — tell me what you need and we'll create a look! ✨` : 'Let\'s get started — scan an item into your closet and I\'ll help you build looks 🪄',
       ];
       addChatMsg('bot', match ? match.reply : defaultReplies[Math.floor(Math.random()*defaultReplies.length)]);
     }
@@ -3751,27 +3752,27 @@
 
   // ---- Explore / Search ----
   const EX_VIBES = [
-    {label:'הכל', val:'all'}, {label:'Y2K', val:'y2k'}, {label:'Streetwear', val:'streetwear'},
-    {label:'מינימל', val:'minimal'}, {label:'וינטג׳', val:'vintage'}, {label:'קוטג׳ קור', val:'cottage'},
-    {label:'פרפורמנס', val:'sport'}, {label:'פורמלי', val:'formal'},
+    {label:'All', val:'all'}, {label:'Y2K', val:'y2k'}, {label:'Streetwear', val:'streetwear'},
+    {label:'Minimal', val:'minimal'}, {label:'Vintage', val:'vintage'}, {label:'Cottage Core', val:'cottage'},
+    {label:'Performance', val:'sport'}, {label:'Formal', val:'formal'},
   ];
   const EX_TRENDING = [
     {icon:'flame',label:'Adidas Samba',tag:'streetwear'},
-    {icon:'hanger',label:'בארל ג׳ינס',tag:'y2k'},
-    {icon:'hanger',label:'ז׳קט עור',tag:'streetwear'},
-    {icon:'bag',label:'מיני בג',tag:'y2k'},
+    {icon:'hanger',label:'Barrel jeans',tag:'y2k'},
+    {icon:'hanger',label:'Leather jacket',tag:'streetwear'},
+    {icon:'bag',label:'Mini bag',tag:'y2k'},
     {icon:'flower',label:'Cottage Core',tag:'cottage'},
     {icon:'sparkle',label:'Y2K Denim',tag:'y2k'},
-    {icon:'minimal',label:'מינימל לבן',tag:'minimal'},
+    {icon:'minimal',label:'White minimal',tag:'minimal'},
     {icon:'briefcase',label:'Power Dressing',tag:'formal'},
   ];
   const EX_CARDS = [
-    {name:'לוק קיץ עירוני',sub:'Zara + Samba',badge:'טרנד'},
-    {name:'Streetwear All Black',sub:'קרגו + אוברסייז',badge:'הכי אין'},
-    {name:'Cottage Romance',sub:'וינטג׳ + רומנטי',badge:''},
-    {name:'Sport Luxe',sub:'Nike + מינימל',badge:'חדש'},
-    {name:'מינימל קלאסי',sub:'לבן + ניוד',badge:''},
-    {name:'Y2K Butterfly',sub:'לו-רייז + קרופ',badge:'ויראלי'},
+    {name:'Urban summer look',sub:'Zara + Samba',badge:'Trending'},
+    {name:'Streetwear All Black',sub:'Cargo + oversized',badge:'Top pick'},
+    {name:'Cottage Romance',sub:'Vintage + romantic',badge:''},
+    {name:'Sport Luxe',sub:'Nike + minimal',badge:'New'},
+    {name:'Classic minimal',sub:'White + nude',badge:''},
+    {name:'Y2K Butterfly',sub:'Low-rise + crop',badge:'Viral'},
   ];
 
   let exVibe = 'all', exInited = false;
@@ -3828,8 +3829,8 @@
     let cards = EX_CARDS;
     if (exVibe !== 'all') {
       const vibeMap = {y2k:['y2k','butterfly'],streetwear:['black','street','cargo'],
-        minimal:['מינימל','ניוד'],vintage:['וינטג׳'],cottage:['cottage','romance'],
-        sport:['sport','nike'],formal:['פורמל']};
+        minimal:['minimal','nude'],vintage:['vintage'],cottage:['cottage','romance'],
+        sport:['sport','nike'],formal:['formal','power']};
       const terms = vibeMap[exVibe]||[exVibe];
       cards = EX_CARDS.filter(c => terms.some(t => (c.name+c.sub).toLowerCase().includes(t.toLowerCase())));
       if (!cards.length) cards = EX_CARDS;
@@ -3850,7 +3851,7 @@
     if (!q) { showExDefault(); return; }
     document.getElementById('ex-default').style.display = 'none';
     document.getElementById('ex-results').style.display = 'block';
-    document.getElementById('ex-results-label').textContent = `תוצאות עבור "${q}"`;
+    document.getElementById('ex-results-label').textContent = `Results for "${q}"`;
 
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const ql = q.toLowerCase();
@@ -3868,7 +3869,7 @@
     let html = '';
 
     if (wardHits.length) {
-      html += `<div style="font-size:11px;font-weight:800;color:var(--muted);padding:0 0 8px;letter-spacing:.4px">מהארון שלך</div>`;
+      html += `<div style="font-size:11px;font-weight:800;color:var(--muted);padding:0 0 8px;letter-spacing:.4px">From your closet</div>`;
       html += wardHits.map(it => `
         <div class="ex-result-row" onclick="openSheetItem(${JSON.stringify({name:it.name,category:it.category,emoji:it.emoji,style_tags:it.style_tags||[]})})">
           <div class="ex-result-emoji">${it.emoji||CAT_EMOJI[it.category]||'👗'}</div>
@@ -3877,7 +3878,7 @@
     }
 
     if (shopHits.length) {
-      html += `<div style="font-size:11px;font-weight:800;color:var(--muted);padding:${wardHits.length?'14px':0} 0 8px;letter-spacing:.4px">קנייה</div>`;
+      html += `<div style="font-size:11px;font-weight:800;color:var(--muted);padding:${wardHits.length?'14px':0} 0 8px;letter-spacing:.4px">Shop</div>`;
       html += shopHits.map(it => {
         const disc = it.orig > it.price ? Math.round((1-it.price/it.orig)*100) : 0;
         return `
@@ -3890,7 +3891,7 @@
     }
 
     if (!html) {
-      list.innerHTML = `<div style="text-align:center;color:var(--muted);padding:32px 0;font-size:14px;font-weight:700">לא נמצאו תוצאות 🔍<br><span style="font-size:12px;font-weight:500">נסי סגנון, צבע או מותג</span></div>`;
+      list.innerHTML = `<div style="text-align:center;color:var(--muted);padding:32px 0;font-size:14px;font-weight:700">No results found 🔍<br><span style="font-size:12px;font-weight:500">Try a style, color, or brand</span></div>`;
       return;
     }
     list.innerHTML = html;
