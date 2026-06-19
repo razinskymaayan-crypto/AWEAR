@@ -4,6 +4,11 @@
 
 ---
 
+## 2026-06-19 — Cycle 2
+
+| תאריך | סוכן | branch | סטטוס | תיאור |
+| 2026-06-19 | dana | feat/profile-screen-stub | הושלם | Cycle 2 P1: ProfileScreen.js stub — ScrollView, avatar (88px), displayName, username, bio, StatBox row (posts/followers/following), CTA row (Add Look → navigate('Camera'), Edit Profile placeholder). profile namespace נוסף ל-en.json + he.json (5 keys). כל copy דרך t() — אין hardcoded strings. colors מטוקנים קיימים (0e0c0f/e8526a/1e1a22) — migration ל-var() tracked ל-Cycle 3. commit: 9b24518. worktree: /Users/tamargrosz/dana-profile. חסמים פתוחים: (1) editProfile onPress ריק — ממתין לauth screens (אורן); (2) hardcoded colors — migration אחרי וראן מחליט על token naming. |
+
 ## 2026-06-19
 
 | תאריך | סוכן | branch | סטטוס | תיאור |
