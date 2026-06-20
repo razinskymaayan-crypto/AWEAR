@@ -850,6 +850,18 @@
   .store-scope { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 2px; }
   .store-arrow { color: var(--muted); font-size: var(--t-h3,16px); flex-shrink: 0; }
 
+  /* ---- In-App Checkout States ---- */
+  .checkout-processing { display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 0; }
+  .co-spin { width:30px;height:30px;border:3px solid var(--line,#2e2836);border-top-color:var(--accent,#e8526a);border-radius:50%;animation:spin .8s linear infinite; }
+  .co-label { font-size:var(--t-body,14px);color:var(--muted,#8a8498);font-weight:700; }
+  .checkout-success { display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 0 6px;text-align:center; }
+  .co-check { width:48px;height:48px;border-radius:50%;background:color-mix(in srgb,var(--success,#52c97a) 16%,transparent);display:flex;align-items:center;justify-content:center;color:var(--success,#52c97a); }
+  .co-title { font-size:var(--t-h3,15px);font-weight:900;color:var(--fg,#f0ecf5); }
+  .co-sub { font-size:var(--t-caption,12px);color:var(--muted,#8a8498);font-weight:600; }
+  .co-credit { display:flex;align-items:center;gap:5px;font-size:var(--t-caption,12px);color:var(--success,#52c97a);font-weight:700;margin-top:2px; }
+  .co-goto-btn { width:100%;margin-top:8px;padding:13px;border:0;border-radius:14px;background:var(--card,#1e1a22);color:var(--fg,#f0ecf5);font-family:inherit;font-size:var(--t-body,14px);font-weight:800;cursor:pointer;transition:filter .15s;min-height:44px; }
+  .co-goto-btn:active { filter:brightness(.88); }
+
   /* ---- Onboarding ----
      Redesigned 2026-06-18 per board decision (board_meeting_2026-06-18_design_quality.md):
      the old layout was a single centered icon on an empty gradient void -- "feels cheap"
@@ -2168,10 +2180,9 @@
 
   function openSheetSingle(it, earnAmt, influencerUser){
     logAdminEvent('buy_intent', 'Opened sheet: ' + (it.name||'item'));
-    const stores = itemStores(it);
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success, #34d399);font-weight:700;margin-top:8px;text-align:center">
-           ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על הרכישה הזאת
+      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success,#52c97a);font-weight:700;margin-top:8px;text-align:center">
+           ${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase
          </p>` : '';
     const wardrobe4compat = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const csHTML = wardrobe4compat.length ? compatScoreHTML(it, wardrobe4compat) : '';
@@ -2187,18 +2198,15 @@
         </div>
       </div>
       ${earnLine}
-      ${stores.length ? `<div class="sheet-divider">or find it in stores</div>
-        <div class="sheet-stores">${stores.map(storeRowHTML).join('')}</div>` : ''}
       <div style="height:16px"></div>`;
 
-    const primary = stores[0];
-    sheetFooter.innerHTML = primary
-      ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
-            style="text-decoration:none" aria-label="Buy ${attr(it.name)} at ${attr(primary.retailer)}">
-           Buy at ${esc(primary.retailer)}
+    _checkoutCtx = {it, influencerUser: influencerUser || null};
+    sheetFooter.innerHTML = it.price_estimate_usd
+      ? `<button class="sheet-buy" data-action="checkout" aria-label="Buy ${attr(it.name)}">
+           ${icon('bag',18)} Buy Now
            <span class="sheet-buy-price">$${esc(it.price_estimate_usd)}</span>
-         </a>`
-      : `<div style="text-align:center;color:var(--muted);font-size:var(--t-small);padding:10px 0">No shopping link available for this item yet</div>`;
+         </button>`
+      : `<div style="text-align:center;color:var(--muted,#8a8498);font-size:var(--t-small,13px);padding:10px 0">Price not available for this item</div>`;
 
     showSheet();
   }
@@ -2334,38 +2342,36 @@
   function openSheetLook(label, items, totalPrice, earnAmt, influencerUser){
     const list = items||[];
     const rows = list.map(it => {
-      const st = itemStores(it), url = st[0] ? st[0].url : '';
-      const buy = url
-        ? `<a class="sheet-row-buy" href="${attr(url)}" target="_blank" rel="noopener" style="text-decoration:none">Shop</a>`
-        : '';
       return `<div class="sheet-look-row">
         <div class="sheet-look-emoji">${productImage(it)}</div>
         <div class="sheet-look-name">${esc(it.name)}</div>
         <div class="sheet-look-price">$${esc(it.price_estimate_usd||it.price||0)}</div>
-        ${buy}
       </div>`;
     }).join('');
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success, #34d399);font-weight:700;margin-top:4px;text-align:center">
-           ${icon('diamond',14)} @${esc(influencerUser)} תרוויח ₪${esc(earnAmt)} על כל קנייה
+      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success,#52c97a);font-weight:700;margin-top:4px;text-align:center">
+           ${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase
          </p>` : '';
 
     sheetBody.innerHTML = `
-      <div style="font-weight:900;font-size: var(--t-h3,15px);margin-bottom:14px;letter-spacing:-.2px">
+      <div style="font-weight:900;font-size:var(--t-h3,15px);margin-bottom:14px;letter-spacing:-.2px">
         ${esc(label)} · ${list.length} items
       </div>
       <div class="sheet-look-list">${rows}</div>
       <div class="sheet-total">
         <span class="sheet-total-label">Look total</span>
-        <span class="sheet-total-amt">₪${esc(totalPrice)}</span>
+        <span class="sheet-total-amt">$${esc(totalPrice)}</span>
       </div>
       ${earnLine}
       <div style="height:8px"></div>`;
 
-    sheetFooter.innerHTML =
-      `<div style="display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;color:var(--muted);font-size: var(--t-caption,12px);padding:6px 0 2px">
-         ${icon('bag',15)} Buy each item directly from its store
-       </div>`;
+    _checkoutCtx = {items: list, influencerUser: influencerUser || null, totalPrice};
+    sheetFooter.innerHTML = totalPrice
+      ? `<button class="sheet-buy" data-action="checkout-look" aria-label="Buy this look">
+           ${icon('bag',18)} Buy This Look
+           <span class="sheet-buy-price">$${esc(totalPrice)}</span>
+         </button>`
+      : `<div style="text-align:center;color:var(--muted,#8a8498);font-size:var(--t-small,13px);padding:8px 0">Explore items above</div>`;
 
     showSheet();
   }
@@ -2409,6 +2415,83 @@
     buySheet.style.transition = '';
     buySheet.style.transform = '';
     sheetStartY = null;
+  });
+
+  // ---- In-App Checkout ----
+  function handleCheckout() {
+    if (!_checkoutCtx || !_checkoutCtx.it) return;
+    const {it, influencerUser} = _checkoutCtx;
+    sheetFooter.innerHTML = `<div class="checkout-processing"><div class="co-spin"></div><div class="co-label">Placing your order…</div></div>`;
+    setTimeout(() => {
+      const w = loadWardrobe();
+      if (!w.find(x => x.name === it.name)) {
+        w.unshift({name:it.name, category:it.category||'', price_estimate_usd:it.price_estimate_usd||0,
+          search_query:it.search_query||it.name, style_tags:it.style_tags||[], ts:Date.now(), from_purchase:true});
+        saveWardrobe(w);
+      }
+      if (influencerUser) {
+        try {
+          const credits = JSON.parse(localStorage.getItem(CREDITS_KEY)||'[]');
+          credits.unshift({id:'c_'+Date.now(), from:influencerUser, item:it.name,
+            amount:+((it.price_estimate_usd||0)*0.05).toFixed(2), ts:Date.now()});
+          localStorage.setItem(CREDITS_KEY, JSON.stringify(credits));
+        } catch(e){}
+      }
+      const creditLine = influencerUser
+        ? `<div class="co-credit">${icon('diamond',12)} @${esc(influencerUser)} earned a creator credit</div>` : '';
+      sheetFooter.innerHTML = `<div class="checkout-success">
+        <div class="co-check">${icon('checkCircle',24)}</div>
+        <div class="co-title">Order confirmed!</div>
+        <div class="co-sub">${esc(it.name)} added to your closet</div>
+        ${creditLine}
+        <button class="co-goto-btn" data-action="goto-closet">View in Closet</button>
+      </div>`;
+      logAdminEvent('purchase', 'Bought: '+(it.name||'item')+(influencerUser?' via @'+influencerUser:''));
+      showToast('Added to your closet');
+    }, 1800);
+  }
+
+  function handleLookCheckout() {
+    if (!_checkoutCtx || !_checkoutCtx.items) return;
+    const {items, influencerUser, totalPrice} = _checkoutCtx;
+    sheetFooter.innerHTML = `<div class="checkout-processing"><div class="co-spin"></div><div class="co-label">Placing your order…</div></div>`;
+    setTimeout(() => {
+      const w = loadWardrobe();
+      items.forEach(it => {
+        if (!w.find(x => x.name === it.name)) {
+          w.unshift({name:it.name, category:it.category||'', price_estimate_usd:it.price_estimate_usd||0,
+            search_query:it.search_query||it.name, style_tags:it.style_tags||[], ts:Date.now(), from_purchase:true});
+        }
+      });
+      saveWardrobe(w);
+      if (influencerUser) {
+        try {
+          const credits = JSON.parse(localStorage.getItem(CREDITS_KEY)||'[]');
+          credits.unshift({id:'c_'+Date.now(), from:influencerUser, item:`${items.length}-item look`,
+            amount:+((totalPrice||0)*0.05).toFixed(2), ts:Date.now()});
+          localStorage.setItem(CREDITS_KEY, JSON.stringify(credits));
+        } catch(e){}
+      }
+      const creditLine = influencerUser
+        ? `<div class="co-credit">${icon('diamond',12)} @${esc(influencerUser)} earned a creator credit</div>` : '';
+      sheetFooter.innerHTML = `<div class="checkout-success">
+        <div class="co-check">${icon('checkCircle',24)}</div>
+        <div class="co-title">Look ordered!</div>
+        <div class="co-sub">${items.length} items added to your closet</div>
+        ${creditLine}
+        <button class="co-goto-btn" data-action="goto-closet">View in Closet</button>
+      </div>`;
+      logAdminEvent('purchase', `Bought look: ${items.length} items`+(influencerUser?' via @'+influencerUser:''));
+      showToast(`${items.length} items added to your closet`);
+    }, 1800);
+  }
+
+  sheetFooter.addEventListener('click', e => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    if (btn.dataset.action === 'checkout') handleCheckout();
+    if (btn.dataset.action === 'checkout-look') handleLookCheckout();
+    if (btn.dataset.action === 'goto-closet') { closeSheet(); showView('closet'); }
   });
 
   // ---- buy confirm — opens product sheet with real retailers (no fake animation) ----
@@ -2501,7 +2584,9 @@
 
   // ---- persistence ----
   const WARDROBE_KEY='awear_wardrobe',META_KEY='awear_meta',SHELF_KEY='awear_shelf',
-        FEED_KEY='awear_feed',LASTSCAN_KEY='awear_lastscan',PROFILE_KEY='awear_profile';
+        FEED_KEY='awear_feed',LASTSCAN_KEY='awear_lastscan',PROFILE_KEY='awear_profile',
+        CREDITS_KEY='awear_credits';
+  let _checkoutCtx = null;
   const ls={load:k=>{try{return JSON.parse(localStorage.getItem(k))||null;}catch(e){return null;}},
             save:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
   const loadProfile=()=>ls.load(PROFILE_KEY)||{name:'My Style',handle:'me',city:'',bio:'',photo:null};
