@@ -24,6 +24,7 @@ import uuid
 import time
 import traceback
 import urllib.parse
+import urllib.request
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -34,7 +35,7 @@ logger = logging.getLogger(__name__)
 import anthropic
 from dotenv import load_dotenv
 from fastapi import Body, FastAPI, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from pydantic import BaseModel
@@ -424,6 +425,40 @@ async def analyze(request: Request, photo: UploadFile):
         look_total += item.get("price_estimate_usd") or 0
     result["look_total_usd"] = look_total
     return result
+
+
+# ---------------------------------------------------------------------------
+# Product images — proxy to Pexels (free API key) so clothing items show real
+# catalog-style photos. The <img src> hits this endpoint, which 302-redirects
+# straight to the matched photo. If PEXELS_API_KEY is unset or there's no match,
+# it returns 404 so the frontend falls back to its clean designed placeholder
+# (never a broken image, never an emoji). Results are cached in-memory per query.
+# ---------------------------------------------------------------------------
+PEXELS_API_KEY = os.getenv("PEXELS_API_KEY", "").strip()
+_product_image_cache: dict[str, str] = {}
+
+
+@app.get("/api/product-image")
+def product_image(q: str = ""):
+    q = (q or "").strip().lower()
+    if not q or not PEXELS_API_KEY:
+        return Response(status_code=404)
+    if q not in _product_image_cache:
+        url = ""
+        try:
+            req = urllib.request.Request(
+                "https://api.pexels.com/v1/search?"
+                + urllib.parse.urlencode({"query": q, "per_page": 1, "orientation": "portrait"}),
+                headers={"Authorization": PEXELS_API_KEY},
+            )
+            with urllib.request.urlopen(req, timeout=5) as r:
+                photos = json.loads(r.read().decode()).get("photos", [])
+            url = photos[0]["src"]["large"] if photos else ""
+        except Exception:  # noqa: BLE001 — image is best-effort; placeholder covers failures
+            url = ""
+        _product_image_cache[q] = url
+    url = _product_image_cache[q]
+    return RedirectResponse(url) if url else Response(status_code=404)
 
 
 @app.get("/")

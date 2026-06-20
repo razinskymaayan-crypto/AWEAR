@@ -2111,9 +2111,8 @@
   }
   function productImage(it, cls){
     const q = (it && (it.search_query || it.q || it.name)) || 'fashion clothing item';
-    const url = 'https://image.pollinations.ai/prompt/' +
-      encodeURIComponent(q + ', fashion product photo, plain white background, e-commerce, centered, studio lighting') +
-      '?width=400&height=500&nologo=true';
+    // real catalog photo via our Pexels proxy; on 404 (no key/match) -> onerror -> clean placeholder
+    const url = '/api/product-image?q=' + encodeURIComponent(q);
     return `<img class="pi-img ${cls||''}" src="${attr(url)}" alt="${attr((it&&it.name)||'')}" loading="lazy" `+
       `data-cat="${attr((it&&it.category)||'')}" onload="this.classList.add('loaded')" onerror="this.onerror=null;imgFallback(this)">`;
   }
@@ -2121,9 +2120,7 @@
   // productImage(), but a cinematic editorial prompt instead of a white-cutout product shot --
   // used for full-bleed hero imagery like onboarding, never for garment thumbnails). ----
   function editorialImage(q, alt, cls){
-    const url = 'https://image.pollinations.ai/prompt/' +
-      encodeURIComponent((q || 'fashion editorial photography') + ', high detail, photorealistic') +
-      '?width=780&height=1000&nologo=true';
+    const url = '/api/product-image?q=' + encodeURIComponent(q || 'fashion editorial');
     // data-cat intentionally omitted -- imgFallback()/catIcon() default to a clean
     // hanger glyph when no garment category applies (this is a lifestyle photo, not a product shot).
     return `<img class="pi-img ${cls||''}" src="${attr(url)}" alt="${attr(alt||'')}" loading="lazy" `+
