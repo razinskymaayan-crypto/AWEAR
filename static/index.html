@@ -1202,6 +1202,38 @@
   .rw-perk-btn.locked { background: var(--card); color: var(--muted); border: 1.5px solid var(--line); }
   .rw-perk-btn.unlocked { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
 
+  /* ---- Creator Wallet ---- */
+  .wa-wrap { display: flex; flex-direction: column; padding-bottom: 32px; }
+  .wa-header { padding: 16px 18px 10px; display: flex; align-items: center; gap: 8px; }
+  .wa-title { font-size: var(--t-title,20px); font-weight: 900; letter-spacing: -.4px; flex: 1; display: flex; align-items: center; gap: 8px; }
+  .wa-hero { margin: 4px 18px 16px; border-radius: 24px; padding: 24px 22px; background: linear-gradient(135deg, var(--card) 0%, color-mix(in srgb, var(--accent2) 18%, var(--card)) 100%); border: 1px solid color-mix(in srgb, var(--accent2) 30%, transparent); position: relative; overflow: hidden; }
+  .wa-hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: color-mix(in srgb, var(--accent2) 14%, transparent); pointer-events: none; }
+  .wa-bal-amt { font-size: 48px; font-weight: 900; letter-spacing: -2px; color: var(--fg,#f0ecf5); line-height: 1; font-family: 'Poppins', sans-serif; position: relative; }
+  .wa-bal-label { font-size: var(--t-small,13px); color: color-mix(in srgb, var(--fg,#f0ecf5) 65%, transparent); font-weight: 700; margin-top: 4px; position: relative; }
+  .wa-pending-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid color-mix(in srgb, var(--fg,#f0ecf5) 12%, transparent); position: relative; }
+  .wa-pending-amt { font-size: var(--t-body,14px); font-weight: 900; color: var(--success,#52c97a); font-family: 'Poppins', sans-serif; }
+  .wa-pending-label { font-size: var(--t-caption,12px); color: color-mix(in srgb, var(--fg,#f0ecf5) 55%, transparent); font-weight: 700; flex: 1; }
+  .wa-withdraw-btn { padding: 8px 18px; background: color-mix(in srgb, var(--fg,#f0ecf5) 12%, transparent); border: 1.5px solid color-mix(in srgb, var(--fg,#f0ecf5) 22%, transparent); border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; color: var(--fg,#f0ecf5); cursor: pointer; transition: all .18s; min-height: 44px; white-space: nowrap; }
+  .wa-withdraw-btn:active { transform: scale(.95); opacity: .8; }
+  .wa-section-label { padding: 4px 18px 10px; font-size: var(--t-micro,11px); font-weight: 800; color: var(--muted,#8a8498); letter-spacing: .6px; text-transform: uppercase; }
+  .wa-credit-list { display: flex; flex-direction: column; gap: 10px; padding: 0 18px; }
+  .wa-credit-row { display: flex; align-items: center; gap: 12px; background: var(--card,#1e1a22); border-radius: var(--r-md,14px); padding: 14px; border: 1px solid var(--line,#2e2836); }
+  .wa-credit-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent3,#7a6af0), var(--accent,#e8526a)); display: flex; align-items: center; justify-content: center; font-size: var(--t-caption,12px); font-weight: 900; color: #fff; flex-shrink: 0; text-transform: uppercase; letter-spacing: .5px; }
+  .wa-credit-info { flex: 1; min-width: 0; }
+  .wa-credit-from { font-size: var(--t-small,13px); font-weight: 800; color: var(--fg,#f0ecf5); }
+  .wa-credit-item { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .wa-credit-right { text-align: right; flex-shrink: 0; }
+  .wa-credit-amt { font-size: var(--t-body,14px); font-weight: 900; color: var(--success,#52c97a); font-family: 'Poppins', sans-serif; }
+  .wa-credit-date { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; margin-top: 2px; }
+  .wa-empty { display: flex; flex-direction: column; align-items: center; padding: 32px 24px; gap: 10px; color: var(--muted,#8a8498); }
+  .wa-empty-title { font-size: var(--t-body,14px); font-weight: 800; color: var(--fg,#f0ecf5); }
+  .wa-empty-sub { font-size: var(--t-small,13px); text-align: center; line-height: 1.5; max-width: 280px; }
+  .wa-how-list { display: flex; flex-direction: column; gap: 8px; padding: 0 18px; }
+  .wa-how-row { display: flex; align-items: flex-start; gap: 12px; background: var(--card,#1e1a22); border-radius: var(--r-md,14px); padding: 12px 14px; border: 1px solid var(--line,#2e2836); }
+  .wa-how-icon { color: var(--accent2,#c4855a); flex-shrink: 0; padding-top: 2px; }
+  .wa-how-copy { font-size: var(--t-small,13px); font-weight: 700; line-height: 1.45; color: var(--fg,#f0ecf5); }
+  .wa-how-sub { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; margin-top: 2px; }
+
   /* ---- Sustainability Score ---- */
   .sus-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
   .sus-header { padding: 16px 18px 10px; font-size: var(--t-title,20px); font-weight: 900; }
@@ -1695,6 +1727,11 @@
       <div class="rw-wrap" id="rw-wrap"></div>
     </section>
 
+    <!-- CREATOR WALLET -->
+    <section id="wallet" class="view">
+      <div class="wa-wrap" id="wl-wrap"></div>
+    </section>
+
     <!-- SUSTAINABILITY -->
     <section id="sustainability" class="view">
       <div class="sus-wrap" id="sus-wrap"></div>
@@ -2115,6 +2152,7 @@
     if (name === 'analytics') renderAnalytics();
     if (name === 'outfits')       initOutfitGen();
     if (name === 'rewards')        renderRewards();
+    if (name === 'wallet')         renderWallet();
     if (name === 'sustainability') renderSustainability();
     if (name === 'marketplace')   renderMarketplace();
     if (name === 'publicclosets') renderPublicClosets();
@@ -3336,6 +3374,7 @@
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('marketplace')"><span class="hq-icon">${icon('cart', 20)}</span>Marketplace</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('compare')"><span class="hq-icon">${icon('scale', 20)}</span>Compare</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('rewards')"><span class="hq-icon">${icon('award', 20)}</span>Rewards</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('wallet')"><span class="hq-icon">${icon('coins', 20)}</span>Wallet</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('sustainability')"><span class="hq-icon">${icon('leaf', 20)}</span>Eco</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('seasonal')"><span class="hq-icon">${icon('list', 20)}</span>Season</button>
       </div>
@@ -3757,6 +3796,91 @@
         showToast('הטבה מומשה!');
         renderRewards();
       });
+    });
+  }
+
+  // ---- Creator Wallet ----
+  function renderWallet() {
+    const el = document.getElementById('wl-wrap');
+    if (!el) return;
+
+    const SEED_FLAG = 'awear_wallet_seeded';
+    if (!localStorage.getItem(SEED_FLAG)) {
+      const existing = JSON.parse(localStorage.getItem(CREDITS_KEY) || '[]');
+      if (existing.length === 0) {
+        const now = Date.now();
+        localStorage.setItem(CREDITS_KEY, JSON.stringify([
+          {id:'c_s1', from:'sofia.style',  item:'Linen blazer',        amount:4.50, ts: now - 3*86400000},
+          {id:'c_s2', from:'maya_looks',   item:'2-item summer look',  amount:7.25, ts: now - 7*86400000},
+          {id:'c_s3', from:'zara.vibes',   item:'Slip midi dress',     amount:3.10, ts: now - 14*86400000},
+        ]));
+      }
+      localStorage.setItem(SEED_FLAG, '1');
+    }
+
+    const credits = JSON.parse(localStorage.getItem(CREDITS_KEY) || '[]');
+    const total = credits.reduce((s, c) => s + (c.amount || 0), 0);
+
+    function fmtDate(ts) {
+      return new Date(ts).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    }
+    function initials(name) {
+      return (name||'?').split(/[._@]/).filter(Boolean).slice(0,2).map(s=>(s[0]||'')).join('').toUpperCase().slice(0,2) || '?';
+    }
+
+    const creditRows = credits.length > 0
+      ? credits.map(c => `
+        <div class="wa-credit-row">
+          <div class="wa-credit-avatar">${initials(c.from||'?')}</div>
+          <div class="wa-credit-info">
+            <div class="wa-credit-from">@${esc(c.from||'creator')}</div>
+            <div class="wa-credit-item">${esc(c.item||'purchase')}</div>
+          </div>
+          <div class="wa-credit-right">
+            <div class="wa-credit-amt">+$${(c.amount||0).toFixed(2)}</div>
+            <div class="wa-credit-date">${fmtDate(c.ts||Date.now())}</div>
+          </div>
+        </div>`).join('')
+      : `<div class="wa-empty">
+          ${icon('coins',40)}
+          <div class="wa-empty-title">No credits yet</div>
+          <div class="wa-empty-sub">Share your looks to the feed. When someone buys via your post, you earn 5% as a creator credit.</div>
+        </div>`;
+
+    el.innerHTML = `
+      <div class="wa-header">
+        <div class="wa-title">${icon('coins',20)} Creator Wallet</div>
+      </div>
+      <div class="wa-hero">
+        <div class="wa-bal-amt">$${total.toFixed(2)}</div>
+        <div class="wa-bal-label">Total credits earned</div>
+        <div class="wa-pending-row">
+          <div class="wa-pending-amt">$${total.toFixed(2)}</div>
+          <div class="wa-pending-label">Pending payout</div>
+          <button class="wa-withdraw-btn" id="wa-withdraw">Withdraw</button>
+        </div>
+      </div>
+      <div class="wa-section-label">Credits history</div>
+      <div class="wa-credit-list">${creditRows}</div>
+      <div class="wa-section-label" style="margin-top:16px">How it works</div>
+      <div class="wa-how-list">
+        <div class="wa-how-row">
+          <div class="wa-how-icon">${icon('share',16)}</div>
+          <div><div class="wa-how-copy">Share a look to the feed</div><div class="wa-how-sub">Tag items from your closet or AWEAR's catalog</div></div>
+        </div>
+        <div class="wa-how-row">
+          <div class="wa-how-icon">${icon('bag',16)}</div>
+          <div><div class="wa-how-copy">Someone buys via your post</div><div class="wa-how-sub">Every in-app purchase through your look earns you 5%</div></div>
+        </div>
+        <div class="wa-how-row">
+          <div class="wa-how-icon">${icon('cash',16)}</div>
+          <div><div class="wa-how-copy">Cash out when ready</div><div class="wa-how-sub">Minimum $10 — Stripe Connect available post-launch</div></div>
+        </div>
+      </div>`;
+
+    el.querySelector('#wa-withdraw')?.addEventListener('click', () => {
+      if (total < 10) { showToast('Minimum withdrawal is $10'); return; }
+      showToast('Withdrawal requested — processing in 2–5 business days');
     });
   }
 
