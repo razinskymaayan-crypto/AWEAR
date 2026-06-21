@@ -361,6 +361,21 @@
     display: flex; align-items: center; gap: 8px;
   }
   .fc-verified { color: var(--accent); display: inline-flex; align-items: center; }
+  .fc-follow-btn {
+    margin-left: auto; flex-shrink: 0;
+    padding: 0 14px; min-height: 44px;
+    background: rgba(255,255,255,.13);
+    backdrop-filter: blur(6px);
+    border: 1.5px solid rgba(255,255,255,.28);
+    border-radius: var(--r-pill, 999px);
+    font-size: var(--t-micro, 11px); font-weight: 900; color: #fff;
+    font-family: inherit; cursor: pointer; transition: all .18s;
+    white-space: nowrap; display: inline-flex; align-items: center;
+  }
+  .fc-follow-btn.following {
+    background: transparent; border-color: rgba(255,255,255,.14); color: rgba(255,255,255,.45);
+  }
+  .fc-follow-btn:active { transform: scale(.93); }
   .fc-caption {
     font-size: var(--t-body, 14px);
     color: rgba(255,255,255,.92);
@@ -2902,13 +2917,13 @@
 
   // ---- Feed ----
   let SEED_POSTS=[
-    {id:'s1',user:'noa.styles', name:'Noa',verified:true, caption:'Summer cafe look ☕️',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress'],items:[{category:'top',name:'White cropped tee',price_estimate_usd:79,q:'white cropped tee'},{category:'bottoms',name:'Beige baker trousers',price_estimate_usd:159,q:'beige baker trousers'},{category:'shoes',name:'White sneakers',price_estimate_usd:220,q:'white leather sneakers'},{category:'accessory',name:'Sunglasses',price_estimate_usd:89,q:'trendy sunglasses'}]},
-    {id:'s2',user:'yael_fits',  name:'Yael', verified:false,caption:'Modern streetwear ✨',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes'],items:[{category:'top',name:'Oversized tee',price_estimate_usd:99,q:'oversized graphic tee'},{category:'bottoms',name:'Parachute cargos',price_estimate_usd:159,q:'parachute cargo pants'},{category:'shoes',name:'Adidas Samba',price_estimate_usd:449,q:'adidas samba'},{category:'accessory',name:'Baseball cap',price_estimate_usd:69,q:'baseball cap'}]},
-    {id:'s3',user:'mika.thrift',name:'Mika',verified:true, caption:'Secondhand in mint condition ♻️',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag'],items:[{category:'top',name:'Vintage shirt',price_estimate_usd:45,q:'vintage shirt'},{category:'bottoms',name:'Mom jeans',price_estimate_usd:89,q:'vintage mom jeans'},{category:'bag',name:'Shoulder bag',price_estimate_usd:60,q:'vintage shoulder bag'}]},
-    {id:'s4',user:'shir.daily', name:'Shir', verified:false,caption:'Sunday outfit 🤍',        tags:['minimal','ootd'],            price:179,img:null,                 grad:'linear-gradient(160deg,#fccb90,#d57eeb)',         likes:3300,trend:88,earn:18,mtags:['minimal','everyday','ootd','dress','shoes'],items:[{category:'dress',name:'Midi dress',price_estimate_usd:179,q:'midi slip dress'},{category:'shoes',name:'Ballet flats',price_estimate_usd:120,q:'ballet flats'},{category:'bag',name:'Mini bag',price_estimate_usd:95,q:'mini bag'}]},
-    {id:'s5',user:'agam.x',     name:'Agam', verified:true, caption:'vintage vibes 🕶️',            tags:['vintage','retro'],           price:259,img:null,                 grad:'linear-gradient(160deg,#5ee7df,#b490ca)',         likes:4000,trend:94,earn:26,mtags:['vintage','retro','thrifted','accessory','outerwear'],items:[{category:'outerwear',name:'Denim jacket',price_estimate_usd:199,q:'vintage denim jacket'},{category:'accessory',name:'Retro sunglasses',price_estimate_usd:79,q:'retro sunglasses'},{category:'shoes',name:'Cowboy boots',price_estimate_usd:259,q:'cowboy boots'}]},
-    {id:'s6',user:'dana.edit',  name:'Dana', verified:false,caption:'office but make it cute 💼',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag'],items:[{category:'dress',name:'Blazer dress',price_estimate_usd:320,q:'blazer dress'},{category:'shoes',name:'Loafers',price_estimate_usd:199,q:'leather loafers'},{category:'bag',name:'Structured bag',price_estimate_usd:240,q:'structured work bag'}]},
-    {id:'s7',user:'lia.threads',name:'Lia', verified:true, caption:'beach day ready 🌊',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms'],items:[{category:'top',name:'Bikini top',price_estimate_usd:69,q:'bikini top'},{category:'bottoms',name:'Linen pants',price_estimate_usd:120,q:'linen beach pants'},{category:'accessory',name:'Straw hat',price_estimate_usd:79,q:'straw hat'}]},
+    {id:'s1',userId:'u1',user:'noa.styles', name:'Noa',verified:true, caption:'Summer cafe look',      tags:['y2k','casual','minimal'],   price:149,img:'/static/feed/1.jpg',grad:'linear-gradient(160deg,#ff9a8b,#ff6a88,#ff99ac)',likes:2400,trend:91,earn:15,mtags:['y2k','casual','minimal','top','dress'],items:[{category:'top',name:'White cropped tee',price_estimate_usd:79,q:'white cropped tee'},{category:'bottoms',name:'Beige baker trousers',price_estimate_usd:159,q:'beige baker trousers'},{category:'shoes',name:'White sneakers',price_estimate_usd:220,q:'white leather sneakers'},{category:'accessory',name:'Sunglasses',price_estimate_usd:89,q:'trendy sunglasses'}]},
+    {id:'s2',userId:'u2',user:'yael_fits',  name:'Yael', verified:false,caption:'Modern streetwear',           tags:['streetwear','utility'],      price:219,img:'/static/feed/2.jpg',grad:'linear-gradient(160deg,#a18cd1,#fbc2eb)',         likes:5100,trend:96,earn:22,mtags:['streetwear','utility','bottoms','sneakers','shoes'],items:[{category:'top',name:'Oversized tee',price_estimate_usd:99,q:'oversized graphic tee'},{category:'bottoms',name:'Parachute cargos',price_estimate_usd:159,q:'parachute cargo pants'},{category:'shoes',name:'Adidas Samba',price_estimate_usd:449,q:'adidas samba'},{category:'accessory',name:'Baseball cap',price_estimate_usd:69,q:'baseball cap'}]},
+    {id:'s3',userId:'u3',user:'mika.thrift',name:'Mika',verified:true, caption:'Secondhand in mint condition',     tags:['secondhand','vintage'],      price:89, img:null,                 grad:'linear-gradient(160deg,#84fab0,#8fd3f4)',         likes:1800,trend:82,earn:9, mtags:['secondhand','vintage','everyday','top','bag'],items:[{category:'top',name:'Vintage shirt',price_estimate_usd:45,q:'vintage shirt'},{category:'bottoms',name:'Mom jeans',price_estimate_usd:89,q:'vintage mom jeans'},{category:'bag',name:'Shoulder bag',price_estimate_usd:60,q:'vintage shoulder bag'}]},
+    {id:'s4',userId:'u4',user:'shir.daily', name:'Shir', verified:false,caption:'Sunday outfit',        tags:['minimal','ootd'],            price:179,img:null,                 grad:'linear-gradient(160deg,#fccb90,#d57eeb)',         likes:3300,trend:88,earn:18,mtags:['minimal','everyday','ootd','dress','shoes'],items:[{category:'dress',name:'Midi dress',price_estimate_usd:179,q:'midi slip dress'},{category:'shoes',name:'Ballet flats',price_estimate_usd:120,q:'ballet flats'},{category:'bag',name:'Mini bag',price_estimate_usd:95,q:'mini bag'}]},
+    {id:'s5',userId:'u5',user:'agam.x',     name:'Agam', verified:true, caption:'Vintage vibes',            tags:['vintage','retro'],           price:259,img:null,                 grad:'linear-gradient(160deg,#5ee7df,#b490ca)',         likes:4000,trend:94,earn:26,mtags:['vintage','retro','thrifted','accessory','outerwear'],items:[{category:'outerwear',name:'Denim jacket',price_estimate_usd:199,q:'vintage denim jacket'},{category:'accessory',name:'Retro sunglasses',price_estimate_usd:79,q:'retro sunglasses'},{category:'shoes',name:'Cowboy boots',price_estimate_usd:259,q:'cowboy boots'}]},
+    {id:'s6',userId:'u6',user:'dana.edit',  name:'Dana', verified:false,caption:'Office but make it cute',  tags:['minimal','ootd'],            price:320,img:null,                 grad:'linear-gradient(160deg,#f8ceec,#a29bfe)',         likes:6200,trend:97,earn:32,mtags:['minimal','business','dress','shoes','bag'],items:[{category:'dress',name:'Blazer dress',price_estimate_usd:320,q:'blazer dress'},{category:'shoes',name:'Loafers',price_estimate_usd:199,q:'leather loafers'},{category:'bag',name:'Structured bag',price_estimate_usd:240,q:'structured work bag'}]},
+    {id:'s7',userId:'u1',user:'lia.threads',name:'Lia', verified:true, caption:'Beach day ready',           tags:['casual','y2k'],              price:120,img:null,                 grad:'linear-gradient(160deg,#89f7fe,#66a6ff)',         likes:3800,trend:89,earn:12,mtags:['casual','summer','y2k','top','bottoms'],items:[{category:'top',name:'Bikini top',price_estimate_usd:69,q:'bikini top'},{category:'bottoms',name:'Linen pants',price_estimate_usd:120,q:'linen beach pants'},{category:'accessory',name:'Straw hat',price_estimate_usd:79,q:'straw hat'}]},
   ];
 
   // ---- Data loaders (products.json / profiles.json / posts.json) ----
@@ -3051,7 +3066,7 @@
       ${pillsHTML?`<div class="fc-item-pills">${pillsHTML}</div>`:''}
 
       <div class="fc-info">
-        <div class="fc-user">@${esc(post.user||'me')}${post.verified?`<span class="fc-verified">${icon('checkCircle',14)}</span>`:''}</div>
+        <div class="fc-user">@${esc(post.user||'me')}${post.verified?`<span class="fc-verified">${icon('checkCircle',14)}</span>`:''}${(!isMine&&post.userId)?`<button class="fc-follow-btn${followState[post.userId]?' following':''}" data-follow-uid="${attr(post.userId)}">${followState[post.userId]?'Following':'+ Follow'}</button>`:''}</div>
         <div class="fc-caption">${esc(post.caption||'')}</div>
         <div class="fc-tags">${tagPills}</div>
         <span class="fc-match">${matchPercent(mtags)}% match to my closet</span>
@@ -3168,6 +3183,17 @@
         const enriched={...item, style_tags:(item.style_tags&&item.style_tags.length)?item.style_tags:(post.tags||[])};
         openSheetItem(enriched, post.items);
       }
+      return;
+    }
+    // follow button on feed card
+    const followBtn=e.target.closest('.fc-follow-btn');
+    if(followBtn){
+      const uid=followBtn.dataset.followUid;if(!uid)return;
+      followState[uid]=!followState[uid];
+      localStorage.setItem('awear_follows',JSON.stringify(followState));
+      followBtn.textContent=followState[uid]?'Following':'+ Follow';
+      followBtn.classList.toggle('following',!!followState[uid]);
+      showToast(followState[uid]?'Now following':'Unfollowed');
       return;
     }
     // bottom action bar buttons
@@ -4718,7 +4744,9 @@
     {id:'u5', name:'Roni Gold', handle:'@ronigold', avatar:'https://randomuser.me/api/portraits/women/5.jpg', vibe:'Sport Luxe', items:22, following:false},
     {id:'u6', name:'Lior Sade', handle:'@liorsade', avatar:'https://randomuser.me/api/portraits/women/6.jpg', vibe:'Vintage', items:51, following:false},
   ];
-  let followState = JSON.parse(localStorage.getItem('awear_follows') || '{}');
+  const _defaultFollows={};
+  SEED_USERS.forEach(u=>{if(u.following)_defaultFollows[u.id]=true;});
+  let followState=Object.assign({},_defaultFollows,JSON.parse(localStorage.getItem('awear_follows')||'{}'));
 
   // ---- Blocking (Shira) ----
   // Same persistence pattern as followState: a plain object keyed by a
@@ -5988,15 +6016,24 @@
     const host=document.getElementById('feed-scroll'); if(!host) return;
     host.innerHTML='';
     if(activeTab==='following'){
-      host.appendChild(renderFollowingEmpty());
-      return;
+      _renderFollowingTab(host); return;
     }
-    // stories at top of foryou
     host.appendChild(renderStories());
-    // then the regular feed cards
     _origRenderFeed.call(this);
-    // move the stories into position (renderFeed clears host, so re-inject)
   };
+
+  function _renderFollowingTab(host){
+    LIKES=loadSet('awear_likes'); SAVED=loadSet('awear_saved');
+    const followed=SEED_POSTS.filter(p=>p.userId&&followState[p.userId]&&!isBlocked(p.user));
+    if(!followed.length){ host.appendChild(renderFollowingEmpty()); return; }
+    followed.forEach(post=>{
+      const wrap=document.createElement('div');
+      wrap.innerHTML=feedCardHTML(post,false);
+      host.appendChild(wrap.firstElementChild);
+    });
+    bindReactions&&bindReactions(host);
+    bindFeedMoreMenu&&bindFeedMoreMenu(host);
+  }
 
   // override: renderFeed adds cards to host — we need stories first
   // Re-implement cleanly:
@@ -6005,8 +6042,7 @@
     LIKES=loadSet('awear_likes'); SAVED=loadSet('awear_saved');
     host.innerHTML='';
     if(activeTab==='following'){
-      host.appendChild(renderFollowingEmpty());
-      return;
+      _renderFollowingTab(host); return;
     }
     host.appendChild(renderStories());
     loadFeedPosts().forEach(p=>{
