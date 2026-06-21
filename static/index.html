@@ -962,7 +962,7 @@
   .og-title { font-size: var(--t-title,20px); font-weight: 900; letter-spacing: -.4px; }
   .og-sub { font-size: var(--t-caption); color: var(--muted); font-weight: 600; margin-top: 4px; }
   .og-input-row { display: flex; gap: 8px; padding: 0 18px 12px; }
-  .og-input { flex: 1; background: var(--card); border: 1.5px solid var(--line); border-radius: 18px; padding: 13px 16px; font-family: inherit; font-size: var(--t-body); color: var(--text); outline: none; direction: rtl; transition: border .18s; }
+  .og-input { flex: 1; background: var(--card); border: 1.5px solid var(--line); border-radius: 18px; padding: 13px 16px; font-family: inherit; font-size: var(--t-body); color: var(--text); outline: none; transition: border .18s; }
   .og-input:focus { border-color: var(--accent2); }
   .og-go { padding: 13px 18px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; border-radius: 18px; color: #fff; font-family: inherit; font-size: var(--t-body); font-weight: 900; cursor: pointer; transition: transform .15s; white-space: nowrap; }
   .og-go:active { transform: scale(.96); }
@@ -1734,7 +1734,7 @@
   <header>
     <div class="logo">AWEAR<span class="pin" id="header-city-pin"></span></div>
     <div style="display:flex;align-items:center;gap:10px;position:relative;">
-      <button class="notif-btn" id="notif-btn" aria-label="התראות" onclick="toggleNotifPanel()">
+      <button class="notif-btn" id="notif-btn" aria-label="Notifications" onclick="toggleNotifPanel()">
         <span class="notif-badge" id="notif-badge" data-notif-badge></span>
       </button>
       <div class="ava"></div>
@@ -2581,9 +2581,9 @@
     modalCard.innerHTML = '<div class="spinner"></div><h3>Listing ' + esc(label) + ' for sale…</h3><p>AI is pricing it based on secondhand market demand</p>';
     setTimeout(() => {
       addListing({ name:label, price:Number(price)||0, category:cat||'' });
-      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:var(--success, #34d399)">' + icon('cash',48) + '</div><h3>פורסם למכירה!</h3>' +
-        '<p>' + esc(label) + ' עכשיו במדף המכירה בפרופיל שלך<br/>מחיר מומלץ: ₪' + esc(price) + ' · עמלת Awear 15%</p>' +
-        '<button class="close">לפרופיל</button>';
+      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:var(--success,#52c97a)">' + icon('cash',48) + '</div><h3>Listed for sale!</h3>' +
+        '<p>' + esc(label) + ' is now on your For Sale shelf<br/>Suggested price: $' + esc(price) + ' · AWEAR takes 15%</p>' +
+        '<button class="close">View profile</button>';
       modalCard.querySelector('.close').addEventListener('click', () => { modal.classList.remove('show'); showView('closet'); });
     }, 1300);
   }
@@ -2764,14 +2764,14 @@
 
   function forSaleHTML(){
     const shelf=loadShelf(),shelfTotal=shelf.reduce((s,it)=>s+(Number(it.price)||0),0),earnings=Math.round(shelfTotal*.85);
-    const earnCard=shelf.length?`<div class="earn"><div class="top"><span class="big-num">₪${earnings.toLocaleString()}</span><span class="ttl">earnings potential</span></div>
-      <p>${shelf.length} items for sale · worth ₪${shelfTotal.toLocaleString()} · net after Awear's 15% fee</p></div>`:'';
+    const earnCard=shelf.length?`<div class="earn"><div class="top"><span class="big-num">$${earnings.toLocaleString()}</span><span class="ttl">earnings potential</span></div>
+      <p>${shelf.length} items for sale · worth $${shelfTotal.toLocaleString()} · net after AWEAR's 15% fee</p></div>`:'';
     const listings=shelf.length
       ?shelf.map(it=>`<div class="listing"><div class="ic">${productImage(it)}</div>
-        <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">מתומחר ע"י AI לפי ביקוש בשוק היד-שנייה</div></div>
-        <div class="ask"><div class="p">₪${esc(it.price)}</div><div class="live">פעיל</div></div>
-        <button class="rm" data-rm="${attr(it.ts)}" title="הסר">×</button></div>`).join('')
-      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--success, #34d399)">${icon('cash',44)}</div>עדיין לא העלית פריטים למכירה.<br/>פתחי את הארון ולחצי "מכרי" על פריט.</div>`;
+        <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">AI-priced based on resale market demand</div></div>
+        <div class="ask"><div class="p">$${esc(it.price)}</div><div class="live">Active</div></div>
+        <button class="rm" data-rm="${attr(it.ts)}" title="Remove">×</button></div>`).join('')
+      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--success,#52c97a)">${icon('cash',44)}</div>No items listed for sale yet.<br/>Open your closet and tap "Sell" on any item.</div>`;
     return earnCard+listings;
   }
 
@@ -2789,10 +2789,10 @@
           <div style="font-size:var(--t-small);color:var(--muted);font-weight:600;line-height:1.6;max-width:240px">Scan your first look — AI will detect the pieces and build your personal closet</div>
           <button onclick="document.getElementById('file-input').click()" style="margin-top:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;border-radius:16px;font-family:inherit;font-size:var(--t-body);font-weight:900;color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:8px">${icon('camera', 18)} Scan first look</button>
         </div>` : `
-      ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:14px;font-size:11.5px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:6px">${icon('alertTriangle',14)} הסריקה האחרונה הייתה במצב דמו — AI לא היה זמין, אלו פריטי הדגמה</div>`:''}
-      ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} סטייליסט AI · מה ללבוש</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
-      ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="הלוק האחרון" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} קני את הלוק האחרון · ~₪${esc(meta.look_total_usd)}</button>`:''}
-      <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} שתפי את הלוק לפיד</button>
+      ${meta.mode==='demo'?`<div style="margin:0 18px 12px;padding:9px 14px;background:color-mix(in srgb,var(--warning,#e8a84a) 10%,transparent);border:1px solid color-mix(in srgb,var(--warning,#e8a84a) 30%,transparent);border-radius:14px;font-size:var(--t-small);font-weight:700;color:var(--warning,#e8a84a);display:flex;align-items:center;gap:6px">${icon('alertTriangle',14)} Demo scan — AI was unavailable, these are example items</div>`:''}
+      ${meta.stylist_tip?`<div class="stylist"><div class="stylist-h" style="display:flex;align-items:center;gap:5px">${icon('sparkle',15)} AI Stylist · Style tip</div><p>${esc(meta.stylist_tip)}</p></div>`:''}
+      ${meta.look_total_usd!=null?`<button class="shop-look" data-buy="1" data-label="This look" data-price="${attr(meta.look_total_usd)}">${icon('bag',18)} Buy this look · ~$${esc(meta.look_total_usd)}</button>`:''}
+      <button class="shop-look share-look" id="share-look">${icon('arrowUp',18)} Share look to feed</button>
       ${closetShelvesHTML(wardrobe)}`}`;
 
 
@@ -2814,7 +2814,7 @@
         <div><b>${feed.length}</b><span>Looks</span></div>
         <div><b style="display:inline-flex;align-items:center;gap:3px;color:var(--accent)">${icon('flame',16)}${meta.trend_score!=null?esc(meta.trend_score):'—'}</b><span>Trend score</span></div>
       </div>
-      <div class="ig-bio"><b>${wardrobe.length} items</b> in closet · worth ~₪${closetValue.toLocaleString()}${meta.overall_style?' · '+esc(meta.overall_style):''}</div>
+      <div class="ig-bio"><b>${wardrobe.length} items</b> in closet · worth ~$${closetValue.toLocaleString()}${meta.overall_style?' · '+esc(meta.overall_style):''}</div>
       <div class="seg">
         <button data-seg="closet" class="${profileTab==='closet'?'on':''}">${icon('hanger',15)} Closet</button>
         <button data-seg="looks"  class="${profileTab==='looks'?'on':''}">${icon('grid',15)} Looks</button>
@@ -2837,8 +2837,8 @@
     if(newItems.length) logAdminEvent('scan', 'Scanned ' + newItems.length + ' items — ' + (newItems[0]?.name||''));
     renderCloset();
     if(newItems.length){
-      const base=(newItems[0]?.name||'פריט') + ' נוסף לארון';
-      showToast(data.mode==='demo' ? base + ' (מצב דמו — AI לא היה זמין)' : base);
+      const base=(newItems[0]?.name||'Item') + ' added to your closet';
+      showToast(data.mode==='demo' ? base + ' (demo — AI unavailable)' : base);
     }
   }
 
@@ -2989,7 +2989,7 @@
     const bgImg=post.img?`<img class="feed-img" src="${attr(post.img)}" alt="" onerror="this.style.display='none'">` :'';
     const tagPills=tags.map(t=>`<span class="ftag">#${esc(t)}</span>`).join('');
     const mineBadge=isMine?`<span class="mine-tag" style="display:inline-flex;align-items:center;gap:4px">${icon('sparkle',13)} You</span>`:`<span></span>`;
-    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn" style="display:flex;align-items:center;gap:5px">${icon('diamond',13)} @${esc(post.user)} earns ₪${esc(post.earn)} on every purchase</div>`:'';
+    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn" style="display:flex;align-items:center;gap:5px">${icon('diamond',13)} @${esc(post.user)} earns $${esc(post.earn)} on every purchase</div>`:'';
     const lbl=post.name?post.name+"'s look":(post.caption||'the look');
     // % of this look already in wardrobe
     const _ownWardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
@@ -3423,7 +3423,7 @@
           <div class="hs-label">${t('home.stat_items')}</div>
         </div>
         <div class="hs-stat" onclick="showView('analytics')">
-          <div class="hs-num">${totalValue > 999 ? '₪'+(totalValue/1000).toFixed(1)+'K' : totalValue ? '₪'+totalValue : '—'}</div>
+          <div class="hs-num">${totalValue > 999 ? '$'+(totalValue/1000).toFixed(1)+'K' : totalValue ? '$'+totalValue : '—'}</div>
           <div class="hs-label">${t('home.stat_value')}</div>
         </div>
         <div class="hs-stat" onclick="showView('analytics')">
@@ -3510,13 +3510,13 @@
             <div style="color:var(--accent2)">${icon(todayChallenge.icon, 28)}</div>
             <div style="flex:1">
               <div style="font-size:var(--t-small,13px);font-weight:800">${esc(todayChallenge.text)}</div>
-              <div style="font-size:var(--t-micro,11px);color:var(--accent2);font-weight:700;margin-top:4px">+${todayChallenge.pts} נקודות</div>
+              <div style="font-size:var(--t-micro,11px);color:var(--accent2);font-weight:700;margin-top:4px">+${todayChallenge.pts} points</div>
             </div>
           </div>
           <div style="margin-top:12px;">
             <div style="display:flex;justify-content:space-between;font-size:var(--t-micro,11px);font-weight:700;color:var(--muted);margin-bottom:6px">
-              <span style="display:inline-flex;align-items:center;gap:4px">${icon(curLevel.icon,12)} ${esc(curLevel.name)} · ${pts} נק׳</span>
-              <span>${esc(nextLevel.name)} ${nextLevel.min} נק׳</span>
+              <span style="display:inline-flex;align-items:center;gap:4px">${icon(curLevel.icon,12)} ${esc(curLevel.name)} · ${pts} pts</span>
+              <span>${esc(nextLevel.name)} ${nextLevel.min} pts</span>
             </div>
             <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden">
               <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s ease"></div>
@@ -3566,8 +3566,8 @@
             if (match) match.wear_count = (match.wear_count || 0) + 1;
           });
           localStorage.setItem('awear_wardrobe', JSON.stringify(wardrobe2));
-          showToast('נרשם! הלוק נשמר');
-          haWore.textContent = 'נשמר';
+          showToast('Logged! Look saved');
+          haWore.textContent = 'Saved';
           haWore.disabled = true;
         }
       });
@@ -3585,9 +3585,9 @@
         .then(d => {
           if (!d.current_weather) return;
           const t = Math.round(d.current_weather.temperature);
-          const codes = {0:'שמש',1:'בהיר',2:'מעונן חלקית',3:'מעונן',
-            45:'ערפל',61:'גשם',63:'גשם',80:'ממטרים',95:'סופה'};
-          const cond = codes[d.current_weather.weathercode] || 'מזג אוויר';
+          const codes = {0:'Sunny',1:'Clear',2:'Partly cloudy',3:'Cloudy',
+            45:'Foggy',61:'Rain',63:'Rain',80:'Showers',95:'Thunderstorm'};
+          const cond = codes[d.current_weather.weathercode] || 'Clear';
           const tempEl = document.getElementById('hw-temp');
           const condEl = document.getElementById('hw-cond');
           if (tempEl) tempEl.textContent = t + '°';
@@ -3630,13 +3630,13 @@
       <div class="an-header" style="display:flex;align-items:center;gap:8px">${icon('barChart',20)} Analytics</div>
       <div class="an-hero">
         <div class="an-box"><div class="an-box-num">${totalItems}</div><div class="an-box-label">items</div></div>
-        <div class="an-box"><div class="an-box-num">${totalValue > 999 ? '₪'+(totalValue/1000).toFixed(1)+'K' : '₪'+totalValue}</div><div class="an-box-label">closet value</div></div>
+        <div class="an-box"><div class="an-box-num">${totalValue > 999 ? '$'+(totalValue/1000).toFixed(1)+'K' : '$'+totalValue}</div><div class="an-box-label">closet value</div></div>
         <div class="an-box"><div class="an-box-num">${totalWears}</div><div class="an-box-label">wears</div></div>
       </div>
 
       ${avgCPW !== null ? `
       <div class="an-cpw-card">
-        <div class="an-cpw-val">₪${avgCPW}</div>
+        <div class="an-cpw-val">$${avgCPW}</div>
         <div class="an-cpw-label">Average cost per wear</div>
       </div>` : ''}
 
@@ -3811,7 +3811,7 @@
   function renderOutfitResults(outfits, occasion) {
     const el = document.getElementById('og-result');
     if (!outfits.length) {
-      el.innerHTML = `<div class="og-empty"><div class="og-empty-icon">🤔</div><div class="og-empty-text">Couldn't build a look</div><div class="og-empty-sub">Try scanning more items into your closet</div></div>`;
+      el.innerHTML = `<div class="og-empty"><div class="og-empty-icon" style="color:var(--muted)">${icon('hanger',36)}</div><div class="og-empty-text">Couldn't build a look</div><div class="og-empty-sub">Try scanning more items into your closet</div></div>`;
       return;
     }
     el.innerHTML = `
@@ -3830,7 +3830,7 @@
                   <div class="og-item-ico">${icon(catIcon(item.category), 22)}</div>
                   <div class="og-item-info">
                     <div class="og-item-name">${esc(item.name)}</div>
-                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '+ חסר — שקלי לקנות' : 'יש בארון'}</div>
+                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '+ Missing — consider buying' : 'In your closet'}</div>
                   </div>
                 </div>`).join('')}
             </div>
@@ -3955,7 +3955,7 @@
         if (rw2.points < cost) { showToast('Not enough points'); return; }
         rw2.points -= cost;
         saveRewards(rw2);
-        showToast('הטבה מומשה!');
+        showToast('Perk redeemed!');
         renderRewards();
       });
     });
@@ -4088,10 +4088,10 @@
       <div style="padding:4px 18px 14px">
         <div style="font-size:var(--t-small);font-weight:900;margin-bottom:12px">Metrics</div>
         ${[
-          {icon:'leaf', name:'ניצול ארון', sub:`${totalItems-unworn}/${totalItems} פריטים נלבשו`, val: reuseRate+'%'},
-          {icon:'heart', name:'יד שנייה', sub:`${soldItems} פריטים נמכרו ב-Marketplace`, val: soldItems+''},
-          {icon:'barChart', name:'Cost Per Wear', sub:`ממוצע ₪${Math.round(avgCPW)||0} ללבישה`, val: avgCPW < 30 ? 'מעולה' : '↑'},
-          {icon:'globe', name:'פחמן שנחסך', sub:`בהשוואה לרכישה חדשה`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
+          {icon:'leaf', name:'Closet usage', sub:`${totalItems-unworn}/${totalItems} items worn`, val: reuseRate+'%'},
+          {icon:'heart', name:'Secondhand', sub:`${soldItems} items sold on Marketplace`, val: soldItems+''},
+          {icon:'barChart', name:'Cost Per Wear', sub:`Average $${Math.round(avgCPW)||0} per wear`, val: avgCPW < 30 ? 'Excellent' : '↑'},
+          {icon:'globe', name:'Carbon saved', sub:`vs buying new`, val: Math.round(soldItems*2.4+reuseRate*0.3)+'kg'},
         ].map(m => `
           <div class="sus-metric">
             <div class="sus-metric-icon">${icon(m.icon, 20)}</div>
@@ -4107,14 +4107,14 @@
   // ---- Marketplace ----
   const MP_KEY = 'awear_marketplace';
   const MP_SEED = [
-    {id:'mp1', name:'ג׳ינס בארל לייט', search_query:'barrel jeans light wash denim', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'כחול'},
-    {id:'mp2', name:'מעיל עור שחור וינטג׳', search_query:'black vintage leather jacket', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'שחור'},
-    {id:'mp3', name:'סניקרס Adidas Samba לבן', search_query:'Adidas Samba white sneakers', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'לבן'},
-    {id:'mp4', name:'מיני בג׳ שחור', search_query:'black mini bag crossbody', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'שחור'},
-    {id:'mp5', name:'חולצת קרופ ריב שמנת', search_query:'cream rib knit crop top', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'שמנת'},
-    {id:'mp6', name:'חצאית מידי סאטן', search_query:'green satin midi skirt formal', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'ירוק'},
-    {id:'mp7', name:'כובע בייסבול שחור', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'שחור'},
-    {id:'mp8', name:'מכנסי קרגו בז׳', search_query:'beige cargo pants utility', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'בז׳'},
+    {id:'mp1', name:'Barrel Jeans Light Wash', search_query:'barrel jeans light wash denim', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'Blue'},
+    {id:'mp2', name:'Black Vintage Leather Jacket', search_query:'black vintage leather jacket', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'Black'},
+    {id:'mp3', name:'Adidas Samba White Sneakers', search_query:'Adidas Samba white sneakers', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'White'},
+    {id:'mp4', name:'Black Mini Crossbody Bag', search_query:'black mini bag crossbody', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'Black'},
+    {id:'mp5', name:'Cream Rib Knit Crop Top', search_query:'cream rib knit crop top', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'Cream'},
+    {id:'mp6', name:'Green Satin Midi Skirt', search_query:'green satin midi skirt formal', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'Green'},
+    {id:'mp7', name:'Black Baseball Cap', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'Black'},
+    {id:'mp8', name:'Beige Cargo Pants', search_query:'beige cargo pants utility', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'Beige'},
   ];
   const MP_NEW_SEED = [
     {id:'n1', name:'Wide Leg Trousers', search_query:'zara wide leg black trousers fashion', category:'bottoms', price:59, brand:'Zara', style_tags:['minimal','chic'], isNew:true},
@@ -4294,7 +4294,7 @@
             <div class="mp-item-info">
               <div class="mp-item-name">${esc(item.name)}</div>
               <div class="${item.isNew ? 'mp-item-brand' : 'mp-item-seller'}">${esc(brandOrSeller||'')}</div>
-              <div class="mp-item-price">₪${item.price}${!item.isNew && item.orig ? ` <span style="font-size:var(--t-micro);color:var(--muted);text-decoration:line-through">₪${item.orig}</span>` : ''}</div>
+              <div class="mp-item-price">$${item.price}${!item.isNew && item.orig ? ` <span style="font-size:var(--t-micro);color:var(--muted);text-decoration:line-through">$${item.orig}</span>` : ''}</div>
               ${compat ? `<div class="mp-item-compat mp-compat-btn" data-action="compat-overlay" data-id="${item.id}">${icon('sparkle',12)} ${compat.pct}% closet match</div>` : ''}
               <button class="mp-buy-btn">${item.isNew ? 'Shop at '+esc(item.brand) : 'Buy Now'}</button>
             </div>
@@ -4401,7 +4401,7 @@
       <div style="padding:14px 16px 0">
         <div style="background:var(--grad-success);border-radius:14px;padding:14px 16px;color:var(--bg);margin-bottom:14px">
           <div style="font-size:var(--t-micro);font-weight:700;opacity:.7">Earnings potential</div>
-          <div style="font-size: var(--t-h1,24px);font-weight:900">₪${totalEarnings.toLocaleString()}</div>
+          <div style="font-size: var(--t-h1,24px);font-weight:900">$${totalEarnings.toLocaleString()}</div>
           <div style="font-size:var(--t-micro);font-weight:600;opacity:.8">${mine.length} active listings</div>
         </div>
       </div>
@@ -4410,9 +4410,9 @@
         <div class="mp-item-img">${productImage(item)}<span class="mp-badge-active">Active</span></div>
         <div class="mp-item-info">
           <div class="mp-item-name">${esc(item.name)}</div>
-          <div class="mp-item-price">₪${item.price}</div>
-          <div class="mp-item-seller" style="color:var(--success);display:flex;align-items:center;gap:4px">${icon('check',12)} פעיל</div>
-          <button class="mp-delete-btn" data-id="${item.id}" style="position:absolute;top:6px;right:6px;background:color-mix(in srgb,var(--danger) 12%,transparent);border:none;border-radius:8px;min-height:44px;padding:6px 12px;font-size:var(--t-micro);font-weight:700;color:var(--danger);cursor:pointer">הסר</button>
+          <div class="mp-item-price">$${item.price}</div>
+          <div class="mp-item-seller" style="color:var(--success);display:flex;align-items:center;gap:4px">${icon('check',12)} Active</div>
+          <button class="mp-delete-btn" data-id="${item.id}" style="position:absolute;top:6px;right:6px;background:color-mix(in srgb,var(--danger) 12%,transparent);border:none;border-radius:8px;min-height:44px;padding:6px 12px;font-size:var(--t-micro);font-weight:700;color:var(--danger);cursor:pointer">Remove</button>
         </div>
       </div>`).join('')}</div>`;
   }
@@ -4442,7 +4442,7 @@
       <div class="mp-sell-form">
         ${prefill ? `<div style="display:flex;align-items:center;gap:10px;background:rgba(139,92,246,.1);border-radius:12px;padding:10px 14px;margin-bottom:4px">
           <div style="color:var(--accent2)">${icon(catIcon(prefillCat), 28)}</div>
-          <div style="font-size:12px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:4px">${icon('check',12)} ממוין מהארון שלך</div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:4px">${icon('check',12)} Pre-filled from your closet</div>
         </div>` : ''}
         <div>
           <div class="mp-form-label">Item name</div>
@@ -4456,7 +4456,7 @@
         </div>
         <div class="mp-price-row">
           <div style="flex:1">
-            <div class="mp-form-label">Price (₪)</div>
+            <div class="mp-form-label">Price ($)</div>
             <input class="mp-form-input" id="sf-price" type="number" placeholder="150" value="${prefillPrice}" />
           </div>
           <button class="mp-ai-price" id="sf-ai-price">AI pricing</button>
@@ -4483,7 +4483,7 @@
       const match = wardrobe.find(i => i.name && name && i.name.includes(name.slice(0,4)));
       const suggested = match ? Math.round((match.price_estimate_usd || 200) * 0.5) : 150;
       document.getElementById('sf-price').value = suggested;
-      showToast(`AI suggests ₪${suggested} — 50% of retail price`);
+      showToast(`AI suggests $${suggested} — 50% of retail price`);
     });
 
     document.getElementById('sf-submit').addEventListener('click', () => {
@@ -4569,7 +4569,7 @@
       const nowBlocked = !already;
       setBlocked(key, label, nowBlocked);
       logAdminEvent(nowBlocked ? 'block_user' : 'unblock_user', `${nowBlocked ? 'חסמה' : 'הסירה חסימה מ'}: ${label} (${key})`);
-      showToast(nowBlocked ? `נחסם: ${label}` : `הוסרה חסימה מ-${label}`);
+      showToast(nowBlocked ? `Blocked: ${label}` : `Unblocked ${label}`);
       overlay.remove();
       if (onDone) onDone(nowBlocked);
     });
@@ -4629,7 +4629,7 @@
         localStorage.setItem('awear_follows', JSON.stringify(followState));
         btn.textContent = followState[uid] ? 'Following' : '+ Follow';
         btn.classList.toggle('following', !!followState[uid]);
-        showToast(followState[uid] ? 'עכשיו עוקבת' : 'הפסקת לעקוב');
+        showToast(followState[uid] ? 'Now following' : 'Unfollowed');
       });
     });
 
@@ -4682,9 +4682,9 @@
 
     const insights = [];
     if (utilizationPct < 50) insights.push(`Only ${utilizationPct}% of your closet gets worn — consider clearing out ${unworn.length} unused items`);
-    if (unusedValue > 500) insights.push(`₪${unusedValue} is sitting unworn in your closet — you could sell it and earn`);
-    if (avgCPW && avgCPW < 20) insights.push(`Average cost per wear is ₪${avgCPW} — excellent! You're using your closet well`);
-    if (avgCPW && avgCPW > 100) insights.push(`High cost per wear (₪${avgCPW}) — try wearing what you already own more`);
+    if (unusedValue > 500) insights.push(`$${unusedValue} is sitting unworn in your closet — you could sell it and earn`);
+    if (avgCPW && avgCPW < 20) insights.push(`Average cost per wear is $${avgCPW} — excellent! You're using your closet well`);
+    if (avgCPW && avgCPW > 100) insights.push(`High cost per wear ($${avgCPW}) — try wearing what you already own more`);
 
     el.innerHTML = `
       <div class="sr-header">
@@ -4703,11 +4703,11 @@
             <div class="sr-hero-label">Total wears</div>
           </div>
           <div class="sr-hero-stat">
-            <div class="sr-hero-num">₪${unusedValue}</div>
+            <div class="sr-hero-num">$${unusedValue}</div>
             <div class="sr-hero-label">Sitting unworn</div>
           </div>
           <div class="sr-hero-stat">
-            <div class="sr-hero-num">${avgCPW ? '₪'+avgCPW : '—'}</div>
+            <div class="sr-hero-num">${avgCPW ? '$'+avgCPW : '—'}</div>
             <div class="sr-hero-label">Avg CPW</div>
           </div>
         </div>
@@ -4755,10 +4755,10 @@
   // ---- Smart Declutter ----
   async function runDeclutter() {
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
-    if (!wardrobe.length) { showToast('הארון ריק — אין מה לנקות'); return; }
-    showToast('AI מנתח את הארון...');
+    if (!wardrobe.length) { showToast('Closet is empty — nothing to declutter'); return; }
+    showToast('AI analyzing your closet…');
     const candidates = wardrobe.filter(i => (i.wear_count||0) === 0);
-    if (!candidates.length) { showToast('הכל נלבש — הארון מנוצל מעולה!'); return; }
+    if (!candidates.length) { showToast('Everything is worn — great closet utilization!'); return; }
     try {
       const res = await fetch('/api/declutter', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -4787,7 +4787,7 @@
             <div style="font-size:var(--t-body);font-weight:800;margin-bottom:4px">${esc(s.name)}</div>
             <div style="font-size:var(--t-micro);color:#8e8e9c;font-weight:600;margin-bottom:6px">${esc(s.reason)}</div>
             <div style="display:flex;gap:8px">
-              <span style="padding:4px 10px;background:var(--success-surface);border-radius:20px;font-size:var(--t-micro);font-weight:800;color:var(--success)">${esc(s.action)} • ₪${s.price_suggestion||0}</span>
+              <span style="padding:4px 10px;background:var(--success-surface);border-radius:20px;font-size:var(--t-micro);font-weight:800;color:var(--success)">${esc(s.action)} • $${s.price_suggestion||0}</span>
             </div>
           </div>`).join('')}
       </div>
@@ -4849,7 +4849,7 @@
           ${suggestions.map(s => `
             <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;cursor:pointer" onclick="addToWishlistFromSeed('${attr(s.name)}')">
               <div style="width:44px;height:44px;border-radius:12px;overflow:hidden;flex-shrink:0">${productImage(s)}</div>
-              <div style="flex:1"><div style="font-size:var(--t-small);font-weight:800">${esc(s.name)}</div><div style="font-size:var(--t-micro);color:var(--muted);font-weight:600">${esc(s.brand)} · ₪${s.price}</div></div>
+              <div style="flex:1"><div style="font-size:var(--t-small);font-weight:800">${esc(s.name)}</div><div style="font-size:var(--t-micro);color:var(--muted);font-weight:600">${esc(s.brand)} · $${s.price}</div></div>
               <div style="font-size: var(--t-title,20px);color:var(--accent)">+</div>
             </div>`).join('')}
         </div>`;
@@ -4893,11 +4893,11 @@
 
   function addToWishlistFromSeed(name) {
     const wl = loadWishlist();
-    if (wl.some(i => i.name === name)) { showToast('כבר ברשימה'); return; }
+    if (wl.some(i => i.name === name)) { showToast('Already on your wishlist'); return; }
     wl.unshift({id: Date.now(), name, addedAt: new Date().toLocaleDateString('he-IL')});
     saveWishlist(wl);
     renderWishlist();
-    showToast(name + ' נוסף לרשימה');
+    showToast(name + ' added to wishlist');
   }
 
   function initChat() {
@@ -5139,7 +5139,7 @@
         return `
         <div class="ex-result-row" onclick="openSheetSingle({name:'${attr(it.name)}',category:'${attr(it.category)}',style_tags:${JSON.stringify(it.style_tags)},price_estimate_usd:${it.price}},0,null)">
           <div class="ex-result-emoji">${productImage(it)}</div>
-          <div style="flex:1"><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(it.brand)} · ₪${it.price}${disc?` <span style="color:var(--success)">-${disc}%</span>`:''}</div></div>
+          <div style="flex:1"><div class="ex-result-name">${esc(it.name)}</div><div class="ex-result-cat">${esc(it.brand)} · $${it.price}${disc?` <span style="color:var(--success)">-${disc}%</span>`:''}</div></div>
           ${it.badge?`<div style="font-size: var(--t-micro,11px);font-weight:800;padding:2px 7px;border-radius:8px;background:rgba(255,61,119,.15);color:var(--accent)">${esc(it.badge)}</div>`:''}
         </div>`;
       }).join('');
@@ -5204,10 +5204,10 @@
       type: 'choice', q: t('onboarding.quiz_budget_q'), hint: t('onboarding.quiz_budget_hint'), multi: false,
       key: 'budget',
       opts: [
-        {icon:'cash',label:'Up to ₪200',sub:t('onboarding.quiz_budget_opt_smart')},
-        {icon:'receipt',label:'₪200–500',sub:t('onboarding.quiz_budget_opt_medium')},
-        {icon:'diamond',label:'₪500–1000',sub:t('onboarding.quiz_budget_opt_luxury')},
-        {icon:'crown',label:'₪1000+',sub:t('onboarding.quiz_budget_opt_anything')},
+        {icon:'cash',label:'Up to $50',sub:t('onboarding.quiz_budget_opt_smart')},
+        {icon:'receipt',label:'$50–150',sub:t('onboarding.quiz_budget_opt_medium')},
+        {icon:'diamond',label:'$150–300',sub:t('onboarding.quiz_budget_opt_luxury')},
+        {icon:'crown',label:'$300+',sub:t('onboarding.quiz_budget_opt_anything')},
       ]
     },
     {
@@ -5414,12 +5414,12 @@
 
   // ---- Stories data ----
   const STORIES = [
-    {id:'st0', name:'הוסיפי סטורי', initials:'+', color:'var(--card)', seen:false, isAdd:true},
+    {id:'st0', name:'Add story',     initials:'+',  color:'var(--card)', seen:false, isAdd:true},
     {id:'st1', name:'Y2K Challenge', initials:'YK', color:'linear-gradient(135deg, var(--accent2), var(--accent))', seen:false},
-    {id:'st2', name:'נועה',          initials:'נו', color:'linear-gradient(135deg, var(--accent), #c45a8e)', seen:false},
-    {id:'st3', name:'יעל',           initials:'יע', color:'linear-gradient(135deg, #7b5cf5, var(--accent))', seen:true},
-    {id:'st4', name:'מינימל יום',    initials:'מי', color:'linear-gradient(135deg, var(--accent2), var(--accent))', seen:false},
-    {id:'st5', name:'מיקה',          initials:'מק', color:'linear-gradient(135deg, var(--accent), #c45a8e)', seen:true},
+    {id:'st2', name:'Noa',           initials:'NL', color:'linear-gradient(135deg, var(--accent), #c45a8e)', seen:false},
+    {id:'st3', name:'Yael',          initials:'YA', color:'linear-gradient(135deg, #7b5cf5, var(--accent))', seen:true},
+    {id:'st4', name:'Minimal Day',   initials:'MD', color:'linear-gradient(135deg, var(--accent2), var(--accent))', seen:false},
+    {id:'st5', name:'Mika',          initials:'MK', color:'linear-gradient(135deg, var(--accent), #c45a8e)', seen:true},
     {id:'st6', name:'Streetwear',    initials:'SW', color:'linear-gradient(135deg, #7b5cf5, var(--accent))', seen:false},
   ];
   // ===== REACTIONS + COMMENTS (Shira) =====
@@ -5816,7 +5816,7 @@
       const wardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
       if(!wardrobe.length){
         const em=document.createElement('div');em.className='feed-empty';
-        em.innerHTML=`<div style="display:flex;justify-content:center;color:var(--muted)">${icon('sparkle',52)}</div><p style="margin-top:12px;font-weight:800">סרקי לוק ראשון<br/>כדי לראות כמה מהלוק כבר יש לך</p>`;
+        em.innerHTML=`<div style="display:flex;justify-content:center;color:var(--muted)">${icon('sparkle',52)}</div><p style="margin-top:12px;font-weight:800">Scan your first look<br/>to see how many pieces you already own</p>`;
         host.appendChild(em); return;
       }
       const wardTags=new Set(wardrobe.flatMap(i=>(i.style_tags||[]).map(t=>t.toLowerCase())));
@@ -5944,10 +5944,10 @@
     const maxCat   = topCats[0]?.[1]||1;
     const kpis = [
       {icon:'user',num:todayEvts.length>0?'1':'0',label:'DAU',sub:`D7: ${d7Evts.length} actions`},
-      {icon:'coins',num:wardValue>999?'₪'+(wardValue/1000).toFixed(1)+'K':'₪'+wardValue,label:'Wardrobe Value',sub:`${wardrobe.length} items`},
+      {icon:'coins',num:wardValue>999?'$'+(wardValue/1000).toFixed(1)+'K':'$'+wardValue,label:'Wardrobe Value',sub:`${wardrobe.length} items`},
       {icon:'camera',num:wardrobe.length,label:'Items Scanned',sub:`${scanEvts} scans`},
       {icon:'sparkle',num:ogEvts,label:'Outfit Gens',sub:'AI generator'},
-      {icon:'receipt',num:totalW>0?'₪'+Math.round(wardValue/totalW):'—',label:'CPW Avg',sub:`${totalW} wears`},
+      {icon:'receipt',num:totalW>0?'$'+Math.round(wardValue/totalW):'—',label:'CPW Avg',sub:`${totalW} wears`},
       {icon:'cart',num:shelf.length+mp.length,label:'For Sale',sub:`${buyEvts} buy intents`},
     ];
     const recentLog = log.slice(0,10);
@@ -5985,12 +5985,12 @@
 
   // ===== STYLIST MARKETPLACE =====
   const STYLISTS_SEED = [
-    {id:'st1', name:'Maya Cohen',   avatar_bg:'linear-gradient(135deg,#f472b6,#a855f7)', spec:'Y2K & Streetwear',     price:'₪150/שעה', tags:['Y2K','Streetwear','Gen-Z'],          avail:true,  rating:'4.9', sessions:234},
-    {id:'st2', name:'Noa Levi',     avatar_bg:'linear-gradient(135deg,#818cf8,#6366f1)', spec:'Minimal & Elegant',    price:'₪200/שעה', tags:['Minimal','Business','Bridal'],       avail:true,  rating:'5.0', sessions:189},
-    {id:'st3', name:'Shira Bar',    avatar_bg:'linear-gradient(135deg,#1a1a2e,#16213e)', spec:'Dark & Edgy',          price:'₪120/שעה', tags:['Edgy','Rock','Alternative'],         avail:false, rating:'4.7', sessions:98},
-    {id:'st4', name:'Tamar Raz',    avatar_bg:'linear-gradient(135deg,#f9a8d4,#fbbf24)', spec:'Cottage Core & Boho',  price:'₪130/שעה', tags:['Cottage Core','Boho','Romantic'],    avail:true,  rating:'4.8', sessions:156},
-    {id:'st5', name:'Dana Katz',    avatar_bg:'linear-gradient(135deg,#0ea5e9,#6366f1)', spec:'Corporate & Power',    price:'₪250/שעה', tags:['Business','Formal','Power Dressing'],avail:true,  rating:'4.9', sessions:312},
-    {id:'st6', name:'Lior Mizrahi', avatar_bg:'linear-gradient(135deg,#f59e0b,#ef4444)', spec:'Trendy & Bold',        price:'₪180/שעה', tags:['Trendy','Bold','Going Out'],         avail:false, rating:'4.6', sessions:77},
+    {id:'st1', name:'Maya Cohen',   avatar_bg:'linear-gradient(135deg,#f472b6,#a855f7)', spec:'Y2K & Streetwear',     price:'$40/hr', tags:['Y2K','Streetwear','Gen-Z'],          avail:true,  rating:'4.9', sessions:234},
+    {id:'st2', name:'Noa Levi',     avatar_bg:'linear-gradient(135deg,#818cf8,#6366f1)', spec:'Minimal & Elegant',    price:'$55/hr', tags:['Minimal','Business','Bridal'],       avail:true,  rating:'5.0', sessions:189},
+    {id:'st3', name:'Shira Bar',    avatar_bg:'linear-gradient(135deg,var(--card),var(--bg))',   spec:'Dark & Edgy',          price:'$32/hr', tags:['Edgy','Rock','Alternative'],         avail:false, rating:'4.7', sessions:98},
+    {id:'st4', name:'Tamar Raz',    avatar_bg:'linear-gradient(135deg,#f9a8d4,var(--accent2))', spec:'Cottage Core & Boho',  price:'$35/hr', tags:['Cottage Core','Boho','Romantic'],    avail:true,  rating:'4.8', sessions:156},
+    {id:'st5', name:'Dana Katz',    avatar_bg:'linear-gradient(135deg,#0ea5e9,#6366f1)', spec:'Corporate & Power',    price:'$68/hr', tags:['Business','Formal','Power Dressing'],avail:true,  rating:'4.9', sessions:312},
+    {id:'st6', name:'Lior Mizrahi', avatar_bg:'linear-gradient(135deg,var(--accent2),var(--accent))', spec:'Trendy & Bold', price:'$48/hr', tags:['Trendy','Bold','Going Out'],         avail:false, rating:'4.6', sessions:77},
   ];
 
   function renderStylistMarketplace() {
@@ -6042,8 +6042,8 @@
             <option value="home">Home visit</option>
           </select>
         </div>
-        <button class="book-submit" onclick="submitBooking('${attr(name)}')">${icon('check',16)} אשרי פגישה</button>
-        <button class="book-cancel" onclick="document.getElementById('book-overlay-el').remove()">ביטול</button>
+        <button class="book-submit" onclick="submitBooking('${attr(name)}')">${icon('check',16)} Confirm session</button>
+        <button class="book-cancel" onclick="document.getElementById('book-overlay-el').remove()">Cancel</button>
       </div>`;
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
@@ -6055,9 +6055,9 @@
     const type = document.getElementById('book-type')?.value;
     if (!nm || !dt) { showToast('Please fill in all the details'); return; }
     document.getElementById('book-overlay-el')?.remove();
-    const typeLabel = type === 'video' ? 'וידאו' : type === 'chat' ? 'צ׳אט' : 'ביקור בית';
-    showToast(`פגישת ${typeLabel} עם ${name} נקבעה`);
-    logAdminEvent('booking', `פגישה עם ${name} — ${typeLabel} ב-${dt}`);
+    const typeLabel = type === 'video' ? 'video' : type === 'chat' ? 'chat' : 'home visit';
+    showToast(`${typeLabel} session with ${name} booked`);
+    logAdminEvent('booking', `Session with ${name} — ${typeLabel} on ${dt}`);
     addRewardPoints(50, 'booking');
   }
 
@@ -6066,26 +6066,26 @@
 
   // ===== SHOPPING FEED =====
   let SHOP_SEED = [
-    {id:'s1',  name:'ג׳ינס ווש בגזרה ישרה', search_query:'washed straight leg jeans women', category:'bottoms',  price:220, orig:380, style_tags:['y2k','denim','casual'],    brand:'Zara',      store:'זארה',       badge:'חם',  score:95},
-    {id:'s2',  name:'טופ קרופ קטיפתי',       search_query:'velvet crop top women',           category:'top',      price:89,  orig:89,  style_tags:['minimal','elegant'],          brand:'H&M',       store:'HM',         badge:'חדש', score:88},
-    {id:'s3',  name:'מיני חצאית פלסה',       search_query:'pleated mini skirt women',        category:'bottoms',  price:160, orig:249, style_tags:['y2k','going-out','bold'],      brand:'SHEIN',     store:'שיין',       badge:'מבצע',score:91},
-    {id:'s4',  name:'ז׳קט דנים אוברסייז',    search_query:'oversized denim jacket women',    category:'outerwear',price:310, orig:310, style_tags:['streetwear','denim','casual'],  brand:'Pull&Bear', store:'פול&בר',     badge:'חם',  score:87},
-    {id:'s5',  name:'סנקרס לבנות קלאסיק',    search_query:'classic white sneakers women',    category:'shoes',    price:299, orig:420, style_tags:['minimal','streetwear','white'], brand:'adidas',    store:'אדידס',      badge:'מבצע',score:93},
-    {id:'s6',  name:'תיק קאנבס טוט',         search_query:'canvas tote bag',                 category:'bag',      price:140, orig:140, style_tags:['minimal','casual','neutral'],   brand:'Mango',     store:'מנגו',       badge:'חדש', score:82},
-    {id:'s7',  name:'שמלת מידי פרחונית',     search_query:'floral midi dress women',         category:'dress',    price:195, orig:290, style_tags:['cottage-core','romantic'],      brand:'ASOS',      store:'ASOS',       badge:'מבצע',score:89},
-    {id:'s8',  name:'חולצת לינן רחבה',        search_query:'oversized linen shirt women',     category:'top',      price:120, orig:120, style_tags:['minimal','linen','casual'],     brand:'Bershka',   store:'ברשקה',      badge:'חדש', score:84},
-    {id:'s9',  name:'מכנסי טרנינג Y2K',       search_query:'Y2K track pants women',           category:'bottoms',  price:175, orig:240, style_tags:['y2k','sporty','streetwear'],    brand:'Nike',      store:'נייקי',      badge:'חם',  score:96},
-    {id:'s10', name:'עגילי הוגס זהב',         search_query:'gold hoop earrings',              category:'jewelry',  price:65,  orig:65,  style_tags:['minimal','elegant','gold'],     brand:'ASOS',      store:'ASOS',       badge:'חדש', score:78},
-    {id:'s11', name:'בלייזר אוברסייז',        search_query:'oversized blazer women',          category:'outerwear',price:380, orig:520, style_tags:['elegant','streetwear','power'],  brand:'Zara',      store:'זארה',       badge:'מבצע',score:90},
-    {id:'s12', name:'כפכפי עור לקה',          search_query:'patent leather mule sandals women',category:'shoes',   price:210, orig:210, style_tags:['elegant','minimal','summer'],   brand:'Mango',     store:'מנגו',       badge:'חדש', score:85},
-    {id:'s13', name:'חולצת רינגר Y2K',        search_query:'Y2K ringer tee women',            category:'top',      price:95,  orig:140, style_tags:['y2k','retro','casual'],          brand:'SHEIN',     store:'שיין',       badge:'מבצע',score:88},
-    {id:'s14', name:'מיני תיק בגט',           search_query:'mini baguette bag women',         category:'bag',      price:250, orig:380, style_tags:['y2k','going-out','bold'],        brand:'Zara',      store:'זארה',       badge:'מבצע',score:86},
-    {id:'s15', name:'גרבי רשת שחורות',        search_query:'black fishnet tights',            category:'accessory',price:35,  orig:35,  style_tags:['y2k','edgy','streetwear'],       brand:'H&M',       store:'HM',         badge:'חם',  score:92},
-    {id:'s16', name:'שמלת סאטן סליפ',         search_query:'satin slip dress women elegant',  category:'dress',    price:280, orig:400, style_tags:['elegant','going-out','romantic'], brand:'ASOS',      store:'ASOS',       badge:'מבצע',score:91},
-    {id:'s17', name:'כובע דלי בז׳',           search_query:'beige bucket hat',                category:'hat',      price:80,  orig:80,  style_tags:['casual','streetwear','minimal'], brand:'Pull&Bear', store:'פול&בר',     badge:'חדש', score:80},
-    {id:'s18', name:'מכנסי קרגו ירוקים',      search_query:'green cargo pants women',         category:'bottoms',  price:195, orig:260, style_tags:['streetwear','cargo','casual'],   brand:'Bershka',   store:'ברשקה',      badge:'מבצע',score:87},
-    {id:'s19', name:'טופ קורסט מובנה',        search_query:'structured corset top women',     category:'top',      price:150, orig:150, style_tags:['y2k','going-out','bold','sexy'], brand:'SHEIN',     store:'שיין',       badge:'חם',  score:94},
-    {id:'s20', name:'סניקרס פלטפורמה',         search_query:'platform chunky sneakers women',  category:'shoes',    price:350, orig:480, style_tags:['y2k','chunky','bold','streetwear'],brand:'adidas', store:'אדידס',      badge:'מבצע',score:89},
+    {id:'s1',  name:'Washed Straight Leg Jeans',  search_query:'washed straight leg jeans women', category:'bottoms',  price:220, orig:380, style_tags:['y2k','denim','casual'],    brand:'Zara',      store:'Zara',       badge:'Hot',   score:95},
+    {id:'s2',  name:'Velvet Crop Top',            search_query:'velvet crop top women',           category:'top',      price:89,  orig:89,  style_tags:['minimal','elegant'],          brand:'H&M',       store:'H&M',        badge:'New',   score:88},
+    {id:'s3',  name:'Pleated Mini Skirt',         search_query:'pleated mini skirt women',        category:'bottoms',  price:160, orig:249, style_tags:['y2k','going-out','bold'],      brand:'SHEIN',     store:'SHEIN',      badge:'Sale',  score:91},
+    {id:'s4',  name:'Oversized Denim Jacket',     search_query:'oversized denim jacket women',    category:'outerwear',price:310, orig:310, style_tags:['streetwear','denim','casual'],  brand:'Pull&Bear', store:'Pull&Bear',  badge:'Hot',   score:87},
+    {id:'s5',  name:'Classic White Sneakers',     search_query:'classic white sneakers women',    category:'shoes',    price:299, orig:420, style_tags:['minimal','streetwear','white'], brand:'adidas',    store:'adidas',     badge:'Sale',  score:93},
+    {id:'s6',  name:'Canvas Tote Bag',            search_query:'canvas tote bag',                 category:'bag',      price:140, orig:140, style_tags:['minimal','casual','neutral'],   brand:'Mango',     store:'Mango',      badge:'New',   score:82},
+    {id:'s7',  name:'Floral Midi Dress',          search_query:'floral midi dress women',         category:'dress',    price:195, orig:290, style_tags:['cottage-core','romantic'],      brand:'ASOS',      store:'ASOS',       badge:'Sale',  score:89},
+    {id:'s8',  name:'Oversized Linen Shirt',      search_query:'oversized linen shirt women',     category:'top',      price:120, orig:120, style_tags:['minimal','linen','casual'],     brand:'Bershka',   store:'Bershka',    badge:'New',   score:84},
+    {id:'s9',  name:'Y2K Track Pants',            search_query:'Y2K track pants women',           category:'bottoms',  price:175, orig:240, style_tags:['y2k','sporty','streetwear'],    brand:'Nike',      store:'Nike',       badge:'Hot',   score:96},
+    {id:'s10', name:'Gold Hoop Earrings',         search_query:'gold hoop earrings',              category:'jewelry',  price:65,  orig:65,  style_tags:['minimal','elegant','gold'],     brand:'ASOS',      store:'ASOS',       badge:'New',   score:78},
+    {id:'s11', name:'Oversized Blazer',           search_query:'oversized blazer women',          category:'outerwear',price:380, orig:520, style_tags:['elegant','streetwear','power'],  brand:'Zara',      store:'Zara',       badge:'Sale',  score:90},
+    {id:'s12', name:'Patent Leather Mule Sandals',search_query:'patent leather mule sandals women',category:'shoes',  price:210, orig:210, style_tags:['elegant','minimal','summer'],   brand:'Mango',     store:'Mango',      badge:'New',   score:85},
+    {id:'s13', name:'Y2K Ringer Tee',             search_query:'Y2K ringer tee women',            category:'top',      price:95,  orig:140, style_tags:['y2k','retro','casual'],          brand:'SHEIN',     store:'SHEIN',      badge:'Sale',  score:88},
+    {id:'s14', name:'Mini Baguette Bag',          search_query:'mini baguette bag women',         category:'bag',      price:250, orig:380, style_tags:['y2k','going-out','bold'],        brand:'Zara',      store:'Zara',       badge:'Sale',  score:86},
+    {id:'s15', name:'Black Fishnet Tights',       search_query:'black fishnet tights',            category:'accessory',price:35,  orig:35,  style_tags:['y2k','edgy','streetwear'],       brand:'H&M',       store:'H&M',        badge:'Hot',   score:92},
+    {id:'s16', name:'Satin Slip Dress',           search_query:'satin slip dress women elegant',  category:'dress',    price:280, orig:400, style_tags:['elegant','going-out','romantic'], brand:'ASOS',      store:'ASOS',       badge:'Sale',  score:91},
+    {id:'s17', name:'Beige Bucket Hat',           search_query:'beige bucket hat',                category:'hat',      price:80,  orig:80,  style_tags:['casual','streetwear','minimal'], brand:'Pull&Bear', store:'Pull&Bear',  badge:'New',   score:80},
+    {id:'s18', name:'Green Cargo Pants',          search_query:'green cargo pants women',         category:'bottoms',  price:195, orig:260, style_tags:['streetwear','cargo','casual'],   brand:'Bershka',   store:'Bershka',    badge:'Sale',  score:87},
+    {id:'s19', name:'Structured Corset Top',      search_query:'structured corset top women',     category:'top',      price:150, orig:150, style_tags:['y2k','going-out','bold','sexy'], brand:'SHEIN',     store:'SHEIN',      badge:'Hot',   score:94},
+    {id:'s20', name:'Platform Chunky Sneakers',   search_query:'platform chunky sneakers women',  category:'shoes',    price:350, orig:480, style_tags:['y2k','chunky','bold','streetwear'],brand:'adidas', store:'adidas',     badge:'Sale',  score:89},
   ];
 
   let sfTab = 'recommended', sfInited = false;
@@ -6154,7 +6154,7 @@
     const items = buildShopFeed(sfTab, wardrobe, profile);
 
     if (!items.length) {
-      grid.innerHTML = `<div class="sf-empty">אין פריטים בקטגוריה זו כרגע</div>`;
+      grid.innerHTML = `<div class="sf-empty">No items in this category right now</div>`;
       return;
     }
 
@@ -6175,8 +6175,8 @@
             <div class="sf-card-name">${esc(it.name)}</div>
             <div class="sf-card-brand">${esc(it.brand)} · ${esc(it.store)}</div>
             <div class="sf-price-row">
-              <div class="sf-price">₪${it.price}</div>
-              ${disc ? `<div class="sf-orig">₪${it.orig}</div><div class="sf-discount">-${disc}%</div>` : ''}
+              <div class="sf-price">$${it.price}</div>
+              ${disc ? `<div class="sf-orig">$${it.orig}</div><div class="sf-discount">-${disc}%</div>` : ''}
             </div>
             ${compatTxt ? `<div class="sf-compat">${icon('sparkle',12)} ${esc(compatTxt)}</div>` : ''}
           </div>
@@ -6338,14 +6338,14 @@
 
     document.getElementById('cmp-result').innerHTML = `
       <div class="cmp-row">
-        <div class="cmp-row-b ${pA}" style="text-align:center;">${priceA ? '₪'+priceA : '—'}</div>
+        <div class="cmp-row-b ${pA}" style="text-align:center;">${priceA ? '$'+priceA : '—'}</div>
         <div class="cmp-row-label">Price</div>
-        <div class="cmp-row-a ${pB}" style="text-align:center;">${priceB ? '₪'+priceB : '—'}</div>
+        <div class="cmp-row-a ${pB}" style="text-align:center;">${priceB ? '$'+priceB : '—'}</div>
       </div>
       <div class="cmp-row">
-        <div class="cmp-row-b ${cpwAw}" style="text-align:center;">${cpwA === '—' ? '—' : '₪'+cpwA+'/wear'}</div>
+        <div class="cmp-row-b ${cpwAw}" style="text-align:center;">${cpwA === '—' ? '—' : '$'+cpwA+'/wear'}</div>
         <div class="cmp-row-label">Cost per wear</div>
-        <div class="cmp-row-a ${cpwBw}" style="text-align:center;">${cpwB === '—' ? '—' : '₪'+cpwB+'/wear'}</div>
+        <div class="cmp-row-a ${cpwBw}" style="text-align:center;">${cpwB === '—' ? '—' : '$'+cpwB+'/wear'}</div>
       </div>
       <div class="cmp-row">
         <div class="cmp-row-b ${cA}" style="text-align:center;">${compatA}%</div>
@@ -6375,14 +6375,14 @@
     const panel = document.getElementById('notif-panel');
     if (!panel) return;
     if (!items || items.length === 0) {
-      panel.innerHTML = '<p class="notif-empty">אין עדכונים</p>';
+      panel.innerHTML = '<p class="notif-empty">No updates yet</p>';
       return;
     }
     panel.innerHTML = items.map(n => `
       <div class="notif-item ${n.read ? '' : 'unread'}">
         <span class="notif-type">${icon(n.type === 'like' ? 'heartFill' : 'chat', 16)}</span>
-        <span class="notif-text">${n.type === 'like' ? 'מישהו אהב את הלוק שלך' : esc(n.type)}</span>
-        <span class="notif-time">${new Date(n.created_at * 1000).toLocaleDateString('he')}</span>
+        <span class="notif-text">${n.type === 'like' ? 'Someone liked your look' : esc(n.type)}</span>
+        <span class="notif-time">${new Date(n.created_at * 1000).toLocaleDateString('en')}</span>
       </div>
     `).join('');
   }
