@@ -1691,6 +1691,42 @@
     background: linear-gradient(160deg, var(--card), var(--bg)); color: var(--muted); font-size: var(--t-display,28px); }
   .sheet-look-emoji { overflow: hidden; border-radius: 9px; background: #fbfbfd; }
   .sheet-look-emoji .img-fallback { background: #fbfbfd; color: #b8b8c4; }
+
+  /* ---- Daily Diary + Streak widget ---- */
+  .streak-widget { margin: 0 16px 16px; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), color-mix(in srgb, var(--accent3) 8%, transparent)); border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); border-radius: var(--r-lg,20px); padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
+  .streak-fire { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border-radius: var(--r-md,14px); flex-shrink: 0; color: #fff; }
+  .streak-info { flex: 1; min-width: 0; }
+  .streak-count { font-size: var(--t-h1,24px); font-weight: 900; line-height: 1; color: var(--fg,#f0ecf5); font-family: 'Poppins', sans-serif; }
+  .streak-label { font-size: var(--t-caption,12px); font-weight: 700; color: var(--muted,#8a8498); margin-top: 2px; }
+  .streak-best { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 700; margin-top: 3px; }
+  .streak-dots { display: flex; gap: 4px; margin-top: 8px; }
+  .streak-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line,#2e2836); flex-shrink: 0; }
+  .streak-dot.done { background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); }
+  .streak-log-btn { min-width: 76px; min-height: 44px; padding: 10px 14px; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 900; color: #fff; cursor: pointer; transition: transform .1s; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+  .streak-log-btn:active { transform: scale(.95); }
+  .streak-logged-badge { min-width: 76px; min-height: 44px; padding: 10px 12px; background: color-mix(in srgb, var(--success,#52c97a) 15%, transparent); border: 1.5px solid var(--success,#52c97a); border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; color: var(--success,#52c97a); display: inline-flex; align-items: center; justify-content: center; gap: 5px; flex-shrink: 0; }
+
+  /* ---- Diary modal ---- */
+  .diary-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 400; display: flex; align-items: flex-end; opacity: 0; transition: opacity .22s; pointer-events: none; }
+  .diary-overlay.show { opacity: 1; pointer-events: auto; }
+  .diary-sheet { background: var(--surface,#161318); border-radius: var(--r-xl,28px) var(--r-xl,28px) 0 0; width: 100%; max-height: 80vh; display: flex; flex-direction: column; transform: translateY(40px); transition: transform .22s; }
+  .diary-overlay.show .diary-sheet { transform: translateY(0); }
+  .diary-handle { width: 36px; height: 4px; background: var(--line,#2e2836); border-radius: 2px; margin: 12px auto 0; flex-shrink: 0; }
+  .diary-title { padding: 14px 20px 4px; font-size: var(--t-lead,17px); font-weight: 900; display: flex; align-items: center; gap: 8px; }
+  .diary-sub { padding: 0 20px 12px; font-size: var(--t-caption,12px); color: var(--muted,#8a8498); font-weight: 600; line-height: 1.5; }
+  .diary-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 8px 16px; overflow-y: auto; flex: 1; }
+  .diary-item { border-radius: var(--r-md,14px); overflow: hidden; border: 2px solid transparent; cursor: pointer; position: relative; transition: all .15s; aspect-ratio: 3/4; background: var(--card,#1e1a22); }
+  .diary-item.selected { border-color: var(--accent,#e8526a); }
+  .diary-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .diary-item .img-fallback { width: 100%; height: 100%; background: var(--card,#1e1a22); color: var(--muted,#8a8498); display: flex; align-items: center; justify-content: center; }
+  .diary-item-name { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,.7)); padding: 20px 6px 6px; font-size: var(--t-micro,11px); font-weight: 800; color: #fff; text-align: center; }
+  .diary-item-check { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; border-radius: 50%; background: var(--accent,#e8526a); display: flex; align-items: center; justify-content: center; color: #fff; opacity: 0; transition: opacity .15s; }
+  .diary-item.selected .diary-item-check { opacity: 1; }
+  .diary-empty { text-align: center; padding: 32px 20px; color: var(--muted,#8a8498); font-size: var(--t-small,13px); font-weight: 600; grid-column: 1/-1; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .diary-footer { padding: 12px 16px; border-top: 1px solid var(--line,#2e2836); flex-shrink: 0; }
+  .diary-submit { width: 100%; min-height: 48px; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-body,14px); font-weight: 900; color: #fff; cursor: pointer; transition: transform .1s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .diary-submit:active { transform: scale(.97); }
+  .diary-submit:disabled { opacity: .4; cursor: default; transform: none; }
 </style>
 </head>
 <body>
@@ -3196,6 +3232,114 @@
   renderHome();
 
   // ---- Home Screen ----
+  // ---- Daily Diary + Streak ----
+  const DIARY_KEY = 'awear_diary';
+  const STREAK_KEY = 'awear_streak';
+
+  function todayStr() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function loadDiary()  { return JSON.parse(localStorage.getItem(DIARY_KEY)  || '[]'); }
+  function saveDiary(d) { localStorage.setItem(DIARY_KEY, JSON.stringify(d)); }
+  function loadStreak() { return JSON.parse(localStorage.getItem(STREAK_KEY) || '{"count":0,"lastDate":"","best":0}'); }
+  function saveStreak(s){ localStorage.setItem(STREAK_KEY, JSON.stringify(s)); }
+
+  function isDiaryLoggedToday() {
+    const today = todayStr();
+    return loadDiary().some(function(e){ return e.date === today; });
+  }
+
+  function computeAndSaveStreak() {
+    const today = todayStr();
+    const s = loadStreak();
+    if (s.lastDate === today) return s;
+    const prev = new Date(); prev.setDate(prev.getDate() - 1);
+    const yStr = prev.getFullYear() + '-' + String(prev.getMonth()+1).padStart(2,'0') + '-' + String(prev.getDate()).padStart(2,'0');
+    s.count = (s.lastDate === yStr) ? (s.count || 0) + 1 : 1;
+    s.lastDate = today;
+    s.best = Math.max(s.best || 0, s.count);
+    saveStreak(s);
+    return s;
+  }
+
+  function showDiaryModal() {
+    var existing = document.getElementById('diary-overlay');
+    if (existing) existing.remove();
+    var wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    var today = todayStr();
+    var diaryEntry = loadDiary().find(function(e){ return e.date === today; });
+    var alreadySel = new Set((diaryEntry ? diaryEntry.items : []).map(function(i){ return i.id; }));
+    var selectedIds = new Set(alreadySel);
+
+    var itemsHtml = wardrobe.length ? wardrobe.map(function(it){
+      return '<div class="diary-item' + (selectedIds.has(it.id) ? ' selected' : '') + '" data-id="' + attr(it.id) + '">' +
+        productImage(it, 'diary-pimg') +
+        '<div class="diary-item-name">' + esc(it.name || catLabel(it.category)) + '</div>' +
+        '<div class="diary-item-check">' + icon('check', 12) + '</div>' +
+      '</div>';
+    }).join('') :
+    '<div class="diary-empty">' + icon('hanger', 32) + '<span>Add items to your closet first</span></div>';
+
+    var overlay = document.createElement('div');
+    overlay.id = 'diary-overlay';
+    overlay.className = 'diary-overlay';
+    overlay.innerHTML =
+      '<div class="diary-sheet">' +
+        '<div class="diary-handle"></div>' +
+        '<div class="diary-title">' + icon('calendar', 18) + ' What did you wear today?</div>' +
+        '<div class="diary-sub">Tap the items you wore. Abigail learns your style with every entry.</div>' +
+        '<div class="diary-grid" id="diary-grid">' + itemsHtml + '</div>' +
+        '<div class="diary-footer">' +
+          '<button class="diary-submit" id="diary-submit"' + (wardrobe.length ? '' : ' disabled') + '>' +
+            icon('check', 16) + ' Log outfit' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function(){ overlay.classList.add('show'); });
+
+    var grid = overlay.querySelector('#diary-grid');
+    var submitBtn = overlay.querySelector('#diary-submit');
+
+    function refreshBtn() {
+      submitBtn.innerHTML = icon('check', 16) + ' Log outfit' +
+        (selectedIds.size ? ' (' + selectedIds.size + ' item' + (selectedIds.size > 1 ? 's' : '') + ')' : '');
+    }
+
+    grid.addEventListener('click', function(e) {
+      var item = e.target.closest('.diary-item[data-id]');
+      if (!item) return;
+      var id = item.dataset.id;
+      if (selectedIds.has(id)) { selectedIds.delete(id); item.classList.remove('selected'); }
+      else { selectedIds.add(id); item.classList.add('selected'); }
+      refreshBtn();
+    });
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeDiaryModal(overlay);
+    });
+
+    submitBtn.addEventListener('click', function() {
+      var diary = loadDiary().filter(function(e){ return e.date !== today; });
+      var items = wardrobe.filter(function(it){ return selectedIds.has(it.id); })
+        .map(function(it){ return {id: it.id, name: it.name || '', category: it.category || ''}; });
+      diary.push({date: today, items: items, ts: Date.now()});
+      saveDiary(diary);
+      var s = computeAndSaveStreak();
+      closeDiaryModal(overlay);
+      renderHome();
+      var milestones = {3: '3-day streak! You\'re building a habit.', 7: 'Week streak! Abigail knows your style.', 30: '30-day streak! You\'re AWEAR\'s top stylist.'};
+      showToast(milestones[s.count] || ('Outfit logged · ' + s.count + '-day streak'));
+    });
+  }
+
+  function closeDiaryModal(overlay) {
+    overlay.classList.remove('show');
+    setTimeout(function(){ if (overlay.parentNode) overlay.remove(); }, 260);
+  }
+
   function renderHome() {
     const prof = loadProfile();
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
@@ -3287,6 +3431,27 @@
           <div class="hs-label">${t('home.stat_wears')}</div>
         </div>
       </div>
+
+      ${(() => {
+        const st = loadStreak();
+        const logged = isDiaryLoggedToday();
+        const dotCount = Math.min(st.count, 7);
+        const dots = Array.from({length: 7}, (_, i) =>
+          '<div class="streak-dot' + (i < dotCount ? ' done' : '') + '"></div>'
+        ).join('');
+        return '<div class="streak-widget">' +
+          '<div class="streak-fire">' + icon('flame', 22) + '</div>' +
+          '<div class="streak-info">' +
+            '<div class="streak-count">' + st.count + '</div>' +
+            '<div class="streak-label">day streak' + (st.count !== 1 ? 's' : '') + '</div>' +
+            (st.best > 1 ? '<div class="streak-best">Best: ' + st.best + ' days</div>' : '') +
+            '<div class="streak-dots">' + dots + '</div>' +
+          '</div>' +
+          (logged
+            ? '<div class="streak-logged-badge">' + icon('check', 14) + ' Logged</div>'
+            : '<button class="streak-log-btn" onclick="showDiaryModal()">' + icon('plus', 14) + ' Log today</button>') +
+        '</div>';
+      })()}
 
       ${(() => {
         // Profile completeness card
