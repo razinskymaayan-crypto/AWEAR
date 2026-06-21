@@ -23,6 +23,8 @@ import sqlite3
 import uuid
 import time
 import traceback
+import asyncio
+import urllib.error
 import urllib.parse
 import urllib.request
 import warnings
@@ -57,6 +59,12 @@ logger = logging.getLogger("awear")
 _rate_store: dict[str, list[float]] = defaultdict(list)
 RATE_WINDOW = 60  # seconds
 
+# ---------------------------------------------------------------------------
+# Weather cache — in-memory, keyed by rounded (lat, lon), TTL 30 minutes
+# ---------------------------------------------------------------------------
+_weather_cache: dict[str, tuple[float, dict]] = {}  # key -> (timestamp, payload)
+WEATHER_CACHE_TTL = 1800  # 30 minutes in seconds
+
 
 def check_rate_limit(client_ip: str, endpoint: str, limit: int) -> bool:
     """Return True if the request is allowed, False if the limit is exceeded.
@@ -72,6 +80,33 @@ def check_rate_limit(client_ip: str, endpoint: str, limit: int) -> bool:
         return False
     _rate_store[key].append(now)
     return True
+
+
+def check_rate_limit_window(client_ip: str, endpoint: str, limit: int, window: int) -> bool:
+    """Sliding-window rate limiter with a custom time window (seconds).
+
+    Identical logic to check_rate_limit but uses an explicit `window` parameter
+    instead of the global RATE_WINDOW — useful for per-hour or per-day limits.
+    """
+    key = f"{client_ip}:{endpoint}"
+    now = time.time()
+    _rate_store[key] = [t for t in _rate_store[key] if now - t < window]
+    if len(_rate_store[key]) >= limit:
+        return False
+    _rate_store[key].append(now)
+    return True
+
+
+# Points awarded per challenge type
+CHALLENGE_POINTS: dict[str, int] = {
+    "scan":      20,
+    "diary":     10,
+    "swipe":     15,
+    "sell":      25,
+    "streak":    30,
+    "share":     10,
+}
+CHALLENGE_POINTS_DEFAULT = 10  # fallback for unknown challenge IDs
 
 # Google integrations are optional — if the deps/creds aren't installed, the core
 # demo must still run. Degrade to no-ops instead of crashing the whole server.
@@ -428,34 +463,62 @@ async def analyze(request: Request, photo: UploadFile):
 
 
 # ---------------------------------------------------------------------------
-# Product images — proxy to Pexels (free API key) so clothing items show real
-# catalog-style photos. The <img src> hits this endpoint, which 302-redirects
-# straight to the matched photo. If PEXELS_API_KEY is unset or there's no match,
-# it returns 404 so the frontend falls back to its clean designed placeholder
-# (never a broken image, never an emoji). Results are cached in-memory per query.
+# Product images — proxy to Pexels (best quality) or Unsplash Source (no-key fallback).
+# Priority: Pexels (if PEXELS_API_KEY set) → Unsplash Source → 404.
+# Results cached in-memory per query.
 # ---------------------------------------------------------------------------
 PEXELS_API_KEY = os.getenv("PEXELS_API_KEY", "").strip()
 _product_image_cache: dict[str, str] = {}
+
+_UNSPLASH_CATEGORY_MAP = {
+    "shoes": "shoes,footwear",
+    "sneakers": "sneakers,shoes",
+    "boots": "boots,shoes",
+    "sandals": "sandals,shoes",
+    "loafers": "loafers,shoes",
+    "top": "shirt,clothing,fashion",
+    "tops": "shirt,clothing,fashion",
+    "bottoms": "pants,jeans,clothing",
+    "jeans": "jeans,denim",
+    "shorts": "shorts,clothing",
+    "outerwear": "jacket,coat,fashion",
+    "jacket": "jacket,fashion",
+    "coat": "coat,fashion",
+    "dress": "dress,fashion",
+    "accessories": "accessories,fashion",
+    "hat": "hat,fashion",
+    "bag": "bag,fashion",
+}
+
+
+def _loremflickr_url(q: str) -> str:
+    """Keyword-matched real photos via loremflickr, no API key needed."""
+    kw = urllib.parse.quote(q[:60].replace(" ", ","))
+    seed = sum(ord(c) for c in q) % 9999
+    return f"https://loremflickr.com/400/500/fashion,{kw}/all?lock={seed}"
 
 
 @app.get("/api/product-image")
 def product_image(q: str = ""):
     q = (q or "").strip().lower()
-    if not q or not PEXELS_API_KEY:
+    if not q:
         return Response(status_code=404)
     if q not in _product_image_cache:
         url = ""
-        try:
-            req = urllib.request.Request(
-                "https://api.pexels.com/v1/search?"
-                + urllib.parse.urlencode({"query": q, "per_page": 1, "orientation": "portrait"}),
-                headers={"Authorization": PEXELS_API_KEY},
-            )
-            with urllib.request.urlopen(req, timeout=5) as r:
-                photos = json.loads(r.read().decode()).get("photos", [])
-            url = photos[0]["src"]["large"] if photos else ""
-        except Exception:  # noqa: BLE001 — image is best-effort; placeholder covers failures
-            url = ""
+        if PEXELS_API_KEY:
+            try:
+                req = urllib.request.Request(
+                    "https://api.pexels.com/v1/search?"
+                    + urllib.parse.urlencode({"query": q, "per_page": 1, "orientation": "portrait"}),
+                    headers={"Authorization": PEXELS_API_KEY},
+                )
+                with urllib.request.urlopen(req, timeout=5) as r:
+                    photos = json.loads(r.read().decode()).get("photos", [])
+                url = photos[0]["src"]["large"] if photos else ""
+            except Exception:  # noqa: BLE001
+                url = ""
+        if not url:
+            url = _loremflickr_url(q)
         _product_image_cache[q] = url
     url = _product_image_cache[q]
     return RedirectResponse(url) if url else Response(status_code=404)
@@ -788,6 +851,37 @@ def init_db() -> None:
                 created_at REAL
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS challenge_completions (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key    TEXT    NOT NULL,
+                challenge_id TEXT   NOT NULL,
+                date        TEXT    NOT NULL DEFAULT (date('now')),
+                points      INTEGER NOT NULL DEFAULT 0,
+                created_at  TEXT    DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS wardrobe_wears (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key   TEXT NOT NULL,
+                item_id    TEXT NOT NULL,
+                worn_date  TEXT NOT NULL,
+                created_at TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS stylist_bookings (
+                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key     TEXT NOT NULL,
+                stylist_id   TEXT NOT NULL,
+                stylist_name TEXT NOT NULL,
+                session_type TEXT NOT NULL,
+                slot_label   TEXT NOT NULL,
+                booked_at    TEXT DEFAULT (datetime('now')),
+                status       TEXT DEFAULT 'confirmed'
+            )
+        """)
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 
@@ -848,6 +942,16 @@ async def get_products(
         "limit": limit,
         "offset": offset,
     }
+
+
+@app.post("/api/admin/reload-products")
+def admin_reload_products():
+    """Hot-reload products.json into the in-memory cache without server restart."""
+    global _products_cache
+    if PRODUCTS_PATH.exists():
+        with open(PRODUCTS_PATH) as f:
+            _products_cache = json.load(f)
+    return {"status": "ok", "count": len(_products_cache)}
 
 
 @app.get("/api/categories")
@@ -1549,6 +1653,389 @@ async def marketplace_assist(request: Request, body: dict = Body(...)):
     except Exception as e:
         logger.warning("marketplace_assist Claude error (%s) — using demo fallback", e)
         return _demo_fallback()
+
+
+# ---------------------------------------------------------------------------
+# GET /api/weather — server-side proxy + 30-minute in-memory cache
+# ---------------------------------------------------------------------------
+
+def _fetch_weather_sync(lat: float, lon: float) -> dict:
+    """Synchronous HTTP call to open-meteo. Run via asyncio.to_thread() — never
+    call this directly inside an async endpoint (SF-004 / iron rule)."""
+    url = (
+        "https://api.open-meteo.com/v1/forecast"
+        f"?latitude={lat}&longitude={lon}"
+        "&current_weather=true"
+        "&hourly=apparent_temperature"
+        "&daily=precipitation_probability_max"
+        "&timezone=auto"
+    )
+    req = urllib.request.Request(url, headers={"User-Agent": "AWEAR/1.0"})
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return json.loads(resp.read().decode())
+
+
+@app.get("/api/weather")
+async def get_weather(request: Request, lat: float, lon: float):
+    """Proxy to open-meteo with 30-minute server-side cache per lat/lon pair.
+
+    Rounds lat/lon to 2 decimal places so nearby requests share the same cache
+    entry (~1.1 km granularity — sufficient for weather data).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "weather", 60):
+        logger.warning("Rate limit exceeded: weather from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    cache_key = f"{lat:.2f},{lon:.2f}"
+    now = time.time()
+    cached = _weather_cache.get(cache_key)
+    if cached is not None:
+        cached_at, payload = cached
+        if now - cached_at < WEATHER_CACHE_TTL:
+            logger.info("weather cache hit: %s (age=%.0fs)", cache_key, now - cached_at)
+            return payload
+
+    # Cache miss — fetch from open-meteo in a thread (must not block the event loop)
+    try:
+        data = await asyncio.to_thread(_fetch_weather_sync, round(lat, 2), round(lon, 2))
+    except urllib.error.URLError as exc:
+        logger.error("weather fetch failed: %s", exc)
+        raise HTTPException(status_code=502, detail="Weather service unavailable.")
+    except Exception as exc:
+        logger.error("weather unexpected error: %s", exc)
+        raise HTTPException(status_code=502, detail="Weather service error.")
+
+    _weather_cache[cache_key] = (now, data)
+    logger.info("weather cache miss: %s — fetched and cached", cache_key)
+    return data
+
+
+# ---------------------------------------------------------------------------
+# GET /api/analytics/wardrobe — server-side computation from client-sent wardrobe
+# ---------------------------------------------------------------------------
+
+@app.get("/api/analytics/wardrobe")
+async def analytics_wardrobe(
+    request: Request,
+    wardrobe: Optional[str] = None,
+    range: Optional[str] = None,
+):
+    """Compute wardrobe analytics from a base64-encoded JSON wardrobe array.
+
+    The wardrobe lives in the client's localStorage — this endpoint accepts it
+    as a base64 query param, computes the stats server-side, and returns the
+    result. No wardrobe data is persisted on the server.
+
+    Optional ?range=week|month|all controls the wear-activity window used for
+    utilization rate and dead-stock detection.  Default (no param or 'all') =
+    all-time behaviour matching the original implementation.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "analytics_wardrobe", 60):
+        logger.warning("Rate limit exceeded: analytics_wardrobe from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    # Validate range param
+    valid_ranges = {None, "week", "month", "all"}
+    if range not in valid_ranges:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid range — accepted values: week, month, all.",
+        )
+
+    if not wardrobe:
+        raise HTTPException(status_code=400, detail="Missing required query param: wardrobe (base64 JSON).")
+
+    # Decode base64 → JSON array
+    try:
+        decoded = base64.b64decode(wardrobe + "==").decode("utf-8")  # pad for safety
+        items: list[dict] = json.loads(decoded)
+        if not isinstance(items, list):
+            raise ValueError("wardrobe must be a JSON array")
+    except Exception as exc:
+        logger.warning("analytics_wardrobe decode error from %s: %s", user_key, exc)
+        raise HTTPException(status_code=400, detail=f"Invalid wardrobe payload: {exc}")
+
+    total = len(items)
+    if total == 0:
+        return {
+            "utilization_rate": 0,
+            "avg_cpw": 0.0,
+            "color_distribution": [],
+            "category_distribution": [],
+            "most_worn": None,
+            "dead_stock": [],
+            "range": range or "all",
+        }
+
+    now_ts = datetime.datetime.utcnow()
+
+    # Determine the activity window based on ?range
+    if range == "week":
+        window_days = 7
+    elif range == "month":
+        window_days = 30
+    else:
+        # "all" or None — keep historical behaviour (30-day utilisation window)
+        window_days = 30
+
+    cutoff_30d = now_ts - datetime.timedelta(days=window_days)
+    cutoff_dead = now_ts - datetime.timedelta(days=window_days)  # unworn threshold for dead-stock
+
+    # --- utilization rate: items with at least 1 wear in the last 30 days ---
+    worn_30d = 0
+    total_cpw = 0.0
+    cpw_count = 0
+    most_worn_item = None
+    most_worn_count = 0
+    dead_stock: list[dict] = []
+
+    color_counts: dict[str, int] = defaultdict(int)
+    category_counts: dict[str, int] = defaultdict(int)
+
+    for item in items:
+        name = item.get("name") or item.get("title") or "Unknown"
+        color = (item.get("color") or "Unknown").strip().title()
+        category = (item.get("category") or item.get("cat") or "other").strip().lower()
+        wear_count = int(item.get("wear_count") or item.get("wears") or 0)
+        price = float(item.get("price") or item.get("price_estimate_usd") or 0)
+        last_worn_raw = item.get("last_worn") or item.get("last_worn_at")
+
+        color_counts[color] += 1
+        category_counts[category] += 1
+
+        # Was the item worn in the last 30 days?
+        if last_worn_raw:
+            try:
+                last_worn_dt = datetime.datetime.fromisoformat(str(last_worn_raw)[:10])
+                if last_worn_dt >= cutoff_30d:
+                    worn_30d += 1
+                else:
+                    days_unworn = (now_ts - last_worn_dt).days
+                    if days_unworn >= 30:
+                        dead_stock.append({"name": name, "days_unworn": days_unworn})
+            except ValueError:
+                pass
+        elif wear_count == 0:
+            dead_stock.append({"name": name, "days_unworn": 999})
+
+        # Cost per wear
+        if wear_count > 0 and price > 0:
+            cpw = price / wear_count
+            total_cpw += cpw
+            cpw_count += 1
+
+        # Most worn
+        if wear_count > most_worn_count:
+            most_worn_count = wear_count
+            most_worn_item = {"name": name, "wear_count": wear_count}
+
+    utilization_rate = round((worn_30d / total) * 100) if total > 0 else 0
+    avg_cpw = round(total_cpw / cpw_count, 2) if cpw_count > 0 else 0.0
+
+    # Build sorted distributions
+    color_total = sum(color_counts.values()) or 1
+    color_distribution = sorted(
+        [
+            {"color": c, "count": n, "pct": round((n / color_total) * 100)}
+            for c, n in color_counts.items()
+        ],
+        key=lambda x: x["count"],
+        reverse=True,
+    )
+    category_distribution = sorted(
+        [{"cat": c, "count": n} for c, n in category_counts.items()],
+        key=lambda x: x["count"],
+        reverse=True,
+    )
+    dead_stock.sort(key=lambda x: x["days_unworn"], reverse=True)
+
+    logger.info(
+        "analytics_wardrobe: user=%s items=%d utilization=%d%% dead=%d range=%s",
+        user_key, total, utilization_rate, len(dead_stock), range or "all",
+    )
+
+    return {
+        "utilization_rate": utilization_rate,
+        "avg_cpw": avg_cpw,
+        "color_distribution": color_distribution,
+        "category_distribution": category_distribution,
+        "most_worn": most_worn_item,
+        "dead_stock": dead_stock[:10],  # cap at 10 worst offenders
+        "range": range or "all",
+    }
+
+
+# ---------------------------------------------------------------------------
+# POST /api/challenge/complete — track challenge completions in SQLite
+# ---------------------------------------------------------------------------
+
+class ChallengeCompleteRequest(BaseModel):
+    challenge_id: str
+    user_key: Optional[str] = None
+
+
+@app.post("/api/challenge/complete")
+async def challenge_complete(request: Request, body: ChallengeCompleteRequest):
+    """Record a challenge completion and return points earned + running total.
+
+    Rate limited to 10 completions per hour per user_key to prevent abuse.
+    Points per challenge type are defined in CHALLENGE_POINTS above.
+    """
+    # MG-005: resolve user_key from request IP, allow override from body
+    ip_key = (request.client.host if request.client else None) or "anon"
+    user_key = body.user_key or ip_key
+
+    # Hourly rate limit — 10 completions per hour per user_key
+    if not check_rate_limit_window(user_key, "challenge_complete", 10, window=3600):
+        logger.warning("Rate limit exceeded: challenge_complete from %s", user_key)
+        raise HTTPException(
+            status_code=429,
+            detail="Rate limit exceeded — max 10 challenge completions per hour.",
+        )
+
+    challenge_id = body.challenge_id.strip().lower()
+    if not challenge_id:
+        raise HTTPException(status_code=400, detail="challenge_id must not be empty.")
+
+    points_earned = CHALLENGE_POINTS.get(challenge_id, CHALLENGE_POINTS_DEFAULT)
+    today = datetime.date.today().isoformat()
+
+    with _get_db() as db:
+        db.execute(
+            """
+            INSERT INTO challenge_completions (user_key, challenge_id, date, points)
+            VALUES (?, ?, ?, ?)
+            """,
+            (user_key, challenge_id, today, points_earned),
+        )
+        db.commit()
+
+        # Sum all points for this user_key across all time
+        row = db.execute(
+            "SELECT COALESCE(SUM(points), 0) AS total FROM challenge_completions WHERE user_key = ?",
+            (user_key,),
+        ).fetchone()
+        total_points = int(row["total"])
+
+    logger.info(
+        "challenge_complete: user=%s challenge=%s points_earned=%d total=%d",
+        user_key, challenge_id, points_earned, total_points,
+    )
+
+    return {
+        "points_earned": points_earned,
+        "total_points": total_points,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Stylist Bookings — POST / GET / DELETE /api/bookings
+# ---------------------------------------------------------------------------
+
+class BookingCreateRequest(BaseModel):
+    stylist_id: str
+    stylist_name: str
+    session_type: str
+    slot_label: str
+
+
+@app.post("/api/bookings")
+async def create_booking(request: Request, body: BookingCreateRequest):
+    """Create a new stylist booking and return booking_id + status.
+
+    Rate limited to 30 requests/minute per user_key (MG-005).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "bookings", 30):
+        logger.warning("Rate limit exceeded: bookings from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    stylist_id = body.stylist_id.strip()
+    stylist_name = body.stylist_name.strip()
+    session_type = body.session_type.strip()
+    slot_label = body.slot_label.strip()
+
+    if not stylist_id or not stylist_name or not session_type or not slot_label:
+        raise HTTPException(status_code=400, detail="All fields are required: stylist_id, stylist_name, session_type, slot_label.")
+
+    with _get_db() as db:
+        cursor = db.execute(
+            """
+            INSERT INTO stylist_bookings (user_key, stylist_id, stylist_name, session_type, slot_label)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (user_key, stylist_id, stylist_name, session_type, slot_label),
+        )
+        db.commit()
+        booking_id = cursor.lastrowid
+
+    logger.info(
+        "bookings_create: user=%s stylist=%s session=%s slot=%s id=%d",
+        user_key, stylist_id, session_type, slot_label, booking_id,
+    )
+
+    return {"booking_id": booking_id, "status": "confirmed"}
+
+
+@app.get("/api/bookings")
+async def list_bookings(request: Request):
+    """Return all bookings for the current user_key ordered by booked_at DESC.
+
+    Rate limited to 30 requests/minute per user_key (MG-005).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "bookings", 30):
+        logger.warning("Rate limit exceeded: bookings from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    with _get_db() as db:
+        rows = db.execute(
+            """
+            SELECT id, stylist_id, stylist_name, session_type, slot_label, booked_at, status
+            FROM stylist_bookings
+            WHERE user_key = ?
+            ORDER BY booked_at DESC
+            """,
+            (user_key,),
+        ).fetchall()
+
+    bookings = [dict(row) for row in rows]
+    logger.info("bookings_list: user=%s count=%d", user_key, len(bookings))
+    return {"bookings": bookings}
+
+
+@app.delete("/api/bookings/{booking_id}")
+async def cancel_booking(booking_id: int, request: Request):
+    """Soft-delete a booking by setting status='cancelled'.
+
+    Returns 404 if the booking does not exist or does not belong to the
+    current user_key.  Rate limited to 30 requests/minute (MG-005).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "bookings", 30):
+        logger.warning("Rate limit exceeded: bookings from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    with _get_db() as db:
+        # Verify ownership before mutating
+        row = db.execute(
+            "SELECT id FROM stylist_bookings WHERE id = ? AND user_key = ?",
+            (booking_id, user_key),
+        ).fetchone()
+
+        if not row:
+            raise HTTPException(status_code=404, detail="Booking not found.")
+
+        db.execute(
+            "UPDATE stylist_bookings SET status = 'cancelled' WHERE id = ? AND user_key = ?",
+            (booking_id, user_key),
+        )
+        db.commit()
+
+    logger.info("bookings_cancel: user=%s booking_id=%d", user_key, booking_id)
+    return {"booking_id": booking_id, "status": "cancelled"}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

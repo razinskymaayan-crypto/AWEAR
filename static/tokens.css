@@ -16,10 +16,10 @@
   --card-hover:    #262030;
   --line:          #2e2836;
   --fg:            #f0ecf5;
-  --muted:         #8a8498;
+  --muted:         #9e99ad;
   --success:         #52c97a;
   --success-dark:    #22c55e;  /* for gradients/hover */
-  --success-surface: rgba(82,201,122,.12);
+  --success-surface: color-mix(in srgb, var(--success) 12%, transparent);
   --warning:       #e8a84a;
   --danger:        #e05252;
   --overlay:       rgba(14,12,15,0.80);
@@ -32,7 +32,7 @@
   --grad-primary:  linear-gradient(135deg, #e8526a, #c4855a);
   --grad-secondary:linear-gradient(135deg, #c4855a, #7a6af0);
   --grad-success:  linear-gradient(135deg, #52c97a, #3db8b8);
-  --grad-shine:    linear-gradient(160deg, rgba(232,82,106,.12), rgba(196,133,90,.08));
+  --grad-shine:    linear-gradient(160deg, color-mix(in srgb, var(--accent) 12%, transparent), color-mix(in srgb, var(--accent2) 8%, transparent));
 
   /* ── Spacing — 8pt grid ──────────────────────────────── */
   /* Primary tokens: --sp-{px-value} */
@@ -98,8 +98,8 @@
   --shadow-sm:     0 1px 4px rgba(0,0,0,.24);
   --shadow-md:     0 2px 16px rgba(0,0,0,.32);
   --shadow-lg:     0 8px 32px rgba(0,0,0,.40);
-  --shadow-accent: 0 4px 20px rgba(232,82,106,.32);
-  --shadow-glow:   0 0 20px rgba(232,82,106,.45);
+  --shadow-accent: 0 4px 20px color-mix(in srgb, var(--accent) 32%, transparent);
+  --shadow-glow:   0 0 20px color-mix(in srgb, var(--accent) 45%, transparent);
 
   /* ── Motion ───────────────────────────────────────────── */
   --motion-fast:   150ms ease;

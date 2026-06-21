@@ -429,17 +429,18 @@ code-reviewer skill → Playwright verify → ג'ף merge
 - Block-user feature (שירה, merged)
 
 ### חוב טכני מתועד
-| חוב | כמות | מתי לתקן |
-|-----|------|----------|
-| Hardcoded hex values | 97 מקומות | Cycle הנוכחי (A2 + visual_redesign) |
-| font-size hardcoded | 402 שורות | batch migration — cycle 2 target: -20 |
-| spacing hardcoded | 366 מקומות | Cycle 3 |
-| emoji ב-SF_ITEMS/STYLISTS_DATA | 26 הופעות | עם A2 |
-| `#2a2040`, `#1a1030` (non-token) | 13 מקומות | עם A2 |
-| `var(--t-*)` שימוש | 0 כרגע | migration בbatches |
-| ANTHROPIC_API_KEY חסר | — | לפני production |
-| Moderation thresholds | לא מאושרות | איילון before-production |
-| Light mode tokens ב-tokens.css | לא קיים | Cycle 3 |
+| חוב | כמות | Owner | Sprint | מתי לתקן |
+|-----|------|-------|--------|----------|
+| Hardcoded hex values | 97 מקומות | נטה | Cycle 2 W1 | Cycle 2 (A2 + visual_redesign) |
+| emoji ב-SF_ITEMS/STYLISTS_DATA | 26 הופעות | דולצ'ה | Cycle 2 W1 | עם A2 — **P0** |
+| `#2a2040`, `#1a1030` (non-token) | 13 מקומות | נטה | Cycle 2 W1 | עם A2 |
+| font-size hardcoded | 402 שורות | נטה | Cycle 2 ongoing | batch migration — target: -20/cycle |
+| `var(--t-*)` שימוש | 0 כרגע | נטה | Cycle 2 ongoing | migration בbatches |
+| spacing hardcoded | 366 מקומות | נטה | Cycle 3 | Cycle 3 |
+| Light mode tokens ב-tokens.css | לא קיים | נטה | Cycle 3 | `@media (prefers-color-scheme: light)` |
+| **ANTHROPIC_API_KEY חסר** | — | **סטיב/ג'ף** | **לפני כל deploy** | **P0 — moderation fail-open** |
+| Moderation thresholds | לא מאושרות | **איילון** | **Cycle 2 W2** | sign-off על plans/moderation_thresholds_proposal.md |
+| look_total_usd fallback מעורב | שורה 2305 | אורן+סאם | Cycle 2 | BE-002 — פתוח מcycle 1 |
 
 ---
 
