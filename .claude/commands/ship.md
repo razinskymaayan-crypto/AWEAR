@@ -10,9 +10,10 @@ Follow every step in order. Do NOT skip the gates. Stop and report if a gate fai
 2. **Build / confirm the change.** Implement `$ARGUMENTS` if not already done (delegate UI work to the `dolce` subagent per `docs/DESIGN_STANDARDS.md`). Keep it scoped — no unrelated edits.
 3. **Design gate (visual changes only).** Run the `gabbana` subagent to review against the standards. Score must be **8+**. If below, fix (via `dolce`) and re-gate until it passes.
 4. **Code gate.** For non-trivial logic, run the `code-reviewer` skill.
-5. **Verify (required).**
+5. **Verify (required — all must pass).**
    - JS syntax: `awk '/<script>/{f=1;next}/<\/script>/{f=0}f' static/index.html > /tmp/ship.js && node --check /tmp/ship.js`
-   - Rendering: use the `verify-rendering` skill (Playwright headless) — **0 page errors** across the touched screens.
+   - **Runtime/render smoke test: `npm install && npm run check-render`** (exit 0). This catches Temporal-Dead-Zone & other init-time crashes that `node --check` CANNOT — e.g. the 2026-06-21 `STREAK_KEY` bug that blanked the app yet passed syntax. **Never skip this; syntax-valid ≠ runs.**
+   - Rendering (if a server is available): `verify-rendering` skill (Playwright) — 0 page errors on touched screens.
    - Server: `curl -s -o /dev/null -w "%{http_code}" http://localhost:8000` returns 200 (restart uvicorn if needed).
 6. **Sync + commit + push.** `git fetch` again; if behind, merge; then commit with a clear message (end with the Co-Authored-By line) and `git push origin main`.
 7. **Report**: what shipped, the Gabbana score, verification results, and the pushed commit hash. Never report success unless steps 5–6 actually passed.
