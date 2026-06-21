@@ -3289,14 +3289,15 @@
     {key:'refer', name:'Referred a friend', icon:'users', pts:50, desc:'Friend joined'},
   ];
 
+  // ---- Daily Diary + Streak keys — declared BEFORE renderHome() reads them (TDZ-safe, per Iron Rule #9) ----
+  const DIARY_KEY = 'awear_diary';
+  const STREAK_KEY = 'awear_streak';
+  const TASTE_KEY = 'awear_taste';
+
   // Auto-render home on load
   renderHome();
 
   // ---- Home Screen ----
-  // ---- Daily Diary + Streak ----
-  const DIARY_KEY = 'awear_diary';
-  const STREAK_KEY = 'awear_streak';
-  const TASTE_KEY = 'awear_taste';
 
   function todayStr() {
     const d = new Date();
