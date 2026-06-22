@@ -1010,13 +1010,21 @@
   .og-outfit-score { font-size: var(--t-caption); font-weight: 800; color: var(--accent2); }
   .og-outfit-items { padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 8px; }
   .og-item-row { display: flex; align-items: center; gap: 10px; }
-  .og-item-ico { font-size: var(--t-title,20px); width: 36px; height: 36px; background: rgba(255,255,255,.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .og-item-ico { font-size: var(--t-title,20px); width: 36px; height: 36px; background: var(--surface); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--muted); }
   .og-item-info { flex: 1; }
   .og-item-name { font-size: var(--t-small); font-weight: 800; }
   .og-item-status { font-size: var(--t-micro); margin-top: 2px; font-weight: 600; }
   .og-item-have { color: var(--success); }
   .og-item-need { color: var(--accent); }
-  .og-outfit-tip { margin: 0 14px 12px; background: rgba(123,92,255,.1); border-radius: 12px; padding: 10px 12px; font-size: var(--t-caption); font-weight: 600; color: rgba(246,246,249,.8); line-height: 1.5; }
+  .og-outfit-tip { margin: 0 14px 12px; background: color-mix(in srgb, var(--accent3) 10%, transparent); border-radius: 12px; padding: 10px 12px; font-size: var(--t-caption); font-weight: 600; color: var(--muted); line-height: 1.5; }
+  .og-item-buyable { gap: 12px; background: var(--surface); border-radius: var(--r-sm); padding: 10px 12px; align-items: center; }
+  .og-buy-thumb { width: 56px; height: 56px; border-radius: var(--r-xs); overflow: hidden; flex-shrink: 0; background: var(--card); }
+  .og-buy-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .og-buy-info { flex: 1; min-width: 0; }
+  .og-buy-name { font-size: var(--t-caption); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .og-buy-price { font-size: var(--t-micro); color: var(--muted); margin-top: 2px; }
+  .og-buy-action { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; padding: 6px 14px; background: var(--accent); color: var(--bg); border: none; border-radius: var(--r-pill); font-family: inherit; font-size: var(--t-micro); font-weight: 900; cursor: pointer; min-height: 36px; transition: transform .12s, opacity .12s; }
+  .og-buy-action:active { transform: scale(.95); opacity: .8; }
   .og-loading { text-align: center; padding: 40px 20px; }
   .og-loading-spinner { font-size: var(--t-display,32px); animation: spin 1s linear infinite; display: inline-block; }
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -4094,6 +4102,21 @@
     }];
   }
 
+  function findShopMatch(category, outfitTags) {
+    const tags = (outfitTags || []).map(t => t.toLowerCase());
+    const catMap = {dress:['dress'],top:['top'],bottoms:['bottoms'],shoes:['shoes'],bag:['bag'],outerwear:['outerwear'],accessory:['accessory','jewelry'],jewelry:['jewelry','accessory'],hat:['hat']};
+    const matchCats = catMap[category] || [category];
+    let best = null, bestScore = -1;
+    for (const p of SHOP_SEED) {
+      if (!matchCats.includes(p.category)) continue;
+      const pTags = (p.style_tags || []).map(t => t.toLowerCase());
+      const overlap = tags.filter(t => pTags.includes(t)).length;
+      const score = overlap * 10 + (p.score || 70) + ((p.image_url || p.product_url) ? 5 : 0);
+      if (score > bestScore) { bestScore = score; best = p; }
+    }
+    return best || SHOP_SEED.find(p => matchCats.includes(p.category)) || null;
+  }
+
   function renderOutfitResults(outfits, occasion) {
     const el = document.getElementById('og-result');
     if (!outfits.length) {
@@ -4111,14 +4134,30 @@
               ${o.match_pct ? `<div class="og-outfit-score">${o.match_pct}% from your closet</div>` : ''}
             </div>
             <div class="og-outfit-items">
-              ${(o.items||[]).map(item => `
-                <div class="og-item-row">
-                  <div class="og-item-ico">${icon(catIcon(item.category), 22)}</div>
-                  <div class="og-item-info">
-                    <div class="og-item-name">${esc(item.name)}</div>
-                    <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '+ Missing — consider buying' : 'In your closet'}</div>
-                  </div>
-                </div>`).join('')}
+              ${(o.items||[]).map(item => {
+                if (item._missing) {
+                  const sp = findShopMatch(item.category, o.style_tags);
+                  if (sp) return `
+                    <div class="og-item-row og-item-buyable">
+                      <div class="og-buy-thumb">${productImage(sp)}</div>
+                      <div class="og-buy-info">
+                        <div class="og-buy-name">${esc(sp.name)}</div>
+                        <div class="og-buy-price">$${sp.price} · ${esc(sp.brand)}</div>
+                        <button class="og-buy-action" onclick="openShopItem('${attr(sp.id)}')">
+                          ${icon('shoppingBag',12)} Shop Now
+                        </button>
+                      </div>
+                    </div>`;
+                }
+                return `
+                  <div class="og-item-row">
+                    <div class="og-item-ico">${icon(catIcon(item.category), 22)}</div>
+                    <div class="og-item-info">
+                      <div class="og-item-name">${esc(item.name)}</div>
+                      <div class="og-item-status ${item._missing?'og-item-need':'og-item-have'}">${item._missing ? '+ Missing — consider buying' : icon('check',12)+' In your closet'}</div>
+                    </div>
+                  </div>`;
+              }).join('')}
             </div>
             ${o.tip ? `<div class="og-outfit-tip">${icon('sparkle',14)} ${esc(o.tip)}</div>` : ''}
           </div>`).join('')}
@@ -6483,13 +6522,16 @@
   function openShopItem(id) {
     const it = SHOP_SEED.find(s => s.id === id);
     if (!it) return;
-    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     openSheetSingle({
       name: it.name,
       category: it.category,
       style_tags: it.style_tags,
       color: '',
       price_estimate_usd: it.price,
+      image_url: it.image_url,
+      search_query: it.search_query,
+      brand: it.brand,
+      brand_vibe: it.brand + ' · ' + it.store,
     }, 0, null);
   }
 
