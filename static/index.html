@@ -1382,7 +1382,7 @@
   /* ---- Marketplace Condition Chips ---- */
   .mp-cond-row { display: flex; gap: 8px; padding: 0 16px 10px; overflow-x: auto; scrollbar-width: none; }
   .mp-cond-row::-webkit-scrollbar { display: none; }
-  .mp-cond-chip { flex-shrink: 0; padding: 7px 18px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--line,#2e2836); background: none; color: var(--muted,#8a8498); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 44px; display: inline-flex; align-items: center; gap: 5px; }
+  .mp-cond-chip { flex-shrink: 0; padding: 0 16px; height: 36px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--line,#2e2836); background: var(--card,#1e1a22); color: var(--muted,#8a8498); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 36px; display: inline-flex; align-items: center; gap: 5px; box-sizing: border-box; }
   .mp-cond-chip.active { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); border-color: var(--fg,#f0ecf5); }
   .mp-closet-chip { border-color: var(--accent3,#7a6af0); color: var(--accent3,#7a6af0); }
   .mp-closet-chip.active { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); border-color: var(--accent3,#7a6af0); }
@@ -1435,7 +1435,7 @@
 
   /* ---- Marketplace Filter Button + Active Chips Bar ---- */
   .mp-toolbar { display: flex; align-items: center; gap: 8px; padding: 0 16px 10px; }
-  .mp-filter-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--line,#2e2836); background: var(--card,#1e1a22); color: var(--fg,#f0ecf5); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 44px; flex-shrink: 0; }
+  .mp-filter-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; height: 36px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--line,#2e2836); background: var(--card,#1e1a22); color: var(--fg,#f0ecf5); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 36px; flex-shrink: 0; box-sizing: border-box; }
   .mp-filter-btn.has-active { border-color: var(--accent3,#7a6af0); color: var(--accent3,#7a6af0); }
   .mp-filter-btn:active { transform: scale(.95); }
   .mp-filter-count { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); font-size: var(--t-micro,11px); font-weight: 900; }
@@ -1485,6 +1485,41 @@
   .mp-empty-filters-clear:active { opacity: .8; }
   .mp-empty-filters-ai { padding: 10px 22px; border-radius: var(--r-pill,999px); background: none; border: 1.5px solid var(--accent2,#c4855a); color: var(--accent2,#c4855a); font-family: inherit; font-size: var(--t-small,13px); font-weight: 800; cursor: pointer; min-height: 44px; transition: opacity .15s; }
   .mp-empty-filters-ai:active { opacity: .8; }
+
+  /* ---- Marketplace Search Bar ---- */
+  .mp-search-bar { padding: 0 16px 10px; }
+  .mp-search-inner { display: flex; align-items: center; gap: 8px; background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: 0 14px; transition: border .18s; }
+  .mp-search-inner:focus-within { border-color: var(--accent3,#7a6af0); }
+  .mp-search-input { flex: 1; background: none; border: none; outline: none; font-family: inherit; font-size: var(--t-small,13px); color: var(--fg,#f0ecf5); padding: 11px 0; min-height: 44px; }
+  .mp-search-input::placeholder { color: var(--muted,#8a8498); }
+  .mp-search-clear { background: none; border: none; color: var(--muted,#8a8498); cursor: pointer; font-size: var(--t-body,14px); padding: 4px; min-width: 28px; min-height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: color .15s; }
+  .mp-search-clear:hover { color: var(--fg,#f0ecf5); }
+
+  /* ---- Quick Sort Chips ---- */
+  .mp-quick-sort { display: flex; gap: 6px; padding: 0 16px 10px; overflow-x: auto; scrollbar-width: none; }
+  .mp-quick-sort::-webkit-scrollbar { display: none; }
+  .mp-qs-chip { flex-shrink: 0; padding: 7px 16px; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; border: 1.5px solid var(--line,#2e2836); background: none; color: var(--muted,#8a8498); cursor: pointer; transition: all .18s; min-height: 36px; white-space: nowrap; }
+  .mp-qs-chip.active { background: var(--surface,#161318); border-color: var(--accent3,#7a6af0); color: var(--accent3,#7a6af0); font-weight: 800; }
+  .mp-qs-chip:active { opacity: .7; }
+
+  /* ---- Seller mini-profile in resale card ---- */
+  .mp-seller-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+  .mp-seller-avatar { width: 22px; height: 22px; border-radius: 50%; background: color-mix(in srgb, var(--accent2,#c4855a) 20%, var(--card,#1e1a22)); color: var(--accent2,#c4855a); font-size: 8px; font-weight: 900; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; letter-spacing: .5px; }
+  .mp-item-seller { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .mp-seller-badge { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: var(--r-pill,999px); background: color-mix(in srgb, var(--success,#52c97a) 15%, transparent); color: var(--success,#52c97a); border: 1px solid color-mix(in srgb, var(--success,#52c97a) 30%, transparent); letter-spacing: .2px; white-space: nowrap; }
+  .mp-seller-rating { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; margin-top: 2px; display: flex; align-items: center; gap: 3px; }
+  .mp-cond-grade-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+  .mp-cond-grade { font-size: 9px; font-weight: 900; padding: 2px 8px; border-radius: var(--r-pill,999px); border: 1px solid; letter-spacing: .3px; white-space: nowrap; }
+  .mp-listed-time { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; }
+
+  /* ---- Buy row + Make Offer ---- */
+  .mp-buy-row { display: flex; gap: 6px; margin-top: 8px; }
+  .mp-buy-row .mp-buy-btn { flex: 1; margin-top: 0; }
+  .mp-offer-btn { flex-shrink: 0; padding: 7px 12px; background: none; border: 1.5px solid var(--accent2,#c4855a); border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-micro,11px); font-weight: 800; color: var(--accent2,#c4855a); cursor: pointer; min-height: 44px; transition: all .18s; white-space: nowrap; }
+  .mp-offer-btn:active { background: color-mix(in srgb, var(--accent2,#c4855a) 15%, transparent); opacity: .85; }
+
+  /* ---- Size badge on retail card image ---- */
+  .mp-size-badge { position: absolute; top: 8px; left: 8px; background: color-mix(in srgb, var(--bg,#0e0c0f) 75%, transparent); backdrop-filter: blur(4px); color: var(--fg,#f0ecf5); font-size: 9px; font-weight: 900; padding: 3px 7px; border-radius: var(--r-xs,6px); letter-spacing: .3px; border: 1px solid color-mix(in srgb, var(--fg,#f0ecf5) 20%, transparent); }
 
   /* ---- Wishlist ---- */
   .wl-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
@@ -2442,6 +2477,7 @@
     refresh:'<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M20 6v5h-5M4 18v-5h5"/>',
     sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
     filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',
+    star:'<path d="M12 3l2.4 5.3 5.6.8-4 4.2 1 5.7L12 16l-5 2.9 1-5.7-4-4.2 5.6-.8L12 3Z" stroke-linejoin="round"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -5099,22 +5135,28 @@
   // ---- Marketplace ----
   const MP_KEY = 'awear_marketplace';
   const MP_SEED = [
-    {id:'mp1', name:'Barrel Jeans Light Wash', search_query:'barrel jeans light wash denim', category:'bottoms', size:'M', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'Blue'},
-    {id:'mp2', name:'Black Vintage Leather Jacket', search_query:'black vintage leather jacket', category:'outerwear', size:'S', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'Black'},
-    {id:'mp3', name:'Adidas Samba White Sneakers', search_query:'Adidas Samba white sneakers', category:'shoes', size:'38', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'White'},
-    {id:'mp4', name:'Black Mini Crossbody Bag', search_query:'black mini bag crossbody', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'Black'},
-    {id:'mp5', name:'Cream Rib Knit Crop Top', search_query:'cream rib knit crop top', category:'top', size:'XS', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'Cream'},
-    {id:'mp6', name:'Green Satin Midi Skirt', search_query:'green satin midi skirt formal', category:'dress', size:'S', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'Green'},
-    {id:'mp7', name:'Black Baseball Cap', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'Black'},
-    {id:'mp8', name:'Beige Cargo Pants', search_query:'beige cargo pants utility', category:'bottoms', size:'L', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'Beige'},
+    {id:'mp1', name:'Barrel Jeans Light Wash', search_query:'barrel jeans light wash denim', category:'bottoms', size:'M', price:180, orig:450, condition:'like-new', condGrade:'A', seller:'@noalevi', seller_rating:4.9, seller_sales:38, seller_badge:'Top Seller', listed_days:2, style_tags:['y2k','denim'], color:'Blue', occasion:'casual', material:'denim'},
+    {id:'mp2', name:'Black Vintage Leather Jacket', search_query:'black vintage leather jacket', category:'outerwear', size:'S', price:320, orig:800, condition:'used', condGrade:'B', seller:'@mayacohen', seller_rating:4.7, seller_sales:12, seller_badge:'Fast Shipper', listed_days:5, style_tags:['streetwear','vintage'], color:'Black', occasion:'casual', material:'synthetic'},
+    {id:'mp3', name:'Adidas Samba White Sneakers', search_query:'Adidas Samba white sneakers', category:'shoes', size:'38', price:390, orig:560, condition:'new', condGrade:'A', seller:'@shirastyle', seller_rating:5.0, seller_sales:61, seller_badge:'Top Seller', listed_days:1, style_tags:['retro','iconic'], color:'White', occasion:'casual', material:'synthetic'},
+    {id:'mp4', name:'Black Mini Crossbody Bag', search_query:'black mini bag crossbody', category:'bag', price:95, orig:220, condition:'like-new', condGrade:'A', seller:'@danakatz', seller_rating:4.8, seller_sales:23, seller_badge:'Fast Shipper', listed_days:3, style_tags:['minimal','everyday'], color:'Black', occasion:'casual'},
+    {id:'mp5', name:'Cream Rib Knit Crop Top', search_query:'cream rib knit crop top', category:'top', size:'XS', price:45, orig:120, condition:'used', condGrade:'B', seller:'@ronigold', seller_rating:4.5, seller_sales:7, seller_badge:'New Seller', listed_days:8, style_tags:['minimal','y2k'], color:'Cream', occasion:'casual', material:'cotton'},
+    {id:'mp6', name:'Green Satin Midi Skirt', search_query:'green satin midi skirt formal', category:'dress', size:'S', price:160, orig:380, condition:'like-new', condGrade:'A', seller:'@liorsade', seller_rating:4.9, seller_sales:44, seller_badge:'Top Seller', listed_days:4, style_tags:['formal','romantic'], color:'Green', occasion:'evening', material:'silk'},
+    {id:'mp7', name:'Black Baseball Cap', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', condGrade:'C', seller:'@noalevi', seller_rating:4.9, seller_sales:38, seller_badge:'Top Seller', listed_days:14, style_tags:['streetwear','casual'], color:'Black', occasion:'sport'},
+    {id:'mp8', name:'Beige Cargo Pants', search_query:'beige cargo pants utility', category:'bottoms', size:'L', price:140, orig:320, condition:'like-new', condGrade:'B', seller:'@mayacohen', seller_rating:4.7, seller_sales:12, seller_badge:'Fast Shipper', listed_days:6, style_tags:['streetwear','utility'], color:'Beige', occasion:'casual', material:'cotton'},
+    {id:'mp9', name:'Ivory Linen Blazer', search_query:'ivory linen blazer oversized vintage', category:'outerwear', size:'M', price:85, orig:200, condition:'like-new', condGrade:'A', seller:'@shirastyle', seller_rating:5.0, seller_sales:61, seller_badge:'Top Seller', listed_days:2, style_tags:['chic','minimal'], color:'Cream', occasion:'work', material:'linen'},
+    {id:'mp10', name:'Vintage Silk Slip Dress', search_query:'vintage silk slip dress 90s minimal', category:'dress', size:'S', price:120, orig:280, condition:'used', condGrade:'B', seller:'@danakatz', seller_rating:4.8, seller_sales:23, seller_badge:'Fast Shipper', listed_days:10, style_tags:['vintage','romantic'], color:'Beige', occasion:'evening', material:'silk'},
+    {id:'mp11', name:'Chunky Knit Wool Sweater', search_query:'chunky knit wool sweater oversized cozy', category:'top', size:'L', price:65, orig:180, condition:'like-new', condGrade:'A', seller:'@ronigold', seller_rating:4.5, seller_sales:7, seller_badge:'New Seller', listed_days:3, style_tags:['cozy','minimal'], color:'Grey', occasion:'casual', material:'wool'},
+    {id:'mp12', name:'Black Wide-Leg Trousers', search_query:'black wide leg trousers tailored minimal', category:'bottoms', size:'M', price:95, orig:240, condition:'like-new', condGrade:'A', seller:'@liorsade', seller_rating:4.9, seller_sales:44, seller_badge:'Top Seller', listed_days:7, style_tags:['office','minimal'], color:'Black', occasion:'work', material:'synthetic'},
   ];
   const MP_NEW_SEED = [
-    {id:'n1', name:'Wide Leg Trousers', search_query:'zara wide leg black trousers fashion', category:'bottoms', size:'M', price:59, brand:'Zara', style_tags:['minimal','chic'], isNew:true},
-    {id:'n2', name:'Linen Blazer', search_query:'hm premium linen blazer cream oversized', category:'outerwear', size:'S', price:79, brand:'H&M', style_tags:['chic','office'], isNew:true},
-    {id:'n3', name:'Satin Slip Dress', search_query:'asos satin slip midi dress green', category:'dress', size:'XS', price:45, brand:'ASOS', style_tags:['romantic','evening'], isNew:true},
-    {id:'n4', name:'Air Force 1', search_query:'nike air force 1 white sneakers', category:'shoes', size:'39', price:199, brand:'Nike', style_tags:['retro','casual'], isNew:true},
-    {id:'n5', name:'Oversized Linen Shirt', search_query:'cos linen white shirt oversized minimal', category:'top', size:'M', price:65, brand:'COS', style_tags:['minimal','summer'], isNew:true},
-    {id:'n6', name:'Leather Belt Bag', search_query:'mango leather belt bag brown crossbody', category:'bag', price:49, brand:'Mango', style_tags:['everyday','utility'], isNew:true},
+    {id:'n1', name:'Wide Leg Trousers', search_query:'zara wide leg black trousers fashion', category:'bottoms', size:'M', price:59, brand:'Zara', style_tags:['minimal','chic'], isNew:true, occasion:'work', arrived_days:3},
+    {id:'n2', name:'Linen Blazer', search_query:'hm premium linen blazer cream oversized', category:'outerwear', size:'S', price:79, brand:'H&M', style_tags:['chic','office'], isNew:true, occasion:'work', arrived_days:5},
+    {id:'n3', name:'Satin Slip Dress', search_query:'asos satin slip midi dress green', category:'dress', size:'XS', price:45, brand:'ASOS', style_tags:['romantic','evening'], isNew:true, occasion:'evening', arrived_days:2},
+    {id:'n4', name:'Air Force 1', search_query:'nike air force 1 white sneakers', category:'shoes', size:'39', price:199, brand:'Nike', style_tags:['retro','casual'], isNew:true, occasion:'sport', arrived_days:1},
+    {id:'n5', name:'Oversized Linen Shirt', search_query:'cos linen white shirt oversized minimal', category:'top', size:'M', price:65, brand:'COS', style_tags:['minimal','summer'], isNew:true, occasion:'casual', arrived_days:6},
+    {id:'n6', name:'Leather Belt Bag', search_query:'mango leather belt bag brown crossbody', category:'bag', price:49, brand:'Mango', style_tags:['everyday','utility'], isNew:true, occasion:'casual', arrived_days:4},
+    {id:'n7', name:'Ribbed Mini Skirt', search_query:'ribbed mini skirt beige y2k fashion', category:'dress', size:'S', price:35, brand:'ASOS', style_tags:['y2k','casual'], isNew:true, occasion:'casual', arrived_days:1},
+    {id:'n8', name:'Cargo Utility Jacket', search_query:'cargo utility jacket green oversized streetwear', category:'outerwear', size:'L', price:89, brand:'H&M', style_tags:['streetwear','utility'], isNew:true, occasion:'casual', arrived_days:2},
   ];
   let mpTab = 'shop', mpFilter = 'all', mpCondFilter = 'new';
   let mpAssistQuery = '', mpAssistMsg = '', mpAssistIds = null; // null = no filter, array = filtered ids
@@ -5129,10 +5171,14 @@
   let mpSortBy = 'default';    // default | price-asc | price-desc | compat-desc | newest
   let mpConditionFilter = 'all'; // all | like-new | good | fair
   let mpCloseMatchOnly = false; // true = compat >= 60%
+  let mpSearchQuery = ''; // live search bar in header
+  let mpOccasionFilter = 'all'; // all | casual | work | evening | sport | formal
+  let mpMaterialFilter = 'all'; // all | cotton | linen | denim | synthetic | wool | silk
   // Pending filter values while sheet is open (applied on "Show Results")
   let _mpPendingSort = 'default', _mpPendingColor = 'all', _mpPendingBrand = 'all';
   let _mpPendingCondition = 'all', _mpPendingPriceMin = 0, _mpPendingPriceMax = 9999;
   let _mpPendingCloseMatch = false;
+  let _mpPendingOccasion = 'all', _mpPendingMaterial = 'all', _mpPendingSize = 'all';
 
   function loadMPListings() {
     const user = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
@@ -5159,11 +5205,23 @@
         });
       }
     }
+    // Live search
+    if (mpSearchQuery) {
+      const q = mpSearchQuery.toLowerCase();
+      filtered = filtered.filter(i =>
+        (i.name||'').toLowerCase().includes(q) ||
+        (i.brand||'').toLowerCase().includes(q) ||
+        (i.seller||'').toLowerCase().includes(q) ||
+        (i.color||'').toLowerCase().includes(q)
+      );
+    }
     // Extended filters
     if (mpCategoryFilter !== 'all') filtered = filtered.filter(i => i.category === mpCategoryFilter);
     if (mpColorFilter !== 'all') filtered = filtered.filter(i => (i.color||'').toLowerCase().includes(mpColorFilter));
     if (mpBrandFilter !== 'all') filtered = filtered.filter(i => i.brand === mpBrandFilter);
     if (mpConditionFilter !== 'all') filtered = filtered.filter(i => (i.condition||'').toLowerCase() === mpConditionFilter);
+    if (mpOccasionFilter !== 'all') filtered = filtered.filter(i => (i.occasion||'') === mpOccasionFilter);
+    if (mpMaterialFilter !== 'all') filtered = filtered.filter(i => (i.material||'') === mpMaterialFilter);
     filtered = filtered.filter(i => i.price >= mpPriceMin && i.price <= mpPriceMax);
     if (mpCloseMatchOnly) {
       const wItems = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
@@ -5186,7 +5244,15 @@
         <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='preloved'?' active-community':''}" data-tab="shop" data-cond="preloved">${icon('heart',13)} Community</button>
         <button class="mp-seg-btn${mpTab==='sell'?' active-sell':''}" data-tab="sell">My&nbsp;Listings</button>
       </div>
-      ${mpTab === 'shop' ? `<div class="mp-assist-bar">
+      ${mpTab === 'shop' ? `
+      <div class="mp-search-bar">
+        <div class="mp-search-inner">
+          ${icon('search', 15)}
+          <input class="mp-search-input" id="mp-search-input" type="search" placeholder="Search items, brands, sellers…" value="${esc(mpSearchQuery||'')}" autocomplete="off" />
+          ${mpSearchQuery ? `<button class="mp-search-clear" id="mp-search-clear" aria-label="Clear search">×</button>` : ''}
+        </div>
+      </div>
+      <div class="mp-assist-bar">
         <div class="mp-assist-input-row">
           ${icon('sparkle', 16)}
           <input class="mp-assist-input" id="mp-assist-input" placeholder="Try: 'vintage denim under $50' or 'quiet luxury blazer'" value="${mpAssistQuery||''}" />
@@ -5218,23 +5284,26 @@
       renderMarketplace();
     }));
 
-    // Size chips (P0-D)
-    el.querySelectorAll('.mp-size-chip').forEach(btn => btn.addEventListener('click', () => {
-      mpSizeFilter = btn.dataset.size || 'all';
-      localStorage.setItem('awear_mp_size', mpSizeFilter);
-      renderMarketplace();
-    }));
-
-    // Pre-loved toggle (P1-D)
-    el.querySelector('[data-action="mp-preloved-toggle"]')?.addEventListener('click', () => {
-      mpPrelovedOnly = !mpPrelovedOnly;
-      localStorage.setItem('awear_mp_preloved', mpPrelovedOnly);
-      renderMarketplace();
-    });
 
     // Category filters
     el.querySelectorAll('.mp-filter').forEach(btn => btn.addEventListener('click', () => {
       mpFilter = btn.dataset.cat; renderMarketplace();
+    }));
+
+    // Search bar — live filter
+    el.querySelector('#mp-search-input')?.addEventListener('input', e => {
+      mpSearchQuery = e.target.value.trim();
+      renderMarketplace();
+    });
+    el.querySelector('#mp-search-clear')?.addEventListener('click', () => {
+      mpSearchQuery = '';
+      renderMarketplace();
+    });
+
+    // Quick sort chips
+    el.querySelectorAll('[data-action="mp-quick-sort"]').forEach(btn => btn.addEventListener('click', () => {
+      mpSortBy = btn.dataset.sort || 'default';
+      renderMarketplace();
     }));
 
     // Filter & Sort sheet open
@@ -5250,7 +5319,15 @@
         else if (key === 'sort') mpSortBy = 'default';
         else if (key === 'price') { mpPriceMin = 0; mpPriceMax = 9999; }
         else if (key === 'closematch') mpCloseMatchOnly = false;
+        else if (key === 'occasion') mpOccasionFilter = 'all';
+        else if (key === 'material') mpMaterialFilter = 'all';
+        else if (key === 'size') { mpSizeFilter = 'all'; localStorage.setItem('awear_mp_size', 'all'); }
         renderMarketplace();
+        return;
+      }
+      // Make Offer
+      if (e.target.closest('[data-action="make-offer"]')) {
+        showToast('Offer sent! The seller will respond shortly.');
         return;
       }
       // Empty state: clear all filters
@@ -5327,45 +5404,39 @@
     });
 
     // P1-D: Pre-loved toggle
-    const prelovedToggleHtml = `
-      <div class="mp-preloved-toggle">
-        <button class="mp-preloved-btn${mpPrelovedOnly?' active':''}" data-action="mp-preloved-toggle">${icon('heart',12)} Pre-loved only</button>
-      </div>`;
 
-    const condChipsHtml = `
-      <div class="mp-cond-row">
-        <button class="mp-cond-chip mp-closet-chip${mpClosetFilter?' active':''}" data-filter="closet">${icon('sparkle', 12)} Matches My Closet</button>
-      </div>`;
-
-    // P0-D: Size filter chips
-    const clothingSizes = ['XS','S','M','L','XL','XXL','Free Size'];
-    const shoeSizes = ['36','37','38','39','40','41','42'];
-    const allSizes = clothingSizes.concat(shoeSizes);
-    const sizeChipsHtml = `
-      <div class="mp-size-row">
-        <button class="mp-size-chip${mpSizeFilter==='all'?' active':''}" data-size="all">All Sizes</button>
-        ${allSizes.map(s => `<button class="mp-size-chip${mpSizeFilter===s?' active':''}" data-size="${s}">${s}</button>`).join('')}
-      </div>`;
 
     const catFiltersHtml = `
       <div class="mp-filters">
         ${categories.map(c => `<button class="mp-filter${mpFilter===c?' active':''}" data-cat="${c}">${catLabels[c]}${catCounts[c] ? ` <span style="font-size:var(--t-micro,11px);opacity:.7">(${catCounts[c]})</span>` : ''}</button>`).join('')}
       </div>`;
 
+    // Quick sort chips (inline, above grid)
+    const quickSortChips = [
+      {key:'default', label:'Best Match'},
+      {key:'newest', label:'Newest'},
+      {key:'price-asc', label:'Lowest Price'},
+      {key:'compat-desc', label:'Trending'},
+    ];
+    const quickSortHtml = `
+      <div class="mp-quick-sort">
+        ${quickSortChips.map(s => `<button class="mp-qs-chip${mpSortBy===s.key?' active':''}" data-action="mp-quick-sort" data-sort="${s.key}">${s.label}</button>`).join('')}
+      </div>`;
+
     // Filter & Sort toolbar + active chips
     const activeFiltersCount = [
       mpColorFilter !== 'all', mpBrandFilter !== 'all', mpConditionFilter !== 'all',
-      mpSortBy !== 'default', mpPriceMin > 0, mpPriceMax < 9999, mpCloseMatchOnly
+      mpOccasionFilter !== 'all', mpMaterialFilter !== 'all', mpSizeFilter !== 'all',
+      mpPriceMin > 0, mpPriceMax < 9999, mpCloseMatchOnly
     ].filter(Boolean).length;
     const activeChipsHtml = (() => {
       const chips = [];
+      if (mpSizeFilter !== 'all') chips.push({label: mpSizeFilter, key: 'size'});
       if (mpColorFilter !== 'all') chips.push({label: mpColorFilter, key: 'color'});
       if (mpBrandFilter !== 'all') chips.push({label: mpBrandFilter, key: 'brand'});
       if (mpConditionFilter !== 'all') chips.push({label: mpConditionFilter, key: 'condition'});
-      if (mpSortBy !== 'default') chips.push({label: {
-        'price-asc':'Price: Low–High','price-desc':'Price: High–Low',
-        'compat-desc':'Best Match','newest':'Newest'
-      }[mpSortBy]||mpSortBy, key: 'sort'});
+      if (mpOccasionFilter !== 'all') chips.push({label: mpOccasionFilter, key: 'occasion'});
+      if (mpMaterialFilter !== 'all') chips.push({label: mpMaterialFilter, key: 'material'});
       if (mpPriceMin > 0 || mpPriceMax < 9999) chips.push({label:`$${mpPriceMin}–$${mpPriceMax < 9999 ? mpPriceMax : '∞'}`, key:'price'});
       if (mpCloseMatchOnly) chips.push({label:'60%+ Match', key:'closematch'});
       if (!chips.length) return '';
@@ -5377,17 +5448,18 @@
           ${icon('filter',14)} Filter &amp; Sort
           ${activeFiltersCount > 0 ? `<span class="mp-filter-count">${activeFiltersCount}</span>` : ''}
         </button>
+        <button class="mp-cond-chip mp-closet-chip${mpClosetFilter?' active':''}" data-filter="closet">${icon('sparkle', 12)} Matches My Closet</button>
         ${activeChipsHtml ? `<div class="mp-active-chips">${activeChipsHtml}</div>` : ''}
       </div>`;
 
-    const filtersBlock = prelovedToggleHtml + condChipsHtml + sizeChipsHtml + catFiltersHtml + toolbarHtml;
+    const filtersBlock = catFiltersHtml + toolbarHtml + quickSortHtml;
 
     // CO2 estimates by category (P1-B)
     const co2Map = {shoes:1.8, outerwear:3.2, top:1.2, bottoms:1.6, bag:0.9, dress:1.4};
 
     if (!items.length) {
       let emptyHtml;
-      const hasExtendedFilters = activeFiltersCount > 0 || mpSizeFilter !== 'all' || mpFilter !== 'all' || mpPrelovedOnly || mpClosetFilter;
+      const hasExtendedFilters = activeFiltersCount > 0 || mpFilter !== 'all' || mpClosetFilter;
       if (mpClosetFilter && wardrobeForEmpty.length === 0) {
         emptyHtml = `<div class="mp-empty">
           ${icon('wardrobe', 36)}
@@ -5420,6 +5492,17 @@
       }
       return filtersBlock + emptyHtml;
     }
+    // Condition grade config (A/B/C → color)
+    const gradeColors = {A:'var(--success,#52c97a)', B:'var(--accent3,#7a6af0)', C:'var(--accent2,#c4855a)'};
+    const gradeLabels = {A:'Like New', B:'Good', C:'Fair'};
+    function _listedAgo(days) {
+      if (!days) return '';
+      if (days <= 1) return '1 day ago';
+      if (days < 7) return `${days} days ago`;
+      if (days < 14) return '1 week ago';
+      return `${Math.floor(days/7)} weeks ago`;
+    }
+
     return filtersBlock + `
       <div class="mp-grid">
         ${items.map(item => {
@@ -5428,25 +5511,48 @@
           const co2Kg = !isRetail ? (co2Map[item.category] || 1.5) : null;
           const cardClass = isRetail ? 'mp-item retail' : 'mp-item resale';
           const badgeClass = isRetail ? 'brand-new' : 'preloved';
-          const badgeText = isRetail ? 'Brand New' : 'Pre-loved';
+          const isNewArrival = isRetail && (item.arrived_days || 0) <= 7;
+          const badgeText = isNewArrival ? 'New Arrival' : (isRetail ? 'Brand New' : 'Pre-loved');
           const btnClass = isRetail ? 'mp-buy-btn retail-btn' : 'mp-buy-btn resale-btn';
           const btnLabel = isRetail ? 'Shop at ' + esc(item.brand) : 'Buy Now';
+          // Condition grade for resale
+          const grade = item.condGrade || '';
+          const gradeColor = gradeColors[grade] || 'var(--muted,#8a8498)';
+          const gradeLabel = gradeLabels[grade] || '';
+          // Seller rating stars
+          const ratingStr = item.seller_rating ? `${item.seller_rating.toFixed(1)} · ${item.seller_sales} sales` : '';
+          // Size badge for retail
+          const sizeBadge = isRetail && item.size ? `<span class="mp-size-badge">${esc(item.size)}</span>` : '';
           return `<div class="${cardClass}" data-id="${item.id}" data-isnew="${!!item.isNew}">
             <div class="mp-item-img">
               ${productImage(item)}
               <div class="mp-item-badge ${badgeClass}">${esc(badgeText)}</div>
+              ${sizeBadge}
             </div>
             <div class="mp-item-info">
               ${compat ? `<div class="mp-compat-pill" data-action="compat-overlay" data-id="${item.id}">${icon('sparkle',11)} ${compat.pct}% match</div>` : ''}
               <div class="mp-item-name">${esc(item.name)}</div>
               ${isRetail
                 ? `<div class="mp-item-brand">${esc(item.brand||'')}</div>`
-                : `<div class="mp-item-seller" data-action="seller-profile" data-seller="${esc(item.seller||'')}" style="cursor:pointer">${esc(item.seller||'')}</div>
-                   <div class="mp-item-preloved-label">Pre-loved · ${esc(item.condition||'used')}</div>`
+                : `<div class="mp-seller-row">
+                    <span class="mp-seller-avatar">${(item.seller||'?').replace('@','').slice(0,2).toUpperCase()}</span>
+                    <span class="mp-item-seller" data-action="seller-profile" data-seller="${esc(item.seller||'')}">
+                      ${esc(item.seller||'')}
+                      ${item.seller_badge ? `<span class="mp-seller-badge">${esc(item.seller_badge)}</span>` : ''}
+                    </span>
+                  </div>
+                  ${ratingStr ? `<div class="mp-seller-rating">${icon('star',10)} ${esc(ratingStr)}</div>` : ''}
+                  <div class="mp-cond-grade-row">
+                    <span class="mp-cond-grade" style="background:color-mix(in srgb,${gradeColor} 18%,transparent);color:${gradeColor};border-color:color-mix(in srgb,${gradeColor} 35%,transparent)">${grade} — ${gradeLabel}</span>
+                    ${item.listed_days ? `<span class="mp-listed-time">${_listedAgo(item.listed_days)}</span>` : ''}
+                  </div>`
               }
               ${co2Kg ? `<div class="mp-co2-badge">${icon('leaf',10)} ~${co2Kg}kg CO₂ saved</div>` : ''}
               <div class="mp-item-price">$${item.price}${!isRetail && item.orig ? ` <span style="font-size:var(--t-micro);color:var(--muted);text-decoration:line-through">$${item.orig}</span>` : ''}</div>
-              <button class="${btnClass}">${btnLabel}</button>
+              <div class="${isRetail ? '' : 'mp-buy-row'}">
+                <button class="${btnClass}">${btnLabel}</button>
+                ${!isRetail ? `<button class="mp-offer-btn" data-action="make-offer" data-id="${item.id}">Make Offer</button>` : ''}
+              </div>
             </div>
           </div>`;
         }).join('')}
@@ -5503,6 +5609,13 @@
     const conditions = ['new-with-tags','like-new','very-good','good','fair'];
     const condLabels = {'new-with-tags':'New with tags','like-new':'Like New','very-good':'Very Good','good':'Good','fair':'Fair'};
     const brands = [...new Set(loadMPListings().map(i => i.brand).filter(Boolean))].sort();
+    const occasions = ['casual','work','evening','sport','formal'];
+    const occasionLabels = {casual:'Casual',work:'Work',evening:'Evening',sport:'Sport',formal:'Formal'};
+    const materials = ['cotton','linen','denim','synthetic','wool','silk'];
+    const materialLabels = {cotton:'Cotton',linen:'Linen',denim:'Denim',synthetic:'Synthetic',wool:'Wool',silk:'Silk'};
+    const clothingSizes = ['XS','S','M','L','XL','XXL'];
+    const shoeSizes = ['36','37','38','39','40','41','42'];
+    const allSheetSizes = clothingSizes.concat(shoeSizes);
     const sortOpts = [
       {key:'default', label:'Recommended'},
       {key:'price-asc', label:'Price: Low to High'},
@@ -5556,8 +5669,38 @@
         </div>
       </div>`;
 
+    const occasionSection = `
+      <div class="mp-fsheet-divider"></div>
+      <div class="mp-fsheet-section">
+        <div class="mp-fsheet-label">Occasion</div>
+        <div class="mp-fsheet-chips">
+          <button class="mp-fsheet-chip${_mpPendingOccasion==='all'?' active':''}" data-action="mp-foccasion" data-occ="all">All</button>
+          ${occasions.map(o => `<button class="mp-fsheet-chip${_mpPendingOccasion===o?' active':''}" data-action="mp-foccasion" data-occ="${o}">${occasionLabels[o]}</button>`).join('')}
+        </div>
+      </div>`;
+
+    const sizeSection = `
+      <div class="mp-fsheet-divider"></div>
+      <div class="mp-fsheet-section">
+        <div class="mp-fsheet-label">Size</div>
+        <div class="mp-fsheet-chips">
+          <button class="mp-fsheet-chip${_mpPendingSize==='all'?' active':''}" data-action="mp-fsize" data-sz="all">All Sizes</button>
+          ${allSheetSizes.map(s => `<button class="mp-fsheet-chip${_mpPendingSize===s?' active':''}" data-action="mp-fsize" data-sz="${s}">${s}</button>`).join('')}
+        </div>
+      </div>`;
+
+    const materialSection = isCommunity ? `
+      <div class="mp-fsheet-divider"></div>
+      <div class="mp-fsheet-section">
+        <div class="mp-fsheet-label">Material</div>
+        <div class="mp-fsheet-chips">
+          <button class="mp-fsheet-chip${_mpPendingMaterial==='all'?' active':''}" data-action="mp-fmaterial" data-mat="all">All</button>
+          ${materials.map(m => `<button class="mp-fsheet-chip${_mpPendingMaterial===m?' active':''}" data-action="mp-fmaterial" data-mat="${m}">${materialLabels[m]}</button>`).join('')}
+        </div>
+      </div>` : '';
+
     if (isCommunity) {
-      // Community (pre-loved): Condition first, Sort, Price, Brand, Color, Closet Match
+      // Community (pre-loved): Condition, Material, Occasion, Sort, Size, Price, Brand, Color, Closet Match
       return `
         <div class="mp-fsheet-section">
           <div class="mp-fsheet-label">Condition</div>
@@ -5566,8 +5709,11 @@
             ${conditions.map(c => `<button class="mp-fsheet-chip${_mpPendingCondition===c?' active':''}" data-action="mp-fcond" data-cond="${c}">${condLabels[c]}</button>`).join('')}
           </div>
         </div>
+        ${materialSection}
+        ${occasionSection}
         <div class="mp-fsheet-divider"></div>
         ${sortSection}
+        ${sizeSection}
         ${priceSection}
         ${brandSection}
         ${colorSection}
@@ -5580,10 +5726,12 @@
           </div>
         </div>`;
     } else {
-      // Shop (retail): Sort, Price, Category, Color, Brand — no Condition, no Closet Match
+      // Shop (retail): Sort, Size, Price, Occasion, Color, Brand
       return `
         ${sortSection}
+        ${sizeSection}
         ${priceSection}
+        ${occasionSection}
         ${colorSection}
         ${brandSection}`;
     }
@@ -5598,6 +5746,9 @@
     _mpPendingPriceMin = mpPriceMin;
     _mpPendingPriceMax = mpPriceMax;
     _mpPendingCloseMatch = mpCloseMatchOnly;
+    _mpPendingOccasion = mpOccasionFilter;
+    _mpPendingMaterial = mpMaterialFilter;
+    _mpPendingSize = mpSizeFilter;
 
     const overlay = document.getElementById('mp-fsheet-overlay');
     const sheet = document.getElementById('mp-fsheet');
@@ -5650,6 +5801,24 @@
       scroll.innerHTML = _buildFilterSheetContent();
       _bindFilterSheetEvents(sheet, scroll);
     }));
+    // Occasion pick
+    scroll.querySelectorAll('[data-action="mp-foccasion"]').forEach(el => el.addEventListener('click', () => {
+      _mpPendingOccasion = el.dataset.occ;
+      scroll.innerHTML = _buildFilterSheetContent();
+      _bindFilterSheetEvents(sheet, scroll);
+    }));
+    // Material pick
+    scroll.querySelectorAll('[data-action="mp-fmaterial"]').forEach(el => el.addEventListener('click', () => {
+      _mpPendingMaterial = el.dataset.mat;
+      scroll.innerHTML = _buildFilterSheetContent();
+      _bindFilterSheetEvents(sheet, scroll);
+    }));
+    // Size pick
+    scroll.querySelectorAll('[data-action="mp-fsize"]').forEach(el => el.addEventListener('click', () => {
+      _mpPendingSize = el.dataset.sz || 'all';
+      scroll.innerHTML = _buildFilterSheetContent();
+      _bindFilterSheetEvents(sheet, scroll);
+    }));
   }
 
   function applyMPFilters() {
@@ -5662,6 +5831,10 @@
     mpPriceMin = isNaN(minVal) ? 0 : minVal;
     mpPriceMax = isNaN(maxVal) || maxVal === 0 ? 9999 : maxVal;
     mpCloseMatchOnly = _mpPendingCloseMatch;
+    mpOccasionFilter = _mpPendingOccasion;
+    mpMaterialFilter = _mpPendingMaterial;
+    mpSizeFilter = _mpPendingSize;
+    localStorage.setItem('awear_mp_size', mpSizeFilter);
     closeMPFilterSheet();
     renderMarketplace();
   }
@@ -5669,9 +5842,11 @@
   function resetMPFilters() {
     mpSortBy = 'default'; mpColorFilter = 'all'; mpBrandFilter = 'all';
     mpConditionFilter = 'all'; mpPriceMin = 0; mpPriceMax = 9999; mpCloseMatchOnly = false;
+    mpOccasionFilter = 'all'; mpMaterialFilter = 'all';
     _mpPendingSort = 'default'; _mpPendingColor = 'all'; _mpPendingBrand = 'all';
     _mpPendingCondition = 'all'; _mpPendingPriceMin = 0; _mpPendingPriceMax = 9999;
-    _mpPendingCloseMatch = false;
+    _mpPendingCloseMatch = false; _mpPendingOccasion = 'all'; _mpPendingMaterial = 'all'; _mpPendingSize = 'all';
+    mpSizeFilter = 'all'; localStorage.setItem('awear_mp_size', 'all');
     closeMPFilterSheet();
     renderMarketplace();
   }
