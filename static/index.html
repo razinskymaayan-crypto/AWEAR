@@ -1171,7 +1171,7 @@
   .styl-price { font-size:var(--t-small);font-weight:900;color:var(--accent);margin-top:4px; }
   .styl-avail { font-size: var(--t-micro,11px);font-weight:800;padding:3px 9px;border-radius:10px;flex-shrink:0; }
   .styl-avail.open { background:var(--success-surface);color:var(--success);border:1px solid rgba(82,201,122,.3); }
-  .styl-avail.busy { background:rgba(255,100,100,.1);color:#f87171;border:1px solid rgba(255,100,100,.2); }
+  .styl-avail.busy { background:color-mix(in srgb, var(--danger) 10%, transparent);color:var(--danger);border:1px solid color-mix(in srgb, var(--danger) 20%, transparent); }
   .styl-tags { display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 12px; }
   .styl-tag { font-size: var(--t-micro,11px);font-weight:800;padding:3px 9px;border-radius:8px;background:rgba(123,92,255,.12);color:var(--accent2);border:1px solid rgba(123,92,255,.2); }
   .styl-actions { display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 16px; }
@@ -1203,7 +1203,7 @@
   .sf-card:active { transform:scale(.97); }
   .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,var(--card),var(--bg)); position:relative; }
   .sf-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:900; padding:3px 8px; border-radius:10px; }
-  .sf-badge.deal { background:#ef4444; }
+  .sf-badge.deal { background:var(--danger); }
   .sf-badge.new { background:var(--success); color:#000; }
   .sf-badge.missing { background:#f59e0b; color:#000; }
   .sf-card-body { padding:10px 12px 12px; }
@@ -1330,7 +1330,7 @@
   .mp-filters::-webkit-scrollbar { display: none; }
   .mp-filter { flex-shrink: 0; padding: 6px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: var(--t-caption); font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 44px; }
   .mp-filter.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: var(--bg, #0e0c0f); }
-  .mp-badge-active { background: var(--accent3); color: var(--fg, #f0ecf5); border-radius: var(--r-pill); font-size: var(--t-micro); font-weight: 800; padding: 3px 8px; }
+  .mp-badge-active { background: var(--accent3); color: var(--bg); border-radius: var(--r-pill); font-size: var(--t-micro); font-weight: 800; padding: 3px 8px; }
   .mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 16px; }
   .mp-item { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all .18s; }
   .mp-item:active { transform: scale(.97); }
@@ -4821,7 +4821,7 @@
       mine.unshift({id:'u'+Date.now(), name, price, condition, category: cat, seller:'@me', orig: price*2, style_tags: prefill?.style_tags || []});
       localStorage.setItem(MP_KEY, JSON.stringify(mine));
       modal.classList.remove('show');
-      logAdminEvent('sell', 'Listed: ' + name + ' ₪' + price);
+      logAdminEvent('sell', 'Listed: ' + name + ' $' + price);
       addRewardPoints(25, 'sell_listing');
       mpTab = 'sell';
       renderMarketplace();
@@ -4886,7 +4886,7 @@
             ? 'Their looks will appear in your feed again.'
             : "You won't see any more looks or content from this user in your feed, and they'll be moved to the blocked list in Public Closets."}
         </div>
-        <button class="book-submit" style="background:${already ? 'linear-gradient(135deg,var(--accent),var(--accent2))' : 'linear-gradient(135deg,#ef4444,#b91c1c)'}">${already ? 'Unblock' : 'Block user'}</button>
+        <button class="book-submit" style="background:${already ? 'linear-gradient(135deg,var(--accent),var(--accent2))' : 'var(--danger)'}">${already ? 'Unblock' : 'Block user'}</button>
         <button class="book-cancel">Cancel</button>
       </div>`;
     document.body.appendChild(overlay);
@@ -4943,7 +4943,7 @@
             <div class="pc-avatar" style="opacity:.45">${icon('blockUser',20)}</div>
             <div class="pc-info">
               <div class="pc-name">${esc(b.label)}</div>
-              <div class="pc-tag" style="color:#ef4444">Blocked — hidden from feed</div>
+              <div class="pc-tag" style="color:var(--danger)">Blocked — hidden from feed</div>
             </div>
             <button class="pc-follow-btn following" data-unblock-key="${attr(key)}" data-unblock-label="${attr(b.label)}">Unblock</button>
           </div>`).join('') : `<div style="color:var(--muted);font-size:var(--t-small);padding:8px 16px 4px">No blocked users</div>`}
@@ -6272,7 +6272,7 @@
     const cpwScore = avgCPW>0?Math.min(30,30*(50/avgCPW)):0;
     const susScore = Math.round((reuseR/100)*40+cpwScore+Math.min(30,mp.length*6));
     const susGrade = susScore>=80?'A':susScore>=60?'B':susScore>=40?'C':'D';
-    const susColor = susScore>=80?'var(--success)':susScore>=60?'#86efac':susScore>=40?'#fbbf24':'#f87171';
+    const susColor = susScore>=80?'var(--success)':susScore>=60?'var(--success)':susScore>=40?'var(--warning)':'var(--danger)';
     const catMap   = {};
     wardrobe.forEach(i=>{const c=catLabel(i.category||'other');catMap[c]=(catMap[c]||0)+1;});
     const topCats  = Object.entries(catMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
@@ -6290,7 +6290,7 @@
       <div class="adm-header"><div class="adm-title" style="display:flex;align-items:center;gap:8px">${icon('barChart',20)} Admin Dashboard</div><div class="adm-badge">INTERNAL</div></div>
       <div class="adm-kpi-grid">${kpis.map(k=>`<div class="adm-kpi"><div class="adm-kpi-icon">${icon(k.icon,20)}</div><div class="adm-kpi-num">${esc(String(k.num))}</div><div class="adm-kpi-label">${esc(k.label)}</div><div class="adm-kpi-sub">${esc(k.sub)}</div></div>`).join('')}</div>
       <div class="adm-section"><div class="adm-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('leaf',16)} Sustainability</div></div>
-      <div class="adm-grade-card"><div class="adm-grade-letter" style="color:${susColor}">${susGrade}</div><div class="adm-grade-info"><div class="adm-grade-label">${susScore}/100</div><div class="adm-grade-sub">Reuse: ${reuseR}% · Sold: ${mp.length} · CPW: ₪${Math.round(avgCPW)||'—'}</div></div></div>
+      <div class="adm-grade-card"><div class="adm-grade-letter" style="color:${susColor}">${susGrade}</div><div class="adm-grade-info"><div class="adm-grade-label">${susScore}/100</div><div class="adm-grade-sub">Reuse: ${reuseR}% · Sold: ${mp.length} · CPW: $${Math.round(avgCPW)||'—'}</div></div></div>
       <div class="adm-section"><div class="adm-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('hanger',16)} Categories</div>${topCats.length?topCats.map(([cat,cnt])=>`<div class="adm-bar-row"><div class="adm-bar-lbl">${esc(cat)}</div><div class="adm-bar-track"><div class="adm-bar-fill" style="width:${Math.round((cnt/maxCat)*100)}%"></div></div><div class="adm-bar-val">${cnt}</div></div>`).join(''):'<div style="color:var(--muted);font-size:var(--t-small)">Empty closet</div>'}</div>
       <div class="adm-section"><div class="adm-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('list',16)} Event Log</div>${recentLog.length?recentLog.map(e=>{const t=new Date(e.ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});return`<div class="adm-event-row"><div class="adm-ev-dot"></div><div class="adm-ev-text">${esc(e.label)}</div><div class="adm-ev-time">${t}</div></div>`;}).join(''):'<div style="color:var(--muted);font-size:var(--t-small);padding:12px 0">No events yet</div>'}</div>
       <div class="adm-export-row"><button class="adm-export-btn primary" onclick="adminExportCSV()" style="display:inline-flex;align-items:center;gap:6px">${icon('arrowUp',15)} Export CSV</button><button class="adm-export-btn secondary" onclick="adminClearLog()" style="display:inline-flex;align-items:center;gap:6px">${icon('alert',15)} Reset Log</button></div>
@@ -6307,7 +6307,7 @@
     const a        = document.createElement('a');
     a.href=url;a.download='awear_wardrobe.csv';a.click();
     URL.revokeObjectURL(url);
-    showToast('CSV יוצא בהצלחה');
+    showToast('CSV exported');
   }
 
   function adminClearLog() {
@@ -6344,7 +6344,7 @@
               <div class="styl-info">
                 <div class="styl-name">${esc(s.name)}</div>
                 <div class="styl-spec">${esc(s.spec)}</div>
-                <div class="styl-price" style="display:flex;align-items:center;gap:3px">${esc(s.price)} · <span style="color:#fbbf24">${icon('diamond',12)}</span> ${esc(s.rating)} · ${s.sessions} sessions</div>
+                <div class="styl-price" style="display:flex;align-items:center;gap:3px">${esc(s.price)} · <span style="color:var(--warning)">${icon('diamond',12)}</span> ${esc(s.rating)} · ${s.sessions} sessions</div>
               </div>
               <div class="styl-avail ${s.avail?'open':'busy'}">${s.avail?'Available':'Busy'}</div>
             </div>
