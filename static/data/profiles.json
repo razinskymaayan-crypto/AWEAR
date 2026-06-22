@@ -2,7 +2,7 @@
   {
     "id": "user_001",
     "username": "noa.style",
-    "display_name": "נועה לוי",
+    "display_name": "Noa Levy",
     "avatar_url": "https://randomuser.me/api/portraits/women/9.jpg",
     "bio": "vintage collector hunting through Tel Aviv's flea markets 🧥 | Jaffa-based",
     "followers": 4320,
@@ -16,7 +16,7 @@
   {
     "id": "user_002",
     "username": "maya.fits",
-    "display_name": "מאיה כהן",
+    "display_name": "Maya Cohen",
     "avatar_url": "https://randomuser.me/api/portraits/women/37.jpg",
     "bio": "sustainable fashion only 🌿 secondhand first | spreading slow fashion in IL",
     "followers": 8750,
@@ -30,7 +30,7 @@
   {
     "id": "user_003",
     "username": "shira.closet",
-    "display_name": "שירה אברהם",
+    "display_name": "Shira Avraham",
     "avatar_url": "https://randomuser.me/api/portraits/women/66.jpg",
     "bio": "capsule wardrobe obsessed | less but better | 30 pieces, infinite looks",
     "followers": 2140,
@@ -44,7 +44,7 @@
   {
     "id": "user_004",
     "username": "liron.daily",
-    "display_name": "לירון מזרחי",
+    "display_name": "Liron Mizrahi",
     "avatar_url": "https://randomuser.me/api/portraits/women/11.jpg",
     "bio": "street style documentation | TLV × Berlin | always in monochrome",
     "followers": 12600,
@@ -58,7 +58,7 @@
   {
     "id": "user_005",
     "username": "gal.wardrobe",
-    "display_name": "גל פרידמן",
+    "display_name": "Gal Friedman",
     "avatar_url": "https://randomuser.me/api/portraits/women/84.jpg",
     "bio": "thrift queen 👑 | every item under ₪50 | proving budget = style",
     "followers": 3870,
@@ -72,7 +72,7 @@
   {
     "id": "user_006",
     "username": "yoav.looks",
-    "display_name": "יואב שפירא",
+    "display_name": "Yoav Shapira",
     "avatar_url": "https://randomuser.me/api/portraits/men/37.jpg",
     "bio": "menswear & tailoring nerd | Oxford shirts forever | TLV-based stylist",
     "followers": 1980,
@@ -86,7 +86,7 @@
   {
     "id": "user_007",
     "username": "idan.street",
-    "display_name": "עידן ביטון",
+    "display_name": "Idan Biton",
     "avatar_url": "https://randomuser.me/api/portraits/men/94.jpg",
     "bio": "sneakers & streetwear | drop culture addict | Haifa boy in TLV",
     "followers": 44200,
@@ -100,7 +100,7 @@
   {
     "id": "user_008",
     "username": "tamar.edit",
-    "display_name": "תמר גולן",
+    "display_name": "Tamar Golan",
     "avatar_url": "https://randomuser.me/api/portraits/women/38.jpg",
     "bio": "fashion editor vibes on a freelancer budget | colour theory enthusiast",
     "followers": 6700,
@@ -114,7 +114,7 @@
   {
     "id": "user_009",
     "username": "lia.boho",
-    "display_name": "ליה נסים",
+    "display_name": "Lia Nissim",
     "avatar_url": "https://randomuser.me/api/portraits/women/22.jpg",
     "bio": "boho soul in the city 🌸 | linen dresses & silver rings | Eilat → TLV",
     "followers": 890,
@@ -128,7 +128,7 @@
   {
     "id": "user_010",
     "username": "aviv.sport",
-    "display_name": "אביב דהן",
+    "display_name": "Aviv Dahan",
     "avatar_url": "https://randomuser.me/api/portraits/men/12.jpg",
     "bio": "athletic meets fashion | gym-to-street | Nike collector since age 14",
     "followers": 5540,

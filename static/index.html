@@ -166,11 +166,10 @@
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ptile .pprice { color: var(--text); font-size: var(--t-body); font-weight: 900; margin-top: 5px; font-family: "Poppins", sans-serif; }
   .ptile .pacts { display: flex; gap: 6px; margin-top: 10px; }
-  .ptile .pbuy, .ptile .psell { flex: 1; border: 0; border-radius: 9px; padding: 7px 0; font-size: var(--t-micro);
+  .ptile .pbuy { flex: 1; border: 0; border-radius: 9px; padding: 7px 0; font-size: var(--t-micro);
     font-weight: 800; cursor: pointer; font-family: inherit; transition: filter .15s; }
   .ptile .pbuy { color: var(--bg); background: var(--text); }
-  .ptile .psell { color: var(--text); background: var(--surface); border: 1px solid var(--line); }
-  .ptile .pbuy:active, .ptile .psell:active { filter: brightness(.92); }
+  .ptile .pbuy:active { filter: brightness(.92); }
   .looks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
   .look-cell { position: relative; aspect-ratio: 3 / 4; border-radius: 10px; overflow: hidden;
     cursor: pointer; background: var(--surface); transition: transform .15s; }
@@ -200,38 +199,44 @@
   .listing .rm { background: none; border: 0; color: var(--muted); font-size: var(--t-h2,18px); cursor: pointer;
     font-family: inherit; padding: 0 2px; flex-shrink: 0; }
 
-  /* ---- Feed TikTok style ---- */
+  /* ---- Feed Instagram-style ---- */
   #feed.view.active { display: flex; flex-direction: column; height: 100%; }
 
   .feed-filters { display: flex; gap: 8px; padding: 10px 14px; overflow-x: auto; scrollbar-width: none;
-    flex-shrink: 0; background: rgba(250,249,247,.95); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--line); z-index: 5; }
+    flex-shrink: 0; background: var(--surface,#161318);
+    border-bottom: 1px solid var(--line,#2e2836); z-index: 5; }
   .feed-filters::-webkit-scrollbar { display: none; }
-  .ff { flex-shrink: 0; border: 1px solid var(--line); background: transparent; color: var(--muted);
-    font-family: inherit; font-size: var(--t-caption); font-weight: 700; padding: 6px 14px; border-radius: 20px;
+  .ff { flex-shrink: 0; border: 1px solid var(--line,#2e2836); background: transparent; color: var(--muted,#8a8498);
+    font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; padding: 6px 14px; border-radius: 20px;
     cursor: pointer; transition: all .15s; }
-  .ff.active { background: var(--text); border-color: var(--text); color: var(--bg); }
+  .ff.active { background: var(--fg,#f0ecf5); border-color: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); }
 
-  .feed-scroll { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+  .feed-scroll { flex: 1; overflow-y: auto; scrollbar-width: none; }
   .feed-scroll::-webkit-scrollbar { display: none; }
 
-  .feed-card-full {
-    position: relative;
-    /* 4:5 aspect ratio per spec — but in snap-scroll full-height context keep height:100% */
-    height: 100%;
-    scroll-snap-align: start;
-    overflow: hidden;
-    background: var(--bg);
-  }
-  .feed-card-full.is-mine { outline: 2px solid rgba(232,74,95,.5); outline-offset: -2px; }
+  /* Card — natural height, Instagram card style */
+  .feed-card-full { position: relative; height: auto; background: var(--bg,#0e0c0f); border-bottom: 6px solid var(--surface,#161318); }
+  .feed-card-full.is-mine { border-left: 3px solid var(--accent,#e8526a); }
 
+  /* ---- Card header (above image) ---- */
+  .fc-header { display: flex; align-items: center; gap: 10px; padding: 10px 14px 8px; }
+  .fc-hdr-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: var(--t-micro,11px); font-weight: 900; color: var(--text,#fbfbfd); overflow: hidden; background: linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a)); }
+  .fc-hdr-info { flex: 1; min-width: 0; }
+  .fc-hdr-user { font-size: var(--t-small,13px); font-weight: 900; display: flex; align-items: center; gap: 5px; color: var(--fg,#f0ecf5); }
+  .fc-hdr-time { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; margin-top: 2px; }
+
+  /* ---- Image area (4:5 portrait, image+pills+reactions inside) ---- */
+  .fc-image-wrap { position: relative; width: 100%; aspect-ratio: 4/5; overflow: hidden; background: var(--surface,#161318); }
   .fcbg { position: absolute; inset: 0; }
-  .fcbg .feed-img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    border-radius: 0; /* card is full-bleed */
+  .fcbg .feed-img, .fc-image-wrap .feed-img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 0;
   }
+
+  /* ---- Below-image area ---- */
+  .fc-below { padding: 4px 14px 14px; }
+  .fc-likes { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); margin-bottom: 5px; }
+  .fc-caption-blk { font-size: var(--t-small,13px); line-height: 1.5; margin-bottom: 6px; color: var(--fg,#f0ecf5); }
+  .fc-caption-uname { font-weight: 900; margin-right: 5px; cursor: pointer; }
 
   /* double-tap heart burst */
   .heart-burst { position: absolute; top: 46%; left: 50%; z-index: 6; font-size: var(--t-display,100px);
@@ -287,154 +292,100 @@
   /* old fc-actions hidden — replaced by fc-item-pills + fc-action-bar */
   .fc-actions { display: none; }
 
-  /* ---- Item pills (right side) ---- */
-  .fc-item-pills { position: absolute; right: 10px; top: 50%; transform: translateY(-55%);
-    display: flex; flex-direction: column; gap: 8px; z-index: 5; max-height: 62%; overflow: hidden; }
+  /* ---- Item category icons — right side vertical stack ---- */
+  .fc-item-pills {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 8px; z-index: 5;
+    align-items: center;
+  }
   .fc-pill {
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-    background: rgba(0,0,0,.58); backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,255,255,.14); border-radius: 16px;
-    padding: 10px 8px; cursor: pointer; width: 64px;
-    transition: transform var(--motion-fast, 150ms ease), background var(--motion-fast, 150ms ease);
-    font-family: inherit; color: #fff; text-align: center;
-  }
-  .fc-pill:active { transform: scale(.88); background: rgba(255,255,255,.14); }
-  .fc-pill-name {
-    font-size: var(--t-micro, 11px);
-    font-weight: 800;
-    line-height: 1.2;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 52px;
-  }
-  .fc-pill-price {
-    font-size: var(--t-micro, 11px);
-    font-weight: 900;
-    color: rgba(255,255,255,.82);
-    font-family: "Poppins", sans-serif;
-  }
-
-  /* ---- Bottom action bar ---- */
-  .fc-action-bar {
-    position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
-    display: flex; align-items: flex-end;
-    padding: 12px 8px 16px;
-    background: linear-gradient(0deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.4) 65%, transparent 100%);
-  }
-  .fca-btn {
-    flex: 1;
-    background: none; border: 0;
-    color: #fff;
-    font-family: inherit;
-    font-size: var(--t-micro, 11px);
-    font-weight: 800;
-    display: flex; flex-direction: column; align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    padding: 4px 0;
-    text-shadow: 0 1px 4px rgba(0,0,0,.7);
-    min-height: 44px;
-    transition: opacity var(--motion-fast, 150ms ease);
-  }
-  .fca-ico {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: rgba(0,0,0,.48);
-    backdrop-filter: blur(10px);
+    width: 36px; height: 36px;
     display: flex; align-items: center; justify-content: center;
-    transition: transform var(--motion-fast, 150ms ease), background var(--motion-fast, 150ms ease);
-    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(8,6,12,.70); backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255,255,255,.12); border-radius: 50%;
+    cursor: pointer; color: rgba(255,255,255,.88);
+    transition: transform 150ms ease, background 150ms ease;
     flex-shrink: 0;
   }
-  .fca-btn:active .fca-ico { transform: scale(.82); }
-  /* liked state — brand highlight fill */
-  .fca-btn.liked .fca-ico {
-    background: rgba(232,74,95,.75);
-    border-color: rgba(232,74,95,.6);
-  }
-  /* saved state — dark fill */
-  .fca-btn.saved .fca-ico {
-    background: rgba(61,56,51,.65);
-    border-color: rgba(61,56,51,.5);
-  }
-  /* buy CTA — editorial black, slightly larger */
-  .fca-btn.buy-btn .fca-ico {
-    background: rgba(20,17,15,.9);
-    border: none;
-    width: 48px; height: 48px;
-    box-shadow: 0 4px 16px rgba(20,17,15,.45);
-  }
+  .fc-pill:active { transform: scale(.88); background: rgba(255,255,255,.18); }
+  .fc-pill-name { display: none; }
+  .fc-pill-price { display: none; }
 
-  .fc-info {
-    position: absolute; bottom: 136px; left: 0; right: 68px;
-    padding: 20px 14px 0;
-    background: linear-gradient(0deg, rgba(0,0,0,.76) 0%, rgba(0,0,0,.38) 55%, transparent 100%);
-    z-index: 5;
+  /* ---- Bottom action bar ---- */
+  /* Action bar — below image, Instagram-style */
+  .fc-action-bar {
+    display: flex; align-items: center; gap: 2px;
+    padding: 8px 0 4px; background: none; position: static;
   }
-  /* Username row: avatar-like bold handle + timestamp */
-  .fc-user {
-    font-weight: 900;
-    font-size: var(--t-h3, 15px);
-    color: #fff;
-    margin-bottom: 6px;
-    display: flex; align-items: center; gap: 8px;
+  .fca-btn {
+    flex: 0 0 auto;
+    background: none; border: 0;
+    color: var(--fg,#f0ecf5);
+    font-family: inherit;
+    font-size: var(--t-small,13px);
+    font-weight: 800;
+    display: flex; align-items: center; gap: 5px;
+    cursor: pointer;
+    padding: 6px 10px 6px 0;
+    min-height: 44px;
+    transition: transform 150ms ease, color 150ms ease;
   }
-  .fc-verified { color: var(--accent); display: inline-flex; align-items: center; }
+  .fca-btn:active { transform: scale(.88); }
+  .fca-ico { display: flex; align-items: center; flex-shrink: 0; }
+  .fca-spacer { flex: 1; }
+  /* liked / saved state */
+  .fca-btn.liked { color: var(--accent,#e8526a); }
+  .fca-btn.saved { color: var(--accent2,#c4855a); }
+  .fca-btn.buy-btn { color: var(--accent3,#7a6af0); font-weight: 900; }
+
+  /* fc-info hidden (replaced by .fc-below content) */
+  .fc-info { display: none; }
+  .fc-user { display: none; }
+
+  .fc-verified { color: var(--accent,#e8526a); display: inline-flex; align-items: center; }
+  /* In-header follow button */
   .fc-follow-btn {
-    margin-left: auto; flex-shrink: 0;
-    padding: 0 14px; min-height: 44px;
-    background: rgba(255,255,255,.13);
-    backdrop-filter: blur(6px);
-    border: 1.5px solid rgba(255,255,255,.28);
-    border-radius: var(--r-pill, 999px);
-    font-size: var(--t-micro, 11px); font-weight: 900; color: #fff;
+    flex-shrink: 0;
+    padding: 0 14px; min-height: 36px;
+    background: var(--card,#1e1a22);
+    border: 1.5px solid var(--line,#2e2836);
+    border-radius: var(--r-pill,999px);
+    font-size: var(--t-micro,11px); font-weight: 900; color: var(--fg,#f0ecf5);
     font-family: inherit; cursor: pointer; transition: all .18s;
     white-space: nowrap; display: inline-flex; align-items: center;
   }
-  .fc-follow-btn.following {
-    background: transparent; border-color: rgba(255,255,255,.14); color: rgba(255,255,255,.45);
-  }
+  .fc-follow-btn.following { color: var(--muted,#8a8498); border-color: var(--line,#2e2836); }
   .fc-follow-btn:active { transform: scale(.93); }
-  .fc-caption {
-    font-size: var(--t-body, 14px);
-    color: rgba(255,255,255,.92);
-    line-height: 1.45;
-    margin-bottom: 8px;
-  }
-  .fc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-  .ftag {
-    font-size: var(--t-small, 13px);
-    color: rgba(255,255,255,.78);
-    font-weight: 700;
-  }
-  /* Match badge — stronger visual */
+
+  /* Caption — now part of fc-below */
+  .fc-caption { font-size: var(--t-small,13px); color: var(--fg,#f0ecf5); line-height: 1.5; }
+  .fc-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+  .ftag { font-size: var(--t-caption,12px); color: var(--muted,#8a8498); font-weight: 700; }
   .fc-match {
     display: inline-flex; align-items: center; gap: 5px;
-    background: rgba(232,74,95,.9);
-    color: #fff;
-    font-size: var(--t-micro, 11px);
-    font-weight: 900;
-    padding: 5px 12px;
-    border-radius: 999px;
-    backdrop-filter: blur(6px);
+    background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836);
+    color: var(--accent,#e8526a);
+    font-size: var(--t-micro,11px); font-weight: 900;
+    padding: 4px 10px; border-radius: var(--r-pill,999px);
+    margin-bottom: 6px;
   }
   .fc-earn {
-    font-size: var(--t-micro, 11px);
-    color: var(--success, #52c97a);
-    font-weight: 700;
-    margin-top: 6px;
-    display: flex; align-items: center; gap: 4px;
+    font-size: var(--t-micro,11px); color: var(--success,#52c97a); font-weight: 700;
+    margin-top: 4px; display: flex; align-items: center; gap: 4px;
   }
 
   /* ---- Reactions (Shira — fixed: absolute positioning inside overflow:hidden card) ---- */
-  .fc-reactions { position: absolute; bottom: 82px; left: 0; right: 0; z-index: 7;
-    display: flex; align-items: center; gap: 6px; padding: 6px 14px; }
-  .fc-reaction-btn { background: rgba(0,0,0,.42); border: 1px solid rgba(255,255,255,.15);
-    backdrop-filter: blur(8px); border-radius: 999px; padding: 5px 11px; font-size: var(--t-body);
+  /* Reactions — on image, bottom strip */
+  .fc-reactions { position: absolute; bottom: 10px; left: 0; right: 0; z-index: 7;
+    display: flex; align-items: center; gap: 6px; padding: 0 14px; }
+  .fc-reaction-btn { background: rgba(0,0,0,.52); border: 1px solid rgba(255,255,255,.15);
+    backdrop-filter: blur(8px); border-radius: 999px; padding: 5px 11px; font-size: var(--t-body,14px);
     cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
     transition: transform 150ms ease, background 150ms ease; }
   .fc-reaction-btn:active { transform: scale(.88); }
   .fc-reaction-btn.reacted { background: rgba(123,92,255,.52); border-color: rgba(123,92,255,.7); }
-  .fc-reaction-btn .rc-count { font-size: var(--t-micro); font-weight: 700; color: rgba(255,255,255,.8); }
-  .fc-views { margin-left: auto; font-size: var(--t-micro); font-weight: 600; color: rgba(255,255,255,.4); }
+  .fc-reaction-btn .rc-count { font-size: var(--t-micro,11px); font-weight: 700; color: rgba(255,255,255,.85); }
+  .fc-views { margin-left: auto; font-size: var(--t-micro,11px); font-weight: 600; color: rgba(255,255,255,.5); }
   /* Comments sheet — rendered OUTSIDE card, as bottom sheet */
   .comments-sheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
     background: var(--card); border-radius: 22px 22px 0 0; padding: 16px 16px 24px;
@@ -459,26 +410,31 @@
   .fc-comment-send { background: var(--accent); border: none; border-radius: 999px;
     padding: 9px 18px; font-size: var(--t-small); font-weight: 800; color: #fff;
     cursor: pointer; font-family: inherit; }
+  /* Own badge — now below image */
   .fc-own-badge {
-    position: absolute; bottom: 144px; left: 14px; z-index: 6;
     display: inline-flex; align-items: center; gap: 5px;
-    background: rgba(0,0,0,.58); backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,.15); border-radius: 999px;
-    padding: 6px 12px;
-    font-size: var(--t-micro, 11px);
-    font-weight: 800;
-    color: rgba(255,255,255,.9);
+    background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-pill,999px);
+    padding: 5px 10px;
+    font-size: var(--t-micro,11px); font-weight: 800; color: var(--fg,#f0ecf5);
+    margin-bottom: 6px;
   }
   .feed-empty {
-    height: 100%;
+    min-height: 40vh;
     display: flex; flex-direction: column; align-items: center;
     justify-content: center;
-    color: var(--muted);
+    color: var(--muted,#8a8498);
     text-align: center;
     padding: 40px;
     gap: 12px;
   }
-  .feed-empty .big { font-size: var(--t-display, 32px); margin-bottom: 4px; }
+  .feed-empty .big { font-size: var(--t-display,32px); margin-bottom: 4px; }
+
+  /* ---- Profile 3-column post grid (Instagram-style) ---- */
+  .up-grid-ig { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin: -16px; }
+  .up-grid-thumb { position: relative; aspect-ratio: 1; background: none; border: 0; padding: 0; cursor: pointer; overflow: hidden; display: block; }
+  .up-thumb-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--muted,#8a8498); background: var(--surface,#161318); }
+  .up-thumb-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .up-thumb-likes { position: absolute; bottom: 5px; left: 5px; display: flex; align-items: center; gap: 3px; font-size: var(--t-micro,11px); font-weight: 800; color: var(--text,#fbfbfd); text-shadow: 0 1px 4px rgba(0,0,0,.8); }
   .feed-empty p { font-size: var(--t-body, 14px); font-weight: 600; }
 
   /* ---- modal ---- */
@@ -1101,6 +1057,56 @@
   .pc-more-btn:active { background: var(--card); }
   .pc-row-blocked .pc-name { color: var(--muted); }
   .pc-blocked-list:empty { display: none; }
+  /* ---- User Profile view (up-) ---- */
+  #user-profile { margin: -4px -14px 0; }
+  .up-back-bar { padding: 14px 16px 0; }
+  .up-back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: 8px 14px; font-size: var(--t-small,13px); font-weight: 800; color: var(--fg,#f0ecf5); cursor: pointer; min-height: 44px; font-family: inherit; }
+  .up-back-btn .ic-svg { transform: rotate(180deg); }
+  .up-hero { padding: 16px 18px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 1px solid var(--line,#2e2836); }
+  .up-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--line,#2e2836); }
+  .up-avatar-initials { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a)); display: flex; align-items: center; justify-content: center; font-size: var(--t-h2,18px); font-weight: 900; color: var(--text,#fbfbfd); }
+  .up-name { font-size: var(--t-title,20px); font-weight: 900; margin-top: 10px; }
+  .up-handle { font-size: var(--t-caption,12px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 2px; }
+  .up-vibe { font-size: var(--t-small,13px); color: var(--muted,#8a8498); margin-top: 6px; line-height: 1.5; }
+  .up-stats { display: flex; gap: 0; margin-top: 14px; }
+  .up-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0 16px; }
+  .up-stat + .up-stat { border-left: 1px solid var(--line,#2e2836); }
+  .up-stat-n { font-size: var(--t-lead,17px); font-weight: 900; }
+  .up-stat-l { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+  .up-follow-btn { margin-top: 14px; padding: 10px 28px; background: linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a)); border: 0; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-small,13px); font-weight: 900; color: var(--text,#fbfbfd); cursor: pointer; transition: all .18s; min-height: 44px; }
+  .up-follow-btn.following { background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); color: var(--muted,#8a8498); }
+  .up-tabs { display: flex; border-bottom: 1px solid var(--line,#2e2836); position: sticky; top: 0; background: var(--bg,#0e0c0f); z-index: 2; }
+  .up-tab { flex: 1; padding: 12px 0; border: 0; background: none; color: var(--muted,#8a8498); font-family: inherit; font-size: var(--t-small,13px); font-weight: 800; cursor: pointer; border-bottom: 2px solid transparent; transition: all .18s; display: flex; align-items: center; justify-content: center; gap: 5px; min-height: 44px; }
+  .up-tab.active { color: var(--fg,#f0ecf5); border-bottom-color: var(--accent,#e8526a); }
+  .up-content { padding: 14px 16px 96px; }
+  .up-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .up-post-card { background: var(--card,#1e1a22); border-radius: var(--r-md,14px); overflow: hidden; border: 1px solid var(--line,#2e2836); cursor: pointer; transition: transform .15s; }
+  .up-post-card:active { transform: scale(.97); }
+  .up-post-cover { height: 160px; display: flex; align-items: center; justify-content: center; color: var(--muted,#8a8498); overflow: hidden; }
+  .up-post-info { padding: 8px 10px 10px; }
+  .up-post-caption { font-size: var(--t-caption,12px); font-weight: 700; line-height: 1.4; }
+  .up-post-likes { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 3px; display: flex; align-items: center; gap: 3px; }
+  .up-wardrobe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .up-item-card { background: var(--card,#1e1a22); border-radius: var(--r-md,14px); padding: 12px; border: 1px solid var(--line,#2e2836); cursor: pointer; transition: transform .15s; }
+  .up-item-card:active { transform: scale(.97); }
+  .up-item-img { width: 100%; height: 80px; border-radius: var(--r-sm,10px); background: var(--bg,#0e0c0f); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: var(--muted,#8a8498); overflow: hidden; }
+  .up-item-img .pi-img, .up-store-img .pi-img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--r-sm,10px); display: block; }
+  .up-sheet-pi { width: 100%; height: 100%; object-fit: cover; border-radius: var(--r-lg,20px); display: block; }
+  .up-item-name { font-size: var(--t-caption,12px); font-weight: 800; line-height: 1.3; }
+  .up-item-cat { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 2px; text-transform: capitalize; }
+  .up-item-price { font-size: var(--t-small,13px); font-weight: 900; color: var(--accent2,#c4855a); margin-top: 5px; }
+  .up-compat-badge { display: inline-flex; align-items: center; gap: 3px; font-size: var(--t-micro,11px); font-weight: 800; margin-top: 5px; padding: 2px 7px; border-radius: var(--r-pill,999px); background: var(--bg,#0e0c0f); }
+  .up-store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .up-store-item { background: var(--card,#1e1a22); border-radius: var(--r-md,14px); padding: 12px; border: 1px solid var(--line,#2e2836); cursor: pointer; transition: transform .15s; }
+  .up-store-item:active { transform: scale(.97); }
+  .up-store-img { width: 100%; height: 88px; border-radius: var(--r-sm,10px); background: var(--bg,#0e0c0f); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: var(--muted,#8a8498); overflow: hidden; }
+  .up-store-img .pi-img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--r-sm,10px); display: block; }
+  .up-store-name { font-size: var(--t-caption,12px); font-weight: 800; }
+  .up-store-cat { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 2px; text-transform: capitalize; }
+  .up-store-price { font-size: var(--t-small,13px); font-weight: 900; color: var(--accent,#e8526a); margin-top: 5px; }
+  .up-empty { text-align: center; padding: 40px 20px; color: var(--muted,#8a8498); font-size: var(--t-small,13px); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .up-privacy-note { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); padding: 7px 12px; background: var(--surface,#161318); border-radius: var(--r-sm,10px); margin-bottom: 12px; display: flex; align-items: center; gap: 5px; border: 1px solid var(--line,#2e2836); }
+  .fc-username-tap { cursor: pointer; background: none; border: 0; color: inherit; font: inherit; padding: 0; font-weight: 900; }
 
   /* ---- Seasonal Report ---- */
   .sr-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
@@ -1424,6 +1430,34 @@
   .mp-size-row::-webkit-scrollbar { display: none; }
   .mp-size-chip { flex-shrink: 0; padding: 6px 14px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 700; border: 1.5px solid var(--line,#2e2836); background: none; color: var(--muted,#8a8498); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 36px; display: inline-flex; align-items: center; }
   .mp-size-chip.active { background: var(--accent2,#c4855a); border-color: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
+
+  /* ---- My Store ---- */
+  .ms-banner { margin: 0 16px 14px; border-radius: var(--r-lg,20px); padding: 18px 18px 16px; position: relative; overflow: hidden; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); }
+  .ms-banner-circle { position: absolute; border-radius: 50%; background: rgba(255,255,255,.07); }
+  .ms-avatar { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.2); border: 2px solid rgba(255,255,255,.35); display: flex; align-items: center; justify-content: center; font-size: var(--t-h3,15px); font-weight: 900; color: #fff; flex-shrink: 0; letter-spacing: .5px; }
+  .ms-store-name { font-size: var(--t-lead,17px); font-weight: 900; color: #fff; line-height: 1.1; }
+  .ms-handle { font-size: var(--t-caption,12px); color: rgba(255,255,255,.7); font-weight: 600; margin-top: 2px; }
+  .ms-rating { display: flex; align-items: center; gap: 3px; margin-top: 5px; font-size: var(--t-micro,11px); color: rgba(255,255,255,.7); font-weight: 700; }
+  .ms-share-btn { background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.3); border-radius: var(--r-md,14px); padding: 7px 13px; color: #fff; font-family: inherit; font-size: var(--t-micro,11px); font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; min-height: 44px; flex-shrink: 0; }
+  .ms-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; padding: 0 16px 14px; }
+  .ms-stat { background: var(--card,#1e1a22); border-radius: var(--r-md,14px); padding: 12px 8px; text-align: center; border: 1px solid var(--line,#2e2836); }
+  .ms-stat-val { font-size: var(--t-h3,15px); font-weight: 900; line-height: 1.1; }
+  .ms-stat-label { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 3px; }
+  .ms-actions { padding: 0 16px 16px; display: flex; gap: 8px; }
+  .ms-list-btn { flex: 1; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); padding: 13px 16px; font-family: inherit; font-size: var(--t-small,13px); font-weight: 900; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; transition: opacity .15s; }
+  .ms-list-btn:active { opacity: .85; }
+  .ms-browse-btn { background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: 13px 16px; font-family: inherit; font-size: var(--t-small,13px); font-weight: 700; color: var(--muted,#8a8498); cursor: pointer; display: flex; align-items: center; gap: 7px; min-height: 44px; }
+  .ms-section-hd { padding: 0 16px 10px; display: flex; align-items: center; justify-content: space-between; }
+  .ms-section-title { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); }
+  .ms-section-sub { font-size: var(--t-micro,11px); color: var(--accent3,#7a6af0); font-weight: 700; }
+  .ms-empty { text-align: center; padding: 28px 20px 16px; }
+  .ms-empty-icon { width: 60px; height: 60px; border-radius: 50%; background: color-mix(in srgb, var(--accent,#e8526a) 12%, transparent); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--accent,#e8526a); }
+  .ms-suggest-hd { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .ms-suggest-sub { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; }
+  .ms-suggest-card { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--card,#1e1a22); border-radius: var(--r-md,14px); margin-bottom: 8px; cursor: pointer; border: 1px solid var(--line,#2e2836); transition: background .15s; }
+  .ms-suggest-card:active { background: var(--card-hover,#262030); }
+  .ms-suggest-img { width: 48px; height: 48px; border-radius: var(--r-sm,10px); overflow: hidden; flex-shrink: 0; }
+  .ms-suggest-sell { font-size: var(--t-micro,11px); font-weight: 800; color: var(--accent,#e8526a); background: color-mix(in srgb, var(--accent,#e8526a) 12%, transparent); padding: 6px 12px; border-radius: var(--r-pill,999px); white-space: nowrap; flex-shrink: 0; border: 1px solid color-mix(in srgb, var(--accent,#e8526a) 20%, transparent); }
 
   /* ---- Marketplace CO2 Badge (P1-B) ---- */
   .mp-co2-badge { font-size: var(--t-micro,11px); font-weight: 700; color: var(--success,#52c97a); margin-top: 3px; display: inline-flex; align-items: center; gap: 3px; }
@@ -2285,6 +2319,11 @@
       </div>
       <div class="feed-scroll" id="feed-scroll"></div>
     </section>
+
+    <!-- USER PROFILE -->
+    <section id="user-profile" class="view">
+      <div id="up-wrap"></div>
+    </section>
   </main>
 
   <nav>
@@ -2319,10 +2358,14 @@
       <div class="edit-field"><label>Username</label><input id="edit-handle" type="text" placeholder="handle" maxlength="20"></div>
       <div class="edit-field"><label>City</label><input id="edit-city" type="text" placeholder="Tel Aviv" maxlength="20"></div>
       <div class="edit-field"><label>Bio</label><textarea id="edit-bio" placeholder="Write something about your style..."></textarea></div>
+      <div class="edit-field" style="flex-direction:row;align-items:center;justify-content:space-between;gap:12px">
+        <label style="flex:1;margin-bottom:0">Show item prices on my profile</label>
+        <input type="checkbox" id="edit-show-prices" style="width:20px;height:20px;accent-color:var(--accent,#e8526a);cursor:pointer;flex-shrink:0">
+      </div>
       <div class="lang-switch-row">
         <span class="lang-switch-icon" id="lang-switch-icon"></span>
         <div class="lang-switch-opts">
-          <button type="button" class="lang-opt-btn" data-lang-opt="he" id="lang-opt-he">עברית</button>
+          <button type="button" class="lang-opt-btn" data-lang-opt="he" id="lang-opt-he">Hebrew</button>
           <button type="button" class="lang-opt-btn" data-lang-opt="en" id="lang-opt-en">English</button>
         </div>
       </div>
@@ -2478,6 +2521,12 @@
     sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
     filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',
     star:'<path d="M12 3l2.4 5.3 5.6.8-4 4.2 1 5.7L12 16l-5 2.9 1-5.7-4-4.2 5.6-.8L12 3Z" stroke-linejoin="round"/>',
+    pants:'<path d="M5 4h14v7l-3.5 9H12l-.5-5.5-.5 5.5H7.5L4 11V4Z" stroke-linejoin="round"/>',
+    shoe:'<path d="M2 18h20v-1a1 1 0 0 0-1-1h-4l-1.5-4.5H9.5L8 14.5H4a2 2 0 0 0-2 2v1.5Z" stroke-linejoin="round"/>',
+    dress:'<path d="M9 3h6l2.5 6.5L15 21H9L6.5 9.5 9 3Z" stroke-linejoin="round"/><path d="M6.5 9.5h11"/>',
+    cap:'<path d="M5 15a7 5 0 0 1 14 0"/><rect x="4" y="15" width="16" height="3" rx="1.5"/><path d="M20 16.5h2.5"/>',
+    skirt:'<path d="M8 3h8v4L20 21H4L8 7V3Z" stroke-linejoin="round"/><path d="M8 7h8"/>',
+    watch:'<rect x="8.5" y="7" width="7" height="10" rx="2.5"/><path d="M11 7V5h2v2M11 17v2h2v-2"/><path d="M8.5 12h7"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -2486,8 +2535,18 @@
       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">${p}</svg></span>`;
   }
   // category -> garment icon (used as image fallback + listing thumbs)
-  const CAT_ICON = { top:'shirt', dress:'hanger', bottoms:'shirt', outerwear:'hanger',
-                     shoes:'bag', bag:'bag', accessory:'sparkle', jewelry:'diamond', hat:'tag' };
+  const CAT_ICON = {
+    top:'shirt', shirt:'shirt', tshirt:'shirt', blouse:'shirt', tank:'shirt', crop:'shirt',
+    bottoms:'pants', pants:'pants', jeans:'pants', trousers:'pants', shorts:'pants', leggings:'pants',
+    skirt:'skirt',
+    dress:'dress', gown:'dress', jumpsuit:'dress',
+    outerwear:'hoodie', jacket:'hoodie', coat:'hoodie', hoodie:'hoodie', blazer:'hoodie', cardigan:'hoodie', vest:'hoodie',
+    shoes:'shoe', sneakers:'shoe', boots:'shoe', heels:'shoe', sandals:'shoe', footwear:'shoe', loafers:'shoe',
+    bag:'bag', handbag:'bag', purse:'bag', backpack:'bag', tote:'bag', clutch:'bag',
+    hat:'cap', cap:'cap', beanie:'cap', headwear:'cap',
+    accessory:'sparkle', accessories:'sparkle', scarf:'sparkle', belt:'sparkle', sunglasses:'sparkle', gloves:'sparkle',
+    jewelry:'diamond', necklace:'diamond', earrings:'diamond', bracelet:'diamond', ring:'diamond', watch:'watch',
+  };
   function catIcon(cat){ return CAT_ICON[(cat||'').toLowerCase()] || 'hanger'; }
   const CAT_LABEL = { top:'Top', dress:'Dress', bottoms:'Bottoms', outerwear:'Outerwear',
                       shoes:'Shoes', bag:'Bag', accessory:'Accessory', jewelry:'Jewelry', hat:'Hat' };
@@ -2573,6 +2632,7 @@
     if (name === 'stylists')      renderStylistMarketplace();
     if (name === 'wishlist')  renderWishlist();
     if (name === 'chat')      initChat();
+    if (name === 'user-profile') renderUserProfile();
   }
 
   document.getElementById('capture-btn').addEventListener('click', () => {
@@ -2953,19 +3013,12 @@
     openSheetSingle(synth, earnAmt, influencerUser);
   }
 
-  function sellFlow(label, price, cat) {
-    modal.classList.add('show');
-    modalCard.innerHTML = '<div class="spinner"></div><h3>Listing ' + esc(label) + ' for sale…</h3><p>AI is pricing it based on secondhand market demand</p>';
-    setTimeout(() => {
-      addListing({ name:label, price:Number(price)||0, category:cat||'' });
-      modalCard.innerHTML = '<div class="big" style="display:flex;justify-content:center;color:var(--success,#52c97a)">' + icon('cash',48) + '</div><h3>Listed for sale!</h3>' +
-        '<p>' + esc(label) + ' is now on your For Sale shelf<br/>Suggested price: $' + esc(price) + ' · AWEAR takes 15%</p>' +
-        '<button class="close">View profile</button>';
-      modalCard.querySelector('.close').addEventListener('click', () => { modal.classList.remove('show'); showView('closet'); });
-    }, 1300);
-  }
-
   document.querySelector('main').addEventListener('click', e => {
+    const profileTap = e.target.closest('[data-open-profile]');
+    if (profileTap && profileTap.dataset.openProfile) {
+      openUserProfile(profileTap.dataset.openProfile);
+      return;
+    }
     const buyBtn = e.target.closest('[data-buy]');
     if (buyBtn && !buyBtn.classList.contains('buy-action')) {
       // "Shop the look" button (shop-look) — try to use wardrobe items for look sheet
@@ -2992,8 +3045,6 @@
       }
       return;
     }
-    const sellBtn = e.target.closest('[data-sell]');
-    if (sellBtn) { sellFlow(sellBtn.dataset.label, sellBtn.dataset.price, sellBtn.dataset.cat); return; }
   });
 
   // ".pbuy" buttons inside .ptile tiles (closet shelves) — intercept before main listener
@@ -3071,7 +3122,6 @@
     <div class="pprice">$${esc(it.price_estimate_usd)}</div>
     <div class="pacts">
       <button class="pbuy" data-buy="1" data-label="${attr(it.name)}" data-price="${attr(it.price_estimate_usd)}" onclick="event.stopPropagation()">Shop</button>
-      <button class="psell" data-sell="1" data-cat="${attr(it.category)}" data-label="${attr(it.name)}" data-price="${Math.round((it.price_estimate_usd||0)*.5)}" onclick="event.stopPropagation()">Sell</button>
     </div></div>`;}
 
   function openWardrobeItemDetail(name) {
@@ -3094,11 +3144,11 @@
         <div style="font-size: var(--t-h1,22px);font-weight:900;text-align:center;margin-top:12px;color:var(--accent)">$${it.price_estimate_usd || '—'}</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:14px 20px 20px">
-        <button onclick="openAbigailWithItem('${attr(it.name)}')" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;font-family:inherit;font-size:var(--t-body);font-weight:900;color:#fff;cursor:pointer">Ask Abigail what to wear</button>
+        <button onclick="openAbigailWithItem('${attr(it.name)}')" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;font-family:inherit;font-size:var(--t-body);font-weight:900;color:#fff;cursor:pointer;min-height:44px">Ask Abigail what to wear</button>
+        <button onclick="openSellFormWithItem('${attr(JSON.stringify(it))}')" style="width:100%;padding:13px;background:var(--card);border:1.5px solid var(--accent,#e8526a);border-radius:14px;font-family:inherit;font-size:var(--t-body);font-weight:800;color:var(--accent,#e8526a);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px">${icon('tag',16)} List for sale in My Store</button>
         <div style="display:flex;gap:8px">
-          <button onclick="openSellFormWithItem('${attr(JSON.stringify(it))}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Sell</button>
-          <button onclick="addToWishlistFromSeed('${attr(it.name)}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Wishlist</button>
-          <button onclick="document.getElementById('purchase-modal').classList.remove('show')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Close</button>
+          <button onclick="addToWishlistFromSeed('${attr(it.name)}')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:var(--t-small);font-weight:700;cursor:pointer;min-height:44px">Wishlist</button>
+          <button onclick="document.getElementById('purchase-modal').classList.remove('show')" style="flex:1;padding:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-family:inherit;font-size:var(--t-small);font-weight:700;cursor:pointer;min-height:44px">Close</button>
         </div>
       </div>`;
     modal.classList.add('show');
@@ -3148,7 +3198,7 @@
         <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">AI-priced based on resale market demand</div></div>
         <div class="ask"><div class="p">$${esc(it.price)}</div><div class="live">Active</div></div>
         <button class="rm" data-rm="${attr(it.ts)}" title="Remove">×</button></div>`).join('')
-      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--success,#52c97a)">${icon('cash',44)}</div>No items listed for sale yet.<br/>Open your closet and tap "Sell" on any item.</div>`;
+      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--success,#52c97a)">${icon('cash',44)}</div>No items listed for sale yet.<br/>Open an item in your closet and tap "List for sale".</div>`;
     return earnCard+listings;
   }
 
@@ -3397,65 +3447,90 @@
     const liked=LIKES.has(post.id),saved=SAVED.has(post.id);
     const bgImg=post.img?`<img class="feed-img" src="${attr(post.img)}" alt="" onerror="this.style.display='none'">` :'';
     const tagPills=tags.map(t=>`<span class="ftag">#${esc(t)}</span>`).join('');
-    const mineBadge=isMine?`<span class="mine-tag" style="display:inline-flex;align-items:center;gap:4px">${icon('sparkle',13)} You</span>`:`<span></span>`;
-    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn" style="display:flex;align-items:center;gap:5px">${icon('diamond',13)} @${esc(post.user)} earns $${esc(post.earn)} on every purchase</div>`:'';
+    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn">${icon('diamond',13)} @${esc(post.user)} earns $${esc(post.earn)} on every purchase</div>`:'';
     const lbl=post.name?post.name+"'s look":(post.caption||'the look');
-    // % of this look already in wardrobe
     const _ownWardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
     const _ownScore=_ownWardrobe.length?calcCompatScore({style_tags:tags},_ownWardrobe):{pct:0,matches:[]};
     const ownBadge=_ownWardrobe.length?`<div class="fc-own-badge">${icon('hanger',12)} ${esc(_ownScore.pct)}% already in your closet</div>`:'';
 
-    // Item pills — right side, vertical stack
+    // Avatar — use seed user avatar or initials
+    const seedUser=!isMine?SEED_USERS.find(u=>u.id===post.userId):null;
+    const displayName=isMine?'You':(post.name||post.user||'U');
+    const initials=displayName.split(/[ .@]/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';
+    const avatarHtml=seedUser?.avatar
+      ?`<img src="${attr(seedUser.avatar)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      :esc(initials);
+    const timeHint=post.trend>=92?'45m':post.trend>=85?'2h':post.trend>=75?'5h':'1d';
+
+    // Item pills (right side on image)
     const pillItems=(post.items||[]).slice(0,4);
     const pillsHTML=pillItems.map((it,i)=>`
       <button class="fc-pill" data-shop="${attr(post.id||'')}" data-item="${i}" aria-label="${attr(it.name)}">
-        <span class="ic-svg" style="width:22px;height:22px" aria-hidden="true">
+        <span class="ic-svg" style="width:17px;height:17px" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">${ICONS[catIcon(it.category)]||ICONS.hanger}</svg>
         </span>
-        <span class="fc-pill-name">${esc((it.name||'').split(' ').slice(0,2).join(' '))}</span>
-        ${(it.price_estimate_usd||it.price)?`<span class="fc-pill-price">$${esc(it.price_estimate_usd||it.price)}</span>`:''}
       </button>`).join('');
 
-    const moreBtn = isMine ? '' : `<button class="fc-more-btn" data-more-user="${attr(post.user||'')}" aria-label="More options">${icon('more',18)}</button>`;
+    const followKey=post.userId||post.user||'';
+    const isFollowing=followKey&&followState[followKey];
+    const likeCount=fmtN((post.likes||0)+(liked?1:0));
+
     return `<div class="feed-card-full${isMine?' is-mine':''}" data-id="${attr(post.id||'')}">
-      <div class="fcbg" style="background:${attr(post.grad||'linear-gradient(160deg,#a18cd1,#fbc2eb)')}">${bgImg}</div>
-      <div class="heart-burst">${icon('heartFill',100)}</div>
-      <div class="fc-top">${mineBadge}<div style="display:flex;align-items:center;gap:8px"><span class="trend-badge" style="display:inline-flex;align-items:center;gap:5px">${icon('flame',14)} ${esc(post.trend||80)}</span>${moreBtn}</div></div>
 
-      ${pillsHTML?`<div class="fc-item-pills">${pillsHTML}</div>`:''}
+      <div class="fc-header">
+        <div class="fc-hdr-avatar">${avatarHtml}</div>
+        <div class="fc-hdr-info">
+          <div class="fc-hdr-user">
+            ${!isMine
+              ?`<button class="fc-username-tap" data-open-profile="${attr(post.userId||post.user||'')}">@${esc(post.user||'user')}</button>${post.verified?`<span class="fc-verified">${icon('checkCircle',12)}</span>`:''}`
+              :`<span>@you</span>${icon('sparkle',12)}`}
+          </div>
+          <div class="fc-hdr-time">${timeHint}</div>
+        </div>
+        ${(!isMine&&followKey)
+          ?`<button class="fc-follow-btn${isFollowing?' following':''}" data-follow-uid="${attr(followKey)}">${isFollowing?'Following':'+ Follow'}</button>`
+          :isMine?`<span class="mine-tag" style="display:inline-flex;align-items:center;gap:4px;font-size:var(--t-micro,11px)">${icon('sparkle',12)} Your look</span>`:''}
+        ${!isMine?`<button class="fc-more-btn" data-more-user="${attr(post.user||'')}" aria-label="More options">${icon('more',18)}</button>`:''}
+      </div>
 
-      <div class="fc-info">
-        <div class="fc-user">@${esc(post.user||'me')}${post.verified?`<span class="fc-verified">${icon('checkCircle',14)}</span>`:''}${(!isMine&&post.userId)?`<button class="fc-follow-btn${followState[post.userId]?' following':''}" data-follow-uid="${attr(post.userId)}">${followState[post.userId]?'Following':'+ Follow'}</button>`:''}</div>
-        <div class="fc-caption">${esc(post.caption||'')}</div>
+      <div class="fc-image-wrap">
+        <div class="fcbg" style="background:${attr(post.grad||'linear-gradient(160deg,#a18cd1,#fbc2eb)')}">${bgImg}</div>
+        <div class="heart-burst">${icon('heartFill',100)}</div>
+        ${pillsHTML?`<div class="fc-item-pills">${pillsHTML}</div>`:''}
+        <span class="trend-badge" style="position:absolute;top:10px;left:14px;z-index:5;display:inline-flex;align-items:center;gap:4px">${icon('flame',12)} ${esc(post.trend||80)}</span>
+      </div>
+
+      <div class="fc-below">
+        <div class="fc-action-bar">
+          <button class="fca-btn${liked?' liked':''}" data-action="like" data-id="${attr(post.id||'')}">
+            <div class="fca-ico">${icon(liked?'heartFill':'heart',26)}</div>
+          </button>
+          <button class="fca-btn${saved?' saved':''}" data-action="save" data-id="${attr(post.id||'')}">
+            <div class="fca-ico">${icon(saved?'bookmarkFill':'bookmark',24)}</div>
+          </button>
+          <button class="fca-btn" data-action="share">
+            <div class="fca-ico">${icon('share',24)}</div>
+          </button>
+          <div class="fca-spacer"></div>
+          ${post.look_total_usd?`<button class="fca-btn buy-btn buy-action"
+              data-label="${attr(lbl)}" data-price="${attr(post.look_total_usd||0)}"
+              data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
+            <div class="fca-ico">${icon('bag',24)}</div>
+            <span>$${esc(String(post.look_total_usd))}</span>
+          </button>`:''}
+          <button class="fca-btn" data-action="report" data-id="${attr(post.id||'')}" aria-label="Report" style="color:var(--muted,#8a8498)">
+            <div class="fca-ico">${icon('flag',20)}</div>
+          </button>
+        </div>
+        <div class="fc-likes">${likeCount} likes</div>
+        <div class="fc-caption-blk">
+          ${!isMine?`<button class="fc-username-tap fc-caption-uname" data-open-profile="${attr(post.userId||post.user||'')}">@${esc(post.user||'user')}</button>`:`<span class="fc-caption-uname">@you</span>`}
+          <span class="fc-caption">${esc(post.caption||'')}</span>
+        </div>
         <div class="fc-tags">${tagPills}</div>
-        <span class="fc-match">${matchPercent(mtags)}% match to my closet</span>
-        ${earnLine}
+        ${_ownWardrobe.length?`<span class="fc-match">${icon('hanger',11)} ${_ownScore.pct}% match to your closet</span>`:''}
+        ${ownBadge}${earnLine}
       </div>
-
-      <div class="fc-action-bar">
-        <button class="fca-btn${liked?' liked':''}" data-action="like" data-id="${attr(post.id||'')}">
-          <div class="fca-ico">${icon(liked?'heartFill':'heart',22)}</div>
-          <span>${fmtN((post.likes||0)+(liked?1:0))}</span>
-        </button>
-        <button class="fca-btn${saved?' saved':''}" data-action="save" data-id="${attr(post.id||'')}">
-          <div class="fca-ico">${icon(saved?'bookmarkFill':'bookmark',21)}</div>
-          <span>${saved?'Saved':'Save'}</span>
-        </button>
-        <button class="fca-btn" data-action="share">
-          <div class="fca-ico">${icon('share',21)}</div><span>Share</span>
-        </button>
-        <button class="fca-btn" data-action="report" data-id="${attr(post.id||'')}" aria-label="Report post">
-          <div class="fca-ico">${icon('flag',21)}</div><span>Report</span>
-        </button>
-        <button class="fca-btn buy-btn buy-action"
-            data-label="${attr(lbl)}" data-price="${attr(post.look_total_usd||0)}"
-            data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
-          <div class="fca-ico">${icon('bag',22)}</div>
-          <span>$${esc(post.look_total_usd||0)}</span>
-        </button>
-      </div>
-      ${ownBadge}
-      ${reactionsHTML(post.id||post.ts||'p'+Math.random())}
     </div>`;
   }
 
@@ -3566,11 +3641,14 @@
       const on=!LIKES.has(id);
       if(on)LIKES.add(id);else LIKES.delete(id);
       saveSet('awear_likes',LIKES);
-      const ico=action.querySelector('.fca-ico'),cnt=action.querySelector('span');
+      const ico=action.querySelector('.fca-ico');
       const post=SEED_POSTS.find(p=>p.id===id)||{likes:0};
-      ico.innerHTML=icon(on?'heartFill':'heart',22);
+      const newCount=fmtN((post.likes||0)+(on?1:0));
+      ico.innerHTML=icon(on?'heartFill':'heart',26);
       action.classList.toggle('liked',on);
-      if(cnt)cnt.textContent=fmtN((post.likes||0)+(on?1:0));
+      const card=action.closest('.feed-card-full');
+      const likesEl=card?.querySelector('.fc-likes');
+      if(likesEl)likesEl.textContent=newCount+' likes';
       if(on){ico.style.transform='scale(1.35)';setTimeout(()=>ico.style.transform='',200);}
       togglePostLike(id,action);
     }
@@ -3579,7 +3657,7 @@
       if(on)SAVED.add(id);else SAVED.delete(id);
       saveSet('awear_saved',SAVED);
       const ico=action.querySelector('.fca-ico'),cnt=action.querySelector('span');
-      ico.innerHTML=icon(on?'bookmarkFill':'bookmark',21);
+      ico.innerHTML=icon(on?'bookmarkFill':'bookmark',24);
       action.classList.toggle('saved',on);
       if(cnt)cnt.textContent=on?'Saved':'Save';
       showToast(on?'Saved to your wishlist':'Removed from saved');
@@ -4267,8 +4345,8 @@
         <div class="sr-dead-zone">
           <div class="sr-dead-title">${icon('alertTriangle',16)} Unworn this season</div>
           <div class="sr-dead-value">${deadItems} items sitting idle · estimated $${deadValue} value</div>
-          <button class="sr-dead-cta" onclick="showView('marketplace')" aria-label="List unworn items for sale">
-            ${icon('tag',16)} List them for sale
+          <button class="sr-dead-cta" onclick="mpTab='sell';showView('marketplace')" aria-label="List unworn items for sale">
+            ${icon('tag',16)} List in My Store
           </button>
         </div>
       </div>
@@ -4468,7 +4546,7 @@
         <div class="an-alert-sub">Worth ~$${deadValue} sitting there</div>
         <div class="an-alert-actions">
           <button class="an-alert-btn primary" onclick="showToast('Challenge accepted — pick one this week!')">Wear one this week</button>
-          <button class="an-alert-btn" onclick="showView('marketplace')">List for sale</button>
+          <button class="an-alert-btn" onclick="mpTab='sell';showView('marketplace')">List in My Store</button>
         </div>
       </div>
 
@@ -5237,12 +5315,11 @@
     el.innerHTML = `
       <div class="mp-header">
         <div class="mp-title">${mpCondFilter === 'preloved' ? `${icon('heart',20)} Community Closets` : `${icon('storefront',20)} Shop New Arrivals`}</div>
-        ${mpTab === 'shop' ? `<button class="mp-sell-btn" id="mp-sell-open">+ Sell</button>` : ''}
       </div>
       <div class="mp-segment">
         <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='new'?' active-shop':''}" data-tab="shop" data-cond="new">${icon('shoppingBag',13)} Shop</button>
         <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='preloved'?' active-community':''}" data-tab="shop" data-cond="preloved">${icon('heart',13)} Community</button>
-        <button class="mp-seg-btn${mpTab==='sell'?' active-sell':''}" data-tab="sell">My&nbsp;Listings</button>
+        <button class="mp-seg-btn${mpTab==='sell'?' active-sell':''}" data-tab="sell">${icon('storefront',13)} My&nbsp;Store</button>
       </div>
       ${mpTab === 'shop' ? `
       <div class="mp-search-bar">
@@ -5362,7 +5439,8 @@
     });
 
     // Sell button
-    el.querySelector('#mp-sell-open')?.addEventListener('click', openSellForm);
+    el.querySelector('#ms-list-btn')?.addEventListener('click', openSellForm);
+    el.querySelector('#ms-share-btn')?.addEventListener('click', () => showToast('Store link copied!'));
 
     // AI assist bar
     el.querySelector('#mp-assist-submit')?.addEventListener('click', runMPAssist);
@@ -5895,41 +5973,109 @@
   }
 
   function renderMySells() {
+    const profile = loadProfile();
     const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
-    if (!mine.length) {
-      const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
-      const suggestions = wardrobe.slice(0, 3);
-      return `<div style="text-align:center;padding:32px 20px 16px;color:var(--muted)">
-        <div style="color:var(--muted);margin-bottom:12px">${icon('box', 36)}</div>
-        <div style="font-size:var(--t-body);font-weight:700;color:var(--fg)">You haven't sold any items yet</div>
-        <div style="font-size:var(--t-caption);margin-top:6px;opacity:.7">Tap "+ Sell an item" to get started</div>
-      </div>
-      ${suggestions.length ? `<div style="padding:0 16px 8px"><div style="font-size:var(--t-caption);font-weight:700;color:var(--muted);margin-bottom:8px">From your closet — worth selling?</div>
-        ${suggestions.map(item => `<div class="mp-suggest-card" data-item='${attr(JSON.stringify(item))}' style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer">
-          <div style="width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0">${productImage(item)}</div>
-          <div style="flex:1"><div style="font-size:var(--t-small);font-weight:700">${esc(item.name||'Item')}</div><div style="font-size:var(--t-micro);color:var(--muted)">Suggested price: $${Math.round((item.price_estimate_usd||200)*0.5)}</div></div>
-          <div style="font-size:var(--t-micro);font-weight:700;color:var(--accent);background:color-mix(in srgb, var(--accent3) 12%, transparent);padding:4px 10px;border-radius:20px">Sell</div>
-        </div>`).join('')}</div>` : ''}`;
-    }
-    const totalEarnings = mine.reduce((s,i) => s + (Number(i.price)||0), 0);
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+
+    const storeName = profile.name || 'My Store';
+    const handle = profile.handle || 'me';
+    const initials = storeName.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'MS';
+    const totalValue = mine.reduce((s,i) => s + (Number(i.price)||0), 0);
+    const soldCount = mine.length > 0 ? Math.floor(mine.length * 0.6) + 2 : 0;
+    const storeViews = mine.length > 0 ? mine.length * 47 + 83 : 0;
+
+    const listedIds = new Set(mine.map(i => i.id));
+    const suggestions = wardrobe
+      .filter(i => !listedIds.has(i.id) && !(i.wear_count > 0))
+      .slice(0, 3);
+
+    const starsHtml = [1,2,3,4,5].map((_,i) =>
+      `<span style="color:${i<4?'rgba(255,255,255,.95)':'rgba(255,255,255,.3)'};line-height:1">★</span>`
+    ).join('');
+
     return `
-      <div style="padding:14px 16px 0">
-        <div style="background:var(--grad-success);border-radius:14px;padding:14px 16px;color:var(--bg);margin-bottom:14px">
-          <div style="font-size:var(--t-micro);font-weight:700;opacity:.7">Earnings potential</div>
-          <div style="font-size: var(--t-h1,24px);font-weight:900">$${totalEarnings.toLocaleString()}</div>
-          <div style="font-size:var(--t-micro);font-weight:600;opacity:.8">${mine.length} active listings</div>
+      <div class="ms-banner">
+        <div class="ms-banner-circle" style="width:100px;height:100px;top:-20px;right:-20px"></div>
+        <div class="ms-banner-circle" style="width:80px;height:80px;bottom:-30px;left:40px"></div>
+        <div style="display:flex;align-items:center;gap:14px;position:relative">
+          <div class="ms-avatar">${esc(initials)}</div>
+          <div style="flex:1;min-width:0">
+            <div class="ms-store-name">${esc(storeName)}</div>
+            <div class="ms-handle">@${esc(handle)}</div>
+            <div class="ms-rating">${starsHtml}<span style="margin-left:2px">4.8 · ${soldCount} sold</span></div>
+          </div>
+          <button class="ms-share-btn" id="ms-share-btn">${icon('share',14)} Share</button>
         </div>
       </div>
-      <div class="mp-grid">${mine.map(item => `
-      <div class="mp-item" style="position:relative">
-        <div class="mp-item-img">${productImage(item)}<span class="mp-badge-active">Active</span></div>
-        <div class="mp-item-info">
-          <div class="mp-item-name">${esc(item.name)}</div>
-          <div class="mp-item-price">$${item.price}</div>
-          <div class="mp-item-seller" style="color:var(--success);display:flex;align-items:center;gap:4px">${icon('check',12)} Active</div>
-          <button class="mp-delete-btn" data-id="${item.id}" style="position:absolute;top:6px;right:6px;background:color-mix(in srgb,var(--danger) 12%,transparent);border:none;border-radius:8px;min-height:44px;padding:6px 12px;font-size:var(--t-micro);font-weight:700;color:var(--danger);cursor:pointer">Remove</button>
+
+      <div class="ms-stats">
+        <div class="ms-stat">
+          <div class="ms-stat-val" style="color:var(--accent3,#7a6af0)">${mine.length}</div>
+          <div class="ms-stat-label">Active</div>
         </div>
-      </div>`).join('')}</div>`;
+        <div class="ms-stat">
+          <div class="ms-stat-val" style="color:var(--accent,#e8526a)">$${totalValue.toLocaleString()}</div>
+          <div class="ms-stat-label">Value</div>
+        </div>
+        <div class="ms-stat">
+          <div class="ms-stat-val" style="color:var(--success,#52c97a)">${soldCount}</div>
+          <div class="ms-stat-label">Sold</div>
+        </div>
+        <div class="ms-stat">
+          <div class="ms-stat-val" style="color:var(--muted,#8a8498)">${storeViews > 0 ? storeViews + '+' : '—'}</div>
+          <div class="ms-stat-label">Views</div>
+        </div>
+      </div>
+
+      <div class="ms-actions">
+        <button class="ms-list-btn" id="ms-list-btn">${icon('tag',16)} List an item</button>
+        <button class="ms-browse-btn" onclick="mpTab='shop';mpCondFilter='new';renderMarketplace()">${icon('storefront',16)} Browse</button>
+      </div>
+
+      ${mine.length ? `
+        <div class="ms-section-hd">
+          <div class="ms-section-title">Active Listings <span style="color:var(--muted,#8a8498);font-weight:600">${mine.length}</span></div>
+          <div class="ms-section-sub">Visible in marketplace</div>
+        </div>
+        <div class="mp-grid" style="margin-bottom:8px">${mine.map(item => `
+          <div class="mp-item" style="position:relative">
+            <div class="mp-item-img">${productImage(item)}
+              <span style="position:absolute;top:8px;left:8px;background:var(--success,#52c97a);color:var(--bg,#0e0c0f);border-radius:var(--r-pill,999px);font-size:9px;font-weight:900;padding:3px 8px">Live</span>
+            </div>
+            <div class="mp-item-info">
+              <div class="mp-item-name">${esc(item.name)}</div>
+              <div class="mp-item-price">$${item.price}</div>
+              <div style="margin-top:6px">
+                <button class="mp-delete-btn" data-id="${item.id}" style="width:100%;background:color-mix(in srgb,var(--danger,#e05252) 10%,transparent);border:1px solid color-mix(in srgb,var(--danger,#e05252) 25%,transparent);border-radius:var(--r-sm,10px);min-height:32px;font-size:var(--t-micro,11px);font-weight:700;color:var(--danger,#e05252);cursor:pointer;font-family:inherit">Remove</button>
+              </div>
+            </div>
+          </div>`).join('')}</div>
+      ` : `
+        <div class="ms-empty">
+          <div class="ms-empty-icon">${icon('storefront',28)}</div>
+          <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">Your store is ready</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:5px">List your first item and start earning</div>
+        </div>
+      `}
+
+      ${suggestions.length ? `
+        <div style="padding:${mine.length ? '6px' : '0'} 16px 8px">
+          <div class="ms-suggest-hd">
+            ${icon('sparkle',14)} Unworn in your closet
+            <span class="ms-suggest-sub">Worth selling?</span>
+          </div>
+          ${suggestions.map(item => `
+            <div class="ms-suggest-card mp-suggest-card" data-item='${attr(JSON.stringify(item))}'>
+              <div class="ms-suggest-img">${productImage(item)}</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:var(--t-small,13px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(item.name||'Item')}</div>
+                <div style="font-size:var(--t-micro,11px);color:var(--muted,#8a8498);margin-top:2px">Suggested: $${Math.round((item.price_estimate_usd||120)*0.5)}</div>
+              </div>
+              <div class="ms-suggest-sell">+ Sell</div>
+            </div>`).join('')}
+        </div>
+      ` : ''}
+    `;
   }
 
   function deleteMySell(id) {
@@ -6010,12 +6156,13 @@
       const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
       mine.unshift({id:'u'+Date.now(), name, price, condition, category: cat, seller:'@me', orig: price*2, style_tags: prefill?.style_tags || []});
       localStorage.setItem(MP_KEY, JSON.stringify(mine));
+      addListing({ name, price, category: cat });
       modal.classList.remove('show');
       logAdminEvent('sell', 'Listed: ' + name + ' $' + price);
       addRewardPoints(25, 'sell_listing');
       mpTab = 'sell';
-      renderMarketplace();
-      showToast('Item listed! +25 points');
+      showView('marketplace');
+      showToast('Listed in My Store! +25 points');
     });
   }
 
@@ -6085,7 +6232,7 @@
     overlay.querySelector('.book-submit').addEventListener('click', () => {
       const nowBlocked = !already;
       setBlocked(key, label, nowBlocked);
-      logAdminEvent(nowBlocked ? 'block_user' : 'unblock_user', `${nowBlocked ? 'חסמה' : 'הסירה חסימה מ'}: ${label} (${key})`);
+      logAdminEvent(nowBlocked ? 'block_user' : 'unblock_user', `${nowBlocked ? 'Blocked' : 'Unblocked'}: ${label} (${key})`);
       showToast(nowBlocked ? `Blocked: ${label}` : `Unblocked ${label}`);
       overlay.remove();
       if (onDone) onDone(nowBlocked);
@@ -6161,6 +6308,18 @@
     el.querySelectorAll('[data-unblock-key]').forEach(btn => {
       btn.addEventListener('click', () => {
         confirmBlockUser(btn.dataset.unblockKey, btn.dataset.unblockLabel, () => { renderPublicClosets(); renderFeed(); });
+      });
+    });
+
+    el.querySelectorAll('.pc-featured-card[data-uid]').forEach(card => {
+      card.addEventListener('click', () => openUserProfile(card.dataset.uid));
+    });
+
+    el.querySelectorAll('.pc-row').forEach(row => {
+      row.addEventListener('click', e => {
+        if (e.target.closest('button')) return;
+        const uid = row.querySelector('[data-uid]')?.dataset.uid || row.querySelector('[data-more-uid]')?.dataset.moreUid;
+        if (uid) openUserProfile(uid);
       });
     });
   }
@@ -6876,6 +7035,8 @@
     document.getElementById('edit-city').value    = prof.city||'';
     document.getElementById('edit-bio').value     = prof.bio||'';
     editPhotoData = prof.photo||null;
+    const showPricesEl = document.getElementById('edit-show-prices');
+    if (showPricesEl) showPricesEl.checked = prof.show_closet_prices !== false;
     const prev = document.getElementById('edit-photo-preview');
     prev.innerHTML = prof.photo
       ? `<img src="${attr(prof.photo)}" alt="">`
@@ -6913,6 +7074,7 @@
       city:  document.getElementById('edit-city').value.trim(),
       bio:   document.getElementById('edit-bio').value.trim(),
       photo: editPhotoData,
+      show_closet_prices: document.getElementById('edit-show-prices')?.checked !== false,
     };
     saveProfile(prof);
     updateHeaderCityPin();
@@ -7971,6 +8133,310 @@
       panel.classList.remove('open');
     }
   }, true);
+
+  // ---- User Profile view ----
+  let _upUserId = null;
+  let _upTab = 'posts';
+  let _prevViewForProfile = 'feed';
+
+  function openUserProfile(userId) {
+    if (!userId) return;
+    _upUserId = userId;
+    _upTab = 'posts';
+    _prevViewForProfile = document.querySelector('.view.active')?.id || 'feed';
+    showView('user-profile');
+  }
+
+  function renderUserProfile() {
+    const el = document.getElementById('up-wrap');
+    if (!el) return;
+
+    // Reset content to prevent listener accumulation on re-render
+    el.innerHTML = '';
+
+    let u = SEED_USERS.find(x => x.id === _upUserId);
+    if (!u) {
+      const post = SEED_POSTS.find(p => p.userId === _upUserId || p.user === _upUserId);
+      if (!post) {
+        el.innerHTML = `<div class="up-back-bar"><button class="up-back-btn" id="up-back-btn">${icon('arrowRight',16)} Back</button></div><div class="up-empty">${icon('user',40)}<div>Profile not found</div></div>`;
+        document.getElementById('up-back-btn')?.addEventListener('click', () => showView(_prevViewForProfile));
+        return;
+      }
+      u = { id: post.userId || post.user, name: post.name || post.user || 'User', handle: '@'+(post.user||'user'), avatar: null, vibe: (post.tags||[])[0]||'Style', items: 0, following: false };
+    }
+
+    // Block check
+    if (isBlocked(u.id) || isBlocked(u.handle)) {
+      el.innerHTML = `
+        <div class="up-back-bar"><button class="up-back-btn" id="up-back-btn">${icon('arrowRight',16)} Back</button></div>
+        <div class="up-empty" style="padding-top:60px">
+          ${icon('user',40)}
+          <div>You've blocked this user</div>
+          <button class="up-follow-btn" style="background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#8a8498)" id="up-unblock-btn">Unblock</button>
+        </div>`;
+      document.getElementById('up-back-btn')?.addEventListener('click', () => showView(_prevViewForProfile));
+      document.getElementById('up-unblock-btn')?.addEventListener('click', () => confirmBlockUser(u.id, u.name, () => renderUserProfile()));
+      return;
+    }
+
+    const myWardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const isFollowing = followState[u.id] ?? u.following;
+    const initials = u.name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'U';
+
+    const userPosts = SEED_POSTS.filter(p => p.userId === u.id || p.user === u.handle.replace(/^@/,''));
+
+    const wardrobeItems = [];
+    const seenNames = new Set();
+    userPosts.forEach(post => {
+      (post.items || []).forEach(item => {
+        if (!seenNames.has(item.name)) {
+          seenNames.add(item.name);
+          wardrobeItems.push({ ...item, style_tags: post.tags || [] });
+        }
+      });
+    });
+
+    const STORE_DEMO = {
+      u1: [{name:'Vintage Denim Jacket', price:85, cat:'outerwear', q:'vintage denim jacket women'}, {name:'White Linen Dress', price:65, cat:'dress', q:'white linen midi dress'}],
+      u2: [{name:'Oversized Blazer', price:110, cat:'outerwear', q:'oversized blazer beige women'}, {name:'Cargo Pants', price:70, cat:'bottoms', q:'cargo pants streetwear women'}],
+      u3: [{name:'Silk Slip Dress', price:55, cat:'dress', q:'silk slip dress minimal'}, {name:'Vintage Crossbody', price:40, cat:'bag', q:'vintage leather crossbody bag'}],
+      u4: [{name:'Boho Maxi Skirt', price:48, cat:'bottoms', q:'boho maxi skirt floral'}, {name:'Crochet Top', price:35, cat:'top', q:'crochet crop top beige'}],
+      u5: [{name:'Sport Windbreaker', price:95, cat:'outerwear', q:'sport windbreaker jacket'}, {name:'Track Pants', price:60, cat:'bottoms', q:'track pants sporty'}],
+      u6: [{name:'Tailored Blazer', price:145, cat:'outerwear', q:'tailored blazer suit women'}, {name:'Structured Tote', price:180, cat:'bag', q:'structured leather tote bag'}],
+    };
+    const storeItems = STORE_DEMO[u.id] || [];
+
+    const theirShowPrices = u.id !== 'u3' && u.id !== 'u6';
+
+    const STATS = {
+      u1:{followers:4320,following:512}, u2:{followers:8750,following:390}, u3:{followers:2140,following:278},
+      u4:{followers:12600,following:1100}, u5:{followers:3870,following:620}, u6:{followers:1980,following:340},
+    };
+    const stats = STATS[u.id] || {followers:1200, following:300};
+
+    const BIOS = {
+      u1:'Vintage collector · Y2K queen · street style TLV',
+      u2:'Sustainable fashion only · secondhand first',
+      u3:'Capsule wardrobe obsessed · less but better',
+      u4:'Street style documentation · TLV × Berlin · always in monochrome',
+      u5:'Thrift queen · every item under $20 · proving budget = style',
+      u6:'Oxford shirts forever · TLV-based stylist · menswear nerd',
+    };
+
+    const allTags = [...new Set(userPosts.flatMap(p => p.tags||[]))].slice(0,4);
+    const tagPillsHTML = allTags.map(t => `<span style="display:inline-flex;align-items:center;padding:3px 9px;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);border-radius:var(--r-pill,999px);font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#8a8498)">${esc(t)}</span>`).join('');
+
+    el.innerHTML = `
+      <div class="up-back-bar" style="display:flex;align-items:center;justify-content:space-between">
+        <button class="up-back-btn" id="up-back-btn" aria-label="Back">${icon('arrowRight',16)} Back</button>
+        <button id="up-more-btn" aria-label="More options" style="width:40px;height:40px;border-radius:50%;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted,#8a8498);min-height:40px;flex-shrink:0">${icon('more',18)}</button>
+      </div>
+      <div class="up-hero">
+        ${u.avatar
+          ? `<img class="up-avatar" src="${attr(u.avatar)}" alt="${attr(u.name)}" loading="lazy">`
+          : `<div class="up-avatar-initials">${esc(initials)}</div>`}
+        <div class="up-name">${esc(u.name)}</div>
+        <div class="up-handle">${esc(u.handle)}</div>
+        <div class="up-vibe">${esc(BIOS[u.id] || u.vibe)}</div>
+        ${tagPillsHTML ? `<div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:8px">${tagPillsHTML}</div>` : ''}
+        <div class="up-stats">
+          <div class="up-stat"><div class="up-stat-n">${fmtN(stats.followers)}</div><div class="up-stat-l">Followers</div></div>
+          <div class="up-stat"><div class="up-stat-n">${fmtN(stats.following)}</div><div class="up-stat-l">Following</div></div>
+          <div class="up-stat"><div class="up-stat-n">${wardrobeItems.length || u.items}</div><div class="up-stat-l">Items</div></div>
+        </div>
+        <button class="up-follow-btn${isFollowing?' following':''}" id="up-follow-btn" aria-pressed="${isFollowing}" data-uid="${attr(u.id)}">${isFollowing?'Following':'+ Follow'}</button>
+      </div>
+      <div class="up-tabs" role="tablist">
+        <button class="up-tab${_upTab==='posts'?' active':''}" data-uptab="posts" role="tab" aria-selected="${_upTab==='posts'}" aria-controls="up-content">${icon('grid',14)} Posts</button>
+        <button class="up-tab${_upTab==='wardrobe'?' active':''}" data-uptab="wardrobe" role="tab" aria-selected="${_upTab==='wardrobe'}" aria-controls="up-content">${icon('hanger',14)} Wardrobe</button>
+        <button class="up-tab${_upTab==='store'?' active':''}" data-uptab="store" role="tab" aria-selected="${_upTab==='store'}" aria-controls="up-content">${icon('storefront',14)} Store</button>
+      </div>
+      <div class="up-content" id="up-content" role="tabpanel"></div>
+    `;
+
+    function renderUpTab() {
+      const contentEl = document.getElementById('up-content');
+      if (!contentEl) return;
+
+      if (_upTab === 'posts') {
+        // 3-column square grid — Instagram style
+        contentEl.innerHTML = userPosts.length ? `
+          <div class="up-grid-ig">
+            ${userPosts.map((p,i) => `
+              <button class="up-grid-thumb" data-post-idx="${i}" aria-label="${attr(p.caption||'Post')}">
+                <div class="up-thumb-bg" style="background:${attr(p.grad||'var(--surface,#161318)')}">
+                  ${p.img ? `<img src="${attr(p.img)}" alt="" loading="lazy">` : icon('image',20)}
+                </div>
+                <div class="up-thumb-likes">${icon('heart',9)} ${fmtN(p.likes||0)}</div>
+              </button>`).join('')}
+          </div>` : `<div class="up-empty">${icon('image',36)}<div>No posts yet</div></div>`;
+        contentEl.querySelectorAll('[data-post-idx]').forEach(card => {
+          card.addEventListener('click', () => {
+            const p = userPosts[Number(card.dataset.postIdx)];
+            if (!p) return;
+            // Open same-design post card in sheet
+            const lookItems = (p.items||[]).slice(0,5);
+            sheetBody.innerHTML = `
+              <div class="fc-header" style="padding:14px 16px 10px">
+                <div class="fc-hdr-avatar">${esc(u.name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?')}</div>
+                <div class="fc-hdr-info">
+                  <div class="fc-hdr-user" style="font-size:var(--t-small,13px);font-weight:900">${esc(u.handle)}</div>
+                  <div class="fc-hdr-time">${fmtN(p.likes||0)} likes</div>
+                </div>
+              </div>
+              <div style="position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;background:${attr(p.grad||'var(--surface,#161318)')}">
+                ${p.img ? `<img src="${attr(p.img)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">` : `<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted,#8a8498)">${icon('image',48)}</div>`}
+              </div>
+              <div style="padding:10px 16px 8px">
+                <div style="font-size:var(--t-small,13px);line-height:1.5;margin-bottom:8px">
+                  <span style="font-weight:900;margin-right:5px">${esc(u.handle)}</span><span style="color:var(--fg,#f0ecf5)">${esc(p.caption||'')}</span>
+                </div>
+                ${lookItems.length ? `
+                <div style="font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#8a8498);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Items in this look</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  ${lookItems.map(it => `<div style="display:flex;align-items:center;gap:10px;background:var(--card,#1e1a22);border-radius:var(--r-sm,10px);padding:9px 12px;border:1px solid var(--line,#2e2836)">
+                    <span style="color:var(--muted,#8a8498)">${icon(catIcon(it.category),18)}</span>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:var(--t-small,13px);font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(it.name)}</div>
+                      <div style="font-size:var(--t-micro,11px);color:var(--muted,#8a8498);text-transform:capitalize">${esc(it.category||'')}</div>
+                    </div>
+                    ${it.price_estimate_usd?`<span style="font-size:var(--t-small,13px);font-weight:900;color:var(--accent2,#c4855a);flex-shrink:0">$${esc(String(it.price_estimate_usd))}</span>`:''}
+                  </div>`).join('')}
+                </div>` : ''}
+              </div>`;
+            sheetFooter.innerHTML = `<button class="sheet-buy" style="background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#8a8498)" onclick="closeSheet()">Close</button>`;
+            showSheet();
+          });
+        });
+
+      } else if (_upTab === 'wardrobe') {
+        const hasWardrobe = myWardrobe.length > 0;
+        contentEl.innerHTML = wardrobeItems.length ? `
+          ${!theirShowPrices ? `<div class="up-privacy-note">${icon('tag',12)} This user has hidden item prices</div>` : ''}
+          ${!hasWardrobe ? `<div class="up-privacy-note" style="margin-bottom:12px">${icon('sparkle',12)} Add items to your wardrobe to see compatibility</div>` : ''}
+          <div class="up-wardrobe-grid">
+            ${wardrobeItems.map(item => {
+              const compat = hasWardrobe ? calcCompatScore({...item}, myWardrobe) : null;
+              const cColor = compat ? (compat.pct >= 80 ? 'var(--success,#52c97a)' : compat.pct >= 60 ? 'var(--accent2,#c4855a)' : 'var(--accent,#e8526a)') : '';
+              return `<div class="up-item-card" data-up-item="${attr(JSON.stringify(item))}" data-compat="${attr(String(compat?.pct||0))}" data-uname="${attr(u.name)}">
+                <div class="up-item-img">${productImage({name:item.name, search_query:item.q||item.name, category:item.category}, 'up-pi')}</div>
+                <div class="up-item-name">${esc(item.name)}</div>
+                <div class="up-item-cat">${esc(item.category||'')}</div>
+                ${(theirShowPrices && item.price_estimate_usd) ? `<div class="up-item-price">$${esc(String(item.price_estimate_usd))}</div>` : ''}
+                ${compat ? `<div class="up-compat-badge" style="color:${cColor}">${icon('sparkle',10)} ${compat.pct}% match</div>` : ''}
+              </div>`;
+            }).join('')}
+          </div>` : `<div class="up-empty">${icon('hanger',36)}<div>No wardrobe items</div></div>`;
+        contentEl.querySelectorAll('[data-up-item]').forEach(card => {
+          card.addEventListener('click', () => {
+            try { openUserWardrobeItem(JSON.parse(card.dataset.upItem), card.dataset.uname, Number(card.dataset.compat)); }
+            catch(e2) { console.warn('up-item parse error', e2); }
+          });
+        });
+
+      } else if (_upTab === 'store') {
+        const hasWardrobe = myWardrobe.length > 0;
+        contentEl.innerHTML = storeItems.length ? `
+          <div class="up-store-grid">
+            ${storeItems.map((si,i) => {
+              const synthItem = {name:si.name, category:si.cat, search_query:si.q||si.name, style_tags:[]};
+              const compat = hasWardrobe ? calcCompatScore(synthItem, myWardrobe) : null;
+              const cColor = compat ? (compat.pct >= 80 ? 'var(--success,#52c97a)' : compat.pct >= 60 ? 'var(--accent2,#c4855a)' : 'var(--accent,#e8526a)') : '';
+              return `<div class="up-store-item" data-store-idx="${i}">
+                <div class="up-store-img">${productImage({name:si.name, search_query:si.q||si.name, category:si.cat}, 'up-pi')}</div>
+                <div class="up-store-name">${esc(si.name)}</div>
+                <div class="up-store-cat">${esc(si.cat)}</div>
+                <div class="up-store-price">$${esc(String(si.price))}</div>
+                ${compat ? `<div class="up-compat-badge" style="color:${cColor};margin-top:4px">${icon('sparkle',10)} ${compat.pct}% match</div>` : ''}
+              </div>`;
+            }).join('')}
+          </div>` : `<div class="up-empty">${icon('storefront',36)}<div>No active listings</div></div>`;
+        contentEl.querySelectorAll('[data-store-idx]').forEach(card => {
+          card.addEventListener('click', () => {
+            const si = storeItems[Number(card.dataset.storeIdx)];
+            if (!si) return;
+            openUserWardrobeItem(
+              {name:si.name, category:si.cat, search_query:si.q||si.name, price_estimate_usd:si.price, style_tags:[]},
+              u.name, 0
+            );
+          });
+        });
+      }
+    }
+    renderUpTab();
+
+    el.querySelectorAll('[data-uptab]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        _upTab = btn.dataset.uptab;
+        el.querySelectorAll('[data-uptab]').forEach(b => {
+          b.classList.toggle('active', b === btn);
+          b.setAttribute('aria-selected', String(b === btn));
+        });
+        renderUpTab();
+      });
+    });
+
+    document.getElementById('up-back-btn')?.addEventListener('click', () => showView(_prevViewForProfile));
+
+    document.getElementById('up-follow-btn')?.addEventListener('click', () => {
+      followState[u.id] = !followState[u.id];
+      localStorage.setItem('awear_follows', JSON.stringify(followState));
+      const btn = document.getElementById('up-follow-btn');
+      if (btn) {
+        btn.innerHTML = followState[u.id] ? 'Following' : '+ Follow';
+        btn.classList.toggle('following', !!followState[u.id]);
+        btn.setAttribute('aria-pressed', String(!!followState[u.id]));
+      }
+      showToast(followState[u.id] ? `Now following ${u.name}` : `Unfollowed ${u.name}`);
+    });
+
+    document.getElementById('up-more-btn')?.addEventListener('click', () => {
+      confirmBlockUser(u.id, u.name, () => renderUserProfile());
+    });
+  }
+
+  function openUserWardrobeItem(item, userName, compatPct) {
+    const myWardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const hasWardrobe = myWardrobe.length > 0;
+    const compat = hasWardrobe
+      ? calcCompatScore({...item, style_tags: item.style_tags||[]}, myWardrobe)
+      : null;
+    const displayPct = compat?.pct ?? compatPct ?? 0;
+    const cColor = displayPct >= 80 ? 'var(--success,#52c97a)' : displayPct >= 60 ? 'var(--accent2,#c4855a)' : 'var(--accent,#e8526a)';
+    const cLabel = displayPct >= 80 ? 'Great fit for your wardrobe!' : displayPct >= 60 ? 'Good match' : 'Partial match';
+
+    sheetBody.innerHTML = `
+      <div style="text-align:center;padding:18px 18px 4px">
+        <div style="width:140px;height:140px;border-radius:var(--r-lg,20px);overflow:hidden;margin:0 auto 14px;border:1px solid var(--line,#2e2836);background:var(--bg,#0e0c0f);display:flex;align-items:center;justify-content:center;color:var(--muted,#8a8498)">
+          ${productImage({name:item.name, search_query:item.q||item.search_query||item.name, category:item.category}, 'up-sheet-pi')}
+        </div>
+        <div style="font-size:var(--t-title,20px);font-weight:900">${esc(item.name)}</div>
+        <div style="font-size:var(--t-small,13px);color:var(--muted,#8a8498);font-weight:700;margin-top:4px;text-transform:capitalize">${esc(item.category||'')} · ${esc(userName||'')}</div>
+      </div>
+      <div style="padding:4px 18px 16px">
+        ${hasWardrobe ? `
+        <div style="background:var(--card,#1e1a22);border-radius:var(--r-md,14px);padding:14px 16px;border:1px solid var(--line,#2e2836)">
+          <div style="font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#8a8498);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Compatibility with your wardrobe</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span style="font-size:var(--t-body,14px);font-weight:800;color:${cColor}">${cLabel}</span>
+            <span style="font-size:var(--t-h1,24px);font-weight:900;color:${cColor}">${displayPct}%</span>
+          </div>
+          <div style="height:6px;background:var(--bg,#0e0c0f);border-radius:var(--r-pill,999px);overflow:hidden">
+            <div style="height:100%;width:${displayPct}%;background:${cColor};border-radius:var(--r-pill,999px)"></div>
+          </div>
+          ${compat?.matches?.length ? `<div style="margin-top:10px;font-size:var(--t-micro,11px);color:var(--muted,#8a8498);font-weight:700">Pairs with: ${compat.matches.map(m=>`<span style="color:var(--fg,#f0ecf5)">${esc(m)}</span>`).join(', ')}</div>` : ''}
+        </div>` : `
+        <div style="background:var(--card,#1e1a22);border-radius:var(--r-md,14px);padding:14px 16px;border:1px solid var(--line,#2e2836);text-align:center;color:var(--muted,#8a8498);font-size:var(--t-small,13px);font-weight:700">
+          ${icon('sparkle',16)} Add items to your wardrobe to see how this fits
+        </div>`}
+        ${item.price_estimate_usd ? `<div style="margin-top:12px;text-align:center;font-size:var(--t-small,13px);color:var(--muted,#8a8498)">Est. value <strong style="color:var(--accent2,#c4855a)">$${esc(String(item.price_estimate_usd))}</strong></div>` : ''}
+      </div>`;
+    sheetFooter.innerHTML = `<div style="display:flex;gap:10px;width:100%">
+      <button class="sheet-buy" onclick="closeSheet()" style="flex:1;background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#8a8498)">Close</button>
+      ${item.price_estimate_usd ? `<button class="sheet-buy" onclick="showToast('Added to wishlist');closeSheet()" style="flex:2;background:linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a));border:0;color:var(--text,#fbfbfd)">${icon('bookmark',14)} Wishlist</button>` : ''}
+    </div>`;
+    showSheet();
+  }
 
   // init bell icon (static HTML — inject via JS per DS-008)
   (function initNotifBell() {
