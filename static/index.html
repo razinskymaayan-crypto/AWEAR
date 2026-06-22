@@ -1350,11 +1350,23 @@
   .mp-ai-price { padding: 8px 14px; background: rgba(123,92,255,.15); border: 1.5px solid var(--accent2); border-radius: 12px; font-size: var(--t-caption); font-weight: 800; color: var(--accent2); cursor: pointer; white-space: nowrap; font-family: inherit; }
 
   /* ---- Marketplace Segment ---- */
-  .mp-segment { display: flex; gap: 4px; background: var(--card); border-radius: var(--r-pill); margin: 0 16px 12px; padding: 4px; }
-  .mp-seg-btn { flex: 1; padding: 13px 10px; text-align: center; font-size: var(--t-small); font-weight: 800; color: var(--muted); border-radius: var(--r-pill); cursor: pointer; transition: all .2s; font-family: inherit; background: none; border: none; }
-  .mp-seg-btn.active-sh { background: var(--accent2); color: var(--bg); }
-  .mp-seg-btn.active-new { background: var(--accent3); color: var(--fg, #f0ecf5); }
-  .mp-seg-btn.active-sell { background: var(--accent); color: var(--bg); }
+  .mp-segment { display: flex; gap: 4px; background: var(--card,#1e1a22); border-radius: var(--r-pill,999px); margin: 0 16px 12px; padding: 4px; }
+  .mp-seg-btn { flex: 1; padding: 11px 6px; text-align: center; font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); border-radius: var(--r-pill,999px); cursor: pointer; transition: all .2s; font-family: inherit; background: none; border: none; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+  .mp-seg-btn.active-all { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); }
+  .mp-seg-btn.active-new { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
+  .mp-seg-btn.active-preloved { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
+  .mp-seg-btn.active-sell { background: var(--accent,#e8526a); color: var(--bg,#0e0c0f); }
+  .mp-seg-btn.active-shop { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
+  .mp-seg-btn.active-community { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
+
+  /* ---- Marketplace Card — World Differentiation ---- */
+  .mp-item.retail { border-color: color-mix(in srgb, var(--accent3,#7a6af0) 30%, var(--line,#2e2836)); }
+  .mp-item.resale { border-color: color-mix(in srgb, var(--accent2,#c4855a) 30%, var(--line,#2e2836)); }
+  .mp-item-brand { font-size: var(--t-micro,11px); font-weight: 900; color: var(--accent3,#7a6af0); margin-top: 3px; letter-spacing: .4px; text-transform: uppercase; }
+  .mp-item-seller { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 700; margin-top: 3px; }
+  .mp-item-preloved-label { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 800; margin-top: 2px; letter-spacing: .2px; }
+  .mp-buy-btn.retail-btn { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
+  .mp-buy-btn.resale-btn { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); }
 
   /* ---- Marketplace Card — New Items ---- */
   .mp-item-shop-btn { display: block; width: 100%; margin-top: 8px; padding: 7px 0; background: var(--accent3); border: none; border-radius: var(--r-pill); font-family: inherit; font-size: var(--t-caption); font-weight: 900; color: #fff; cursor: pointer; transition: transform .15s; }
@@ -1402,6 +1414,77 @@
   .mp-compat-btn { cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: color-mix(in srgb, var(--accent2) 12%, transparent); border-radius: var(--r-pill); transition: background .15s; }
   .mp-compat-btn:hover { background: color-mix(in srgb, var(--accent2) 22%, transparent); }
   .mp-compat-btn:active { opacity: .7; }
+
+  /* ---- Marketplace Compat Pill (P0-C) — top of card, prominent ---- */
+  .mp-compat-pill { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: color-mix(in srgb, var(--accent2,#c4855a) 18%, transparent); border: 1px solid color-mix(in srgb, var(--accent2,#c4855a) 40%, transparent); border-radius: var(--r-pill,999px); font-size: var(--t-micro,11px); font-weight: 900; color: var(--accent2,#c4855a); margin-bottom: 5px; letter-spacing: .2px; cursor: pointer; transition: background .15s; }
+  .mp-compat-pill:active { opacity: .75; }
+
+  /* ---- Marketplace Size Chips (P0-D) ---- */
+  .mp-size-row { display: flex; gap: 6px; padding: 0 16px 10px; overflow-x: auto; scrollbar-width: none; }
+  .mp-size-row::-webkit-scrollbar { display: none; }
+  .mp-size-chip { flex-shrink: 0; padding: 6px 14px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 700; border: 1.5px solid var(--line,#2e2836); background: none; color: var(--muted,#8a8498); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 36px; display: inline-flex; align-items: center; }
+  .mp-size-chip.active { background: var(--accent2,#c4855a); border-color: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
+
+  /* ---- Marketplace CO2 Badge (P1-B) ---- */
+  .mp-co2-badge { font-size: var(--t-micro,11px); font-weight: 700; color: var(--success,#52c97a); margin-top: 3px; display: inline-flex; align-items: center; gap: 3px; }
+
+  /* ---- Marketplace Pre-loved Toggle (P1-D) ---- */
+  .mp-preloved-toggle { display: flex; align-items: center; gap: 8px; padding: 0 16px 10px; }
+  .mp-preloved-btn { flex-shrink: 0; padding: 8px 16px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--accent3,#7a6af0); background: none; color: var(--accent3,#7a6af0); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 36px; display: inline-flex; align-items: center; gap: 6px; }
+  .mp-preloved-btn.active { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
+
+  /* ---- Marketplace Filter Button + Active Chips Bar ---- */
+  .mp-toolbar { display: flex; align-items: center; gap: 8px; padding: 0 16px 10px; }
+  .mp-filter-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--line,#2e2836); background: var(--card,#1e1a22); color: var(--fg,#f0ecf5); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 44px; flex-shrink: 0; }
+  .mp-filter-btn.has-active { border-color: var(--accent3,#7a6af0); color: var(--accent3,#7a6af0); }
+  .mp-filter-btn:active { transform: scale(.95); }
+  .mp-filter-count { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); font-size: var(--t-micro,11px); font-weight: 900; }
+  .mp-active-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
+  .mp-active-chips::-webkit-scrollbar { display: none; }
+  .mp-active-chip { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: var(--r-pill,999px); background: color-mix(in srgb, var(--accent3,#7a6af0) 15%, transparent); border: 1px solid color-mix(in srgb, var(--accent3,#7a6af0) 40%, transparent); font-size: var(--t-micro,11px); font-weight: 800; color: var(--accent3,#7a6af0); cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: opacity .15s; }
+  .mp-active-chip:active { opacity: .7; }
+  .mp-active-chip-x { font-size: var(--t-caption,12px); opacity: .7; line-height: 1; }
+
+  /* ---- Marketplace Filter Sheet ---- */
+  .mp-fsheet-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); z-index: 60; pointer-events: none; transition: background .25s ease; }
+  .mp-fsheet-overlay.show { background: rgba(0,0,0,.62); pointer-events: auto; backdrop-filter: blur(3px); }
+  .mp-fsheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--surface,#161318); border-radius: 24px 24px 0 0; border-top: 1px solid var(--line,#2e2836); padding: 0 0 calc(env(safe-area-inset-bottom,0px) + 8px); z-index: 61; transform: translateY(110%); transition: transform .3s cubic-bezier(.32,.72,0,1); max-height: 88%; display: flex; flex-direction: column; }
+  .mp-fsheet.show { transform: translateY(0); }
+  .mp-fsheet-handle { width: 36px; height: 4px; background: var(--line,#2e2836); border-radius: 2px; margin: 12px auto 4px; flex-shrink: 0; }
+  .mp-fsheet-scroll { overflow-y: auto; flex: 1; padding: 8px 0 16px; scrollbar-width: none; }
+  .mp-fsheet-scroll::-webkit-scrollbar { display: none; }
+  .mp-fsheet-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 20px 16px; flex-shrink: 0; }
+  .mp-fsheet-title { font-size: var(--t-h3,15px); font-weight: 900; }
+  .mp-fsheet-reset { font-size: var(--t-caption,12px); font-weight: 800; color: var(--accent,#e8526a); background: none; border: none; cursor: pointer; font-family: inherit; min-height: 44px; padding: 0 4px; }
+  .mp-fsheet-section { padding: 0 20px 20px; }
+  .mp-fsheet-label { font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 10px; }
+  .mp-fsheet-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mp-fsheet-chip { padding: 8px 16px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 700; border: 1.5px solid var(--line,#2e2836); background: none; color: var(--muted,#8a8498); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 44px; display: inline-flex; align-items: center; gap: 5px; }
+  .mp-fsheet-chip.active { background: var(--accent3,#7a6af0); border-color: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
+  .mp-fsheet-chip.active-camel { background: var(--accent2,#c4855a); border-color: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
+  .mp-fsheet-divider { height: 1px; background: var(--line,#2e2836); margin: 0 20px 20px; }
+  .mp-fsheet-price-row { display: flex; align-items: center; gap: 10px; }
+  .mp-fsheet-price-input { flex: 1; background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 10px 14px; font-family: inherit; font-size: var(--t-body,14px); color: var(--fg,#f0ecf5); outline: none; transition: border .18s; width: 100%; -moz-appearance: textfield; }
+  .mp-fsheet-price-input::-webkit-outer-spin-button, .mp-fsheet-price-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .mp-fsheet-price-input:focus { border-color: var(--accent3,#7a6af0); }
+  .mp-fsheet-price-sep { font-size: var(--t-caption,12px); color: var(--muted,#8a8498); font-weight: 700; flex-shrink: 0; }
+  .mp-fsheet-apply { display: block; width: calc(100% - 40px); margin: 16px 20px 0; padding: 14px; background: linear-gradient(135deg, var(--accent3,#7a6af0), var(--accent,#e8526a)); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-body,14px); font-weight: 900; color: var(--fg,#f0ecf5); cursor: pointer; min-height: 52px; transition: opacity .15s; }
+  .mp-fsheet-apply:active { opacity: .85; }
+  .mp-sort-row { display: flex; flex-direction: column; gap: 6px; }
+  .mp-sort-opt { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: var(--r-md,14px); background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); cursor: pointer; transition: all .18s; min-height: 44px; font-size: var(--t-small,13px); font-weight: 700; color: var(--fg,#f0ecf5); }
+  .mp-sort-opt.active { border-color: var(--accent3,#7a6af0); color: var(--accent3,#7a6af0); }
+  .mp-sort-check { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line,#2e2836); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .18s; }
+  .mp-sort-opt.active .mp-sort-check { background: var(--accent3,#7a6af0); border-color: var(--accent3,#7a6af0); }
+
+  /* ---- Marketplace Empty State (filters) ---- */
+  .mp-empty-filters { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 48px 20px; text-align: center; }
+  .mp-empty-filters-title { font-size: var(--t-body,14px); font-weight: 800; color: var(--fg,#f0ecf5); }
+  .mp-empty-filters-sub { font-size: var(--t-caption,12px); color: var(--muted,#8a8498); }
+  .mp-empty-filters-ctas { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+  .mp-empty-filters-clear { padding: 10px 22px; border-radius: var(--r-pill,999px); background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); border: none; font-family: inherit; font-size: var(--t-small,13px); font-weight: 800; cursor: pointer; min-height: 44px; transition: opacity .15s; }
+  .mp-empty-filters-clear:active { opacity: .8; }
+  .mp-empty-filters-ai { padding: 10px 22px; border-radius: var(--r-pill,999px); background: none; border: 1.5px solid var(--accent2,#c4855a); color: var(--accent2,#c4855a); font-family: inherit; font-size: var(--t-small,13px); font-weight: 800; cursor: pointer; min-height: 44px; transition: opacity .15s; }
+  .mp-empty-filters-ai:active { opacity: .8; }
 
   /* ---- Wishlist ---- */
   .wl-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
@@ -1686,9 +1769,6 @@
   .an-box { flex: 1; background: var(--card); border-radius: 18px; border: 1px solid var(--line); padding: 14px 8px; text-align: center; }
   .an-box-num { font-size: var(--t-title,20px); font-weight: 900; letter-spacing: -.5px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .an-box-label { font-size: var(--t-micro,11px); color: var(--muted); font-weight: 700; margin-top: 4px; }
-  .an-cpw-card { margin: 0 18px 14px; background: linear-gradient(135deg, var(--bg), var(--card)); border: 1px solid rgba(123,92,255,.3); border-radius: 20px; padding: 20px; text-align: center; }
-  .an-cpw-val { font-size: var(--t-display,38px); font-weight: 900; letter-spacing: -1px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .an-cpw-label { font-size: var(--t-small); color: var(--muted); font-weight: 700; margin-top: 6px; }
   .an-section { padding: 4px 18px 14px; }
   .an-sec-title { font-size: var(--t-small); font-weight: 900; margin-bottom: 12px; }
   .an-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
@@ -1702,6 +1782,71 @@
   .an-item-sub { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 2px; }
   .an-item-cpw { font-size: var(--t-small); font-weight: 900; color: var(--accent2); flex-shrink: 0; }
   .an-empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: var(--t-body); font-weight: 700; line-height: 1.8; }
+
+  /* ---- Analytics v2 — Spotify Wrapped style ---- */
+  .an-identity-card { margin: 0 18px 14px; border-radius: 22px; padding: 22px 20px; background: linear-gradient(135deg, var(--card, #1e1a22) 0%, color-mix(in srgb, var(--accent3, #7a6af0) 14%, var(--card, #1e1a22)) 100%); border: 1px solid color-mix(in srgb, var(--accent3, #7a6af0) 30%, transparent); position: relative; overflow: hidden; }
+  .an-identity-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 20%, color-mix(in srgb, var(--accent3, #7a6af0) 18%, transparent) 0%, transparent 60%); pointer-events: none; }
+  .an-identity-kicker { font-size: var(--t-micro, 11px); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: color-mix(in srgb, var(--accent3, #7a6af0) 80%, var(--fg, #f0ecf5)); margin-bottom: 6px; }
+  .an-identity-name { font-size: var(--t-h1, 24px); font-weight: 900; letter-spacing: -.5px; color: var(--fg, #f0ecf5); line-height: 1.15; margin-bottom: 12px; }
+  .an-identity-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+  .an-identity-pill { padding: 5px 12px; border-radius: var(--r-pill, 999px); background: color-mix(in srgb, var(--accent3, #7a6af0) 18%, transparent); border: 1px solid color-mix(in srgb, var(--accent3, #7a6af0) 35%, transparent); font-size: var(--t-caption, 12px); font-weight: 700; color: var(--fg, #f0ecf5); }
+  .an-identity-share { position: absolute; top: 16px; right: 18px; width: 36px; height: 44px; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--fg, #f0ecf5) 10%, transparent); border: none; border-radius: var(--r-sm, 10px); cursor: pointer; color: var(--fg, #f0ecf5); transition: background .18s; }
+  .an-identity-share:active { background: color-mix(in srgb, var(--fg, #f0ecf5) 20%, transparent); }
+
+  .an-cpw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 18px 14px; }
+  .an-cpw-card { background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); border-radius: 18px; padding: 16px; }
+  .an-cpw-label { font-size: var(--t-micro, 11px); font-weight: 800; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .an-cpw-label.champion { color: var(--success, #52c97a); }
+  .an-cpw-label.hidden-cost { color: var(--warning, #e8a84a); }
+  .an-cpw-value { font-size: var(--t-h3, 15px); font-weight: 900; color: var(--fg, #f0ecf5); line-height: 1.25; margin-bottom: 4px; }
+  .an-cpw-sub { font-size: var(--t-micro, 11px); color: var(--muted, #8a8498); font-weight: 600; }
+
+  .an-health-section { margin: 0 18px 14px; }
+  .an-health-row { margin-bottom: 14px; }
+  .an-health-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .an-health-lbl { font-size: var(--t-small, 13px); font-weight: 700; color: var(--fg, #f0ecf5); }
+  .an-health-pct { font-size: var(--t-small, 13px); font-weight: 900; }
+  .an-health-bar { height: 8px; background: var(--line, #2e2836); border-radius: 4px; overflow: hidden; }
+  .an-health-fill { height: 100%; border-radius: 4px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+
+  .an-alert-card { margin: 0 18px 14px; border-radius: 20px; padding: 18px 18px 16px; background: color-mix(in srgb, var(--warning, #e8a84a) 10%, var(--card, #1e1a22)); border: 1.5px solid color-mix(in srgb, var(--warning, #e8a84a) 40%, transparent); }
+  .an-alert-title { font-size: var(--t-h3, 15px); font-weight: 900; color: var(--fg, #f0ecf5); display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+  .an-alert-sub { font-size: var(--t-caption, 12px); font-weight: 600; color: var(--muted, #8a8498); margin-bottom: 14px; }
+  .an-alert-actions { display: flex; gap: 9px; }
+  .an-alert-btn { flex: 1; min-height: 44px; border-radius: var(--r-sm, 10px); border: 1.5px solid var(--line, #2e2836); background: transparent; font-family: inherit; font-size: var(--t-caption, 12px); font-weight: 800; color: var(--fg, #f0ecf5); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background .18s, border-color .18s; }
+  .an-alert-btn:active { background: color-mix(in srgb, var(--fg, #f0ecf5) 8%, transparent); }
+  .an-alert-btn.primary { background: color-mix(in srgb, var(--warning, #e8a84a) 15%, transparent); border-color: color-mix(in srgb, var(--warning, #e8a84a) 50%, transparent); color: var(--warning, #e8a84a); }
+  .an-alert-btn.primary:active { background: color-mix(in srgb, var(--warning, #e8a84a) 25%, transparent); }
+
+  .an-score-section { margin: 0 18px 14px; display: flex; align-items: center; gap: 20px; background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); border-radius: 20px; padding: 20px; }
+  .an-score-ring { width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 5px solid; }
+  .an-score-number { font-size: var(--t-h1, 24px); font-weight: 900; letter-spacing: -.5px; line-height: 1; }
+  .an-score-unit { font-size: var(--t-micro, 11px); font-weight: 700; margin-top: 2px; opacity: .75; }
+  .an-score-info { flex: 1; }
+  .an-score-title { font-size: var(--t-lead, 17px); font-weight: 900; color: var(--fg, #f0ecf5); margin-bottom: 4px; }
+  .an-score-sub { font-size: var(--t-caption, 12px); font-weight: 600; color: var(--muted, #8a8498); line-height: 1.5; }
+
+  .an-wrapped-teaser { margin: 0 18px 24px; border-radius: 24px; padding: 28px 22px; background: linear-gradient(135deg, var(--accent, #e8526a) 0%, var(--accent3, #7a6af0) 100%); position: relative; overflow: hidden; }
+  .an-wrapped-teaser::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 80%, color-mix(in srgb, var(--accent2, #c4855a) 40%, transparent) 0%, transparent 55%); pointer-events: none; }
+  .an-wrapped-year { font-size: var(--t-micro, 11px); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, #fff 70%, transparent); margin-bottom: 8px; position: relative; }
+  .an-wrapped-title { font-size: var(--t-title, 20px); font-weight: 900; color: #fff; letter-spacing: -.4px; line-height: 1.15; margin-bottom: 14px; position: relative; }
+  .an-wrapped-stats { display: flex; gap: var(--space-3, 12px); margin-bottom: var(--space-4, 16px); position: relative; }
+  .an-wrapped-stat { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .an-wrapped-stat-val { font-size: var(--t-h3, 15px); font-weight: 900; color: #fff; line-height: 1.1; }
+  .an-wrapped-stat-label { font-size: var(--t-micro, 11px); font-weight: 600; color: color-mix(in srgb, #fff 70%, transparent); line-height: 1.3; }
+  .an-wrapped-actions { display: flex; align-items: center; gap: var(--space-2, 8px); position: relative; }
+  .an-wrapped-cta { flex: 1; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.22); color: #fff; font-size: var(--t-small, 13px); font-weight: 800; border: none; border-radius: var(--r-pill, 999px); cursor: pointer; padding: 0 var(--space-4, 16px); backdrop-filter: blur(6px); gap: var(--space-2, 8px); }
+  .an-wrapped-cta:active { opacity: .8; }
+  .an-wrapped-share { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: var(--r-pill, 999px); cursor: pointer; flex-shrink: 0; }
+  /* Season Report Sheet */
+  .season-report-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4, 16px) var(--space-4, 16px) var(--space-3, 12px); border-bottom: 1px solid var(--line, #2e2836); }
+  .season-report-title { font-size: var(--t-lead, 17px); font-weight: 900; color: var(--fg, #f0ecf5); }
+  .season-report-body { padding: var(--space-4, 16px); display: flex; flex-direction: column; gap: var(--space-4, 16px); overflow-y: auto; max-height: 60vh; }
+  .season-stat-row { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3, 12px) var(--space-4, 16px); background: var(--card, #1e1a22); border-radius: var(--r-md, 14px); }
+  .season-stat-row-label { font-size: var(--t-small, 13px); font-weight: 700; color: var(--muted, #8a8498); }
+  .season-stat-row-val { font-size: var(--t-small, 13px); font-weight: 900; color: var(--fg, #f0ecf5); text-align: right; max-width: 60%; }
+  .season-color-swatches { display: flex; gap: var(--space-2, 8px); margin-top: var(--space-1, 4px); }
+  .season-color-swatch { width: 36px; height: 36px; border-radius: var(--r-sm, 10px); flex-shrink: 0; }
 
   /* ---- AI Stylist Chat ---- */
   .chat-outer { display: flex; flex-direction: column; height: 100%; }
@@ -1798,6 +1943,90 @@
   .diary-submit { width: 100%; min-height: 48px; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-body,14px); font-weight: 900; color: #fff; cursor: pointer; transition: transform .1s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
   .diary-submit:active { transform: scale(.97); }
   .diary-submit:disabled { opacity: .4; cursor: default; transform: none; }
+
+  /* ---- Season Entry Card (profile) ---- */
+  .season-entry-card { background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent3,#7a6af0)); border-radius: var(--r-lg,20px); padding: 16px 18px; margin: 0 16px 16px; cursor: pointer; min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3,12px); transition: opacity .15s; }
+  .season-entry-card:active { opacity: .85; }
+  .season-entry-left { display: flex; flex-direction: column; gap: var(--space-1,4px); }
+  .season-entry-row { display: flex; align-items: center; gap: var(--space-2,8px); }
+  .season-entry-title { font-size: var(--t-h3,15px); font-weight: 800; color: #fff; letter-spacing: -.2px; }
+  .season-entry-sub { font-size: var(--t-micro,11px); font-weight: 600; color: rgba(255,255,255,.8); }
+  .season-entry-arrow { color: #fff; flex-shrink: 0; }
+
+  /* ---- Season Recap full screen ---- */
+  #season-recap { overflow-y: auto; background: var(--bg,#0e0c0f); }
+  .sr-wrap { padding-bottom: 80px; }
+  /* Hero */
+  .sr-hero { position: relative; padding: var(--space-6,24px) var(--space-4,16px) var(--space-4,16px); background: linear-gradient(160deg, var(--accent,#e8526a) 0%, var(--accent3,#7a6af0) 100%); overflow: hidden; }
+  .sr-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 20%, color-mix(in srgb,var(--accent2,#c4855a) 35%,transparent) 0%, transparent 55%); pointer-events: none; }
+  .sr-back-btn { position: relative; display: inline-flex; align-items: center; gap: var(--space-2,8px); background: rgba(255,255,255,.15); color: #fff; border: none; border-radius: var(--r-pill,999px); padding: var(--space-2,8px) var(--space-3,12px); font-size: var(--t-small,13px); font-weight: 700; cursor: pointer; min-height: 44px; margin-bottom: var(--space-4,16px); backdrop-filter: blur(6px); }
+  .sr-back-btn:active { opacity: .8; }
+  .sr-hero-season { position: relative; font-size: var(--t-display,32px); font-weight: 900; color: #fff; letter-spacing: -.6px; line-height: 1.05; }
+  .sr-hero-year { position: relative; font-size: var(--t-caption,12px); font-weight: 700; color: rgba(255,255,255,.7); letter-spacing: .08em; text-transform: uppercase; margin-top: var(--space-1,4px); margin-bottom: var(--space-2,8px); }
+  .sr-hero-sub { position: relative; font-size: var(--t-lead,17px); font-weight: 700; color: rgba(255,255,255,.9); line-height: 1.3; }
+  /* mood variants */
+  .season-mood-summer .sr-hero-season { font-weight: 900; color: #fff; text-shadow: 0 2px 18px color-mix(in srgb,var(--accent,#e8526a) 50%,transparent); }
+  .season-mood-winter .sr-hero { filter: brightness(0.97); }
+  /* Stats row */
+  .sr-stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-2,8px); padding: var(--space-4,16px) var(--space-4,16px) 0; }
+  .sr-stat-cell { background: var(--card,#1e1a22); border-radius: var(--r-md,14px); padding: var(--space-3,12px) var(--space-2,8px); display: flex; flex-direction: column; align-items: center; gap: var(--space-1,4px); text-align: center; }
+  .sr-stat-num { font-size: var(--t-h1,24px); font-weight: 900; color: var(--fg,#f0ecf5); letter-spacing: -.5px; line-height: 1.1; }
+  .sr-stat-lbl { font-size: var(--t-micro,11px); font-weight: 600; color: var(--muted,#8a8498); line-height: 1.3; }
+  /* Section common */
+  .sr-section { padding: var(--space-4,16px); }
+  .sr-section-title { font-size: var(--t-h3,15px); font-weight: 800; color: var(--fg,#f0ecf5); margin-bottom: var(--space-3,12px); display: flex; align-items: center; gap: var(--space-2,8px); }
+  /* Identity card */
+  .sr-identity-card { background: linear-gradient(135deg, color-mix(in srgb,var(--accent3,#7a6af0) 20%,var(--card,#1e1a22)), var(--card,#1e1a22)); border: 1px solid color-mix(in srgb,var(--accent3,#7a6af0) 30%,transparent); border-radius: var(--r-lg,20px); padding: var(--space-4,16px); display: flex; flex-direction: column; gap: var(--space-3,12px); }
+  .sr-identity-label { font-size: var(--t-title,20px); font-weight: 900; color: var(--fg,#f0ecf5); letter-spacing: -.3px; }
+  .sr-identity-tags { display: flex; flex-wrap: wrap; gap: var(--space-2,8px); }
+  .sr-tag { padding: var(--space-1,4px) var(--space-3,12px); background: color-mix(in srgb,var(--accent3,#7a6af0) 18%,transparent); border: 1px solid color-mix(in srgb,var(--accent3,#7a6af0) 40%,transparent); border-radius: var(--r-pill,999px); font-size: var(--t-small,13px); font-weight: 700; color: var(--fg,#f0ecf5); }
+  /* Wear champions */
+  .sr-champ-row { display: flex; gap: var(--space-3,12px); overflow-x: auto; padding-bottom: var(--space-2,8px); -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .sr-champ-row::-webkit-scrollbar { display: none; }
+  .sr-champ-item { flex: 0 0 130px; background: var(--card,#1e1a22); border-radius: var(--r-md,14px); padding: var(--space-3,12px); display: flex; flex-direction: column; gap: var(--space-2,8px); }
+  .sr-champ-icon { width: 44px; height: 44px; background: color-mix(in srgb,var(--accent2,#c4855a) 15%,transparent); border-radius: var(--r-sm,10px); display: flex; align-items: center; justify-content: center; color: var(--accent2,#c4855a); }
+  .sr-champ-name { font-size: var(--t-small,13px); font-weight: 800; color: var(--fg,#f0ecf5); line-height: 1.3; }
+  .sr-champ-wears { font-size: var(--t-micro,11px); font-weight: 600; color: var(--muted,#8a8498); }
+  /* Dead zone */
+  .sr-dead-zone { background: color-mix(in srgb,var(--warning,#e8a84a) 10%,var(--card,#1e1a22)); border: 1px solid color-mix(in srgb,var(--warning,#e8a84a) 25%,transparent); border-radius: var(--r-lg,20px); padding: var(--space-4,16px); display: flex; flex-direction: column; gap: var(--space-3,12px); }
+  .sr-dead-title { font-size: var(--t-h3,15px); font-weight: 800; color: var(--fg,#f0ecf5); display: flex; align-items: center; gap: var(--space-2,8px); }
+  .sr-dead-value { font-size: var(--t-small,13px); font-weight: 600; color: var(--muted,#8a8498); }
+  .sr-dead-cta { min-height: 48px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2,8px); background: color-mix(in srgb,var(--warning,#e8a84a) 90%,#000); color: #fff; font-size: var(--t-body,14px); font-weight: 800; border: none; border-radius: var(--r-pill,999px); cursor: pointer; font-family: inherit; transition: opacity .15s; }
+  .sr-dead-cta:active { opacity: .85; }
+  /* Extended sections — editorial insight label */
+  .sr-insight { font-size: var(--t-small,13px); font-weight: 500; color: var(--muted,#8a8498); line-height: 1.55; margin-bottom: var(--space-3,12px); }
+  /* Color palette (Pantone-style, DS-010: user hex values = inline style exception) */
+  .sr-palette-wrap { background: var(--card,#1e1a22); border-radius: var(--r-lg,20px); padding: var(--space-4,16px); }
+  .sr-palette-cols { display: flex; gap: var(--space-2,8px); align-items: flex-end; }
+  .sr-palette-col { display: flex; flex-direction: column; align-items: center; gap: var(--space-1,4px); flex: 1; }
+  .sr-palette-swatch { width: 100%; border-radius: var(--r-sm,10px) var(--r-sm,10px) 0 0; }
+  .sr-palette-name { font-size: var(--t-micro,11px); font-weight: 600; color: var(--muted,#8a8498); text-align: center; max-width: 52px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sr-palette-pct { font-size: var(--t-micro,11px); font-weight: 800; color: var(--fg,#f0ecf5); }
+  /* Bar charts */
+  .sr-bar-list { display: flex; flex-direction: column; gap: var(--space-3,12px); }
+  .sr-bar-row { display: grid; grid-template-columns: 80px 1fr 36px; align-items: center; gap: var(--space-2,8px); }
+  .sr-bar-lbl { font-size: var(--t-small,13px); font-weight: 700; color: var(--fg,#f0ecf5); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sr-bar-track { height: var(--chart-bar-height,8px); background: var(--progress-track,var(--line,#2e2836)); border-radius: var(--r-pill,999px); overflow: hidden; }
+  .sr-bar-fill { height: 100%; border-radius: var(--r-pill,999px); transition: width 600ms cubic-bezier(0.34,1.56,0.64,1); }
+  .sr-bar-val { font-size: var(--t-small,13px); font-weight: 700; color: var(--muted,#8a8498); text-align: right; }
+  .sr-brand-row { display: grid; grid-template-columns: 88px 1fr 28px; align-items: center; gap: var(--space-2,8px); }
+  .sr-brand-row .sr-bar-lbl { font-size: var(--t-small,13px); }
+  .sr-cpw-wrap { background: var(--card,#1e1a22); border-radius: var(--r-lg,20px); padding: var(--space-4,16px); }
+  /* Active ratio card */
+  .sr-active-card { background: linear-gradient(135deg, color-mix(in srgb,var(--success,#52c97a) 12%,var(--card,#1e1a22)), var(--card,#1e1a22)); border: 1px solid color-mix(in srgb,var(--success,#52c97a) 25%,transparent); border-radius: var(--r-lg,20px); padding: var(--space-4,16px); display: flex; align-items: center; gap: var(--space-4,16px); }
+  .sr-active-num { font-size: var(--t-display,32px); font-weight: 900; color: var(--success,#52c97a); flex-shrink: 0; width: 64px; text-align: center; }
+  .sr-active-body { display: flex; flex-direction: column; gap: var(--space-1,4px); }
+  .sr-active-headline { font-size: var(--t-h3,15px); font-weight: 800; color: var(--fg,#f0ecf5); }
+  .sr-active-sub { font-size: var(--t-small,13px); font-weight: 500; color: var(--muted,#8a8498); line-height: 1.4; }
+  /* Score section */
+  .sr-score-section { display: flex; flex-direction: column; align-items: center; gap: var(--space-4,16px); padding: var(--space-4,16px); }
+  .sr-score-ring { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
+  .sr-score-ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .sr-score-ring-num { font-size: var(--t-display,32px); font-weight: 900; color: var(--fg,#f0ecf5); letter-spacing: -.8px; z-index: 1; }
+  .sr-score-compare { font-size: var(--t-small,13px); font-weight: 600; color: var(--muted,#8a8498); text-align: center; }
+  .sr-score-compare strong { color: var(--accent,#e8526a); }
+  .sr-share-btn { min-height: 52px; min-width: 200px; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2,8px); background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent3,#7a6af0)); color: #fff; font-size: var(--t-body,14px); font-weight: 900; border: none; border-radius: var(--r-pill,999px); cursor: pointer; font-family: inherit; padding: 0 var(--space-6,24px); transition: opacity .15s; }
+  .sr-share-btn:active { opacity: .85; }
 </style>
 </head>
 <body>
@@ -1829,6 +2058,11 @@
       <div class="an-wrap" id="analytics-wrap"></div>
     </section>
 
+    <!-- SEASON RECAP -->
+    <section id="season-recap" class="view">
+      <div class="sr-wrap" id="season-recap-wrap"></div>
+    </section>
+
     <!-- REWARDS -->
     <section id="rewards" class="view">
       <div class="rw-wrap" id="rw-wrap"></div>
@@ -1847,6 +2081,17 @@
     <!-- MARKETPLACE -->
     <section id="marketplace" class="view">
       <div class="mp-wrap" id="mp-wrap"></div>
+      <!-- Filter & Sort bottom sheet -->
+      <div class="mp-fsheet-overlay" id="mp-fsheet-overlay" aria-hidden="true"></div>
+      <div class="mp-fsheet" id="mp-fsheet" role="dialog" aria-modal="true" aria-label="Filter and Sort">
+        <div class="mp-fsheet-handle" aria-hidden="true"></div>
+        <div class="mp-fsheet-head">
+          <span class="mp-fsheet-title">Filter &amp; Sort</span>
+          <button class="mp-fsheet-reset" id="mp-fsheet-reset">Reset all</button>
+        </div>
+        <div class="mp-fsheet-scroll" id="mp-fsheet-scroll"></div>
+        <button class="mp-fsheet-apply" id="mp-fsheet-apply">Show Results</button>
+      </div>
     </section>
 
     <!-- PUBLIC CLOSETS -->
@@ -1879,7 +2124,7 @@
         <div class="sf-tabs" id="sf-tabs">
           <button class="sf-tab active" data-tab="recommended" data-icon="sparkle">For You</button>
           <button class="sf-tab" data-tab="trending" data-icon="flame">Trending</button>
-          <button class="sf-tab" data-tab="missing" data-icon="target">Gaps</button>
+          <button class="sf-tab" data-tab="missing" data-icon="target">Complete Your Closet</button>
           <button class="sf-tab" data-tab="deals" data-icon="tag">Deals</button>
         </div>
         <div class="sf-grid" id="sf-grid"></div>
@@ -2012,7 +2257,7 @@
     <button data-view="explore"><span class="ico" id="nav-ico-explore"></span><span data-i18n="nav.explore">Search</span></button>
     <button class="fab" id="capture-btn"><span id="nav-ico-fab"></span></button>
     <button data-view="feed"><span class="ico" id="nav-ico-feed"></span><span data-i18n="nav.feed">Feed</span></button>
-    <button data-view="closet"><span class="ico" id="nav-ico-closet"></span><span data-i18n="nav.closet">Closet</span></button>
+    <button data-view="marketplace"><span class="ico" id="nav-ico-shop"></span><span data-i18n="nav.shop">Shop</span></button>
   </nav>
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
@@ -2195,6 +2440,8 @@
     x:'<path d="M6 6l12 12M18 6 6 18"/>',
     arrowRight:'<path d="M5 12h14M13 6l6 6-6 6" stroke-linejoin="round"/>',
     refresh:'<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M20 6v5h-5M4 18v-5h5"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
+    filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -2283,6 +2530,7 @@
     if (name === 'marketplace')   renderMarketplace();
     if (name === 'publicclosets') renderPublicClosets();
     if (name === 'seasonal')      renderSeasonalReport();
+    if (name === 'season-recap')  renderSeasonRecap(getActiveSeason());
     if (name === 'compare')       initCompare();
     if (name === 'shopping')      initShoppingFeed();
     if (name === 'admin')         renderAdminDashboard();
@@ -2908,6 +3156,19 @@
         <div><b style="display:inline-flex;align-items:center;gap:3px;color:var(--accent)">${icon('flame',16)}${meta.trend_score!=null?esc(meta.trend_score):'—'}</b><span>Trend score</span></div>
       </div>
       <div class="ig-bio"><b>${wardrobe.length} items</b> in closet · worth ~$${closetValue.toLocaleString()}${meta.overall_style?' · '+esc(meta.overall_style):''}</div>
+      ${(() => {
+        const s = getActiveSeason();
+        return `<div class="season-entry-card" id="season-entry-card" role="button" tabindex="0" aria-label="View ${s.name} ${s.year} season recap">
+          <div class="season-entry-left">
+            <div class="season-entry-row">
+              <span style="color:#fff">${icon(s.icon, 20)}</span>
+              <span class="season-entry-title">Your ${esc(s.name)} ${s.year}</span>
+            </div>
+            <div class="season-entry-sub">Tap to see your season recap</div>
+          </div>
+          <span class="season-entry-arrow">${icon('arrowRight', 20)}</span>
+        </div>`;
+      })()}
       <div class="seg">
         <button data-seg="closet" class="${profileTab==='closet'?'on':''}">${icon('hanger',15)} Closet</button>
         <button data-seg="looks"  class="${profileTab==='looks'?'on':''}">${icon('grid',15)} Looks</button>
@@ -2916,6 +3177,7 @@
 
     document.getElementById('share-look')?.addEventListener('click',shareLookToFeed);
     document.getElementById('edit-profile-btn')?.addEventListener('click',openEditProfile);
+    document.getElementById('season-entry-card')?.addEventListener('click',()=>showView('season-recap'));
     closetBody.querySelectorAll('[data-seg]').forEach(b=>b.addEventListener('click',()=>{profileTab=b.dataset.seg;renderCloset();}));
     closetBody.querySelectorAll('[data-rm]').forEach(btn=>btn.addEventListener('click',()=>removeListing(Number(btn.dataset.rm))));
     closetBody.querySelectorAll('[data-goto-feed]').forEach(cell=>cell.addEventListener('click',()=>showView('feed')));
@@ -3316,7 +3578,7 @@
 
   // ---- static UI icons (nav bar) ----
   document.getElementById('nav-ico-home').innerHTML    = icon('sparkle', 24);
-  document.getElementById('nav-ico-closet').innerHTML  = icon('hanger', 24);
+  document.getElementById('nav-ico-shop').innerHTML    = icon('shoppingBag', 24);
   document.getElementById('nav-ico-explore').innerHTML = icon('search', 24);
   document.getElementById('nav-ico-feed').innerHTML    = icon('play', 24);
   document.getElementById('nav-ico-fab').innerHTML     = icon('plus', 28);
@@ -3357,6 +3619,8 @@
 
   // Auto-render home on load
   renderHome();
+  // Wire marketplace filter sheet (overlay + apply + reset) — runs once after DOM ready
+  requestAnimationFrame(initMPFilterSheet);
 
   // ---- Home Screen ----
 
@@ -3662,7 +3926,7 @@
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('rewards')"><span class="hq-icon">${icon('award', 20)}</span>Rewards</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('wallet')"><span class="hq-icon">${icon('coins', 20)}</span>Wallet</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('sustainability')"><span class="hq-icon">${icon('leaf', 20)}</span>Eco</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('seasonal')"><span class="hq-icon">${icon('list', 20)}</span>Season</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('season-recap')"><span class="hq-icon">${icon('sparkle', 20)}</span>My Season</button>
       </div>
     `;
 
@@ -3720,62 +3984,475 @@
     }, ()=>{}, {timeout:6000});
   }
 
+  // ---- Season Report ----
+  // ---- Seasonal Recap (Valentino — Commerce & Intelligence) ----
+  function getActiveSeason() {
+    const m = new Date().getMonth(); // 0-11
+    const y = new Date().getFullYear();
+    // Summer: April(3) – September(8)
+    if (m >= 3 && m <= 8) return { name: 'Summer', year: y, icon: 'sun', start: new Date(y,3,1), end: new Date(y,8,30) };
+    // Winter: October(9) – March(2)
+    const winterYear = m >= 9 ? y : y - 1;
+    return { name: 'Winter', year: winterYear + 1, icon: 'sparkle', start: new Date(winterYear,9,1), end: new Date(winterYear+1,2,31) };
+  }
+
+  function renderSeasonRecap(season) {
+    season = season || getActiveSeason();
+    const wrap = document.getElementById('season-recap-wrap');
+    if (!wrap) return;
+
+    // Derive wardrobe data or use seeds
+    let itemsCount = 24, outfitsLogged = 42, seasonScore = 71, deadItems = 8, deadValue = 340;
+    let champData = [
+      { name: 'Black Blazer', wears: 14, cat: 'outerwear' },
+      { name: 'White Sneakers', wears: 11, cat: 'shoes' },
+      { name: 'Linen Shirt', wears: 8, cat: 'top' },
+    ];
+    let identityLabel = 'The Quiet Minimalist';
+    let identityTags = ['Monochrome', 'Clean Lines', 'Effortless'];
+    let items = [];
+    try {
+      const raw = localStorage.getItem('awear_wardrobe');
+      items = raw ? JSON.parse(raw) : [];
+      if (items.length > 0) {
+        itemsCount = items.length;
+        const wornItems = items.filter(i => (i.wear_count||0) > 0);
+        outfitsLogged = wornItems.reduce((s,i) => s + (i.wear_count||0), 0) || 42;
+        const neverWorn = items.filter(i => !(i.wear_count||0));
+        deadItems = neverWorn.length || 8;
+        deadValue = Math.round(neverWorn.reduce((s,i) => s + (i.price_estimate_usd||0), 0)) || 340;
+        seasonScore = itemsCount > 0 ? Math.min(99, Math.round((wornItems.length / itemsCount) * 100 + 12)) : 71;
+        const sorted = [...items].sort((a,b) => (b.wear_count||0) - (a.wear_count||0));
+        if (sorted[0]) champData = sorted.slice(0,3).map(i => ({ name: i.name||'Item', wears: i.wear_count||1, cat: i.category||'top' }));
+        const tags = items.flatMap(i => i.tags || []);
+        const tagFreq = {};
+        tags.forEach(t => { tagFreq[t] = (tagFreq[t]||0)+1; });
+        const topTags = Object.entries(tagFreq).sort((a,b)=>b[1]-a[1]).slice(0,3).map(e=>e[0]);
+        if (topTags.length) {
+          identityTags = topTags;
+          const dominated = topTags[0]?.toLowerCase() || '';
+          if (dominated.includes('vintage') || dominated.includes('retro')) identityLabel = 'The Vintage Collector';
+          else if (dominated.includes('street') || dominated.includes('urban')) identityLabel = 'The Streetwear Pioneer';
+          else if (dominated.includes('bold') || dominated.includes('color')) identityLabel = 'The Bold Maximalist';
+          else identityLabel = 'The Quiet Minimalist';
+        }
+      }
+    } catch(e) {}
+
+    // Extended analytics — derived from hoisted items array
+    const _COLOR_MAP={
+      black:'#1a1a1a',white:'#f5f0ea',cream:'#f5f0ea',ivory:'#f5f0ea',beige:'#d4b896',
+      navy:'#1d2d44',blue:'#2563eb',cobalt:'#0047ab',
+      red:'#e8526a',rose:'#e8526a',pink:'#f472b6',coral:'#f87171',
+      orange:'#fb923c',terracotta:'#c2523c',rust:'#b45309',
+      yellow:'#fbbf24',gold:'#d97706',camel:'#c4855a',tan:'#c4855a',sand:'#d4b896',
+      green:'#16a34a',sage:'#7fb069',olive:'#84714b',khaki:'#9ca382',
+      purple:'#7a6af0',lavender:'#a78bfa',mauve:'#9661c0',violet:'#8b5cf6',
+      brown:'#8b5e3c',burgundy:'#800020',wine:'#722f37',
+      grey:'#9ca3af',gray:'#9ca3af',charcoal:'#4b5563',silver:'#e2e8f0',
+      teal:'#0d9488',mint:'#a7f3d0',turquoise:'#06b6d4',
+    };
+    function _srHex(name){
+      const n=(name||'').toLowerCase().replace(/[\s\-_]/g,'');
+      for(const[k,v]of Object.entries(_COLOR_MAP)){if(n.includes(k))return v;}
+      return '#9ca3af';
+    }
+    const COLOR_SEEDS=[
+      {name:'Noir',hex:'#1a1a1a',pct:32},{name:'Ivory',hex:'#f5f0ea',pct:24},
+      {name:'Terracotta',hex:'#e8526a',pct:18},{name:'Camel',hex:'#c4855a',pct:16},
+      {name:'Mauve',hex:'#7a6af0',pct:10},
+    ];
+    const colorFreqMap={};
+    items.forEach(i=>{const c=(i.color||'').toLowerCase().trim();if(c&&c.length>1)colorFreqMap[c]=(colorFreqMap[c]||0)+Math.max(i.wear_count||0,1);});
+    const colorEntries=Object.entries(colorFreqMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const totalCW=colorEntries.reduce((s,[,v])=>s+v,0)||1;
+    const paletteData=colorEntries.length>=2
+      ?colorEntries.map(([name,count])=>({name:name.charAt(0).toUpperCase()+name.slice(1),hex:_srHex(name),pct:Math.round(count/totalCW*100)}))
+      :COLOR_SEEDS;
+    const maxSwatchPct=Math.max(...paletteData.map(c=>c.pct),1);
+
+    const catBuckets={};
+    items.forEach(i=>{
+      const cat=(i.category||'other').toLowerCase();
+      if(!catBuckets[cat])catBuckets[cat]={total:0,worn:0,wears:0,value:0};
+      catBuckets[cat].total++;catBuckets[cat].wears+=(i.wear_count||0);catBuckets[cat].value+=(i.price_estimate_usd||0);
+      if((i.wear_count||0)>0)catBuckets[cat].worn++;
+    });
+    const CAT_SEEDS=[
+      {label:'Tops',util:72},{label:'Shoes',util:80},{label:'Bottoms',util:58},
+      {label:'Outerwear',util:33},{label:'Bags',util:45},{label:'Dresses',util:25},
+    ];
+    const catRows=Object.entries(catBuckets).sort((a,b)=>b[1].wears-a[1].wears).slice(0,6)
+      .map(([cat,d])=>({label:cat.charAt(0).toUpperCase()+cat.slice(1),util:d.total>0?Math.round(d.worn/d.total*100):0}));
+    const catDisplay=catRows.length>=2?catRows:CAT_SEEDS;
+    const SR_FILLS=['var(--accent,#e8526a)','var(--accent2,#c4855a)','var(--accent3,#7a6af0)','var(--success,#52c97a)','var(--warning,#e8a84a)','var(--muted,#8a8498)'];
+
+    const brandBuckets={};
+    items.forEach(i=>{const b=(i.brand||'').trim();if(b)brandBuckets[b]=(brandBuckets[b]||0)+1;});
+    const brandEntries=Object.entries(brandBuckets).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const BRAND_SEEDS=[['Zara',7],['H&M',5],['Nike',4],['Vintage',3]];
+    const brandsDisplay=brandEntries.length>=2?brandEntries:BRAND_SEEDS;
+    const maxBrand=Math.max(...brandsDisplay.map(([,v])=>v),1);
+
+    const cpwByCat=Object.entries(catBuckets)
+      .filter(([,d])=>d.wears>0&&d.value>0)
+      .map(([cat,d])=>({label:cat.charAt(0).toUpperCase()+cat.slice(1),cpw:+(d.value/d.wears).toFixed(0)}))
+      .sort((a,b)=>a.cpw-b.cpw).slice(0,5);
+    const CPW_SEEDS=[{label:'Shoes',cpw:8},{label:'Tops',cpw:12},{label:'Bags',cpw:19},{label:'Bottoms',cpw:24},{label:'Outerwear',cpw:67}];
+    const cpwData=cpwByCat.length>=2?cpwByCat:CPW_SEEDS;
+    const maxCpwVal=Math.max(...cpwData.map(c=>c.cpw),1);
+
+    const avgPriceByCat=Object.entries(catBuckets)
+      .filter(([,d])=>d.total>0&&d.value>0)
+      .map(([cat,d])=>({label:cat.charAt(0).toUpperCase()+cat.slice(1),avg:+(d.value/d.total).toFixed(0)}))
+      .sort((a,b)=>b.avg-a.avg).slice(0,6);
+    const AVG_PRICE_SEEDS=[{label:'Outerwear',avg:148},{label:'Shoes',avg:92},{label:'Bags',avg:78},{label:'Dresses',avg:65},{label:'Bottoms',avg:48},{label:'Tops',avg:34}];
+    const avgPriceData=avgPriceByCat.length>=2?avgPriceByCat:AVG_PRICE_SEEDS;
+    const maxAvgPrice=Math.max(...avgPriceData.map(c=>c.avg),1);
+
+    const activeRatio=itemsCount>0?Math.round(((itemsCount-deadItems)/itemsCount)*100):66;
+
+    const moodClass = season.name === 'Summer' ? 'season-mood-summer' : 'season-mood-winter';
+    const recapSection = document.getElementById('season-recap');
+    if (recapSection) {
+      recapSection.classList.remove('season-mood-summer','season-mood-winter');
+      recapSection.classList.add(moodClass);
+    }
+
+    const scoreBg = `var(--card,#1e1a22)`;
+    const scoreColor = `var(--accent,#e8526a)`;
+    const circumference = 2 * Math.PI * 46; // r=46
+    const scoreOffset = circumference - (seasonScore / 100) * circumference;
+
+    wrap.innerHTML = `
+      <!-- Hero -->
+      <div class="sr-hero">
+        <button class="sr-back-btn" onclick="history.back()||showView('closet')" aria-label="Back">
+          ${icon('arrowRight',16)} Back
+        </button>
+        <div class="sr-hero-season">${esc(season.name)}</div>
+        <div class="sr-hero-year">${season.year}</div>
+        <div class="sr-hero-sub">Your ${esc(season.name)} ${season.year} in Style</div>
+      </div>
+
+      <!-- Numbers -->
+      <div class="sr-stats-row">
+        <div class="sr-stat-cell"><div class="sr-stat-num">${itemsCount}</div><div class="sr-stat-lbl">Items this season</div></div>
+        <div class="sr-stat-cell"><div class="sr-stat-num">${outfitsLogged}</div><div class="sr-stat-lbl">Outfits logged</div></div>
+        <div class="sr-stat-cell"><div class="sr-stat-num">${seasonScore}</div><div class="sr-stat-lbl">Season score</div></div>
+      </div>
+
+      <!-- Style Identity -->
+      <div class="sr-section">
+        <div class="sr-section-title">${icon('sparkle',16)} Your Style Identity</div>
+        <div class="sr-identity-card">
+          <div class="sr-identity-label">${esc(identityLabel)}</div>
+          <div class="sr-identity-tags">
+            ${identityTags.map(t => `<span class="sr-tag">${esc(t)}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- Color Story -->
+      <div class="sr-section">
+        <div class="sr-section-title">${icon('sparkle',16)} Your Color Story</div>
+        <div class="sr-insight">Your wardrobe speaks in color. These shades defined your ${esc(season.name)} ${season.year}.</div>
+        <div class="sr-palette-wrap">
+          <div class="sr-palette-cols">
+            ${paletteData.map(c=>`<div class="sr-palette-col"><div class="sr-palette-pct">${c.pct}%</div><div class="sr-palette-swatch" style="background:${c.hex};height:${Math.round(20+(c.pct/maxSwatchPct)*56)}px" aria-label="${c.name}"></div><div class="sr-palette-name">${c.name}</div></div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Wardrobe -->
+      <div class="sr-section">
+        <div class="sr-active-card">
+          <div class="sr-active-num">${activeRatio}%</div>
+          <div class="sr-active-body">
+            <div class="sr-active-headline">${activeRatio>=70?'Closet Champion':activeRatio>=50?'Solid Foundation':'Room to Grow'}</div>
+            <div class="sr-active-sub">of your wardrobe worn this ${esc(season.name)}. ${activeRatio<50?deadItems+' items still waiting for their moment.':"You're putting your closet to work."}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wear Champions -->
+      <div class="sr-section">
+        <div class="sr-section-title">${icon('flame',16)} What You Loved This ${esc(season.name)}</div>
+        <div class="sr-champ-row">
+          ${champData.map(c => `
+            <div class="sr-champ-item">
+              <div class="sr-champ-icon">${icon(catIcon(c.cat)||'hanger',22)}</div>
+              <div class="sr-champ-name">${esc(c.name)}</div>
+              <div class="sr-champ-wears">${c.wears} wears</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Category Utilization -->
+      <div class="sr-section">
+        <div class="sr-section-title">${icon('barChart',16)} How Each Category Performed</div>
+        <div class="sr-insight">The percentage of items in each category you actually wore this ${esc(season.name)}.</div>
+        <div class="sr-bar-list">
+          ${catDisplay.map((c,i)=>`<div class="sr-bar-row"><div class="sr-bar-lbl">${c.label}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${c.util}%;background:${SR_FILLS[i]||SR_FILLS[0]}"></div></div><div class="sr-bar-val">${c.util}%</div></div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Brand Universe -->
+      <div class="sr-section">
+        <div class="sr-section-title">${icon('tag',16)} Your Brand Universe</div>
+        <div class="sr-insight">The labels making up your closet this season.</div>
+        <div class="sr-bar-list">
+          ${brandsDisplay.map(([brand,count])=>`<div class="sr-brand-row"><div class="sr-bar-lbl">${brand}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${Math.round(count/maxBrand*100)}%;background:var(--accent2,#c4855a)"></div></div><div class="sr-bar-val">${count}</div></div>`).join('')}
+        </div>
+      </div>
+
+      <!-- CPW by Category -->
+      <div class="sr-section">
+        <div class="sr-section-title">${icon('coins',16)} Cost Per Wear</div>
+        <div class="sr-insight">${cpwData[0]?'Your '+cpwData[0].label+' are your best investment at $'+cpwData[0].cpw+'/wear.':'Log more wears to unlock your cost-per-wear breakdown.'}</div>
+        <div class="sr-cpw-wrap">
+          <div class="sr-bar-list">
+            ${cpwData.map((c,i)=>`<div class="sr-bar-row"><div class="sr-bar-lbl">${c.label}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${Math.round(c.cpw/maxCpwVal*100)}%;background:${i===0?'var(--success,#52c97a)':'var(--accent,#e8526a)'}"></div></div><div class="sr-bar-val">$${c.cpw}</div></div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- Average Price by Category -->
+      <div class="sr-section">
+        <div class="sr-section-title">${icon('receipt',16)} Average Item Price by Category</div>
+        <div class="sr-insight">${avgPriceData[0]?'You invest the most in '+avgPriceData[0].label.toLowerCase()+' — $'+avgPriceData[0].avg+' on average per item.':'Based on your wardrobe values.'}</div>
+        <div class="sr-bar-list">
+          ${avgPriceData.map(c=>`<div class="sr-bar-row"><div class="sr-bar-lbl">${c.label}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${Math.round(c.avg/maxAvgPrice*100)}%;background:var(--accent2,#c4855a)"></div></div><div class="sr-bar-val">$${c.avg}</div></div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Dead Zone -->
+      <div class="sr-section">
+        <div class="sr-dead-zone">
+          <div class="sr-dead-title">${icon('alertTriangle',16)} Unworn this season</div>
+          <div class="sr-dead-value">${deadItems} items sitting idle · estimated $${deadValue} value</div>
+          <button class="sr-dead-cta" onclick="showView('marketplace')" aria-label="List unworn items for sale">
+            ${icon('tag',16)} List them for sale
+          </button>
+        </div>
+      </div>
+
+      <!-- Season Score Ring + Share -->
+      <div class="sr-score-section">
+        <div class="sr-section-title" style="margin-bottom:0">${icon('award',16)} Your Season Score</div>
+        <div class="sr-score-ring" aria-label="Season score ${seasonScore}">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="46" fill="none" stroke="var(--card,#1e1a22)" stroke-width="10"/>
+            <circle cx="60" cy="60" r="46" fill="none" stroke="var(--accent,#e8526a)" stroke-width="10"
+              stroke-dasharray="${circumference.toFixed(1)}" stroke-dashoffset="${scoreOffset.toFixed(1)}"
+              stroke-linecap="round"/>
+          </svg>
+          <span class="sr-score-ring-num">${seasonScore}</span>
+        </div>
+        <div class="sr-score-compare">Community avg: 52 &middot; <strong>You: ${seasonScore}</strong></div>
+        <button class="sr-share-btn" id="sr-share-btn" aria-label="Share your season recap">
+          ${icon('share',18)} Share Your Season
+        </button>
+      </div>
+    `;
+
+    document.getElementById('sr-share-btn')?.addEventListener('click', () => {
+      if (navigator.share) {
+        navigator.share({
+          title: `My ${season.name} ${season.year} Style Recap`,
+          text: `I scored ${seasonScore} on my ${season.name} style recap on AWEAR. Check yours!`,
+          url: window.location.href,
+        }).catch(() => {});
+      } else {
+        showToast('Sharing coming soon');
+      }
+    });
+  }
+
   // ---- Analytics ----
   function renderAnalytics() {
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const el = document.getElementById('analytics-wrap');
 
     if (!wardrobe.length) {
-      el.innerHTML = `<div class="an-header" style="display:flex;align-items:center;gap:8px">${icon('barChart',20)} Analytics</div><div class="an-empty">${icon('hanger',36)} Your closet is empty<br><span style="font-size:var(--t-caption);font-weight:500;opacity:.6">Scan your first look to see stats</span></div>`;
+      el.innerHTML = `
+        <div class="an-header" style="display:flex;align-items:center;gap:8px">${icon('barChart',20)} Analytics</div>
+        <div class="an-empty">
+          ${icon('hanger',36)}
+          <br>Your closet is empty
+          <br><span style="font-size:var(--t-caption,12px);font-weight:500;opacity:.6">Add your first item to see insights</span>
+          <br><button class="ha-btn ha-primary" style="margin-top:20px;display:inline-flex;align-items:center;gap:8px" onclick="showView('closet')">${icon('plus',16)} Add your first item</button>
+        </div>`;
       return;
     }
 
+    // ---- Data calculations ----
     const totalItems = wardrobe.length;
-    const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_usd||0), 0);
     const totalWears = wardrobe.reduce((s,i) => s + (i.wear_count||0), 0);
-    const avgCPW = totalValue > 0 && totalWears > 0 ? Math.round(totalValue / totalWears) : null;
+    const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_usd||0), 0);
 
-    // Color distribution
-    const colorMap = {};
-    wardrobe.forEach(i => { const c = (i.color||'Other'); colorMap[c] = (colorMap[c]||0)+1; });
-    const topColors = Object.entries(colorMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    // Utilization: items worn at least once / total (seed 34% if no wear data)
+    const wornItems = wardrobe.filter(i => (i.wear_count||0) > 0);
+    const utilizationPct = totalItems > 0
+      ? (wornItems.length > 0 ? Math.round((wornItems.length / totalItems) * 100) : 34)
+      : 34;
 
-    // Category distribution
+    // Active (worn 3+) and never worn
+    const activeItems = wardrobe.filter(i => (i.wear_count||0) >= 3);
+    const activePct = totalItems > 0
+      ? (activeItems.length > 0 ? Math.round((activeItems.length / totalItems) * 100) : 42)
+      : 42;
+    const neverWorn = wardrobe.filter(i => (i.wear_count||0) === 0);
+    const neverPct = totalItems > 0
+      ? (neverWorn.length > 0 ? Math.round((neverWorn.length / totalItems) * 100) : 18)
+      : 18;
+
+    // Cost per wear
+    const itemsWithCPW = wardrobe.filter(i => i.price_estimate_usd > 0 && (i.wear_count||0) > 0);
+    const avgCPW = itemsWithCPW.length > 0
+      ? (itemsWithCPW.reduce((s,i) => s + i.price_estimate_usd / i.wear_count, 0) / itemsWithCPW.length).toFixed(2)
+      : '8.40';
+
+    // Wear champion & hidden cost
+    const sortedByWear = [...wardrobe].sort((a,b) => (b.wear_count||0) - (a.wear_count||0));
+    const champion = sortedByWear.find(i => (i.wear_count||0) > 0);
+    const sortedByValue = [...neverWorn].sort((a,b) => (b.price_estimate_usd||0) - (a.price_estimate_usd||0));
+    const hiddenCost = sortedByValue[0] || null;
+
+    // Sustainability score (rewear ratio vs community 52%)
+    const rewearScore = utilizationPct > 0 ? Math.min(100, Math.round(utilizationPct * 1.05)) : 71;
+    const scoreColor = rewearScore >= 50
+      ? 'var(--success, #52c97a)'
+      : rewearScore >= 30
+        ? 'var(--warning, #e8a84a)'
+        : 'var(--danger, #e05252)';
+
+    // Style identity — derive from tags or seed
+    const allTags = wardrobe.flatMap(i => i.style_tags || []);
+    const tagCount = {};
+    allTags.forEach(t => { tagCount[t] = (tagCount[t]||0)+1; });
+    const topTags = Object.entries(tagCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t])=>t);
+    const identityTags = topTags.length >= 2 ? topTags : ['minimal', 'vintage', 'Y2K'];
+    const STYLE_ARCHETYPES = {
+      minimal: 'The Quiet Minimalist',
+      vintage: 'The Vintage Collector',
+      streetwear: 'The Street Auteur',
+      y2k: 'The Y2K Revivalist',
+      boho: 'The Free Spirit',
+      office: 'The Power Dresser',
+      coastal: 'The Coastal Romantic',
+      cottagecore: 'The Cottagecore Dreamer',
+    };
+    const primaryTag = (identityTags[0]||'minimal').toLowerCase();
+    const archetype = STYLE_ARCHETYPES[primaryTag] || 'The Quiet Minimalist';
+
+    // Dead zone: items not worn in 60+ days (seed: 3 items, $340)
+    const deadCount = neverWorn.length > 0 ? Math.min(neverWorn.length, 3) : 3;
+    const deadValue = neverWorn.length > 0
+      ? neverWorn.slice(0, 3).reduce((s,i) => s + (i.price_estimate_usd||0), 0) || 340
+      : 340;
+
+    // Color distribution (kept for category bars)
     const catMap = {};
     wardrobe.forEach(i => { const c = i.category||'other'; catMap[c] = (catMap[c]||0)+1; });
-    const topCats = Object.entries(catMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const topCats = Object.entries(catMap).sort((a,b)=>b[1]-a[1]).slice(0,4);
 
-    // Wear sorting
-    const sortedByWear = [...wardrobe].sort((a,b) => (b.wear_count||0) - (a.wear_count||0));
-    const mostWorn   = sortedByWear.filter(i => (i.wear_count||0) > 0).slice(0,3);
-    const leastWorn  = sortedByWear.filter(i => (i.wear_count||0) === 0).slice(0,3);
-
+    // ---- Render ----
     el.innerHTML = `
       <div class="an-header" style="display:flex;align-items:center;gap:8px">${icon('barChart',20)} Analytics</div>
+
+      <!-- 1. Hero Stats Bar -->
       <div class="an-hero">
         <div class="an-box"><div class="an-box-num">${totalItems}</div><div class="an-box-label">items</div></div>
-        <div class="an-box"><div class="an-box-num">${totalValue > 999 ? '$'+(totalValue/1000).toFixed(1)+'K' : '$'+totalValue}</div><div class="an-box-label">closet value</div></div>
-        <div class="an-box"><div class="an-box-num">${totalWears}</div><div class="an-box-label">wears</div></div>
+        <div class="an-box"><div class="an-box-num">${utilizationPct}%</div><div class="an-box-label">utilization</div></div>
+        <div class="an-box"><div class="an-box-num">$${avgCPW}</div><div class="an-box-label">avg cost/wear</div></div>
       </div>
 
-      ${avgCPW !== null ? `
-      <div class="an-cpw-card">
-        <div class="an-cpw-val">$${avgCPW}</div>
-        <div class="an-cpw-label">Average cost per wear</div>
-      </div>` : ''}
-
-      <div class="an-section">
-        <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('flower',16)} My colors</div>
-        ${topColors.map(([color, count]) => {
-          const pct = Math.round((count/totalItems)*100);
-          return `<div class="an-bar-row">
-            <div class="an-bar-lbl">${esc(color)}</div>
-            <div class="an-bar-track"><div class="an-bar-fill" style="width:${pct}%"></div></div>
-            <div class="an-bar-pct">${pct}%</div>
-          </div>`;
-        }).join('')}
+      <!-- 2. Style Identity Card -->
+      <div class="an-identity-card">
+        <button class="an-identity-share" onclick="showToast('Sharing coming soon')" aria-label="Share style identity">${icon('share',18)}</button>
+        <div class="an-identity-kicker">Your Style Identity</div>
+        <div class="an-identity-name">${esc(archetype)}</div>
+        <div class="an-identity-tags">
+          ${identityTags.map(t => `<span class="an-identity-pill">${esc(t)}</span>`).join('')}
+        </div>
       </div>
 
+      <!-- 3. Cost Per Wear Mini-Grid -->
+      <div class="an-cpw-grid">
+        <div class="an-cpw-card">
+          <div class="an-cpw-label champion">${icon('flame',12)} Wear Champion</div>
+          <div class="an-cpw-value">${champion ? esc(champion.name) : 'Black Blazer'}</div>
+          <div class="an-cpw-sub">${champion
+            ? `${champion.wear_count} wears · $${Math.round(champion.price_estimate_usd/champion.wear_count)||2}/wear`
+            : '47 wears · $2.30/wear'
+          }</div>
+        </div>
+        <div class="an-cpw-card">
+          <div class="an-cpw-label hidden-cost">${icon('alert',12)} Hidden Cost</div>
+          <div class="an-cpw-value">${hiddenCost ? esc(hiddenCost.name) : 'Satin Skirt'}</div>
+          <div class="an-cpw-sub">${hiddenCost
+            ? `bought $${hiddenCost.price_estimate_usd||180} · worn 0 times`
+            : 'bought $180 · worn 1 time'
+          }</div>
+        </div>
+      </div>
+
+      <!-- 4. Wardrobe Health -->
+      <div class="an-section" style="padding-bottom:0">
+        <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('target',16)} Wardrobe Health</div>
+      </div>
+      <div class="an-health-section">
+        <div class="an-health-row">
+          <div class="an-health-meta">
+            <span class="an-health-lbl">Utilization</span>
+            <span class="an-health-pct" style="color:var(--success,#52c97a)">${utilizationPct}%</span>
+          </div>
+          <div class="an-health-bar"><div class="an-health-fill" style="width:${utilizationPct}%;background:var(--success,#52c97a)"></div></div>
+        </div>
+        <div class="an-health-row">
+          <div class="an-health-meta">
+            <span class="an-health-lbl">Active Items (3+ wears)</span>
+            <span class="an-health-pct" style="color:var(--accent2,#c4855a)">${activePct}%</span>
+          </div>
+          <div class="an-health-bar"><div class="an-health-fill" style="width:${activePct}%;background:var(--accent2,#c4855a)"></div></div>
+        </div>
+        <div class="an-health-row">
+          <div class="an-health-meta">
+            <span class="an-health-lbl">Never Worn</span>
+            <span class="an-health-pct" style="color:var(--danger,#e05252)">${neverPct}%</span>
+          </div>
+          <div class="an-health-bar"><div class="an-health-fill" style="width:${neverPct}%;background:var(--danger,#e05252)"></div></div>
+        </div>
+      </div>
+
+      <!-- 5. Dead Zone Alert -->
+      <div class="an-alert-card">
+        <div class="an-alert-title">${icon('alert',16)} ${deadCount} item${deadCount!==1?'s':''} haven't been worn in 60+ days</div>
+        <div class="an-alert-sub">Worth ~$${deadValue} sitting there</div>
+        <div class="an-alert-actions">
+          <button class="an-alert-btn primary" onclick="showToast('Challenge accepted — pick one this week!')">Wear one this week</button>
+          <button class="an-alert-btn" onclick="showView('marketplace')">List for sale</button>
+        </div>
+      </div>
+
+      <!-- 6. Sustainability Score -->
+      <div class="an-section" style="padding-bottom:0">
+        <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('leaf',16)} Sustainability</div>
+      </div>
+      <div class="an-score-section">
+        <div class="an-score-ring" style="border-color:${scoreColor};color:${scoreColor}">
+          <div class="an-score-number">${rewearScore}</div>
+          <div class="an-score-unit">/ 100</div>
+        </div>
+        <div class="an-score-info">
+          <div class="an-score-title">Rewear Score</div>
+          <div class="an-score-sub">You rewear ${rewearScore}% of your wardrobe.<br>Community avg: 52%</div>
+        </div>
+      </div>
+
+      <!-- Category bars (kept from v1) -->
+      ${topCats.length > 1 ? `
       <div class="an-section">
         <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('hanger',16)} By category</div>
         ${topCats.map(([cat, count]) => {
@@ -3786,38 +4463,29 @@
             <div class="an-bar-pct">${pct}%</div>
           </div>`;
         }).join('')}
-      </div>
-
-      ${mostWorn.length ? `
-      <div class="an-section">
-        <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('flame',16)} Most worn</div>
-        ${mostWorn.map(i => `
-          <div class="an-item-row">
-            <div class="an-item-ico">${icon(catIcon(i.category), 22)}</div>
-            <div style="flex:1;min-width:0">
-              <div class="an-item-name">${esc(i.name)}</div>
-              <div class="an-item-sub">${i.wear_count} wears</div>
-            </div>
-            <div class="an-item-cpw">${i.price_estimate_usd && i.wear_count ? '$'+Math.round(i.price_estimate_usd/i.wear_count)+'/wear' : ''}</div>
-          </div>`).join('')}
       </div>` : ''}
 
-      ${leastWorn.length ? `
-      <div class="an-section">
-        <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('tag',16)} Never worn</div>
-        ${leastWorn.map(i => `
-          <div class="an-item-row">
-            <div class="an-item-ico">${icon(catIcon(i.category), 22)}</div>
-            <div style="flex:1;min-width:0">
-              <div class="an-item-name">${esc(i.name)}</div>
-              <div class="an-item-sub">$${i.price_estimate_usd||0} in closet · never worn</div>
-            </div>
-            <button class="ha-btn ha-secondary" style="padding:6px 12px;font-size:var(--t-micro);border-radius:10px;white-space:nowrap;flex-shrink:0" onclick="addToWishlistFromItem('${attr(i.name)}')">Sell</button>
-          </div>`).join('')}
-      </div>
+      <!-- Smart Declutter CTA -->
       <div class="an-section">
         <button class="ha-btn ha-primary" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px" onclick="runDeclutter()">${icon('sparkle',16)} Smart Declutter — let AI clean your closet</button>
-      </div>` : ''}
+      </div>
+
+      <!-- 7. Season Style Report — entry card -->
+      ${(() => {
+        const s = getActiveSeason();
+        return `<div class="an-wrapped-teaser season-entry-analytics" style="cursor:pointer" onclick="showView('season-recap')" role="button" tabindex="0" aria-label="Open ${s.name} ${s.year} recap">
+          <div class="an-wrapped-year">AWEAR · ${s.year}</div>
+          <div class="an-wrapped-title">Your ${esc(s.name)} ${s.year} in Style</div>
+          <div class="an-wrapped-actions">
+            <button class="an-wrapped-cta" onclick="event.stopPropagation();showView('season-recap')" aria-label="See full season report" style="min-height:44px">
+              ${icon('barChart', 16)} See Full Recap
+            </button>
+            <button class="an-wrapped-share" onclick="event.stopPropagation();showToast('Sharing coming soon')" aria-label="Share season report" style="min-height:44px;min-width:44px">
+              ${icon('share', 18)}
+            </button>
+          </div>
+        </div>`;
+      })()}
     `;
   }
 
@@ -4431,26 +5099,40 @@
   // ---- Marketplace ----
   const MP_KEY = 'awear_marketplace';
   const MP_SEED = [
-    {id:'mp1', name:'Barrel Jeans Light Wash', search_query:'barrel jeans light wash denim', category:'bottoms', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'Blue'},
-    {id:'mp2', name:'Black Vintage Leather Jacket', search_query:'black vintage leather jacket', category:'outerwear', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'Black'},
-    {id:'mp3', name:'Adidas Samba White Sneakers', search_query:'Adidas Samba white sneakers', category:'shoes', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'White'},
+    {id:'mp1', name:'Barrel Jeans Light Wash', search_query:'barrel jeans light wash denim', category:'bottoms', size:'M', price:180, orig:450, condition:'like-new', seller:'@noalevi', style_tags:['y2k','denim'], color:'Blue'},
+    {id:'mp2', name:'Black Vintage Leather Jacket', search_query:'black vintage leather jacket', category:'outerwear', size:'S', price:320, orig:800, condition:'used', seller:'@mayacohen', style_tags:['streetwear','vintage'], color:'Black'},
+    {id:'mp3', name:'Adidas Samba White Sneakers', search_query:'Adidas Samba white sneakers', category:'shoes', size:'38', price:390, orig:560, condition:'new', seller:'@shirastyle', style_tags:['retro','iconic'], color:'White'},
     {id:'mp4', name:'Black Mini Crossbody Bag', search_query:'black mini bag crossbody', category:'bag', price:95, orig:220, condition:'like-new', seller:'@danakatz', style_tags:['minimal','everyday'], color:'Black'},
-    {id:'mp5', name:'Cream Rib Knit Crop Top', search_query:'cream rib knit crop top', category:'top', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'Cream'},
-    {id:'mp6', name:'Green Satin Midi Skirt', search_query:'green satin midi skirt formal', category:'dress', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'Green'},
+    {id:'mp5', name:'Cream Rib Knit Crop Top', search_query:'cream rib knit crop top', category:'top', size:'XS', price:45, orig:120, condition:'used', seller:'@ronigold', style_tags:['minimal','y2k'], color:'Cream'},
+    {id:'mp6', name:'Green Satin Midi Skirt', search_query:'green satin midi skirt formal', category:'dress', size:'S', price:160, orig:380, condition:'new', seller:'@liorsade', style_tags:['formal','romantic'], color:'Green'},
     {id:'mp7', name:'Black Baseball Cap', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', seller:'@noalevi', style_tags:['streetwear','casual'], color:'Black'},
-    {id:'mp8', name:'Beige Cargo Pants', search_query:'beige cargo pants utility', category:'bottoms', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'Beige'},
+    {id:'mp8', name:'Beige Cargo Pants', search_query:'beige cargo pants utility', category:'bottoms', size:'L', price:140, orig:320, condition:'like-new', seller:'@mayacohen', style_tags:['streetwear','utility'], color:'Beige'},
   ];
   const MP_NEW_SEED = [
-    {id:'n1', name:'Wide Leg Trousers', search_query:'zara wide leg black trousers fashion', category:'bottoms', price:59, brand:'Zara', style_tags:['minimal','chic'], isNew:true},
-    {id:'n2', name:'Linen Blazer', search_query:'hm premium linen blazer cream oversized', category:'outerwear', price:79, brand:'H&M', style_tags:['chic','office'], isNew:true},
-    {id:'n3', name:'Satin Slip Dress', search_query:'asos satin slip midi dress green', category:'dress', price:45, brand:'ASOS', style_tags:['romantic','evening'], isNew:true},
-    {id:'n4', name:'Air Force 1', search_query:'nike air force 1 white sneakers', category:'shoes', price:199, brand:'Nike', style_tags:['retro','casual'], isNew:true},
-    {id:'n5', name:'Oversized Linen Shirt', search_query:'cos linen white shirt oversized minimal', category:'top', price:65, brand:'COS', style_tags:['minimal','summer'], isNew:true},
+    {id:'n1', name:'Wide Leg Trousers', search_query:'zara wide leg black trousers fashion', category:'bottoms', size:'M', price:59, brand:'Zara', style_tags:['minimal','chic'], isNew:true},
+    {id:'n2', name:'Linen Blazer', search_query:'hm premium linen blazer cream oversized', category:'outerwear', size:'S', price:79, brand:'H&M', style_tags:['chic','office'], isNew:true},
+    {id:'n3', name:'Satin Slip Dress', search_query:'asos satin slip midi dress green', category:'dress', size:'XS', price:45, brand:'ASOS', style_tags:['romantic','evening'], isNew:true},
+    {id:'n4', name:'Air Force 1', search_query:'nike air force 1 white sneakers', category:'shoes', size:'39', price:199, brand:'Nike', style_tags:['retro','casual'], isNew:true},
+    {id:'n5', name:'Oversized Linen Shirt', search_query:'cos linen white shirt oversized minimal', category:'top', size:'M', price:65, brand:'COS', style_tags:['minimal','summer'], isNew:true},
     {id:'n6', name:'Leather Belt Bag', search_query:'mango leather belt bag brown crossbody', category:'bag', price:49, brand:'Mango', style_tags:['everyday','utility'], isNew:true},
   ];
-  let mpTab = 'shop', mpFilter = 'all', mpCondFilter = 'all';
+  let mpTab = 'shop', mpFilter = 'all', mpCondFilter = 'new';
   let mpAssistQuery = '', mpAssistMsg = '', mpAssistIds = null; // null = no filter, array = filtered ids
   let mpClosetFilter = false; // true = show only items with compat score >= 50%
+  let mpSizeFilter = localStorage.getItem('awear_mp_size') || 'all';
+  let mpPrelovedOnly = localStorage.getItem('awear_mp_preloved') === 'true';
+  // Extended filter state (TDZ-safe: declared before renderMarketplace)
+  let mpCategoryFilter = 'all';
+  let mpColorFilter = 'all';
+  let mpPriceMin = 0, mpPriceMax = 9999;
+  let mpBrandFilter = 'all';
+  let mpSortBy = 'default';    // default | price-asc | price-desc | compat-desc | newest
+  let mpConditionFilter = 'all'; // all | like-new | good | fair
+  let mpCloseMatchOnly = false; // true = compat >= 60%
+  // Pending filter values while sheet is open (applied on "Show Results")
+  let _mpPendingSort = 'default', _mpPendingColor = 'all', _mpPendingBrand = 'all';
+  let _mpPendingCondition = 'all', _mpPendingPriceMin = 0, _mpPendingPriceMax = 9999;
+  let _mpPendingCloseMatch = false;
 
   function loadMPListings() {
     const user = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
@@ -4466,6 +5148,8 @@
     if (mpCondFilter === 'preloved') filtered = filtered.filter(i => !i.isNew);
     if (mpFilter !== 'all') filtered = filtered.filter(i => i.category === mpFilter);
     if (mpAssistIds !== null) filtered = filtered.filter(i => mpAssistIds.includes(i.id));
+    if (mpPrelovedOnly) filtered = filtered.filter(i => !i.isNew);
+    if (mpSizeFilter !== 'all') filtered = filtered.filter(i => !i.size || i.size === mpSizeFilter);
     if (mpClosetFilter) {
       const closetItems = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
       if (closetItems.length > 0) {
@@ -4475,21 +5159,37 @@
         });
       }
     }
+    // Extended filters
+    if (mpCategoryFilter !== 'all') filtered = filtered.filter(i => i.category === mpCategoryFilter);
+    if (mpColorFilter !== 'all') filtered = filtered.filter(i => (i.color||'').toLowerCase().includes(mpColorFilter));
+    if (mpBrandFilter !== 'all') filtered = filtered.filter(i => i.brand === mpBrandFilter);
+    if (mpConditionFilter !== 'all') filtered = filtered.filter(i => (i.condition||'').toLowerCase() === mpConditionFilter);
+    filtered = filtered.filter(i => i.price >= mpPriceMin && i.price <= mpPriceMax);
+    if (mpCloseMatchOnly) {
+      const wItems = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+      if (wItems.length > 0) filtered = filtered.filter(i => { const c = calcCompatScore(i, wItems); return c && c.pct >= 60; });
+    }
+    // Sort
+    if (mpSortBy === 'price-asc') filtered = [...filtered].sort((a,b) => a.price - b.price);
+    else if (mpSortBy === 'price-desc') filtered = [...filtered].sort((a,b) => b.price - a.price);
+    else if (mpSortBy === 'compat-desc') filtered = [...filtered].sort((a,b) => (b.compat||0) - (a.compat||0));
+    else if (mpSortBy === 'newest') filtered = [...filtered].sort((a,b) => (b.id > a.id ? 1 : -1));
 
     const el = document.getElementById('mp-wrap');
     el.innerHTML = `
       <div class="mp-header">
-        <div class="mp-title">${icon('storefront',20)} Marketplace</div>
+        <div class="mp-title">${mpCondFilter === 'preloved' ? `${icon('heart',20)} Community Closets` : `${icon('storefront',20)} Shop New Arrivals`}</div>
         ${mpTab === 'shop' ? `<button class="mp-sell-btn" id="mp-sell-open">+ Sell</button>` : ''}
       </div>
       <div class="mp-segment">
-        <button class="mp-seg-btn${mpTab==='shop'?' active-sh':''}" data-tab="shop">Shop</button>
-        <button class="mp-seg-btn${mpTab==='sell'?' active-sell':''}" data-tab="sell">My Listings</button>
+        <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='new'?' active-shop':''}" data-tab="shop" data-cond="new">${icon('shoppingBag',13)} Shop</button>
+        <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='preloved'?' active-community':''}" data-tab="shop" data-cond="preloved">${icon('heart',13)} Community</button>
+        <button class="mp-seg-btn${mpTab==='sell'?' active-sell':''}" data-tab="sell">My&nbsp;Listings</button>
       </div>
       ${mpTab === 'shop' ? `<div class="mp-assist-bar">
         <div class="mp-assist-input-row">
           ${icon('sparkle', 16)}
-          <input class="mp-assist-input" id="mp-assist-input" placeholder="Ask me to find something…" value="${mpAssistQuery||''}" />
+          <input class="mp-assist-input" id="mp-assist-input" placeholder="Try: 'vintage denim under $50' or 'quiet luxury blazer'" value="${mpAssistQuery||''}" />
           ${mpAssistQuery ? `<button class="mp-assist-clear" id="mp-assist-clear">×</button>` : ''}
           <button class="mp-assist-btn" id="mp-assist-submit">${icon('arrowRight', 16)}</button>
         </div>
@@ -4498,9 +5198,12 @@
       ${mpTab === 'shop' ? renderMPShopGrid(filtered, wardrobe) : renderMySells()}
     `;
 
-    // Tabs
+    // Top-level tabs: Shop / Community / My Listings
     el.querySelectorAll('.mp-seg-btn').forEach(btn => btn.addEventListener('click', () => {
-      mpTab = btn.dataset.tab; mpFilter = 'all'; mpCondFilter = 'all';
+      mpTab = btn.dataset.tab || 'shop';
+      if (mpTab === 'shop' && btn.dataset.cond) mpCondFilter = btn.dataset.cond;
+      else if (mpTab === 'sell') mpCondFilter = 'new'; // preserve shop default on return
+      mpFilter = 'all';
       mpAssistQuery = ''; mpAssistMsg = ''; mpAssistIds = null; mpClosetFilter = false;
       renderMarketplace();
     }));
@@ -4515,10 +5218,55 @@
       renderMarketplace();
     }));
 
+    // Size chips (P0-D)
+    el.querySelectorAll('.mp-size-chip').forEach(btn => btn.addEventListener('click', () => {
+      mpSizeFilter = btn.dataset.size || 'all';
+      localStorage.setItem('awear_mp_size', mpSizeFilter);
+      renderMarketplace();
+    }));
+
+    // Pre-loved toggle (P1-D)
+    el.querySelector('[data-action="mp-preloved-toggle"]')?.addEventListener('click', () => {
+      mpPrelovedOnly = !mpPrelovedOnly;
+      localStorage.setItem('awear_mp_preloved', mpPrelovedOnly);
+      renderMarketplace();
+    });
+
     // Category filters
     el.querySelectorAll('.mp-filter').forEach(btn => btn.addEventListener('click', () => {
       mpFilter = btn.dataset.cat; renderMarketplace();
     }));
+
+    // Filter & Sort sheet open
+    el.addEventListener('click', e => {
+      if (e.target.closest('[data-action="mp-filter-open"]')) { openMPFilterSheet(); return; }
+      // Remove individual active chip
+      const chip = e.target.closest('[data-action="mp-chip-remove"]');
+      if (chip) {
+        const key = chip.dataset.key;
+        if (key === 'color') mpColorFilter = 'all';
+        else if (key === 'brand') mpBrandFilter = 'all';
+        else if (key === 'condition') mpConditionFilter = 'all';
+        else if (key === 'sort') mpSortBy = 'default';
+        else if (key === 'price') { mpPriceMin = 0; mpPriceMax = 9999; }
+        else if (key === 'closematch') mpCloseMatchOnly = false;
+        renderMarketplace();
+        return;
+      }
+      // Empty state: clear all filters
+      if (e.target.closest('[data-action="mp-filters-reset"]')) { resetMPFilters(); return; }
+      // Empty state: focus AI assist
+      if (e.target.closest('[data-action="mp-assist-focus"]')) {
+        document.getElementById('mp-assist-input')?.focus();
+        return;
+      }
+    });
+
+    // Seller profile tap (P1-C)
+    el.addEventListener('click', e => {
+      const sellerEl = e.target.closest('[data-action="seller-profile"]');
+      if (sellerEl) { e.stopPropagation(); showToast('Seller profile coming soon'); }
+    });
 
     // Buy button — event delegation via data-id on parent card
     el.addEventListener('click', e => {
@@ -4569,30 +5317,99 @@
     const categories = ['all','top','bottoms','shoes','bag','outerwear','dress'];
     const catLabels = {all:'All',top:'Tops',bottoms:'Bottoms',shoes:'Shoes',bag:'Bags',outerwear:'Outerwear',dress:'Dresses'};
     const wardrobeForEmpty = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const allListingsForCount = loadMPListings();
+
+    // P0-E: count per category from all listings (before category filter, after condition/size/etc)
+    const catCounts = {};
+    categories.forEach(c => {
+      if (c === 'all') { catCounts[c] = allListingsForCount.length; return; }
+      catCounts[c] = allListingsForCount.filter(i => i.category === c).length;
+    });
+
+    // P1-D: Pre-loved toggle
+    const prelovedToggleHtml = `
+      <div class="mp-preloved-toggle">
+        <button class="mp-preloved-btn${mpPrelovedOnly?' active':''}" data-action="mp-preloved-toggle">${icon('heart',12)} Pre-loved only</button>
+      </div>`;
+
     const condChipsHtml = `
       <div class="mp-cond-row">
-        <button class="mp-cond-chip${mpCondFilter==='all'?' active':''}" data-cond="all">All</button>
-        <button class="mp-cond-chip${mpCondFilter==='new'?' active':''}" data-cond="new">New</button>
-        <button class="mp-cond-chip${mpCondFilter==='preloved'?' active':''}" data-cond="preloved">Pre-loved</button>
         <button class="mp-cond-chip mp-closet-chip${mpClosetFilter?' active':''}" data-filter="closet">${icon('sparkle', 12)} Matches My Closet</button>
       </div>`;
+
+    // P0-D: Size filter chips
+    const clothingSizes = ['XS','S','M','L','XL','XXL','Free Size'];
+    const shoeSizes = ['36','37','38','39','40','41','42'];
+    const allSizes = clothingSizes.concat(shoeSizes);
+    const sizeChipsHtml = `
+      <div class="mp-size-row">
+        <button class="mp-size-chip${mpSizeFilter==='all'?' active':''}" data-size="all">All Sizes</button>
+        ${allSizes.map(s => `<button class="mp-size-chip${mpSizeFilter===s?' active':''}" data-size="${s}">${s}</button>`).join('')}
+      </div>`;
+
     const catFiltersHtml = `
       <div class="mp-filters">
-        ${categories.map(c => `<button class="mp-filter${mpFilter===c?' active':''}" data-cat="${c}">${catLabels[c]}</button>`).join('')}
+        ${categories.map(c => `<button class="mp-filter${mpFilter===c?' active':''}" data-cat="${c}">${catLabels[c]}${catCounts[c] ? ` <span style="font-size:var(--t-micro,11px);opacity:.7">(${catCounts[c]})</span>` : ''}</button>`).join('')}
       </div>`;
+
+    // Filter & Sort toolbar + active chips
+    const activeFiltersCount = [
+      mpColorFilter !== 'all', mpBrandFilter !== 'all', mpConditionFilter !== 'all',
+      mpSortBy !== 'default', mpPriceMin > 0, mpPriceMax < 9999, mpCloseMatchOnly
+    ].filter(Boolean).length;
+    const activeChipsHtml = (() => {
+      const chips = [];
+      if (mpColorFilter !== 'all') chips.push({label: mpColorFilter, key: 'color'});
+      if (mpBrandFilter !== 'all') chips.push({label: mpBrandFilter, key: 'brand'});
+      if (mpConditionFilter !== 'all') chips.push({label: mpConditionFilter, key: 'condition'});
+      if (mpSortBy !== 'default') chips.push({label: {
+        'price-asc':'Price: Low–High','price-desc':'Price: High–Low',
+        'compat-desc':'Best Match','newest':'Newest'
+      }[mpSortBy]||mpSortBy, key: 'sort'});
+      if (mpPriceMin > 0 || mpPriceMax < 9999) chips.push({label:`$${mpPriceMin}–$${mpPriceMax < 9999 ? mpPriceMax : '∞'}`, key:'price'});
+      if (mpCloseMatchOnly) chips.push({label:'60%+ Match', key:'closematch'});
+      if (!chips.length) return '';
+      return chips.map(c => `<button class="mp-active-chip" data-action="mp-chip-remove" data-key="${c.key}">${c.label} <span class="mp-active-chip-x">×</span></button>`).join('');
+    })();
+    const toolbarHtml = `
+      <div class="mp-toolbar">
+        <button class="mp-filter-btn${activeFiltersCount > 0 ? ' has-active' : ''}" data-action="mp-filter-open">
+          ${icon('filter',14)} Filter &amp; Sort
+          ${activeFiltersCount > 0 ? `<span class="mp-filter-count">${activeFiltersCount}</span>` : ''}
+        </button>
+        ${activeChipsHtml ? `<div class="mp-active-chips">${activeChipsHtml}</div>` : ''}
+      </div>`;
+
+    const filtersBlock = prelovedToggleHtml + condChipsHtml + sizeChipsHtml + catFiltersHtml + toolbarHtml;
+
+    // CO2 estimates by category (P1-B)
+    const co2Map = {shoes:1.8, outerwear:3.2, top:1.2, bottoms:1.6, bag:0.9, dress:1.4};
+
     if (!items.length) {
       let emptyHtml;
+      const hasExtendedFilters = activeFiltersCount > 0 || mpSizeFilter !== 'all' || mpFilter !== 'all' || mpPrelovedOnly || mpClosetFilter;
       if (mpClosetFilter && wardrobeForEmpty.length === 0) {
         emptyHtml = `<div class="mp-empty">
           ${icon('wardrobe', 36)}
           <div>Add items to your closet to unlock Closet Match</div>
           <button class="mp-empty-cta" data-action="go-wardrobe">Open Wardrobe</button>
         </div>`;
-      } else if (mpClosetFilter) {
+      } else if (hasExtendedFilters) {
+        emptyHtml = `<div class="mp-empty-filters">
+          ${icon('search', 40)}
+          <div class="mp-empty-filters-title">No items match your filters</div>
+          <div class="mp-empty-filters-sub">Try adjusting your filters or let AI find something for you</div>
+          <div class="mp-empty-filters-ctas">
+            <button class="mp-empty-filters-clear" data-action="mp-filters-reset">Clear filters</button>
+            <button class="mp-empty-filters-ai" data-action="mp-assist-focus">${icon('sparkle',12)} Ask AI Stylist</button>
+          </div>
+        </div>`;
+      } else if (mpCondFilter === 'preloved') {
         emptyHtml = `<div class="mp-empty">
-          ${icon('search', 36)}
-          <div>No items match your closet right now</div>
-          <div style="font-size:var(--t-caption);color:var(--muted);margin-top:4px">Try removing filters or check back later</div>
+          ${icon('heart', 40)}
+          <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">No pre-loved items yet</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">Be the first to sell from your closet!</div>
+          <button class="mp-empty-cta" onclick="mpTab='sell';renderMarketplace()">Start Selling</button>
         </div>`;
       } else {
         emptyHtml = `<div style="text-align:center;padding:48px 20px;color:var(--muted)">
@@ -4601,26 +5418,35 @@
           <div style="font-size:var(--t-caption);margin-top:6px">Try a different filter</div>
         </div>`;
       }
-      return condChipsHtml + catFiltersHtml + emptyHtml;
+      return filtersBlock + emptyHtml;
     }
-    return condChipsHtml + catFiltersHtml + `
+    return filtersBlock + `
       <div class="mp-grid">
         ${items.map(item => {
-          const compat = (!item.isNew && wardrobe.length) ? calcCompatScore(item, wardrobe) : null;
-          const badgeClass = item.isNew ? 'brand-new' : 'preloved';
-          const badgeText = item.isNew ? 'New' : 'Pre-loved';
-          const brandOrSeller = item.isNew ? item.brand : item.seller;
-          return `<div class="mp-item" data-id="${item.id}" data-isnew="${!!item.isNew}">
+          const isRetail = !!item.isNew;
+          const compat = (!isRetail && wardrobe.length) ? calcCompatScore(item, wardrobe) : null;
+          const co2Kg = !isRetail ? (co2Map[item.category] || 1.5) : null;
+          const cardClass = isRetail ? 'mp-item retail' : 'mp-item resale';
+          const badgeClass = isRetail ? 'brand-new' : 'preloved';
+          const badgeText = isRetail ? 'Brand New' : 'Pre-loved';
+          const btnClass = isRetail ? 'mp-buy-btn retail-btn' : 'mp-buy-btn resale-btn';
+          const btnLabel = isRetail ? 'Shop at ' + esc(item.brand) : 'Buy Now';
+          return `<div class="${cardClass}" data-id="${item.id}" data-isnew="${!!item.isNew}">
             <div class="mp-item-img">
               ${productImage(item)}
               <div class="mp-item-badge ${badgeClass}">${esc(badgeText)}</div>
             </div>
             <div class="mp-item-info">
+              ${compat ? `<div class="mp-compat-pill" data-action="compat-overlay" data-id="${item.id}">${icon('sparkle',11)} ${compat.pct}% match</div>` : ''}
               <div class="mp-item-name">${esc(item.name)}</div>
-              <div class="${item.isNew ? 'mp-item-brand' : 'mp-item-seller'}">${esc(brandOrSeller||'')}</div>
-              <div class="mp-item-price">$${item.price}${!item.isNew && item.orig ? ` <span style="font-size:var(--t-micro);color:var(--muted);text-decoration:line-through">$${item.orig}</span>` : ''}</div>
-              ${compat ? `<div class="mp-item-compat mp-compat-btn" data-action="compat-overlay" data-id="${item.id}">${icon('sparkle',12)} ${compat.pct}% closet match</div>` : ''}
-              <button class="mp-buy-btn">${item.isNew ? 'Shop at '+esc(item.brand) : 'Buy Now'}</button>
+              ${isRetail
+                ? `<div class="mp-item-brand">${esc(item.brand||'')}</div>`
+                : `<div class="mp-item-seller" data-action="seller-profile" data-seller="${esc(item.seller||'')}" style="cursor:pointer">${esc(item.seller||'')}</div>
+                   <div class="mp-item-preloved-label">Pre-loved · ${esc(item.condition||'used')}</div>`
+              }
+              ${co2Kg ? `<div class="mp-co2-badge">${icon('leaf',10)} ~${co2Kg}kg CO₂ saved</div>` : ''}
+              <div class="mp-item-price">$${item.price}${!isRetail && item.orig ? ` <span style="font-size:var(--t-micro);color:var(--muted);text-decoration:line-through">$${item.orig}</span>` : ''}</div>
+              <button class="${btnClass}">${btnLabel}</button>
             </div>
           </div>`;
         }).join('')}
@@ -4668,6 +5494,196 @@
         <button class="mp-buy-btn" data-action="close-modal">Got it!</button>
       </div>`;
     modal.classList.add('show');
+  }
+
+  // ---- Marketplace Filter Sheet ----
+  function _buildFilterSheetContent() {
+    const colors = ['black','white','navy','red','green','camel','grey','pink'];
+    const colorLabels = {black:'Black',white:'White',navy:'Navy',red:'Red',green:'Green',camel:'Camel',grey:'Grey',pink:'Pink'};
+    const conditions = ['new-with-tags','like-new','very-good','good','fair'];
+    const condLabels = {'new-with-tags':'New with tags','like-new':'Like New','very-good':'Very Good','good':'Good','fair':'Fair'};
+    const brands = [...new Set(loadMPListings().map(i => i.brand).filter(Boolean))].sort();
+    const sortOpts = [
+      {key:'default', label:'Recommended'},
+      {key:'price-asc', label:'Price: Low to High'},
+      {key:'price-desc', label:'Price: High to Low'},
+      {key:'compat-desc', label:'Best Closet Match'},
+      {key:'newest', label:'Newest First'},
+    ];
+
+    const isCommunity = mpCondFilter === 'preloved';
+
+    const sortSection = `
+      <div class="mp-fsheet-section">
+        <div class="mp-fsheet-label">Sort by</div>
+        <div class="mp-sort-row">
+          ${sortOpts.map(o => `
+            <div class="mp-sort-opt${_mpPendingSort===o.key?' active':''}" data-action="mp-sort-pick" data-sort="${o.key}">
+              <span>${o.label}</span>
+              <span class="mp-sort-check">${_mpPendingSort===o.key ? icon('check',10) : ''}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    const priceSection = `
+      <div class="mp-fsheet-divider"></div>
+      <div class="mp-fsheet-section">
+        <div class="mp-fsheet-label">Price range</div>
+        <div class="mp-fsheet-price-row">
+          <input class="mp-fsheet-price-input" id="mp-price-min" type="number" min="0" placeholder="$ Min" value="${_mpPendingPriceMin > 0 ? _mpPendingPriceMin : ''}" />
+          <span class="mp-fsheet-price-sep">—</span>
+          <input class="mp-fsheet-price-input" id="mp-price-max" type="number" min="0" placeholder="$ Max" value="${_mpPendingPriceMax < 9999 ? _mpPendingPriceMax : ''}" />
+        </div>
+      </div>`;
+
+    const colorSection = `
+      <div class="mp-fsheet-divider"></div>
+      <div class="mp-fsheet-section">
+        <div class="mp-fsheet-label">Color</div>
+        <div class="mp-fsheet-chips">
+          <button class="mp-fsheet-chip${_mpPendingColor==='all'?' active':''}" data-action="mp-fcolor" data-color="all">All</button>
+          ${colors.map(c => `<button class="mp-fsheet-chip${_mpPendingColor===c?' active-camel':''}" data-action="mp-fcolor" data-color="${c}">${colorLabels[c]}</button>`).join('')}
+        </div>
+      </div>`;
+
+    const brandSection = `
+      <div class="mp-fsheet-divider"></div>
+      <div class="mp-fsheet-section">
+        <div class="mp-fsheet-label">Brand</div>
+        <div class="mp-fsheet-chips">
+          <button class="mp-fsheet-chip${_mpPendingBrand==='all'?' active':''}" data-action="mp-fbrand" data-brand="all">All Brands</button>
+          ${brands.map(b => `<button class="mp-fsheet-chip${_mpPendingBrand===b?' active':''}" data-action="mp-fbrand" data-brand="${b}">${b}</button>`).join('')}
+        </div>
+      </div>`;
+
+    if (isCommunity) {
+      // Community (pre-loved): Condition first, Sort, Price, Brand, Color, Closet Match
+      return `
+        <div class="mp-fsheet-section">
+          <div class="mp-fsheet-label">Condition</div>
+          <div class="mp-fsheet-chips">
+            <button class="mp-fsheet-chip${_mpPendingCondition==='all'?' active':''}" data-action="mp-fcond" data-cond="all">All</button>
+            ${conditions.map(c => `<button class="mp-fsheet-chip${_mpPendingCondition===c?' active':''}" data-action="mp-fcond" data-cond="${c}">${condLabels[c]}</button>`).join('')}
+          </div>
+        </div>
+        <div class="mp-fsheet-divider"></div>
+        ${sortSection}
+        ${priceSection}
+        ${brandSection}
+        ${colorSection}
+        <div class="mp-fsheet-divider"></div>
+        <div class="mp-fsheet-section">
+          <div class="mp-fsheet-label">Closet Match</div>
+          <div class="mp-fsheet-chips">
+            <button class="mp-fsheet-chip${!_mpPendingCloseMatch?' active':''}" data-action="mp-fclosematch" data-val="false">All Items</button>
+            <button class="mp-fsheet-chip${_mpPendingCloseMatch?' active':''}" data-action="mp-fclosematch" data-val="true">${icon('sparkle',12)} 60%+ Match Only</button>
+          </div>
+        </div>`;
+    } else {
+      // Shop (retail): Sort, Price, Category, Color, Brand — no Condition, no Closet Match
+      return `
+        ${sortSection}
+        ${priceSection}
+        ${colorSection}
+        ${brandSection}`;
+    }
+  }
+
+  function openMPFilterSheet() {
+    // Sync pending state from current active state
+    _mpPendingSort = mpSortBy;
+    _mpPendingColor = mpColorFilter;
+    _mpPendingBrand = mpBrandFilter;
+    _mpPendingCondition = mpConditionFilter;
+    _mpPendingPriceMin = mpPriceMin;
+    _mpPendingPriceMax = mpPriceMax;
+    _mpPendingCloseMatch = mpCloseMatchOnly;
+
+    const overlay = document.getElementById('mp-fsheet-overlay');
+    const sheet = document.getElementById('mp-fsheet');
+    const scroll = document.getElementById('mp-fsheet-scroll');
+    if (!overlay || !sheet || !scroll) return;
+    scroll.innerHTML = _buildFilterSheetContent();
+    overlay.classList.add('show');
+    sheet.classList.add('show');
+    overlay.setAttribute('aria-hidden','false');
+    _bindFilterSheetEvents(sheet, scroll);
+  }
+
+  function closeMPFilterSheet() {
+    const overlay = document.getElementById('mp-fsheet-overlay');
+    const sheet = document.getElementById('mp-fsheet');
+    if (!overlay || !sheet) return;
+    overlay.classList.remove('show');
+    sheet.classList.remove('show');
+    overlay.setAttribute('aria-hidden','true');
+  }
+
+  function _bindFilterSheetEvents(sheet, scroll) {
+    // Sort pick
+    scroll.querySelectorAll('[data-action="mp-sort-pick"]').forEach(el => el.addEventListener('click', () => {
+      _mpPendingSort = el.dataset.sort;
+      scroll.innerHTML = _buildFilterSheetContent();
+      _bindFilterSheetEvents(sheet, scroll);
+    }));
+    // Color pick
+    scroll.querySelectorAll('[data-action="mp-fcolor"]').forEach(el => el.addEventListener('click', () => {
+      _mpPendingColor = el.dataset.color;
+      scroll.innerHTML = _buildFilterSheetContent();
+      _bindFilterSheetEvents(sheet, scroll);
+    }));
+    // Condition pick
+    scroll.querySelectorAll('[data-action="mp-fcond"]').forEach(el => el.addEventListener('click', () => {
+      _mpPendingCondition = el.dataset.cond;
+      scroll.innerHTML = _buildFilterSheetContent();
+      _bindFilterSheetEvents(sheet, scroll);
+    }));
+    // Brand pick
+    scroll.querySelectorAll('[data-action="mp-fbrand"]').forEach(el => el.addEventListener('click', () => {
+      _mpPendingBrand = el.dataset.brand;
+      scroll.innerHTML = _buildFilterSheetContent();
+      _bindFilterSheetEvents(sheet, scroll);
+    }));
+    // Close match toggle
+    scroll.querySelectorAll('[data-action="mp-fclosematch"]').forEach(el => el.addEventListener('click', () => {
+      _mpPendingCloseMatch = el.dataset.val === 'true';
+      scroll.innerHTML = _buildFilterSheetContent();
+      _bindFilterSheetEvents(sheet, scroll);
+    }));
+  }
+
+  function applyMPFilters() {
+    const minVal = parseInt(document.getElementById('mp-price-min')?.value || '0', 10);
+    const maxVal = parseInt(document.getElementById('mp-price-max')?.value || '9999', 10);
+    mpSortBy = _mpPendingSort;
+    mpColorFilter = _mpPendingColor;
+    mpBrandFilter = _mpPendingBrand;
+    mpConditionFilter = _mpPendingCondition;
+    mpPriceMin = isNaN(minVal) ? 0 : minVal;
+    mpPriceMax = isNaN(maxVal) || maxVal === 0 ? 9999 : maxVal;
+    mpCloseMatchOnly = _mpPendingCloseMatch;
+    closeMPFilterSheet();
+    renderMarketplace();
+  }
+
+  function resetMPFilters() {
+    mpSortBy = 'default'; mpColorFilter = 'all'; mpBrandFilter = 'all';
+    mpConditionFilter = 'all'; mpPriceMin = 0; mpPriceMax = 9999; mpCloseMatchOnly = false;
+    _mpPendingSort = 'default'; _mpPendingColor = 'all'; _mpPendingBrand = 'all';
+    _mpPendingCondition = 'all'; _mpPendingPriceMin = 0; _mpPendingPriceMax = 9999;
+    _mpPendingCloseMatch = false;
+    closeMPFilterSheet();
+    renderMarketplace();
+  }
+
+  // Initialise filter sheet overlay/button bindings (called once at init time)
+  function initMPFilterSheet() {
+    const overlay = document.getElementById('mp-fsheet-overlay');
+    const applyBtn = document.getElementById('mp-fsheet-apply');
+    const resetBtn = document.getElementById('mp-fsheet-reset');
+    if (overlay) overlay.addEventListener('click', closeMPFilterSheet);
+    if (applyBtn) applyBtn.addEventListener('click', applyMPFilters);
+    if (resetBtn) resetBtn.addEventListener('click', resetMPFilters);
   }
 
   async function runMPAssist() {
