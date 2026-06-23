@@ -20,6 +20,25 @@
 
 ---
 
+## 1b. The hybrid ONE-TAP Buy model (founder vision)
+User stores shipping + payment **once** in AWEAR. Every "Buy" is one tap — no re-entering details on each site. Behind that single button, the backend **routes intelligently** by product source:
+| Route | Mechanism | UX | Earn |
+|---|---|---|---|
+| **Dropship API** (Spocket/Zendrop/CJ) | their API places order + ships | full in-app checkout | margin |
+| **Universal-checkout API** (e.g. Rye) | one API checks out at many real retailers | in-app checkout | commission |
+| **Affiliate + autofill** | open retailer pre-filled from stored details | near-zero friction | commission |
+The user always experiences **one Buy button**; the share of products on the true in-app path grows as we integrate more suppliers/aggregators. *(Avoid a generic bot that fills any site's checkout — fragile + ToS/PCI risk. Use purpose-built APIs.)* Stored payment = tokenized via Stripe.
+**Where the tech lives:** `/api/resolve-product` returns `{source: dropship|universal|affiliate, checkout_path}`; the Buy handler picks the path. Profile stores shipping; Stripe stores payment token.
+
+## 1c. Brand coverage matrix — "can we cover every store?"
+Almost entirely **yes**, via a mix; only a few luxury houses' *own* sites are closed (covered indirectly):
+| Brand type | Direct? | How we cover it |
+|---|---|---|
+| Mass + premium (Ralph Lauren, Nike, Zara, Levi's, ASOS, Adidas) | ✅ | affiliate network direct |
+| Designer (Gucci, Prada, Burberry) | ⚠️ partial | multi-brand luxury retailers w/ affiliate: Farfetch, Net-a-Porter, SSENSE, Mytheresa |
+| Ultra-luxury (Louis Vuitton, Chanel, Hermès) | ❌ no affiliate | luxury resale w/ affiliate: Vestiaire Collective, The RealReal, Fashionphile + "shop similar" |
+Net: mass+premium direct, designer via luxury platforms, ultra-luxury via resale/"shop similar" — so a user's item is **never** a dead end.
+
 ## 2. Edge case: item from 2023 that's no longer sold anywhere
 **The question:** user uploads an old/discontinued piece. It isn't on any retailer site. What do we do?
 
