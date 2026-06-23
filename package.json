@@ -1,0 +1,33 @@
+{
+  "name": "awear-agents",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check-render": "node scripts/check-render.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/razinskymaayan-crypto/AWEAR.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/razinskymaayan-crypto/AWEAR/issues"
+  },
+  "homepage": "https://github.com/razinskymaayan-crypto/AWEAR#readme",
+  "dependencies": {
+    "@capacitor/cli": "^8.4.1",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/ios": "^8.4.1"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}
