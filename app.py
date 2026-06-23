@@ -995,6 +995,67 @@ async def get_products(
     }
 
 
+# ---------------------------------------------------------------------------
+# Buy routing — the SINGLE place the app asks "how do I buy this item?".
+# Returns the route behind the one-tap Buy button: source + checkout path +
+# affiliate buy_url, and a status of exact | similar | archive (the discontinued-
+# item chain from docs/PRODUCTIONIZATION.md). Simulated today (affiliate path +
+# catalog match); to go live, populate IN_APP_RETAILERS / wire a real network key
+# into affiliate_url() — nothing else in the app needs to change.
+# ---------------------------------------------------------------------------
+
+# Retailers we can fulfill IN-APP (dropship / universal-checkout API). Empty until a
+# real supplier/aggregator contract+key is wired; then those products route to the
+# one-tap in-app checkout and everything else falls back to an affiliate redirect.
+IN_APP_RETAILERS: set[str] = set()
+
+
+def _match_score(item: dict, p: dict) -> int:
+    """Cheap keyword + category match between a wardrobe item and a catalog product."""
+    score = 0
+    if (item.get("category") or "").lower() and (item.get("category") or "").lower() == (p.get("category") or "").lower():
+        score += 3
+    q = " ".join(str(item.get(k, "")) for k in ("search_query", "name", "brand", "color")).lower().replace(",", " ")
+    hay = (str(p.get("name", "")) + " " + str(p.get("brand", "")) + " " + str(p.get("color", ""))).lower()
+    for w in {w for w in q.split() if len(w) >= 3}:
+        if w in hay:
+            score += 1
+    return score
+
+
+def _buy_route(p: dict) -> dict:
+    retailer = (p.get("brand") or "").lower()
+    in_app = retailer in IN_APP_RETAILERS
+    return {
+        "id": p.get("id"),
+        "name": p.get("name"),
+        "brand": p.get("brand"),
+        "price_usd": p.get("price_estimate_usd"),
+        "image_url": p.get("image_url"),
+        "retailer": p.get("brand"),
+        "source": "in_app" if in_app else "affiliate",      # dropship/universal vs affiliate
+        "checkout": "in_app" if in_app else "redirect",       # one-tap in-app vs prefilled redirect
+        "buy_url": affiliate_url(p.get("product_url") or ""),
+    }
+
+
+@app.get("/api/resolve-product")
+def resolve_product(q: str = "", category: str = "", color: str = "", brand: str = ""):
+    item = {"search_query": q, "category": category, "color": color, "brand": brand}
+    scored = sorted(((_match_score(item, p), p) for p in _products_cache), key=lambda t: t[0], reverse=True)
+    if scored and scored[0][0] >= 3:
+        route = _buy_route(scored[0][1])
+        route["status"] = "exact"
+        return route
+    sims = [p for s, p in scored[:8] if s > 0][:4]
+    if sims:
+        return {"status": "similar", "checkout": "redirect", "source": "affiliate",
+                "alternatives": [_buy_route(p) for p in sims]}
+    # discontinued / nothing matches: never a dead end — own it, style it, resell it
+    return {"status": "archive", "source": "none", "checkout": "none", "alternatives": [],
+            "message": "Not sold new anymore — keep it in your closet, style it, or list it for resale."}
+
+
 @app.post("/api/admin/reload-products")
 def admin_reload_products():
     """Hot-reload products.json into the in-memory cache without server restart."""
