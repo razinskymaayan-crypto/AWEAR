@@ -2305,11 +2305,14 @@
         </div>
         <div class="feed-filters" id="feed-filters">
           <button class="ff active" data-filter="all">All</button>
-          <button class="ff" data-filter="y2k">Y2K</button>
-          <button class="ff" data-filter="streetwear">Streetwear</button>
           <button class="ff" data-filter="minimal">Minimal</button>
+          <button class="ff" data-filter="streetwear">Streetwear</button>
           <button class="ff" data-filter="vintage">Vintage</button>
-          <button class="ff" data-filter="secondhand">Secondhand</button>
+          <button class="ff" data-filter="y2k">Y2K</button>
+          <button class="ff" data-filter="luxury">Luxury</button>
+          <button class="ff" data-filter="sporty">Sporty</button>
+          <button class="ff" data-filter="boho">Boho</button>
+          <button class="ff" data-filter="dark academia">Dark Academia</button>
         </div>
       </div>
       <div class="feed-scroll" id="feed-scroll"></div>
@@ -3430,11 +3433,16 @@
   function saveSet(k,s){localStorage.setItem(k,JSON.stringify([...s]));}
   let LIKES=loadSet('awear_likes'), SAVED=loadSet('awear_saved');
 
-  let activeFilter='all';
+  let activeFilters=(()=>{try{const a=JSON.parse(localStorage.getItem('awear_feed_style_filter'));return a&&a.length?new Set(a):new Set(['all']);}catch(e){return new Set(['all']);}})();
+  document.querySelectorAll('#feed-filters .ff').forEach(b=>b.classList.toggle('active',activeFilters.has(b.dataset.filter)));
   document.getElementById('feed-filters').addEventListener('click',e=>{
     const btn=e.target.closest('.ff');if(!btn)return;
-    document.querySelectorAll('.ff').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');activeFilter=btn.dataset.filter;renderFeed();
+    const f=btn.dataset.filter;
+    if(f==='all'){activeFilters=new Set(['all']);}
+    else{activeFilters.delete('all');if(activeFilters.has(f))activeFilters.delete(f);else activeFilters.add(f);if(activeFilters.size===0)activeFilters.add('all');}
+    localStorage.setItem('awear_feed_style_filter',JSON.stringify([...activeFilters]));
+    document.querySelectorAll('#feed-filters .ff').forEach(b=>b.classList.toggle('active',activeFilters.has(b.dataset.filter)));
+    renderFeed();
   });
 
   function feedCardHTML(post,isMine){
@@ -3540,7 +3548,7 @@
       host.appendChild(wrap.firstElementChild);
     });
     let seeds=SEED_POSTS.filter(p=>!isBlocked(p.user));
-    if(activeFilter!=='all') seeds=seeds.filter(p=>(p.tags||[]).includes(activeFilter));
+    if(!activeFilters.has('all')) seeds=seeds.filter(p=>(p.tags||[]).some(t=>activeFilters.has(t)));
     if(!seeds.length&&!loadFeedPosts().length){
       host.innerHTML=`<div class="feed-empty"><div class="big" style="display:flex;justify-content:center">${icon('search',50)}</div><p>No looks in this style yet</p></div>`;return;
     }
@@ -7495,7 +7503,7 @@
       host.appendChild(wrap.firstElementChild);
     });
     let seeds=SEED_POSTS.filter(p=>!isBlocked(p.user));
-    if(activeFilter!=='all') seeds=seeds.filter(p=>(p.tags||[]).includes(activeFilter));
+    if(!activeFilters.has('all')) seeds=seeds.filter(p=>(p.tags||[]).some(t=>activeFilters.has(t)));
     if(activeTab==='inspiration'){
       const wardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
       if(!wardrobe.length){
