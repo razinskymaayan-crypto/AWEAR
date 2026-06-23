@@ -4,6 +4,42 @@
 
 ---
 
+## ⭐ DESIGN DIRECTION v2 — Premium Editorial **LIGHT** (Founder override · Maayan · 2026-06-21)
+> **This section SUPERSEDES the color/aesthetic direction below it.** Founder decision: pivot from dark-warm to **premium editorial light**. Where v2 conflicts with older text (e.g. "dark = premium", "לא Farfetch"), **v2 wins.** Agents: build to v2.
+
+**The one line:** *A fashion app that feels like a magazine — clean, light, editorial, image-first. Every layer borrows from the best app in its category.*
+
+**Per-layer references (study these, match their feel):**
+| Layer | Reference | What to take |
+|---|---|---|
+| Closet / Wardrobe | **Whering** | calm light grid of clean cut-out garments; "your wardrobe, organized & beautiful" |
+| Shopping / Shop-the-Look | **Farfetch · ASOS** | white canvas, big product imagery, lots of white space, refined editorial type, minimal chrome |
+| Social feed | **Instagram** | content-first, full-bleed media, near-invisible clean UI |
+| AI Stylist | **modern AI assistants** | calm conversational UI, suggestion cards/chips, proactive but uncluttered |
+
+**Aesthetic rules (v2):**
+- **Light, warm-white canvas.** Lots of negative space. The product images are the only "loud" thing — UI recedes.
+- **Editorial typography drives hierarchy** — large, confident headings; generous spacing; restraint.
+- **Near-monochrome.** Primary actions = editorial black on white (Farfetch/ASOS). Color used *sparingly* as a single highlight, never neon.
+- **No dark-neon, no heavy gradients, no glow.** Premium = quiet, not loud.
+
+**Color tokens (v2 — light). Use ONLY tokens; replace hardcoded hex as you touch each screen:**
+```css
+--bg:    #FAF9F7;  /* warm off-white canvas */
+--bg2:   #FFFFFF;  /* raised surfaces / cards */
+--card:  #FFFFFF;
+--surface:#F3F1EC; /* subtle fills, chips, shelves */
+--text:  #14110F;  /* near-black, editorial */
+--muted: #8A857E;  /* secondary text */
+--line:  #E9E5DF;  /* hairline borders */
+--accent:  #14110F; /* primary action = editorial black */
+--accent2: #3D3833; /* subtle gradient partner (keep gradients minimal) */
+--hl:    #E84A5F;  /* sparing brand highlight (active state / sale) — rare */
+```
+Re-theme is systematic & screen-by-screen (Dolce builds → Gabbana gates 8+ → `npm run check-render`). Until a screen is converted it may look mixed — that's expected mid-migration.
+
+---
+
 ## חלק א׳ — חזון ופילוסופיה
 
 ### המשפט שמגדיר כל החלטה

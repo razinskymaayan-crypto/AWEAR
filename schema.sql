@@ -4,7 +4,7 @@ CREATE TABLE users (
     id          SERIAL PRIMARY KEY,
     handle      TEXT UNIQUE NOT NULL,
     name        TEXT NOT NULL,
-    city        TEXT DEFAULT 'תל אביב',
+    city        TEXT DEFAULT 'Tel Aviv',
     bio         TEXT DEFAULT '',
     photo_url   TEXT,
     style_vibes TEXT[],

@@ -8,9 +8,9 @@ const DEFAULT_USER_ID = 'user_1'; // v1 — no auth yet
 const MOCK_PROFILE = {
   id: 'current_user',
   username: 'noa.style',
-  display_name: 'נועה',
+  display_name: 'Noa',
   avatar_url: 'https://randomuser.me/api/portraits/women/44.jpg',
-  bio: 'אוהבת מינימליזם ◦ תל אביב',
+  bio: 'Minimalism lover ◦ Tel Aviv',
   verified: false,
 };
 

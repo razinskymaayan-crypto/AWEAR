@@ -23,7 +23,10 @@ import sqlite3
 import uuid
 import time
 import traceback
+import asyncio
+import urllib.error
 import urllib.parse
+import urllib.request
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -34,7 +37,7 @@ logger = logging.getLogger(__name__)
 import anthropic
 from dotenv import load_dotenv
 from fastapi import Body, FastAPI, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from pydantic import BaseModel
@@ -56,6 +59,12 @@ logger = logging.getLogger("awear")
 _rate_store: dict[str, list[float]] = defaultdict(list)
 RATE_WINDOW = 60  # seconds
 
+# ---------------------------------------------------------------------------
+# Weather cache — in-memory, keyed by rounded (lat, lon), TTL 30 minutes
+# ---------------------------------------------------------------------------
+_weather_cache: dict[str, tuple[float, dict]] = {}  # key -> (timestamp, payload)
+WEATHER_CACHE_TTL = 1800  # 30 minutes in seconds
+
 
 def check_rate_limit(client_ip: str, endpoint: str, limit: int) -> bool:
     """Return True if the request is allowed, False if the limit is exceeded.
@@ -71,6 +80,33 @@ def check_rate_limit(client_ip: str, endpoint: str, limit: int) -> bool:
         return False
     _rate_store[key].append(now)
     return True
+
+
+def check_rate_limit_window(client_ip: str, endpoint: str, limit: int, window: int) -> bool:
+    """Sliding-window rate limiter with a custom time window (seconds).
+
+    Identical logic to check_rate_limit but uses an explicit `window` parameter
+    instead of the global RATE_WINDOW — useful for per-hour or per-day limits.
+    """
+    key = f"{client_ip}:{endpoint}"
+    now = time.time()
+    _rate_store[key] = [t for t in _rate_store[key] if now - t < window]
+    if len(_rate_store[key]) >= limit:
+        return False
+    _rate_store[key].append(now)
+    return True
+
+
+# Points awarded per challenge type
+CHALLENGE_POINTS: dict[str, int] = {
+    "scan":      20,
+    "diary":     10,
+    "swipe":     15,
+    "sell":      25,
+    "streak":    30,
+    "share":     10,
+}
+CHALLENGE_POINTS_DEFAULT = 10  # fallback for unknown challenge IDs
 
 # Google integrations are optional — if the deps/creds aren't installed, the core
 # demo must still run. Degrade to no-ops instead of crashing the whole server.
@@ -279,15 +315,18 @@ _DEMO_OUTFITS = [
         "items": [
             {"category": "top", "name": "White Ribbed Crop Top", "color": "white",
              "material_guess": "cotton", "brand_vibe": "Zara", "style_tags": ["minimal", "y2k"],
-             "resale_potential": "medium", "search_query": "white ribbed cropped sleeveless tank top women", "price_estimate_usd": 25},
+             "resale_potential": "medium", "search_query": "white ribbed cropped sleeveless tank top women", "price_estimate_usd": 25,
+             "image_url": "https://image.hm.com/assets/hm/59/12/591234ce7947b24f9bbb9ce0abf536e0d0551563.jpg"},
             {"category": "bottoms", "name": "Barrel-Leg Light Wash Denim", "color": "light blue",
              "material_guess": "denim", "brand_vibe": "Levi's",
              "style_tags": ["denim", "y2k", "casual"], "resale_potential": "high",
-             "search_query": "barrel leg light wash jeans women", "price_estimate_usd": 80},
+             "search_query": "barrel leg light wash jeans women", "price_estimate_usd": 80,
+             "image_url": "https://n.nordstrommedia.com/it/15963ac9-5f3f-4207-b119-a021e1db52e7.jpeg?h=368&w=240&dpr=2"},
             {"category": "shoes", "name": "Adidas Samba OG White", "color": "white/black",
              "material_guess": "leather", "brand_vibe": "Adidas",
              "style_tags": ["retro", "sporty", "iconic"], "resale_potential": "high",
-             "search_query": "adidas samba og white black sneakers", "price_estimate_usd": 120},
+             "search_query": "adidas samba og white black sneakers", "price_estimate_usd": 120,
+             "image_url": "https://assets.adidas.com/images/w_1880,f_auto,q_auto/c68f09963c6e47dcad68ac010115a208_9366/Stan_Smith_Shoes_White_FX5500_01_standard.jpg"},
         ],
         "overall_style": "Y2K Minimal",
         "occasion": "Everyday / Coffee shop",
@@ -300,15 +339,18 @@ _DEMO_OUTFITS = [
             {"category": "outerwear", "name": "Oversized Camel Blazer", "color": "camel",
              "material_guess": "wool blend", "brand_vibe": "& Other Stories",
              "style_tags": ["preppy", "minimal", "smart-casual"], "resale_potential": "high",
-             "search_query": "oversized camel blazer women wool", "price_estimate_usd": 150},
+             "search_query": "oversized camel blazer women wool", "price_estimate_usd": 150,
+             "image_url": "https://static.zara.net/assets/public/9885/e922/a0be46659e56/661cb395b150/08769916400-p/08769916400-p.jpg"},
             {"category": "bottoms", "name": "Straight-Leg Black Trousers", "color": "black",
              "material_guess": "polyester blend", "brand_vibe": "COS",
              "style_tags": ["minimal", "office", "classic"], "resale_potential": "medium",
-             "search_query": "straight leg black tailored trousers women", "price_estimate_usd": 70},
+             "search_query": "straight leg black tailored trousers women", "price_estimate_usd": 70,
+             "image_url": "https://n.nordstrommedia.com/it/742c046e-df5e-4844-95b4-61e1096c97ed.jpeg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=780&h=1196"},
             {"category": "shoes", "name": "Pointed-Toe Leather Mules", "color": "black",
              "material_guess": "leather", "brand_vibe": "Mango",
              "style_tags": ["minimal", "elegant"], "resale_potential": "medium",
-             "search_query": "pointed toe black leather mules women", "price_estimate_usd": 60},
+             "search_query": "pointed toe black leather mules women", "price_estimate_usd": 60,
+             "image_url": "https://cdn.shopify.com/s/files/1/0610/1440/9428/files/10MM18-VENICE-20118-CASTAN.jpg"},
         ],
         "overall_style": "Minimal Chic",
         "occasion": "Office / Dinner",
@@ -321,19 +363,23 @@ _DEMO_OUTFITS = [
             {"category": "top", "name": "Vintage Band Graphic Tee", "color": "black",
              "material_guess": "cotton", "brand_vibe": "vintage",
              "style_tags": ["streetwear", "vintage", "grunge"], "resale_potential": "high",
-             "search_query": "vintage black band graphic tee oversized", "price_estimate_usd": 35},
+             "search_query": "vintage black band graphic tee oversized", "price_estimate_usd": 35,
+             "image_url": "https://images.urbndata.com/is/image/UrbanOutfitters/89759898_049_b?$xlarge$&fit=constrain&qlt=80&wid=614"},
             {"category": "bottoms", "name": "Baggy Cargo Pants Khaki", "color": "khaki",
              "material_guess": "cotton twill", "brand_vibe": "Carhartt",
              "style_tags": ["streetwear", "utility", "y2k"], "resale_potential": "high",
-             "search_query": "baggy cargo pants khaki women utility", "price_estimate_usd": 90},
+             "search_query": "baggy cargo pants khaki women utility", "price_estimate_usd": 90,
+             "image_url": "https://is4.revolveassets.com/images/p4/n/uv/RTAR-WJ45_V1.jpg"},
             {"category": "shoes", "name": "New Balance 550 White Cream", "color": "white/cream",
              "material_guess": "leather", "brand_vibe": "New Balance",
              "style_tags": ["retro", "sporty", "streetwear"], "resale_potential": "high",
-             "search_query": "new balance 550 white cream sneakers", "price_estimate_usd": 110},
+             "search_query": "new balance 550 white cream sneakers", "price_estimate_usd": 110,
+             "image_url": "https://assets.adidas.com/images/w_1880,f_auto,q_auto/7f58eea8063344908fafb96773b13a1e_9366/Superstar_Shoes_White_EG4958_01_standard.jpg"},
             {"category": "bag", "name": "Mini Crossbody Black Canvas", "color": "black",
              "material_guess": "canvas", "brand_vibe": "streetwear",
              "style_tags": ["streetwear", "everyday"], "resale_potential": "low",
-             "search_query": "mini black canvas crossbody bag streetwear", "price_estimate_usd": 30},
+             "search_query": "mini black canvas crossbody bag streetwear", "price_estimate_usd": 30,
+             "image_url": "https://shop.mango.com/assets/rcs/pics/static/T8/fotos/S/87046714_CU_B.jpg?ts=1714729382668"},
         ],
         "overall_style": "Urban Streetwear",
         "occasion": "Weekend / Street",
@@ -424,6 +470,68 @@ async def analyze(request: Request, photo: UploadFile):
         look_total += item.get("price_estimate_usd") or 0
     result["look_total_usd"] = look_total
     return result
+
+
+# ---------------------------------------------------------------------------
+# Product images — proxy to Pexels (best quality) or Unsplash Source (no-key fallback).
+# Priority: Pexels (if PEXELS_API_KEY set) → Unsplash Source → 404.
+# Results cached in-memory per query.
+# ---------------------------------------------------------------------------
+PEXELS_API_KEY = os.getenv("PEXELS_API_KEY", "").strip()
+_product_image_cache: dict[str, str] = {}
+
+_UNSPLASH_CATEGORY_MAP = {
+    "shoes": "shoes,footwear",
+    "sneakers": "sneakers,shoes",
+    "boots": "boots,shoes",
+    "sandals": "sandals,shoes",
+    "loafers": "loafers,shoes",
+    "top": "shirt,clothing,fashion",
+    "tops": "shirt,clothing,fashion",
+    "bottoms": "pants,jeans,clothing",
+    "jeans": "jeans,denim",
+    "shorts": "shorts,clothing",
+    "outerwear": "jacket,coat,fashion",
+    "jacket": "jacket,fashion",
+    "coat": "coat,fashion",
+    "dress": "dress,fashion",
+    "accessories": "accessories,fashion",
+    "hat": "hat,fashion",
+    "bag": "bag,fashion",
+}
+
+
+def _loremflickr_url(q: str) -> str:
+    """Keyword-matched real photos via loremflickr, no API key needed."""
+    kw = urllib.parse.quote(q[:60].replace(" ", ","))
+    seed = sum(ord(c) for c in q) % 9999
+    return f"https://loremflickr.com/400/500/fashion,{kw}/all?lock={seed}"
+
+
+@app.get("/api/product-image")
+def product_image(q: str = ""):
+    q = (q or "").strip().lower()
+    if not q:
+        return Response(status_code=404)
+    if q not in _product_image_cache:
+        url = ""
+        if PEXELS_API_KEY:
+            try:
+                req = urllib.request.Request(
+                    "https://api.pexels.com/v1/search?"
+                    + urllib.parse.urlencode({"query": q, "per_page": 1, "orientation": "portrait"}),
+                    headers={"Authorization": PEXELS_API_KEY},
+                )
+                with urllib.request.urlopen(req, timeout=5) as r:
+                    photos = json.loads(r.read().decode()).get("photos", [])
+                url = photos[0]["src"]["large"] if photos else ""
+            except Exception:  # noqa: BLE001
+                url = ""
+        if not url:
+            url = _loremflickr_url(q)
+        _product_image_cache[q] = url
+    url = _product_image_cache[q]
+    return RedirectResponse(url) if url else Response(status_code=404)
 
 
 @app.get("/")
@@ -753,6 +861,78 @@ def init_db() -> None:
                 created_at REAL
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS challenge_completions (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key    TEXT    NOT NULL,
+                challenge_id TEXT   NOT NULL,
+                date        TEXT    NOT NULL DEFAULT (date('now')),
+                points      INTEGER NOT NULL DEFAULT 0,
+                created_at  TEXT    DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS wardrobe_wears (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key   TEXT NOT NULL,
+                item_id    TEXT NOT NULL,
+                worn_date  TEXT NOT NULL,
+                created_at TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS stylist_bookings (
+                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key     TEXT NOT NULL,
+                stylist_id   TEXT NOT NULL,
+                stylist_name TEXT NOT NULL,
+                session_type TEXT NOT NULL,
+                slot_label   TEXT NOT NULL,
+                booked_at    TEXT DEFAULT (datetime('now')),
+                status       TEXT DEFAULT 'confirmed'
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS wishlist (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key   TEXT NOT NULL,
+                item_id    TEXT NOT NULL,
+                item_type  TEXT NOT NULL DEFAULT 'marketplace',
+                item_data  TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_key, item_id)
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS wear_log (
+                id            INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key      TEXT NOT NULL,
+                item_id       TEXT NOT NULL,
+                item_name     TEXT,
+                worn_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                style_tags    TEXT,
+                color_primary TEXT,
+                occasion      TEXT,
+                material_guess TEXT
+            )
+        """)
+        # Migrate existing wear_log rows — SQLite ALTER TABLE doesn't support IF NOT EXISTS
+        for _col in ['color_primary TEXT', 'occasion TEXT', 'material_guess TEXT']:
+            try:
+                conn.execute(f'ALTER TABLE wear_log ADD COLUMN {_col}')
+            except Exception:
+                pass
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS season_summaries (
+                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key     TEXT NOT NULL,
+                season       TEXT NOT NULL,
+                year         INTEGER NOT NULL,
+                generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                summary_json TEXT NOT NULL,
+                UNIQUE(user_key, season, year)
+            )
+        """)
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 
@@ -813,6 +993,16 @@ async def get_products(
         "limit": limit,
         "offset": offset,
     }
+
+
+@app.post("/api/admin/reload-products")
+def admin_reload_products():
+    """Hot-reload products.json into the in-memory cache without server restart."""
+    global _products_cache
+    if PRODUCTS_PATH.exists():
+        with open(PRODUCTS_PATH) as f:
+            _products_cache = json.load(f)
+    return {"status": "ok", "count": len(_products_cache)}
 
 
 @app.get("/api/categories")
@@ -1514,6 +1704,1145 @@ async def marketplace_assist(request: Request, body: dict = Body(...)):
     except Exception as e:
         logger.warning("marketplace_assist Claude error (%s) — using demo fallback", e)
         return _demo_fallback()
+
+
+# ---------------------------------------------------------------------------
+# GET /api/weather — server-side proxy + 30-minute in-memory cache
+# ---------------------------------------------------------------------------
+
+def _fetch_weather_sync(lat: float, lon: float) -> dict:
+    """Synchronous HTTP call to open-meteo. Run via asyncio.to_thread() — never
+    call this directly inside an async endpoint (SF-004 / iron rule)."""
+    url = (
+        "https://api.open-meteo.com/v1/forecast"
+        f"?latitude={lat}&longitude={lon}"
+        "&current_weather=true"
+        "&hourly=apparent_temperature"
+        "&daily=precipitation_probability_max"
+        "&timezone=auto"
+    )
+    req = urllib.request.Request(url, headers={"User-Agent": "AWEAR/1.0"})
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return json.loads(resp.read().decode())
+
+
+@app.get("/api/weather")
+async def get_weather(request: Request, lat: float, lon: float):
+    """Proxy to open-meteo with 30-minute server-side cache per lat/lon pair.
+
+    Rounds lat/lon to 2 decimal places so nearby requests share the same cache
+    entry (~1.1 km granularity — sufficient for weather data).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "weather", 60):
+        logger.warning("Rate limit exceeded: weather from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    cache_key = f"{lat:.2f},{lon:.2f}"
+    now = time.time()
+    cached = _weather_cache.get(cache_key)
+    if cached is not None:
+        cached_at, payload = cached
+        if now - cached_at < WEATHER_CACHE_TTL:
+            logger.info("weather cache hit: %s (age=%.0fs)", cache_key, now - cached_at)
+            return payload
+
+    # Cache miss — fetch from open-meteo in a thread (must not block the event loop)
+    try:
+        data = await asyncio.to_thread(_fetch_weather_sync, round(lat, 2), round(lon, 2))
+    except urllib.error.URLError as exc:
+        logger.error("weather fetch failed: %s", exc)
+        raise HTTPException(status_code=502, detail="Weather service unavailable.")
+    except Exception as exc:
+        logger.error("weather unexpected error: %s", exc)
+        raise HTTPException(status_code=502, detail="Weather service error.")
+
+    _weather_cache[cache_key] = (now, data)
+    logger.info("weather cache miss: %s — fetched and cached", cache_key)
+    return data
+
+
+# ---------------------------------------------------------------------------
+# GET /api/analytics/wardrobe — server-side computation from client-sent wardrobe
+# ---------------------------------------------------------------------------
+
+@app.get("/api/analytics/wardrobe")
+async def analytics_wardrobe(
+    request: Request,
+    wardrobe: Optional[str] = None,
+    range: Optional[str] = None,
+):
+    """Compute wardrobe analytics from a base64-encoded JSON wardrobe array.
+
+    The wardrobe lives in the client's localStorage — this endpoint accepts it
+    as a base64 query param, computes the stats server-side, and returns the
+    result. No wardrobe data is persisted on the server.
+
+    Optional ?range=week|month|all controls the wear-activity window used for
+    utilization rate and dead-stock detection.  Default (no param or 'all') =
+    all-time behaviour matching the original implementation.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "analytics_wardrobe", 60):
+        logger.warning("Rate limit exceeded: analytics_wardrobe from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    # Validate range param
+    valid_ranges = {None, "week", "month", "all"}
+    if range not in valid_ranges:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid range — accepted values: week, month, all.",
+        )
+
+    if not wardrobe:
+        raise HTTPException(status_code=400, detail="Missing required query param: wardrobe (base64 JSON).")
+
+    # Decode base64 → JSON array
+    try:
+        decoded = base64.b64decode(wardrobe + "==").decode("utf-8")  # pad for safety
+        items: list[dict] = json.loads(decoded)
+        if not isinstance(items, list):
+            raise ValueError("wardrobe must be a JSON array")
+    except Exception as exc:
+        logger.warning("analytics_wardrobe decode error from %s: %s", user_key, exc)
+        raise HTTPException(status_code=400, detail=f"Invalid wardrobe payload: {exc}")
+
+    total = len(items)
+    if total == 0:
+        return {
+            "utilization_rate": 0,
+            "avg_cpw": 0.0,
+            "color_distribution": [],
+            "category_distribution": [],
+            "most_worn": None,
+            "dead_stock": [],
+            "range": range or "all",
+        }
+
+    now_ts = datetime.datetime.utcnow()
+
+    # Determine the activity window based on ?range
+    if range == "week":
+        window_days = 7
+    elif range == "month":
+        window_days = 30
+    else:
+        # "all" or None — keep historical behaviour (30-day utilisation window)
+        window_days = 30
+
+    cutoff_30d = now_ts - datetime.timedelta(days=window_days)
+    cutoff_dead = now_ts - datetime.timedelta(days=window_days)  # unworn threshold for dead-stock
+
+    # --- utilization rate: items with at least 1 wear in the last 30 days ---
+    worn_30d = 0
+    total_cpw = 0.0
+    cpw_count = 0
+    most_worn_item = None
+    most_worn_count = 0
+    dead_stock: list[dict] = []
+
+    color_counts: dict[str, int] = defaultdict(int)
+    category_counts: dict[str, int] = defaultdict(int)
+
+    for item in items:
+        name = item.get("name") or item.get("title") or "Unknown"
+        color = (item.get("color") or "Unknown").strip().title()
+        category = (item.get("category") or item.get("cat") or "other").strip().lower()
+        wear_count = int(item.get("wear_count") or item.get("wears") or 0)
+        price = float(item.get("price") or item.get("price_estimate_usd") or 0)
+        last_worn_raw = item.get("last_worn") or item.get("last_worn_at")
+
+        color_counts[color] += 1
+        category_counts[category] += 1
+
+        # Was the item worn in the last 30 days?
+        if last_worn_raw:
+            try:
+                last_worn_dt = datetime.datetime.fromisoformat(str(last_worn_raw)[:10])
+                if last_worn_dt >= cutoff_30d:
+                    worn_30d += 1
+                else:
+                    days_unworn = (now_ts - last_worn_dt).days
+                    if days_unworn >= 30:
+                        dead_stock.append({"name": name, "days_unworn": days_unworn})
+            except ValueError:
+                pass
+        elif wear_count == 0:
+            dead_stock.append({"name": name, "days_unworn": 999})
+
+        # Cost per wear
+        if wear_count > 0 and price > 0:
+            cpw = price / wear_count
+            total_cpw += cpw
+            cpw_count += 1
+
+        # Most worn
+        if wear_count > most_worn_count:
+            most_worn_count = wear_count
+            most_worn_item = {"name": name, "wear_count": wear_count}
+
+    utilization_rate = round((worn_30d / total) * 100) if total > 0 else 0
+    avg_cpw = round(total_cpw / cpw_count, 2) if cpw_count > 0 else 0.0
+
+    # Build sorted distributions
+    color_total = sum(color_counts.values()) or 1
+    color_distribution = sorted(
+        [
+            {"color": c, "count": n, "pct": round((n / color_total) * 100)}
+            for c, n in color_counts.items()
+        ],
+        key=lambda x: x["count"],
+        reverse=True,
+    )
+    category_distribution = sorted(
+        [{"cat": c, "count": n} for c, n in category_counts.items()],
+        key=lambda x: x["count"],
+        reverse=True,
+    )
+    dead_stock.sort(key=lambda x: x["days_unworn"], reverse=True)
+
+    logger.info(
+        "analytics_wardrobe: user=%s items=%d utilization=%d%% dead=%d range=%s",
+        user_key, total, utilization_rate, len(dead_stock), range or "all",
+    )
+
+    return {
+        "utilization_rate": utilization_rate,
+        "avg_cpw": avg_cpw,
+        "color_distribution": color_distribution,
+        "category_distribution": category_distribution,
+        "most_worn": most_worn_item,
+        "dead_stock": dead_stock[:10],  # cap at 10 worst offenders
+        "range": range or "all",
+    }
+
+
+# ---------------------------------------------------------------------------
+# POST /api/challenge/complete — track challenge completions in SQLite
+# ---------------------------------------------------------------------------
+
+class ChallengeCompleteRequest(BaseModel):
+    challenge_id: str
+    user_key: Optional[str] = None
+
+
+@app.post("/api/challenge/complete")
+async def challenge_complete(request: Request, body: ChallengeCompleteRequest):
+    """Record a challenge completion and return points earned + running total.
+
+    Rate limited to 10 completions per hour per user_key to prevent abuse.
+    Points per challenge type are defined in CHALLENGE_POINTS above.
+    """
+    # MG-005: resolve user_key from request IP, allow override from body
+    ip_key = (request.client.host if request.client else None) or "anon"
+    user_key = body.user_key or ip_key
+
+    # Hourly rate limit — 10 completions per hour per user_key
+    if not check_rate_limit_window(user_key, "challenge_complete", 10, window=3600):
+        logger.warning("Rate limit exceeded: challenge_complete from %s", user_key)
+        raise HTTPException(
+            status_code=429,
+            detail="Rate limit exceeded — max 10 challenge completions per hour.",
+        )
+
+    challenge_id = body.challenge_id.strip().lower()
+    if not challenge_id:
+        raise HTTPException(status_code=400, detail="challenge_id must not be empty.")
+
+    points_earned = CHALLENGE_POINTS.get(challenge_id, CHALLENGE_POINTS_DEFAULT)
+    today = datetime.date.today().isoformat()
+
+    with _get_db() as db:
+        db.execute(
+            """
+            INSERT INTO challenge_completions (user_key, challenge_id, date, points)
+            VALUES (?, ?, ?, ?)
+            """,
+            (user_key, challenge_id, today, points_earned),
+        )
+        db.commit()
+
+        # Sum all points for this user_key across all time
+        row = db.execute(
+            "SELECT COALESCE(SUM(points), 0) AS total FROM challenge_completions WHERE user_key = ?",
+            (user_key,),
+        ).fetchone()
+        total_points = int(row["total"])
+
+    logger.info(
+        "challenge_complete: user=%s challenge=%s points_earned=%d total=%d",
+        user_key, challenge_id, points_earned, total_points,
+    )
+
+    return {
+        "points_earned": points_earned,
+        "total_points": total_points,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Stylist Bookings — POST / GET / DELETE /api/bookings
+# ---------------------------------------------------------------------------
+
+class BookingCreateRequest(BaseModel):
+    stylist_id: str
+    stylist_name: str
+    session_type: str
+    slot_label: str
+
+
+@app.post("/api/bookings")
+async def create_booking(request: Request, body: BookingCreateRequest):
+    """Create a new stylist booking and return booking_id + status.
+
+    Rate limited to 30 requests/minute per user_key (MG-005).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "bookings", 30):
+        logger.warning("Rate limit exceeded: bookings from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    stylist_id = body.stylist_id.strip()
+    stylist_name = body.stylist_name.strip()
+    session_type = body.session_type.strip()
+    slot_label = body.slot_label.strip()
+
+    if not stylist_id or not stylist_name or not session_type or not slot_label:
+        raise HTTPException(status_code=400, detail="All fields are required: stylist_id, stylist_name, session_type, slot_label.")
+
+    with _get_db() as db:
+        cursor = db.execute(
+            """
+            INSERT INTO stylist_bookings (user_key, stylist_id, stylist_name, session_type, slot_label)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (user_key, stylist_id, stylist_name, session_type, slot_label),
+        )
+        db.commit()
+        booking_id = cursor.lastrowid
+
+    logger.info(
+        "bookings_create: user=%s stylist=%s session=%s slot=%s id=%d",
+        user_key, stylist_id, session_type, slot_label, booking_id,
+    )
+
+    return {"booking_id": booking_id, "status": "confirmed"}
+
+
+@app.get("/api/bookings")
+async def list_bookings(request: Request):
+    """Return all bookings for the current user_key ordered by booked_at DESC.
+
+    Rate limited to 30 requests/minute per user_key (MG-005).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "bookings", 30):
+        logger.warning("Rate limit exceeded: bookings from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    with _get_db() as db:
+        rows = db.execute(
+            """
+            SELECT id, stylist_id, stylist_name, session_type, slot_label, booked_at, status
+            FROM stylist_bookings
+            WHERE user_key = ?
+            ORDER BY booked_at DESC
+            """,
+            (user_key,),
+        ).fetchall()
+
+    bookings = [dict(row) for row in rows]
+    logger.info("bookings_list: user=%s count=%d", user_key, len(bookings))
+    return {"bookings": bookings}
+
+
+@app.delete("/api/bookings/{booking_id}")
+async def cancel_booking(booking_id: int, request: Request):
+    """Soft-delete a booking by setting status='cancelled'.
+
+    Returns 404 if the booking does not exist or does not belong to the
+    current user_key.  Rate limited to 30 requests/minute (MG-005).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "bookings", 30):
+        logger.warning("Rate limit exceeded: bookings from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    with _get_db() as db:
+        # Verify ownership before mutating
+        row = db.execute(
+            "SELECT id FROM stylist_bookings WHERE id = ? AND user_key = ?",
+            (booking_id, user_key),
+        ).fetchone()
+
+        if not row:
+            raise HTTPException(status_code=404, detail="Booking not found.")
+
+        db.execute(
+            "UPDATE stylist_bookings SET status = 'cancelled' WHERE id = ? AND user_key = ?",
+            (booking_id, user_key),
+        )
+        db.commit()
+
+    logger.info("bookings_cancel: user=%s booking_id=%d", user_key, booking_id)
+    return {"booking_id": booking_id, "status": "cancelled"}
+
+
+# ---------------------------------------------------------------------------
+# Wishlist — POST /api/wishlist/toggle · GET /api/wishlist · GET /api/wishlist/status
+# SQLite-backed per BE-004/BE-005. MG-005 user_key. Rate limit 30/min on writes.
+# ---------------------------------------------------------------------------
+
+class WishlistToggleRequest(BaseModel):
+    item_id: str
+    item_type: str = "marketplace"
+    item_data: dict = {}
+
+
+@app.post("/api/wishlist/toggle")
+async def wishlist_toggle(request: Request, body: WishlistToggleRequest):
+    """Toggle a wishlist item for the current user.
+
+    If the item already exists in the wishlist it is removed and the response
+    contains ``saved: false``.  Otherwise it is inserted and the response
+    contains ``saved: true``.  Either way ``count`` reflects the new total
+    number of saved items for this user.
+
+    Rate limited to 30 requests/minute per user_key (MG-005).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "wishlist_toggle", 30):
+        logger.warning("Rate limit exceeded: wishlist_toggle from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    item_id = body.item_id.strip()
+    if not item_id:
+        raise HTTPException(status_code=400, detail="item_id is required.")
+
+    item_type = body.item_type.strip() or "marketplace"
+    item_data_json = json.dumps(body.item_data)
+
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM wishlist WHERE user_key = ? AND item_id = ?",
+            (user_key, item_id),
+        ).fetchone()
+
+        if existing:
+            db.execute(
+                "DELETE FROM wishlist WHERE user_key = ? AND item_id = ?",
+                (user_key, item_id),
+            )
+            saved = False
+        else:
+            db.execute(
+                """
+                INSERT INTO wishlist (user_key, item_id, item_type, item_data)
+                VALUES (?, ?, ?, ?)
+                """,
+                (user_key, item_id, item_type, item_data_json),
+            )
+            saved = True
+
+        db.commit()
+
+        count = db.execute(
+            "SELECT COUNT(*) FROM wishlist WHERE user_key = ?",
+            (user_key,),
+        ).fetchone()[0]
+
+    logger.info("wishlist_toggle: user=%s item_id=%s saved=%s count=%d", user_key, item_id, saved, count)
+    return {"saved": saved, "count": count}
+
+
+@app.get("/api/wishlist")
+async def get_wishlist(request: Request):
+    """Return all wishlist items for the current user ordered by saved date DESC.
+
+    Each item includes the stored ``item_data`` JSON snapshot and ``created_at``.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "wishlist_get", 30):
+        logger.warning("Rate limit exceeded: wishlist_get from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    with _get_db() as db:
+        rows = db.execute(
+            """
+            SELECT id, item_id, item_type, item_data, created_at
+            FROM wishlist
+            WHERE user_key = ?
+            ORDER BY created_at DESC
+            """,
+            (user_key,),
+        ).fetchall()
+
+    items = []
+    for row in rows:
+        entry = dict(row)
+        raw = entry.get("item_data")
+        entry["item_data"] = json.loads(raw) if raw else {}
+        items.append(entry)
+
+    logger.info("wishlist_list: user=%s count=%d", user_key, len(items))
+    return {"items": items, "total": len(items)}
+
+
+@app.get("/api/wishlist/status")
+async def get_wishlist_status(request: Request, item_ids: str = ""):
+    """Return saved status and per-item save count for a comma-separated list of item IDs.
+
+    Query param ``item_ids`` — e.g. ``?item_ids=abc,def,ghi``.
+
+    Response shape::
+
+        {
+            "saved": {"abc": true, "def": false},
+            "counts": {"abc": 3, "def": 0}
+        }
+
+    ``counts`` reflects how many *different* users have saved each item,
+    giving a lightweight social-proof signal to the frontend.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "wishlist_status", 30):
+        logger.warning("Rate limit exceeded: wishlist_status from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    if not item_ids.strip():
+        return {"saved": {}, "counts": {}}
+
+    ids = [i.strip() for i in item_ids.split(",") if i.strip()]
+    if not ids:
+        return {"saved": {}, "counts": {}}
+
+    placeholders = ",".join("?" * len(ids))
+
+    with _get_db() as db:
+        # Which of these items has the current user saved?
+        user_rows = db.execute(
+            f"SELECT item_id FROM wishlist WHERE user_key = ? AND item_id IN ({placeholders})",
+            [user_key] + ids,
+        ).fetchall()
+        user_saved_ids = {row["item_id"] for row in user_rows}
+
+        # Total save count per item (all users — social proof).
+        count_rows = db.execute(
+            f"SELECT item_id, COUNT(*) AS cnt FROM wishlist WHERE item_id IN ({placeholders}) GROUP BY item_id",
+            ids,
+        ).fetchall()
+        count_map = {row["item_id"]: row["cnt"] for row in count_rows}
+
+    saved_map = {iid: (iid in user_saved_ids) for iid in ids}
+    counts_map = {iid: count_map.get(iid, 0) for iid in ids}
+
+    return {"saved": saved_map, "counts": counts_map}
+
+
+# ---------------------------------------------------------------------------
+# Analytics — wear_log table  (wear events + summary + wrapped)
+# POST /api/analytics/wear · GET /api/analytics/summary · GET /api/analytics/wrapped/{year}
+# BE-004/BE-005: SQLite from day 1. MG-005: user_key from IP. OW-001: grep 3 layers.
+# ---------------------------------------------------------------------------
+
+# Demo seed values used when a user has no real wear_log data yet.
+_ANALYTICS_DEMO = {
+    "total_items": 24,
+    "utilization_rate": 0.34,
+    "avg_cost_per_wear": 8.40,
+    "dead_zone_count": 3,
+    "rewear_score": 71,
+    "sustainability": {
+        "preloved_items": 5,
+        "co2_saved_kg": 12.4,
+    },
+    "top_style_tags": ["minimal", "vintage", "Y2K"],
+    "style_archetype": "The Quiet Minimalist",
+    "most_worn": {
+        "item_id": "demo_blazer",
+        "item_name": "Black Blazer",
+        "wear_count": 47,
+        "cpw": 2.30,
+    },
+    "least_efficient": {
+        "item_id": "demo_skirt",
+        "item_name": "Satin Skirt",
+        "price": 180.0,
+        "wear_count": 1,
+        "cpw": 180.0,
+    },
+}
+
+_WRAPPED_DEMO = {
+    "style_word": "Minimalist",
+    "total_outfits": 127,
+    "most_worn_item": "Black Blazer",
+    "cpw_champion": {"name": "Black Blazer", "cpw": 2.30, "wears": 47},
+    "items_never_worn": 23,
+    "phantom_value_usd": 1240.0,
+    "rewear_rate": 0.71,
+    "co2_saved_kg": 12.4,
+    "trend_pioneer_score": 87,
+    "color_palette": ["#1a1a2e", "#c4855a", "#f0ecf5", "#52c97a", "#8a8498"],
+}
+
+# ---------------------------------------------------------------------------
+# Season helpers — 2 seasons only: summer (Apr–Sep) and winter (Oct–Mar).
+# "Winter year" = the January side (e.g. Winter 2026 = Oct 2025 – Mar 2026).
+# ---------------------------------------------------------------------------
+
+def _get_current_season() -> tuple[str, int, "datetime.date", "datetime.date"]:
+    """Return (season, year, start_date, end_date) for today's date.
+
+    summer: April 1 – September 30 of the same calendar year.
+    winter: October 1 of year Y – March 31 of year Y+1.
+            The *year label* is Y+1 (the January side).
+    """
+    today = datetime.date.today()
+    m, y = today.month, today.year
+    if 4 <= m <= 9:
+        return "summer", y, datetime.date(y, 4, 1), datetime.date(y, 9, 30)
+    else:
+        winter_year = y if m >= 10 else y - 1
+        return "winter", winter_year + 1, datetime.date(winter_year, 10, 1), datetime.date(winter_year + 1, 3, 31)
+
+
+def _season_date_range(season: str, year: int) -> tuple["datetime.date", "datetime.date"]:
+    """Return (start_date, end_date) for a given season+year label.
+
+    summer 2026 → 2026-04-01 .. 2026-09-30
+    winter 2026 → 2025-10-01 .. 2026-03-31
+    Raises ValueError on invalid input.
+    """
+    season = season.lower()
+    if season == "summer":
+        return datetime.date(year, 4, 1), datetime.date(year, 9, 30)
+    elif season == "winter":
+        return datetime.date(year - 1, 10, 1), datetime.date(year, 3, 31)
+    else:
+        raise ValueError(f"Unknown season '{season}' — must be 'summer' or 'winter'.")
+
+
+def _season_display_name(season: str, year: int) -> str:
+    return f"{'Summer' if season == 'summer' else 'Winter'} {year}"
+
+
+_STYLE_ARCHETYPES = [
+    "The Quiet Minimalist",
+    "The Vintage Soul",
+    "The Streetwear Pioneer",
+    "The Maximalist Dreamer",
+    "The Athleisure Native",
+    "The Coastal Wanderer",
+    "The Dark Romantic",
+    "The Boho Free Spirit",
+]
+
+_STYLE_WORDS = ["Minimalist", "Vintage", "Streetwear", "Bold", "Athleisure", "Coastal", "Dark", "Boho"]
+
+
+class WearLogRequest(BaseModel):
+    item_id: str
+    item_name: str = ""
+    style_tags: list[str] = []
+
+
+@app.post("/api/analytics/wear")
+async def log_wear_event(request: Request, body: WearLogRequest):
+    """Log a single wear event for the current user.
+
+    Stores item_id, item_name, style_tags (JSON array) and current timestamp
+    in the wear_log SQLite table.  Rate limited to 60 requests/minute.
+
+    Returns::
+
+        { "logged": true, "total_wears": N }
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "analytics_wear", 60):
+        logger.warning("Rate limit exceeded: analytics_wear from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    item_id = body.item_id.strip()
+    if not item_id:
+        raise HTTPException(status_code=400, detail="item_id is required.")
+
+    item_name = body.item_name.strip()
+    style_tags_json = json.dumps(body.style_tags)
+
+    with _get_db() as db:
+        db.execute(
+            """
+            INSERT INTO wear_log (user_key, item_id, item_name, style_tags)
+            VALUES (?, ?, ?, ?)
+            """,
+            (user_key, item_id, item_name, style_tags_json),
+        )
+        db.commit()
+
+        total_wears = db.execute(
+            "SELECT COUNT(*) FROM wear_log WHERE user_key = ?",
+            (user_key,),
+        ).fetchone()[0]
+
+    logger.info("wear_log: user=%s item_id=%s total_wears=%d", user_key, item_id, total_wears)
+    return {"logged": True, "total_wears": total_wears}
+
+
+@app.get("/api/analytics/summary")
+async def analytics_summary(request: Request):
+    """Return wardrobe analytics summary for the current user.
+
+    Computes live stats from the wear_log table when the user has data.
+    Falls back to realistic demo seed values for new users with no wear history.
+
+    Stats computed from real data:
+    - utilization_rate: fraction of distinct items worn in the last 30 days
+    - avg_cost_per_wear: not computed server-side (no price stored) — returns demo value
+    - dead_zone_count: distinct items not worn in 60+ days
+    - rewear_score: % of distinct items worn at least twice
+    - top_style_tags: 3 most-used style tags across all wear events
+    - style_archetype: derived from top style tags
+    - most_worn: item with most wear events
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "analytics_summary", 60):
+        logger.warning("Rate limit exceeded: analytics_summary from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    with _get_db() as db:
+        total_rows = db.execute(
+            "SELECT COUNT(*) FROM wear_log WHERE user_key = ?",
+            (user_key,),
+        ).fetchone()[0]
+
+        # No real data yet — return demo values so the UI is never empty.
+        if total_rows == 0:
+            return dict(_ANALYTICS_DEMO)
+
+        # --- Distinct items worn at all ---
+        all_items_rows = db.execute(
+            "SELECT DISTINCT item_id FROM wear_log WHERE user_key = ?",
+            (user_key,),
+        ).fetchall()
+        all_item_ids = [r[0] for r in all_items_rows]
+        total_distinct = len(all_item_ids)
+
+        # --- Items worn in last 30 days ---
+        cutoff_30d = (datetime.datetime.utcnow() - datetime.timedelta(days=30)).isoformat()
+        worn_30d_rows = db.execute(
+            """
+            SELECT DISTINCT item_id FROM wear_log
+            WHERE user_key = ? AND worn_at >= ?
+            """,
+            (user_key, cutoff_30d),
+        ).fetchall()
+        worn_30d_ids = {r[0] for r in worn_30d_rows}
+        utilization_rate = round(len(worn_30d_ids) / total_distinct, 2) if total_distinct else 0.0
+
+        # --- Dead zone: items not worn in 60+ days (or never worn in 60+ days window) ---
+        cutoff_60d = (datetime.datetime.utcnow() - datetime.timedelta(days=60)).isoformat()
+        dead_rows = db.execute(
+            """
+            SELECT item_id FROM wear_log
+            WHERE user_key = ?
+            GROUP BY item_id
+            HAVING MAX(worn_at) < ?
+            """,
+            (user_key, cutoff_60d),
+        ).fetchall()
+        dead_zone_count = len(dead_rows)
+
+        # --- Rewear score: % of distinct items worn >= 2 times ---
+        reworn_rows = db.execute(
+            """
+            SELECT COUNT(*) FROM (
+                SELECT item_id FROM wear_log
+                WHERE user_key = ?
+                GROUP BY item_id
+                HAVING COUNT(*) >= 2
+            )
+            """,
+            (user_key,),
+        ).fetchone()[0]
+        rewear_score = round((reworn_rows / total_distinct) * 100) if total_distinct else 0
+
+        # --- Most worn item ---
+        most_worn_row = db.execute(
+            """
+            SELECT item_id, item_name, COUNT(*) AS wear_count
+            FROM wear_log
+            WHERE user_key = ?
+            GROUP BY item_id
+            ORDER BY wear_count DESC
+            LIMIT 1
+            """,
+            (user_key,),
+        ).fetchone()
+        most_worn = None
+        if most_worn_row:
+            most_worn = {
+                "item_id": most_worn_row["item_id"],
+                "item_name": most_worn_row["item_name"] or most_worn_row["item_id"],
+                "wear_count": most_worn_row["wear_count"],
+                "cpw": None,  # price not stored server-side
+            }
+
+        # --- Top style tags (across all wear events) ---
+        tag_rows = db.execute(
+            "SELECT style_tags FROM wear_log WHERE user_key = ? AND style_tags IS NOT NULL",
+            (user_key,),
+        ).fetchall()
+        tag_counts: dict[str, int] = defaultdict(int)
+        for row in tag_rows:
+            try:
+                tags = json.loads(row[0] or "[]")
+                for tag in tags:
+                    if isinstance(tag, str) and tag.strip():
+                        tag_counts[tag.strip().lower()] += 1
+            except (json.JSONDecodeError, TypeError):
+                pass
+        top_style_tags = [t for t, _ in sorted(tag_counts.items(), key=lambda x: x[1], reverse=True)[:3]]
+
+        # --- Style archetype: map top tag to archetype ---
+        _tag_archetype_map = {
+            "minimal": "The Quiet Minimalist",
+            "vintage": "The Vintage Soul",
+            "streetwear": "The Streetwear Pioneer",
+            "maximalist": "The Maximalist Dreamer",
+            "athleisure": "The Athleisure Native",
+            "coastal": "The Coastal Wanderer",
+            "dark": "The Dark Romantic",
+            "boho": "The Boho Free Spirit",
+            "y2k": "The Streetwear Pioneer",
+            "office": "The Quiet Minimalist",
+        }
+        style_archetype = "The Quiet Minimalist"
+        if top_style_tags:
+            style_archetype = _tag_archetype_map.get(top_style_tags[0], "The Quiet Minimalist")
+
+    logger.info(
+        "analytics_summary: user=%s total_rows=%d distinct=%d utilization=%.2f rewear=%d%%",
+        user_key, total_rows, total_distinct, utilization_rate, rewear_score,
+    )
+
+    return {
+        "total_items": total_distinct,
+        "utilization_rate": utilization_rate,
+        "avg_cost_per_wear": _ANALYTICS_DEMO["avg_cost_per_wear"],  # needs price data
+        "dead_zone_count": dead_zone_count,
+        "rewear_score": rewear_score,
+        "sustainability": _ANALYTICS_DEMO["sustainability"],
+        "top_style_tags": top_style_tags or _ANALYTICS_DEMO["top_style_tags"],
+        "style_archetype": style_archetype,
+        "most_worn": most_worn or _ANALYTICS_DEMO["most_worn"],
+        "least_efficient": _ANALYTICS_DEMO["least_efficient"],  # needs price data
+    }
+
+
+def _compute_wrapped_summary(
+    db: "sqlite3.Connection",
+    user_key: str,
+    start_iso: str,
+    end_iso: str,
+) -> dict:
+    """Compute Wrapped-style summary for a date window.
+
+    Returns the summary dict (real data) or None if no wear events exist.
+    Internal helper — no rate-limit, no request context.
+    """
+    rows = db.execute(
+        """
+        SELECT item_id, item_name, style_tags
+        FROM wear_log
+        WHERE user_key = ?
+          AND worn_at >= ?
+          AND worn_at <= ?
+        """,
+        (user_key, start_iso, end_iso),
+    ).fetchall()
+
+    if not rows:
+        return None  # caller decides fallback
+
+    total_outfits = len(rows)
+
+    item_counts: dict[str, dict] = {}
+    for row in rows:
+        iid = row["item_id"]
+        if iid not in item_counts:
+            item_counts[iid] = {
+                "item_id": iid,
+                "item_name": row["item_name"] or iid,
+                "wears": 0,
+            }
+        item_counts[iid]["wears"] += 1
+
+    sorted_items = sorted(item_counts.values(), key=lambda x: x["wears"], reverse=True)
+    top_item = sorted_items[0]
+
+    cpw_champion = {
+        "name": top_item["item_name"],
+        "cpw": None,
+        "wears": top_item["wears"],
+    }
+
+    all_item_ids_rows = db.execute(
+        "SELECT DISTINCT item_id FROM wear_log WHERE user_key = ?",
+        (user_key,),
+    ).fetchall()
+    all_item_ids = {r[0] for r in all_item_ids_rows}
+    window_item_ids = {r["item_id"] for r in rows}
+    items_never_worn_window = len(all_item_ids - window_item_ids)
+
+    reworn = sum(1 for v in item_counts.values() if v["wears"] >= 2)
+    rewear_rate = round(reworn / len(item_counts), 2) if item_counts else 0.0
+
+    tag_counts: dict[str, int] = defaultdict(int)
+    for row in rows:
+        try:
+            tags = json.loads(row["style_tags"] or "[]")
+            for tag in tags:
+                if isinstance(tag, str) and tag.strip():
+                    tag_counts[tag.strip().lower()] += 1
+        except (json.JSONDecodeError, TypeError):
+            pass
+    top_tags = [t for t, _ in sorted(tag_counts.items(), key=lambda x: x[1], reverse=True)[:3]]
+
+    _tag_style_word_map = {
+        "minimal": "Minimalist",
+        "vintage": "Vintage",
+        "streetwear": "Streetwear",
+        "maximalist": "Bold",
+        "athleisure": "Athleisure",
+        "coastal": "Coastal",
+        "dark": "Dark",
+        "boho": "Boho",
+        "y2k": "Y2K",
+        "office": "Classic",
+    }
+    style_word = _tag_style_word_map.get(top_tags[0] if top_tags else "", "Minimalist")
+    trend_pioneer_score = min(100, len(tag_counts) * 12)
+
+    return {
+        "style_word": style_word,
+        "total_outfits": total_outfits,
+        "most_worn_item": top_item["item_name"],
+        "cpw_champion": cpw_champion,
+        "items_never_worn": items_never_worn_window,
+        "phantom_value_usd": _WRAPPED_DEMO["phantom_value_usd"],
+        "rewear_rate": rewear_rate,
+        "co2_saved_kg": round(total_outfits * 0.0977, 1),
+        "trend_pioneer_score": trend_pioneer_score,
+        "color_palette": _WRAPPED_DEMO["color_palette"],
+    }
+
+
+@app.get("/api/analytics/wrapped/{year}")
+async def analytics_wrapped(year: int, request: Request, season: Optional[str] = None):
+    """Return a Spotify Wrapped-style summary for the given year.
+
+    Optional query param ``season``:
+    - ``summer`` — April 1 – September 30 of ``year``
+    - ``winter`` — October 1 of ``year-1`` – March 31 of ``year``
+    - omitted — combined Summer+Winter for the full calendar year (backward compat)
+
+    Uses real wear_log data when available; falls back to demo seed values.
+    Year must be between 2020 and 2100.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "analytics_wrapped", 60):
+        logger.warning("Rate limit exceeded: analytics_wrapped from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    if not (2020 <= year <= 2100):
+        raise HTTPException(status_code=400, detail="year must be between 2020 and 2100.")
+
+    if season is not None:
+        season = season.lower()
+        if season not in ("summer", "winter"):
+            raise HTTPException(status_code=400, detail="season must be 'summer' or 'winter'.")
+
+    with _get_db() as db:
+        if season is not None:
+            start_date, end_date = _season_date_range(season, year)
+            start_iso = start_date.isoformat()
+            end_iso = end_date.isoformat() + "T23:59:59"
+            summary = _compute_wrapped_summary(db, user_key, start_iso, end_iso)
+            if summary is None:
+                summary = dict(_WRAPPED_DEMO)
+            logger.info(
+                "analytics_wrapped: user=%s year=%d season=%s total_outfits=%d",
+                user_key, year, season, summary.get("total_outfits", 0),
+            )
+            return {"year": year, "season": season,
+                    "display_name": _season_display_name(season, year), **summary}
+        else:
+            # Backward-compat: full calendar year (Jan 1 – Dec 31)
+            start_iso = f"{year}-01-01"
+            end_iso = f"{year}-12-31T23:59:59"
+            summer_s, summer_e = _season_date_range("summer", year)
+            winter_s, winter_e = _season_date_range("winter", year)
+            summer_sum = _compute_wrapped_summary(
+                db, user_key, summer_s.isoformat(), summer_e.isoformat() + "T23:59:59"
+            )
+            winter_sum = _compute_wrapped_summary(
+                db, user_key, winter_s.isoformat(), winter_e.isoformat() + "T23:59:59"
+            )
+            combined = _compute_wrapped_summary(db, user_key, start_iso, end_iso)
+            if combined is None:
+                combined = dict(_WRAPPED_DEMO)
+            logger.info(
+                "analytics_wrapped: user=%s year=%d (combined) total_outfits=%d",
+                user_key, year, combined.get("total_outfits", 0),
+            )
+            return {
+                "year": year,
+                **combined,
+                "seasons": {
+                    "summer": summer_sum or dict(_WRAPPED_DEMO),
+                    "winter": winter_sum or dict(_WRAPPED_DEMO),
+                },
+            }
+
+
+@app.get("/api/analytics/season/current")
+async def analytics_season_current(request: Request):
+    """Return the current season with live progress and wear summary.
+
+    Response::
+
+        {
+          "season": "summer",
+          "year": 2026,
+          "display_name": "Summer 2026",
+          "start_date": "2026-04-01",
+          "end_date": "2026-09-30",
+          "days_elapsed": 82,
+          "days_remaining": 98,
+          "summary": { ...same shape as wrapped endpoint... }
+        }
+
+    Falls back to demo data when the user has no wear events this season.
+    Rate limited to 60 requests/minute.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "analytics_season_current", 60):
+        logger.warning("Rate limit exceeded: analytics_season_current from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    season, year, start_date, end_date = _get_current_season()
+    today = datetime.date.today()
+    days_elapsed = (today - start_date).days
+    days_remaining = (end_date - today).days
+
+    start_iso = start_date.isoformat()
+    end_iso = end_date.isoformat() + "T23:59:59"
+
+    with _get_db() as db:
+        summary = _compute_wrapped_summary(db, user_key, start_iso, end_iso)
+        if summary is None:
+            summary = dict(_WRAPPED_DEMO)
+
+    logger.info(
+        "analytics_season_current: user=%s season=%s/%d elapsed=%d remaining=%d",
+        user_key, season, year, days_elapsed, days_remaining,
+    )
+
+    return {
+        "season": season,
+        "year": year,
+        "display_name": _season_display_name(season, year),
+        "start_date": start_date.isoformat(),
+        "end_date": end_date.isoformat(),
+        "days_elapsed": days_elapsed,
+        "days_remaining": days_remaining,
+        "summary": summary,
+    }
+
+
+@app.get("/api/analytics/seasons/archive")
+async def analytics_seasons_archive(request: Request):
+    """Return list of seasons for which the user has wear data.
+
+    Covers the last 4 seasons (2 years back) plus the current season.
+    Seasons with no data are included with outfit_count=0 and score=null.
+
+    Response::
+
+        {
+          "seasons": [
+            {"season": "summer", "year": 2026, "display_name": "Summer 2026",
+             "outfit_count": 42, "score": 71},
+            ...
+          ]
+        }
+
+    Rate limited to 30 requests/minute.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "analytics_seasons_archive", 30):
+        logger.warning("Rate limit exceeded: analytics_seasons_archive from %s", user_key)
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    current_season, current_year, _, _ = _get_current_season()
+
+    # Build list of last 5 season slots (current + 4 prior), most-recent first.
+    slots: list[tuple[str, int]] = []
+    s, y = current_season, current_year
+    for _ in range(5):
+        slots.append((s, y))
+        # Step back one season
+        if s == "summer":
+            s, y = "winter", y  # Winter of the same label-year comes before Summer
+        else:
+            s, y = "summer", y - 1
+
+    result_seasons = []
+    with _get_db() as db:
+        for season, year in slots:
+            start_date, end_date = _season_date_range(season, year)
+            start_iso = start_date.isoformat()
+            end_iso = end_date.isoformat() + "T23:59:59"
+
+            count_row = db.execute(
+                """
+                SELECT COUNT(*) FROM wear_log
+                WHERE user_key = ? AND worn_at >= ? AND worn_at <= ?
+                """,
+                (user_key, start_iso, end_iso),
+            ).fetchone()
+            outfit_count = count_row[0] if count_row else 0
+
+            score: Optional[int] = None
+            if outfit_count > 0:
+                # Rewear score for the season (% of items worn >= 2 times)
+                item_rows = db.execute(
+                    """
+                    SELECT item_id, COUNT(*) AS c FROM wear_log
+                    WHERE user_key = ? AND worn_at >= ? AND worn_at <= ?
+                    GROUP BY item_id
+                    """,
+                    (user_key, start_iso, end_iso),
+                ).fetchall()
+                total_items = len(item_rows)
+                reworn = sum(1 for r in item_rows if r["c"] >= 2)
+                score = round((reworn / total_items) * 100) if total_items else 0
+
+            result_seasons.append({
+                "season": season,
+                "year": year,
+                "display_name": _season_display_name(season, year),
+                "outfit_count": outfit_count,
+                "score": score,
+            })
+
+    logger.info(
+        "analytics_seasons_archive: user=%s seasons_returned=%d",
+        user_key, len(result_seasons),
+    )
+    return {"seasons": result_seasons}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

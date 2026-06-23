@@ -7,6 +7,7 @@
     "explore":     "Search",
     "feed":        "Feed",
     "closet":      "Closet",
+    "shop":        "Shop",
     "chat":        "Abigail",
     "shopping":    "Shop",
     "marketplace": "Marketplace"
@@ -45,7 +46,7 @@
   "settings": {
     "section_title": "Settings",
     "language":      "Language",
-    "language_he":   "עברית",
+    "language_he":   "Hebrew",
     "language_en":   "English"
   },
   "closet": {
