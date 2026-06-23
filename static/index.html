@@ -4782,7 +4782,7 @@
       mine.unshift({id:'u'+Date.now(), name, price, condition, category: cat, seller:'@me', orig: price*2, style_tags: prefill?.style_tags || []});
       localStorage.setItem(MP_KEY, JSON.stringify(mine));
       modal.classList.remove('show');
-      logAdminEvent('sell', 'Listed: ' + name + ' ₪' + price);
+      logAdminEvent('sell', 'Listed: ' + name + ' $' + price);
       addRewardPoints(25, 'sell_listing');
       mpTab = 'sell';
       renderMarketplace();
@@ -4856,7 +4856,7 @@
     overlay.querySelector('.book-submit').addEventListener('click', () => {
       const nowBlocked = !already;
       setBlocked(key, label, nowBlocked);
-      logAdminEvent(nowBlocked ? 'block_user' : 'unblock_user', `${nowBlocked ? 'חסמה' : 'הסירה חסימה מ'}: ${label} (${key})`);
+      logAdminEvent(nowBlocked ? 'block_user' : 'unblock_user', `${nowBlocked ? 'Blocked' : 'Unblocked'}: ${label} (${key})`);
       showToast(nowBlocked ? `Blocked: ${label}` : `Unblocked ${label}`);
       overlay.remove();
       if (onDone) onDone(nowBlocked);
@@ -6251,7 +6251,7 @@
       <div class="adm-header"><div class="adm-title" style="display:flex;align-items:center;gap:8px">${icon('barChart',20)} Admin Dashboard</div><div class="adm-badge">INTERNAL</div></div>
       <div class="adm-kpi-grid">${kpis.map(k=>`<div class="adm-kpi"><div class="adm-kpi-icon">${icon(k.icon,20)}</div><div class="adm-kpi-num">${esc(String(k.num))}</div><div class="adm-kpi-label">${esc(k.label)}</div><div class="adm-kpi-sub">${esc(k.sub)}</div></div>`).join('')}</div>
       <div class="adm-section"><div class="adm-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('leaf',16)} Sustainability</div></div>
-      <div class="adm-grade-card"><div class="adm-grade-letter" style="color:${susColor}">${susGrade}</div><div class="adm-grade-info"><div class="adm-grade-label">${susScore}/100</div><div class="adm-grade-sub">Reuse: ${reuseR}% · Sold: ${mp.length} · CPW: ₪${Math.round(avgCPW)||'—'}</div></div></div>
+      <div class="adm-grade-card"><div class="adm-grade-letter" style="color:${susColor}">${susGrade}</div><div class="adm-grade-info"><div class="adm-grade-label">${susScore}/100</div><div class="adm-grade-sub">Reuse: ${reuseR}% · Sold: ${mp.length} · CPW: $${Math.round(avgCPW)||'—'}</div></div></div>
       <div class="adm-section"><div class="adm-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('hanger',16)} Categories</div>${topCats.length?topCats.map(([cat,cnt])=>`<div class="adm-bar-row"><div class="adm-bar-lbl">${esc(cat)}</div><div class="adm-bar-track"><div class="adm-bar-fill" style="width:${Math.round((cnt/maxCat)*100)}%"></div></div><div class="adm-bar-val">${cnt}</div></div>`).join(''):'<div style="color:var(--muted);font-size:var(--t-small)">Empty closet</div>'}</div>
       <div class="adm-section"><div class="adm-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('list',16)} Event Log</div>${recentLog.length?recentLog.map(e=>{const t=new Date(e.ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});return`<div class="adm-event-row"><div class="adm-ev-dot"></div><div class="adm-ev-text">${esc(e.label)}</div><div class="adm-ev-time">${t}</div></div>`;}).join(''):'<div style="color:var(--muted);font-size:var(--t-small);padding:12px 0">No events yet</div>'}</div>
       <div class="adm-export-row"><button class="adm-export-btn primary" onclick="adminExportCSV()" style="display:inline-flex;align-items:center;gap:6px">${icon('arrowUp',15)} Export CSV</button><button class="adm-export-btn secondary" onclick="adminClearLog()" style="display:inline-flex;align-items:center;gap:6px">${icon('alert',15)} Reset Log</button></div>
@@ -6268,7 +6268,7 @@
     const a        = document.createElement('a');
     a.href=url;a.download='awear_wardrobe.csv';a.click();
     URL.revokeObjectURL(url);
-    showToast('CSV יוצא בהצלחה');
+    showToast('CSV exported');
   }
 
   function adminClearLog() {
