@@ -2715,6 +2715,31 @@
       : `<div style="text-align:center;color:var(--muted,#8a8498);font-size:var(--t-small,13px);padding:10px 0">Price not available for this item</div>`;
 
     showSheet();
+    applyBuyRoute(it);   // hybrid buy routing via /api/resolve-product
+  }
+
+  // Ask the backend how to buy this item, then adapt the sheet:
+  //  exact   -> keep in-app checkout, note the source store
+  //  similar -> show "shop similar" alternatives (discontinued-item handling)
+  //  archive -> own-it / resell message (never a dead end)
+  // On any failure the default sheet is left untouched.
+  async function applyBuyRoute(it){
+    try{
+      const p = new URLSearchParams({q: it.search_query||it.name||'', category: it.category||'', color: it.color||'', brand: it.brand_vibe||''});
+      const res = await fetch('/api/resolve-product?'+p.toString()); if(!res.ok) return;
+      const r = await res.json();
+      if(r.status==='exact'){
+        sheetBody.insertAdjacentHTML('beforeend',
+          `<div style="display:flex;align-items:center;gap:6px;justify-content:center;color:var(--muted,#8a8498);font-size:12px;margin-top:-8px">${icon('check',13)} Sourced from ${esc(r.retailer||'partner store')}${r.checkout==='in_app'?' · in-app':''}</div>`);
+      } else if(r.status==='similar' && (r.alternatives||[]).length){
+        const alts=r.alternatives.slice(0,3);
+        sheetBody.insertAdjacentHTML('beforeend',
+          `<div style="margin-top:4px"><div style="font-weight:800;font-size:13px;margin-bottom:8px">Not sold new — shop similar</div><div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none">${alts.map(a=>`<a href="${attr(a.buy_url)}" target="_blank" rel="noopener" style="flex:0 0 100px;text-decoration:none"><div style="aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--surface,#f3f1ec)"><img src="${attr(a.image_url)}" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div><div style="font-size:11px;font-weight:700;color:var(--text,#14110f);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.brand)}</div><div style="font-size:11px;color:var(--muted,#8a8498)">$${esc(a.price_usd)}</div></a>`).join('')}</div></div>`);
+        sheetFooter.innerHTML = `<div style="text-align:center;color:var(--muted,#8a8498);font-size:13px;padding:8px 0">Pick a similar piece ↑ — or keep it in your closet</div>`;
+      } else if(r.status==='archive'){
+        sheetFooter.innerHTML = `<div style="text-align:center;color:var(--muted,#8a8498);font-size:13px;padding:10px 0;line-height:1.5">${esc(r.message||'Not sold new anymore — style it from your closet or list it for resale.')}</div>`;
+      }
+    }catch(e){ /* keep default sheet */ }
   }
 
   // ---- AI stylist heuristic: build outfit combos from the user's closet ----
