@@ -933,6 +933,30 @@ def init_db() -> None:
                 UNIQUE(user_key, season, year)
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS orders (
+                id           TEXT PRIMARY KEY,
+                user_key     TEXT NOT NULL,
+                post_id      TEXT DEFAULT '',
+                product_id   TEXT DEFAULT '',
+                product_name TEXT NOT NULL,
+                amount_usd   REAL DEFAULT 0,
+                status       TEXT DEFAULT 'completed',
+                influencer_id TEXT DEFAULT '',
+                created_at   TEXT NOT NULL
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS credits (
+                id           TEXT PRIMARY KEY,
+                user_key     TEXT NOT NULL,
+                order_id     TEXT NOT NULL,
+                item_name    TEXT DEFAULT '',
+                amount_usd   REAL DEFAULT 0,
+                type         TEXT DEFAULT 'creator',
+                created_at   TEXT NOT NULL
+            )
+        """)
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 
@@ -2904,6 +2928,103 @@ async def analytics_seasons_archive(request: Request):
         user_key, len(result_seasons),
     )
     return {"seasons": result_seasons}
+
+
+# ---------------------------------------------------------------------------
+# Orders + Creator Credits — POST /api/orders · GET /api/wallet
+# SQLite-backed per MASTER_PLAN A7. MG-005 user_key. BE-004/BE-005.
+# ---------------------------------------------------------------------------
+
+class OrderCreate(BaseModel):
+    product_name: str
+    product_id: str = ""
+    amount_usd: float = 0.0
+    influencer_id: str = ""
+    post_id: str = ""
+
+
+@app.post("/api/orders")
+async def create_order(order: OrderCreate, request: Request):
+    """Record an in-app purchase and optionally credit the influencer.
+
+    Writes one row to ``orders`` and, when ``influencer_id`` is provided,
+    one row to ``credits`` (5% of ``amount_usd``).
+
+    Rate limited to 20 requests/minute (MG-005).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "orders", 20):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 20 requests/minute.")
+
+    product_name = (order.product_name or "").strip()
+    if not product_name:
+        raise HTTPException(status_code=400, detail="product_name is required.")
+
+    now = datetime.datetime.utcnow().isoformat()
+    order_id = "ord_" + uuid.uuid4().hex[:12]
+
+    with _get_db() as db:
+        db.execute(
+            """INSERT INTO orders (id, user_key, post_id, product_id, product_name,
+                                   amount_usd, status, influencer_id, created_at)
+               VALUES (?,?,?,?,?,?,?,?,?)""",
+            (order_id, user_key, order.post_id, order.product_id, product_name,
+             order.amount_usd, "completed", order.influencer_id, now),
+        )
+        credit_amount = 0.0
+        if order.influencer_id:
+            credit_amount = round(order.amount_usd * 0.05, 2)
+            credit_id = "crd_" + uuid.uuid4().hex[:12]
+            db.execute(
+                """INSERT INTO credits (id, user_key, order_id, item_name, amount_usd, type, created_at)
+                   VALUES (?,?,?,?,?,?,?)""",
+                (credit_id, order.influencer_id, order_id, product_name,
+                 credit_amount, "creator", now),
+            )
+        db.commit()
+
+    logger.info("order created: id=%s user=%s influencer=%s credit=%.2f",
+                order_id, user_key, order.influencer_id or "none", credit_amount)
+    return {"order_id": order_id, "status": "completed", "credit_amount": credit_amount}
+
+
+@app.get("/api/wallet")
+async def get_wallet(request: Request):
+    """Return the caller's creator-credit balance and history.
+
+    Uses MG-005 ``user_key`` (IP-based) to identify the user.
+    Rate limited to 30 requests/minute.
+
+    Response::
+
+        {
+          "balance": 14.75,
+          "credits": [
+            {"id": "crd_abc", "item": "Linen blazer", "amount": 4.50,
+             "order_id": "ord_xyz", "created_at": "2026-06-24T10:00:00"}
+          ]
+        }
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "wallet", 30):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    with _get_db() as db:
+        rows = db.execute(
+            """SELECT id, order_id, item_name, amount_usd, created_at
+               FROM credits WHERE user_key = ?
+               ORDER BY created_at DESC LIMIT 50""",
+            (user_key,),
+        ).fetchall()
+
+    credits = [
+        {"id": r["id"], "item": r["item_name"], "amount": r["amount_usd"],
+         "order_id": r["order_id"], "created_at": r["created_at"]}
+        for r in rows
+    ]
+    balance = round(sum(r["amount_usd"] for r in rows), 2)
+    logger.info("wallet: user=%s balance=%.2f credits=%d", user_key, balance, len(credits))
+    return {"balance": balance, "credits": credits}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
