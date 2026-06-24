@@ -2928,6 +2928,11 @@
     if (!_checkoutCtx || !_checkoutCtx.it) return;
     const {it, influencerUser} = _checkoutCtx;
     sheetFooter.innerHTML = `<div class="checkout-processing"><div class="co-spin"></div><div class="co-label">Placing your order…</div></div>`;
+    // Fire-and-forget to backend (BE A7) — localStorage remains source of truth for instant UI
+    fetch('/api/orders', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({product_name: it.name||'', product_id: it.id||'',
+        amount_usd: it.price_estimate_usd||0, influencer_id: influencerUser||'', post_id:''})
+    }).catch(()=>{});
     setTimeout(() => {
       const w = loadWardrobe();
       if (!w.find(x => x.name === it.name)) {
@@ -2961,6 +2966,11 @@
     if (!_checkoutCtx || !_checkoutCtx.items) return;
     const {items, influencerUser, totalPrice} = _checkoutCtx;
     sheetFooter.innerHTML = `<div class="checkout-processing"><div class="co-spin"></div><div class="co-label">Placing your order…</div></div>`;
+    // Fire-and-forget to backend (BE A7) — record the look purchase as a single order
+    fetch('/api/orders', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({product_name: items.length+'-item look', product_id:'',
+        amount_usd: totalPrice||0, influencer_id: influencerUser||'', post_id:''})
+    }).catch(()=>{});
     setTimeout(() => {
       const w = loadWardrobe();
       items.forEach(it => {
