@@ -1,0 +1,13 @@
+# Netlify config — publishes the AWEAR web app (static frontend).
+# The SPA lives in static/; that folder is the site root.
+# Backend (app.py) is NOT deployed here — API calls fall back to demo mode.
+
+[build]
+  publish = "static"
+  command = ""
+
+# Single-page app: any unknown path serves index.html so deep links don't 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
