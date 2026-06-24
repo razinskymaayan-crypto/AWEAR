@@ -1,0 +1,92 @@
+name: AWEAR Autopilot
+
+# Runs the autonomous AWEAR engineer in GitHub's cloud — no local machine needed.
+# Cadence: every 3 hours, but only OUTSIDE quiet hours (18:00-23:00 Israel time),
+# so you always keep quota for your own interactive work.
+#
+# Israel is UTC+3 (summer). Quiet window 18:00-23:00 IL = 15:00-20:00 UTC — no runs there.
+# Scheduled run times (UTC):  20, 23, 02, 05, 08, 11, 14  ->  IL: 23, 02, 05, 08, 11, 14, 17
+
+on:
+  schedule:
+    - cron: '0 20,23,2,5,8,11,14 * * *'
+  workflow_dispatch:   # lets you trigger a run manually from the Actions tab (for testing)
+
+# Never let two runs overlap — they'd fight over git.
+concurrency:
+  group: awear-autopilot
+  cancel-in-progress: false
+
+permissions:
+  contents: write       # allow the job to push commits back to the repo
+
+jobs:
+  autopilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12   # hard cap per run — a runaway task can't burn your Actions minutes
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # full history so merges/pushes work
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Configure git identity
+        run: |
+          git config user.name "Tamar Grosz"
+          git config user.email "carmelph16@gmail.com"
+
+      - name: Run autopilot (one task)
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          claude -p "$(cat <<'PROMPT'
+          You are an autonomous AWEAR engineer working solo. Do ONE task this run, end to end.
+
+          0. FIRST read .claude/master/INBOX.md. If there is any message marked [פתוח] (open), that is your task this run — it OVERRIDES everything below. Do exactly what it asks, write a short Hebrew reply directly under that message, and change its tag from [פתוח] to [DONE]. Handle the oldest open message if several. If none are open, continue.
+
+          1. Read .claude/master/MASTER_PLAN.md and the last 12 lines of .claude/agents/activity_log.md. The north star is the investor demo — every task must serve it.
+
+          2. Choose your task by STRICT priority order. Stop at the first that applies:
+             (a) An open INBOX message (handled in step 0).
+             (b) The highest unfinished task from the MASTER_PLAN week tables (A1, A2, A4a...), earliest week first.
+             (c) Only if a/b are exhausted: a concrete gap that clearly moves the investor demo forward.
+
+          3. VALUE GATE — before writing any code, state in ONE sentence the concrete user-facing value of this task. If you cannot, or the value is marginal/cosmetic-only/speculative, DO NOT build it. Instead append it to IDEAS.md for human approval and STOP. An empty run that ships nothing is BETTER than busywork. Anti-garbage rules, no exceptions:
+             - No speculative refactors. No rewriting working code for style. No renaming for taste.
+             - No new feature that is not traceable to the master plan or an INBOX message.
+             - Do not re-do anything already in the activity_log.
+
+          4. If you hit a blocker needing a human (account signup, payment, API key, a founder-only decision), do NOT get stuck or hack around it — append a clear line to TODO_FOR_TAMAR.md and pick a different task (back to step 2).
+
+          5. Implement following .claude/commands/ship.md: build the change (delegate UI to the dolce subagent; gate any visual change with gabbana, score must be 8+ or fix and re-gate), then VERIFY — node --check on the extracted JS AND npm run check-render must both exit 0. Do not commit if verification fails or the design gate is below 8.
+
+          6. Append one activity_log.md entry in the required format. If you learned something reusable (a gotcha, a fix pattern), also add it to the relevant .claude/agents/knowledge/ file so future runs benefit.
+
+          7. Commit (end message with the Co-Authored-By line). Do NOT push — the workflow pushes for you.
+
+          Keep the change scoped — exactly one task, no unrelated edits, then stop.
+          PROMPT
+          )" \
+            --model opus \
+            --permission-mode acceptEdits \
+            --allowedTools \
+              "Edit" "Write" "Read" "Glob" "Grep" "Task" \
+              "Bash(git add:*)" "Bash(git commit:*)" "Bash(git status:*)" \
+              "Bash(git log:*)" "Bash(git diff:*)" \
+              "Bash(npm install:*)" "Bash(npm run:*)" \
+              "Bash(node:*)" "Bash(python3:*)" "Bash(awk:*)" \
+            --output-format text
+
+      - name: Push changes
+        run: |
+          git pull --rebase origin main || true
+          git push origin HEAD:main || echo "nothing to push"
