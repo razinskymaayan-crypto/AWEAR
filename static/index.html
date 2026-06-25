@@ -185,6 +185,24 @@
   .earn p { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin-top: 6px; }
   .shelf-empty { text-align: center; color: var(--muted); padding: 40px 26px; font-size: 13.5px; line-height: 1.6; }
   .shelf-empty .big { font-size: 44px; margin-bottom: 12px; }
+  /* ---- Smart Sell Suggestions (L3 Resale) ---- */
+  .ss-wrap { margin: 0 16px 20px; }
+  .ss-header { font-weight: 900; font-size: var(--t-body,14px); margin: 0 2px 4px; display: flex; align-items: center; gap: 6px; }
+  .ss-header-sub { font-size: var(--t-micro,11px); font-weight: 700; color: var(--muted,#8a8498); margin: 0 2px 12px; }
+  .ss-list { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: none; }
+  .ss-list::-webkit-scrollbar { display: none; }
+  .ss-card { flex-shrink: 0; width: 148px; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); overflow: hidden; }
+  .ss-card-img { height: 112px; overflow: hidden; background: var(--surface,#161318); }
+  .ss-card-img img { width: 100%; height: 100%; object-fit: cover; }
+  .ss-card-img .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; color: var(--muted,#8a8498); }
+  .ss-card-body { padding: 8px 10px 10px; }
+  .ss-card-name { font-size: var(--t-caption,12px); font-weight: 800; line-height: 1.3; margin-bottom: 3px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .ss-card-wear { font-size: var(--t-micro,11px); font-weight: 700; color: var(--accent2,#c4855a); margin-bottom: 6px; }
+  .ss-card-prices { display: flex; align-items: baseline; gap: 5px; margin-bottom: 8px; }
+  .ss-price-suggest { font-size: var(--t-small,13px); font-weight: 900; color: var(--success,#52c97a); }
+  .ss-price-orig { font-size: var(--t-micro,11px); font-weight: 600; color: var(--muted,#8a8498); text-decoration: line-through; }
+  .ss-list-btn { width: 100%; min-height: 44px; padding: 8px 10px; background: color-mix(in srgb, var(--success,#52c97a) 12%, transparent); border: 1px solid color-mix(in srgb, var(--success,#52c97a) 30%, transparent); border-radius: var(--r-sm,10px); font-family: inherit; font-size: var(--t-micro,11px); font-weight: 900; color: var(--success,#52c97a); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: opacity .1s; }
+  .ss-list-btn:active { opacity: .75; transform: scale(.97); }
   .listing { display: flex; align-items: center; gap: 12px; background: var(--card);
     border: 1px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 10px; }
   .listing .ic { width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0; font-size: var(--t-h1,24px);
@@ -3313,16 +3331,59 @@
     </div>`).join('')}</div>`;}
 
   function forSaleHTML(){
-    const shelf=loadShelf(),shelfTotal=shelf.reduce((s,it)=>s+(Number(it.price)||0),0),earnings=Math.round(shelfTotal*.85);
-    const earnCard=shelf.length?`<div class="earn"><div class="top"><span class="big-num">$${earnings.toLocaleString()}</span><span class="ttl">earnings potential</span></div>
-      <p>${shelf.length} items for sale · worth $${shelfTotal.toLocaleString()} · net after AWEAR's 15% fee</p></div>`:'';
-    const listings=shelf.length
-      ?shelf.map(it=>`<div class="listing"><div class="ic">${productImage(it)}</div>
-        <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">AI-priced based on resale market demand</div></div>
-        <div class="ask"><div class="p">$${esc(it.price)}</div><div class="live">Active</div></div>
-        <button class="rm" data-rm="${attr(it.ts)}" title="Remove">×</button></div>`).join('')
-      :`<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--success,#52c97a)">${icon('cash',44)}</div>No items listed for sale yet.<br/>Open an item in your closet and tap "List for sale".</div>`;
-    return earnCard+listings;
+    const wardrobe = loadWardrobe();
+    const shelf = loadShelf();
+    const shelfTotal = shelf.reduce((s,it) => s + (Number(it.price)||0), 0);
+    const earnings = Math.round(shelfTotal * 0.85);
+
+    // L3 Smart Sell Suggestions — items with lowest wear_count not already listed
+    const alreadyListed = new Set(shelf.map(s => s.name));
+    const suggestions = wardrobe
+      .filter(it => !alreadyListed.has(it.name))
+      .sort((a, b) => (a.wear_count || 0) - (b.wear_count || 0))
+      .filter(it => (it.wear_count || 0) <= 7)
+      .slice(0, 5);
+
+    function ssSellLabel(it) {
+      const w = it.wear_count || 0;
+      if (w === 0) return 'Never worn';
+      if (w === 1) return 'Worn only once';
+      if (w <= 3) return `Only ${w} wears`;
+      return `Lightly worn · ${w}×`;
+    }
+
+    const suggestHTML = suggestions.length ? `
+      <div class="ss-wrap">
+        <div class="ss-header">${icon('sparkle',15)} Smart sell suggestions</div>
+        <div class="ss-header-sub">Items you rarely reach for — earn on them</div>
+        <div class="ss-list">
+          ${suggestions.map(it => {
+            const resalePrice = Math.round((it.price_estimate_usd || 100) * 0.5);
+            return `<div class="ss-card">
+              <div class="ss-card-img">${productImage(it)}</div>
+              <div class="ss-card-body">
+                <div class="ss-card-name">${esc(it.name)}</div>
+                <div class="ss-card-wear">${ssSellLabel(it)}</div>
+                <div class="ss-card-prices">
+                  <span class="ss-price-suggest">$${resalePrice}</span>
+                  <span class="ss-price-orig">$${esc(it.price_estimate_usd||'—')}</span>
+                </div>
+                <button class="ss-list-btn" data-ss-sell="${attr(it.name)}">${icon('tag',13)} List for sale</button>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>` : '';
+
+    const earnCard = shelf.length ? `<div class="earn"><div class="top"><span class="big-num">$${earnings.toLocaleString()}</span><span class="ttl">earnings potential</span></div>
+      <p>${shelf.length} items for sale · worth $${shelfTotal.toLocaleString()} · net after AWEAR's 15% fee</p></div>` : '';
+    const listings = shelf.length
+      ? shelf.map(it => `<div class="listing"><div class="ic">${productImage(it)}</div>
+          <div class="info"><div class="nm">${esc(it.name)}</div><div class="sub">AI-priced based on resale market demand</div></div>
+          <div class="ask"><div class="p">$${esc(it.price)}</div><div class="live">Active</div></div>
+          <button class="rm" data-rm="${attr(it.ts)}" title="Remove">×</button></div>`).join('')
+      : `<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--success,#52c97a)">${icon('cash',44)}</div>No items listed for sale yet.<br/>Open an item in your closet and tap "List for sale".</div>`;
+    return suggestHTML + earnCard + listings;
   }
 
   function renderCloset(){
@@ -3390,6 +3451,10 @@
     closetBody.querySelectorAll('[data-seg]').forEach(b=>b.addEventListener('click',()=>{profileTab=b.dataset.seg;renderCloset();}));
     closetBody.querySelectorAll('[data-rm]').forEach(btn=>btn.addEventListener('click',()=>removeListing(Number(btn.dataset.rm))));
     closetBody.querySelectorAll('[data-goto-feed]').forEach(cell=>cell.addEventListener('click',()=>showView('feed')));
+    closetBody.querySelectorAll('[data-ss-sell]').forEach(btn=>btn.addEventListener('click',()=>{
+      const it=loadWardrobe().find(i=>i.name===btn.dataset.ssSell);
+      if(it) openSellForm(it);
+    }));
   }
 
   function addScan(data){
