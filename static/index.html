@@ -4394,6 +4394,20 @@
     }, ()=>{}, {timeout:6000});
   }
 
+  // ---- Native share (Web Share API on iOS / Capacitor WKWebView; clipboard fallback on desktop) ----
+  function shareStyleCard(title, text) {
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({ title, text, url }).catch(() => {});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text + ' ' + url)
+        .then(() => showToast('Copied — paste it anywhere to share'),
+              () => showToast('Sharing not available here'));
+    } else {
+      showToast('Sharing not available here');
+    }
+  }
+
   // ---- Season Report ----
   // ---- Seasonal Recap (Valentino — Commerce & Intelligence) ----
   function getActiveSeason() {
@@ -4667,15 +4681,10 @@
     `;
 
     document.getElementById('sr-share-btn')?.addEventListener('click', () => {
-      if (navigator.share) {
-        navigator.share({
-          title: `My ${season.name} ${season.year} Style Recap`,
-          text: `I scored ${seasonScore} on my ${season.name} style recap on AWEAR. Check yours!`,
-          url: window.location.href,
-        }).catch(() => {});
-      } else {
-        showToast('Sharing coming soon');
-      }
+      shareStyleCard(
+        `My ${season.name} ${season.year} Style Recap`,
+        `I scored ${seasonScore} on my ${season.name} style recap on AWEAR. Check yours!`
+      );
     });
   }
 
@@ -4780,7 +4789,7 @@
 
       <!-- 2. Style Identity Card -->
       <div class="an-identity-card">
-        <button class="an-identity-share" onclick="showToast('Sharing coming soon')" aria-label="Share style identity">${icon('share',18)}</button>
+        <button class="an-identity-share" id="an-identity-share-btn" aria-label="Share style identity">${icon('share',18)}</button>
         <div class="an-identity-kicker">Your Style Identity</div>
         <div class="an-identity-name">${esc(archetype)}</div>
         <div class="an-identity-tags">
@@ -4890,13 +4899,28 @@
             <button class="an-wrapped-cta" onclick="event.stopPropagation();showView('season-recap')" aria-label="See full season report" style="min-height:44px">
               ${icon('barChart', 16)} See Full Recap
             </button>
-            <button class="an-wrapped-share" onclick="event.stopPropagation();showToast('Sharing coming soon')" aria-label="Share season report" style="min-height:44px;min-width:44px">
+            <button class="an-wrapped-share" id="an-wrapped-share-btn" aria-label="Share season report" style="min-height:44px;min-width:44px">
               ${icon('share', 18)}
             </button>
           </div>
         </div>`;
       })()}
     `;
+
+    document.getElementById('an-identity-share-btn')?.addEventListener('click', () => {
+      shareStyleCard(
+        `My Style Identity: ${archetype}`,
+        `My AWEAR style identity is "${archetype}" — ${identityTags.join(', ')}. What's yours?`
+      );
+    });
+    document.getElementById('an-wrapped-share-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const s = getActiveSeason();
+      shareStyleCard(
+        `My ${s.name} ${s.year} in Style`,
+        `Check out my ${s.name} ${s.year} style report on AWEAR.`
+      );
+    });
   }
 
   // ---- Outfit Generator ----
