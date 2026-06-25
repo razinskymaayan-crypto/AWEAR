@@ -3959,6 +3959,40 @@
         const yd = prev.getFullYear() + '-' + String(prev.getMonth()+1).padStart(2,'0') + '-' + String(prev.getDate()).padStart(2,'0');
         saveStreak({count:7, lastDate:yd, best:7});
       }
+      // Seed 3 demo looks so the Looks tab shows content on first launch
+      if (!loadFeedPosts().length) {
+        const now = Date.now();
+        saveFeedPosts([
+          {ts:now-4*86400000, id:'demo_post_1', photo:'/static/feed/1.jpg',
+           caption:'Y2K Minimal', occasion:'Everyday / Coffee shop',
+           item_count:3, look_total_usd:225,
+           items:[
+             {category:'top',name:'White Ribbed Crop Top',price_estimate_usd:25,search_query:'white ribbed cropped sleeveless tank top women'},
+             {category:'bottoms',name:'Barrel-Leg Light Wash Denim',price_estimate_usd:80,search_query:'barrel leg light wash jeans women'},
+             {category:'shoes',name:'Adidas Samba OG White',price_estimate_usd:120,search_query:'adidas samba og white black sneakers'},
+           ],
+           tags:['minimal','y2k','top','bottoms','shoes']},
+          {ts:now-2*86400000, id:'demo_post_2', photo:'/static/feed/2.jpg',
+           caption:'Urban Streetwear', occasion:'Weekend / Street',
+           item_count:4, look_total_usd:255,
+           items:[
+             {category:'top',name:'Vintage Band Graphic Tee',price_estimate_usd:35,search_query:'vintage black band graphic tee oversized'},
+             {category:'bottoms',name:'Baggy Cargo Pants Khaki',price_estimate_usd:90,search_query:'baggy cargo pants khaki women utility'},
+             {category:'shoes',name:'New Balance 550 White Cream',price_estimate_usd:110,search_query:'new balance 550 white cream sneakers'},
+             {category:'bag',name:'Mini Crossbody Black Canvas',price_estimate_usd:30,search_query:'mini black canvas crossbody bag streetwear'},
+           ],
+           tags:['streetwear','vintage','utility','top','bottoms','shoes','bag']},
+          {ts:now-86400000, id:'demo_post_3', photo:'/static/feed/100_1072.JPG',
+           caption:'Minimal Chic', occasion:'Office / Dinner',
+           item_count:3, look_total_usd:280,
+           items:[
+             {category:'outerwear',name:'Oversized Camel Blazer',price_estimate_usd:150,search_query:'oversized camel blazer women wool'},
+             {category:'bottoms',name:'Straight-Leg Black Trousers',price_estimate_usd:70,search_query:'straight leg black tailored trousers women'},
+             {category:'shoes',name:'Pointed-Toe Leather Mules',price_estimate_usd:60,search_query:'pointed toe black leather mules women'},
+           ],
+           tags:['minimal','office','outerwear','bottoms','shoes']},
+        ]);
+      }
     }
     localStorage.setItem(_DEMO_SEED_KEY, '1');
   }
