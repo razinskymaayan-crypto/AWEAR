@@ -82,3 +82,7 @@
 
 ---
 
+### DS-016 | פריט שנקנה/נסרק חייב לשאת image_url עד הארון
+**מקור:** A3/A6 demo-image fix (2026-06-25)
+**לקח:** `_productImgUrl(it)` ב-static/index.html נופל ל-`loremflickr.com` (תמונות Flickr אקראיות) כשאין `it.image_url`. כל מקום שמוסיף פריט לארון (handleCheckout/handleLookCheckout, scan, wishlist) חייב להעתיק `image_url` (ו-`brand_vibe`/`brand`, `id`) מהמקור — אחרת מיד אחרי "קניתי" רגע ה-demo המרכזי מציג תמונה אקראית במקום ה-catalog image שהמשתמשת ראתה. זה שובר את L1 ("clean catalog image") בלי console error.
+**מנגנון:** בכל `w.unshift({...})` שמוסיף פריט נרכש/נסרק — כלול `image_url:it.image_url||''`. grep: `grep -n "w.unshift" static/index.html` ובדוק שכל אחד נושא image_url.

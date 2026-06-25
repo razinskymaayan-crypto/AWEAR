@@ -3004,7 +3004,9 @@
       const w = loadWardrobe();
       if (!w.find(x => x.name === it.name)) {
         w.unshift({name:it.name, category:it.category||'', price_estimate_usd:it.price_estimate_usd||0,
-          search_query:it.search_query||it.name, style_tags:it.style_tags||[], ts:Date.now(), from_purchase:true});
+          search_query:it.search_query||it.name, style_tags:it.style_tags||[],
+          image_url:it.image_url||'', brand_vibe:it.brand_vibe||it.brand||'', id:it.id||('p_'+Date.now()),
+          ts:Date.now(), from_purchase:true});
         saveWardrobe(w);
       }
       if (influencerUser) {
@@ -3040,10 +3042,12 @@
     }).catch(()=>{});
     setTimeout(() => {
       const w = loadWardrobe();
-      items.forEach(it => {
+      items.forEach((it,i) => {
         if (!w.find(x => x.name === it.name)) {
           w.unshift({name:it.name, category:it.category||'', price_estimate_usd:it.price_estimate_usd||0,
-            search_query:it.search_query||it.name, style_tags:it.style_tags||[], ts:Date.now(), from_purchase:true});
+            search_query:it.search_query||it.name, style_tags:it.style_tags||[],
+            image_url:it.image_url||'', brand_vibe:it.brand_vibe||it.brand||'', id:it.id||('p_'+Date.now()+'_'+i),
+            ts:Date.now(), from_purchase:true});
         }
       });
       saveWardrobe(w);
