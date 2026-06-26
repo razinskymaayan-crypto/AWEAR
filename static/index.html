@@ -2914,6 +2914,10 @@
 
   function openSheetLook(label, items, totalPrice, earnAmt, influencerUser){
     const list = items||[];
+    // BE-002: the displayed "Look total" must equal the sum of the rows shown below.
+    // Derive it from the items themselves; only trust the caller's number if none are priced.
+    const itemsSum = list.reduce((s,it)=>s+(Number(it.price_estimate_usd||it.price)||0),0);
+    totalPrice = itemsSum>0 ? itemsSum : (Number(totalPrice)||0);
     const rows = list.map(it => {
       return `<div class="sheet-look-row">
         <div class="sheet-look-emoji">${productImage(it)}</div>
@@ -3639,6 +3643,18 @@
     renderFeed();
   });
 
+  // BE-002: the look total = sum of the post's priced items (single source of truth),
+  // so the feed-card button, the sheet rows, and the "Look total" can never disagree.
+  // Falls back to the post's look_total_usd only when no item carries a price.
+  function lookTotalOf(post){
+    const items=post&&post.items;
+    if(items&&items.length){
+      const sum=items.reduce((s,x)=>s+(Number(x.price_estimate_usd||x.price)||0),0);
+      if(sum>0) return sum;
+    }
+    return (post&&Number(post.look_total_usd))||0;
+  }
+
   function feedCardHTML(post,isMine){
     const tags=post.tags||[],mtags=post.mtags||tags;
     const liked=LIKES.has(post.id),saved=SAVED.has(post.id);
@@ -3646,6 +3662,7 @@
     const tagPills=tags.map(t=>`<span class="ftag">#${esc(t)}</span>`).join('');
     const earnLine=(!isMine&&post.earn)?`<div class="fc-earn">${icon('diamond',13)} @${esc(post.user)} earns $${esc(post.earn)} on every purchase</div>`:'';
     const lbl=post.name?post.name+"'s look":(post.caption||'the look');
+    const lookTot=lookTotalOf(post);
     const _ownWardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
     const _ownScore=_ownWardrobe.length?calcCompatScore({style_tags:tags},_ownWardrobe):{pct:0,matches:[]};
     const ownBadge=_ownWardrobe.length?`<div class="fc-own-badge">${icon('hanger',12)} ${esc(_ownScore.pct)}% already in your closet</div>`:'';
@@ -3709,11 +3726,11 @@
             <div class="fca-ico">${icon('share',24)}</div>
           </button>
           <div class="fca-spacer"></div>
-          ${post.look_total_usd?`<button class="fca-btn buy-btn buy-action"
-              data-label="${attr(lbl)}" data-price="${attr(post.look_total_usd||0)}"
+          ${lookTot?`<button class="fca-btn buy-btn buy-action"
+              data-label="${attr(lbl)}" data-price="${attr(lookTot)}"
               data-earn="${attr(post.earn||0)}" data-user="${attr(post.user||'')}">
             <div class="fca-ico">${icon('bag',24)}</div>
-            <span>$${esc(String(post.look_total_usd))}</span>
+            <span>$${esc(String(lookTot))}</span>
           </button>`:''}
           <button class="fca-btn" data-action="report" data-id="${attr(post.id||'')}" aria-label="Report" style="color:var(--muted,#8a8498)">
             <div class="fca-ico">${icon('flag',20)}</div>
@@ -3763,9 +3780,9 @@
   }
   function shopPostItems(post,fallbackLabel,price,earn,user){
     if(post && post.items && post.items.length){
-      const total=post.items.reduce((s,x)=>s+(Number(x.price_estimate_usd||x.price)||0),0);
+      const total=lookTotalOf(post);
       openSheetLook(post.name?(post.name+"'s look"):(post.caption||fallbackLabel||'The look'),
-        post.items, price||post.look_total_usd||total, earn||post.earn||0, user||post.user||'');
+        post.items, total||price||post.look_total_usd, earn||post.earn||0, user||post.user||'');
       return true;
     }
     return false;
