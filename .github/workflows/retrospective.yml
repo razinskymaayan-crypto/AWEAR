@@ -1,0 +1,83 @@
+name: AWEAR Daily Retrospective
+
+# Once a day, turns the day's events into durable lessons so the team keeps improving.
+# Runs at 18:00 UTC (≈21:00 Israel) — before the 22:00 team report, so the day is "closed"
+# and learnings are captured. Reads failures, founder feedback, surveys/research and wins,
+# updates the knowledge rules (and may refine the autopilot prompt — meta-learning), then
+# sends a Learning Report to Telegram.
+
+on:
+  schedule:
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: awear-retrospective
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  retro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Configure git identity
+        run: |
+          git config user.name "Tamar Grosz"
+          git config user.email "carmelph16@gmail.com"
+
+      - name: Run retrospective
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          claude -p "$(cat <<'PROMPT'
+          You are the AWEAR retrospective facilitator. Once a day, turn the day's events into durable lessons so the agent team keeps improving. Be sharp — 1-3 strong, testable lessons beat 10 vague ones.
+
+          1. SYNC: git fetch + merge origin/main (never overwrite the other team).
+          2. GATHER today's signals (use the UTC date):
+             - Failures: .claude/agents/knowledge/FAILURES.md rows dated today + any "revert" commits in git log.
+             - Founder feedback: changes in .claude/master/IDEAS.md (approved/rejected), INBOX "## הושלם" notes, NEEDS_YOU.md.
+             - Surveys & research: files in docs/surveys/ and docs/research/ dated today — their key recommendations.
+             - Successful patterns / wins: today's activity_log.md + DAILY_DIGEST.md + the contributions ledger.
+          3. EXTRACT lessons. For each durable lesson, write a CONCRETE, TESTABLE coded rule (what to do / not do + why):
+             - Org-wide (everyone) → append the next OW-0XX rule to .claude/agents/knowledge/OW.md.
+             - Domain/agent-specific → append to the right domain file (ds.md design, be.md backend, sf.md social, mg.md management) — these are the per-team/agent memories.
+          4. REPEAT-MISTAKE CHECK: for each failure today, check if it VIOLATED a rule that ALREADY existed. If yes it is a REPEAT — do NOT alert the founder; instead SILENTLY strengthen/clarify that rule (sharper wording, an example, an enforcement hook idea). Count repeats.
+          5. META-LEARNING: if a lesson means the autopilot's own instructions should change, you MAY edit the prompt in .github/workflows/autopilot.yml directly (keep it minimal and safe).
+          6. LOG: append one dated section to .claude/agents/knowledge/LEARNING_LOG.md (new lessons with codes; repeat-mistakes count + which rules; focus/areas improved).
+          7. REPORT to Telegram (English, concise): bash scripts/tg.sh text "Learning Report <date>: <N> new lessons (<codes>); <M> repeat-mistakes (<rules or none>); focus: <one line>".
+          8. Commit (end message with the Co-Authored-By line). Do NOT push — the workflow pushes for you.
+
+          If the day had no meaningful signals, say so briefly in LEARNING_LOG.md and send a one-line "quiet day, no new lessons" Telegram note. Do not invent lessons.
+          PROMPT
+          )" \
+            --model opus \
+            --permission-mode acceptEdits \
+            --allowedTools \
+              "Edit" "Write" "Read" "Glob" "Grep" \
+              "Bash(git add:*)" "Bash(git commit:*)" "Bash(git status:*)" \
+              "Bash(git log:*)" "Bash(git diff:*)" "Bash(git fetch:*)" "Bash(git merge:*)" \
+              "Bash(bash scripts/tg.sh:*)" \
+            --output-format text
+
+      - name: Push changes
+        run: |
+          git pull --rebase origin main || true
+          git push origin HEAD:main || echo "nothing to push"

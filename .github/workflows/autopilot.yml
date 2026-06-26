@@ -57,7 +57,7 @@ jobs:
 
           SAFETY FIRST (before anything else):
           A. Sync — git fetch + merge origin/main. Never overwrite the other team's work.
-          B. Health check — run "npm install && npm run check-render". If it FAILS on current HEAD, the previous change broke the app: your ONLY job this run is to fix or "git revert" the breaking commit so the app renders again, then stop. (Auto-rollback.)
+          B. Health check — run "npm install && npm run check-render". If it FAILS on current HEAD, the previous change broke the app: your ONLY job this run is to fix or "git revert" the breaking commit so the app renders again, then stop. (Auto-rollback.) ALSO append one row to .claude/agents/knowledge/FAILURES.md (| date | what broke | root cause | rule it violated or "new" |) so the daily retrospective can learn from it.
 
           PICK YOUR TASK — strict priority, stop at the first that applies:
           1. INBOX (.claude/master/INBOX.md): EVERY non-empty line under "## משימות חדשות" is a founder task, written in plain Hebrew — interpret intent generously. These ALWAYS come first, over everything. Take the first one.
@@ -81,6 +81,7 @@ jobs:
           Aligns with MG-002 (never skip the manager). Record real IC attribution (see FINISH).
 
           HOW YOU WORK:
+          - APPLY LEARNING: before domain work, the assigned IC reads OW.md + its domain knowledge file (.claude/agents/knowledge/) and APPLIES those rules. Learning is only real if applied — do not repeat a documented mistake.
           - Scope: one main task + small directly-related fixes you run into. No unrelated edits, no speculative refactors, no renaming for taste. Never re-do anything already in activity_log.
           - VALUE GATE: before coding, state in ONE line the concrete user-facing value. If you cannot, do not build it — propose it in IDEAS.md instead.
           - UI language: English ONLY. The whole app UI is English.
