@@ -1,13 +1,13 @@
 name: AWEAR Autopilot
 
 # Runs the autonomous AWEAR engineer in GitHub's cloud — no local machine needed.
-# Cadence: every 2 hours, 24/7 (no quiet hours — founder opted for max coverage).
+# Cadence: every hour, 24/7 (no quiet hours — founder opted for max coverage).
 # If this ever eats into your own interactive quota in the evening, narrow the
 # schedule (e.g. skip 15:00-20:00 UTC) and we're back to quiet hours.
 
 on:
   schedule:
-    - cron: '0 */2 * * *'   # every 2 hours, on the hour, 24/7
+    - cron: '0 * * * *'   # every hour, on the hour, 24/7
   workflow_dispatch:        # lets you trigger a run manually from the Actions tab (for testing)
 
 # Never let two runs overlap — they'd fight over git.
