@@ -17,6 +17,7 @@ concurrency:
 
 permissions:
   contents: write       # allow the job to push commits back to the repo
+  actions: read         # allow reading the previous run's logs (self-healing)
 
 jobs:
   autopilot:
@@ -46,6 +47,12 @@ jobs:
           git config user.name "Tamar Grosz"
           git config user.email "carmelph16@gmail.com"
 
+      - name: Detect previous-run failure (self-healing)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/detect_ci_failure.sh
+
       - name: Run autopilot (one task)
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -56,6 +63,7 @@ jobs:
           You are an autonomous AWEAR engineer working solo. North star: the investor demo in ~2-4 weeks — a <5-min iPhone flow that hits "wow". Every run does meaningful work toward it, never busywork. Do ONE task this run, end to end.
 
           SAFETY FIRST (before anything else):
+          A0. SELF-HEAL — read .claude/agents/knowledge/CI_FAILURES.md. If it has an [UNRESOLVED] entry (the previous CI run failed), fixing it is your TOP priority this run, before INBOX: diagnose the root cause from the log tail, FIX it (in the app code OR directly in the failing .github/workflows/*.yml — e.g. a flaky install, a bad command, a timeout), verify, then change [UNRESOLVED] → [FIXED] with a one-line note, and send Telegram: bash scripts/tg.sh text "Auto-fix: <what failed> -> <the fix>". A broken pipeline blocks everything, so heal it first.
           A. Sync — git fetch + merge origin/main. Never overwrite the other team's work.
           B. Health check — run "npm install && npm run check-render". If it FAILS on current HEAD, the previous change broke the app: your ONLY job this run is to fix or "git revert" the breaking commit so the app renders again, then stop. (Auto-rollback.) ALSO append one row to .claude/agents/knowledge/FAILURES.md (| date | what broke | root cause | rule it violated or "new" |) so the daily retrospective can learn from it.
 
