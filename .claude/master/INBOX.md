@@ -8,11 +8,11 @@
 ═══════════════════════════════════════
 
 ## משימות חדשות
-תוריד את הפיצר של המזג אוויר בדף של הפרופיל
 צלמו את מסך החנות (Store) ושלחו לי בטלגרם צילום מסך + הסבר על כל פיצ'ר שיש בחנות — מה כל כפתור, פילטר ואזור עושה.
 
 
 ═══════════════════════════════════════
 
 ## הושלם
+- הסרת פיצ'ר מזג האוויר מדף הבית — done (removed weather card HTML/CSS + fetchWeather JS from home view; tightened greeting spacing).
 - שנו את סדר הטאבים בניווט התחתון: feed, store, AI, DM, profile — done (commit 91d29f7: nav reordered, Feed is now default).

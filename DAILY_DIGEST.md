@@ -6,4 +6,7 @@
 
 ---
 
-## (waiting for first run)
+## 2026-06-26
+- Done: Removed the weather feature from the home screen (INBOX task) — card, CSS, and the geolocation fetch are gone; tightened the greeting spacing it left behind. Also fixed the screenshot tool to skip onboarding so reports show real screens.
+- Proposed: nothing pending approval.
+- Blocked: nothing.

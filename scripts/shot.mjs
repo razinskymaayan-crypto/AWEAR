@@ -44,6 +44,11 @@ async function main() {
   const port = server.address().port;
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+  // Seed state so the SPA opens past onboarding — otherwise every view is hidden
+  // behind the onboarding overlay and screenshots are useless.
+  await page.addInitScript(() => {
+    try { localStorage.setItem('awear_onboarded', '1'); } catch {}
+  });
   try {
     await page.goto(`http://localhost:${port}/static/index.html`, { waitUntil: 'networkidle', timeout: 25000 });
     // Navigate to the requested view, tolerating either showView() or a nav button.

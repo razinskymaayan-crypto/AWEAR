@@ -1629,7 +1629,7 @@
 
   /* ---- Home Screen ---- */
   .home-wrap { display: flex; flex-direction: column; gap: 0; padding-bottom: 8px; }
-  .home-greeting-section { padding: 24px 18px 12px; }
+  .home-greeting-section { padding: 24px 18px 8px; }
   .home-greeting {
     font-size: var(--t-h1, 24px);
     font-weight: 900;
@@ -1647,40 +1647,6 @@
     font-weight: 600;
     margin-top: 6px;
     letter-spacing: .1px;
-  }
-
-  /* Weather card — accent border, deeper card */
-  .home-weather-card {
-    margin: 8px 16px 16px;
-    background: var(--card);
-    border: 1px solid rgba(255,255,255,.06);
-    border-radius: 16px;
-    padding: 16px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: var(--shadow-md, 0 2px 16px rgba(0,0,0,.32));
-  }
-  .hw-temp {
-    font-size: var(--t-display, 32px);
-    font-weight: 900;
-    letter-spacing: -1px;
-    font-family: "Poppins", sans-serif;
-  }
-  .hw-cond {
-    font-size: var(--t-small, 13px);
-    color: var(--muted);
-    font-weight: 600;
-    margin-top: 4px;
-  }
-  .hw-event {
-    font-size: var(--t-micro, 11px);
-    color: var(--accent);
-    font-weight: 800;
-    background: rgba(255,61,119,.12);
-    border: 1px solid rgba(255,61,119,.22);
-    padding: 8px 14px;
-    border-radius: 999px;
   }
 
   /* Section labels — cleaner hierarchy */
@@ -1865,7 +1831,7 @@
 
   /* Empty / scan prompt */
   .home-scan-prompt {
-    margin: 0 16px 16px;
+    margin: 0 18px 16px;
     background: linear-gradient(135deg, rgba(255,61,119,.08), rgba(123,92,255,.08));
     border: 1.5px dashed rgba(255,61,119,.35);
     border-radius: 16px;
@@ -4258,14 +4224,6 @@
         <div class="home-date">${esc(dateStr)}</div>
       </div>
 
-      <div class="home-weather-card">
-        <div>
-          <div class="hw-temp" id="hw-temp">26°</div>
-          <div class="hw-cond" id="hw-cond">${esc(prof.city || 'Weather')}</div>
-        </div>
-        <div class="hw-event">${t('home.look_waiting')}</div>
-      </div>
-
       ${hasOutfits ? `
       <div class="home-sec-label">${t('home.outfit_today')}</div>
       <div class="home-outfit-row" id="ho-row">
@@ -4454,27 +4412,6 @@
       });
     }
 
-    fetchWeather();
-  }
-
-  function fetchWeather() {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(pos => {
-      const {latitude: lat, longitude: lon} = pos.coords;
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`)
-        .then(r => r.json())
-        .then(d => {
-          if (!d.current_weather) return;
-          const t = Math.round(d.current_weather.temperature);
-          const codes = {0:'Sunny',1:'Clear',2:'Partly cloudy',3:'Cloudy',
-            45:'Foggy',61:'Rain',63:'Rain',80:'Showers',95:'Thunderstorm'};
-          const cond = codes[d.current_weather.weathercode] || 'Clear';
-          const tempEl = document.getElementById('hw-temp');
-          const condEl = document.getElementById('hw-cond');
-          if (tempEl) tempEl.textContent = t + '°';
-          if (condEl) condEl.textContent = cond;
-        }).catch(()=>{});
-    }, ()=>{}, {timeout:6000});
   }
 
   // ---- Native share (Web Share API on iOS / Capacitor WKWebView; clipboard fallback on desktop) ----
