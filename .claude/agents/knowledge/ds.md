@@ -86,3 +86,9 @@
 **מקור:** A3/A6 demo-image fix (2026-06-25)
 **לקח:** `_productImgUrl(it)` ב-static/index.html נופל ל-`loremflickr.com` (תמונות Flickr אקראיות) כשאין `it.image_url`. כל מקום שמוסיף פריט לארון (handleCheckout/handleLookCheckout, scan, wishlist) חייב להעתיק `image_url` (ו-`brand_vibe`/`brand`, `id`) מהמקור — אחרת מיד אחרי "קניתי" רגע ה-demo המרכזי מציג תמונה אקראית במקום ה-catalog image שהמשתמשת ראתה. זה שובר את L1 ("clean catalog image") בלי console error.
 **מנגנון:** בכל `w.unshift({...})` שמוסיף פריט נרכש/נסרק — כלול `image_url:it.image_url||''`. grep: `grep -n "w.unshift" static/index.html` ובדוק שכל אחד נושא image_url.
+
+
+### DS-017 | כל avatar img חיצוני חייב onerror fallback — לא רק product images
+**מקור:** A6 demo reliability — avatar fallback (2026-06-26)
+**לקח:** imgFallback() כיסה רק product images (productImage()). 4 avatar imgs (feed card, peopleCard x2, user profile) נטענו ישירות מ-randomuser.me בלי onerror — אם ה-CDN חסום/איטי בדמו החי, כל avatar הופך ל-broken-image glyph. avatar שבור בפיד = בדיוק ההפך מ"התמונה היא הכוכב".
+**מנגנון:** קיים avatarFallback(img) (ליד imgFallback) שמחליף את ה-img ב-.avatar-fallback (עיגול ראשי-תיבות על gradient accent->accent2, מראה את .up-avatar-initials המאושר). כל <img> של avatar חייב data-name="${attr(name)}" + onerror="this.onerror=null;avatarFallback(this)". grep אכיפה: grep -nE "<img[^>]*(avatar|randomuser|portraits)" static/index.html — כל תוצאה חייבת avatarFallback. ל-img עם width:100% ה-helper נופל ל-parentElement.offsetWidth כדי לא לטעות בגודל העיגול.

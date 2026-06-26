@@ -2049,6 +2049,10 @@
     background: linear-gradient(160deg, var(--card), var(--bg)); color: var(--muted); font-size: var(--t-display,28px); }
   .sheet-look-emoji { overflow: hidden; border-radius: 9px; background: #fbfbfd; }
   .sheet-look-emoji .img-fallback { background: #fbfbfd; color: #b8b8c4; }
+  /* Avatar fallback — initials circle when an external avatar URL fails to load (A6 demo reliability) */
+  .avatar-fallback { border-radius: 50%; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a));
+    display: inline-flex; align-items: center; justify-content: center; font-weight: 900; color: var(--text,#fbfbfd);
+    line-height: 1; flex-shrink: 0; border: 2px solid var(--line,#2e2836); }
 
   /* ---- Daily Diary + Streak widget ---- */
   .streak-widget { margin: 0 16px 16px; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), color-mix(in srgb, var(--accent3) 8%, transparent)); border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); border-radius: var(--r-lg,20px); padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
@@ -2641,6 +2645,25 @@
     const span = document.createElement('span');
     span.className = 'img-fallback';
     span.innerHTML = icon(catIcon(cat), 40);
+    img.replaceWith(span);
+  }
+  // Avatars come from external CDNs (randomuser.me, user uploads). If one fails to load,
+  // swap the broken <img> for an initials circle so the demo never shows a broken-avatar
+  // glyph. Reads the name from data-name, falling back to alt. (A6 demo reliability.)
+  function avatarFallback(img){
+    const name = (img.getAttribute('data-name') || img.getAttribute('alt') || '').trim();
+    const initials = name.split(/[ .@]/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || '?';
+    // A broken img with width:100% can report offsetWidth 0 — fall back to the
+    // sized parent so the feed avatar circle matches its container exactly.
+    const parent = img.parentElement;
+    const w = img.offsetWidth || (parent && parent.offsetWidth) || parseInt(img.style.width, 10) || 40;
+    const h = img.offsetHeight || (parent && parent.offsetHeight) || parseInt(img.style.height, 10) || w;
+    const span = document.createElement('span');
+    span.className = 'avatar-fallback';
+    span.textContent = initials;
+    span.style.width = w + 'px';
+    span.style.height = h + 'px';
+    span.style.fontSize = Math.max(11, Math.round(w * 0.4)) + 'px';
     img.replaceWith(span);
   }
   // Map category → loremflickr keywords for relevant fashion photos
@@ -3714,7 +3737,7 @@
     const displayName=isMine?'You':(post.name||post.user||'U');
     const initials=displayName.split(/[ .@]/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';
     const avatarHtml=seedUser?.avatar
-      ?`<img src="${attr(seedUser.avatar)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      ?`<img src="${attr(seedUser.avatar)}" alt="" data-name="${attr(displayName)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.onerror=null;avatarFallback(this)">`
       :esc(initials);
     const timeHint=post.trend>=92?'45m':post.trend>=85?'2h':post.trend>=75?'5h':'1d';
 
@@ -6724,7 +6747,7 @@
       <div class="pc-featured-row">
         ${visibleUsers.slice(0,4).map(u => `
           <div class="pc-featured-card" data-uid="${u.id}">
-            <div class="pc-feat-cover"><img src="${u.avatar}" alt="${esc(u.name)}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.12);"></div>
+            <div class="pc-feat-cover"><img src="${u.avatar}" alt="${esc(u.name)}" data-name="${attr(u.name)}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.12);" onerror="this.onerror=null;avatarFallback(this)"></div>
             <div class="pc-feat-info">
               <div class="pc-feat-name">${esc(u.name)}</div>
               <div class="pc-feat-handle">${esc(u.handle)}</div>
@@ -6737,7 +6760,7 @@
         ${visibleUsers.map(u => {
           const isFollowing = followState[u.id] ?? u.following;
           return `<div class="pc-row">
-            <div class="pc-avatar"><img src="${u.avatar}" alt="${esc(u.name)}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;display:block;"></div>
+            <div class="pc-avatar"><img src="${u.avatar}" alt="${esc(u.name)}" data-name="${attr(u.name)}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;display:block;" onerror="this.onerror=null;avatarFallback(this)"></div>
             <div class="pc-info">
               <div class="pc-name">${esc(u.name)}</div>
               <div class="pc-handle">${esc(u.handle)} · ${u.items} items</div>
@@ -8718,7 +8741,7 @@
       </div>
       <div class="up-hero">
         ${u.avatar
-          ? `<img class="up-avatar" src="${attr(u.avatar)}" alt="${attr(u.name)}" loading="lazy">`
+          ? `<img class="up-avatar" src="${attr(u.avatar)}" alt="${attr(u.name)}" data-name="${attr(u.name)}" loading="lazy" onerror="this.onerror=null;avatarFallback(this)">`
           : `<div class="up-avatar-initials">${esc(initials)}</div>`}
         <div class="up-name">${esc(u.name)}</div>
         <div class="up-handle">${esc(u.handle)}</div>
