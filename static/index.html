@@ -6970,9 +6970,20 @@
       });
       const data = await res.json();
       hideChatTyping();
-      addChatMsg('bot', data.answer || 'Try again in a moment');
+      // Use the live AI answer only when it really is one. When the AI is
+      // unavailable (no API key / server error) the backend sends {ok:false} —
+      // fall through to the local stylist so the demo never breaks. (A6)
+      if (data && data.ok !== false && data.answer) addChatMsg('bot', data.answer);
+      else addChatMsg('bot', abigailLocalReply(q));
     } catch(_) {
       hideChatTyping();
+      addChatMsg('bot', abigailLocalReply(q));
+    }
+  }
+
+  // Local stylist fallback — keyword-matched replies used whenever the live AI
+  // is unavailable. Keeps the L4 chat working as a real feature in the demo. (A6)
+  function abigailLocalReply(q) {
       const wardrobe2 = JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
       const hasW = wardrobe2.length > 0;
       const itemName = hasW ? wardrobe2[0].name : null;
@@ -6999,8 +7010,7 @@
         'I\'m here! Give me a few more details so I can help you better.',
         hasW ? `With your closet we have tons of options — tell me what you need and we'll create a look!` : 'Let\'s get started — scan an item into your closet and I\'ll help you build looks.',
       ];
-      addChatMsg('bot', match ? match.reply : defaultReplies[Math.floor(Math.random()*defaultReplies.length)]);
-    }
+      return match ? match.reply : defaultReplies[Math.floor(Math.random()*defaultReplies.length)];
   }
 
   // ---- Explore / Search ----

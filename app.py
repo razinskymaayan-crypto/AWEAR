@@ -749,10 +749,12 @@ async def stylist_chat(request: Request, data: StylistMessage):
                 "content": f"Wardrobe info: {data.wardrobe_context}\n\nQuestion: {data.question}",
             }],
         )
-        return {"answer": response.content[0].text}
+        return {"answer": response.content[0].text, "ok": True}
     except Exception as e:
         print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
-        return {"answer": "AI stylist unavailable right now 🙏 try again in a moment"}
+        # Demo reliability (A6): signal unavailability so the client falls through
+        # to its local stylist replies instead of rendering a broken message.
+        return {"ok": False}
 
 
 class CommentModerationRequest(BaseModel):
