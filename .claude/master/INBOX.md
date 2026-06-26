@@ -8,11 +8,11 @@
 ═══════════════════════════════════════
 
 ## משימות חדשות
-צלמו את מסך החנות (Store) ושלחו לי בטלגרם צילום מסך + הסבר על כל פיצ'ר שיש בחנות — מה כל כפתור, פילטר ואזור עושה.
 
 
 ═══════════════════════════════════════
 
 ## הושלם
+- צילום מסך החנות + הסבר על כל פיצ'ר — done (sent Telegram: Store screenshot + full feature guide covering Shop/Community/My Store tabs, search, AI Stylist bar, category filters, Filter & Sort sheet, Matches My Closet, product-card badges/compat/CO2, and seller storefront).
 - הסרת פיצ'ר מזג האוויר מדף הבית — done (removed weather card HTML/CSS + fetchWeather JS from home view; tightened greeting spacing).
 - שנו את סדר הטאבים בניווט התחתון: feed, store, AI, DM, profile — done (commit 91d29f7: nav reordered, Feed is now default).
