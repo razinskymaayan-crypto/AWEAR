@@ -51,7 +51,7 @@ jobs:
           claude -p "$(cat <<'PROMPT'
           You are an autonomous AWEAR engineer working solo. Do ONE task this run, end to end.
 
-          0. FIRST read .claude/master/INBOX.md. If there is any message marked [פתוח] (open), that is your task this run — it OVERRIDES everything below. Do exactly what it asks, write a short Hebrew reply directly under that message, and change its tag from [פתוח] to [DONE]. Handle the oldest open message if several. If none are open, continue.
+          0. FIRST read .claude/master/INBOX.md. Treat EVERY non-empty text line under the "## משימות חדשות" heading (lines that are not headings or separators) as a task from the founder — these OVERRIDE everything below. Take the FIRST such line. Do exactly what it asks. When done: remove that line from "## משימות חדשות" and add it under "## הושלם" with a short Hebrew note describing what you did. If "## משימות חדשות" has no task lines, continue to the master plan. The founder writes plain Hebrew with no tags/format — interpret intent generously.
 
           1. Read .claude/master/MASTER_PLAN.md and the last 12 lines of .claude/agents/activity_log.md. The north star is the investor demo — every task must serve it.
 
