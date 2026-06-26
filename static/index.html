@@ -2190,7 +2190,7 @@
 
   <main id="main">
     <!-- HOME SCREEN -->
-    <section id="home" class="view active">
+    <section id="home" class="view">
       <div class="home-wrap" id="home-wrap"></div>
     </section>
 
@@ -2378,7 +2378,7 @@
     </section>
 
     <!-- FEED -->
-    <section id="feed" class="view">
+    <section id="feed" class="view active">
       <div class="feed-top">
         <div class="feed-tabs">
           <button class="ftab active" data-tab="foryou">For You</button>
@@ -2412,11 +2412,11 @@
   </main>
 
   <nav>
-    <button data-view="home" class="active"><span class="ico" id="nav-ico-home"></span><span data-i18n="nav.home">Home</span></button>
-    <button data-view="explore"><span class="ico" id="nav-ico-explore"></span><span data-i18n="nav.explore">Search</span></button>
-    <button class="fab" id="capture-btn"><span id="nav-ico-fab"></span></button>
-    <button data-view="feed"><span class="ico" id="nav-ico-feed"></span><span data-i18n="nav.feed">Feed</span></button>
-    <button data-view="marketplace"><span class="ico" id="nav-ico-shop"></span><span data-i18n="nav.shop">Shop</span></button>
+    <button data-view="feed" class="active"><span class="ico" id="nav-ico-feed"></span><span>Feed</span></button>
+    <button data-view="marketplace"><span class="ico" id="nav-ico-shop"></span><span>Store</span></button>
+    <button data-view="outfits"><span class="ico" id="nav-ico-ai"></span><span>AI</span></button>
+    <button data-view="chat"><span class="ico" id="nav-ico-dm"></span><span>DM</span></button>
+    <button data-view="closet"><span class="ico" id="nav-ico-profile"></span><span>Profile</span></button>
   </nav>
 
   <input type="file" id="file-input" accept="image/*" capture="environment" />
@@ -2740,7 +2740,7 @@
     if (name === 'user-profile') renderUserProfile();
   }
 
-  document.getElementById('capture-btn').addEventListener('click', () => {
+  document.getElementById('capture-btn')?.addEventListener('click', () => {
     profileTab = 'closet'; showView('closet'); fileInput.click();
   });
 
@@ -3970,11 +3970,11 @@
   }
 
   // ---- static UI icons (nav bar) ----
-  document.getElementById('nav-ico-home').innerHTML    = icon('sparkle', 24);
-  document.getElementById('nav-ico-shop').innerHTML    = icon('shoppingBag', 24);
-  document.getElementById('nav-ico-explore').innerHTML = icon('search', 24);
   document.getElementById('nav-ico-feed').innerHTML    = icon('play', 24);
-  document.getElementById('nav-ico-fab').innerHTML     = icon('plus', 28);
+  document.getElementById('nav-ico-shop').innerHTML    = icon('shoppingBag', 24);
+  document.getElementById('nav-ico-ai').innerHTML      = icon('sparkle', 24);
+  document.getElementById('nav-ico-dm').innerHTML      = icon('messageCircle', 24);
+  document.getElementById('nav-ico-profile').innerHTML = icon('user', 24);
 
   // ---- header city pin — global-first: no hardcoded city, reflects user's own profile ----
   function updateHeaderCityPin() {
@@ -4080,8 +4080,8 @@
   }
   _seedDemoCloset();
 
-  // Auto-render home on load
-  renderHome();
+  // Auto-render feed on load (default tab) — deferred so followState + all late-inits are ready
+  requestAnimationFrame(() => showView('feed'));
   // Wire marketplace filter sheet (overlay + apply + reset) — runs once after DOM ready
   requestAnimationFrame(initMPFilterSheet);
 
