@@ -9,7 +9,7 @@
 ---
 
 ## Open — needs your attention
-(empty — agents will add lines here)
+- 2026-06-27 — Closet Analytics survey scored **Trust/credibility 3/10 (SEVERE)**: the screen was showing contradictory/placeholder stats (100% utilization next to 18% never-worn, a fake "Satin Skirt · worn 1 time"). **Auto-fixed this run** — numbers now derive from one source of truth (verified). No action needed unless you want to review; bigger follow-ups are in IDEAS.md.
 
 ---
 

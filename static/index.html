@@ -4730,21 +4730,18 @@
     const totalWears = wardrobe.reduce((s,i) => s + (i.wear_count||0), 0);
     const totalValue = wardrobe.reduce((s,i) => s + (i.price_estimate_usd||0), 0);
 
-    // Utilization: items worn at least once / total (seed 34% if no wear data)
-    const wornItems = wardrobe.filter(i => (i.wear_count||0) > 0);
-    const utilizationPct = totalItems > 0
-      ? (wornItems.length > 0 ? Math.round((wornItems.length / totalItems) * 100) : 34)
-      : 34;
+    // Single source of truth: seed fallbacks ONLY when there is no real wear data.
+    const hasWearData = totalWears > 0;
 
-    // Active (worn 3+) and never worn
+    // Utilization: items worn at least once / total (seed 34% only if no wear data)
+    const wornItems = wardrobe.filter(i => (i.wear_count||0) > 0);
+    const utilizationPct = hasWearData ? Math.round((wornItems.length / totalItems) * 100) : 34;
+
+    // Active (worn 3+) and never worn — all derived from the same source, so worn% + never% = 100
     const activeItems = wardrobe.filter(i => (i.wear_count||0) >= 3);
-    const activePct = totalItems > 0
-      ? (activeItems.length > 0 ? Math.round((activeItems.length / totalItems) * 100) : 42)
-      : 42;
+    const activePct = hasWearData ? Math.round((activeItems.length / totalItems) * 100) : 42;
     const neverWorn = wardrobe.filter(i => (i.wear_count||0) === 0);
-    const neverPct = totalItems > 0
-      ? (neverWorn.length > 0 ? Math.round((neverWorn.length / totalItems) * 100) : 18)
-      : 18;
+    const neverPct = hasWearData ? Math.round((neverWorn.length / totalItems) * 100) : 18;
 
     // Cost per wear
     const itemsWithCPW = wardrobe.filter(i => i.price_estimate_usd > 0 && (i.wear_count||0) > 0);
@@ -4755,8 +4752,13 @@
     // Wear champion & hidden cost
     const sortedByWear = [...wardrobe].sort((a,b) => (b.wear_count||0) - (a.wear_count||0));
     const champion = sortedByWear.find(i => (i.wear_count||0) > 0);
-    const sortedByValue = [...neverWorn].sort((a,b) => (b.price_estimate_usd||0) - (a.price_estimate_usd||0));
-    const hiddenCost = sortedByValue[0] || null;
+    // Hidden Cost = the real item with the worst cost-per-wear (price ÷ max(1, wears)).
+    // Always a genuine wardrobe item; null only when there is no wear/price data.
+    const hiddenCost = hasWearData
+      ? ([...wardrobe]
+          .filter(i => (i.price_estimate_usd||0) > 0)
+          .sort((a,b) => (b.price_estimate_usd/Math.max(1,b.wear_count||0)) - (a.price_estimate_usd/Math.max(1,a.wear_count||0)))[0] || null)
+      : null;
 
     // Sustainability score (rewear ratio vs community 52%)
     const rewearScore = utilizationPct > 0 ? Math.min(100, Math.round(utilizationPct * 1.05)) : 71;
@@ -4785,11 +4787,14 @@
     const primaryTag = (identityTags[0]||'minimal').toLowerCase();
     const archetype = STYLE_ARCHETYPES[primaryTag] || 'The Quiet Minimalist';
 
-    // Dead zone: items not worn in 60+ days (seed: 3 items, $340)
-    const deadCount = neverWorn.length > 0 ? Math.min(neverWorn.length, 3) : 3;
-    const deadValue = neverWorn.length > 0
-      ? neverWorn.slice(0, 3).reduce((s,i) => s + (i.price_estimate_usd||0), 0) || 340
-      : 340;
+    // Dead zone: real least-worn items. Prefer truly never-worn; else infer from lowest wear counts.
+    const deadItems = neverWorn.length > 0
+      ? neverWorn
+      : [...wardrobe].sort((a,b) => (a.wear_count||0) - (b.wear_count||0)).slice(0, 3);
+    const deadCount = deadItems.length;
+    const deadValue = Math.round(deadItems.reduce((s,i) => s + (i.price_estimate_usd||0), 0)) || 340;
+    // Truthful copy: real "never worn in 60+ days" only when items are genuinely never-worn.
+    const deadCopy = neverWorn.length > 0 ? "haven't been worn in 60+ days" : 'are barely worn';
 
     // Color distribution (kept for category bars)
     const catMap = {};
@@ -4831,7 +4836,7 @@
           <div class="an-cpw-label hidden-cost">${icon('alert',12)} Hidden Cost</div>
           <div class="an-cpw-value">${hiddenCost ? esc(hiddenCost.name) : 'Satin Skirt'}</div>
           <div class="an-cpw-sub">${hiddenCost
-            ? `bought $${hiddenCost.price_estimate_usd||180} · worn 0 times`
+            ? `bought $${hiddenCost.price_estimate_usd} · ${hiddenCost.wear_count||0} wear${(hiddenCost.wear_count||0)===1?'':'s'} · $${Math.round(hiddenCost.price_estimate_usd/Math.max(1,hiddenCost.wear_count||0))}/wear`
             : 'bought $180 · worn 1 time'
           }</div>
         </div>
@@ -4867,7 +4872,7 @@
 
       <!-- 5. Dead Zone Alert -->
       <div class="an-alert-card">
-        <div class="an-alert-title">${icon('alert',16)} ${deadCount} item${deadCount!==1?'s':''} haven't been worn in 60+ days</div>
+        <div class="an-alert-title">${icon('alert',16)} ${deadCount} item${deadCount!==1?'s':''} ${deadCopy}</div>
         <div class="an-alert-sub">Worth ~$${deadValue} sitting there</div>
         <div class="an-alert-actions">
           <button class="an-alert-btn primary" onclick="showToast('Challenge accepted — pick one this week!')">Wear one this week</button>
