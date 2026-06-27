@@ -21,3 +21,6 @@
 
 ---
 
+
+## SF-AVATAR-01 — avatarFallback() needs a FAILING img, not a valid placeholder
+`avatarFallback(img)` is wired via `onerror`. A valid transparent gif (e.g. a 1x1 base64 data: URI) LOADS successfully, so `onerror` never fires and the avatar stays invisible (empty column). For seeded/initials avatars where there is no real photo URL, do NOT use an onerror placeholder — render the fallback span inline directly: `<span class="...-avatar avatar-fallback">${initials}</span>` (compute initials with `name.split(/[ .@]/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?'`). Apply the sizing class + `avatar-fallback` (gradient/centering) together. One render path = all callers consistent. (Feed comments seed, 2026-06-27.)
