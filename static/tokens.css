@@ -24,6 +24,13 @@
   --danger:        #e05252;
   --overlay:       rgba(14,12,15,0.80);
 
+  /* Seasonal accents — decorative, theme-independent (stay sunny/cool in both modes) */
+  --summer-1:      #f3d27a;   /* soft pastel butter yellow */
+  --summer-2:      #ecbf72;   /* soft pastel apricot */
+  --summer-ink:    #3a2a08;   /* dark text for contrast on summer yellow */
+  --summer-blue:   #8ccbe5;   /* soft pastel sky blue */
+  --summer-blue2:  #5aacd4;   /* muted pastel sea blue */
+
   /* Text aliases — backward compat */
   --text: #fbfbfd;       /* alias of --fg */
   --bg2:  #161318;       /* alias of --surface */

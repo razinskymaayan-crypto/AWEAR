@@ -13,7 +13,12 @@
     "success":      "#4ade80",
     "warning":      "#fbbf24",
     "danger":       "#ef4444",
-    "overlay":      "rgba(0,0,0,0.72)"
+    "overlay":      "rgba(0,0,0,0.72)",
+    "summer-1":     "#f3d27a",
+    "summer-2":     "#ecbf72",
+    "summer-ink":   "#3a2a08",
+    "summer-blue":  "#8ccbe5",
+    "summer-blue2": "#5aacd4"
   },
   "gradient": {
     "primary":      "linear-gradient(135deg, #ff3d77, #7b5cff)",

@@ -47,9 +47,6 @@
   header { padding: 18px 20px 12px; display: flex; align-items: center; justify-content: space-between;
     position: relative; z-index: 5; flex-shrink: 0; }
   .logo { display: flex; align-items: baseline; gap: 6px; color: var(--text,#f0ecf5); }
-  .ava { width: 36px; height: 36px; border-radius: 50%; position: relative;
-    background: var(--line); border: 1.5px solid var(--line); }
-  .ava::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--surface); }
   .notif-btn { position: relative; width: 36px; height: 36px; border-radius: 50%; background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text, #fbfbfd); flex-shrink: 0; }
   .notif-btn:active { opacity: .7; }
   .notif-badge { position: absolute; top: -2px; right: -2px; min-width: 16px; height: 16px; border-radius: 8px; background: var(--accent, #e8526a); color: #fff; font-size: 10px; font-weight: 900; display: none; align-items: center; justify-content: center; padding: 0 3px; line-height: 1; border: 1.5px solid var(--bg, #0e0c0f); }
@@ -72,6 +69,7 @@
   nav { position: absolute; bottom: 0; left: 0; right: 0; height: 76px;
     background: rgba(250,249,247,.94); backdrop-filter: blur(16px); border-top: 1px solid var(--line);
     display: flex; align-items: center; justify-content: space-around; z-index: 10; }
+  nav.conv-nav-hidden { display: none; }
   nav button { background: none; border: 0; color: var(--muted); font-size: var(--t-micro); font-weight: 600;
     font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
   nav button.active { color: var(--text); }
@@ -114,8 +112,9 @@
     padding: 16px; color: var(--hl); font-size: var(--t-body); margin-top: 14px; }
 
   /* ---- Dolce design system (profile + closet shelves) ---- */
-  .ig-head { display: flex; align-items: center; gap: 16px; padding: 8px 4px 16px; }
-  .ig-ava { width: 76px; height: 76px; border-radius: 50%; flex-shrink: 0; position: relative;
+  .ig-head { display: flex; align-items: flex-start; gap: 16px; padding: 8px 4px 16px; }
+  .ig-avacol { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; }
+  .ig-ava { width: 96px; height: 96px; border-radius: 50%; flex-shrink: 0; position: relative;
     background: var(--line); padding: 3px; }
   .ig-ava::after { content: ""; position: absolute; inset: 3px; border-radius: 50%;
     background: var(--surface); }
@@ -133,6 +132,13 @@
   .ig-stats > div { display: flex; flex-direction: column; gap: 3px; flex: 1; }
   .ig-stats b { font-size: var(--t-h2,18px); font-weight: 900; font-family: "Poppins", sans-serif; }
   .ig-stats span { font-size: var(--t-micro); color: var(--muted); font-weight: 700; }
+  .ig-headmain { position: relative; flex: 1; min-width: 0; min-height: 96px; }
+  .ig-headstats { position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); display: flex; justify-content: space-around; text-align: center; gap: 4px; }
+  .ig-headstats > div { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+  .ig-headstats b { font-size: var(--t-h3,15px); font-weight: 900; font-family: "Poppins", sans-serif; }
+  .ig-headstats span { font-size: var(--t-micro,11px); color: var(--muted); font-weight: 700; white-space: nowrap; }
+  .ig-headmain .ig-nameblock { position: absolute; top: calc(50% + 16px); left: 0; right: 0; text-align: center; }
+  .ig-headmain .ig-name { font-size: var(--t-caption,12px); }
   .ig-bio { font-size: var(--t-small); color: var(--muted); line-height: 1.55; padding: 0 2px 16px; }
   .ig-bio b { color: var(--text); font-weight: 800; }
   .seg { display: flex; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
@@ -831,6 +837,20 @@
     border-radius: 8px; padding: 2px 8px;
     font-size: var(--t-body); font-weight: 800;
   }
+  /* Marketplace product detail sheet: store label, description, dual action footer */
+  .mp-sheet-store { display: inline-flex; align-items: center; gap: 5px; margin: 4px 0 6px;
+    font-size: var(--t-small,13px); font-weight: 800; color: var(--accent2,#c4855a); }
+  .mp-sheet-desc-label { font-size: var(--t-micro,11px); font-weight: 800; letter-spacing: .4px;
+    text-transform: uppercase; color: var(--muted,#8a8498); margin: 4px 0 6px; }
+  .mp-sheet-desc { font-size: var(--t-small,13px); line-height: 1.55; color: var(--fg,#f0ecf5); }
+  .mp-sheet-actions { display: flex; gap: 10px; align-items: stretch; }
+  .mp-sheet-actions .sheet-buy { flex: 1; }
+  .sheet-buy-secondary { flex: 0 0 auto; padding: 16px 18px; border-radius: 16px; font-family: inherit;
+    font-size: var(--t-small,13px); font-weight: 800; cursor: pointer; min-height: 52px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px; white-space: nowrap;
+    background: var(--card,#1e1a22); color: var(--accent3,#7a6af0); border: 1.5px solid var(--accent3,#7a6af0);
+    transition: transform .14s, filter .14s; }
+  .sheet-buy-secondary:active { transform: scale(.97); filter: brightness(.93); }
 
   .sheet-divider {
     display: flex; align-items: center; gap: 10px;
@@ -980,6 +1000,11 @@
   .og-go:active { transform: scale(.96); }
   .og-scenarios { display: flex; gap: 8px; padding: 0 18px 16px; overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
   .og-scenarios::-webkit-scrollbar { display: none; }
+  .og-abigail-btn { display: flex; align-items: center; gap: 10px; width: calc(100% - 36px); margin: 4px 18px 14px; min-height: 52px; padding: 10px 16px; background: color-mix(in srgb, var(--accent3, #7a6af0) 12%, var(--card, #1e1a22)); border: 1.5px solid color-mix(in srgb, var(--accent3, #7a6af0) 35%, transparent); border-radius: var(--r-md, 14px); color: var(--fg, #f0ecf5); font-family: inherit; font-size: var(--t-body, 14px); font-weight: 800; cursor: pointer; text-align: left; transition: transform .15s, background .15s; }
+  .og-abigail-btn:active { transform: scale(.98); }
+  .og-abigail-ico { width: 36px; height: 36px; min-width: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); display: flex; align-items: center; justify-content: center; color: var(--fg, #f0ecf5); flex-shrink: 0; }
+  .og-abigail-txt { display: flex; flex-direction: column; gap: 1px; }
+  .og-abigail-sub { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); }
   .og-chip { flex-shrink: 0; padding: 8px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: var(--t-caption); font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; transition: all .18s; display: flex; align-items: center; gap: 5px; }
   .og-chip:active { border-color: var(--accent2); background: rgba(123,92,255,.1); }
   .og-result-section { padding: 0 18px; display: flex; flex-direction: column; gap: 14px; }
@@ -1527,10 +1552,9 @@
   .ms-store-pic-wrap { flex-shrink: 0; padding: 2px; border-radius: 50%; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); }
   .ms-store-pic { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; display: block; }
   .ms-store-pic-initials { background: var(--surface,#161318); display: flex; align-items: center; justify-content: center; font-size: var(--t-h3,15px); font-weight: 900; color: var(--fg,#f0ecf5); letter-spacing: .5px; }
-  .ms-actions { padding: 0 16px 16px; display: flex; gap: 6px; }
-  .ms-list-btn { flex: 1; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); padding: var(--space-3,12px) var(--space-4,16px); font-family: inherit; font-size: var(--t-small,13px); font-weight: 900; color: var(--on-accent,#fff); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; transition: opacity .15s; }
-  .ms-list-btn:active { opacity: .85; }
-  .ms-act-btn { flex: 0 0 auto; background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: var(--space-3,12px) var(--space-3,12px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; color: var(--fg,#f0ecf5); cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 44px; white-space: nowrap; }
+  .ms-actions { padding: 0 16px 12px; display: flex; gap: 6px; }
+  /* Three identical action buttons — same size (flex:1), same color, slim height */
+  .ms-act-btn { flex: 1; min-width: 0; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: var(--space-2,8px) var(--space-2,8px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; color: var(--fg,#f0ecf5); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; white-space: nowrap; }
   .ms-act-btn:active { background: var(--card-hover,#262030); }
   .ms-section-hd { padding: 0 16px 10px; display: flex; align-items: center; justify-content: space-between; }
   .ms-section-title { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); }
@@ -1564,6 +1588,41 @@
   .mp-active-chip { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: var(--r-pill,999px); background: color-mix(in srgb, var(--accent3,#7a6af0) 15%, transparent); border: 1px solid color-mix(in srgb, var(--accent3,#7a6af0) 40%, transparent); font-size: var(--t-micro,11px); font-weight: 800; color: var(--accent3,#7a6af0); cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: opacity .15s; }
   .mp-active-chip:active { opacity: .7; }
   .mp-active-chip-x { font-size: var(--t-caption,12px); opacity: .7; line-height: 1; }
+
+  /* ---- Community tab (preloved) ---- */
+
+  /* View-mode sub-toggle (lighter than the main .mp-segment so it reads as a sub-control) */
+  .mp-comm-toggle { display: flex; gap: 4px; margin: 0 16px 14px; padding: 3px; background: var(--surface,#161318); border: 1px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); }
+  .mp-comm-tgl { flex: 1; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 6px; border: none; background: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); cursor: pointer; transition: all .18s; }
+  .mp-comm-tgl.active { background: var(--card,#1e1a22); color: var(--fg,#f0ecf5); box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+
+  /* Store-page cards (Mode A list) */
+  .mp-store-pages { display: flex; flex-direction: column; gap: 14px; padding: 0 16px 24px; }
+  .mp-sp-card { background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-lg,20px); padding: 14px; cursor: pointer; transition: border-color .18s, transform .16s; }
+  .mp-sp-card:active { transform: scale(.99); }
+  .mp-sp-head { display: flex; align-items: center; gap: 12px; }
+  .mp-sp-av { width: 52px; height: 52px; border-radius: var(--r-pill,999px); flex-shrink: 0; padding: 2px; background: linear-gradient(135deg, var(--accent2,#c4855a), var(--accent3,#7a6af0)); }
+  .mp-sp-av img { width: 100%; height: 100%; border-radius: var(--r-pill,999px); object-fit: cover; display: block; border: 2px solid var(--card,#1e1a22); }
+  .mp-sp-meta { flex: 1; min-width: 0; }
+  .mp-sp-name { font-size: var(--t-h3,15px); font-weight: 900; color: var(--fg,#f0ecf5); }
+  .mp-sp-handle { font-size: var(--t-micro,11px); font-weight: 600; color: var(--muted,#8a8498); margin-top: 1px; }
+  .mp-sp-vibe { font-size: var(--t-micro,11px); font-weight: 700; color: var(--accent2,#c4855a); margin-top: 3px; display: inline-flex; align-items: center; gap: 4px; }
+  .mp-sp-follow { flex-shrink: 0; min-height: 36px; padding: 8px 16px; border: 0; border-radius: var(--r-pill,999px); background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); color: var(--on-accent,#fff); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; cursor: pointer; transition: all .18s; }
+  .mp-sp-follow.following { background: var(--card,#1e1a22); color: var(--muted,#8a8498); border: 1.5px solid var(--line,#2e2836); }
+  .mp-sp-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0; }
+  .mp-sp-thumb { aspect-ratio: 1; border-radius: var(--r-md,14px); overflow: hidden; background: var(--surface,#161318); }
+  .mp-sp-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .mp-sp-thumb-empty { grid-column: 1 / -1; aspect-ratio: 3 / 1; display: flex; align-items: center; justify-content: center; border-radius: var(--r-md,14px); background: var(--surface,#161318); color: var(--muted,#8a8498); }
+  .mp-sp-visit { width: 100%; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1.5px solid var(--accent3,#7a6af0); background: color-mix(in srgb, var(--accent3,#7a6af0) 10%, transparent); color: var(--accent3,#7a6af0); border-radius: var(--r-md,14px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; cursor: pointer; transition: all .18s; }
+  .mp-sp-visit:active { transform: scale(.98); }
+
+  /* Expanded single store page */
+  .mp-sp-detail { padding: 0 16px 8px; }
+  .mp-sp-back { min-height: 44px; display: inline-flex; align-items: center; gap: 5px; background: none; border: none; color: var(--muted,#8a8498); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; cursor: pointer; padding: 4px 0; }
+  .mp-sp-cover { display: flex; align-items: center; gap: 12px; background: linear-gradient(160deg, var(--card,#1e1a22), var(--surface,#161318)); border: 1px solid var(--line,#2e2836); border-radius: var(--r-lg,20px); padding: 14px; margin-top: 4px; }
+  .mp-sp-cover-av { width: 60px; height: 60px; border-radius: var(--r-pill,999px); flex-shrink: 0; padding: 2px; background: linear-gradient(135deg, var(--accent2,#c4855a), var(--accent3,#7a6af0)); }
+  .mp-sp-cover-av img { width: 100%; height: 100%; border-radius: var(--r-pill,999px); object-fit: cover; display: block; border: 2px solid var(--card,#1e1a22); }
+  .mp-sp-cover-meta { flex: 1; min-width: 0; }
 
   /* ---- Marketplace Filter Sheet ---- */
   .mp-fsheet-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); z-index: 60; pointer-events: none; transition: background .25s ease; }
@@ -2088,6 +2147,51 @@
   .chat-send-btn { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: transform .15s; }
   .chat-send-btn:active { transform: scale(.92); }
 
+  /* ---- Direct Messages (user-to-user) ---- */
+  .dm-outer { display: flex; flex-direction: column; height: 100%; }
+  .dm-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px 10px; border-bottom: 1px solid var(--line, #2e2836); flex-shrink: 0; }
+  .dm-head-title { font-size: var(--t-lead, 17px); font-weight: 900; color: var(--fg, #f0ecf5); }
+  .dm-head-sub { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); }
+  .dm-back { width: 44px; height: 44px; min-width: 44px; border-radius: 50%; background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); color: var(--fg, #f0ecf5); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: transform .15s, background .15s; }
+  .dm-back:active { transform: scale(.92); background: var(--card-hover, #262030); }
+  .dm-list { flex: 1; overflow-y: auto; scrollbar-width: none; padding-bottom: 84px; }
+  .dm-list::-webkit-scrollbar { display: none; }
+  .dm-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; min-height: 44px; border-bottom: 1px solid var(--line, #2e2836); cursor: pointer; transition: background .15s; }
+  .dm-row:active { background: var(--card-hover, #262030); }
+  .dm-row:focus-visible { outline: 2px solid var(--accent, #e8526a); outline-offset: -2px; }
+  .dm-avatar { width: 50px; height: 50px; min-width: 50px; border-radius: 50%; object-fit: cover; display: block; flex-shrink: 0; }
+  .dm-avatar.avatar-fallback { display: flex; align-items: center; justify-content: center; font-size: var(--t-body, 14px); font-weight: 800; color: var(--fg, #f0ecf5); background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); }
+  .dm-row-body { flex: 1; min-width: 0; }
+  .dm-row-top { display: flex; align-items: baseline; gap: 8px; justify-content: space-between; }
+  .dm-row-name { font-size: var(--t-body, 14px); font-weight: 800; color: var(--fg, #f0ecf5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dm-row-time { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); flex-shrink: 0; }
+  .dm-row-preview { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+  .dm-row-last { flex: 1; min-width: 0; font-size: var(--t-small, 13px); font-weight: 600; color: var(--muted, #8a8498); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dm-row-last.unread { color: var(--fg, #f0ecf5); font-weight: 700; }
+  .dm-badge { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--accent, #e8526a); color: var(--on-accent, #fff); font-size: var(--t-micro, 11px); font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .dm-empty { padding: 48px 24px; text-align: center; color: var(--muted, #8a8498); }
+  .dm-empty-ico { color: var(--accent, #e8526a); opacity: .85; margin-bottom: 12px; }
+  .dm-empty-title { font-size: var(--t-h3, 15px); font-weight: 800; color: var(--fg, #f0ecf5); margin-bottom: 6px; }
+  .dm-empty-sub { font-size: var(--t-small, 13px); font-weight: 600; line-height: 1.5; }
+  .dm-thread { flex: 1; overflow-y: auto; padding: 14px 14px 6px; display: flex; flex-direction: column; gap: 8px; scrollbar-width: none; }
+  .dm-thread::-webkit-scrollbar { display: none; }
+  .dm-bubble-wrap { display: flex; flex-direction: column; max-width: 80%; }
+  .dm-bubble-wrap.me { align-self: flex-end; align-items: flex-end; }
+  .dm-bubble-wrap.them { align-self: flex-start; align-items: flex-start; }
+  /* grouped = same sender as the bubble above; tighten the 8px thread gap to 2px */
+  .dm-bubble-wrap.grouped { margin-top: -6px; }
+  .dm-bubble { padding: 10px 14px; border-radius: 18px; font-size: var(--t-body, 14px); font-weight: 600; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .dm-bubble-wrap.me .dm-bubble { background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); color: var(--on-accent, #fff); border-end-end-radius: 5px; }
+  .dm-bubble-wrap.them .dm-bubble { background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); color: var(--fg, #f0ecf5); border-end-start-radius: 5px; }
+  .dm-bubble-time { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); padding: 2px 4px 0; }
+  .dm-bubble-status { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); padding: 1px 4px 0; }
+  .dm-input-row { display: flex; gap: 8px; padding: 8px 14px calc(16px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line, #2e2836); flex-shrink: 0; }
+  .dm-input { flex: 1; background: var(--card, #1e1a22); border: 1.5px solid var(--line, #2e2836); border-radius: 22px; padding: 11px 16px; font-family: inherit; font-size: var(--t-body, 14px); color: var(--fg, #f0ecf5); outline: none; transition: border .18s; }
+  .dm-input:focus { border-color: var(--accent, #e8526a); }
+  .dm-send { width: 44px; height: 44px; min-width: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); border: 0; color: var(--on-accent, #fff); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: transform .15s; }
+  .dm-send:active { transform: scale(.92); }
+  .dm-send:disabled { opacity: .5; cursor: default; }
+
   /* ---- icon system ---- */
   .ic-svg { display: inline-block; vertical-align: middle; flex-shrink: 0; }
   .ic-svg svg { display: block; width: 100%; height: 100%; }
@@ -2159,9 +2263,16 @@
   .season-entry-card:active { opacity: .85; }
   .season-entry-left { display: flex; flex-direction: column; gap: var(--space-1,4px); }
   .season-entry-row { display: flex; align-items: center; gap: var(--space-2,8px); }
-  .season-entry-title { font-size: var(--t-h3,15px); font-weight: 800; color: #fff; letter-spacing: -.2px; }
+  .season-entry-icon { color: var(--on-accent,#fff); display: inline-flex; }
+  .season-entry-title { font-size: var(--t-h3,15px); font-weight: 800; color: var(--on-accent,#fff); letter-spacing: -.2px; }
   .season-entry-sub { font-size: var(--t-micro,11px); font-weight: 600; color: rgba(255,255,255,.8); }
-  .season-entry-arrow { color: #fff; flex-shrink: 0; }
+  .season-entry-arrow { color: var(--on-accent,#fff); flex-shrink: 0; }
+  /* Summer = sunny yellow card with dark text for contrast */
+  .season-entry-card.s-summer { background: linear-gradient(135deg, var(--summer-1,#f5c84b), var(--summer-2,#e89a2c)); }
+  .season-entry-card.s-summer .season-entry-icon,
+  .season-entry-card.s-summer .season-entry-title,
+  .season-entry-card.s-summer .season-entry-arrow { color: var(--summer-ink,#3a2a08); }
+  .season-entry-card.s-summer .season-entry-sub { color: color-mix(in srgb, var(--summer-ink,#3a2a08) 78%, transparent); }
 
   /* ---- Season Recap full screen ---- */
   #season-recap { overflow-y: auto; background: var(--bg,#0e0c0f); }
@@ -2175,7 +2286,22 @@
   .sr-hero-year { position: relative; font-size: var(--t-caption,12px); font-weight: 700; color: rgba(255,255,255,.7); letter-spacing: .08em; text-transform: uppercase; margin-top: var(--space-1,4px); margin-bottom: var(--space-2,8px); }
   .sr-hero-sub { position: relative; font-size: var(--t-lead,17px); font-weight: 700; color: rgba(255,255,255,.9); line-height: 1.3; }
   /* mood variants */
-  .season-mood-summer .sr-hero-season { font-weight: 900; color: #fff; text-shadow: 0 2px 18px color-mix(in srgb,var(--accent,#e8526a) 50%,transparent); }
+  /* Summer = sunny yellow tones across the recap page — no grey: secondary text + tracks go summery */
+  .season-mood-summer { --muted: color-mix(in srgb, var(--summer-blue2,#1f8fc4) 60%, var(--fg,#f0ecf5)); --progress-track: color-mix(in srgb, var(--summer-blue,#34b3e0) 22%, transparent); }
+  .season-mood-summer .sr-hero { background: linear-gradient(160deg, var(--summer-1,#f5c84b) 0%, var(--summer-2,#e89a2c) 100%); }
+  .season-mood-summer .sr-hero::before { background: radial-gradient(ellipse at 80% 20%, color-mix(in srgb,var(--summer-1,#f5c84b) 55%,transparent) 0%, transparent 55%); }
+  .season-mood-summer .sr-hero-season { font-weight: 900; color: var(--summer-ink,#3a2a08); text-shadow: 0 1px 10px color-mix(in srgb,var(--summer-1,#f5c84b) 70%,transparent); }
+  .season-mood-summer .sr-hero-year { color: color-mix(in srgb, var(--summer-ink,#3a2a08) 65%, transparent); }
+  .season-mood-summer .sr-hero-sub { color: color-mix(in srgb, var(--summer-ink,#3a2a08) 85%, transparent); }
+  /* Fresh summery yellow + blue across the whole stats page */
+  .season-mood-summer .sr-stat-num { color: var(--summer-2,#e89a2c); }
+  .season-mood-summer .sr-stat-cell:nth-child(2) .sr-stat-num { color: var(--summer-blue,#34b3e0); }
+  .season-mood-summer .sr-section-title svg { color: var(--summer-blue2,#1f8fc4); }
+  .season-mood-summer .sr-identity-card { background: linear-gradient(135deg, color-mix(in srgb,var(--summer-blue,#34b3e0) 22%,var(--card,#1e1a22)), var(--card,#1e1a22)); border-color: color-mix(in srgb,var(--summer-blue,#34b3e0) 38%,transparent); }
+  .season-mood-summer .sr-tag { background: color-mix(in srgb,var(--summer-blue,#34b3e0) 18%,transparent); border-color: color-mix(in srgb,var(--summer-blue,#34b3e0) 42%,transparent); }
+  .season-mood-summer .sr-champ-icon { background: color-mix(in srgb,var(--summer-1,#f5c84b) 22%,transparent); color: var(--summer-2,#e89a2c); }
+  .season-mood-summer .sr-active-card { background: linear-gradient(135deg, color-mix(in srgb,var(--summer-blue,#34b3e0) 16%,var(--card,#1e1a22)), var(--card,#1e1a22)); border-color: color-mix(in srgb,var(--summer-blue,#34b3e0) 32%,transparent); }
+  .season-mood-summer .sr-active-num { color: var(--summer-blue2,#1f8fc4); }
   .season-mood-winter .sr-hero { filter: brightness(0.97); }
   /* Stats row */
   .sr-stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-2,8px); padding: var(--space-4,16px) var(--space-4,16px) 0; }
@@ -2248,7 +2374,6 @@
       <button class="notif-btn" id="notif-btn" aria-label="Notifications" onclick="toggleNotifPanel()">
         <span class="notif-badge" id="notif-badge" data-notif-badge></span>
       </button>
-      <div class="ava"></div>
     </div>
   </header>
   <div id="notif-panel"></div>
@@ -2386,6 +2511,7 @@
           <div class="og-title" style="display:flex;align-items:center;gap:8px"><span class="ic-svg" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l1.7 4.8L18.5 9.5l-4.8 1.7L12 16l-1.7-4.8L5.5 9.5l4.8-1.7L12 3Z" stroke-linejoin="round"/><path d="M18.5 15l.7 2 .8 2-2-.7-2-.8 2-.7.5-1.8Z" stroke-linejoin="round"/></svg></span> Outfit Generator</div>
           <div class="og-sub">Tell us the occasion — AI builds looks from your wardrobe</div>
         </div>
+        <button class="og-abigail-btn" id="og-abigail-btn"></button>
         <div id="og-taste-banner"></div>
         <div class="og-input-row">
           <input class="og-input" id="og-input" placeholder='e.g. "I have a date tonight"' />
@@ -2413,6 +2539,7 @@
     <section id="chat" class="view">
       <div class="chat-outer" id="chat-outer">
         <div class="chat-header">
+          <button class="dm-back" id="chat-back" aria-label="Back to AI stylist" style="margin-right:2px"></button>
           <div class="chat-header-avatar"><span class="ic-svg" style="width:18px;height:18px;color:#fff" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></span></div>
           <div>
             <div style="font-size:var(--t-body);font-weight:900">Abigail</div>
@@ -2426,6 +2553,11 @@
           <button class="chat-send-btn" id="chat-send"></button>
         </div>
       </div>
+    </section>
+
+    <!-- DIRECT MESSAGES (user-to-user) -->
+    <section id="dm" class="view">
+      <div class="dm-outer" id="dm-outer"></div>
     </section>
 
     <!-- EXPLORE / SEARCH -->
@@ -2490,7 +2622,7 @@
     <button data-view="feed" class="active"><span class="ico" id="nav-ico-feed"></span><span>Feed</span></button>
     <button data-view="marketplace"><span class="ico" id="nav-ico-shop"></span><span>Store</span></button>
     <button data-view="outfits"><span class="ico" id="nav-ico-ai"></span><span>AI</span></button>
-    <button data-view="chat"><span class="ico" id="nav-ico-dm"></span><span>DM</span></button>
+    <button data-view="dm"><span class="ico" id="nav-ico-dm"></span><span>DM</span></button>
     <button data-view="closet"><span class="ico" id="nav-ico-profile"></span><span>Profile</span></button>
   </nav>
 
@@ -2640,7 +2772,7 @@
   // declared before showView() (~line 2733) so the router can read it TDZ-safe.
   const VIEW_TITLES = {
     home: 'home', feed: 'feed', marketplace: 'marketplace', outfits: 'AI stylist',
-    chat: 'messages', closet: 'profile', explore: 'explore', analytics: 'wrapped',
+    chat: 'Abigail', dm: 'messages', closet: 'profile', explore: 'explore', analytics: 'wrapped',
     wishlist: 'wishlist', stylists: 'stylists', shopping: 'shopping', rewards: 'rewards',
     wallet: 'wallet', sustainability: 'sustainability', publicclosets: 'closets',
     seasonal: 'seasonal', compare: 'compare', admin: 'admin', agents: 'agents',
@@ -2710,6 +2842,9 @@
     bell:'<path d="M6 10a6 6 0 0 1 12 0v3.5l1.5 2.5H4.5L6 13.5V10Z" stroke-linejoin="round"/><path d="M10 19a2 2 0 0 0 4 0"/>',
     x:'<path d="M6 6l12 12M18 6 6 18"/>',
     arrowRight:'<path d="M5 12h14M13 6l6 6-6 6" stroke-linejoin="round"/>',
+    arrowLeft:'<path d="M19 12H5M11 6l-6 6 6 6" stroke-linejoin="round"/>',
+    send:'<path d="M21 3 10.5 13.5M21 3l-6.5 18-4-8-8-4L21 3Z" stroke-linejoin="round"/>',
+    messageCircle:'<path d="M4 12a8 8 0 1 1 3.2 6.4L3 20l1.3-4A7.9 7.9 0 0 1 4 12Z" stroke-linejoin="round"/>',
     refresh:'<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M20 6v5h-5M4 18v-5h5"/>',
     clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2" stroke-linecap="round" stroke-linejoin="round"/>',
     sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
@@ -2825,7 +2960,10 @@
     document.querySelectorAll('.view').forEach(v =>
       v.classList.toggle('active', v.id === name));
     mainEl.classList.toggle('feed-mode', name === 'feed');
-    mainEl.classList.toggle('chat-mode', name === 'chat');
+    mainEl.classList.toggle('chat-mode', name === 'chat' || name === 'dm');
+    // Hide the bottom tab bar in a full conversation (Abigail chat). The DM tab
+    // decides per-screen below: list keeps the nav, an open thread hides it.
+    document.querySelector('nav')?.classList.toggle('conv-nav-hidden', name === 'chat');
     if (name === 'home')      renderHome();
     if (name === 'closet')    renderCloset();
     if (name === 'feed')      renderFeed();
@@ -2846,6 +2984,7 @@
     if (name === 'stylists')      renderStylistMarketplace();
     if (name === 'wishlist')  renderWishlist();
     if (name === 'chat')      initChat();
+    if (name === 'dm')        renderDM();
     if (name === 'user-profile') renderUserProfile();
     const hsn = document.getElementById('header-section-name');
     if (hsn) hsn.textContent = VIEW_TITLES[name] || name;
@@ -3259,6 +3398,11 @@
     if (btn.dataset.action === 'checkout') handleCheckout();
     if (btn.dataset.action === 'checkout-look') handleLookCheckout();
     if (btn.dataset.action === 'goto-closet') { closeSheet(); showView('closet'); }
+    if (btn.dataset.action === 'view-seller-profile') {
+      if (!_mpSheetStore) return;
+      closeSheet();
+      openUserProfile(_mpSheetStore);
+    }
   });
 
   // ---- buy confirm — opens product sheet with real retailers (no fake animation) ----
@@ -3411,6 +3555,7 @@
         FEED_KEY='awear_feed',LASTSCAN_KEY='awear_lastscan',PROFILE_KEY='awear_profile',
         CREDITS_KEY='awear_credits';
   let _checkoutCtx = null;
+  let _mpSheetStore = null; // seller's user id for the open marketplace item sheet (View profile target)
   const ls={load:k=>{try{return JSON.parse(localStorage.getItem(k))||null;}catch(e){return null;}},
             save:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
   const loadProfile=()=>ls.load(PROFILE_KEY)||{name:'My Style',handle:'me',city:'',bio:'',photo:null};
@@ -3595,27 +3740,36 @@
     const profPhotoHTML=prof.photo
       ?`<img class="ig-ava-photo" src="${attr(prof.photo)}" alt="">`
       :`<span class="ava-ico">${icon('user',38)}</span>`;
+    // Avatar-row counts: Followers · Following · Looks · Items
+    const followingCount=Object.values(followState).filter(Boolean).length;
+    const followersCount=1240+feed.length*53+wardrobe.length*17;
+    const season=getActiveSeason();
     closetBody.innerHTML=`
       <div class="ig-head">
-        <div class="ig-ava">${profPhotoHTML}</div>
-        <div class="ig-id">
-          <div class="ig-name">${esc(prof.name||'My Style')}</div>
-          <div class="ig-handle">@${esc(prof.handle||'me')}${prof.city?' · '+esc(prof.city):''}</div>
-          ${prof.bio?`<div style="font-size:var(--t-caption);color:rgba(246,246,249,.7);margin-top:4px;line-height:1.4">${esc(prof.bio)}</div>`:''}
+        <div class="ig-avacol">
+          <div class="ig-ava">${profPhotoHTML}</div>
           <span class="ig-edit" id="edit-profile-btn">Edit profile</span>
         </div>
+        <div class="ig-headmain">
+          <div class="ig-headstats">
+            <div><b>${fmtN(followersCount)}</b><span>Followers</span></div>
+            <div><b>${fmtN(followingCount)}</b><span>Following</span></div>
+            <div><b>${feed.length}</b><span>Looks</span></div>
+            <div><b>${wardrobe.length}</b><span>Items</span></div>
+          </div>
+          <div class="ig-nameblock">
+            <div class="ig-name">${esc(prof.name||'My Style')}</div>
+            ${prof.bio?`<div style="font-size:var(--t-caption);color:rgba(246,246,249,.7);margin-top:4px;line-height:1.4">${esc(prof.bio)}</div>`:''}
+          </div>
+        </div>
       </div>
-      <div class="ig-stats">
-        <div><b>${feed.length}</b><span>Looks</span></div>
-        <div><b style="display:inline-flex;align-items:center;gap:3px;color:var(--accent)">${icon('flame',16)}${meta.trend_score!=null?esc(meta.trend_score):'—'}</b><span>Trend score</span></div>
-      </div>
-      <div class="ig-bio"><b>${wardrobe.length} items</b> in closet · worth ~$${closetValue.toLocaleString()}${meta.overall_style?' · '+esc(meta.overall_style):''}</div>
       ${(() => {
-        const s = getActiveSeason();
-        return `<div class="season-entry-card" id="season-entry-card" role="button" tabindex="0" aria-label="View ${s.name} ${s.year} season recap">
+        const s = season;
+        const summer = s.name==='Summer';
+        return `<div class="season-entry-card${summer?' s-summer':''}" id="season-entry-card" role="button" tabindex="0" aria-label="View ${s.name} ${s.year} season recap">
           <div class="season-entry-left">
             <div class="season-entry-row">
-              <span style="color:#fff">${icon(s.icon, 20)}</span>
+              <span class="season-entry-icon">${icon(s.icon, 20)}</span>
               <span class="season-entry-title">Your ${esc(s.name)} ${s.year}</span>
             </div>
             <div class="season-entry-sub">Tap to see your season recap</div>
@@ -4707,7 +4861,10 @@
     const catRows=Object.entries(catBuckets).sort((a,b)=>b[1].wears-a[1].wears).slice(0,6)
       .map(([cat,d])=>({label:cat.charAt(0).toUpperCase()+cat.slice(1),util:d.total>0?Math.round(d.worn/d.total*100):0}));
     const catDisplay=catRows.length>=2?catRows:CAT_SEEDS;
-    const SR_FILLS=['var(--accent,#e8526a)','var(--accent2,#c4855a)','var(--accent3,#7a6af0)','var(--success,#52c97a)','var(--warning,#e8a84a)','var(--muted,#8a8498)'];
+    const isSummer = season.name === 'Summer';
+    const SR_FILLS = isSummer
+      ? ['var(--summer-blue,#34b3e0)','var(--summer-1,#f5c84b)','var(--summer-blue2,#1f8fc4)','var(--summer-2,#e89a2c)','var(--summer-blue,#34b3e0)','var(--summer-1,#f5c84b)']
+      : ['var(--accent,#e8526a)','var(--accent2,#c4855a)','var(--accent3,#7a6af0)','var(--success,#52c97a)','var(--warning,#e8a84a)','var(--muted,#8a8498)'];
 
     const brandBuckets={};
     items.forEach(i=>{const b=(i.brand||'').trim();if(b)brandBuckets[b]=(brandBuckets[b]||0)+1;});
@@ -4824,7 +4981,7 @@
         <div class="sr-section-title">${icon('tag',16)} Your Brand Universe</div>
         <div class="sr-insight">The labels making up your closet this season.</div>
         <div class="sr-bar-list">
-          ${brandsDisplay.map(([brand,count])=>`<div class="sr-brand-row"><div class="sr-bar-lbl">${brand}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${Math.round(count/maxBrand*100)}%;background:var(--accent2,#c4855a)"></div></div><div class="sr-bar-val">${count}</div></div>`).join('')}
+          ${brandsDisplay.map(([brand,count])=>`<div class="sr-brand-row"><div class="sr-bar-lbl">${brand}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${Math.round(count/maxBrand*100)}%;background:${isSummer?'var(--summer-1,#f5c84b)':'var(--accent2,#c4855a)'}"></div></div><div class="sr-bar-val">${count}</div></div>`).join('')}
         </div>
       </div>
 
@@ -4834,7 +4991,7 @@
         <div class="sr-insight">${cpwData[0]?'Your '+cpwData[0].label+' are your best investment at $'+cpwData[0].cpw+'/wear.':'Log more wears to unlock your cost-per-wear breakdown.'}</div>
         <div class="sr-cpw-wrap">
           <div class="sr-bar-list">
-            ${cpwData.map((c,i)=>`<div class="sr-bar-row"><div class="sr-bar-lbl">${c.label}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${Math.round(c.cpw/maxCpwVal*100)}%;background:${i===0?'var(--success,#52c97a)':'var(--accent,#e8526a)'}"></div></div><div class="sr-bar-val">$${c.cpw}</div></div>`).join('')}
+            ${cpwData.map((c,i)=>`<div class="sr-bar-row"><div class="sr-bar-lbl">${c.label}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${Math.round(c.cpw/maxCpwVal*100)}%;background:${isSummer?(i===0?'var(--summer-blue,#34b3e0)':'var(--summer-1,#f5c84b)'):(i===0?'var(--success,#52c97a)':'var(--accent,#e8526a)')}"></div></div><div class="sr-bar-val">$${c.cpw}</div></div>`).join('')}
           </div>
         </div>
       </div>
@@ -4844,7 +5001,7 @@
         <div class="sr-section-title">${icon('receipt',16)} Average Item Price by Category</div>
         <div class="sr-insight">${avgPriceData[0]?'You invest the most in '+avgPriceData[0].label.toLowerCase()+' — $'+avgPriceData[0].avg+' on average per item.':'Based on your wardrobe values.'}</div>
         <div class="sr-bar-list">
-          ${avgPriceData.map(c=>`<div class="sr-bar-row"><div class="sr-bar-lbl">${c.label}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${Math.round(c.avg/maxAvgPrice*100)}%;background:var(--accent2,#c4855a)"></div></div><div class="sr-bar-val">$${c.avg}</div></div>`).join('')}
+          ${avgPriceData.map(c=>`<div class="sr-bar-row"><div class="sr-bar-lbl">${c.label}</div><div class="sr-bar-track"><div class="sr-bar-fill" style="width:${Math.round(c.avg/maxAvgPrice*100)}%;background:${isSummer?'var(--summer-blue,#34b3e0)':'var(--accent2,#c4855a)'}"></div></div><div class="sr-bar-val">$${c.avg}</div></div>`).join('')}
         </div>
       </div>
 
@@ -5200,6 +5357,14 @@
   let ogLoading = false;
 
   function initOutfitGen() {
+    const abBtn = document.getElementById('og-abigail-btn');
+    if (abBtn) {
+      abBtn.innerHTML =
+        `<span class="og-abigail-ico">${icon('chat',18)}</span>`+
+        `<span class="og-abigail-txt"><span>Chat with Abigail</span>`+
+        `<span class="og-abigail-sub">Your AI stylist — ask anything</span></span>`;
+      if (!abBtn._bound) { abBtn._bound = true; abBtn.addEventListener('click', () => showView('chat')); }
+    }
     const scenariosEl = document.getElementById('og-scenarios');
     scenariosEl.innerHTML = OG_SCENARIOS.map(s =>
       `<button class="og-chip" data-q="${attr(s.label)}">${icon(s.icon,14)} ${esc(s.label)}</button>`
@@ -5936,6 +6101,9 @@
   let _mpPendingOccasion = 'all', _mpPendingMaterial = 'all', _mpPendingSize = 'all';
   let _deadZoneItems = [];
   let msViewMode = 'today'; // My Store viewers stat: today | month | all (cyclical button)
+  // Community tab (preloved) — view mode + selected store (TDZ-safe: before renderMarketplace)
+  let mpCommunityView = 'stores'; // 'stores' = store pages | 'items' = item grid (reuses mp* filters)
+  let mpStore = null; // selected store user id when drilled into a single store page
 
   function loadMPListings() {
     const user = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
@@ -5997,7 +6165,7 @@
         <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='preloved'?' active-community':''}" data-tab="shop" data-cond="preloved">Community</button>
         <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='new'?' active-shop':''}" data-tab="shop" data-cond="new">Browse</button>
       </div>
-      ${mpTab === 'shop' ? `
+      ${mpTab === 'shop' && mpCondFilter === 'new' ? `
       <div class="mp-search-bar">
         <div class="mp-search-inner">
           ${icon('search', 15)}
@@ -6014,7 +6182,11 @@
         </div>
         ${mpAssistMsg ? `<div class="mp-assist-msg">${esc(mpAssistMsg)}</div>` : ''}
       </div>` : ''}
-      ${mpTab === 'shop' ? renderMPShopGrid(filtered, wardrobe) : renderMySells()}
+      ${mpTab === 'shop'
+        ? (mpCondFilter === 'preloved'
+            ? renderMPCommunity(filtered, wardrobe)
+            : renderMPShopGrid(filtered, wardrobe))
+        : renderMySells()}
     `;
 
     // Top-level tabs: Shop / Community / My Listings
@@ -6028,8 +6200,43 @@
       mpCategoryFilter = 'all'; mpColorFilter = 'all'; mpBrandFilter = 'all'; mpConditionFilter = 'all';
       mpOccasionFilter = 'all'; mpMaterialFilter = 'all'; mpSizeFilter = 'all';
       mpPriceMin = 0; mpPriceMax = 9999; mpSortBy = 'default'; mpCloseMatchOnly = false;
+      // Reset Community sub-state so leaving/returning to Community is clean
+      mpCommunityView = 'stores'; mpStore = null;
       renderMarketplace();
     }));
+
+    // ---- Community tab handlers (preloved) ----
+    if (mpTab === 'shop' && mpCondFilter === 'preloved') {
+      // Store-page card tap → drill into that store's page
+      el.querySelectorAll('[data-action="mp-store-open"]').forEach(card => card.addEventListener('click', e => {
+        if (e.target.closest('[data-action="mp-store-follow"]')) return;
+        mpStore = card.dataset.uid; mpCommunityView = 'stores'; renderMarketplace();
+      }));
+      // Follow toggle (store-page cards)
+      el.querySelectorAll('[data-action="mp-store-follow"]').forEach(btn => btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const uid = btn.dataset.uid;
+        followState[uid] = !followState[uid];
+        localStorage.setItem('awear_follows', JSON.stringify(followState));
+        showToast(followState[uid] ? 'Now following' : 'Unfollowed');
+        renderMarketplace();
+      }));
+      // View-mode toggle: Store pages ⟷ View by items
+      el.querySelectorAll('[data-action="mp-comm-view"]').forEach(btn => btn.addEventListener('click', () => {
+        mpCommunityView = btn.dataset.view || 'stores';
+        if (mpCommunityView === 'items') mpStore = null;
+        renderMarketplace();
+      }));
+      // Visit store (open in-tab store page)
+      el.querySelectorAll('[data-action="mp-store-visit"]').forEach(btn => btn.addEventListener('click', e => {
+        e.stopPropagation();
+        mpStore = btn.dataset.uid; mpCommunityView = 'stores'; renderMarketplace();
+      }));
+      // Back from single store page → store list
+      el.querySelector('[data-action="mp-store-back"]')?.addEventListener('click', () => {
+        mpStore = null; renderMarketplace();
+      });
+    }
 
     // Condition chips (closet chip is toggle, others are exclusive)
     el.querySelectorAll('.mp-cond-chip').forEach(btn => btn.addEventListener('click', () => {
@@ -6096,10 +6303,21 @@
       }
     });
 
-    // Seller profile tap (P1-C)
+    // Seller name tap → open that store's page; card tap → product detail sheet.
     el.addEventListener('click', e => {
       const sellerEl = e.target.closest('[data-action="seller-profile"]');
-      if (sellerEl) { e.stopPropagation(); showToast('Seller profile coming soon'); }
+      if (sellerEl) {
+        e.stopPropagation();
+        const seller = SEED_USERS.find(u => u.handle === sellerEl.dataset.seller);
+        if (seller) openUserProfile(seller.id);
+        return;
+      }
+      // Tap anywhere on a resale card (not a button) → product detail sheet
+      if (e.target.closest('.mp-buy-btn, .mp-offer-btn, [data-action="compat-overlay"], .mp-delete-btn')) return;
+      const card = e.target.closest('.mp-item.resale');
+      if (!card) return;
+      const item = (loadMPListings().find(i => i.id === card.dataset.id)) || MP_SEED.find(i => i.id === card.dataset.id);
+      if (item) openMPItemSheet(item);
     });
 
     // Buy button — event delegation via data-id on parent card
@@ -6225,9 +6443,6 @@
 
     const filtersBlock = catFiltersHtml + toolbarHtml + quickSortHtml;
 
-    // CO2 estimates by category (P1-B)
-    const co2Map = {shoes:1.8, outerwear:3.2, top:1.2, bottoms:1.6, bag:0.9, dress:1.4};
-
     if (!items.length) {
       let emptyHtml;
       const hasExtendedFilters = activeFiltersCount > 0 || mpFilter !== 'all' || mpClosetFilter;
@@ -6263,20 +6478,28 @@
       }
       return filtersBlock + emptyHtml;
     }
-    // Condition grade config (A/B/C → color)
+
+    return filtersBlock + `
+      <div class="mp-grid">
+        ${renderMPCards(items, wardrobe)}
+      </div>`;
+  }
+
+  // Shared product-card markup for marketplace grids (Browse + Community).
+  // Self-contained: holds its own grade/co2/listed-ago config so it can be
+  // called from renderMPShopGrid (Browse) and renderMPGridBare (store page).
+  function renderMPCards(items, wardrobe) {
+    const co2Map = {shoes:1.8, outerwear:3.2, top:1.2, bottoms:1.6, bag:0.9, dress:1.4};
     const gradeColors = {A:'var(--success,#52c97a)', B:'var(--accent3,#7a6af0)', C:'var(--accent2,#c4855a)'};
     const gradeLabels = {A:'Like New', B:'Good', C:'Fair'};
-    function _listedAgo(days) {
+    const _listedAgo = (days) => {
       if (!days) return '';
       if (days <= 1) return '1 day ago';
       if (days < 7) return `${days} days ago`;
       if (days < 14) return '1 week ago';
       return `${Math.floor(days/7)} weeks ago`;
-    }
-
-    return filtersBlock + `
-      <div class="mp-grid">
-        ${items.map(item => {
+    };
+    return items.map(item => {
           const isRetail = !!item.isNew;
           const compat = (!isRetail && wardrobe.length) ? calcCompatScore(item, wardrobe) : null;
           const co2Kg = !isRetail ? (co2Map[item.category] || 1.5) : null;
@@ -6326,8 +6549,166 @@
               </div>
             </div>
           </div>`;
-        }).join('')}
+        }).join('');
+  }
+
+  // ---- Community tab (preloved) ----
+  // items = already-filtered preloved listings (respects all mp* filters + search).
+  // Layout: store strip → view toggle → (store pages | item grid).
+  function renderMPCommunity(items, wardrobe) {
+    const sellerItems = (handle) => MP_SEED.filter(i => i.seller === handle);
+    const storeData = SEED_USERS
+      .filter(u => !isBlocked(u.id))
+      .map(u => {
+        const its = sellerItems(u.handle);
+        return { u, items: its, count: its.length, following: !!(followState[u.id] ?? u.following) };
+      });
+
+    // ---- View toggle (always shown) ----
+    const toggleHtml = `
+      <div class="mp-comm-toggle" role="tablist">
+        <button class="mp-comm-tgl${mpCommunityView==='stores'?' active':''}" data-action="mp-comm-view" data-view="stores" role="tab" aria-selected="${mpCommunityView==='stores'}">${icon('users',14)} Store pages</button>
+        <button class="mp-comm-tgl${mpCommunityView==='items'?' active':''}" data-action="mp-comm-view" data-view="items" role="tab" aria-selected="${mpCommunityView==='items'}">${icon('grid',14)} View by items</button>
       </div>`;
+
+    // ---- Search bar (kept) — sits BELOW the selection (strip + toggle), above content ----
+    const searchHtml = `
+      <div class="mp-search-bar">
+        <div class="mp-search-inner">
+          ${icon('search', 15)}
+          <input class="mp-search-input" id="mp-search-input" type="search" placeholder="Search items, brands, sellers…" value="${esc(mpSearchQuery||'')}" autocomplete="off" />
+          ${mpSearchQuery ? `<button class="mp-search-clear" id="mp-search-clear" aria-label="Clear search">×</button>` : ''}
+        </div>
+      </div>`;
+
+    // Selection (view toggle) → then the remaining search → then content.
+    const selectionHtml = `${toggleHtml}${searchHtml}`;
+
+    // ---- Mode B: View by items → reuse existing shop grid (filters/sort/chips) ----
+    if (mpCommunityView === 'items') {
+      return `${selectionHtml}${renderMPShopGrid(items, wardrobe)}`;
+    }
+
+    // ---- Mode A: Store pages ----
+    // Single selected store → expanded page with its item grid + back affordance.
+    if (mpStore) {
+      const sd = storeData.find(s => s.u.id === mpStore);
+      if (sd) return `${selectionHtml}${storePageExpanded(sd, wardrobe)}`;
+      mpStore = null; // store no longer available
+    }
+
+    // Store-page cards list (following first, then explore).
+    const ordered = [...storeData].sort((a, b) => Number(b.following) - Number(a.following));
+    const cardsHtml = ordered.map(sd => storePageCard(sd)).join('');
+    return `${selectionHtml}
+      <div class="mp-store-pages">${cardsHtml}</div>`;
+  }
+
+  // Compact store-page preview card (used in the store-pages list).
+  function storePageCard(sd) {
+    const u = sd.u;
+    const thumbs = sd.items.slice(0, 3).map(it => `
+      <div class="mp-sp-thumb">${productImage(it)}</div>`).join('')
+      || `<div class="mp-sp-thumb-empty">${icon('tag',16)}</div>`;
+    return `<div class="mp-sp-card" data-action="mp-store-open" data-uid="${u.id}">
+      <div class="mp-sp-head">
+        <div class="mp-sp-av">
+          <img src="${attr(u.avatar)}" alt="" data-name="${attr(u.name)}" loading="lazy" onerror="this.onerror=null;avatarFallback(this)">
+        </div>
+        <div class="mp-sp-meta">
+          <div class="mp-sp-name">${esc(u.name)}</div>
+          <div class="mp-sp-handle">${esc(u.handle)} · ${sd.count} ${sd.count===1?'item':'items'}</div>
+          <div class="mp-sp-vibe">${icon('tag',10)} ${esc(u.vibe)}</div>
+        </div>
+        <button class="mp-sp-follow${sd.following?' following':''}" data-action="mp-store-follow" data-uid="${u.id}">${sd.following?'Following':'+ Follow'}</button>
+      </div>
+      <div class="mp-sp-thumbs">${thumbs}</div>
+      <button class="mp-sp-visit" data-action="mp-store-visit" data-uid="${u.id}">Visit store ${icon('arrowRight',13)}</button>
+    </div>`;
+  }
+
+  // Expanded single-store page: header + that seller's item grid.
+  function storePageExpanded(sd, wardrobe) {
+    const u = sd.u;
+    return `
+      <div class="mp-sp-detail">
+        <button class="mp-sp-back" data-action="mp-store-back">${icon('arrowLeft',14)} All stores</button>
+        <div class="mp-sp-cover">
+          <div class="mp-sp-cover-av">
+            <img src="${attr(u.avatar)}" alt="" data-name="${attr(u.name)}" loading="lazy" onerror="this.onerror=null;avatarFallback(this)">
+          </div>
+          <div class="mp-sp-cover-meta">
+            <div class="mp-sp-name">${esc(u.name)}</div>
+            <div class="mp-sp-handle">${esc(u.handle)}</div>
+            <div class="mp-sp-vibe">${icon('tag',10)} ${esc(u.vibe)} · ${sd.count} ${sd.count===1?'item':'items'}</div>
+          </div>
+          <button class="mp-sp-follow${sd.following?' following':''}" data-action="mp-store-follow" data-uid="${u.id}">${sd.following?'Following':'+ Follow'}</button>
+        </div>
+      </div>
+      ${sd.items.length ? renderMPGridBare(sd.items, wardrobe) : `
+        <div class="mp-empty">
+          ${icon('tag',36)}
+          <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">No items listed yet</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">Follow to get notified when ${esc(u.name.split(' ')[0])} lists something</div>
+        </div>`}`;
+  }
+
+  // Item grid WITHOUT the filter toolbar (used inside a single store page).
+  // Reuses the exact card markup from renderMPShopGrid via renderMPCards.
+  function renderMPGridBare(items, wardrobe) {
+    return `<div class="mp-grid">${renderMPCards(items, wardrobe)}</div>`;
+  }
+
+  // Synthesize a readable product description from listing attributes (MP_SEED has no description field).
+  function mpItemDescription(item) {
+    const condWord = ({A:'like-new', B:'good', C:'fair'})[item.condGrade] || (item.condition || 'pre-loved');
+    const attrs = [item.color, item.material, item.category].filter(Boolean).join(' ');
+    const bits = [];
+    bits.push(`A ${condWord} condition ${attrs || 'piece'}${item.size ? `, size ${item.size}` : ''}.`);
+    if ((item.style_tags || []).length) bits.push(`Style: ${item.style_tags.join(', ')}.`);
+    if (item.occasion) bits.push(`Made for ${item.occasion} looks.`);
+    if (item.orig && item.orig > item.price) bits.push(`Originally $${item.orig} — now $${item.price}.`);
+    const rating = item.seller_rating ? ` (${item.seller_rating.toFixed(1)} rating, ${item.seller_sales} sales)` : '';
+    if (item.seller) bits.push(`Listed by ${item.seller}${rating}.`);
+    return bits.join(' ');
+  }
+
+  // Marketplace product detail sheet: photo + seller + description, then Buy + View profile.
+  function openMPItemSheet(item) {
+    logAdminEvent('buy_intent', 'Opened MP item: ' + (item.name || 'item'));
+    const store = SEED_USERS.find(u => u.handle === item.seller) || null;
+    _mpSheetStore = store ? store.id : null;
+    _checkoutCtx = { it: {
+      name: item.name, category: item.category, color: item.color,
+      brand_vibe: item.seller, price_estimate_usd: item.price,
+      search_query: item.name, style_tags: item.style_tags || [],
+    }, influencerUser: null };
+
+    const storeName = store ? store.name : (item.seller || '');
+    const origStrike = (item.orig && item.orig > item.price)
+      ? ` <span style="font-size:var(--t-small,13px);color:var(--muted,#8a8498);text-decoration:line-through">$${esc(item.orig)}</span>` : '';
+
+    sheetBody.innerHTML = `
+      <div class="sheet-hero">
+        <div class="sheet-hero-img">${productImage(item)}</div>
+        <div class="sheet-hero-info">
+          <div class="sheet-hero-name">${esc(item.name)}</div>
+          ${storeName ? `<span class="mp-sheet-store">${icon('user',13)} Sold by ${esc(storeName)}</span>` : ''}
+          <div class="sheet-hero-price">$${esc(item.price)}${origStrike}</div>
+        </div>
+      </div>
+      <div class="mp-sheet-desc-label">Description</div>
+      <div class="mp-sheet-desc">${esc(mpItemDescription(item))}</div>
+      <div style="height:8px"></div>`;
+
+    sheetFooter.innerHTML = `
+      <div class="mp-sheet-actions">
+        ${store ? `<button class="sheet-buy-secondary" data-action="view-seller-profile" aria-label="View ${attr(storeName)} profile">${icon('user',16)} View profile</button>` : ''}
+        <button class="sheet-buy" data-action="checkout" aria-label="Buy ${attr(item.name)}">
+          ${icon('bag',18)} Buy Now <span class="sheet-buy-price">$${esc(item.price)}</span>
+        </button>
+      </div>`;
+    showSheet();
   }
 
   function handleMPBuy(id, isNew) {
@@ -7003,7 +7384,7 @@
       <div class="ms-actions">
         <button class="ms-act-btn" id="ms-insight-btn">${icon('barChart',14)} Insight</button>
         <button class="ms-act-btn" id="ms-filter-btn">${icon('filter',14)} Filter &amp; sort</button>
-        <button class="ms-list-btn" id="ms-list-btn">${icon('tag',16)} List an item</button>
+        <button class="ms-act-btn" id="ms-list-btn">${icon('tag',14)} List an item</button>
       </div>
 
       ${mine.length === 0 ? `
@@ -7609,6 +7990,12 @@
     const sendBtn = document.getElementById('chat-send');
     if (sendBtn) sendBtn.innerHTML = icon('arrowUp', 18);
 
+    const backBtn = document.getElementById('chat-back');
+    if (backBtn) {
+      backBtn.innerHTML = icon('arrowLeft', 20);
+      if (!backBtn._bound) { backBtn._bound = true; backBtn.addEventListener('click', () => showView('outfits')); }
+    }
+
     document.getElementById('chat-presets').innerHTML = CHAT_PRESETS.map(p =>
       `<button class="chat-preset">${esc(p)}</button>`
     ).join('');
@@ -7718,6 +8105,245 @@
         hasW ? `With your closet we have tons of options — tell me what you need and we'll create a look!` : 'Let\'s get started — scan an item into your closet and I\'ll help you build looks.',
       ];
       return match ? match.reply : defaultReplies[Math.floor(Math.random()*defaultReplies.length)];
+  }
+
+  // ============================================================
+  // DIRECT MESSAGES (user-to-user) — distinct from Abigail AI chat.
+  // Backend: Sam's /api/dm/* (conversations / thread / send).
+  // dmPeer === null  → conversation list ;  else → open thread.
+  // ============================================================
+  let dmPeer = null;        // {user_id, name, handle, avatar} of open thread, or null
+  let dmSending = false;    // guards double-send
+
+  // Relative time helper — number-driven, language-neutral chrome (just digits + m/h/d).
+  function dmTimeAgo(iso){
+    if(!iso) return '';
+    const then = new Date(iso).getTime();
+    if(isNaN(then)) return '';
+    const sec = Math.max(0, Math.floor((Date.now()-then)/1000));
+    if(sec < 60)        return 'now';
+    const min = Math.floor(sec/60); if(min < 60) return min+'m';
+    const hr  = Math.floor(min/60); if(hr  < 24) return hr+'h';
+    const day = Math.floor(hr/24);  if(day < 7)  return day+'d';
+    return new Date(then).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  }
+
+  // Renders an avatar: real <img> with onerror fallback when there's a URL,
+  // otherwise an inline initials circle (SF-AVATAR-01 — a valid placeholder
+  // never fires onerror, so we must inline the fallback when there's no photo).
+  function dmAvatarHTML(name, avatar, cls){
+    if(avatar){
+      return `<img class="${cls}" src="${attr(avatar)}" alt="" data-name="${attr(name)}" loading="lazy" onerror="this.onerror=null;avatarFallback(this)">`;
+    }
+    const initials = String(name||'').split(/[ .@]/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || '?';
+    return `<span class="${cls} avatar-fallback">${esc(initials)}</span>`;
+  }
+
+  function renderDM(){
+    if(dmPeer) renderDMThread();
+    else       renderDMList();
+  }
+
+  async function renderDMList(){
+    const root = document.getElementById('dm-outer');
+    if(!root) return;
+    document.querySelector('nav')?.classList.remove('conv-nav-hidden'); // list is a top-level tab — keep the nav
+    root.innerHTML =
+      `<div class="dm-head"><div><div class="dm-head-title">Messages</div>`+
+      `<div class="dm-head-sub">Direct messages</div></div></div>`+
+      `<div class="dm-list" id="dm-list"><div class="dm-empty">Loading…</div></div>`;
+    const listEl = document.getElementById('dm-list');
+    let convos = [];
+    try {
+      const res = await fetch('/api/dm/conversations');
+      const data = await res.json();
+      convos = (data && data.conversations) || [];
+    } catch(_){
+      listEl.innerHTML =
+        `<div class="dm-empty"><div class="dm-empty-ico">${icon('messageCircle',40)}</div>`+
+        `<div class="dm-empty-title">Couldn't load messages</div>`+
+        `<div class="dm-empty-sub">Check your connection and try again.</div></div>`;
+      return;
+    }
+    if(!convos.length){
+      listEl.innerHTML =
+        `<div class="dm-empty"><div class="dm-empty-ico">${icon('messageCircle',40)}</div>`+
+        `<div class="dm-empty-title">No messages yet</div>`+
+        `<div class="dm-empty-sub">When you message someone, your chats show up here.</div></div>`;
+      return;
+    }
+    listEl.innerHTML = convos.map(c => {
+      const name    = c.name || c.handle || 'User';
+      const unread  = Number(c.unread) || 0;
+      const handle  = c.handle ? '@'+String(c.handle).replace(/^@/,'') : '';
+      const lastCls = unread > 0 ? 'dm-row-last unread' : 'dm-row-last';
+      const aria    = unread > 0 ? `${name}, ${unread} unread` : name;
+      return `<div class="dm-row" role="button" tabindex="0" aria-label="${attr(aria)}" data-uid="${attr(c.user_id)}" `+
+        `data-name="${attr(name)}" data-handle="${attr(handle)}" data-avatar="${attr(c.avatar||'')}">`+
+        dmAvatarHTML(name, c.avatar, 'dm-avatar')+
+        `<div class="dm-row-body">`+
+          `<div class="dm-row-top"><span class="dm-row-name">${esc(name)}</span>`+
+            `<span class="dm-row-time">${esc(dmTimeAgo(c.last_at))}</span></div>`+
+          `<div class="dm-row-preview"><span class="${lastCls}">${esc(c.last_message||'')}</span>`+
+            (unread>0 ? `<span class="dm-badge">${unread>99?'99+':unread}</span>` : '')+
+          `</div>`+
+        `</div></div>`;
+    }).join('');
+    listEl.querySelectorAll('.dm-row').forEach(row => {
+      const open = () => {
+        dmPeer = {
+          user_id: row.dataset.uid,
+          name:    row.dataset.name,
+          handle:  row.dataset.handle,
+          avatar:  row.dataset.avatar || '',
+        };
+        renderDM();
+      };
+      row.addEventListener('click', open);
+      row.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+      });
+    });
+  }
+
+  async function renderDMThread(){
+    const root = document.getElementById('dm-outer');
+    if(!root || !dmPeer) return;
+    document.querySelector('nav')?.classList.add('conv-nav-hidden'); // composer needs the bottom space
+    const peerName = dmPeer.name || dmPeer.handle || 'User';
+    root.innerHTML =
+      `<div class="dm-head">`+
+        `<button class="dm-back" id="dm-back" aria-label="Back to messages">${icon('arrowLeft',20)}</button>`+
+        `<div><div class="dm-head-title">${esc(peerName)}</div>`+
+        (dmPeer.handle ? `<div class="dm-head-sub">${esc(dmPeer.handle)}</div>` : '')+`</div>`+
+      `</div>`+
+      `<div class="dm-thread" id="dm-thread"><div class="dm-empty">Loading…</div></div>`+
+      `<div class="dm-input-row">`+
+        `<input class="dm-input" id="dm-input" placeholder="Message…" dir="auto" autocomplete="off" />`+
+        `<button class="dm-send" id="dm-send" aria-label="Send">${icon('send',18)}</button>`+
+      `</div>`;
+
+    document.getElementById('dm-back').addEventListener('click', () => {
+      dmPeer = null; renderDM();
+    });
+
+    const input  = document.getElementById('dm-input');
+    const sendBtn = document.getElementById('dm-send');
+    const submit = () => dmSend(input);
+    sendBtn.addEventListener('click', submit);
+    input.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); submit(); }});
+
+    await loadDMThread();
+    input.focus();
+  }
+
+  async function loadDMThread(){
+    const threadEl = document.getElementById('dm-thread');
+    if(!threadEl || !dmPeer) return;
+    let messages = [];
+    try {
+      const res = await fetch('/api/dm/thread/'+encodeURIComponent(dmPeer.user_id));
+      const data = await res.json();
+      if(data && data.peer){
+        // refresh peer meta from the server (authoritative name/handle/avatar)
+        dmPeer.name   = data.peer.name   || dmPeer.name;
+        dmPeer.handle = data.peer.handle ? '@'+String(data.peer.handle).replace(/^@/,'') : dmPeer.handle;
+        dmPeer.avatar = data.peer.avatar || dmPeer.avatar;
+      }
+      messages = (data && data.messages) || [];
+    } catch(_){
+      threadEl.innerHTML =
+        `<div class="dm-empty"><div class="dm-empty-ico">${icon('messageCircle',40)}</div>`+
+        `<div class="dm-empty-title">Couldn't load this chat</div>`+
+        `<div class="dm-empty-sub">Check your connection and try again.</div></div>`;
+      return;
+    }
+    renderDMMessages(messages);
+  }
+
+  function renderDMMessages(messages){
+    const threadEl = document.getElementById('dm-thread');
+    if(!threadEl) return;
+    if(!messages.length){
+      threadEl.innerHTML =
+        `<div class="dm-empty"><div class="dm-empty-sub">No messages yet — say hi.</div></div>`;
+      return;
+    }
+    threadEl.innerHTML = messages.map((m, i) =>
+      dmBubbleHTML(m, messages[i-1], i === messages.length-1)).join('');
+    threadEl.scrollTop = threadEl.scrollHeight;
+  }
+
+  // 5-minute grouping threshold: bubbles within 5 min of the previous same-side
+  // bubble are visually grouped (tight gap, no per-bubble timestamp).
+  const DM_GROUP_MS = 5 * 60 * 1000;
+  function dmSameSide(a, b){
+    if(!a || !b) return false;
+    return (a.from === 'me' ? 'me' : 'them') === (b.from === 'me' ? 'me' : 'them');
+  }
+  function dmCloseInTime(a, b){
+    if(!a || !b) return false;
+    const ta = new Date(a.created_at).getTime(), tb = new Date(b.created_at).getTime();
+    if(isNaN(ta) || isNaN(tb)) return false;
+    return Math.abs(tb - ta) <= DM_GROUP_MS;
+  }
+
+  function dmBubbleHTML(m, prev, isLast){
+    // m.text is USER CONTENT — emoji here is legitimate; esc() guards XSS only.
+    const side = m.from === 'me' ? 'me' : 'them';
+    // grouped = same sender as the bubble directly above, within 5 min → tighten gap.
+    const grouped = dmSameSide(m, prev) && dmCloseInTime(m, prev);
+    // Show the timestamp only when the conversation "breaks" — a side change or a
+    // >5 min gap from the previous bubble — so the thread reads like a chat, not a log.
+    const showTime = !grouped;
+    const meta = isLast && side === 'me'
+      ? `<div class="dm-bubble-status">Sent</div>`
+      : (showTime ? `<div class="dm-bubble-time">${esc(dmTimeAgo(m.created_at))}</div>` : '');
+    return `<div class="dm-bubble-wrap ${side}${grouped ? ' grouped' : ''}">`+
+      `<div class="dm-bubble">${esc(m.text)}</div>`+meta+`</div>`;
+  }
+
+  async function dmSend(input){
+    if(dmSending || !dmPeer) return;
+    const text = (input.value || '').trim();
+    if(!text) return;
+    if(text.length > 2000){ showToast('Message is too long (max 2000)'); return; }
+    dmSending = true;
+    input.value = '';
+    // Optimistic append.
+    const threadEl = document.getElementById('dm-thread');
+    if(threadEl){
+      const empty = threadEl.querySelector('.dm-empty');
+      if(empty) threadEl.innerHTML = '';
+      // Derive "prev" from the bubble already at the bottom so grouping (same side,
+      // <5 min) is correct, and clear any stale "Sent" status that was on it.
+      const prevWrap = threadEl.querySelector('.dm-bubble-wrap:last-child');
+      let prev = null;
+      if(prevWrap){
+        prev = { from: prevWrap.classList.contains('me') ? 'me' : 'them', created_at: new Date().toISOString() };
+        const oldStatus = prevWrap.querySelector('.dm-bubble-status');
+        if(oldStatus) oldStatus.remove();
+      }
+      threadEl.insertAdjacentHTML('beforeend',
+        dmBubbleHTML({from:'me', text, created_at:new Date().toISOString()}, prev, true));
+      threadEl.scrollTop = threadEl.scrollHeight;
+    }
+    logAdminEvent('dm', 'Sent message to '+(dmPeer.name||dmPeer.user_id));
+    try {
+      const res = await fetch('/api/dm/send', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({to_user_id: dmPeer.user_id, text}),
+      });
+      if(res.status === 429){ showToast('Slow down — too many messages'); }
+      else if(!res.ok){ showToast("Couldn't send message"); }
+      // Refetch to reconcile optimistic bubble with server truth.
+      await loadDMThread();
+    } catch(_){
+      showToast("Couldn't send message");
+    } finally {
+      dmSending = false;
+      document.getElementById('dm-input')?.focus();
+    }
   }
 
   // ---- Explore / Search ----

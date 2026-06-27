@@ -959,6 +959,24 @@ def init_db() -> None:
                 created_at   TEXT NOT NULL
             )
         """)
+        # Direct messages between users. owner_key = the MG-005 user_key ("me").
+        # peer_id = the other party (a seed user id). direction: 'out' = me->peer,
+        # 'in' = peer->me. read = whether an inbound message has been seen by me.
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS dm_messages (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                owner_key  TEXT NOT NULL,
+                peer_id    TEXT NOT NULL,
+                direction  TEXT NOT NULL,
+                text       TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                read       INTEGER NOT NULL DEFAULT 0
+            )
+        """)
+        conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_dm_owner_peer_created
+            ON dm_messages (owner_key, peer_id, created_at)
+        """)
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 
@@ -3027,6 +3045,254 @@ async def get_wallet(request: Request):
     balance = round(sum(r["amount_usd"] for r in rows), 2)
     logger.info("wallet: user=%s balance=%.2f credits=%d", user_key, balance, len(credits))
     return {"balance": balance, "credits": credits}
+
+
+# ---------------------------------------------------------------------------
+# Direct Messages (DM) between users — real user-to-user messaging.
+# "me" = MG-005 user_key. "them" = a seed user id (peer_id). Stored in SQLite
+# (dm_messages). NOTE: this is NOT the AI Stylist chat (/api/stylist/chat) — that
+# endpoint stays untouched.
+# ---------------------------------------------------------------------------
+
+class DMSendRequest(BaseModel):
+    to_user_id: str
+    text: str
+
+
+def _dm_peer_profile(peer_id: str) -> dict:
+    """Resolve peer display metadata from _profiles_cache, with a safe fallback."""
+    prof = next((p for p in _profiles_cache if p.get("id") == peer_id), None)
+    if prof:
+        return {
+            "user_id": peer_id,
+            "name": prof.get("display_name") or prof.get("username") or peer_id,
+            "handle": "@" + (prof.get("username") or peer_id),
+            "avatar": prof.get("avatar_url", ""),
+        }
+    # Fallback for any peer not in the profiles fixture.
+    return {
+        "user_id": peer_id,
+        "name": peer_id,
+        "handle": "@" + peer_id,
+        "avatar": "",
+    }
+
+
+# Seed conversations: (peer_id, [ (direction, text, minutes_ago), ... ]).
+# Newest message in each thread is listed last (largest -> smallest minutes_ago).
+_DM_SEED = [
+    ("user_011", [
+        ("in",  "hey! would you be up for a little styling collab?", 60),
+        ("out", "ooh yes — what did you have in mind?", 52),
+        ("in",  "thinking a shared autumn capsule, 10 pieces each", 48),
+        ("in",  "i can send a moodboard tonight if you're in 🤍", 12),
+    ]),
+    ("user_004", [
+        ("in",  "obsessed with the monochrome look you posted yesterday", 2880),
+        ("out", "thank you!! took me three tries to get the proportions right", 2875),
+        ("in",  "where's the oversized blazer from? need it", 2870),
+        ("out", "thrifted it in florentin, no label sadly", 2860),
+        ("in",  "still thinking about it btw 😅", 35),
+    ]),
+    ("user_009", [
+        ("in",  "your boho layering in the last reel was unreal", 240),
+        ("out", "you're so sweet 🥹 it's all about the textures honestly", 180),
+        ("in",  "drop the crochet vest source pls i'm begging", 150),
+    ]),
+    ("user_005", [
+        ("out", "hey! is the beige trench still up for sale?", 1500),
+        ("in",  "it is! size M, barely worn. want more pics?", 1440),
+        ("out", "yes please, and would you do 220?", 1435),
+        ("in",  "let's do 240 and i'll throw in the belt", 1420),
+    ]),
+    ("user_002", [
+        ("out", "is the vintage market in jaffa open on fridays?", 1440),
+        ("in",  "yes til 2pm! go early, the good stuff goes fast", 1420),
+        ("out", "amazing, thank you 🙏", 1415),
+    ]),
+    ("user_001", [
+        ("in",  "are you going to the thrift swap this weekend?", 600),
+        ("out", "planning to! bringing two bags to trade", 560),
+        ("in",  "perfect, let's meet at the entrance at 11", 540),
+    ]),
+    ("user_006", [
+        ("in",  "what sneakers are those in your gym fit?", 720),
+        ("out", "the low-top sambas! comfiest thing i own", 700),
+    ]),
+    ("user_003", [
+        ("in",  "your capsule breakdown saved me so much closet space", 4320),
+        ("out", "that's the dream! what did you end up cutting?", 4200),
+        ("in",  "like 30 pieces 😭 felt amazing tbh", 4100),
+    ]),
+]
+
+
+def _seed_dm_for_owner(owner_key: str) -> None:
+    """Idempotently seed demo conversations for an owner_key with no DM history."""
+    now = datetime.datetime.utcnow()
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM dm_messages WHERE owner_key = ? LIMIT 1", (owner_key,)
+        ).fetchone()
+        if existing:
+            return
+        for peer_id, msgs in _DM_SEED:
+            # An inbound message is "read" if I replied after it (any later outbound in
+            # the thread); only inbound messages after my last reply stay unread — so a
+            # conversation where I sent the last message shows no false unread badge.
+            last_out_idx = max((i for i, m in enumerate(msgs) if m[0] == "out"), default=-1)
+            for idx, (direction, text, minutes_ago) in enumerate(msgs):
+                created_at = (now - datetime.timedelta(minutes=minutes_ago)).isoformat()
+                read = 0 if (direction == "in" and idx > last_out_idx) else 1
+                db.execute(
+                    """INSERT INTO dm_messages
+                       (owner_key, peer_id, direction, text, created_at, read)
+                       VALUES (?, ?, ?, ?, ?, ?)""",
+                    (owner_key, peer_id, direction, text, created_at, read),
+                )
+        db.commit()
+    logger.info("dm_seed: seeded %d conversations for owner=%s", len(_DM_SEED), owner_key)
+
+
+def _dm_demo_conversations() -> dict:
+    """In-memory demo payload used only if the DB layer fails (never returns 500)."""
+    now = datetime.datetime.utcnow()
+    convos = []
+    for peer_id, msgs in _DM_SEED:
+        last_dir, last_text, last_min = msgs[-1]
+        peer = _dm_peer_profile(peer_id)
+        convos.append({
+            "user_id": peer["user_id"],
+            "name": peer["name"],
+            "handle": peer["handle"],
+            "avatar": peer["avatar"],
+            "last_message": last_text,
+            "last_at": (now - datetime.timedelta(minutes=last_min)).isoformat(),
+            "unread": sum(1 for d, _, _ in msgs if d == "in"),
+        })
+    convos.sort(key=lambda c: c["last_at"], reverse=True)
+    return {"conversations": convos}
+
+
+@app.get("/api/dm/conversations")
+async def dm_conversations(request: Request):
+    """List the current user's DM threads, newest activity first."""
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "dm_conversations", 60):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+    try:
+        _seed_dm_for_owner(user_key)
+        with _get_db() as db:
+            rows = db.execute(
+                """SELECT peer_id,
+                          COUNT(*)                                          AS total,
+                          SUM(CASE WHEN direction='in' AND read=0 THEN 1 ELSE 0 END) AS unread
+                   FROM dm_messages
+                   WHERE owner_key = ?
+                   GROUP BY peer_id""",
+                (user_key,),
+            ).fetchall()
+            convos = []
+            for r in rows:
+                last = db.execute(
+                    """SELECT text, created_at FROM dm_messages
+                       WHERE owner_key = ? AND peer_id = ?
+                       ORDER BY created_at DESC LIMIT 1""",
+                    (user_key, r["peer_id"]),
+                ).fetchone()
+                peer = _dm_peer_profile(r["peer_id"])
+                convos.append({
+                    "user_id": peer["user_id"],
+                    "name": peer["name"],
+                    "handle": peer["handle"],
+                    "avatar": peer["avatar"],
+                    "last_message": last["text"] if last else "",
+                    "last_at": last["created_at"] if last else "",
+                    "unread": int(r["unread"] or 0),
+                })
+        convos.sort(key=lambda c: c["last_at"], reverse=True)
+        return {"conversations": convos}
+    except Exception as e:
+        logger.error("dm_conversations DB error, serving demo fallback: %s", e)
+        return _dm_demo_conversations()
+
+
+@app.get("/api/dm/thread/{user_id}")
+async def dm_thread(user_id: str, request: Request):
+    """Return one conversation's messages (oldest first) and mark inbound as read."""
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "dm_thread", 120):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 120 requests/minute.")
+    peer = _dm_peer_profile(user_id)
+    try:
+        _seed_dm_for_owner(user_key)
+        with _get_db() as db:
+            rows = db.execute(
+                """SELECT id, direction, text, created_at FROM dm_messages
+                   WHERE owner_key = ? AND peer_id = ?
+                   ORDER BY created_at ASC, id ASC""",
+                (user_key, user_id),
+            ).fetchall()
+            # Mark this peer's inbound messages as read now that the thread is open.
+            db.execute(
+                "UPDATE dm_messages SET read = 1 WHERE owner_key = ? AND peer_id = ? AND direction = 'in'",
+                (user_key, user_id),
+            )
+            db.commit()
+        messages = [
+            {
+                "id": r["id"],
+                "from": "me" if r["direction"] == "out" else "them",
+                "text": r["text"],
+                "created_at": r["created_at"],
+            }
+            for r in rows
+        ]
+        return {"peer": peer, "messages": messages}
+    except Exception as e:
+        logger.error("dm_thread DB error, serving demo fallback: %s", e)
+        now = datetime.datetime.utcnow()
+        seed = next((m for pid, m in _DM_SEED if pid == user_id), [])
+        messages = [
+            {
+                "id": idx + 1,
+                "from": "me" if direction == "out" else "them",
+                "text": text,
+                "created_at": (now - datetime.timedelta(minutes=minutes_ago)).isoformat(),
+            }
+            for idx, (direction, text, minutes_ago) in enumerate(seed)
+        ]
+        return {"peer": peer, "messages": messages}
+
+
+@app.post("/api/dm/send")
+async def dm_send(payload: DMSendRequest, request: Request):
+    """Send a message from the current user to a peer. Persists to SQLite."""
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "dm_send", 30):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    to_user_id = (payload.to_user_id or "").strip()
+    text = (payload.text or "").strip()
+    if not to_user_id:
+        raise HTTPException(status_code=400, detail="to_user_id required")
+    if not text:
+        raise HTTPException(status_code=400, detail="text required")
+    if len(text) > 2000:
+        raise HTTPException(status_code=400, detail="text too long — max 2000 chars")
+
+    created_at = datetime.datetime.utcnow().isoformat()
+    with _get_db() as db:
+        cur = db.execute(
+            """INSERT INTO dm_messages
+               (owner_key, peer_id, direction, text, created_at, read)
+               VALUES (?, ?, 'out', ?, ?, 1)""",
+            (user_key, to_user_id, text, created_at),
+        )
+        db.commit()
+        new_id = cur.lastrowid
+    logger.info("dm_send: owner=%s peer=%s id=%s", user_key, to_user_id, new_id)
+    return {"id": new_id, "created_at": created_at}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
