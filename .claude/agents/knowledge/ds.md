@@ -1,40 +1,5 @@
-# learnings — AWEAR agents
-> קרא רק את הסעיפים הרלוונטיים לתפקידך.
-
-## ○ ORG-WIDE — כל סוכן קורא את זה, ללא יוצא מן הכלל
-
-### OW-001 | rename = 3 שכבות, לא 1
-**מקור:** price_estimate_ils → usd incident (2026-06-18), חזר כממצא audit (2026-06-19)
-**לקח:** כל שינוי שם שדה/endpoint חייב לכסות: backend (app.py) + frontend (index.html) + mobile (mobile/). fix שמכסה שכבה אחת ייראה סגור ויחזור.
-**מנגנון:** לפני merge — grep על השם הישן ב-3 המקומות. תוצאות ה-grep ב-PR description.
-
-### OW-002 | "הושלם" ≠ "נבדק"
-**מקור:** shira_retrospective + dana_retrospective (2026-06-19)
-**לקח:** קוד שקיים ≠ feature שעובד. "moderation exists in code" — לא נבדק חיה עם curl. "CameraScreen exists" — capturedPrimaryButton ללא onPress. הכרזה על "הושלם" ללא ריצה בפועל = הצהרה שקרית.
-**מנגנון:** definition-of-done מפורש בכל dispatch. לפחות: curl / Metro bundle / Playwright — לפי סוג הfeature.
-
-### OW-003 | תיאום לפני עבודה על קבצים משותפים
-**מקור:** oren_retrospective — conflict עם דולצ'ה ב-Compare picker (2026-06-19)
-**לקח:** conflict בין אורן ודולצ'ה על אותה שורה ב-index.html — נמנע בקריאה אחת של activity_log.md לפני dispatch.
-**מנגנון:** לפני כל עבודה על `static/index.html` / `app.py` / `mobile/App.js` — קרא `agents/activity_log.md`. אם יש overlap — תאם טווח שורות לפני שמתחיל.
-
-### OW-004 | פער בין "יודע שהכלי קיים" לבין "מפעיל אותו"
-**מקור:** varan_retrospective + sam_retrospective (2026-06-19)
-**לקח:** backend-rename-safety קיים בגלל ₪/$. לא הופעל. stall-escalation מוגדר. לא הופעל. learnings.md לא היה קיים אף שנזכר בinstructions. הפער הוא לא "לא ידעתי" — הפער הוא בין רשימה לפעולה.
-**מנגנון:** כל סוכן: בתחילת task — קרא סעיף הסקילים שלך ושאל "האם מישהו מהם רלוונטי כעת?"
-
-### OW-005 | תשתית שקיימת ≠ תשתית שבשימוש
-**מקור:** netta_retrospective (2026-06-19) — 402 שורות font-size hardcoded; token system כמעט לא בשימוש
-**לקח:** tokens.css קיים. awear-tokens.json קיים. 402 שורות font-size hardcoded בindex.html, 226 hex values. "יש לנו design system" ≠ "אנחנו משתמשים בו". כל תשתית — דורשת grep לפני דיווח "coverage".
-**מנגנון:** כל cycle — `grep -c "var(--t-" static/index.html`. תעד את המספר. המספר צריך לעלות.
-
-### OW-006 | כלל ללא מנגנון אכיפה = המלצה
-**מקור:** mark_retrospective (2026-06-19) — Iron Rule נכתב ב-18.06, עוקף ב-18.06
-**לקח:** כלל שנכתב ב-CLAUDE.md ולא משנה workflow בפועל הוא הצהרה. כל כלל חייב: (1) מי אוכף, (2) מתי נבדק, (3) מה קורה כשמופר.
-**מנגנון:** לפני Board Sync — כל מנהל בודק: "כל כלל ברזל שכתבתי — יושם בcycle שעבר?"
-
----
-
+# knowledge/ds.md — Design System
+> **קרא גם:** [[OW.md]] (OW-001..OW-006 — Org-Wide Iron Rules, single source of truth)
 
 ## ○ DESIGN SYSTEM — נטה, דולצ'ה, גבאנה
 
@@ -117,3 +82,13 @@
 
 ---
 
+### DS-016 | פריט שנקנה/נסרק חייב לשאת image_url עד הארון
+**מקור:** A3/A6 demo-image fix (2026-06-25)
+**לקח:** `_productImgUrl(it)` ב-static/index.html נופל ל-`loremflickr.com` (תמונות Flickr אקראיות) כשאין `it.image_url`. כל מקום שמוסיף פריט לארון (handleCheckout/handleLookCheckout, scan, wishlist) חייב להעתיק `image_url` (ו-`brand_vibe`/`brand`, `id`) מהמקור — אחרת מיד אחרי "קניתי" רגע ה-demo המרכזי מציג תמונה אקראית במקום ה-catalog image שהמשתמשת ראתה. זה שובר את L1 ("clean catalog image") בלי console error.
+**מנגנון:** בכל `w.unshift({...})` שמוסיף פריט נרכש/נסרק — כלול `image_url:it.image_url||''`. grep: `grep -n "w.unshift" static/index.html` ובדוק שכל אחד נושא image_url.
+
+
+### DS-017 | כל avatar img חיצוני חייב onerror fallback — לא רק product images
+**מקור:** A6 demo reliability — avatar fallback (2026-06-26)
+**לקח:** imgFallback() כיסה רק product images (productImage()). 4 avatar imgs (feed card, peopleCard x2, user profile) נטענו ישירות מ-randomuser.me בלי onerror — אם ה-CDN חסום/איטי בדמו החי, כל avatar הופך ל-broken-image glyph. avatar שבור בפיד = בדיוק ההפך מ"התמונה היא הכוכב".
+**מנגנון:** קיים avatarFallback(img) (ליד imgFallback) שמחליף את ה-img ב-.avatar-fallback (עיגול ראשי-תיבות על gradient accent->accent2, מראה את .up-avatar-initials המאושר). כל <img> של avatar חייב data-name="${attr(name)}" + onerror="this.onerror=null;avatarFallback(this)". grep אכיפה: grep -nE "<img[^>]*(avatar|randomuser|portraits)" static/index.html — כל תוצאה חייבת avatarFallback. ל-img עם width:100% ה-helper נופל ל-parentElement.offsetWidth כדי לא לטעות בגודל העיגול.

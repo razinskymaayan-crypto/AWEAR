@@ -36,15 +36,17 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 | Token mirror (RN) | `mobile/theme/tokens.js` (imports from `awear-tokens.json`) |
 | **Master plan (תוכנית אב)** | `.claude/master/MASTER_PLAN.md` ← read this first |
 | Design master plan | `docs/VISUAL_VISION.md` ← single source of truth |
-| Domain knowledge | `.claude/agents/knowledge/ds.md` / `be.md` / `mb.md` / `sf.md` / `mg.md` |
+| **Knowledge INDEX** | `.claude/agents/knowledge/INDEX.md` ← כל קודי הלמידה במקום אחד |
+| Domain knowledge | `.claude/agents/knowledge/OW.md` (org-wide) + `ds.md` / `be.md` / `mb.md` / `sf.md` / `mg.md` |
 | Research index | `.claude/agents/knowledge/research.md` — check before doing any research |
+| **Plans INDEX** | `.claude/agents/plans/INDEX.md` ← כל הplans עם status |
 | Activity log | `.claude/agents/activity_log.md` (last 20 entries — check for concurrent file edits) |
 | Specs / plans | `.claude/agents/plans/` |
 | Archive log | `.claude/agents/activity_log_archive.md` |
 
 ## Before starting — 3 steps, always
 1. **Check** `.claude/agents/activity_log.md` last 5 entries — is anyone else editing the same file?
-2. **Read** `.claude/agents/knowledge/[your-domain].md` — `ds` / `be` / `mb` / `sf` / `mg`
+2. **Read** `.claude/agents/knowledge/OW.md` (all agents) + your domain file (`ds` / `be` / `mb` / `sf` / `mg`) — or grep `INDEX.md` for your specific learning code
 3. **Grep before Read** — for large files (`index.html`, `app.py`), grep the target first, then read only the relevant lines with `offset`+`limit`
 
 ## Editing discipline
@@ -77,3 +79,35 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 ```
 | YYYY-MM-DD | agent | branch/file | status | short description |
 ```
+
+## Role Quick-Start (grep your role — load only what's relevant)
+
+### DESIGN — דולצ'ה, נטה, גבאנה
+- קרא: `knowledge/OW.md` + `knowledge/ds.md` + `docs/VISUAL_VISION.md`
+- Scope: `static/tokens.css`, `static/index.html` (CSS + HTML בלבד)
+- Gate: self-check P0 (DS-002) → גבאנה audit → code-reviewer skill → Playwright
+- Iron Rules: DS-004 (var fallback), DS-006 (icon(), לא emoji), DS-008 (icon() = JS templates only), DS-009 (לא font-size על image containers)
+
+### BACKEND — סאם, אורן
+- קרא: `knowledge/OW.md` + `knowledge/be.md` + `docs/BACKEND_ARCHITECTURE.md`
+- Scope: `app.py`, `schema.sql`, `data/`
+- Gate: MG-005 pattern + rate limit + SQLite (לא in-memory) + curl test
+- Iron Rules: BE-003 (Sam=schema, Oren=integration), BE-004/BE-005 (SQLite מיום 1), OW-001 (rename=3 שכבות)
+
+### MOBILE — דנה, רועי (וראן — כיוון בלבד, לא קוד)
+- קרא: `knowledge/OW.md` + `knowledge/mb.md`
+- Scope: `mobile/` בלבד
+- Gate: Metro bundle + `minHeight: 44` + `var(token)` + `t()` לtranslations
+- Iron Rules: MB-001 (stall = וראן מפעיל), MB-002 (navigation+state לפני dispatch), OW-003 (תיאום לפני mobile/App.js)
+
+### MANAGEMENT — ג'ף, סטיב, איילון, מארק, וראן
+- קרא: `knowledge/OW.md` + `knowledge/mg.md` + `.claude/master/MASTER_PLAN.md`
+- Scope: cross-cutting decisions — לא ביצוע קוד ישיר
+- Gate: CE-001 (שאלת פתיחה) + scope report בפורמט PR-001
+- Iron Rules: MG-002 (dispatch דרך מנהל, לא skip), MG-006 (State A vs B מתועד)
+
+### SOCIAL — שירה
+- קרא: `knowledge/OW.md` + `knowledge/sf.md`
+- Scope: social features (comments, moderation, block/report, reactions)
+- Gate: SF-001 (thresholds = איילון) + SF-002 (curl test חובה) + SF-003 (API key check)
+- **P0 פתוח:** ANTHROPIC_API_KEY חסר = moderation fail-open. לא לdeploy ללא זה.

@@ -16,10 +16,10 @@
   --card-hover:    #262030;
   --line:          #2e2836;
   --fg:            #f0ecf5;
-  --muted:         #8a8498;
+  --muted:         #9e99ad;
   --success:         #52c97a;
   --success-dark:    #22c55e;  /* for gradients/hover */
-  --success-surface: rgba(82,201,122,.12);
+  --success-surface: color-mix(in srgb, var(--success) 12%, transparent);
   --warning:       #e8a84a;
   --danger:        #e05252;
   --overlay:       rgba(14,12,15,0.80);
@@ -32,7 +32,7 @@
   --grad-primary:  linear-gradient(135deg, #e8526a, #c4855a);
   --grad-secondary:linear-gradient(135deg, #c4855a, #7a6af0);
   --grad-success:  linear-gradient(135deg, #52c97a, #3db8b8);
-  --grad-shine:    linear-gradient(160deg, rgba(232,82,106,.12), rgba(196,133,90,.08));
+  --grad-shine:    linear-gradient(160deg, color-mix(in srgb, var(--accent) 12%, transparent), color-mix(in srgb, var(--accent2) 8%, transparent));
 
   /* ── Spacing — 8pt grid ──────────────────────────────── */
   /* Primary tokens: --sp-{px-value} */
@@ -98,14 +98,20 @@
   --shadow-sm:     0 1px 4px rgba(0,0,0,.24);
   --shadow-md:     0 2px 16px rgba(0,0,0,.32);
   --shadow-lg:     0 8px 32px rgba(0,0,0,.40);
-  --shadow-accent: 0 4px 20px rgba(232,82,106,.32);
-  --shadow-glow:   0 0 20px rgba(232,82,106,.45);
+  --shadow-accent: 0 4px 20px color-mix(in srgb, var(--accent) 32%, transparent);
+  --shadow-glow:   0 0 20px color-mix(in srgb, var(--accent) 45%, transparent);
 
   /* ── Motion ───────────────────────────────────────────── */
   --motion-fast:   150ms ease;
   --motion-normal: 250ms ease;
   --motion-slow:   400ms ease;
   --motion-spring: 350ms cubic-bezier(0.34,1.56,0.64,1);
+
+  /* ── Data Visualization (DS-010) ─────────────────────── */
+  --chart-bar-height:    8px;
+  --chart-bar-height-lg: 12px;
+  --swatch-size:        36px;
+  --progress-track:     var(--line, #2e2836);
 
   /* ── Z-index ──────────────────────────────────────────── */
   --z-base:   1;
@@ -114,6 +120,59 @@
   --z-modal:  200;
   --z-toast:  300;
   --z-sheet:  400;
+}
+
+/* ── Light Mode — Premium Editorial Light (Founder override 2026-06-21) ───── */
+/* Board decision: Light + Dark auto per device. Source: docs/VISUAL_VISION.md v2 */
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Backgrounds — warm off-white canvas */
+    --bg:        #FAF9F7;
+    --bg2:       #FFFFFF;
+    --surface:   #F3F1EC;
+    --card:      #FFFFFF;
+    --card-hover:#F5F3EE;
+
+    /* Text */
+    --fg:        #14110F;
+    --text:      #14110F;
+    --muted:     #8A857E;
+
+    /* Structure */
+    --line:      #E9E5DF;
+    --overlay:   rgba(20,17,15,0.60);
+
+    /* Brand — editorial black as primary action (Zara/Farfetch model) */
+    --accent:    #14110F;
+    --accent2:   #3D3833;
+    --accent3:   #5B52D6;   /* purple stays, slightly deeper for contrast */
+    --hl:        #E84A5F;   /* brand highlight — used sparingly (like, brand badge) */
+
+    /* Status (keep vivid for clear signal) */
+    --success:         #1A9E52;
+    --success-dark:    #16854A;
+    --success-surface: color-mix(in srgb, #1A9E52 10%, transparent);
+    --warning:         #B8700A;
+    --danger:          #C23636;
+
+    /* Gradients — editorial warm-dark on light surface */
+    --grad-primary:   linear-gradient(135deg, #14110F, #3D3833);
+    --grad-secondary: linear-gradient(135deg, #3D3833, #5B52D6);
+    --grad-success:   linear-gradient(135deg, #1A9E52, #0D7A7A);
+    --grad-shine:     linear-gradient(160deg,
+                        color-mix(in srgb, #14110F 6%, transparent),
+                        color-mix(in srgb, #3D3833 4%, transparent));
+
+    /* Shadows — lighter for light surfaces */
+    --shadow-sm:     0 1px 4px  rgba(20,17,15,.08);
+    --shadow-md:     0 2px 16px rgba(20,17,15,.12);
+    --shadow-lg:     0 8px 32px rgba(20,17,15,.16);
+    --shadow-accent: 0 4px 20px color-mix(in srgb, #14110F 16%, transparent);
+    --shadow-glow:   0 0 20px   color-mix(in srgb, #E84A5F 30%, transparent);
+
+    /* Data viz — match chart track to new line token */
+    --progress-track: var(--line, #E9E5DF);
+  }
 }
 
 /* RTL font override */

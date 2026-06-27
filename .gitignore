@@ -26,5 +26,12 @@ agents/data/dashboard_data.json
 # Local tools — binaries, not source
 tools/
 
+# graphify knowledge-graph output (generated locally)
+graphify-out/
+
+# Node / Capacitor (generated; ios/ is regenerable via `npx cap add ios`)
+node_modules/
+ios/
+
 # OS
 .DS_Store

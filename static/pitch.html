@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>AWEAR — Investor Deck</title>
+<style>
+  :root{
+    --bg:#0e0c0f; --surface:#161318; --card:#1e1a22; --line:#2e2836;
+    --fg:#f0ecf5; --muted:#8a8498;
+    --accent:#e8526a; --accent2:#c4855a; --accent3:#7a6af0;
+    --success:#52c97a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,"Heebo","Inter",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;overflow:hidden}
+
+  .deck{height:100dvh;width:100vw;position:relative}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;
+    padding:48px 32px 80px;overflow-y:auto;
+    animation:fade .4s ease}
+  .slide.active{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .kicker{font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    color:var(--accent);margin-bottom:14px}
+  h1{font-size:30px;line-height:1.15;font-weight:900;margin-bottom:18px;letter-spacing:-.5px}
+  .punch{font-size:17px;line-height:1.5;color:var(--accent2);font-weight:700;
+    margin-bottom:22px;font-style:italic}
+  ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+  li{font-size:15px;line-height:1.5;padding-right:18px;position:relative;color:var(--fg)}
+  li::before{content:"";position:absolute;right:0;top:9px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent)}
+  li b{color:var(--fg);font-weight:900}
+  .note{margin-top:auto;padding-top:18px;font-size:12px;color:var(--muted);
+    line-height:1.5;border-top:1px solid var(--line);margin-top:24px}
+
+  table{border-collapse:collapse;width:100%;margin-top:8px}
+  td,th{padding:10px 12px;border-bottom:1px solid var(--line);font-size:14px;text-align:right}
+  th{color:var(--muted);font-weight:800;font-size:12px;text-transform:uppercase}
+  td b{color:var(--accent);font-weight:900}
+
+  .ladder{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px}
+  .step .s-t{font-weight:900;font-size:15px;margin-bottom:3px}
+  .step .s-d{font-size:13px;color:var(--muted);line-height:1.45}
+
+  /* Title slide */
+  .title-slide{align-items:center;justify-content:center;text-align:center}
+  .logo{font-size:46px;font-weight:900;letter-spacing:3px;
+    background:linear-gradient(120deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    margin-bottom:16px}
+  .tagline{font-size:18px;color:var(--fg);font-weight:700;line-height:1.5;max-width:420px}
+  .sub{font-size:13px;color:var(--muted);margin-top:24px}
+
+  /* nav */
+  .nav{position:fixed;bottom:0;left:0;right:0;height:64px;display:flex;align-items:center;
+    justify-content:space-between;padding:0 20px;
+    background:linear-gradient(0deg,var(--bg) 40%,transparent);z-index:10}
+  .nav button{background:var(--card);border:1px solid var(--line);color:var(--fg);
+    width:48px;height:48px;border-radius:50%;font-size:20px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-family:inherit}
+  .nav button:active{transform:scale(.9)}
+  .nav button:disabled{opacity:.3}
+  .dots{display:flex;gap:7px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:all .2s}
+  .dot.on{background:var(--accent);width:20px;border-radius:4px}
+  .counter{position:fixed;top:18px;left:24px;font-size:12px;color:var(--muted);
+    font-weight:800;z-index:10}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- 0 Title -->
+  <section class="slide title-slide active">
+    <div class="logo">AWEAR</div>
+    <div class="tagline">The wardrobe is the profile.<br>Fashion is identity.</div>
+    <div class="sub">Investor Deck · 2026 · Carmel + Maayan</div>
+  </section>
+
+  <!-- 1 Problem -->
+  <section class="slide">
+    <div class="kicker">01 · הבעיה</div>
+    <h1>ארון מלא ואין מה ללבוש</h1>
+    <div class="punch">Gen-Z כבר מתעדת כל תלבושת — אבל החוויה שבורה.</div>
+    <ul>
+      <li>"נועה", בת 17, מוציאה ~$250 בחודש על בגדים ו<b>כבר מצלמת</b> תלבושות לפני שהיא יוצאת.</li>
+      <li>רואה לוק בטיקטוק → לא יודעת מאיפה הפריט.</li>
+      <li>חצי מהארון לא נלבש — ואין לה מושג מה יש לה.</li>
+      <li>אין מקום אחד שמחבר <b>השראה → ארון אישי → קנייה/מכירה</b>.</li>
+    </ul>
+    <div class="note">היא כבר עושה את העבודה הקשה — מתעדת. אף אחד לא נתן לזה בית.</div>
+  </section>
+
+  <!-- 2 Solution -->
+  <section class="slide">
+    <div class="kicker">02 · הפתרון</div>
+    <h1>הארון הוא הפרופיל</h1>
+    <div class="punch">צילום תלבושת → AI מזהה כל פריט → הארון הופך לפיד חי שאפשר לקנות ממנו.</div>
+    <ul>
+      <li><b>Closet = Profile</b> — מדפי קטגוריה, כל פריט = clean catalog image.</li>
+      <li><b>Shop-the-Look</b> — קנייה in-app, בלי לעזוב את האפליקציה.</li>
+      <li><b>Resale</b> — AI מציע מה למכור (50% מהמחיר) לפי usage נמוך.</li>
+      <li><b>AI Stylist</b> — "מה ללבוש" לפי event + עונה, stats, streaks.</li>
+      <li><b>Social Feed</b> — TikTok-style, looks שאפשר לקנות.</li>
+    </ul>
+    <div class="note">"The wardrobe is the profile. Fashion is identity."</div>
+  </section>
+
+  <!-- 3 Advantage -->
+  <section class="slide">
+    <div class="kicker">03 · היתרון הלא-הוגן</div>
+    <h1>חברה אגנטית</h1>
+    <div class="punch">מה שדורש $2M ו-10 אנשים — אנחנו עושים ב-$80K + 2 מייסדות + צוות אייג'נטים.</div>
+    <ul>
+      <li><b>Moat #1 — גרף ידע מצטבר:</b> ככל שמצלמת יותר → המלצות מדויקות יותר → switching cost עולה.</li>
+      <li><b>Moat #2 — חברה אגנטית:</b> השכבה התפעולית היא אייג'נטים. העלות לא גדלה לינארית.</li>
+      <li><b>0 עובדים</b> ל-12 חודשים — הכסף הולך למוצר, לא ל-payroll.</li>
+      <li>האייג'נטים מבצעים ומייעצים — <b>המייסדות מחליטות</b>.</li>
+    </ul>
+    <div class="note">ה-"wow" של המשקיע: ה-deck וה-app עצמם נבנו ע"י הצוות האגנטי.</div>
+  </section>
+
+  <!-- 4 Market -->
+  <section class="slide">
+    <div class="kicker">04 · השוק</div>
+    <h1>Fashion social + resale + stylist AI</h1>
+    <div class="punch">Global, English-first, ישראל כ-beachhead.</div>
+    <ul>
+      <li>קהל: גיל 16–50, כל העולם. <b>Persona: נועה, 17, מרכז ישראל.</b></li>
+      <li>שלוש קטגוריות מתכנסות לאפליקציה אחת: fashion social · resale · AI stylist.</li>
+      <li><b>Beachhead:</b> מיקרו-אינפלואנסריות ישראליות + build-in-public → CAC אורגני נמוך.</li>
+      <li>References: Instagram · Pinterest · Zara. <b>לא</b> TikTok/Depop/Farfetch.</li>
+    </ul>
+    <div class="note">להתחיל צר (נועה + ישראל), path ל-global דרך English-first מהיום הראשון.</div>
+  </section>
+
+  <!-- 5 Model -->
+  <section class="slide">
+    <div class="kicker">05 · מודל עסקי</div>
+    <h1>מרוויחים מהיום הראשון</h1>
+    <div class="punch">חוקי, מיידי, ללא תלות במותג.</div>
+    <div class="ladder">
+      <div class="step"><div class="s-t">שלב 1 — Affiliate (מהיום)</div><div class="s-d">AWIN/Rakuten/CJ · עמלה 5–15% · אפס מלאי. שורה אחת בקוד = כל כפתור "קני" מכניס כסף.</div></div>
+      <div class="step"><div class="s-t">שלב 2 — Dropshipping (בסקייל)</div><div class="s-d">ספקים + מותגי D2C ישראלים.</div></div>
+      <div class="step"><div class="s-t">שלב 3 — Full (post-PMF)</div><div class="s-d">רק אחרי 1,000+ active ו-purchase intent מוכח.</div></div>
+    </div>
+    <div class="note">Resale: עמלה 15%. Creator Credits: משפיען מזוכה 5% מכל קנייה דרך הפוסט שלו.</div>
+  </section>
+
+  <!-- 6 Traction -->
+  <section class="slide">
+    <div class="kicker">06 · תחזית · Unit Economics</div>
+    <h1>LTV/CAC &gt; 4x</h1>
+    <div class="punch">המספר שמבדיל אפליקציה מעסק.</div>
+    <table>
+      <tr><th>מטריקה</th><th>ערך</th></tr>
+      <tr><td>Contribution / משתמשת / חודש</td><td>~$11</td></tr>
+      <tr><td>Gross margin</td><td>~85%</td></tr>
+      <tr><td>CAC (אורגני)</td><td>$3–7</td></tr>
+      <tr><td>LTV/CAC</td><td><b>&gt;4x</b></td></tr>
+    </table>
+    <ul style="margin-top:16px">
+      <li><b>M6:</b> ~2,100 משתמשות · ~$9K monthly</li>
+      <li><b>M12:</b> ~7,000 · ~$31K monthly</li>
+      <li><b>M18:</b> ~$800K ARR</li>
+    </ul>
+    <div class="note">Target 90 יום: app חי + 500 בטא · D30 retention &gt; 25% · רכישות affiliate ראשונות.</div>
+  </section>
+
+  <!-- 7 Ask -->
+  <section class="slide">
+    <div class="kicker">07 · הבקשה</div>
+    <h1>$70–80K → 12 חודשי runway</h1>
+    <div class="punch">להוכחת retention ו-purchase intent.</div>
+    <table>
+      <tr><th>סעיף</th><th>~12 חודשים</th></tr>
+      <tr><td>מחיית 2 מייסדות</td><td>~$36K</td></tr>
+      <tr><td>AI / Agents (API)</td><td>~$7K</td></tr>
+      <tr><td>Infra / Cloud</td><td>~$3K</td></tr>
+      <tr><td>שיווק / קרדיטים</td><td>~$18K</td></tr>
+      <tr><td>משפטי / תשלומים</td><td>~$5K</td></tr>
+      <tr><td>Buffer (15%)</td><td>~$10K</td></tr>
+    </table>
+    <div class="note">כסף ממשפחה → עסקה מקצועית עם נייר ועו"ד. זה מוריד סיכון, לא מעלה.</div>
+  </section>
+
+  <!-- 8 Demo -->
+  <section class="slide">
+    <div class="kicker">08 · דמו</div>
+    <h1>Live iPhone · פחות מ-5 דקות</h1>
+    <div class="punch">לא slides — האפליקציה עצמה, על iPhone אמיתי.</div>
+    <ul>
+      <li><b>Scan</b> לוק → AI מזהה פריטים → catalog images על המדפים.</li>
+      <li><b>AI Stylist</b> מציע אאוטפיט ל-event + עונה.</li>
+      <li><b>For You feed</b> — looks שאפשר לקנות.</li>
+      <li><b>Buy in-app</b> → "Order confirmed".</li>
+      <li><b>Item lands in closet</b>.</li>
+      <li><b>Creator Wallet</b> → המשפיען מזוכה (5%).</li>
+      <li><b>Bonus:</b> dashboard חי של הסוכנים = "built by agents".</li>
+    </ul>
+    <div class="note">אפס broken images, graceful offline. אם משהו נכשל — ממשיכים, הדמו תמיד מצליח.</div>
+  </section>
+
+</div>
+
+<div class="counter" id="counter">1 / 9</div>
+<div class="nav">
+  <button id="prev" aria-label="הקודם">‹</button>
+  <div class="dots" id="dots"></div>
+  <button id="next" aria-label="הבא">›</button>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const dotsWrap=document.getElementById('dots');
+  const counter=document.getElementById('counter');
+  const prev=document.getElementById('prev'), next=document.getElementById('next');
+  let i=0;
+  slides.forEach((_,n)=>{const d=document.createElement('div');d.className='dot'+(n===0?' on':'');dotsWrap.appendChild(d);});
+  const dots=[...document.querySelectorAll('.dot')];
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,n2)=>s.classList.toggle('active',n2===i));
+    dots.forEach((d,n2)=>d.classList.toggle('on',n2===i));
+    counter.textContent=(i+1)+' / '+slides.length;
+    prev.disabled=i===0; next.disabled=i===slides.length-1;
+  }
+  next.onclick=()=>go(i+1); prev.onclick=()=>go(i-1);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'||e.key===' ')go(i+1);
+    if(e.key==='ArrowRight')go(i-1);
+  });
+  // swipe (RTL: swipe left = next)
+  let x0=null;
+  document.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>50){ dx<0?go(i+1):go(i-1); }
+    x0=null;
+  },{passive:true});
+  go(0);
+</script>
+</body>
+</html>

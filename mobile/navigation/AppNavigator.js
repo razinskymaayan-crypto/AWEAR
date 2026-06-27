@@ -1,11 +1,11 @@
-// AppNavigator.js — skeleton. יאוכלס בCycle 2 כשReact Navigation יותקן.
-// לא לייבא כאן עדיין — ה-install יבוא עם Cycle 2 P0.
+// AppNavigator.js — skeleton. Will be populated in Cycle 2 when React Navigation is installed.
+// Do not import here yet — install will come with Cycle 2 P0.
 //
-// כשהזמן יגיע (P0):
+// When the time comes (P0):
 //   npm install @react-navigation/native @react-navigation/stack @react-navigation/bottom-tabs
 //   + peer deps: react-native-screens react-native-safe-area-context
 //
-// ואז: App.js מייבא NavigationContainer + AppNavigator במקום ה-shim.
+// Then: App.js imports NavigationContainer + AppNavigator instead of the shim.
 
 export const SCREENS = {
   Camera: 'Camera',

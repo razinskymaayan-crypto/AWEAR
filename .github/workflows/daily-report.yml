@@ -1,0 +1,47 @@
+name: AWEAR Daily Team Report
+
+# Sends a daily Telegram report (who worked, how much, on what + per-agent token estimate)
+# to the "Awear Alerts" group at 22:00 Israel time, year-round.
+#
+# GitHub cron is UTC-only and does not follow DST, so we fire at BOTH 19:00 UTC (summer,
+# IDT=UTC+3) and 20:00 UTC (winter, IST=UTC+2). scripts/daily_report.py self-gates on the
+# real Asia/Jerusalem time and only sends when it is actually 22:00 in Israel — so the
+# off-season trigger is a harmless no-op.
+
+on:
+  schedule:
+    - cron: '0 19 * * *'   # 22:00 Israel during summer (IDT)
+    - cron: '0 20 * * *'   # 22:00 Israel during winter (IST)
+  workflow_dispatch:        # manual test (set FORCE below to bypass the time gate)
+    inputs:
+      force:
+        description: 'Send now regardless of time (1 = yes)'
+        required: false
+        default: '0'
+
+concurrency:
+  group: awear-daily-report
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install matplotlib
+        continue-on-error: true
+        run: pip install matplotlib
+
+      - name: Send daily team report
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          FORCE_REPORT: ${{ github.event.inputs.force }}
+        run: python3 scripts/daily_report.py
