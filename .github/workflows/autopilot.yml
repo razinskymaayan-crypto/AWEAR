@@ -1,27 +1,95 @@
 name: AWEAR Autopilot
 
 # Runs the autonomous AWEAR engineer in GitHub's cloud — no local machine needed.
-# Cadence: every hour, 24/7 (no quiet hours — founder opted for max coverage).
-# If this ever eats into your own interactive quota in the evening, narrow the
-# schedule (e.g. skip 15:00-20:00 UTC) and we're back to quiet hours.
-
+#
+# CADENCE MODEL: a new run starts ~1 HOUR AFTER THE PREVIOUS RUN FINISHES — NOT on a fixed
+# wall-clock schedule. GitHub cron can only fire on the clock, so the cron below is just a cheap
+# HEARTBEAT that wakes the lightweight `gate` job. The gate starts a real run only when BOTH:
+#   (a) no other run is currently active, AND
+#   (b) >=60 min have passed since the last REAL run finished.
+# Result: exactly one run at a time, each runs to completion, then a 1-hour cooldown, then the
+# next. No overlap, and nothing is cancelled mid-work. To change the cooldown, edit COOLDOWN_MIN
+# in the gate; to change how soon after the hour it can re-fire, edit the heartbeat frequency.
 on:
   schedule:
-    - cron: '0 * * * *'   # every hour, on the hour, 24/7
-  workflow_dispatch:        # lets you trigger a run manually from the Actions tab (for testing)
-
-# Never let two runs overlap — they'd fight over git.
-concurrency:
-  group: awear-autopilot
-  cancel-in-progress: false
+    - cron: '9,29,49 * * * *'   # heartbeat every ~20 min (off-peak minutes); the gate decides if a real run starts
+  workflow_dispatch:            # manual trigger — bypasses the cooldown (still never overlaps a running job)
 
 permissions:
   contents: write       # allow the job to push commits back to the repo
   actions: read         # allow reading the previous run's logs (self-healing)
 
 jobs:
-  autopilot:
+  # Cheap heartbeat gate (~15s, ~1 Actions-minute). Decides whether a real run should start now.
+  gate:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+    steps:
+      - name: Decide — run only if idle AND >=60 min since the last real run finished
+        id: decide
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SELF: ${{ github.run_id }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          WF="autopilot.yml"
+          COOLDOWN_MIN=60
+          MIN_REAL_DURATION=180   # secs — runs shorter than this are skipped gate-heartbeats, not real work
+
+          # Manual dispatch always runs (the job-level concurrency below still prevents overlap).
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            echo "manual dispatch -> run"; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          RUNS=$(gh api "repos/$REPO/actions/workflows/$WF/runs?per_page=40")
+
+          # 1) Another run already active? Skip — let it finish; it will gate the next one.
+          ACTIVE=$(echo "$RUNS" | jq --argjson self "$SELF" '
+            [ .workflow_runs[]
+              | select(.id != $self)
+              | select(.status=="in_progress" or .status=="queued") ] | length')
+          if [ "${ACTIVE:-0}" -gt 0 ]; then
+            echo "another run active ($ACTIVE) -> skip"; echo "run=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          # 2) When did the last REAL run finish? (Ignore skipped gate-heartbeats by duration.)
+          LAST_END=$(echo "$RUNS" | jq -r --argjson self "$SELF" --argjson mind "$MIN_REAL_DURATION" '
+            [ .workflow_runs[]
+              | select(.id != $self)
+              | select(.status=="completed")
+              | select(.run_started_at != null and .updated_at != null)
+              | { end: .updated_at,
+                  dur: ((.updated_at|fromdateiso8601) - (.run_started_at|fromdateiso8601)) }
+              | select(.dur >= $mind) ]
+            | sort_by(.end) | last | .end // empty')
+
+          if [ -z "$LAST_END" ]; then
+            echo "no previous real run found -> run"; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          LAST_TS=$(date -u -d "$LAST_END" +%s)
+          NOW_TS=$(date -u +%s)
+          ELAPSED_MIN=$(( (NOW_TS - LAST_TS) / 60 ))
+          echo "last real run finished ${ELAPSED_MIN}m ago (at $LAST_END); cooldown ${COOLDOWN_MIN}m"
+          if [ "$ELAPSED_MIN" -ge "$COOLDOWN_MIN" ]; then
+            echo ">= cooldown -> run"; echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "< cooldown -> skip"; echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  autopilot:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    # Safety belt: never let two real runs overlap and fight over git. The gate is the primary
+    # guard (it skips when a run is active), so this should essentially never have to queue/cancel.
+    concurrency:
+      group: awear-autopilot-run
+      cancel-in-progress: false
     timeout-minutes: 30   # hard cap per run. Was 12, which killed real tasks mid-run (claude-code +
                           # playwright-with-deps install + an opus task with subagents/web/charts + verify
                           # routinely exceed 12m → GitHub cancels the job and the work is lost). 30m lets a
