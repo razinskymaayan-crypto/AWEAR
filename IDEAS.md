@@ -31,3 +31,8 @@ Remaining bigger bets, ranked by survey impact:
 4. **Credible resale estimates** — replace the flat 50%-of-retail multiplier (repeated in 3+ places) with condition/brand-aware **ranges** ("~$60–90, est."); label demo fallbacks "sample" until real data exists. Biggest trust risk on the screen. Needs a resale-estimate helper/endpoint.
 5. **Make Smart Declutter results listable** — the AI recommends selling each item then offers only "Close"; add a per-row "List" button reusing `openSellForm()`.
 6. **Persistent above-the-fold "Turn dead stock into ~$X" CTA** + a real community-average rewear benchmark endpoint (today hardcoded 52%).
+
+## Store Insight follow-ups (from 2026-06-27 confirmation survey — docs/surveys/2026-06-27-store-insight.md, overall 8.0/10)
+7. **CTA consistency on Insight cards** — 2 of 4 "Do next" cards have action buttons (Refresh, List), 2 don't (incomplete-listings, pricing-outliers). Button-less cards read as "noted but I can't act here." Wire an edit flow so every card resolves to a tap ("Fix details" / "Edit price"), or remove all CTAs for consistency.
+8. **Credible Health score** — the 40-point floor (`Math.max(40, ...)`) means even the worst store shows 40; experienced sellers sense the floor. Add a projection/delta ("Fix these → ~74" or vs-last-week) so the score feels earned, not decorative.
+9. **Priority legibility on Insight** — the warn/priority/suggest accent stripes read as decoration without a legend; add a subtle "highest impact" tag on the top card so the colour coding signals order.
