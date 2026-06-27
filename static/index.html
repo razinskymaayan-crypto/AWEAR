@@ -6,7 +6,7 @@
 <title>AWEAR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Poppins:wght@600;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <!-- tokens.css loaded before the inline <style> block on purpose: any var defined in both
      (e.g. --accent, --bg, --card) keeps the inline value below (cascade order), so this
      link is zero-risk — it only adds the token categories not yet defined inline
@@ -46,10 +46,7 @@
 
   header { padding: 18px 20px 12px; display: flex; align-items: center; justify-content: space-between;
     position: relative; z-index: 5; flex-shrink: 0; }
-  .logo { font-family: "Poppins", sans-serif; font-weight: 800; font-size: var(--t-h1,26px); letter-spacing: -1px;
-    color: var(--text); }
-  .logo .pin { font-size: var(--t-caption); color: var(--muted); font-weight: 500; margin-inline-start: 6px;
-    -webkit-text-fill-color: var(--muted); }
+  .logo { display: flex; align-items: baseline; gap: 6px; color: var(--text,#f0ecf5); }
   .ava { width: 36px; height: 36px; border-radius: 50%; position: relative;
     background: var(--line); border: 1.5px solid var(--line); }
   .ava::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--surface); }
@@ -1379,6 +1376,27 @@
   .mp-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
   .mp-header { padding: 14px 16px 8px; display: flex; align-items: center; justify-content: space-between; }
   .mp-title { font-size: var(--t-title,20px); font-weight: 900; letter-spacing: -.4px; }
+  /* Shared brand wordmark — used by the global <header> .logo (lowercase awear + script marketplace) */
+  .mp-brand-wordmark { font-family: "Poppins", sans-serif; font-weight: 800; font-size: var(--t-title,20px); letter-spacing: -1px; color: var(--text,#f0ecf5); line-height: 1; }
+  .mp-brand-script { font-family: "Dancing Script", "Snell Roundhand", "Brush Script MT", cursive; font-weight: 700; font-size: var(--t-h1,24px); line-height: 1; color: var(--accent2,#c4855a); letter-spacing: .2px; transform: translateY(2px); }
+  .app-create-btn { width: 44px; height: 44px; min-width: 44px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-pill,999px); background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); color: var(--text,#f0ecf5); cursor: pointer; font-family: inherit; transition: background .15s, transform .1s; padding: 0; }
+  .app-create-btn:active { transform: scale(.92); background: var(--card-hover,#262030); }
+  .app-create-btn svg { display: block; }
+  /* Reusable global create chooser (drop-in for any header) */
+  .create-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); z-index: 70; pointer-events: none; transition: background .25s ease; }
+  .create-overlay.show { background: rgba(0,0,0,.62); pointer-events: auto; backdrop-filter: blur(3px); }
+  .create-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card,#1e1a22); border-radius: var(--r-xl,28px) var(--r-xl,28px) 0 0; border-top: 1px solid var(--line,#2e2836); padding: 8px 16px calc(env(safe-area-inset-bottom, 0px) + 16px); z-index: 71; transform: translateY(110%); transition: transform .3s cubic-bezier(.32,.72,0,1); box-shadow: 0 -8px 32px rgba(20,17,15,.28); }
+  .create-overlay.show .create-sheet { transform: translateY(0); }
+  .create-sheet-handle { width: 38px; height: 4px; border-radius: var(--r-pill,999px); background: var(--line,#2e2836); margin: 8px auto 14px; }
+  .create-sheet-title { font-size: var(--t-small,13px); font-weight: 800; color: var(--muted,#8a8498); text-transform: uppercase; letter-spacing: .6px; margin: 0 4px 10px; }
+  .create-opt { width: 100%; min-height: 60px; display: flex; align-items: center; gap: 14px; padding: 12px 14px; margin-bottom: 8px; background: var(--surface,#161318); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); cursor: pointer; font-family: inherit; text-align: start; transition: background .15s; }
+  .create-opt:active { background: var(--card-hover,#262030); }
+  .create-opt-ico { width: 42px; height: 42px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm,10px); color: var(--text,#f0ecf5); }
+  .create-opt-ico.post { background: color-mix(in srgb, var(--accent,#e8526a) 16%, transparent); color: var(--accent,#e8526a); }
+  .create-opt-ico.scan { background: color-mix(in srgb, var(--accent3,#7a6af0) 16%, transparent); color: var(--accent3,#7a6af0); }
+  .create-opt-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .create-opt-label { font-size: var(--t-body,14px); font-weight: 800; color: var(--text,#f0ecf5); }
+  .create-opt-sub { font-size: var(--t-caption,12px); font-weight: 600; color: var(--muted,#8a8498); }
   .mp-sell-btn { padding: 8px 16px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; border-radius: 20px; font-family: inherit; font-size: var(--t-caption); font-weight: 900; color: #fff; cursor: pointer; transition: transform .15s; }
   .mp-sell-btn:active { transform: scale(.95); }
   .mp-filters { display: flex; gap: 7px; padding: 0 16px 12px; overflow-x: auto; scrollbar-width: none; }
@@ -2157,8 +2175,9 @@
 <body>
 <div class="phone">
   <header>
-    <div class="logo">AWEAR<span class="pin" id="header-city-pin"></span></div>
+    <div class="logo"><span class="mp-brand-wordmark">awear</span><span class="mp-brand-script" id="header-section-name">feed</span></div>
     <div style="display:flex;align-items:center;gap:10px;position:relative;">
+      <button class="app-create-btn" aria-label="Create" onclick="openCreateMenu()"></button>
       <button class="notif-btn" id="notif-btn" aria-label="Notifications" onclick="toggleNotifPanel()">
         <span class="notif-badge" id="notif-badge" data-notif-badge></span>
       </button>
@@ -2445,6 +2464,28 @@
     <div class="sheet-scroll" id="sheet-body"></div>
     <div class="sheet-footer" id="sheet-footer"></div>
   </div>
+
+  <!-- Reusable global create chooser (drop into any header header via openCreateMenu()) -->
+  <div id="create-overlay" class="create-overlay" role="dialog" aria-modal="true" aria-label="Create" aria-hidden="true" onclick="if(event.target===this)closeCreateMenu()">
+    <div class="create-sheet">
+      <div class="create-sheet-handle" aria-hidden="true"></div>
+      <div class="create-sheet-title">Create</div>
+      <button class="create-opt" id="create-opt-post" type="button">
+        <span class="create-opt-ico post" id="create-ico-post"></span>
+        <span class="create-opt-txt">
+          <span class="create-opt-label">New post</span>
+          <span class="create-opt-sub">Share a look to the feed</span>
+        </span>
+      </button>
+      <button class="create-opt" id="create-opt-scan" type="button">
+        <span class="create-opt-ico scan" id="create-ico-scan"></span>
+        <span class="create-opt-txt">
+          <span class="create-opt-label">Scan a garment</span>
+          <span class="create-opt-sub">Add an item to your closet</span>
+        </span>
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -2517,6 +2558,17 @@
   const modal      = document.getElementById('purchase-modal');
   const modalCard  = document.getElementById('modal-card');
   const mainEl     = document.getElementById('main');
+
+  // ---- header section name map: view-id -> founder-facing label shown next to "awear" ----
+  // declared before showView() (~line 2733) so the router can read it TDZ-safe.
+  const VIEW_TITLES = {
+    home: 'home', feed: 'feed', marketplace: 'marketplace', outfits: 'AI stylist',
+    chat: 'messages', closet: 'profile', explore: 'explore', analytics: 'wrapped',
+    wishlist: 'wishlist', stylists: 'stylists', shopping: 'shopping', rewards: 'rewards',
+    wallet: 'wallet', sustainability: 'sustainability', publicclosets: 'closets',
+    seasonal: 'seasonal', compare: 'compare', admin: 'admin', agents: 'agents',
+    'user-profile': 'profile'
+  };
 
   // ---- icon system: clean inline line-art SVGs (Lucide/Phosphor style) ----
   // every path uses currentColor so the icon inherits its parent's text color.
@@ -2717,6 +2769,8 @@
     if (name === 'wishlist')  renderWishlist();
     if (name === 'chat')      initChat();
     if (name === 'user-profile') renderUserProfile();
+    const hsn = document.getElementById('header-section-name');
+    if (hsn) hsn.textContent = VIEW_TITLES[name] || name;
   }
 
   document.getElementById('capture-btn')?.addEventListener('click', () => {
@@ -3948,6 +4002,35 @@
     showToast._t=setTimeout(()=>t.classList.remove('show'),2400);
   }
 
+  // ---- Reusable global create chooser (works from any header's + button) ----
+  function openCreateMenu(){
+    const ov = document.getElementById('create-overlay');
+    if(!ov) return;
+    // inject icons (icon() returns SVG string; safe innerHTML)
+    const ip = document.getElementById('create-ico-post');
+    const is = document.getElementById('create-ico-scan');
+    if(ip) ip.innerHTML = icon('plus', 22);
+    if(is) is.innerHTML = icon('camera', 22);
+    ov.classList.add('show');
+    ov.setAttribute('aria-hidden','false');
+  }
+  function closeCreateMenu(){
+    const ov = document.getElementById('create-overlay');
+    if(!ov) return;
+    ov.classList.remove('show');
+    ov.setAttribute('aria-hidden','true');
+  }
+  // TODO: no real post composer exists yet — wire to it when built (grep "openNewPostComposer").
+  function openNewPostComposer(){
+    showToast('New post composer — coming soon');
+  }
+  (function wireCreateMenu(){
+    const post = document.getElementById('create-opt-post');
+    const scan = document.getElementById('create-opt-scan');
+    if(post) post.addEventListener('click', ()=>{ closeCreateMenu(); openNewPostComposer(); });
+    if(scan) scan.addEventListener('click', ()=>{ closeCreateMenu(); document.getElementById('file-input').click(); });
+  })();
+
   // ---- static UI icons (nav bar) ----
   document.getElementById('nav-ico-feed').innerHTML    = icon('play', 24);
   document.getElementById('nav-ico-shop').innerHTML    = icon('shoppingBag', 24);
@@ -3955,11 +4038,15 @@
   document.getElementById('nav-ico-dm').innerHTML      = icon('messageCircle', 24);
   document.getElementById('nav-ico-profile').innerHTML = icon('user', 24);
 
+  // ---- global "+" create buttons in static-HTML headers: fill icon once (icon() is JS-only, DS-008) ----
+  document.querySelectorAll('.app-create-btn').forEach(b => { if (!b.querySelector('svg')) b.innerHTML = icon('plus', 22); });
+
   // ---- header city pin — global-first: no hardcoded city, reflects user's own profile ----
   function updateHeaderCityPin() {
-    const city = loadProfile().city;
     const pin = document.getElementById('header-city-pin');
-    if (pin) pin.textContent = city ? `· ${city}` : '';
+    if (!pin) return; // #header-city-pin removed from global header — no-op cleanly
+    const city = loadProfile().city;
+    pin.textContent = city ? `· ${city}` : '';
   }
   updateHeaderCityPin();
 
@@ -5798,13 +5885,10 @@
 
     const el = document.getElementById('mp-wrap');
     el.innerHTML = `
-      <div class="mp-header">
-        <div class="mp-title">${mpCondFilter === 'preloved' ? `${icon('heart',20)} Community Closets` : `${icon('storefront',20)} Shop New Arrivals`}</div>
-      </div>
       <div class="mp-segment">
-        <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='new'?' active-shop':''}" data-tab="shop" data-cond="new">${icon('shoppingBag',13)} Shop</button>
-        <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='preloved'?' active-community':''}" data-tab="shop" data-cond="preloved">${icon('heart',13)} Community</button>
-        <button class="mp-seg-btn${mpTab==='sell'?' active-sell':''}" data-tab="sell">${icon('storefront',13)} My&nbsp;Store</button>
+        <button class="mp-seg-btn${mpTab==='sell'?' active-sell':''}" data-tab="sell">My&nbsp;store</button>
+        <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='preloved'?' active-community':''}" data-tab="shop" data-cond="preloved">Community</button>
+        <button class="mp-seg-btn${mpTab==='shop'&&mpCondFilter==='new'?' active-shop':''}" data-tab="shop" data-cond="new">Browse</button>
       </div>
       ${mpTab === 'shop' ? `
       <div class="mp-search-bar">
