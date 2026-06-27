@@ -11,6 +11,10 @@ set -u
 
 TOKEN="${TELEGRAM_BOT_TOKEN:-}"
 CHAT="${TELEGRAM_CHAT_ID:-}"
+# Strip stray CR/LF/whitespace — a trailing newline in the env var makes the
+# request URL malformed and curl exits 3 (every report silently fails). See FAILURES.
+TOKEN="$(printf '%s' "$TOKEN" | tr -d '[:space:]')"
+CHAT="$(printf '%s' "$CHAT" | tr -d '[:space:]')"
 [ -z "$TOKEN" ] || [ -z "$CHAT" ] && { echo "tg.sh: telegram env not set — skipping"; exit 0; }
 
 API="https://api.telegram.org/bot${TOKEN}"
