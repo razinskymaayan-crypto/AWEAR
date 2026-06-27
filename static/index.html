@@ -137,7 +137,8 @@
   .ig-headstats > div { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
   .ig-headstats b { font-size: var(--t-h3,15px); font-weight: 900; font-family: "Poppins", sans-serif; }
   .ig-headstats span { font-size: var(--t-micro,11px); color: var(--muted); font-weight: 700; white-space: nowrap; }
-  .ig-headmain .ig-nameblock { position: absolute; top: calc(50% + 16px); left: 0; right: 0; text-align: center; }
+  .ig-headmain .ig-nameblock { position: absolute; top: calc(50% + 24px); left: 0; right: 0; text-align: center; }
+  .ig-avacol .ig-edit { margin-top: 0; }
   .ig-headmain .ig-name { font-size: var(--t-caption,12px); }
   .ig-bio { font-size: var(--t-small); color: var(--muted); line-height: 1.55; padding: 0 2px 16px; }
   .ig-bio b { color: var(--text); font-weight: 800; }
@@ -4331,7 +4332,7 @@
       saveWardrobe(_DEMO_CLOSET_ITEMS);
       const p = loadProfile();
       if (!p.name || p.name === 'My Style') {
-        saveProfile(Object.assign({}, p, {name:'Noa', handle:'noavibes', city:'Tel Aviv', bio:'Minimal / Y2K / streetwear'}));
+        saveProfile(Object.assign({}, p, {name:'Carmel Pikarsky', handle:'carmel', city:'Tel Aviv', bio:'Minimal / Y2K / streetwear'}));
       }
       // Show a 7-day streak so the home screen looks like an active user
       if (!loadStreak().count) {
@@ -4377,6 +4378,15 @@
     localStorage.setItem(_DEMO_SEED_KEY, '1');
   }
   _seedDemoCloset();
+
+  // One-time: set the profile owner's name (runs once per flag version; bump version to force a re-apply)
+  (function _setProfileOwner(){
+    const KEY='awear_profile_owner_v2';
+    if(localStorage.getItem(KEY)) return;
+    const p=loadProfile();
+    saveProfile(Object.assign({},p,{name:'Carmel Pikarsky', handle:(!p.handle||p.handle==='me'||p.handle==='noavibes')?'carmel':p.handle}));
+    localStorage.setItem(KEY,'1');
+  })();
 
   // Auto-render feed on load (default tab) — deferred so followState + all late-inits are ready
   requestAnimationFrame(() => showView('feed'));
@@ -6270,6 +6280,11 @@
       renderMarketplace();
     }));
 
+    // Delegated handlers live on #mp-wrap, which is STATIC HTML (never recreated),
+    // so bind them ONCE. Re-binding every render accumulated duplicate listeners
+    // that fired openMPItemSheet / handlers N times per click.
+    if (!el.dataset.mpDelegated) {
+      el.dataset.mpDelegated = '1';
     // Filter & Sort sheet open
     el.addEventListener('click', e => {
       if (e.target.closest('[data-action="mp-filter-open"]')) { openMPFilterSheet(); return; }
@@ -6316,6 +6331,7 @@
       if (e.target.closest('.mp-buy-btn, .mp-offer-btn, [data-action="compat-overlay"], .mp-delete-btn')) return;
       const card = e.target.closest('.mp-item.resale');
       if (!card) return;
+      e.stopPropagation();
       const item = (loadMPListings().find(i => i.id === card.dataset.id)) || MP_SEED.find(i => i.id === card.dataset.id);
       if (item) openMPItemSheet(item);
     });
@@ -6335,6 +6351,7 @@
       const del = e.target.closest('.mp-delete-btn');
       if (del) { deleteMySell(del.dataset.id); }
     });
+    } // end bind-once delegated handlers
 
     // Sell button
     el.querySelector('#ms-list-btn')?.addEventListener('click', openSellForm);
