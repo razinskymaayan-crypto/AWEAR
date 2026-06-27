@@ -21,3 +21,13 @@ Founder/Ayalon prioritizes; small obvious wins are fixed directly, not parked he
 4. **Resolve one-screen naming** — header "awear wrapped" vs H1 "Analytics" vs a "Season Recap" card = three names for one surface. Pick one (recommend the Wrapped narrative).
 5. **Differentiate the two scoring rings** — Closet Health Score ring and Sustainability Rewear ring use the same "/100 in a circle" device; demote one and add one-line metric definitions so the numbers feel earned.
 6. **Score-progress trend arrow** — now that the score starts mid-range (75/B), a month-over-month arrow makes the "climb" visible (retention hook). (Builds on the shipped composite Closet Health Score, commit e0cdf12.)
+
+## Closet Analytics — 2026-06-27 survey round 3 (100-expert panel, doc: 2026-06-27-closet-analytics.md)
+*Shipped this run (no longer ideas): true conic progress-arc rings; actionable weakest-lever Health hint; utilization/rewear disambiguation; Hidden Cost → pre-filled sell form + "Recover ~$X" CTA.*
+Remaining bigger bets, ranked by survey impact:
+1. **Closet-health trend / delta** ("75, +7 this month") — the #1 retention lever; converts a one-time reveal into a weekly ritual. Needs a `closet_health_history` snapshot table + a weekly write job (backend → Sam).
+2. **Collapse the two competing "/100" rings** — make Closet Health the single hero; render rewear/active/utilization as labelled *contributors* beneath it, not a second equal ring (kills the "my score dropped to 30?" confusion). Layout decision → Mark/Dolce.
+3. **CPW projection on Hidden Cost** — "wear 3 more times → $36/wear" with a tiny progress bar; reframes guilt as a winnable goal (highest motivational-pull-per-pixel per the product panel).
+4. **Credible resale estimates** — replace the flat 50%-of-retail multiplier (repeated in 3+ places) with condition/brand-aware **ranges** ("~$60–90, est."); label demo fallbacks "sample" until real data exists. Biggest trust risk on the screen. Needs a resale-estimate helper/endpoint.
+5. **Make Smart Declutter results listable** — the AI recommends selling each item then offers only "Close"; add a per-row "List" button reusing `openSellForm()`.
+6. **Persistent above-the-fold "Turn dead stock into ~$X" CTA** + a real community-average rewear benchmark endpoint (today hardcoded 52%).

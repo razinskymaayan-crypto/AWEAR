@@ -1925,7 +1925,7 @@
   .an-box-num { font-size: var(--t-title,20px); font-weight: 900; letter-spacing: -.5px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .an-box-label { font-size: var(--t-micro,11px); color: var(--muted); font-weight: 700; margin-top: 4px; }
   .an-section { padding: 4px 18px 14px; }
-  .an-sec-title { font-size: var(--t-small); font-weight: 900; margin-bottom: 12px; }
+  .an-sec-title { font-size: var(--t-small, 13px); font-weight: 900; margin-bottom: 12px; }
   .an-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
   .an-bar-lbl { font-size: var(--t-caption); font-weight: 700; width: 52px; flex-shrink: 0; text-align: right; }
   .an-bar-track { flex: 1; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
@@ -1950,12 +1950,14 @@
   .an-identity-share:active { background: color-mix(in srgb, #ffffff 30%, transparent); }
 
   .an-cpw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 18px 14px; }
-  .an-cpw-card { background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); border-radius: 18px; padding: 16px; }
+  .an-cpw-card { background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); border-radius: 18px; padding: 16px; transition: background .12s ease; }
+  .an-cpw-card[onclick]:active { background: color-mix(in srgb, var(--fg, #f0ecf5) 8%, var(--card, #1e1a22)); }
   .an-cpw-label { font-size: var(--t-micro, 11px); font-weight: 800; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
   .an-cpw-label.champion { color: var(--success, #52c97a); }
   .an-cpw-label.hidden-cost { color: var(--warning, #e8a84a); }
   .an-cpw-value { font-size: var(--t-h3, 15px); font-weight: 900; color: var(--fg, #f0ecf5); line-height: 1.25; margin-bottom: 4px; }
   .an-cpw-sub { font-size: var(--t-micro, 11px); color: var(--muted, #8a8498); font-weight: 600; }
+  .an-cpw-recover { font-size: var(--t-micro, 11px); font-weight: 800; color: var(--success, #52c97a); margin-top: 6px; display: inline-flex; align-items: center; gap: 4px; }
 
   .an-health-section { margin: 0 18px 14px; }
   .an-health-row { margin-bottom: 14px; }
@@ -1975,7 +1977,9 @@
   .an-alert-btn.primary:active { background: color-mix(in srgb, var(--warning, #e8a84a) 25%, transparent); }
 
   .an-score-section { margin: 0 18px 14px; display: flex; align-items: center; gap: 20px; background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); border-radius: 20px; padding: 20px; }
-  .an-score-ring { width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 5px solid; }
+  .an-score-ring { width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+  .an-score-ring::before { content: ''; position: absolute; inset: 5px; border-radius: 50%; background: var(--card, #1e1a22); }
+  .an-score-ring > * { position: relative; z-index: 1; }
   .an-score-number { font-size: var(--t-h1, 24px); font-weight: 900; letter-spacing: -.5px; line-height: 1; }
   .an-score-unit { font-size: var(--t-micro, 11px); font-weight: 700; margin-top: 2px; opacity: .75; }
   .an-score-info { flex: 1; }
@@ -1988,7 +1992,9 @@
   .an-hs-kicker { font-size: var(--t-micro, 11px); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted, #8a8498); }
   .an-hs-grade { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; font-size: var(--t-body, 14px); font-weight: 900; border: 2px solid; }
   .an-hs-body { display: flex; align-items: center; gap: 20px; }
-  .an-hs-ring { width: 76px; height: 76px; border-radius: 50%; border: 4px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .an-hs-ring { width: 76px; height: 76px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; position: relative; }
+  .an-hs-ring::before { content: ''; position: absolute; inset: 4px; border-radius: 50%; background: var(--card, #1e1a22); }
+  .an-hs-ring > * { position: relative; z-index: 1; }
   .an-hs-num { font-size: var(--t-h1, 24px); font-weight: 900; line-height: 1; letter-spacing: -.5px; }
   .an-hs-denom { font-size: var(--t-micro, 11px); font-weight: 700; opacity: .65; margin-top: 2px; }
   .an-hs-info { flex: 1; min-width: 0; }
@@ -4915,9 +4921,26 @@
     const healthGrade = healthScore >= 80 ? 'A' : healthScore >= 60 ? 'B' : healthScore >= 40 ? 'C' : 'D';
     const healthColor = healthScore >= 80 ? 'var(--success,#52c97a)' : healthScore >= 60 ? 'var(--accent2,#c4855a)' : healthScore >= 40 ? 'var(--warning,#e8a84a)' : 'var(--danger,#e05252)';
     const healthDesc = healthScore >= 80 ? 'Your wardrobe is thriving.' : healthScore >= 60 ? 'Good habits — keep it up.' : healthScore >= 40 ? 'Getting there — wear more to climb.' : 'Time to refresh your wardrobe habits.';
+    // Coach, not report card: name the single weakest weighted lever and the next grade up.
+    const nextGrade = { D: 'C', C: 'B', B: 'A', A: 'A' }[healthGrade] || healthGrade;
+    // Weighted contributions — same weights as healthScore (util .4, active .3, rewear .3).
+    const _contrib = [
+      { key: 'util', val: utilizationPct * 0.4 },
+      { key: 'active', val: activePct * 0.3 },
+      { key: 'rewear', val: rewearScore * 0.3 },
+    ];
+    const _weakest = _contrib.sort((a, b) => a.val - b.val)[0].key;
+    let _coachHint;
+    if (neverWorn.length > 0 && (_weakest === 'util' || _weakest === 'active')) {
+      _coachHint = `Wear ${neverWorn.length} never-worn item${neverWorn.length === 1 ? '' : 's'} to climb toward Grade ${nextGrade}.`;
+    } else if (_weakest === 'rewear') {
+      _coachHint = `Re-wear a few favorites again to reach Grade ${nextGrade}.`;
+    } else {
+      _coachHint = `Wear a wider range of your closet to reach Grade ${nextGrade}.`;
+    }
     const healthHint = healthScore >= 80
       ? `${activePct}% actively worn · ${rewearScore}% rewear rate`
-      : `Wear more items and sell unloved pieces to raise your score`;
+      : _coachHint;
 
     // Style identity — derive from tags or seed
     const allTags = wardrobe.flatMap(i => i.style_tags || []);
@@ -4974,7 +4997,7 @@
           <div class="an-hs-grade" style="color:${healthColor};border-color:${healthColor};background:color-mix(in srgb,${healthColor} 12%,transparent)">${healthGrade}</div>
         </div>
         <div class="an-hs-body">
-          <div class="an-hs-ring" style="border-color:${healthColor};color:${healthColor}">
+          <div class="an-hs-ring" style="background:conic-gradient(${healthColor} ${healthScore}%, var(--line,#2e2836) 0);color:${healthColor}">
             <div class="an-hs-num">${healthScore}</div>
             <div class="an-hs-denom">/ 100</div>
           </div>
@@ -5013,13 +5036,14 @@
             : '47 wears · $2.30/wear'
           }</div>
         </div>
-        <div class="an-cpw-card">
+        <div class="an-cpw-card"${hiddenCost ? ` style="cursor:pointer" onclick="openSellFormWithItem('${attr(JSON.stringify(hiddenCost))}')"` : ''}>
           <div class="an-cpw-label hidden-cost">${icon('alert',12)} Hidden Cost</div>
           <div class="an-cpw-value">${hiddenCost ? esc(hiddenCost.name) : 'Satin Skirt'}</div>
           <div class="an-cpw-sub">${hiddenCost
             ? `bought $${hiddenCost.price_estimate_usd} · ${hiddenCost.wear_count||0} wear${(hiddenCost.wear_count||0)===1?'':'s'} · $${Math.round(hiddenCost.price_estimate_usd/Math.max(1,hiddenCost.wear_count||0))}/wear`
             : 'bought $180 · worn 1 time'
           }</div>
+          ${hiddenCost ? `<div class="an-cpw-recover">${icon('tag',11)} Recover ~$${Math.round(hiddenCost.price_estimate_usd*0.5)} — tap to list</div>` : ''}
         </div>
       </div>
 
@@ -5030,7 +5054,7 @@
       <div class="an-health-section">
         <div class="an-health-row">
           <div class="an-health-meta">
-            <span class="an-health-lbl">Utilization</span>
+            <span class="an-health-lbl">Utilization · worn 1+×</span>
             <span class="an-health-pct" style="color:var(--success,#52c97a)">${utilizationPct}%</span>
           </div>
           <div class="an-health-bar"><div class="an-health-fill" style="width:${utilizationPct}%;background:var(--success,#52c97a)"></div></div>
@@ -5066,13 +5090,13 @@
         <div class="an-sec-title" style="display:inline-flex;align-items:center;gap:6px">${icon('leaf',16)} Sustainability</div>
       </div>
       <div class="an-score-section">
-        <div class="an-score-ring" style="border-color:${scoreColor};color:${scoreColor}">
+        <div class="an-score-ring" style="background:conic-gradient(${scoreColor} ${rewearScore}%, var(--line,#2e2836) 0);color:${scoreColor}">
           <div class="an-score-number">${rewearScore}</div>
           <div class="an-score-unit">/ 100</div>
         </div>
         <div class="an-score-info">
           <div class="an-score-title">Rewear Score</div>
-          <div class="an-score-sub">You rewear ${rewearScore}% of your wardrobe.<br>Community avg: 52%</div>
+          <div class="an-score-sub">You re-wear ${rewearScore}% of items 2+ times — your true favorites.<br>Community avg: 52%</div>
         </div>
       </div>
 
