@@ -22,7 +22,10 @@ permissions:
 jobs:
   autopilot:
     runs-on: ubuntu-latest
-    timeout-minutes: 12   # hard cap per run — a runaway task can't burn your Actions minutes
+    timeout-minutes: 30   # hard cap per run. Was 12, which killed real tasks mid-run (claude-code +
+                          # playwright-with-deps install + an opus task with subagents/web/charts + verify
+                          # routinely exceed 12m → GitHub cancels the job and the work is lost). 30m lets a
+                          # run finish while still bounding Actions-minute spend. Raise further if runs still cancel.
 
     steps:
       - name: Checkout repo
