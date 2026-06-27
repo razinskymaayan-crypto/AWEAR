@@ -409,15 +409,24 @@
   .comments-sheet-handle { width: 36px; height: 4px; background: var(--line); border-radius: 2px;
     margin: 0 auto 14px; }
   .comments-sheet-title { font-size: var(--t-body); font-weight: 800; margin-bottom: 12px; }
-  .fc-comment-item { background: var(--surface); border-radius: 10px;
-    padding: 8px 12px; margin-bottom: 8px; }
-  .fc-comment-user { font-size: var(--t-micro); font-weight: 800; color: var(--accent); margin-bottom: 3px; }
+  .fc-comment-item { background: var(--surface, #161318); border-radius: 10px;
+    padding: 8px 12px; margin-bottom: 8px;
+    display: flex; align-items: flex-start; gap: 10px; }
+  .fc-comment-item--creator { border: 1px solid var(--accent2, #c4855a); }
+  .fc-comment-avatar { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%;
+    font-size: var(--t-micro, 11px); }
+  .fc-comment-body { flex: 1 1 auto; min-width: 0; }
+  .fc-comment-user { font-size: var(--t-caption, 12px); font-weight: 800; color: var(--fg, #f0ecf5); margin-bottom: 3px;
+    display: inline-flex; align-items: center; gap: 6px; }
+  .fc-comment-creator-badge { font-size: var(--t-micro, 11px); font-weight: 700; color: var(--accent, #e8526a);
+    border: 1px solid var(--accent, #e8526a); border-radius: var(--r-pill, 999px); padding: 1px 7px; line-height: 1.3; }
   .fc-comment-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .fc-comment-report { background: none; border: none; padding: 2px; margin: 0;
-    display: inline-flex; align-items: center; cursor: pointer;
-    color: var(--muted); transition: color 150ms ease; }
-  .fc-comment-report:hover, .fc-comment-report:active { color: var(--text); }
-  .fc-comment-text { font-size: var(--t-small); color: var(--text); line-height: 1.4; }
+  .fc-comment-report { background: none; border: none; padding: 8px; margin: -8px;
+    min-width: 44px; min-height: 44px;
+    display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+    color: var(--muted, #8a8498); transition: color 150ms ease; }
+  .fc-comment-report:hover, .fc-comment-report:active { color: var(--text, #fbfbfd); }
+  .fc-comment-text { font-size: var(--t-small, 13px); color: var(--text, #fbfbfd); line-height: 1.4; }
   .fc-comment-input-row { display: flex; gap: 8px; margin-top: 12px; }
   .fc-comment-input { flex: 1; background: var(--card); border: 1px solid var(--line);
     border-radius: 999px; padding: 9px 16px; font-size: var(--t-small); color: var(--text);
@@ -8137,6 +8146,169 @@
   const REACTION_SET  = ['❤️','🔥','⭐','✨'];
   const REACTION_ICONS = {'❤️':'heartFill','🔥':'flame','⭐':'sparkle','✨':'sparkle'};
 
+  // ===== SEEDED SOCIAL PROOF (Shira) =====
+  // Demo-only seed so the feed reads as ALIVE: posts with 2.4k–7.2k likes must
+  // not show 0 reactions / 0 comments (an investor reads that as fake).
+  // - Counts are DETERMINISTIC constants (NOT Math.random) so they stay stable
+  //   across renders and screenshots.
+  // - Reaction totals ≈ 8–12% of like count, split uneven (❤️~45 / 🔥~30 /
+  //   ⭐~15 / ✨~10), skewed per look (streetwear 🔥-heavy, quiet-luxury ⭐/✨),
+  //   with irregular numbers (231 not 230) — round splits read as fake.
+  // - Comments: ~likes/400 clamped 3–9, unique & look-specific per post, every
+  //   post has a shopping-intent question AND a creator reply right under it
+  //   (the ask→answer loop is the shop-the-look thesis on display).
+  // - EMOJI RULE: emoji appears ONLY inside the comment `text` (user-generated
+  //   content). All UI chrome stays emoji-free via icon()/SVG.
+  const FEED_REACTIONS_SEED = {
+    s1:  {'❤️':121,'🔥':58, '⭐':39, '✨':29},   // 2400 likes, casual cafe — balanced
+    s2:  {'❤️':203,'🔥':211,'⭐':52, '✨':37},   // 5100, streetwear — 🔥-heavy
+    s3:  {'❤️':97, '🔥':41, '⭐':38, '✨':33},   // 1800, thrift — hype + appreciation
+    s4:  {'❤️':167,'🔥':79, '⭐':51, '✨':38},   // 3300, minimal sunday
+    s5:  {'❤️':198,'🔥':161,'⭐':57, '✨':41},   // 4000, vintage — fire on the find
+    s6:  {'❤️':281,'🔥':119,'⭐':113,'✨':77},   // 6200, office quiet-lux — ⭐/✨ lift
+    s7:  {'❤️':181,'🔥':121,'⭐':54, '✨':39},   // 3800, beach
+    s8:  {'❤️':197,'🔥':86, '⭐':89, '✨':61},   // 4100, business casual — ⭐ lift
+    s9:  {'❤️':318,'🔥':121,'⭐':174,'✨':131},  // 7200, quiet luxury — ⭐/✨-heavy
+    s10: {'❤️':149,'🔥':96, '⭐':41, '✨':27},   // 2900, athleisure
+  };
+  // Comment voice: warm, lowercase-leaning, SPECIFIC to that look + creator.
+  // "user" is a handle string (rendered with @); the seeded creator reply uses
+  // the post's own handle so the ask→answer loop is legible.
+  const FEED_COMMENTS_SEED = {
+    s1: [ // noa.styles — summer cafe, white cropped tee + beige trousers + white sneakers
+      {user:'leah.wears',  text:'the beige trousers + white tee is SO clean for summer ☀️'},
+      {user:'tamarrr',     text:'where are the trousers from?? need that exact baker fit'},
+      {user:'noa.styles',  text:'thrifted the trousers but linked a similar pair in my closet ✨'},
+      {user:'cafe.ksenia', text:'tuck the tee a little more and this is a perfect cafe fit'},
+      {user:'minimal.may', text:'the all-neutral palette is everything'},
+      {user:'rinathk',     text:'obsessed, saving this for my next coffee date 🔥'},
+    ],
+    s2: [ // yael_fits — streetwear, oversized tee, parachute cargos, Adidas Samba, cap
+      {user:'kobi.streets', text:'those Sambas with the parachute cargos go crazy 🔥'},
+      {user:'dorfits',      text:'where are the cargos from? been hunting that parachute fit'},
+      {user:'yael_fits',    text:'cargos are vintage but dropped a similar pair in my closet'},
+      {user:'urban.eli',    text:'size up on the tee next time and it’s a 10/10 fit'},
+      {user:'samba.head',   text:'the cap ties the whole thing together ngl'},
+      {user:'noya.k',       text:'this is the cleanest street fit on my feed today'},
+      {user:'streetlab',    text:'fit is loud in the best way 🔥'},
+      {user:'maor.t',       text:'how tall are you? trying to judge the cargo break'},
+      {user:'yael_fits',    text:'5’7 — cargos hit right at the Sambas for reference ✨'},
+    ],
+    s3: [ // mika.thrift — secondhand mint: vintage shirt, mom jeans, shoulder bag
+      {user:'vintage.ro',   text:'no WAY this is secondhand, the shirt looks brand new'},
+      {user:'thriftwithme', text:'where did you find that shoulder bag?? it’s perfect'},
+      {user:'mika.thrift',  text:'tiny local thrift! similar bag linked in my closet ✨'},
+      {user:'eco.dana',     text:'the mom jeans wash is unreal for a thrift find 🔥'},
+      {user:'secondhand.s', text:'this is why i trust your hauls every time'},
+    ],
+    s4: [ // shir.daily — sunday minimal: midi slip dress, ballet flats, mini bag
+      {user:'sundaynoa',    text:'the slip dress + ballet flats is such a soft sunday combo'},
+      {user:'flat.lover',   text:'what color is the midi dress exactly? screen reads sage?'},
+      {user:'shir.daily',   text:'it’s a muted sage 🌿 linked the dress in my closet'},
+      {user:'minimalist.m', text:'add a thin gold chain and it’s flawless'},
+      {user:'gilad.ph',     text:'this is my favorite fit you’ve posted ⭐'},
+      {user:'cafe.ksenia',  text:'the mini bag is so cute, where is it from?'},
+      {user:'shir.daily',   text:'mini bag was a gift but found a near-match in my closet ✨'},
+      {user:'roniii',       text:'soft girl sunday done right honestly'},
+    ],
+    s5: [ // agam.x — vintage: denim jacket, retro sunglasses, cowboy boots
+      {user:'retro.tom',    text:'the denim jacket + cowboy boots combo is unreal 🔥'},
+      {user:'vintagevicky', text:'where are the boots from?? been wanting a pair forever'},
+      {user:'agam.x',       text:'boots are a vintage find — similar ones in my closet ✨'},
+      {user:'denimdiary',   text:'the wash on that jacket is a perfect vintage blue'},
+      {user:'sunny.lee',    text:'those retro shades complete the whole 70s thing'},
+      {user:'oldsoul.r',    text:'this could be straight out of a film still'},
+      {user:'maytal.k',     text:'saving for inspo, the layering is so good 🔥'},
+      {user:'thrift.ari',   text:'how do you always find boots like these'},
+      {user:'agam.x',       text:'patience + early saturdays at the market honestly'},
+    ],
+    s6: [ // dana.edit — office cute: blazer dress, loafers, structured bag
+      {user:'work.tova',    text:'office but make it cute is EXACTLY this, the blazer dress ⭐'},
+      {user:'corporate.k',  text:'where is the structured bag from? need a real work bag'},
+      {user:'dana.edit',    text:'bag is older but linked a very close one in my closet ✨'},
+      {user:'loaferlove',   text:'the loafers keep it sharp without trying too hard'},
+      {user:'minimal.may',  text:'this is my whole monday mood now'},
+      {user:'hilaaa',       text:'the tailoring on that blazer dress is so clean'},
+      {user:'office.eden',  text:'what length is the dress? worried about a work dress code'},
+      {user:'dana.edit',    text:'hits just above the knee — totally office-safe ✨'},
+      {user:'quietlux.j',   text:'understated and expensive-looking, love it'},
+    ],
+    s7: [ // lia.threads — beach: bikini top, linen pants, straw hat
+      {user:'beachbella',   text:'the linen pants over a bikini top is the perfect beach fit'},
+      {user:'summer.noa',   text:'where are the linen pants from? need that exact drape'},
+      {user:'lia.threads',  text:'linen pants are linked in my closet — so breezy ✨'},
+      {user:'sandy.t',      text:'the straw hat is the cherry on top honestly 🔥'},
+      {user:'coastalcore',  text:'this is going straight on my vacation moodboard'},
+      {user:'mermaid.may',  text:'so effortless, you make beach dressing look easy'},
+      {user:'rotem.s',      text:'what spf are we wearing for this gorgeous day ☀️'},
+      {user:'lia.threads',  text:'50 always — protect the skin 💛 the hat helps too'},
+      {user:'oceanic.k',    text:'saving this for my trip next week, obsessed'},
+    ],
+    s8: [ // emma.edit — business casual: blazer dress, pointed heels, croc tote
+      {user:'office.eden',  text:'business casual done right, the pointed heels elevate it ⭐'},
+      {user:'profesh.r',    text:'where is the croc tote from? need a polished work bag'},
+      {user:'emma.edit',    text:'tote is a few seasons old — close match in my closet ✨'},
+      {user:'tailored.t',   text:'the neutral palette reads so expensive'},
+      {user:'monday.may',   text:'stealing this exact combo for interviews honestly'},
+      {user:'hadas.k',      text:'the beige-on-beige is doing all the work, love it'},
+      {user:'work.tova',    text:'are the heels comfy enough for a full office day?'},
+      {user:'emma.edit',    text:'surprisingly yes — block-ish heel, i walk miles in them ✨'},
+      {user:'classickara',  text:'this is the blueprint for first-day-of-work fits'},
+    ],
+    s9: [ // zara.fits — quiet luxury: camel wool coat, wide leg trousers, ballet flats
+      {user:'quietlux.j',   text:'quiet luxury era indeed, what’s the coat fabric?'},
+      {user:'zara.fits',    text:'it’s a cashmere-wool blend — linked a similar coat in my closet ✨'},
+      {user:'minimal.may',  text:'the camel coat + cream trousers is pure elegance ⭐'},
+      {user:'understated.s',text:'where are the ballet flats from? need that exact satin'},
+      {user:'zara.fits',    text:'flats are old faithful — dropped a near-match in my closet'},
+      {user:'sleek.noa',    text:'the tonal styling is so quietly expensive'},
+      {user:'editorial.k',  text:'this looks like a campaign shot honestly ⭐'},
+      {user:'tova.r',       text:'how warm is that coat for actual winter?'},
+      {user:'zara.fits',    text:'genuinely toasty — the wool blend earns its keep ✨'},
+    ],
+    s10: [ // sport.mia — gym to brunch: sports bra, flare leggings, cropped hoodie
+      {user:'fitwithdana',  text:'gym to brunch in one fit, the flare leggings are everything 🔥'},
+      {user:'brunch.bex',   text:'where’s the set from? need those flare leggings'},
+      {user:'sport.mia',    text:'set is linked in my closet — squat-proof i promise ✨'},
+      {user:'movemore.m',   text:'the cropped hoodie makes it brunch-ready instantly'},
+      {user:'lift.lia',     text:'love that this actually works for both, so smart'},
+      {user:'activenoa',    text:'are the leggings high-waisted enough for squats?'},
+      {user:'sport.mia',    text:'super high-waisted — they stay put through everything 🔥'},
+    ],
+  };
+
+  // Idempotent: writes a post's baseline ONLY if that post has no stored entry
+  // yet, so toggle/get/addComment all operate naturally on top of the baseline
+  // (solves the toggle-drop trap — no merge math in getters needed). Safe to
+  // call on every load. Uses the localStorage helpers below (hoisted fns).
+  function seedFeedSocialProof() {
+    try {
+      const reactions = loadReactions();
+      const comments  = loadComments();
+      let rChanged = false, cChanged = false;
+      Object.keys(FEED_REACTIONS_SEED).forEach(pid => {
+        if (!reactions[pid]) {
+          reactions[pid] = { counts: Object.assign({}, FEED_REACTIONS_SEED[pid]), mine: null };
+          rChanged = true;
+        }
+      });
+      Object.keys(FEED_COMMENTS_SEED).forEach(pid => {
+        if (!comments[pid] || !comments[pid].length) {
+          comments[pid] = FEED_COMMENTS_SEED[pid].map((c, i) => ({
+            id: 'seed_' + pid + '_' + i,
+            user: c.user,
+            text: c.text,
+            ts: 0,
+            seed: true,
+          }));
+          cChanged = true;
+        }
+      });
+      if (rChanged) saveReactions(reactions);
+      if (cChanged) saveComments(comments);
+    } catch (e) { /* seeding is additive; never block render */ }
+  }
+
   function loadReactions() {
     try { return JSON.parse(localStorage.getItem(REACTIONS_KEY) || '{}'); } catch(e) { return {}; }
   }
@@ -8299,14 +8471,13 @@
       const localComment = addComment(postId, text);
       if (!localComment) return;
       recordCommentPost();
-      const newItem = document.createElement('div');
-      newItem.className = 'fc-comment-item';
-      newItem.dataset.commentId = localComment.id;
-      newItem.innerHTML = `<div class="fc-comment-row">
-          <div class="fc-comment-user">@you</div>
-          <button class="fc-comment-report" data-report-comment="${esc(localComment.id)}" aria-label="Report comment">${icon('flag',14)}</button>
-        </div>
-        <div class="fc-comment-text">${esc(text)}</div>`;
+      // Reuse _commentItemHTML so the optimistic row matches the seeded rows
+      // exactly (avatar column + body). The author is 'you' (the comment's
+      // user), never the look creator, so no creator highlight applies.
+      const _tmp = document.createElement('div');
+      _tmp.innerHTML = _commentItemHTML(localComment, _postCreatorHandle(postId));
+      const newItem = _tmp.firstElementChild;
+      // Repaint the avatar fallback now (the data: img onerror fires on insert).
       const csList = sheet.querySelector('.cs-list');
       // Remove "No comments yet" placeholder if present.
       const placeholder = csList.querySelector('div:not(.fc-comment-item)');
@@ -8364,16 +8535,39 @@
     return sheet;
   }
 
+  // The look creator's handle for a given post id (so a creator's own reply
+  // can be highlighted in the comments). SEED_POSTS is the live feed array
+  // (API data is prepended into it at load).
+  function _postCreatorHandle(postId) {
+    try {
+      const p = SEED_POSTS.find(p => p.id === postId);
+      return p ? (p.user || p.handle || '') : '';
+    } catch (e) { return ''; }
+  }
+
   // Renders a single comment item — used by both openCommentsSheet and the
   // optimistic send path so the DOM structure is always identical.
-  function _commentItemHTML(c) {
-    const username = c.user_key ? '@' + esc(c.user_key.split('.').join('')) : '@' + esc(c.user || 'you');
-    return `<div class="fc-comment-item" data-comment-id="${esc(c.id||'')}">
-      <div class="fc-comment-row">
-        <div class="fc-comment-user">${username}</div>
-        <button class="fc-comment-report" data-report-comment="${esc(c.id||'')}" aria-label="Report comment">${icon('flag',14)}</button>
+  // creatorHandle: the look's creator handle for the open post — when the
+  // comment author matches it, the row is highlighted + badged so the
+  // ask→answer shop-the-look loop pops.
+  function _commentItemHTML(c, creatorHandle) {
+    const handle = c.user_key || c.user || 'you';
+    const username = '@' + esc(handle.split('.').join(''));
+    const isCreator = !!creatorHandle && handle === creatorHandle;
+    const badge = isCreator ? `<span class="fc-comment-creator-badge">Creator</span>` : '';
+    // Initials avatar rendered INLINE (not via <img onerror=avatarFallback>):
+    // a valid src never fires onerror, so the fallback never painted. Same
+    // initials rule avatarFallback() uses — split on [ .@], first 2 words.
+    const initials = handle.split(/[ .@]/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || '?';
+    return `<div class="fc-comment-item${isCreator?' fc-comment-item--creator':''}" data-comment-id="${esc(c.id||'')}">
+      <span class="fc-comment-avatar avatar-fallback">${esc(initials)}</span>
+      <div class="fc-comment-body">
+        <div class="fc-comment-row">
+          <div class="fc-comment-user">${username}${badge}</div>
+          <button class="fc-comment-report" data-report-comment="${esc(c.id||'')}" aria-label="Report comment">${icon('flag',14)}</button>
+        </div>
+        <div class="fc-comment-text">${esc(c.text)}</div>
       </div>
-      <div class="fc-comment-text">${esc(c.text)}</div>
     </div>`;
   }
 
@@ -8384,25 +8578,35 @@
     const sheet = ensureCommentsSheet();
     _commentsPostId = postId;
     const list = sheet.querySelector('.cs-list');
+    const creatorHandle = _postCreatorHandle(postId);
     // Show sheet immediately with local data (instant feel), then refresh from API.
     const localComments = getPostComments(postId);
     list.innerHTML = localComments.length
-      ? localComments.map(_commentItemHTML).join('')
+      ? localComments.map(c => _commentItemHTML(c, creatorHandle)).join('')
       : `<div style="color:rgba(255,255,255,.35);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
     sheet.classList.add('open');
 
-    // Async API fetch — replaces local view with server state.
+    // Async API fetch — MERGES server comments ABOVE the local/seeded view.
+    // Trap: in the demo the backend store is EMPTY, so a naive "replace with
+    // API result" wipes the seeded conversation and shows "No comments yet".
+    // Rule: empty API response → KEEP the seed; non-empty → server items
+    // (newest-first) ABOVE the seed, de-duped so a user's own comment that
+    // round-tripped to the server isn't shown twice.
     try {
       const res = await fetch(`/api/posts/${encodeURIComponent(postId)}/comments`);
       if (res.ok) {
         const data = await res.json();
-        const items = data.items || [];
-        list.innerHTML = items.length
-          ? items.map(_commentItemHTML).join('')
-          : `<div style="color:rgba(255,255,255,.35);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
+        const apiItems = data.items || [];
+        if (apiItems.length) {
+          const local = getPostComments(postId);
+          const apiTexts = new Set(apiItems.map(c => (c.text || '').trim()));
+          const merged = apiItems.concat(local.filter(c => !apiTexts.has((c.text || '').trim())));
+          list.innerHTML = merged.map(c => _commentItemHTML(c, creatorHandle)).join('');
+        }
+        // apiItems empty → do nothing: the seeded/local view stays on screen.
       }
     } catch (_e) {
-      // API unreachable — local data already shown, keep it.
+      // API unreachable — local/seeded data already shown, keep it.
     }
   }
 
@@ -8450,6 +8654,12 @@
       });
     });
   }
+
+  // Seed demo social proof once everything it depends on (REACTIONS_KEY /
+  // COMMENTS_KEY consts + load/save helpers) is initialized above. Runs
+  // synchronously before the deferred showView('feed') rAF fires, so the very
+  // first render reads the seeded counts. Idempotent — safe on every load.
+  seedFeedSocialProof();
 
   let seenStories = new Set(JSON.parse(localStorage.getItem('awear_stories_seen')||'[]'));
 
