@@ -4761,7 +4761,9 @@
       : null;
 
     // Sustainability score (rewear ratio vs community 52%)
-    const rewearScore = utilizationPct > 0 ? Math.min(100, Math.round(utilizationPct * 1.05)) : 71;
+    // Real rewear = share of wardrobe worn MORE THAN ONCE (worn >= 2). NOT utilization (worn >= 1).
+    const rewornItems = wardrobe.filter(i => (i.wear_count||0) >= 2);
+    const rewearScore = hasWearData ? Math.round((rewornItems.length / totalItems) * 100) : 30;
     const scoreColor = rewearScore >= 50
       ? 'var(--success, #52c97a)'
       : rewearScore >= 30
