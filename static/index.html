@@ -1939,14 +1939,15 @@
   .an-empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: var(--t-body); font-weight: 700; line-height: 1.8; }
 
   /* ---- Analytics v2 — Spotify Wrapped style ---- */
-  .an-identity-card { margin: 0 18px 14px; border-radius: 22px; padding: 22px 20px; background: linear-gradient(135deg, var(--card, #1e1a22) 0%, color-mix(in srgb, var(--accent3, #7a6af0) 14%, var(--card, #1e1a22)) 100%); border: 1px solid color-mix(in srgb, var(--accent3, #7a6af0) 30%, transparent); position: relative; overflow: hidden; }
-  .an-identity-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 20%, color-mix(in srgb, var(--accent3, #7a6af0) 18%, transparent) 0%, transparent 60%); pointer-events: none; }
-  .an-identity-kicker { font-size: var(--t-micro, 11px); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: color-mix(in srgb, var(--accent3, #7a6af0) 80%, var(--fg, #f0ecf5)); margin-bottom: 6px; }
-  .an-identity-name { font-size: var(--t-h1, 24px); font-weight: 900; letter-spacing: -.5px; color: var(--fg, #f0ecf5); line-height: 1.15; margin-bottom: 12px; }
-  .an-identity-tags { display: flex; gap: 7px; flex-wrap: wrap; }
-  .an-identity-pill { padding: 5px 12px; border-radius: var(--r-pill, 999px); background: color-mix(in srgb, var(--accent3, #7a6af0) 18%, transparent); border: 1px solid color-mix(in srgb, var(--accent3, #7a6af0) 35%, transparent); font-size: var(--t-caption, 12px); font-weight: 700; color: var(--fg, #f0ecf5); }
-  .an-identity-share { position: absolute; top: 16px; right: 18px; width: 36px; height: 44px; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--fg, #f0ecf5) 10%, transparent); border: none; border-radius: var(--r-sm, 10px); cursor: pointer; color: var(--fg, #f0ecf5); transition: background .18s; }
-  .an-identity-share:active { background: color-mix(in srgb, var(--fg, #f0ecf5) 20%, transparent); }
+  .an-identity-card { margin: 0 18px 14px; border-radius: 22px; padding: 22px 20px; background: linear-gradient(135deg, var(--hl, #e8526a) 0%, color-mix(in srgb, var(--hl, #e8526a) 55%, #c4855a) 50%, #c4855a 100%); border: 1px solid color-mix(in srgb, #c4855a 60%, transparent); position: relative; overflow: hidden; }
+  .an-identity-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 18%, color-mix(in srgb, #ffffff 26%, transparent) 0%, transparent 62%); pointer-events: none; }
+  .an-identity-kicker { position: relative; font-size: var(--t-micro, 11px); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: color-mix(in srgb, var(--text-on-accent, #fff7f2) 88%, transparent); margin-bottom: 6px; }
+  .an-identity-name { position: relative; font-size: var(--t-h1, 24px); font-weight: 900; letter-spacing: -.5px; color: var(--text-on-accent, #fff7f2); line-height: 1.15; margin-bottom: 12px; }
+  .an-identity-tags { position: relative; display: flex; gap: 7px; flex-wrap: wrap; }
+  .an-identity-range { position: relative; margin-top: 10px; font-size: var(--t-caption, 12px); font-weight: 600; color: color-mix(in srgb, var(--text-on-accent, #fff7f2) 90%, transparent); text-shadow: 0 1px 2px rgba(0,0,0,.18); }
+  .an-identity-pill { padding: 5px 12px; border-radius: var(--r-pill, 999px); background: color-mix(in srgb, #ffffff 32%, transparent); border: 1px solid color-mix(in srgb, #ffffff 50%, transparent); font-size: var(--t-caption, 12px); font-weight: 700; color: var(--text-on-accent, #fff7f2); text-shadow: 0 1px 2px rgba(0,0,0,.18); }
+  .an-identity-share { position: absolute; top: 16px; right: 18px; width: 36px; height: 44px; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in srgb, #ffffff 18%, transparent); border: none; border-radius: var(--r-sm, 10px); cursor: pointer; color: var(--text-on-accent, #fff7f2); transition: background .18s; }
+  .an-identity-share:active { background: color-mix(in srgb, #ffffff 30%, transparent); }
 
   .an-cpw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 18px 14px; }
   .an-cpw-card { background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); border-radius: 18px; padding: 16px; }
@@ -4123,11 +4124,11 @@
     {id:'ds3', category:'top',       name:'Black Ribbed Knit Turtleneck', color:'black',    brand_vibe:'COS',             style_tags:['minimal','classic'],    price_estimate_usd:48,  wear_count:7,  search_query:'black ribbed knit turtleneck women fitted'},
     {id:'ds4', category:'bottoms',   name:'Barrel-Leg Light Wash Denim',  color:'light blue',brand_vibe:"Levi's",         style_tags:['denim','y2k'],          price_estimate_usd:80,  wear_count:21, search_query:'barrel leg light wash jeans women',               image_url:'https://n.nordstrommedia.com/it/15963ac9-5f3f-4207-b119-a021e1db52e7.jpeg?h=368&w=240&dpr=2'},
     {id:'ds5', category:'bottoms',   name:'Straight-Leg Black Trousers',  color:'black',    brand_vibe:'COS',             style_tags:['minimal','office'],     price_estimate_usd:70,  wear_count:14, search_query:'straight leg black tailored trousers women',      image_url:'https://n.nordstrommedia.com/it/742c046e-df5e-4844-95b4-61e1096c97ed.jpeg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=780&h=1196'},
-    {id:'ds6', category:'bottoms',   name:'Baggy Cargo Pants Khaki',      color:'khaki',    brand_vibe:'Carhartt',        style_tags:['streetwear','utility'], price_estimate_usd:90,  wear_count:8,  search_query:'baggy cargo pants khaki women utility',           image_url:'https://is4.revolveassets.com/images/p4/n/uv/RTAR-WJ45_V1.jpg'},
+    {id:'ds6', category:'bottoms',   name:'Baggy Cargo Pants Khaki',      color:'khaki',    brand_vibe:'Carhartt',        style_tags:['streetwear','utility'], price_estimate_usd:90,  wear_count:0,  search_query:'baggy cargo pants khaki women utility',           image_url:'https://is4.revolveassets.com/images/p4/n/uv/RTAR-WJ45_V1.jpg'},
     {id:'ds7', category:'shoes',     name:'Adidas Samba OG White',        color:'white',    brand_vibe:'Adidas',          style_tags:['retro','sporty'],       price_estimate_usd:120, wear_count:18, search_query:'adidas samba og white black sneakers women',      image_url:'https://assets.adidas.com/images/w_1880,f_auto,q_auto/c68f09963c6e47dcad68ac010115a208_9366/Stan_Smith_Shoes_White_FX5500_01_standard.jpg'},
-    {id:'ds8', category:'shoes',     name:'Pointed-Toe Leather Mules',    color:'black',    brand_vibe:'Mango',           style_tags:['elegant','minimal'],    price_estimate_usd:60,  wear_count:5,  search_query:'pointed toe black leather mules women',           image_url:'https://cdn.shopify.com/s/files/1/0610/1440/9428/files/10MM18-VENICE-20118-CASTAN.jpg'},
+    {id:'ds8', category:'shoes',     name:'Pointed-Toe Leather Mules',    color:'black',    brand_vibe:'Mango',           style_tags:['elegant','minimal'],    price_estimate_usd:60,  wear_count:0,  search_query:'pointed toe black leather mules women',           image_url:'https://cdn.shopify.com/s/files/1/0610/1440/9428/files/10MM18-VENICE-20118-CASTAN.jpg'},
     {id:'ds9', category:'shoes',     name:'New Balance 550 White Cream',  color:'white',    brand_vibe:'New Balance',     style_tags:['retro','casual'],       price_estimate_usd:110, wear_count:11, search_query:'new balance 550 white cream sneakers women',      image_url:'https://assets.adidas.com/images/w_1880,f_auto,q_auto/7f58eea8063344908fafb96773b13a1e_9366/Superstar_Shoes_White_EG4958_01_standard.jpg'},
-    {id:'ds10',category:'outerwear', name:'Oversized Camel Blazer',       color:'camel',    brand_vibe:'& Other Stories', style_tags:['preppy','minimal'],     price_estimate_usd:150, wear_count:6,  search_query:'oversized camel blazer women wool',               image_url:'https://static.zara.net/assets/public/9885/e922/a0be46659e56/661cb395b150/08769916400-p/08769916400-p.jpg'},
+    {id:'ds10',category:'outerwear', name:'Oversized Camel Blazer',       color:'camel',    brand_vibe:'& Other Stories', style_tags:['preppy','minimal'],     price_estimate_usd:150, wear_count:0,  search_query:'oversized camel blazer women wool',               image_url:'https://static.zara.net/assets/public/9885/e922/a0be46659e56/661cb395b150/08769916400-p/08769916400-p.jpg'},
     {id:'ds11',category:'bag',       name:'Mini Crossbody Black Canvas',  color:'black',    brand_vibe:'streetwear',      style_tags:['streetwear','everyday'],price_estimate_usd:30,  wear_count:22, search_query:'mini black canvas crossbody bag streetwear',      image_url:'https://shop.mango.com/assets/rcs/pics/static/T8/fotos/S/87046714_CU_B.jpg?ts=1714729382668'},
     {id:'ds12',category:'dress',     name:'Slip Satin Midi Dress',        color:'champagne',brand_vibe:'Reformation',     style_tags:['elegant','evening'],    price_estimate_usd:145, wear_count:2,  search_query:'slip satin midi dress champagne women'},
     {id:'ds13',category:'jewelry',   name:'Gold Layered Necklace',        color:'gold',     brand_vibe:'Mejuri',          style_tags:['minimal','gold'],       price_estimate_usd:48,  wear_count:26, search_query:'gold layered necklace women minimal delicate'},
@@ -4895,7 +4896,7 @@
     // Always a genuine wardrobe item; null only when there is no wear/price data.
     const hiddenCost = hasWearData
       ? ([...wardrobe]
-          .filter(i => (i.price_estimate_usd||0) > 0)
+          .filter(i => (i.price_estimate_usd||0) > 0 && (i.wear_count||0) >= 1)
           .sort((a,b) => (b.price_estimate_usd/Math.max(1,b.wear_count||0)) - (a.price_estimate_usd/Math.max(1,a.wear_count||0)))[0] || null)
       : null;
 
@@ -4936,6 +4937,15 @@
     };
     const primaryTag = (identityTags[0]||'minimal').toLowerCase();
     const archetype = STYLE_ARCHETYPES[primaryTag] || 'The Quiet Minimalist';
+    // Honest "range" line — only when the shown tags span more than the primary family,
+    // so a clean archetype name above mixed pills reads as range, not a system error.
+    const _coreWord = primaryTag.charAt(0).toUpperCase() + primaryTag.slice(1);
+    const _rangeTags = identityTags.slice(1)
+      .filter(t => (t||'').toLowerCase() !== primaryTag)
+      .map(t => (t||'').toLowerCase());
+    const identityRange = _rangeTags.length
+      ? `${_coreWord} core, with ${_rangeTags.join(' + ')} range`
+      : '';
 
     // Dead zone: real least-worn items. Prefer truly never-worn; else infer from lowest wear counts.
     const deadItems = neverWorn.length > 0
@@ -4990,6 +5000,7 @@
         <div class="an-identity-tags">
           ${identityTags.map(t => `<span class="an-identity-pill">${esc(t)}</span>`).join('')}
         </div>
+        ${identityRange ? `<div class="an-identity-range">${esc(identityRange)}</div>` : ''}
       </div>
 
       <!-- 3. Cost Per Wear Mini-Grid -->
