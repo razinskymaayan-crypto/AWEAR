@@ -36,3 +36,8 @@ Remaining bigger bets, ranked by survey impact:
 7. **CTA consistency on Insight cards** — 2 of 4 "Do next" cards have action buttons (Refresh, List), 2 don't (incomplete-listings, pricing-outliers). Button-less cards read as "noted but I can't act here." Wire an edit flow so every card resolves to a tap ("Fix details" / "Edit price"), or remove all CTAs for consistency.
 8. **Credible Health score** — the 40-point floor (`Math.max(40, ...)`) means even the worst store shows 40; experienced sellers sense the floor. Add a projection/delta ("Fix these → ~74" or vs-last-week) so the score feels earned, not decorative.
 9. **Priority legibility on Insight** — the warn/priority/suggest accent stripes read as decoration without a legend; add a subtle "highest impact" tag on the top card so the colour coding signals order.
+
+## Feed social-proof follow-ups (from 2026-06-27 confirmation survey — docs/surveys/2026-06-27-feed-social-proof.md, overall 8.3/10)
+10. **Comment persistence (BE-005)** — `_comments_store` in app.py (~line 1451) is an in-memory dict; a user-posted comment vanishes on server restart. Migrate to SQLite via `_init_db` (Sam/Oren). Demo risk only if a live viewer posts then refreshes; seeded comments persist client-side regardless.
+11. **Reaction realism jitter** — reaction totals are a fixed ~10% of likes with a fixed ❤️🔥⭐✨ split; under expert scrutiny this can read as "seeded". Add small per-post jitter so no two posts share the same ratio.
+12. **Comment timestamps** — add relative time ("2h ago") to comments to reinforce recency / "alive" feel (survey flagged its absence as the main thing undercutting authenticity).
