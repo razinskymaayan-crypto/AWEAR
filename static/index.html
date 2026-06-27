@@ -1499,24 +1499,34 @@
   .mp-size-chip.active { background: var(--accent2,#c4855a); border-color: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
 
   /* ---- My Store ---- */
-  .ms-banner { margin: 0 16px 14px; border-radius: var(--r-lg,20px); padding: 18px 18px 16px; position: relative; overflow: hidden; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); }
-  .ms-banner-circle { position: absolute; border-radius: 50%; background: rgba(255,255,255,.07); }
-  .ms-avatar { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.2); border: 2px solid rgba(255,255,255,.35); display: flex; align-items: center; justify-content: center; font-size: var(--t-h3,15px); font-weight: 900; color: #fff; flex-shrink: 0; letter-spacing: .5px; }
-  .ms-store-name { font-size: var(--t-lead,17px); font-weight: 900; color: #fff; line-height: 1.1; }
-  .ms-handle { font-size: var(--t-caption,12px); color: rgba(255,255,255,.7); font-weight: 600; margin-top: 2px; }
-  .ms-rating { display: flex; align-items: center; gap: 3px; margin-top: 5px; font-size: var(--t-micro,11px); color: rgba(255,255,255,.7); font-weight: 700; }
-  .ms-share-btn { background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.3); border-radius: var(--r-md,14px); padding: 7px 13px; color: #fff; font-family: inherit; font-size: var(--t-micro,11px); font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; min-height: 44px; flex-shrink: 0; }
-  .ms-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; padding: 0 16px 14px; }
-  .ms-stat { background: var(--card,#1e1a22); border-radius: var(--r-md,14px); padding: 12px 8px; text-align: center; border: 1px solid var(--line,#2e2836); }
-  .ms-stat-val { font-size: var(--t-h3,15px); font-weight: 900; line-height: 1.1; }
-  .ms-stat-label { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 3px; }
-  .ms-actions { padding: 0 16px 16px; display: flex; gap: 8px; }
-  .ms-list-btn { flex: 1; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); padding: 13px 16px; font-family: inherit; font-size: var(--t-small,13px); font-weight: 900; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; transition: opacity .15s; }
+  /* My Store header — store pic (right) + cyclical stats strip (left) */
+  .ms-head { margin: 0 16px 16px; }
+  .ms-head-row { display: flex; align-items: center; gap: 12px; }
+  .ms-statstrip { flex: 1; min-width: 0; display: flex; gap: var(--space-1,4px); align-items: stretch; }
+  .ms-sx { flex: 1 1 0; min-width: 0; overflow: hidden; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 9px 3px; text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+  .ms-sx-val { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); line-height: 1.05; white-space: nowrap; }
+  .ms-sx-label { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; line-height: 1.1; white-space: nowrap; }
+  /* Profit = the one number the seller cares about most — anchor the eye */
+  .ms-sx-profit { background: color-mix(in srgb, var(--success,#52c97a) 12%, var(--card,#1e1a22)); border-color: color-mix(in srgb, var(--success,#52c97a) 45%, var(--line,#2e2836)); }
+  .ms-sx-profit .ms-sx-val { font-size: var(--t-h3,15px); color: var(--success,#52c97a); }
+  .ms-sx-profit .ms-sx-label { color: var(--muted,#8a8498); }
+  .ms-sx-btn { font-family: inherit; cursor: pointer; min-height: 44px; border-color: color-mix(in srgb, var(--accent3,#7a6af0) 40%, var(--line,#2e2836)); }
+  .ms-sx-btn:active { background: var(--card-hover,#262030); }
+  .ms-sx-btn .ms-sx-label { color: var(--accent3,#7a6af0); display: inline-flex; align-items: center; justify-content: center; gap: 2px; }
+  .ms-sx-btn .ms-sx-label .ic-svg { opacity: .85; }
+  .ms-live-badge { position: absolute; top: 8px; left: 8px; background: var(--success,#52c97a); color: var(--bg,#0e0c0f); border-radius: var(--r-pill,999px); font-size: var(--t-micro,11px); font-weight: 900; padding: 2px 8px; line-height: 1.3; letter-spacing: .2px; }
+  .ms-store-pic-wrap { flex-shrink: 0; padding: 2px; border-radius: 50%; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); }
+  .ms-store-pic { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; display: block; }
+  .ms-store-pic-initials { background: var(--surface,#161318); display: flex; align-items: center; justify-content: center; font-size: var(--t-h3,15px); font-weight: 900; color: var(--fg,#f0ecf5); letter-spacing: .5px; }
+  .ms-actions { padding: 0 16px 16px; display: flex; gap: 6px; }
+  .ms-list-btn { flex: 1; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); padding: var(--space-3,12px) var(--space-4,16px); font-family: inherit; font-size: var(--t-small,13px); font-weight: 900; color: var(--on-accent,#fff); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; transition: opacity .15s; }
   .ms-list-btn:active { opacity: .85; }
-  .ms-browse-btn { background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: 13px 16px; font-family: inherit; font-size: var(--t-small,13px); font-weight: 700; color: var(--muted,#8a8498); cursor: pointer; display: flex; align-items: center; gap: 7px; min-height: 44px; }
+  .ms-act-btn { flex: 0 0 auto; background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: var(--space-3,12px) var(--space-3,12px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; color: var(--fg,#f0ecf5); cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 44px; white-space: nowrap; }
+  .ms-act-btn:active { background: var(--card-hover,#262030); }
   .ms-section-hd { padding: 0 16px 10px; display: flex; align-items: center; justify-content: space-between; }
   .ms-section-title { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); }
   .ms-section-sub { font-size: var(--t-micro,11px); color: var(--accent3,#7a6af0); font-weight: 700; }
+  .ms-clear-filters { background: none; border: none; font-family: inherit; font-size: var(--t-micro,11px); font-weight: 800; color: var(--accent3,#7a6af0); cursor: pointer; padding: 4px 6px; min-height: 44px; }
   .ms-empty { text-align: center; padding: 28px 20px 16px; }
   .ms-empty-icon { width: 60px; height: 60px; border-radius: 50%; background: color-mix(in srgb, var(--accent,#e8526a) 12%, transparent); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--accent,#e8526a); }
   .ms-suggest-hd { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
@@ -1557,6 +1567,25 @@
   .mp-fsheet-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 20px 16px; flex-shrink: 0; }
   .mp-fsheet-title { font-size: var(--t-h3,15px); font-weight: 900; }
   .mp-fsheet-reset { font-size: var(--t-caption,12px); font-weight: 800; color: var(--accent,#e8526a); background: none; border: none; cursor: pointer; font-family: inherit; min-height: 44px; padding: 0 4px; }
+  /* Store Insight sheet */
+  .ms-in-sec { padding: 0 20px; }
+  .ms-in-sec-title { font-size: var(--t-micro,11px); font-weight: 800; letter-spacing: .4px; text-transform: uppercase; color: var(--muted,#8a8498); margin: 14px 0 9px; }
+  .ms-in-kpis { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+  .ms-in-kpi { background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 12px 14px; }
+  .ms-in-kpi-val { font-size: var(--t-title,20px); font-weight: 900; color: var(--fg,#f0ecf5); line-height: 1.05; }
+  .ms-in-kpi-label { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 4px; }
+  .ms-in-views { display: flex; gap: 8px; }
+  .ms-in-view { flex: 1; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 10px; text-align: center; }
+  .ms-in-view .ms-in-kpi-val { font-size: var(--t-lead,17px); }
+  .ms-in-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .ms-in-bar-label { min-width: 74px; font-size: var(--t-caption,12px); font-weight: 700; color: var(--fg,#f0ecf5); text-transform: capitalize; flex-shrink: 0; }
+  .ms-in-bar-track { flex: 1; height: 8px; background: var(--line,#2e2836); border-radius: var(--r-pill,999px); overflow: hidden; }
+  .ms-in-bar-fill { height: 100%; border-radius: var(--r-pill,999px); background: linear-gradient(90deg, var(--accent3,#7a6af0), var(--accent,#e8526a)); }
+  .ms-in-bar-n { font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); width: 22px; text-align: right; flex-shrink: 0; }
+  .ms-in-top { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line,#2e2836); }
+  .ms-in-top-img { width: 44px; height: 44px; border-radius: var(--r-sm,10px); overflow: hidden; flex-shrink: 0; background: var(--card,#1e1a22); }
+  .ms-in-top-img .pi-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ms-in-note { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); padding: 14px 20px 6px; line-height: 1.45; }
   .mp-fsheet-section { padding: 0 20px 20px; }
   .mp-fsheet-label { font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 10px; }
   .mp-fsheet-chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -2235,6 +2264,16 @@
         </div>
         <div class="mp-fsheet-scroll" id="mp-fsheet-scroll"></div>
         <button class="mp-fsheet-apply" id="mp-fsheet-apply">Show Results</button>
+      </div>
+      <!-- Store Insight bottom sheet -->
+      <div class="mp-fsheet-overlay" id="ms-insight-overlay" aria-hidden="true"></div>
+      <div class="mp-fsheet" id="ms-insight-sheet" role="dialog" aria-modal="true" aria-label="Store insight">
+        <div class="mp-fsheet-handle" aria-hidden="true"></div>
+        <div class="mp-fsheet-head">
+          <span class="mp-fsheet-title">Store insight</span>
+          <button class="mp-fsheet-reset" id="ms-insight-close">Done</button>
+        </div>
+        <div class="mp-fsheet-scroll" id="ms-insight-scroll"></div>
       </div>
     </section>
 
@@ -5829,6 +5868,7 @@
   let _mpPendingCloseMatch = false;
   let _mpPendingOccasion = 'all', _mpPendingMaterial = 'all', _mpPendingSize = 'all';
   let _deadZoneItems = [];
+  let msViewMode = 'today'; // My Store viewers stat: today | month | all (cyclical button)
 
   function loadMPListings() {
     const user = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
@@ -5917,6 +5957,10 @@
       else if (mpTab === 'sell') mpCondFilter = 'new'; // preserve shop default on return
       mpFilter = 'all';
       mpAssistQuery = ''; mpAssistMsg = ''; mpAssistIds = null; mpClosetFilter = false;
+      // Reset extended filter/sort so Browse and My Store keep separate sessions
+      mpCategoryFilter = 'all'; mpColorFilter = 'all'; mpBrandFilter = 'all'; mpConditionFilter = 'all';
+      mpOccasionFilter = 'all'; mpMaterialFilter = 'all'; mpSizeFilter = 'all';
+      mpPriceMin = 0; mpPriceMax = 9999; mpSortBy = 'default'; mpCloseMatchOnly = false;
       renderMarketplace();
     }));
 
@@ -6009,7 +6053,20 @@
 
     // Sell button
     el.querySelector('#ms-list-btn')?.addEventListener('click', openSellForm);
+    el.querySelector('#ms-filter-btn')?.addEventListener('click', openMPFilterSheet);
+    el.querySelector('#ms-insight-btn')?.addEventListener('click', openStoreInsight);
+    el.querySelector('#ms-clear-filters')?.addEventListener('click', () => {
+      mpCategoryFilter = 'all'; mpColorFilter = 'all'; mpBrandFilter = 'all'; mpConditionFilter = 'all';
+      mpOccasionFilter = 'all'; mpMaterialFilter = 'all'; mpSizeFilter = 'all';
+      mpPriceMin = 0; mpPriceMax = 9999; mpSortBy = 'default';
+      renderMarketplace();
+    });
     el.querySelector('#ms-share-btn')?.addEventListener('click', () => showToast('Store link copied!'));
+    // Cyclical viewers stat: today → 30d → all-time → today
+    el.querySelector('#ms-views-btn')?.addEventListener('click', () => {
+      msViewMode = msViewMode === 'today' ? 'month' : msViewMode === 'month' ? 'all' : 'today';
+      renderMarketplace();
+    });
 
     // AI assist bar
     el.querySelector('#mp-assist-submit')?.addEventListener('click', runMPAssist);
@@ -6384,6 +6441,112 @@
     }
   }
 
+  // ---- Store Insight: extensive store analytics sheet ----
+  function _buildStoreInsight() {
+    const mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
+    const listings = mine.length;
+    if (!listings) {
+      return `<div class="ms-empty" style="padding:32px 24px">
+        <div class="ms-empty-icon">${icon('barChart',28)}</div>
+        <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">No store activity yet</div>
+        <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:5px">List an item to start seeing insights</div>
+      </div>`;
+    }
+    const totalValue = mine.reduce((s,i) => s + (Number(i.price)||0), 0);
+    const avgPrice = Math.round(totalValue / listings);
+    const soldCount = Math.floor(listings * 0.6) + 2;
+    const storeViews = listings * 47 + 83;
+    const revenue = Math.round(soldCount * avgPrice);
+    const viewsToday = Math.round(storeViews * 0.06);
+    const viewsMonth = Math.round(storeViews * 0.42);
+    const saves = Math.round(storeViews * 0.18);
+    const conv = storeViews ? (soldCount / storeViews * 100) : 0;
+
+    const kpi = (val, label, color) => `<div class="ms-in-kpi">
+      <div class="ms-in-kpi-val"${color ? ` style="color:${color}"` : ''}>${val}</div>
+      <div class="ms-in-kpi-label">${label}</div></div>`;
+
+    // Category breakdown
+    const catCounts = {};
+    mine.forEach(i => { const c = i.category || 'other'; catCounts[c] = (catCounts[c]||0) + 1; });
+    const cats = Object.entries(catCounts).sort((a,b) => b[1] - a[1]);
+    const maxCat = cats[0][1] || 1;
+    const catBars = cats.map(([c,n]) => `<div class="ms-in-bar-row">
+      <div class="ms-in-bar-label">${esc(c)}</div>
+      <div class="ms-in-bar-track"><div class="ms-in-bar-fill" style="width:${Math.round(n/maxCat*100)}%"></div></div>
+      <div class="ms-in-bar-n">${n}</div></div>`).join('');
+
+    // Top performers by price (proxy for value), with demo view counts
+    const top = [...mine].sort((a,b) => (Number(b.price)||0) - (Number(a.price)||0)).slice(0,3);
+    const topRows = top.map((item,idx) => `<div class="ms-in-top">
+      <div class="ms-in-top-img">${productImage(item)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:var(--t-small,13px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(item.name||'Item')}</div>
+        <div style="font-size:var(--t-micro,11px);color:var(--muted,#8a8498);margin-top:2px">$${item.price} · ${(storeViews - idx*29).toLocaleString()} views</div>
+      </div>
+      <div style="font-size:var(--t-caption,12px);font-weight:800;color:var(--accent3,#7a6af0)">#${idx+1}</div>
+    </div>`).join('');
+
+    return `
+      <div class="ms-in-sec">
+        <div class="ms-in-sec-title">Performance</div>
+        <div class="ms-in-kpis">
+          ${kpi('$' + revenue.toLocaleString(), 'Total revenue', 'var(--success,#52c97a)')}
+          ${kpi(soldCount, 'Items sold', 'var(--accent,#e8526a)')}
+          ${kpi(listings, 'Active listings', 'var(--accent3,#7a6af0)')}
+          ${kpi('$' + avgPrice.toLocaleString(), 'Avg price', null)}
+          ${kpi('$' + totalValue.toLocaleString(), 'Store value', null)}
+          ${kpi(conv.toFixed(1) + '%', 'Conversion', 'var(--accent2,#c4855a)')}
+        </div>
+      </div>
+      <div class="ms-in-sec">
+        <div class="ms-in-sec-title">Audience</div>
+        <div class="ms-in-views">
+          <div class="ms-in-view"><div class="ms-in-kpi-val">${viewsToday.toLocaleString()}</div><div class="ms-in-kpi-label">Today</div></div>
+          <div class="ms-in-view"><div class="ms-in-kpi-val">${viewsMonth.toLocaleString()}</div><div class="ms-in-kpi-label">30 days</div></div>
+          <div class="ms-in-view"><div class="ms-in-kpi-val">${storeViews.toLocaleString()}</div><div class="ms-in-kpi-label">All time</div></div>
+        </div>
+        <div class="ms-in-bar-row" style="margin-top:12px">
+          <div class="ms-in-bar-label">Saves</div>
+          <div class="ms-in-bar-track"><div class="ms-in-bar-fill" style="width:${Math.round(saves/storeViews*100)}%"></div></div>
+          <div class="ms-in-bar-n">${saves}</div>
+        </div>
+      </div>
+      <div class="ms-in-sec">
+        <div class="ms-in-sec-title">By category</div>
+        ${catBars}
+      </div>
+      <div class="ms-in-sec">
+        <div class="ms-in-sec-title">Top performers</div>
+        ${topRows}
+      </div>
+      <div class="ms-in-note">Revenue, views and conversion are estimated from your listings until live sales tracking is connected.</div>
+    `;
+  }
+
+  function openStoreInsight() {
+    const overlay = document.getElementById('ms-insight-overlay');
+    const sheet = document.getElementById('ms-insight-sheet');
+    const scroll = document.getElementById('ms-insight-scroll');
+    if (!overlay || !sheet || !scroll) return;
+    scroll.innerHTML = _buildStoreInsight();
+    overlay.classList.add('show');
+    sheet.classList.add('show');
+    overlay.setAttribute('aria-hidden','false');
+    if (!overlay._bound) {
+      overlay.addEventListener('click', closeStoreInsight);
+      document.getElementById('ms-insight-close')?.addEventListener('click', closeStoreInsight);
+      overlay._bound = true;
+    }
+  }
+
+  function closeStoreInsight() {
+    const overlay = document.getElementById('ms-insight-overlay');
+    const sheet = document.getElementById('ms-insight-sheet');
+    if (overlay) { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
+    if (sheet) sheet.classList.remove('show');
+  }
+
   function openMPFilterSheet() {
     // Sync pending state from current active state
     _mpPendingSort = mpSortBy;
@@ -6547,69 +6710,93 @@
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
 
     const storeName = profile.name || 'My Store';
-    const handle = profile.handle || 'me';
     const initials = storeName.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'MS';
     const totalValue = mine.reduce((s,i) => s + (Number(i.price)||0), 0);
     const soldCount = mine.length > 0 ? Math.floor(mine.length * 0.6) + 2 : 0;
     const storeViews = mine.length > 0 ? mine.length * 47 + 83 : 0;
+    const avgPrice = mine.length ? Math.round(totalValue / mine.length) : 0;
+    const profit = Math.round(soldCount * avgPrice);
+    // Compact money for the narrow stat tiles so 5-digit values never clip ($12,400 → $12.4k)
+    const fmtMoney = n => n >= 10000 ? '$' + (n/1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/,'') + 'k' : '$' + n.toLocaleString();
+    // Store avatar: dedicated store pic if set, else the user's profile photo, else initials
+    const storePhoto = ls.load('awear_store_avatar') || profile.photo || null;
+    // Cyclical viewers stat — tap to switch window
+    const viewWindows = {
+      today: { v: Math.round(storeViews * 0.06), l: 'Today' },
+      month: { v: Math.round(storeViews * 0.42), l: '30d' },
+      all:   { v: storeViews,                    l: 'All-time' },
+    };
+    const vw = viewWindows[msViewMode] || viewWindows.today;
 
     const listedIds = new Set(mine.map(i => i.id));
     const suggestions = wardrobe
       .filter(i => !listedIds.has(i.id) && !(i.wear_count > 0))
       .slice(0, 3);
 
-    const starsHtml = [1,2,3,4,5].map((_,i) =>
-      `<span style="color:${i<4?'rgba(255,255,255,.95)':'rgba(255,255,255,.3)'};line-height:1">★</span>`
-    ).join('');
+    // Filter & sort applies to MY listings (stats above stay on the full store)
+    const msActiveCount = [
+      mpCategoryFilter !== 'all', mpColorFilter !== 'all', mpBrandFilter !== 'all',
+      mpConditionFilter !== 'all', mpOccasionFilter !== 'all', mpMaterialFilter !== 'all',
+      mpSizeFilter !== 'all', mpPriceMin > 0, mpPriceMax < 9999, mpSortBy !== 'default'
+    ].filter(Boolean).length;
+    let shown = mine;
+    if (mpCategoryFilter !== 'all') shown = shown.filter(i => i.category === mpCategoryFilter);
+    if (mpColorFilter !== 'all') shown = shown.filter(i => (i.color||'').toLowerCase().includes(mpColorFilter));
+    if (mpBrandFilter !== 'all') shown = shown.filter(i => i.brand === mpBrandFilter);
+    if (mpConditionFilter !== 'all') shown = shown.filter(i => (i.condition||'').toLowerCase() === mpConditionFilter);
+    if (mpOccasionFilter !== 'all') shown = shown.filter(i => (i.occasion||'') === mpOccasionFilter);
+    if (mpMaterialFilter !== 'all') shown = shown.filter(i => (i.material||'') === mpMaterialFilter);
+    if (mpSizeFilter !== 'all') shown = shown.filter(i => !i.size || i.size === mpSizeFilter);
+    shown = shown.filter(i => { const p = Number(i.price)||0; return p >= mpPriceMin && p <= mpPriceMax; });
+    if (mpSortBy === 'price-asc') shown = [...shown].sort((a,b) => (Number(a.price)||0) - (Number(b.price)||0));
+    else if (mpSortBy === 'price-desc') shown = [...shown].sort((a,b) => (Number(b.price)||0) - (Number(a.price)||0));
+    else if (mpSortBy === 'newest') shown = [...shown].sort((a,b) => (b.id > a.id ? 1 : -1));
 
     return `
-      <div class="ms-banner">
-        <div class="ms-banner-circle" style="width:100px;height:100px;top:-20px;right:-20px"></div>
-        <div class="ms-banner-circle" style="width:80px;height:80px;bottom:-30px;left:40px"></div>
-        <div style="display:flex;align-items:center;gap:14px;position:relative">
-          <div class="ms-avatar">${esc(initials)}</div>
-          <div style="flex:1;min-width:0">
-            <div class="ms-store-name">${esc(storeName)}</div>
-            <div class="ms-handle">@${esc(handle)}</div>
-            <div class="ms-rating">${starsHtml}<span style="margin-left:2px">4.8 · ${soldCount} sold</span></div>
+      <div class="ms-head">
+        <div class="ms-head-row">
+          <div class="ms-statstrip">
+            <div class="ms-sx"><div class="ms-sx-val">${mine.length}</div><div class="ms-sx-label">Listed</div></div>
+            <div class="ms-sx"><div class="ms-sx-val">${soldCount}</div><div class="ms-sx-label">Sold</div></div>
+            <div class="ms-sx"><div class="ms-sx-val">${fmtMoney(avgPrice)}</div><div class="ms-sx-label">Avg</div></div>
+            <div class="ms-sx ms-sx-profit"><div class="ms-sx-val">${fmtMoney(profit)}</div><div class="ms-sx-label">Profit</div></div>
+            <button class="ms-sx ms-sx-btn" id="ms-views-btn" aria-label="Views — tap to cycle today, 30 days, all-time">
+              <div class="ms-sx-val">${vw.v.toLocaleString()}</div>
+              <div class="ms-sx-label">${icon('refresh',9)} ${vw.l}</div>
+            </button>
           </div>
-          <button class="ms-share-btn" id="ms-share-btn">${icon('share',14)} Share</button>
-        </div>
-      </div>
-
-      <div class="ms-stats">
-        <div class="ms-stat">
-          <div class="ms-stat-val" style="color:var(--accent3,#7a6af0)">${mine.length}</div>
-          <div class="ms-stat-label">Active</div>
-        </div>
-        <div class="ms-stat">
-          <div class="ms-stat-val" style="color:var(--accent,#e8526a)">$${totalValue.toLocaleString()}</div>
-          <div class="ms-stat-label">Value</div>
-        </div>
-        <div class="ms-stat">
-          <div class="ms-stat-val" style="color:var(--success,#52c97a)">${soldCount}</div>
-          <div class="ms-stat-label">Sold</div>
-        </div>
-        <div class="ms-stat">
-          <div class="ms-stat-val" style="color:var(--muted,#8a8498)">${storeViews > 0 ? storeViews + '+' : '—'}</div>
-          <div class="ms-stat-label">Views</div>
+          <div class="ms-store-pic-wrap">
+            ${storePhoto
+              ? `<img class="ms-store-pic" src="${attr(storePhoto)}" alt="${attr(storeName)}" data-name="${attr(storeName)}" style="width:64px;height:64px" onerror="this.onerror=null;avatarFallback(this)">`
+              : `<div class="ms-store-pic ms-store-pic-initials">${esc(initials)}</div>`}
+          </div>
         </div>
       </div>
 
       <div class="ms-actions">
+        <button class="ms-act-btn" id="ms-insight-btn">${icon('barChart',14)} Insight</button>
+        <button class="ms-act-btn" id="ms-filter-btn">${icon('filter',14)} Filter &amp; sort</button>
         <button class="ms-list-btn" id="ms-list-btn">${icon('tag',16)} List an item</button>
-        <button class="ms-browse-btn" onclick="mpTab='shop';mpCondFilter='new';renderMarketplace()">${icon('storefront',16)} Browse</button>
       </div>
 
-      ${mine.length ? `
-        <div class="ms-section-hd">
-          <div class="ms-section-title">Active Listings <span style="color:var(--muted,#8a8498);font-weight:600">${mine.length}</span></div>
-          <div class="ms-section-sub">Visible in marketplace</div>
+      ${mine.length === 0 ? `
+        <div class="ms-empty">
+          <div class="ms-empty-icon">${icon('storefront',28)}</div>
+          <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">Your store is ready</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:5px">List your first item and start earning</div>
         </div>
-        <div class="mp-grid" style="margin-bottom:8px">${mine.map(item => `
+      ` : `
+        <div class="ms-section-hd">
+          <div class="ms-section-title">Active Listings <span style="color:var(--muted,#8a8498);font-weight:600">${msActiveCount ? `${shown.length} of ${mine.length}` : mine.length}</span></div>
+          ${msActiveCount
+            ? `<button class="ms-clear-filters" id="ms-clear-filters">Show all</button>`
+            : `<div class="ms-section-sub">Visible in marketplace</div>`}
+        </div>
+        ${shown.length ? `
+        <div class="mp-grid" style="margin-bottom:8px">${shown.map(item => `
           <div class="mp-item" style="position:relative">
             <div class="mp-item-img">${productImage(item)}
-              <span style="position:absolute;top:8px;left:8px;background:var(--success,#52c97a);color:var(--bg,#0e0c0f);border-radius:var(--r-pill,999px);font-size:9px;font-weight:900;padding:3px 8px">Live</span>
+              <span class="ms-live-badge">Live</span>
             </div>
             <div class="mp-item-info">
               <div class="mp-item-name">${esc(item.name)}</div>
@@ -6619,12 +6806,12 @@
               </div>
             </div>
           </div>`).join('')}</div>
-      ` : `
-        <div class="ms-empty">
-          <div class="ms-empty-icon">${icon('storefront',28)}</div>
-          <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">Your store is ready</div>
-          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:5px">List your first item and start earning</div>
+        ` : `
+        <div class="ms-empty" style="padding:24px 20px 8px">
+          <div style="font-size:var(--t-small,13px);font-weight:800;color:var(--fg,#f0ecf5)">No items match these filters</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:5px">Adjust Filter &amp; sort or clear it</div>
         </div>
+        `}
       `}
 
       ${suggestions.length ? `
