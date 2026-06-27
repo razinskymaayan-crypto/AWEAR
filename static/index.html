@@ -1570,22 +1570,44 @@
   /* Store Insight sheet */
   .ms-in-sec { padding: 0 20px; }
   .ms-in-sec-title { font-size: var(--t-micro,11px); font-weight: 800; letter-spacing: .4px; text-transform: uppercase; color: var(--muted,#8a8498); margin: 14px 0 9px; }
-  .ms-in-kpis { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
-  .ms-in-kpi { background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 12px 14px; }
-  .ms-in-kpi-val { font-size: var(--t-title,20px); font-weight: 900; color: var(--fg,#f0ecf5); line-height: 1.05; }
-  .ms-in-kpi-label { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 4px; }
-  .ms-in-views { display: flex; gap: 8px; }
-  .ms-in-view { flex: 1; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 10px; text-align: center; }
-  .ms-in-view .ms-in-kpi-val { font-size: var(--t-lead,17px); }
   .ms-in-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .ms-in-bar-label { min-width: 74px; font-size: var(--t-caption,12px); font-weight: 700; color: var(--fg,#f0ecf5); text-transform: capitalize; flex-shrink: 0; }
   .ms-in-bar-track { flex: 1; height: 8px; background: var(--line,#2e2836); border-radius: var(--r-pill,999px); overflow: hidden; }
-  .ms-in-bar-fill { height: 100%; border-radius: var(--r-pill,999px); background: linear-gradient(90deg, var(--accent3,#7a6af0), var(--accent,#e8526a)); }
-  .ms-in-bar-n { font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); width: 22px; text-align: right; flex-shrink: 0; }
-  .ms-in-top { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line,#2e2836); }
-  .ms-in-top-img { width: 44px; height: 44px; border-radius: var(--r-sm,10px); overflow: hidden; flex-shrink: 0; background: var(--card,#1e1a22); }
-  .ms-in-top-img .pi-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ms-in-bar-fill { height: 100%; border-radius: var(--r-pill,999px); background: linear-gradient(90deg, var(--accent3,#7a6af0), var(--accent,#e8526a)); transition: width .4s cubic-bezier(.32,.72,0,1); }
+  .ms-in-bar-n { font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); min-width: 36px; text-align: right; flex-shrink: 0; }
   .ms-in-note { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); padding: 14px 20px 6px; line-height: 1.45; }
+  /* Store Insight — Health header */
+  .ms-in-health { background: var(--grad-shine, var(--card,#1e1a22)); border: 1px solid var(--line,#2e2836); border-radius: var(--r-lg,20px); padding: 16px 18px; margin: 4px 20px 12px; }
+  .ms-in-health-score { font-size: var(--t-display,32px); font-weight: 900; color: var(--fg,#f0ecf5); line-height: 1; }
+  .ms-in-health-score span { font-size: var(--t-lead,17px); font-weight: 800; color: var(--muted,#8a8498); }
+  .ms-in-health-verdict { font-size: var(--t-small,13px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 6px; }
+  .ms-in-health-sub { font-size: var(--t-micro,11px); color: var(--accent3,#7a6af0); font-weight: 800; margin-top: 4px; display: flex; align-items: center; gap: 5px; }
+  .ms-in-snap { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line,#2e2836); }
+  .ms-in-snap-val { font-size: var(--t-lead,17px); font-weight: 900; color: var(--fg,#f0ecf5); line-height: 1.05; }
+  .ms-in-snap-label { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 700; margin-top: 3px; }
+  /* Store Insight — recommendation cards */
+  .ms-in-rec { display: flex; align-items: center; gap: 12px; background: var(--card-hover,#262030); border: 1px solid var(--line,#2e2836); border-inline-start: 4px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 12px 14px; margin-bottom: 8px; min-height: 44px; }
+  .ms-in-rec.is-warn { border-inline-start-color: var(--warning,#e8a84a); }
+  .ms-in-rec.is-priority { border-inline-start-color: var(--accent,#e8526a); }
+  .ms-in-rec.is-suggest { border-inline-start-color: var(--accent3,#7a6af0); }
+  .ms-in-rec-ic { width: 36px; height: 36px; border-radius: var(--r-sm,10px); display: grid; place-items: center; flex-shrink: 0; background: color-mix(in srgb, var(--accent3,#7a6af0) 14%, transparent); color: var(--accent3,#7a6af0); }
+  .ms-in-rec.is-warn .ms-in-rec-ic { background: color-mix(in srgb, var(--warning,#e8a84a) 14%, transparent); color: var(--warning,#e8a84a); }
+  .ms-in-rec.is-priority .ms-in-rec-ic { background: color-mix(in srgb, var(--accent,#e8526a) 14%, transparent); color: var(--accent,#e8526a); }
+  .ms-in-rec.is-suggest .ms-in-rec-ic { background: color-mix(in srgb, var(--accent3,#7a6af0) 14%, transparent); color: var(--accent3,#7a6af0); }
+  .ms-in-rec-body { flex: 1; min-width: 0; }
+  .ms-in-rec-title { font-size: var(--t-h3,15px); font-weight: 800; color: var(--fg,#f0ecf5); line-height: 1.25; }
+  .ms-in-rec-action { font-size: var(--t-small,13px); color: var(--muted,#8a8498); margin-top: 2px; line-height: 1.35; }
+  .ms-in-rec-cta { flex-shrink: 0; min-height: 44px; padding: 0 14px; border-radius: var(--r-pill,999px); border: 1px solid var(--accent3,#7a6af0); background: transparent; color: var(--accent3,#7a6af0); font-family: inherit; font-weight: 800; font-size: var(--t-small,13px); cursor: pointer; }
+  .ms-in-rec.is-warn .ms-in-rec-cta { border-color: var(--warning,#e8a84a); color: var(--warning,#e8a84a); }
+  .ms-in-rec.is-priority .ms-in-rec-cta { border-color: var(--accent,#e8526a); color: var(--accent,#e8526a); }
+  .ms-in-rec-cta:active { background: var(--card,#1e1a22); }
+  /* Store Insight — momentum goal */
+  .ms-in-goal { background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 14px; margin: 0 20px; }
+  .ms-in-goal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .ms-in-goal-label { font-size: var(--t-small,13px); font-weight: 800; color: var(--fg,#f0ecf5); }
+  .ms-in-goal-n { font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); }
+  .ms-in-diag { font-size: var(--t-small,13px); color: var(--muted,#8a8498); margin-top: 10px; line-height: 1.4; padding: 0 20px; }
+  .ms-in-rec-wrap { padding: 0 20px; }
   .mp-fsheet-section { padding: 0 20px 20px; }
   .mp-fsheet-label { font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 10px; }
   .mp-fsheet-chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -2680,6 +2702,7 @@
     x:'<path d="M6 6l12 12M18 6 6 18"/>',
     arrowRight:'<path d="M5 12h14M13 6l6 6-6 6" stroke-linejoin="round"/>',
     refresh:'<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M20 6v5h-5M4 18v-5h5"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2" stroke-linecap="round" stroke-linejoin="round"/>',
     sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
     filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',
     star:'<path d="M12 3l2.4 5.3 5.6.8-4 4.2 1 5.7L12 16l-5 2.9 1-5.7-4-4.2 5.6-.8L12 3Z" stroke-linejoin="round"/>',
@@ -6487,76 +6510,236 @@
         <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:5px">List an item to start seeing insights</div>
       </div>`;
     }
+    // ----- shared demo metrics (consistent with rest of file) -----
     const totalValue = mine.reduce((s,i) => s + (Number(i.price)||0), 0);
-    const avgPrice = Math.round(totalValue / listings);
+    const avgPrice = Math.round(totalValue / listings) || 0;
     const soldCount = Math.floor(listings * 0.6) + 2;
     const storeViews = listings * 47 + 83;
     const revenue = Math.round(soldCount * avgPrice);
-    const viewsToday = Math.round(storeViews * 0.06);
-    const viewsMonth = Math.round(storeViews * 0.42);
     const saves = Math.round(storeViews * 0.18);
     const conv = storeViews ? (soldCount / storeViews * 100) : 0;
+    const saveRate = storeViews ? (saves / storeViews) : 0;       // saves per view
+    const sellThrough = saves ? (soldCount / saves) : 0;          // sales per save
 
-    const kpi = (val, label, color) => `<div class="ms-in-kpi">
-      <div class="ms-in-kpi-val"${color ? ` style="color:${color}"` : ''}>${val}</div>
-      <div class="ms-in-kpi-label">${label}</div></div>`;
+    // ----- age proxy: parse ms-epoch from id, else fall back to array index -----
+    const ageDaysOf = (item, idx) => {
+      const digits = parseInt(String(item.id || '').replace(/\D/g,''), 10);
+      if (digits && digits > 1e12) {
+        return Math.floor((Date.now() - digits) / 86400000);
+      }
+      // index proxy: index 0 = newest (unshifted). compress so older items cross 30d.
+      return idx * 12;
+    };
 
-    // Category breakdown
-    const catCounts = {};
-    mine.forEach(i => { const c = i.category || 'other'; catCounts[c] = (catCounts[c]||0) + 1; });
-    const cats = Object.entries(catCounts).sort((a,b) => b[1] - a[1]);
-    const maxCat = cats[0][1] || 1;
-    const catBars = cats.map(([c,n]) => `<div class="ms-in-bar-row">
-      <div class="ms-in-bar-label">${esc(c)}</div>
-      <div class="ms-in-bar-track"><div class="ms-in-bar-fill" style="width:${Math.round(n/maxCat*100)}%"></div></div>
-      <div class="ms-in-bar-n">${n}</div></div>`).join('');
+    // ----- completeness: 7 fields, image||image_url counts as one -----
+    const COMPLETE_FIELDS = ['brand','color','size','material','condition','occasion'];
+    const completenessOf = (item) => {
+      let filled = 0;
+      COMPLETE_FIELDS.forEach(f => { if (item[f] != null && String(item[f]).trim() !== '') filled++; });
+      if ((item.image && String(item.image).trim()) || (item.image_url && String(item.image_url).trim())) filled++;
+      return filled / 7; // 0..1
+    };
+    const missingFieldsOf = (item) => {
+      const miss = [];
+      COMPLETE_FIELDS.forEach(f => { if (item[f] == null || String(item[f]).trim() === '') miss.push(f); });
+      if (!((item.image && String(item.image).trim()) || (item.image_url && String(item.image_url).trim()))) miss.push('photo');
+      return miss;
+    };
 
-    // Top performers by price (proxy for value), with demo view counts
-    const top = [...mine].sort((a,b) => (Number(b.price)||0) - (Number(a.price)||0)).slice(0,3);
-    const topRows = top.map((item,idx) => `<div class="ms-in-top">
-      <div class="ms-in-top-img">${productImage(item)}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:var(--t-small,13px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(item.name||'Item')}</div>
-        <div style="font-size:var(--t-micro,11px);color:var(--muted,#8a8498);margin-top:2px">$${item.price} · ${(storeViews - idx*29).toLocaleString()} views</div>
-      </div>
-      <div style="font-size:var(--t-caption,12px);font-weight:800;color:var(--accent3,#7a6af0)">#${idx+1}</div>
-    </div>`).join('');
+    // ====== MODULE 1: stale listings (ageDays > 30) ======
+    const staleItems = mine
+      .map((it, idx) => ({ it, idx, age: ageDaysOf(it, idx) }))
+      .filter(x => x.age > 30)
+      .sort((a,b) => b.age - a.age); // oldest first
 
+    // ====== MODULE 2: incomplete listings (<70% complete) ======
+    const incompleteItems = mine
+      .map((it, idx) => ({ it, idx, score: completenessOf(it) }))
+      .filter(x => x.score < 0.70)
+      .sort((a,b) => a.score - b.score); // worst first
+
+    // ====== MODULE 3: pricing outliers (per-category median, cats with >=3) ======
+    const byCat = {};
+    mine.forEach(it => { const c = it.category || 'other'; (byCat[c] = byCat[c] || []).push(it); });
+    const median = (arr) => {
+      const s = arr.slice().sort((a,b) => a - b);
+      const m = Math.floor(s.length / 2);
+      return s.length % 2 ? s[m] : (s[m-1] + s[m]) / 2;
+    };
+    const outliers = [];
+    Object.entries(byCat).forEach(([cat, items]) => {
+      if (items.length < 3) return;
+      const med = median(items.map(i => Number(i.price)||0).filter(p => p > 0));
+      if (!med) return;
+      items.forEach(it => {
+        const p = Number(it.price)||0;
+        if (!p) return;
+        if (p > med * 1.6 || p < med * 0.5) outliers.push({ it, cat, med: Math.round(med) });
+      });
+    });
+
+    // ====== MODULE 4: list-next (wardrobe wear_count<=2 not yet listed) ======
+    let wardrobe = [];
+    try { wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]'); } catch(e) { wardrobe = []; }
+    const listedNames = new Set(mine.map(i => String(i.name||'').trim().toLowerCase()));
+    const listCandidates = wardrobe
+      .filter(w => (Number(w.wear_count)||0) <= 2 && !listedNames.has(String(w.name||'').trim().toLowerCase()))
+      .sort((a,b) => (Number(a.wear_count)||0) - (Number(b.wear_count)||0));
+
+    // ====== HEALTH SCORE ======
+    let score = 100;
+    score -= Math.min(staleItems.length * 8, 24);
+    score -= Math.min(incompleteItems.length * 6, 24);
+    score -= Math.min(outliers.length * 6, 18);
+    if (saveRate < 0.15) score -= 10;
+    score = Math.max(40, Math.round(score));
+    const verdict = score >= 85 ? 'Your store is in great shape'
+      : score >= 70 ? 'Healthy — a few quick wins below'
+      : score >= 55 ? 'Some easy fixes will lift sales'
+      : "Let's tune up your store";
+
+    // ====== build recommendation cards (highest impact first, cap 4) ======
+    const recCard = ({ tier, ic, title, action, cta }) => `
+      <div class="ms-in-rec ${tier}">
+        <div class="ms-in-rec-ic">${icon(ic, 18)}</div>
+        <div class="ms-in-rec-body">
+          <div class="ms-in-rec-title">${title}</div>
+          <div class="ms-in-rec-action">${action}</div>
+        </div>
+        ${cta || ''}
+      </div>`;
+
+    const recs = [];
+
+    if (staleItems.length) {
+      const shown = Math.min(staleItems.length, 3);
+      recs.push(recCard({
+        tier: 'is-warn', ic: 'clock',
+        title: `${staleItems.length} listing${staleItems.length>1?'s are':' is'} going quiet`,
+        action: 'Older listings drop in search — refresh to get seen again.',
+        cta: `<button class="ms-in-rec-cta" id="ms-in-refresh">Refresh</button>`
+      }));
+    }
+
+    if (incompleteItems.length) {
+      const worst = incompleteItems[0];
+      const miss = missingFieldsOf(worst.it).slice(0,2).join(', ');
+      recs.push(recCard({
+        tier: 'is-priority', ic: 'list',
+        title: `Add details to ${incompleteItems.length} listing${incompleteItems.length>1?'s':''} to get found`,
+        action: `Missing ${esc(miss || 'details')} — buyers filter by these.`,
+        cta: ''
+      }));
+    }
+
+    if (outliers.length) {
+      const o = outliers[0];
+      const p = Number(o.it.price)||0;
+      const dir = p > o.med ? 'high' : 'low';
+      recs.push(recCard({
+        tier: 'is-warn', ic: 'cash',
+        title: `${outliers.length} item${outliers.length>1?'s':''} may be priced off`,
+        action: `Your ${esc(o.it.name||'item')} is $${p.toLocaleString()} — similar ${esc(o.cat)} here sell ~$${o.med.toLocaleString()}.`,
+        cta: ''
+      }));
+    }
+
+    if (listCandidates.length) {
+      const pick = listCandidates[0];
+      recs.push(recCard({
+        tier: 'is-suggest', ic: 'sparkle',
+        title: `${listCandidates.length} closet item${listCandidates.length>1?'s are':' is'} ready to sell`,
+        action: 'Turn unworn pieces into earnings.',
+        cta: `<button class="ms-in-rec-cta" onclick="closeStoreInsight();openSellFormWithItem('${attr(JSON.stringify(pick))}')">List</button>`
+      }));
+    }
+
+    const recHTML = recs.length
+      ? recs.slice(0,4).join('')
+      : `<div class="ms-in-rec is-suggest">
+          <div class="ms-in-rec-ic">${icon('check',18)}</div>
+          <div class="ms-in-rec-body">
+            <div class="ms-in-rec-title">Nothing needs attention</div>
+            <div class="ms-in-rec-action">Your listings are fresh, complete and well priced.</div>
+          </div></div>`;
+
+    // ====== conversion funnel ======
+    const funnelMax = Math.max(storeViews, 1);
+    const funnelBar = (label, n) => `<div class="ms-in-bar-row">
+      <div class="ms-in-bar-label">${label}</div>
+      <div class="ms-in-bar-track"><div class="ms-in-bar-fill" style="width:${Math.round(n/funnelMax*100)}%"></div></div>
+      <div class="ms-in-bar-n">${n.toLocaleString()}</div></div>`;
+    const diag = saveRate < 0.15
+      ? "Buyers look but don't save — stronger cover photos help."
+      : sellThrough < 0.40
+      ? "Buyers save but don't buy — try a small price drop."
+      : 'Healthy funnel — keep listing.';
+
+    // ====== weekly momentum goal ======
+    const goal = Math.max(soldCount + 2, 5);
+    const goalPct = Math.min(100, Math.round(soldCount / goal * 100));
+    const goalGap = Math.max(0, goal - soldCount);
+
+    // ====== assemble ======
     return `
-      <div class="ms-in-sec">
-        <div class="ms-in-sec-title">Performance</div>
-        <div class="ms-in-kpis">
-          ${kpi('$' + revenue.toLocaleString(), 'Total revenue', 'var(--success,#52c97a)')}
-          ${kpi(soldCount, 'Items sold', 'var(--accent,#e8526a)')}
-          ${kpi(listings, 'Active listings', 'var(--accent3,#7a6af0)')}
-          ${kpi('$' + avgPrice.toLocaleString(), 'Avg price', null)}
-          ${kpi('$' + totalValue.toLocaleString(), 'Store value', null)}
-          ${kpi(conv.toFixed(1) + '%', 'Conversion', 'var(--accent2,#c4855a)')}
+      <div class="ms-in-health">
+        <div class="ms-in-health-score">${score}<span> / 100</span></div>
+        <div class="ms-in-health-verdict">${verdict}</div>
+        <div class="ms-in-health-sub">${icon('arrowUp',12)} Fixes below raise your score</div>
+        <div class="ms-in-snap">
+          <div><div class="ms-in-snap-val">$${revenue.toLocaleString()}</div><div class="ms-in-snap-label">Revenue</div></div>
+          <div><div class="ms-in-snap-val">${conv.toFixed(1)}%</div><div class="ms-in-snap-label">Conversion</div></div>
+          <div><div class="ms-in-snap-val">${saves.toLocaleString()}</div><div class="ms-in-snap-label">Saves</div></div>
         </div>
       </div>
-      <div class="ms-in-sec">
-        <div class="ms-in-sec-title">Audience</div>
-        <div class="ms-in-views">
-          <div class="ms-in-view"><div class="ms-in-kpi-val">${viewsToday.toLocaleString()}</div><div class="ms-in-kpi-label">Today</div></div>
-          <div class="ms-in-view"><div class="ms-in-kpi-val">${viewsMonth.toLocaleString()}</div><div class="ms-in-kpi-label">30 days</div></div>
-          <div class="ms-in-view"><div class="ms-in-kpi-val">${storeViews.toLocaleString()}</div><div class="ms-in-kpi-label">All time</div></div>
-        </div>
-        <div class="ms-in-bar-row" style="margin-top:12px">
-          <div class="ms-in-bar-label">Saves</div>
-          <div class="ms-in-bar-track"><div class="ms-in-bar-fill" style="width:${Math.round(saves/storeViews*100)}%"></div></div>
-          <div class="ms-in-bar-n">${saves}</div>
-        </div>
+      <div class="ms-in-sec-title" style="padding:0 20px">Do next</div>
+      <div class="ms-in-rec-wrap">${recHTML}</div>
+      <div class="ms-in-sec" style="margin-top:6px">
+        <div class="ms-in-sec-title">Conversion funnel</div>
+        ${funnelBar('Views', storeViews)}
+        ${funnelBar('Saves', saves)}
+        ${funnelBar('Sales', soldCount)}
+        <div class="ms-in-diag" style="padding:0">${diag}</div>
       </div>
-      <div class="ms-in-sec">
-        <div class="ms-in-sec-title">By category</div>
-        ${catBars}
-      </div>
-      <div class="ms-in-sec">
-        <div class="ms-in-sec-title">Top performers</div>
-        ${topRows}
+      <div class="ms-in-sec-title" style="padding:0 20px">This week</div>
+      <div class="ms-in-goal">
+        <div class="ms-in-goal-top">
+          <div class="ms-in-goal-label">Weekly sales goal</div>
+          <div class="ms-in-goal-n">${soldCount} / ${goal}</div>
+        </div>
+        <div class="ms-in-bar-track"><div class="ms-in-bar-fill" style="width:${goalPct}%"></div></div>
+        <div class="ms-in-diag" style="padding:8px 0 0">You're ${goalGap} sale${goalGap===1?'':'s'} from your best week.</div>
       </div>
       <div class="ms-in-note">Revenue, views and conversion are estimated from your listings until live sales tracking is connected.</div>
     `;
+  }
+
+  // Render sheet body + (re)bind the per-render CTAs (recreated on each innerHTML set)
+  function _renderStoreInsight() {
+    const scroll = document.getElementById('ms-insight-scroll');
+    if (!scroll) return;
+    scroll.innerHTML = _buildStoreInsight();
+    // Refresh CTA: relist the oldest stale item to the top of the store
+    scroll.querySelector('#ms-in-refresh')?.addEventListener('click', () => {
+      let mine = [];
+      try { mine = JSON.parse(localStorage.getItem(MP_KEY) || '[]'); } catch(e) { mine = []; }
+      if (!mine.length) return;
+      // recompute oldest stale (same age proxy as _buildStoreInsight)
+      const ageDaysOf = (item, idx) => {
+        const digits = parseInt(String(item.id || '').replace(/\D/g,''), 10);
+        if (digits && digits > 1e12) return Math.floor((Date.now() - digits) / 86400000);
+        return idx * 12;
+      };
+      let oldestIdx = -1, oldestAge = 30;
+      mine.forEach((it, idx) => { const a = ageDaysOf(it, idx); if (a > oldestAge) { oldestAge = a; oldestIdx = idx; } });
+      if (oldestIdx < 0) return;
+      const item = mine.splice(oldestIdx, 1)[0];
+      item.id = 'u' + Date.now();
+      mine.unshift(item); // back to the top (newest)
+      localStorage.setItem(MP_KEY, JSON.stringify(mine));
+      _renderStoreInsight(); // re-render + rebind
+      showToast('Listing refreshed — back to the top');
+    });
   }
 
   function openStoreInsight() {
@@ -6564,7 +6747,7 @@
     const sheet = document.getElementById('ms-insight-sheet');
     const scroll = document.getElementById('ms-insight-scroll');
     if (!overlay || !sheet || !scroll) return;
-    scroll.innerHTML = _buildStoreInsight();
+    _renderStoreInsight();
     overlay.classList.add('show');
     sheet.classList.add('show');
     overlay.setAttribute('aria-hidden','false');
