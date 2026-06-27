@@ -4795,6 +4795,8 @@
     const deadValue = Math.round(deadItems.reduce((s,i) => s + (i.price_estimate_usd||0), 0)) || 340;
     // Truthful copy: real "never worn in 60+ days" only when items are genuinely never-worn.
     const deadCopy = neverWorn.length > 0 ? "haven't been worn in 60+ days" : 'are barely worn';
+    // Store for openDeadZoneListSheet() — updated each time analytics renders.
+    _deadZoneItems = deadItems;
 
     // Color distribution (kept for category bars)
     const catMap = {};
@@ -4873,10 +4875,10 @@
       <!-- 5. Dead Zone Alert -->
       <div class="an-alert-card">
         <div class="an-alert-title">${icon('alert',16)} ${deadCount} item${deadCount!==1?'s':''} ${deadCopy}</div>
-        <div class="an-alert-sub">Worth ~$${deadValue} sitting there</div>
+        <div class="an-alert-sub">~$${deadValue} tied up · sell and earn <strong style="color:var(--success,#52c97a);font-weight:800">~$${Math.round(deadValue*0.5)}</strong></div>
         <div class="an-alert-actions">
           <button class="an-alert-btn primary" onclick="showToast('Challenge accepted — pick one this week!')">Wear one this week</button>
-          <button class="an-alert-btn" onclick="mpTab='sell';showView('marketplace')">List in My Store</button>
+          <button class="an-alert-btn" onclick="openDeadZoneListSheet()">List in My Store</button>
         </div>
       </div>
 
@@ -5697,6 +5699,7 @@
   let _mpPendingCondition = 'all', _mpPendingPriceMin = 0, _mpPendingPriceMax = 9999;
   let _mpPendingCloseMatch = false;
   let _mpPendingOccasion = 'all', _mpPendingMaterial = 'all', _mpPendingSize = 'all';
+  let _deadZoneItems = [];
 
   function loadMPListings() {
     const user = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
@@ -6524,6 +6527,52 @@
     localStorage.setItem(MP_KEY, JSON.stringify(updated));
     renderMarketplace();
     showToast('Item removed from sale');
+  }
+
+  function openDeadZoneListSheet() {
+    const items = _deadZoneItems;
+    if (!items.length) { mpTab='sell'; showView('marketplace'); return; }
+    const modal = document.getElementById('purchase-modal');
+    const card  = document.getElementById('modal-card');
+    const totalEarn = Math.round(items.reduce((s,i) => s + (i.price_estimate_usd||0) * 0.5, 0));
+    card.innerHTML = `
+      <div style="padding:18px 20px 6px;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:var(--t-lead,17px);font-weight:900;display:flex;align-items:center;gap:8px">${icon('tag',18)} List in My Store</span>
+        <button style="background:none;border:none;color:var(--muted,#8a8498);cursor:pointer;padding:4px;display:flex" onclick="document.getElementById('purchase-modal').classList.remove('show')">${icon('x',18)}</button>
+      </div>
+      <div style="padding:0 20px 14px;font-size:var(--t-small,13px);color:var(--muted,#8a8498)">
+        ${items.length} item${items.length!==1?'s':''} barely worn — sell all and earn <strong style="color:var(--success,#52c97a)">~$${totalEarn}</strong>
+      </div>
+      <div style="border-top:1px solid var(--line,#2e2836)">
+        ${items.map((it,i) => {
+          const earn = Math.round((it.price_estimate_usd||0) * 0.5);
+          return `<div style="display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--line,#2e2836)">
+            <div style="width:52px;height:52px;border-radius:var(--r-sm,10px);overflow:hidden;flex-shrink:0;background:var(--card,#1e1a22)">${productImage(it)}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:var(--t-body,14px);font-weight:700;color:var(--fg,#f0ecf5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(it.name)}</div>
+              <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:2px">${earn>0?`~$${earn} · 50% of retail`:'Ready to list'}</div>
+            </div>
+            <button class="dz-list-btn" data-dz-idx="${i}" style="min-height:44px;padding:0 16px;background:var(--accent,#e8526a);border:none;border-radius:var(--r-pill,999px);font-family:inherit;font-size:var(--t-caption,12px);font-weight:800;color:#fff;cursor:pointer;flex-shrink:0;white-space:nowrap">List</button>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="padding:16px 20px 20px">
+        <button id="dz-list-first-btn" style="width:100%;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a));border:none;border-radius:var(--r-md,14px);font-family:inherit;font-size:var(--t-body,14px);font-weight:800;color:#fff;cursor:pointer">
+          ${icon('tag',16)} Start listing · earn ~$${totalEarn}
+        </button>
+      </div>`;
+    modal.classList.add('show');
+    card.querySelectorAll('.dz-list-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = +btn.dataset.dzIdx;
+        modal.classList.remove('show');
+        openSellForm(_deadZoneItems[idx]);
+      });
+    });
+    document.getElementById('dz-list-first-btn')?.addEventListener('click', () => {
+      modal.classList.remove('show');
+      openSellForm(_deadZoneItems[0]);
+    });
   }
 
   function openSellFormWithItem(jsonStr) {
