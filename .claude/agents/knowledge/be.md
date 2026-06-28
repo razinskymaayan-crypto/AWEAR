@@ -32,3 +32,6 @@
 
 ---
 
+
+## BE-IDEMPOTENT — money/credit writes need an idempotency key (2026-06-28, sam)
+Fire-and-forget POSTs from the client (`fetch(...).catch(()=>{})`) WILL be retried/double-fired (double-tap, network retry). For any endpoint that writes money or a ledger row (orders, credits, payments), accept an optional client-supplied `client_ref`, SELECT-before-INSERT on `(user_key, client_ref)`, and return the existing row (with `deduped:true`, zero new side-effects) on a hit. Keep it backward-compatible: empty `client_ref` = legacy behavior. Use an ADDITIVE guarded migration (`PRAGMA table_info` + `ALTER TABLE ADD COLUMN`, never DROP/recreate) and a NON-unique index (a UNIQUE on the new column would collide with existing `''` rows). Ties to MASTER_PLAN locked decision #11 (credits ledger append-only & idempotent).

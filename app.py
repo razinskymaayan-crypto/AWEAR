@@ -241,6 +241,7 @@ AFFILIATE_TAG = "awear"  # replace with the real network publisher id once signe
 # the cut AWEAR takes on top of the eventual sale price.
 RESALE_SUGGESTION_PCT = 0.5   # suggested resale price = 50% of original price estimate
 AWEAR_COMMISSION_PCT = 0.15   # AWEAR's commission on a completed resale, on top of the above
+CREATOR_CREDIT_PCT = 0.05   # creator earns 5% of order amount_usd. LOCKED economics — do not change.
 
 # ---------------------------------------------------------------------------
 # Currency — static reference rates, NOT live FX.
@@ -945,9 +946,19 @@ def init_db() -> None:
                 amount_usd   REAL DEFAULT 0,
                 status       TEXT DEFAULT 'completed',
                 influencer_id TEXT DEFAULT '',
+                client_ref   TEXT DEFAULT '',
                 created_at   TEXT NOT NULL
             )
         """)
+        # Additive migration: client_ref idempotency key. Guarded — existing DBs
+        # already have the orders table; ALTER adds the column without touching rows.
+        cols = {r[1] for r in conn.execute("PRAGMA table_info(orders)").fetchall()}
+        if "client_ref" not in cols:
+            conn.execute("ALTER TABLE orders ADD COLUMN client_ref TEXT DEFAULT ''")
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_orders_userkey_ref "
+            "ON orders (user_key, client_ref)"
+        )
         conn.execute("""
             CREATE TABLE IF NOT EXISTS credits (
                 id           TEXT PRIMARY KEY,
@@ -2961,6 +2972,7 @@ class OrderCreate(BaseModel):
     amount_usd: float = 0.0
     influencer_id: str = ""
     post_id: str = ""
+    client_ref: str = ""
 
 
 @app.post("/api/orders")
@@ -2980,20 +2992,37 @@ async def create_order(order: OrderCreate, request: Request):
     if not product_name:
         raise HTTPException(status_code=400, detail="product_name is required.")
 
+    if order.amount_usd < 0:
+        raise HTTPException(status_code=400, detail="amount_usd must be >= 0.")
+    amount_usd = round(order.amount_usd, 2)
+
+    client_ref = (order.client_ref or "").strip()
+    if client_ref:
+        with _get_db() as db:
+            existing = db.execute(
+                "SELECT id FROM orders WHERE user_key = ? AND client_ref = ?",
+                (user_key, client_ref),
+            ).fetchone()
+        if existing:
+            logger.info("order dedup hit: user=%s client_ref=%s -> %s",
+                        user_key, client_ref, existing["id"])
+            return {"order_id": existing["id"], "status": "completed",
+                    "credit_amount": 0.0, "deduped": True}
+
     now = datetime.datetime.utcnow().isoformat()
     order_id = "ord_" + uuid.uuid4().hex[:12]
 
     with _get_db() as db:
         db.execute(
             """INSERT INTO orders (id, user_key, post_id, product_id, product_name,
-                                   amount_usd, status, influencer_id, created_at)
-               VALUES (?,?,?,?,?,?,?,?,?)""",
+                                   amount_usd, status, influencer_id, client_ref, created_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?)""",
             (order_id, user_key, order.post_id, order.product_id, product_name,
-             order.amount_usd, "completed", order.influencer_id, now),
+             amount_usd, "completed", order.influencer_id, client_ref, now),
         )
         credit_amount = 0.0
         if order.influencer_id:
-            credit_amount = round(order.amount_usd * 0.05, 2)
+            credit_amount = round(amount_usd * CREATOR_CREDIT_PCT, 2)
             credit_id = "crd_" + uuid.uuid4().hex[:12]
             db.execute(
                 """INSERT INTO credits (id, user_key, order_id, item_name, amount_usd, type, created_at)
