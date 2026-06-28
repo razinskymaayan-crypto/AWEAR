@@ -683,11 +683,11 @@
 
   /* ---- item detail sheet (feed -> per-item) ---- */
   .item-hero { position: relative; border-radius: 18px; overflow: hidden; margin-bottom: 16px;
-    background: #fbfbfd; aspect-ratio: 4/5; max-height: 340px;
+    background: var(--card, #fbfbfd); aspect-ratio: 4/5; max-height: 340px;
     box-shadow: 0 12px 34px rgba(0,0,0,.4); }
-  .item-hero img { width: 100%; height: 100%; object-fit: contain; display: block; background: #fff; }
+  .item-hero img { width: 100%; height: 100%; object-fit: contain; display: block; background: transparent; }
   /* skeleton shimmer behind product images until they load */
-  .item-hero, .combo-thumb { background: linear-gradient(100deg,#e9e9f0 25%,#f4f4f8 50%,#e9e9f0 75%);
+  .item-hero, .combo-thumb { background: linear-gradient(100deg, var(--card,#e9e9f0) 25%, var(--card-hover,#f4f4f8) 50%, var(--card,#e9e9f0) 75%);
     background-size: 220% 100%; animation: pi-shimmer 1.4s linear infinite; }
   @keyframes pi-shimmer { from { background-position: 220% 0; } to { background-position: -220% 0; } }
   .pi-img { opacity: 0; transition: opacity .35s ease; }
@@ -724,7 +724,7 @@
   /* Avatar circle */
   .skeleton-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; }
   .item-match-invite { font-size: var(--t-micro); font-weight: 700; }
-  .item-hero .img-fallback { width: 100%; height: 100%; background: #fbfbfd; color: #b8b8c4; }
+  .item-hero .img-fallback { width: 100%; height: 100%; background: var(--card, #fbfbfd); color: var(--muted, #b8b8c4); }
   .item-hero-cat { position: absolute; top: 12px; right: 12px; z-index: 2;
     display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px;
     background: rgba(10,10,14,.62); backdrop-filter: blur(8px); color: #fff;
@@ -755,9 +755,9 @@
   .combo-row { display: flex; align-items: stretch; gap: 8px; }
   .combo-pc { flex: 1; min-width: 0; text-align: center; }
   .combo-thumb { width: 100%; aspect-ratio: 4/5; border-radius: 12px; overflow: hidden;
-    background: #fbfbfd; position: relative; }
-  .combo-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; background: #fff; }
-  .combo-thumb .img-fallback { width: 100%; height: 100%; background: #fbfbfd; color: #b8b8c4; }
+    background: var(--card, #fbfbfd); position: relative; }
+  .combo-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; background: transparent; }
+  .combo-thumb .img-fallback { width: 100%; height: 100%; background: var(--card, #fbfbfd); color: var(--muted, #b8b8c4); }
   .combo-pc.is-this .combo-thumb { box-shadow: 0 0 0 2px var(--accent) inset; }
   .combo-tag { position: absolute; top: 6px; right: 6px; font-size: var(--t-micro,9px); font-weight: 900;
     padding: 3px 7px; border-radius: 12px; background: rgba(255,61,119,.92); color: #fff; }
@@ -1261,7 +1261,7 @@
   .sf-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:900; padding:3px 8px; border-radius:10px; }
   .sf-badge.deal { background:var(--danger); }
   .sf-badge.new { background:var(--success); color:#000; }
-  .sf-badge.missing { background:#f59e0b; color:#000; }
+  .sf-badge.missing { background:var(--warning, #f59e0b); color:var(--bg, #000); }
   .sf-card-body { padding:10px 12px 12px; }
   .sf-card-name { font-size:var(--t-small); font-weight:800; line-height:1.3; }
   .sf-card-brand { font-size:var(--t-micro); color:var(--muted); font-weight:600; margin-top:2px; }
@@ -2241,8 +2241,8 @@
     width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit; background: #fff; }
   .mp-item-img .img-fallback, .sf-card-img .img-fallback, .ex-card-bg .img-fallback, .ex-result-emoji .img-fallback {
     background: linear-gradient(160deg, var(--card), var(--bg)); color: var(--muted); font-size: var(--t-display,28px); }
-  .sheet-look-emoji { overflow: hidden; border-radius: 9px; background: #fbfbfd; }
-  .sheet-look-emoji .img-fallback { background: #fbfbfd; color: #b8b8c4; }
+  .sheet-look-emoji { overflow: hidden; border-radius: 9px; background: var(--card, #fbfbfd); }
+  .sheet-look-emoji .img-fallback { background: var(--card, #fbfbfd); color: var(--muted, #b8b8c4); }
   /* Avatar fallback — initials circle when an external avatar URL fails to load (A6 demo reliability) */
   .avatar-fallback { border-radius: 50%; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a));
     display: inline-flex; align-items: center; justify-content: center; font-weight: 900; color: var(--text,#fbfbfd);
@@ -7917,7 +7917,7 @@
         ${suggestions.map(s => `
           <div style="background:var(--card);border-radius:14px;padding:12px 14px;border:1px solid var(--line)">
             <div style="font-size:var(--t-body);font-weight:800;margin-bottom:4px">${esc(s.name)}</div>
-            <div style="font-size:var(--t-micro);color:#8e8e9c;font-weight:600;margin-bottom:6px">${esc(s.reason)}</div>
+            <div style="font-size:var(--t-micro);color:var(--muted,#8e8e9c);font-weight:600;margin-bottom:6px">${esc(s.reason)}</div>
             <div style="display:flex;gap:8px">
               <span style="padding:4px 10px;background:var(--success-surface);border-radius:20px;font-size:var(--t-micro);font-weight:800;color:var(--success)">${esc(s.action)} • $${s.price_suggestion||0}</span>
             </div>
