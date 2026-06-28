@@ -3280,6 +3280,12 @@ async def dm_send(payload: DMSendRequest, request: Request):
         raise HTTPException(status_code=400, detail="text required")
     if len(text) > 2000:
         raise HTTPException(status_code=400, detail="text too long — max 2000 chars")
+    # Reject ghost recipients (e.g. a Community u1-style id) so the DM store never
+    # accrues orphaned threads. Fail-open if the profiles cache is empty (startup
+    # race / load failure) — mirrors the follows-toggle guard — so a transient cache
+    # miss never blocks every legitimate send.
+    if _profiles_cache and not any(p.get("id") == to_user_id for p in _profiles_cache):
+        raise HTTPException(status_code=404, detail="unknown recipient")
 
     created_at = datetime.datetime.utcnow().isoformat()
     with _get_db() as db:
