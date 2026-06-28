@@ -723,17 +723,45 @@
   .skeleton-text.xshort { width: 35%; }
   /* Avatar circle */
   .skeleton-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; }
-  .item-match-invite { font-size: var(--t-micro); font-weight: 700; }
   .item-hero .img-fallback { width: 100%; height: 100%; background: var(--card, #fbfbfd); color: var(--muted, #b8b8c4); }
   .item-hero-cat { position: absolute; top: 12px; right: 12px; z-index: 2;
     display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px;
     background: rgba(10,10,14,.62); backdrop-filter: blur(8px); color: #fff;
     font-size: var(--t-micro,11px); font-weight: 800; }
-  .item-match { position: absolute; bottom: 12px; left: 12px; z-index: 2;
-    display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 20px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
-    font-size: var(--t-small); font-weight: 900; box-shadow: 0 6px 18px rgba(255,61,119,.4); }
-  .item-match b { font-family: "Poppins", sans-serif; font-size: var(--t-h3,15px); font-weight: 800; }
+
+  /* ── Hero match band — the WOW number directly under the photo, before title ── */
+  .match-band { background: var(--surface, #161318); border: 1px solid var(--line, #2e2836);
+    border-radius: var(--r-md, 14px); padding: 16px 18px; margin-bottom: 16px; text-align: center; }
+  /* Hero exception: number is the WOW anchor — push past the display token for cover-authority. */
+  .match-band-num { font-family: "Poppins", sans-serif; font-size: clamp(38px, 11vw, 46px);
+    font-weight: 600; line-height: 1; letter-spacing: -1px; }
+  .match-band-pct { font-size: var(--t-title, 20px); font-weight: 500; color: var(--muted, #8a8498);
+    margin-inline-start: 2px; }
+  .match-band-label { font-size: var(--t-caption, 12px); color: var(--muted, #8a8498);
+    font-weight: 600; margin-top: 4px; }
+  .match-band-reason { font-size: var(--t-small, 13px); color: var(--fg, #f0ecf5);
+    margin-top: 10px; line-height: 1.35; }
+  .match-band-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 12px; }
+  .match-chip { display: inline-flex; align-items: center; padding: 5px 11px;
+    border-radius: var(--r-pill, 999px); background: var(--card, #1e1a22);
+    border: 1px solid var(--line, #2e2836); color: var(--fg, #f0ecf5);
+    font-size: var(--t-caption, 12px); font-weight: 600; }
+  /* Empty closet — inviting, not dead. Same footprint. */
+  .match-band-empty { display: flex; align-items: center; gap: 14px; text-align: start; }
+  .match-band-icon { display: inline-flex; flex-shrink: 0; width: 44px; height: 44px;
+    align-items: center; justify-content: center; border-radius: var(--r-sm, 10px);
+    background: var(--card, #1e1a22); color: var(--accent2, #c4855a); }
+  .match-band-empty-copy { flex: 1; min-width: 0; }
+  .match-band-empty-title { font-size: var(--t-body, 14px); font-weight: 700; color: var(--fg, #f0ecf5); }
+  .match-band-empty .match-band-label { margin-top: 2px; }
+  .match-band-cta { flex-shrink: 0; min-height: 44px; padding: 0 16px;
+    border-radius: var(--r-pill, 999px); border: 1px solid var(--line, #2e2836);
+    background: transparent; color: var(--fg, #f0ecf5);
+    font-size: var(--t-small, 13px); font-weight: 700; font-family: inherit; cursor: pointer;
+    transition: background .18s ease, border-color .18s ease; }
+  .match-band-cta:hover, .match-band-cta:active { background: var(--card-hover, #262030);
+    border-color: var(--accent2, #c4855a); }
+
   .item-name { font-weight: 900; font-size: var(--t-lead,19px); letter-spacing: -.3px; line-height: 1.2; }
   .item-meta { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 18px; }
   .item-price { font-family: "Poppins", sans-serif; font-size: var(--t-h1,22px); font-weight: 800;
@@ -3214,16 +3242,51 @@
     </div>`;
   }
 
+  // Hero match band: prominent "% match to your closet" directly under the item image.
+  // Uses calcCompatScore() {pct, matches:[closetItemNames]} — tier colors the NUMBER + chip borders only.
+  function matchBandHTML(it, wardrobe){
+    // Empty closet → inviting state, NOT 0%. Same band footprint.
+    if(!wardrobe.length){
+      return `<div class="match-band match-band-empty">
+        <span class="match-band-icon">${icon('hanger',22)}</span>
+        <div class="match-band-empty-copy">
+          <div class="match-band-empty-title">Add clothes to see your match</div>
+          <div class="match-band-label">We compare every piece to what you already own</div>
+        </div>
+        <button class="match-band-cta" onclick="closeSheet();showView('closet')">Build your closet</button>
+      </div>`;
+    }
+    const {pct, matches} = calcCompatScore(it, wardrobe);
+    const tier = pct>=80 ? 'high' : pct>=60 ? 'mid' : 'low';
+    const tierColor = pct>=80 ? 'var(--success,#52c97a)' : pct>=60 ? 'var(--accent2,#c4855a)' : 'var(--accent,#e8526a)';
+    // Plain-English reason
+    let reason;
+    if(matches.length>0){
+      if(matches.length===1) reason = `Pairs with your ${esc(matches[0])}.`;
+      else if(matches.length===2) reason = `Pairs with your ${esc(matches[0])} and ${esc(matches[1])}.`;
+      else reason = `Pairs with ${matches.length} pieces you already own.`;
+    } else {
+      reason = 'A fresh direction for your closet.';
+    }
+    const chips = matches.slice(0,3)
+      .map(m=>`<span class="match-chip" style="border-color:${tierColor}">${esc(m)}</span>`)
+      .join('');
+    return `<div class="match-band match-band-${tier}">
+      <div class="match-band-num" style="color:${tierColor}">${pct}<span class="match-band-pct">%</span></div>
+      <div class="match-band-label">match to your closet</div>
+      <div class="match-band-reason">${reason}</div>
+      ${chips?`<div class="match-band-chips">${chips}</div>`:''}
+    </div>`;
+  }
+
   // full item detail sheet: real photo -> match% -> closet combos (AI stylist) -> buy
   function openSheetItem(item, fallbackPool){
     const it=item||{};
     logAdminEvent('buy_intent', 'Opened sheet: ' + (it.name||'item'));
     const stores=itemStores(it);
-    const hasCloset=loadWardrobe().length>0;
-    const pct=matchPercent((it.style_tags||[]).concat(it.category?[it.category]:[]));
-    const matchBadge = hasCloset
-      ? `<span class="item-match">${icon('sparkle',14)} <b>${pct}%</b> closet match</span>`
-      : `<span class="item-match item-match-invite">${icon('sparkle',14)} Add clothes to your closet to see your match</span>`;
+    const wardrobe=loadWardrobe();
+    const hasCloset=wardrobe.length>0;
+    const matchBand = matchBandHTML(it, wardrobe);
     const combos=closetCombos(it,fallbackPool);
     const combosHTML = combos.length
       ? combos.map(c=>comboHTML(it,c)).join('')
@@ -3233,8 +3296,8 @@
       <div class="item-hero">
         <span class="item-hero-cat">${icon(catIcon(it.category),14)} ${esc(catLabel(it.category))}</span>
         ${productImage(it)}
-        ${matchBadge}
       </div>
+      ${matchBand}
       <div class="item-name">${esc(it.name)}</div>
       <div class="item-meta">
         <span class="item-price">$${esc(it.price_estimate_usd||it.price||0)}</span>
