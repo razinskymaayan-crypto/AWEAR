@@ -20,6 +20,10 @@
       "value": "#7a6af0",
       "comment": "Tertiary accent — muted indigo. Used sparingly for notification dots, special states. Cooler complement to the warm primaries. Replaces cyan #06b6d4."
     },
+    "on-accent": {
+      "value": "#fff",
+      "comment": "Text/icon color on the accent→accent2 brand gradient (--grad-primary). White is correct in BOTH dark and light modes: light-mode accent gradient is near-black #14110F→#3D3833, so no light-mode override needed. Was a phantom token referenced ~8× in index.html (.dm-bubble, .dm-send, .mp-sp-follow, .season-entry-*, .ig-ava-initials) — now real (DS-005)."
+    },
     "bg": {
       "value": "#0e0c0f",
       "comment": "Base background. Near-black with a warm purple undertone — avoids the harshness of pure black (#000) or cold blue-black (#0a0a0e). Photo content pops without eye strain. References: Spotify #121212, Twitter dark #15202B — ours is warmer."

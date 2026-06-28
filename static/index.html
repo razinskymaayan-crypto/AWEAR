@@ -606,6 +606,11 @@
   /* ---- profile photo in ig-head ---- */
   .ig-ava { position: relative; }
   .ig-ava-photo { position: absolute; inset: 3px; z-index: 2; border-radius: 50%; object-fit: cover; width: calc(100% - 6px); height: calc(100% - 6px); }
+  .ig-ava-initials { position: absolute; inset: 3px; z-index: 2; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a));
+    display: flex; align-items: center; justify-content: center;
+    font-size: var(--t-h1,24px); font-weight: 900; color: var(--on-accent,#fff); letter-spacing: .5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35); }
 
 
   /* ---- Bottom Sheet ---- */
@@ -2950,6 +2955,10 @@
   function esc(s)  { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
   function attr(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
   function fmtN(n) { n=Number(n)||0; return n>=1000?(n/1000).toFixed(1).replace('.0','')+'K':''+n; }
+  // 1–2 UPPERCASE initials from a name; returns '?' when nothing usable (module-scope so renderCloset + wallet share it)
+  function initials(name) {
+    return (name||'?').split(/[ ._@]/).filter(Boolean).slice(0,2).map(s=>(s[0]||'')).join('').toUpperCase().slice(0,2) || '?';
+  }
 
   // ---- navigation ----
   document.querySelectorAll('nav button[data-view]').forEach(b =>
@@ -3738,9 +3747,12 @@
 
 
     const prof=loadProfile();
+    const profInitials=prof.name?initials(prof.name):'';
     const profPhotoHTML=prof.photo
       ?`<img class="ig-ava-photo" src="${attr(prof.photo)}" alt="">`
-      :`<span class="ava-ico">${icon('user',38)}</span>`;
+      :(profInitials
+        ?`<span class="ig-ava-initials">${esc(profInitials)}</span>`
+        :`<span class="ava-ico">${icon('user',38)}</span>`);
     // Avatar-row counts: Followers · Following · Looks · Items
     const followingCount=Object.values(followState).filter(Boolean).length;
     const followersCount=1240+feed.length*53+wardrobe.length*17;
@@ -5850,9 +5862,6 @@
 
     function fmtDate(ts) {
       return new Date(ts).toLocaleDateString('en-US', {month:'short', day:'numeric'});
-    }
-    function initials(name) {
-      return (name||'?').split(/[._@]/).filter(Boolean).slice(0,2).map(s=>(s[0]||'')).join('').toUpperCase().slice(0,2) || '?';
     }
 
     const creditRows = credits.length > 0
