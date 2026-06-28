@@ -774,6 +774,9 @@
     letter-spacing: -.2px; margin-bottom: 4px; }
   .stylist-h2 .ic-svg { color: var(--accent2); }
   .stylist-sub { color: var(--muted); font-size: var(--t-micro,11px); font-weight: 600; margin-bottom: 14px; }
+  /* "Where it sells" — quiet editorial price headline above the store rows */
+  .wis-from { font-size: var(--t-lead,17px); font-weight: 800; letter-spacing: -.3px;
+    color: var(--text, #14110f); margin: 2px 0 12px; }
   .combo { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
     border-radius: 16px; padding: 12px; margin-bottom: 10px; }
   .combo-cap { font-size: var(--t-caption,12px); font-weight: 800; margin-bottom: 10px; color: var(--text);
@@ -3060,7 +3063,7 @@
 
   const STORE_LOGOS = {
     'ASOS':'ASOS', 'Zara':'Zara', 'H&M':'H&M', 'SHEIN':'SHN',
-    'Depop':'Depop', 'adidas':'ADI', 'Nike':'NK', 'Mango':'MNG',
+    'Depop':'DEP', 'adidas':'ADI', 'Nike':'NK', 'Mango':'MNG',
     'Pull&Bear':'P&B', 'Bershka':'BSK',
   };
   function storeLogo(name){ return STORE_LOGOS[name] || (name||'').slice(0,3).toUpperCase(); }
@@ -3292,6 +3295,24 @@
       ? combos.map(c=>comboHTML(it,c)).join('')
       : `<div class="combo-empty">${icon('hanger',32)}<div>Snap more items into your closet<br/>so the stylist can build looks from clothes you already own.</div></div>`;
 
+    // chunk 3 — "Where it sells": editorial price headline + real retailers + one resale signal row.
+    const basePrice = Number(it.price_estimate_usd||it.price||0);
+    // retail rows reuse storeRowHTML; Depop is excluded here so it appears only as the resale row below.
+    // give each retail row a scope subtitle when empty so every row is two-line — keeps the resale
+    // row in the same rhythm instead of being the only subtitled (dominant) row.
+    const retailRows = stores.filter(o=>o&&o.retailer!=='Depop').map(o=>storeRowHTML({...o, scope:o.scope||'In stock'})).join('');
+    // resale = canonical RESALE_SUGGESTION_PCT (app.py:242 = 0.5). Omit row entirely when price is unknown.
+    const resale = Math.round(basePrice * 0.5);
+    const resaleRow = basePrice ? storeRowHTML({
+      retailer:'Depop',
+      url:'https://www.depop.com/search/?q='+encodeURIComponent(it.search_query||it.name||''),
+      scope:'Resale from $'+resale
+    }) : '';
+    const whereHTML = `
+      <div class="stylist-h2" style="margin-top:var(--space-6,24px)">${icon('tag',16)} Where it sells</div>
+      ${basePrice ? `<div class="wis-from">From $${esc(basePrice)}</div>` : ''}
+      <div class="sheet-stores">${retailRows}${resaleRow}</div>`;
+
     sheetBody.innerHTML = `
       <div class="item-hero">
         <span class="item-hero-cat">${icon(catIcon(it.category),14)} ${esc(catLabel(it.category))}</span>
@@ -3306,6 +3327,7 @@
       <div class="stylist-h2">${icon('sparkle',16)} Stylist picks</div>
       <div class="stylist-sub">Looks that pair this item with clothes from your closet</div>
       ${combosHTML}
+      ${whereHTML}
       <div style="height:8px"></div>`;
 
     const primary=stores[0];
