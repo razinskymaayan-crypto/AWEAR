@@ -1833,10 +1833,30 @@
     box-shadow: var(--shadow-accent, 0 4px 20px rgba(255,61,119,.32));
   }
   .ho-card:active { transform: scale(.95); }
-  .ho-top { height: 164px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--bg2); overflow: hidden; }
-  .ho-top-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .35s ease; background: var(--bg2); }
+  .ho-top { position: relative; height: 164px; overflow: hidden; background: var(--surface, #161318); }
+  .ho-top-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .35s ease; background: var(--surface, #161318); }
   .ho-top-img.loaded { opacity: 1; }
-  .ho-top .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg2); color: rgba(255,255,255,.22); }
+  /* primary garment — fills the whole card top as a cover */
+  .ho-hero-img { position: absolute; inset: 0; object-position: center 30%; }
+  /* second garment — small stylist-flatlay swatch overlaid bottom-right */
+  .ho-swatch {
+    position: absolute;
+    bottom: var(--space-3, 12px);
+    right: var(--space-3, 12px);
+    width: 32%;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--r-sm, 10px);
+    /* double-ring reads in both light & dark mode (light: shadow alone vanishes) */
+    border: 1px solid rgba(255,255,255,.7);
+    box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 0 0 1px rgba(0,0,0,.06);
+    overflow: hidden;
+    background: var(--surface, #161318);
+  }
+  .ho-swatch-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ho-top .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--surface, #161318); color: var(--muted, #8a8498); }
+  /* hero fallback (imgFallback swaps the <img> for a .img-fallback span, dropping its class)
+     — the hero is a direct child of .ho-top, so fill the whole card top */
+  .ho-top > .img-fallback { position: absolute; inset: 0; }
   .ho-info { padding: 10px 10px 12px; }
   .ho-name {
     font-size: var(--t-small, 13px);
@@ -4585,8 +4605,8 @@
           const names = [o.top.name, o.bottom.name, o.shoe?.name].filter(Boolean).slice(0,2).join(' + ');
           return `<div class="ho-card${i===0?' sel':''}" data-idx="${i}">
             <div class="ho-top">
-              ${productImage(o.top, 'ho-top-img')}
-              ${productImage(o.bottom, 'ho-top-img')}
+              ${productImage(o.top, 'ho-top-img ho-hero-img')}
+              ${o.bottom ? `<div class="ho-swatch">${productImage(o.bottom, 'ho-top-img ho-swatch-img')}</div>` : ''}
             </div>
             <div class="ho-info">
               <div class="ho-occasion-badge">${icon(o.occ.icon,10)} ${esc(o.occ.label)}</div>
