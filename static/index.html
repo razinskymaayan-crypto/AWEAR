@@ -3298,15 +3298,16 @@
     // chunk 3 — "Where it sells": editorial price headline + real retailers + one resale signal row.
     const basePrice = Number(it.price_estimate_usd||it.price||0);
     // retail rows reuse storeRowHTML; Depop is excluded here so it appears only as the resale row below.
-    // give each retail row a scope subtitle when empty so every row is two-line — keeps the resale
-    // row in the same rhythm instead of being the only subtitled (dominant) row.
-    const retailRows = stores.filter(o=>o&&o.retailer!=='Depop').map(o=>storeRowHTML({...o, scope:o.scope||'In stock'})).join('');
+    // give each retail row an HONEST scope subtitle when empty so every row is two-line (keeps the
+    // resale row in the same rhythm) — "Shop new" states a real fact (new vs resale), not a fake
+    // inventory claim like "In stock" that we can't actually back (survey trust flag, ayalon).
+    const retailRows = stores.filter(o=>o&&o.retailer!=='Depop').map(o=>storeRowHTML({...o, scope:o.scope||'Shop new'})).join('');
     // resale = canonical RESALE_SUGGESTION_PCT (app.py:242 = 0.5). Omit row entirely when price is unknown.
     const resale = Math.round(basePrice * 0.5);
     const resaleRow = basePrice ? storeRowHTML({
       retailer:'Depop',
       url:'https://www.depop.com/search/?q='+encodeURIComponent(it.search_query||it.name||''),
-      scope:'Resale from $'+resale
+      scope:'Resale est. $'+resale
     }) : '';
     const whereHTML = `
       <div class="stylist-h2" style="margin-top:var(--space-6,24px)">${icon('tag',16)} Where it sells</div>
