@@ -139,6 +139,13 @@ MAX_EDGE = 1024  # downscale long edge to control cost + latency
 # spinning forever — the broad except in /api/analyze then yields the demo fallback,
 # keeping a live pitch from hanging.
 client = anthropic.Anthropic(timeout=25.0)  # reads ANTHROPIC_API_KEY from the environment
+
+# Diagnostics-only holder for the LAST /api/analyze outcome. Lets the founder SEE
+# (via GET /api/scan-health) whether the real scan ran ("live") or fell back to the
+# demo, and WHY — distinguishing "no key configured" from "key present but the call
+# failed". Bounded values only; never holds raw exception text or any key material.
+_last_scan: dict = {"mode": None, "demo_reason": None}
+
 app = FastAPI(title="AWEAR demo")
 
 
@@ -459,10 +466,44 @@ async def analyze(request: Request, photo: UploadFile):
             raise ValueError("empty parse")
         result = response.parsed_output.model_dump()
         result["mode"] = "live"
+        result["demo_reason"] = None
     except Exception as e:  # noqa: BLE001 — auth/api/parse failure -> graceful demo fallback
-        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
+        # Classify the failure into a bounded enum so the founder can SEE whether the
+        # real scan fell to demo because no key is configured vs. a live call failure
+        # WITH a valid key. Raw exception text never reaches the response.
+        if not os.getenv("ANTHROPIC_API_KEY"):
+            # Expected config state on a key-less box — not an incident.
+            demo_reason = "no_api_key"
+            logger.warning("analyze fell to demo: ANTHROPIC_API_KEY not configured")
+        else:
+            # Key IS present — the founder's exact scenario. Map to a bounded enum and
+            # log LOUD (ERROR) with the traceback so the failure is visible in logs.
+            auth_err = getattr(anthropic, "AuthenticationError", ())
+            rate_err = getattr(anthropic, "RateLimitError", ())
+            timeout_err = getattr(anthropic, "APITimeoutError", ())
+            if auth_err and isinstance(e, auth_err):
+                demo_reason = "api_error:auth"
+            elif rate_err and isinstance(e, rate_err):
+                demo_reason = "api_error:rate_limit"
+            elif timeout_err and isinstance(e, timeout_err):
+                demo_reason = "api_error:timeout"
+            elif isinstance(e, ValueError) and str(e) == "empty parse":
+                demo_reason = "api_error:parse"
+            else:
+                demo_reason = "api_error:unknown"
+            logger.error(
+                "analyze fell to demo despite a configured key (%s): %s",
+                demo_reason,
+                e,
+                exc_info=True,
+            )
         result = _demo_analysis()
         result["mode"] = "demo"
+        result["demo_reason"] = demo_reason
+
+    # Record the last scan outcome for the diagnostics endpoint (GET /api/scan-health).
+    _last_scan["mode"] = result["mode"]
+    _last_scan["demo_reason"] = result.get("demo_reason")
 
     # Enrich each item with shoppable buy options + a "shop the whole look" total.
     look_total = 0
@@ -471,6 +512,25 @@ async def analyze(request: Request, photo: UploadFile):
         look_total += item.get("price_estimate_usd") or 0
     result["look_total_usd"] = look_total
     return result
+
+
+@app.get("/api/scan-health")
+async def scan_health(request: Request):
+    """Diagnostics for /api/analyze. Never calls Claude; never returns key material.
+
+    Lets the founder SEE whether the real scan is running ("live") or silently
+    falling back to demo, and WHY (bounded ``demo_reason``). Read-only.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "scan-health", 30):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    return {
+        "key_configured": bool(os.getenv("ANTHROPIC_API_KEY")),
+        "model": MODEL,
+        "last_analyze_mode": _last_scan["mode"],
+        "last_demo_reason": _last_scan["demo_reason"],
+    }
 
 
 # ---------------------------------------------------------------------------
