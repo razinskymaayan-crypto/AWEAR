@@ -12,7 +12,7 @@ name: AWEAR Autopilot
 # in the gate; to change how soon after the hour it can re-fire, edit the heartbeat frequency.
 on:
   schedule:
-    - cron: '9,29,49 * * * *'   # heartbeat every ~20 min (off-peak minutes); the gate decides if a real run starts
+    - cron: '*/10 * * * *'   # heartbeat every 10 min; the gate (COOLDOWN_MIN) decides if a real run starts
   workflow_dispatch:            # manual trigger — bypasses the cooldown (still never overlaps a running job)
 
 permissions:
@@ -37,7 +37,7 @@ jobs:
         run: |
           set -euo pipefail
           WF="autopilot.yml"
-          COOLDOWN_MIN=60
+          COOLDOWN_MIN=10
           MIN_REAL_DURATION=180   # secs — runs shorter than this are skipped gate-heartbeats, not real work
 
           # Manual dispatch always runs (the job-level concurrency below still prevents overlap).

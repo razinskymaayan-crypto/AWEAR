@@ -1,44 +1,56 @@
 [
   {
     "id": "user_001",
-    "username": "noa.style",
-    "display_name": "Noa Levy",
-    "avatar_url": "https://randomuser.me/api/portraits/women/9.jpg",
-    "bio": "vintage collector hunting through Tel Aviv's flea markets 🧥 | Jaffa-based",
+    "username": "tamar",
+    "display_name": "Tamar",
+    "avatar_url": "/static/img/users/tamar/avatar.jpg",
+    "bio": "effortless everyday looks · Tel Aviv",
     "followers": 4320,
     "following": 512,
     "posts_count": 134,
     "verified": false,
     "location": "Tel Aviv",
-    "style_tags": ["vintage", "boho", "minimal"],
+    "style_tags": [
+      "casual",
+      "y2k",
+      "minimal"
+    ],
     "joined": "2024-01"
   },
   {
     "id": "user_002",
-    "username": "maya.fits",
-    "display_name": "Maya Cohen",
-    "avatar_url": "https://randomuser.me/api/portraits/women/37.jpg",
-    "bio": "sustainable fashion only 🌿 secondhand first | spreading slow fashion in IL",
+    "username": "carmel",
+    "display_name": "Carmel",
+    "avatar_url": "/static/img/users/carmel/avatar.jpg",
+    "bio": "street casual & easy fits",
     "followers": 8750,
     "following": 390,
     "posts_count": 201,
     "verified": true,
     "location": "Tel Aviv",
-    "style_tags": ["minimal", "cottagecore", "vintage"],
+    "style_tags": [
+      "streetwear",
+      "casual",
+      "utility"
+    ],
     "joined": "2023-11"
   },
   {
     "id": "user_003",
-    "username": "shira.closet",
-    "display_name": "Shira Avraham",
-    "avatar_url": "https://randomuser.me/api/portraits/women/66.jpg",
-    "bio": "capsule wardrobe obsessed | less but better | 30 pieces, infinite looks",
+    "username": "maayan",
+    "display_name": "Maayan",
+    "avatar_url": "/static/img/users/maayan/avatar.jpg",
+    "bio": "clean minimal menswear",
     "followers": 2140,
     "following": 278,
     "posts_count": 67,
     "verified": false,
     "location": "Haifa",
-    "style_tags": ["minimal", "luxury", "streetwear"],
+    "style_tags": [
+      "minimal",
+      "menswear",
+      "clean"
+    ],
     "joined": "2024-05"
   },
   {
@@ -52,7 +64,11 @@
     "posts_count": 445,
     "verified": true,
     "location": "Tel Aviv",
-    "style_tags": ["streetwear", "avant-garde", "minimal"],
+    "style_tags": [
+      "streetwear",
+      "avant-garde",
+      "minimal"
+    ],
     "joined": "2023-08"
   },
   {
@@ -66,7 +82,11 @@
     "posts_count": 112,
     "verified": false,
     "location": "Beer Sheva",
-    "style_tags": ["Y2K", "vintage", "streetwear"],
+    "style_tags": [
+      "Y2K",
+      "vintage",
+      "streetwear"
+    ],
     "joined": "2024-02"
   },
   {
@@ -80,7 +100,11 @@
     "posts_count": 88,
     "verified": false,
     "location": "Tel Aviv",
-    "style_tags": ["minimal", "luxury", "dark academia"],
+    "style_tags": [
+      "minimal",
+      "luxury",
+      "dark academia"
+    ],
     "joined": "2024-04"
   },
   {
@@ -94,7 +118,11 @@
     "posts_count": 623,
     "verified": true,
     "location": "Tel Aviv",
-    "style_tags": ["streetwear", "sporty", "Y2K"],
+    "style_tags": [
+      "streetwear",
+      "sporty",
+      "Y2K"
+    ],
     "joined": "2023-06"
   },
   {
@@ -108,7 +136,11 @@
     "posts_count": 178,
     "verified": false,
     "location": "Tel Aviv",
-    "style_tags": ["avant-garde", "minimal", "luxury"],
+    "style_tags": [
+      "avant-garde",
+      "minimal",
+      "luxury"
+    ],
     "joined": "2023-12"
   },
   {
@@ -122,7 +154,11 @@
     "posts_count": 43,
     "verified": false,
     "location": "Tel Aviv",
-    "style_tags": ["boho", "cottagecore", "vintage"],
+    "style_tags": [
+      "boho",
+      "cottagecore",
+      "vintage"
+    ],
     "joined": "2025-01"
   },
   {
@@ -136,7 +172,11 @@
     "posts_count": 257,
     "verified": false,
     "location": "Rishon LeZion",
-    "style_tags": ["sporty", "streetwear", "Y2K"],
+    "style_tags": [
+      "sporty",
+      "streetwear",
+      "Y2K"
+    ],
     "joined": "2024-03"
   },
   {
@@ -150,7 +190,11 @@
     "posts_count": 189,
     "verified": false,
     "location": "Tel Aviv",
-    "style_tags": ["vintage", "dark academia", "boho"],
+    "style_tags": [
+      "vintage",
+      "dark academia",
+      "boho"
+    ],
     "joined": "2024-01"
   },
   {
@@ -164,7 +208,11 @@
     "posts_count": 302,
     "verified": true,
     "location": "Tel Aviv",
-    "style_tags": ["minimal", "luxury", "cottagecore"],
+    "style_tags": [
+      "minimal",
+      "luxury",
+      "cottagecore"
+    ],
     "joined": "2023-09"
   },
   {
@@ -178,7 +226,11 @@
     "posts_count": 96,
     "verified": false,
     "location": "Tel Aviv",
-    "style_tags": ["avant-garde", "streetwear", "Y2K"],
+    "style_tags": [
+      "avant-garde",
+      "streetwear",
+      "Y2K"
+    ],
     "joined": "2024-06"
   },
   {
@@ -192,7 +244,11 @@
     "posts_count": 534,
     "verified": true,
     "location": "Tel Aviv",
-    "style_tags": ["streetwear", "sporty", "luxury"],
+    "style_tags": [
+      "streetwear",
+      "sporty",
+      "luxury"
+    ],
     "joined": "2023-07"
   },
   {
@@ -206,7 +262,11 @@
     "posts_count": 74,
     "verified": false,
     "location": "Moshav Beit Yitzhak",
-    "style_tags": ["cottagecore", "boho", "vintage"],
+    "style_tags": [
+      "cottagecore",
+      "boho",
+      "vintage"
+    ],
     "joined": "2024-07"
   },
   {
@@ -220,7 +280,11 @@
     "posts_count": 711,
     "verified": true,
     "location": "Tel Aviv",
-    "style_tags": ["luxury", "minimal", "avant-garde"],
+    "style_tags": [
+      "luxury",
+      "minimal",
+      "avant-garde"
+    ],
     "joined": "2023-05"
   },
   {
@@ -234,7 +298,11 @@
     "posts_count": 288,
     "verified": false,
     "location": "Tel Aviv",
-    "style_tags": ["avant-garde", "Y2K", "streetwear"],
+    "style_tags": [
+      "avant-garde",
+      "Y2K",
+      "streetwear"
+    ],
     "joined": "2023-10"
   },
   {
@@ -248,7 +316,11 @@
     "posts_count": 143,
     "verified": false,
     "location": "Jerusalem",
-    "style_tags": ["dark academia", "vintage", "minimal"],
+    "style_tags": [
+      "dark academia",
+      "vintage",
+      "minimal"
+    ],
     "joined": "2024-02"
   },
   {
@@ -262,7 +334,11 @@
     "posts_count": 489,
     "verified": true,
     "location": "Tel Aviv",
-    "style_tags": ["streetwear", "avant-garde", "luxury"],
+    "style_tags": [
+      "streetwear",
+      "avant-garde",
+      "luxury"
+    ],
     "joined": "2023-08"
   },
   {
@@ -276,7 +352,11 @@
     "posts_count": 167,
     "verified": false,
     "location": "Tel Aviv",
-    "style_tags": ["Y2K", "streetwear", "sporty"],
+    "style_tags": [
+      "Y2K",
+      "streetwear",
+      "sporty"
+    ],
     "joined": "2024-04"
   }
 ]
