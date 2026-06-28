@@ -41,3 +41,10 @@ Remaining bigger bets, ranked by survey impact:
 10. **Comment persistence (BE-005)** — `_comments_store` in app.py (~line 1451) is an in-memory dict; a user-posted comment vanishes on server restart. Migrate to SQLite via `_init_db` (Sam/Oren). Demo risk only if a live viewer posts then refreshes; seeded comments persist client-side regardless.
 11. **Reaction realism jitter** — reaction totals are a fixed ~10% of likes with a fixed ❤️🔥⭐✨ split; under expert scrutiny this can read as "seeded". Add small per-post jitter so no two posts share the same ratio.
 12. **Comment timestamps** — add relative time ("2h ago") to comments to reinforce recency / "alive" feel (survey flagged its absence as the main thing undercutting authenticity).
+
+## Home "Today's Look" carousel polish (from 2026-06-28 post-fix survey — docs/surveys/2026-06-28-home-todays-look.md, overall 8/10, no severe)
+13. **Hero crop/lighting consistency** — cards mix full-body vs portrait framing and golden-hour-warm vs cool-daylight grades; the two-up split seam is visible. Align hero framing (waist-up) + a unified warm-neutral grade for a true editorial rail (Gabbana P1 #1/#2 — highest visual ROI before the demo). Dolce + Netta.
+14. **Card copy truncation** — title/desc cut mid-word ("White Ribbed Crop T…", "Off-duty energy with just the right amoun…"); fit the copy or use a clean ellipsis with more line-height so cards don't read as unfinished.
+15. **Repeated denim bottom** — Weekend Vibes and Street Style cards both show the same light-wash denim; vary the bottom/crop so the looks read as genuinely distinct.
+16. **"Wore it" button glow** — the heavy pink glow competes with the hero carousel above it; dial it back so the imagery stays the star.
+17. **Demo-image durability** — consider light compression/`<picture>` for the bundled `static/img/closet/*.jpg` (currently ~1.4MB total) and extend the local-bundle pattern to any other seed that still hotlinks live CDNs (feed posts, marketplace), to fully eliminate CDN-rot from the demo.
