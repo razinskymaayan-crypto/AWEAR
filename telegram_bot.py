@@ -13,6 +13,8 @@ One-time setup:
 Keep this running (in its own terminal) while you want to work remotely.
 """
 
+from __future__ import annotations
+
 import json
 import os
 import time
@@ -45,6 +47,101 @@ SYSTEM_PROMPT = (
 )
 
 histories: dict[int, list] = {}
+
+# ── Two-way control: founder auth, agent routing, pause/status ──────────────
+# Only these Telegram user IDs may issue commands / route tasks. Comma-separated
+# in env TG_ALLOWED_IDS (Carmel + Razi). Empty => allow everyone (dev only).
+ALLOWED = {int(x) for x in os.getenv("TG_ALLOWED_IDS", "").replace(" ", "").split(",") if x}
+
+# Agents that can be addressed directly with @name. Managers + ICs + Jeff.
+AGENTS = {
+    "jeff", "mark", "steve", "ayalon", "varan",          # managers / CEO
+    "dolce", "valentino", "netta", "gabbana",             # design ICs
+    "sam", "oren", "shira",                               # backend / social ICs
+}
+ASSIGN_DIR = ".claude/agents/assignments"
+PAUSE_FLAG = ".agents_paused"
+BUDGET_STATE = ".agent_budget.json"
+
+
+def _is_allowed(user_id: int) -> bool:
+    return not ALLOWED or user_id in ALLOWED
+
+
+def _route_to_agent(agent: str, task: str, who: str) -> None:
+    """Queue a task for a specific agent — its run reads this file each cycle."""
+    os.makedirs(ASSIGN_DIR, exist_ok=True)
+    with open(f"{ASSIGN_DIR}/{agent}.md", "a") as f:
+        f.write(f"- [ ] (from {who} via Telegram) {task.strip()}\n")
+
+
+def _queue_inbox(task: str, who: str) -> None:
+    """Untagged /task -> shared INBOX 'new tasks' section (Jeff routes it)."""
+    line = f"{task.strip()}  _(from {who} via Telegram)_\n"
+    try:
+        with open(".claude/master/INBOX.md", "r") as f:
+            content = f.read()
+        marker = "## משימות חדשות\n"
+        if marker in content:
+            content = content.replace(marker, marker + "\n" + line, 1)
+            with open(".claude/master/INBOX.md", "w") as f:
+                f.write(content)
+            return
+    except Exception:  # noqa: BLE001
+        pass
+    with open(".tg_inbox", "a") as f:  # fallback
+        f.write(line)
+
+
+def _set_pause(paused: bool) -> None:
+    if paused:
+        open(PAUSE_FLAG, "w").close()
+    elif os.path.exists(PAUSE_FLAG):
+        os.remove(PAUSE_FLAG)
+
+
+def _status_text() -> str:
+    paused = os.path.exists(PAUSE_FLAG)
+    parts = ["⏸️ מושהה" if paused else "▶️ פעיל"]
+    try:
+        with open(BUDGET_STATE) as f:
+            b = json.load(f)
+        spent, cap = b.get("spent_tokens", 0), b.get("daily_cap_tokens", 0)
+        parts.append(f"טוקנים היום: {spent:,}/{cap:,}" if cap else f"טוקנים היום: {spent:,}")
+        if b.get("active_lane"):
+            parts.append(f"רץ עכשיו: {b['active_lane']}")
+    except Exception:  # noqa: BLE001
+        parts.append("(תקציב: אין נתון עדיין)")
+    return " · ".join(parts)
+
+
+def _parse_command(text: str, who: str) -> str | None:
+    """Handle /commands and @agent routing. Returns a reply, or None for free chat."""
+    low = text.lower()
+    if low.startswith("/status"):
+        return _status_text()
+    if low.startswith("/pause"):
+        _set_pause(True)
+        return "⏸️ הסוכנים יושהו אחרי הריצות הפעילות. /resume כדי להמשיך."
+    if low.startswith("/resume"):
+        _set_pause(False)
+        return "▶️ הסוכנים ימשיכו לעבוד."
+    if low.startswith("/task"):
+        task = text[len("/task"):].strip()
+        if not task:
+            return "כתבי /task ואז המשימה. או @<סוכן> משימה כדי לכוון לסוכן ספציפי."
+        _queue_inbox(task, who)
+        return "✅ נכנס ל-INBOX. ג'ף ינתב לסוכן הנכון."
+    if text.lstrip().startswith("@"):
+        tag, _, task = text.lstrip()[1:].partition(" ")
+        agent = tag.lower().rstrip(":,.")
+        if agent in AGENTS and task.strip():
+            _route_to_agent(agent, task, who)
+            return f"✅ נשלח ל-{agent}. הוא יבצע במחזור הקרוב ויחזור אליך חתום בשמו."
+        if agent in AGENTS:
+            return f"מה לבקש מ-{agent}? כתבי: @{agent} <המשימה>"
+        return f"לא מכיר סוכן בשם '{agent}'. סוכנים: {', '.join(sorted(AGENTS))}"
+    return None
 
 
 def _save_chat_id(chat_id: int) -> None:
@@ -116,16 +213,33 @@ def main() -> None:
                 continue
             chat_id = msg["chat"]["id"]
             text = msg["text"].strip()
+            frm = msg.get("from", {})
+            user_id = frm.get("id", 0)
+            who = frm.get("first_name") or frm.get("username") or str(user_id)
             _save_chat_id(chat_id)
-            _log_inbox(text)
+
+            # Founder-only: only Carmel & Razi (TG_ALLOWED_IDS) may use the bot.
+            if not _is_allowed(user_id):
+                tg("sendMessage", {"chat_id": chat_id,
+                                   "text": "מצטער, הבוט הזה פרטי לצוות Awear."})
+                continue
 
             if text == "/start":
                 tg("sendMessage", {
                     "chat_id": chat_id,
-                    "text": "היי! אני הסוכן של Awear 👗 כתבו לי כל דבר — אסטרטגיה, מוצר, גיוס, שיווק — "
-                            "ואני פה. במה נתחיל?",
+                    "text": "היי! אני הצוות של Awear 👗\n"
+                            "• כתבי חופשי — אסטרטגיה/מוצר/גיוס.\n"
+                            "• /task <משימה> — מכניס לתור (ג'ף ינתב).\n"
+                            "• @<סוכן> <משימה> — ישר לסוכן (dolce/sam/valentino/...).\n"
+                            "• /status · /pause · /resume — שליטה.",
                 })
                 histories[chat_id] = []
+                continue
+
+            # Commands + @agent routing take precedence over free chat.
+            cmd_reply = _parse_command(text, who)
+            if cmd_reply is not None:
+                tg("sendMessage", {"chat_id": chat_id, "text": cmd_reply})
                 continue
 
             tg("sendChatAction", {"chat_id": chat_id, "action": "typing"})
