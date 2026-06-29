@@ -1,0 +1,71 @@
+# One-off helper: capture the founders' Telegram user IDs (for bot authorization).
+# Carmel/Razi send the bot ANY message, then within ~5 min this records their
+# numeric id to tg_whoami.json (committed) and pings the group. Remove after use.
+name: tg-whoami
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '*/5 * * * *'   # every 5 min — short-lived; delete this workflow once IDs are captured
+
+concurrency:
+  group: tg-whoami
+  cancel-in-progress: false
+
+jobs:
+  whoami:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Read recent senders from getUpdates
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -e
+          [ -z "$TG_TOKEN" ] && { echo "no token"; exit 0; }
+          TOKEN="$(printf '%s' "$TG_TOKEN" | tr -d '[:space:]')"
+          curl -s "https://api.telegram.org/bot${TOKEN}/getUpdates?timeout=0" -o /tmp/upd.json || exit 0
+          python3 - "$TOKEN" "$TG_CHAT" <<'PY'
+          import json, sys, os, urllib.parse, urllib.request
+          token, chat = sys.argv[1], sys.argv[2]
+          try:
+              upd = json.load(open("/tmp/upd.json"))
+          except Exception:
+              upd = {}
+          people = {}
+          for u in upd.get("result", []):
+              m = u.get("message") or u.get("edited_message") or {}
+              frm = m.get("from") or {}
+              if frm.get("id") and not frm.get("is_bot"):
+                  people[str(frm["id"])] = frm.get("first_name") or frm.get("username") or ""
+          # merge with any previously captured
+          path = "tg_whoami.json"
+          prev = {}
+          if os.path.exists(path):
+              try: prev = json.load(open(path))
+              except Exception: prev = {}
+          prev.update(people)
+          json.dump(prev, open(path, "w"), ensure_ascii=False, indent=2)
+          print("captured:", prev)
+          if people and chat:
+              names = ", ".join(f"{v} (id {k})" for k, v in people.items())
+              try:
+                  urllib.request.urlopen(
+                      f"https://api.telegram.org/bot{token}/sendMessage",
+                      data=urllib.parse.urlencode({"chat_id": chat,
+                          "text": f"whoami captured: {names}"}).encode(), timeout=20)
+              except Exception: pass
+          PY
+      - name: Commit captured IDs
+        run: |
+          git config user.name "awear-bot"; git config user.email "bot@awear.local"
+          if ! git diff --quiet -- tg_whoami.json 2>/dev/null; then
+            git add tg_whoami.json
+            git commit -m "chore(tg): capture founder Telegram user id(s) [skip ci]"
+            git pull --rebase origin main || true
+            git push origin HEAD:main || echo "nothing to push"
+          else
+            echo "no new ids"
+          fi
