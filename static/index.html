@@ -674,7 +674,7 @@
   /* ---- item detail sheet (feed -> per-item) ---- */
   .item-hero { position: relative; border-radius: 18px; overflow: hidden; margin-bottom: 16px;
     background: var(--card, #fbfbfd); aspect-ratio: 4/5; max-height: 340px;
-    box-shadow: 0 12px 34px rgba(0,0,0,.4); }
+    box-shadow: 0 4px 16px rgba(0,0,0,.18); }
   .item-hero img { width: 100%; height: 100%; object-fit: contain; display: block; background: transparent; }
   /* skeleton shimmer behind product images until they load */
   .item-hero, .combo-thumb { background: linear-gradient(100deg, var(--card,#e9e9f0) 25%, var(--card-hover,#f4f4f8) 50%, var(--card,#e9e9f0) 75%);
@@ -717,7 +717,7 @@
   .item-hero-cat { position: absolute; top: 12px; right: 12px; z-index: 2;
     display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px;
     background: rgba(10,10,14,.62); backdrop-filter: blur(8px); color: #fff;
-    font-size: var(--t-micro,11px); font-weight: 800; }
+    font-size: var(--t-micro,11px); font-weight: 700; }
 
   /* ── Hero match band — the WOW number directly under the photo, before title ── */
   .match-band { background: var(--surface, #161318); border: 1px solid var(--line, #2e2836);
@@ -752,27 +752,26 @@
   .match-band-cta:hover, .match-band-cta:active { background: var(--card-hover, #262030);
     border-color: var(--accent2, #c4855a); }
 
-  .item-name { font-weight: 900; font-size: var(--t-lead,19px); letter-spacing: -.3px; line-height: 1.2; }
+  .item-name { font-weight: 700; font-size: var(--t-lead,19px); letter-spacing: -.3px; line-height: 1.2; }
   .item-meta { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 18px; }
-  .item-price { font-family: "Poppins", sans-serif; font-size: var(--t-h1,22px); font-weight: 800;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .item-brand { color: var(--muted); font-size: var(--t-caption,12px); font-weight: 700; }
+  .item-price { font-family: "Poppins", sans-serif; font-size: var(--t-h1,22px); font-weight: 700;
+    color: var(--fg, #f0ecf5); }
+  .item-brand { color: var(--muted); font-size: var(--t-caption,12px); font-weight: 600; }
 
   /* stylist combos */
-  .stylist-h2 { display: flex; align-items: center; gap: 7px; font-size: var(--t-small); font-weight: 900;
+  .stylist-h2 { display: flex; align-items: center; gap: 7px; font-size: var(--t-small); font-weight: 700;
     letter-spacing: -.2px; margin-bottom: 4px; }
   .stylist-h2 .ic-svg { color: var(--accent2); }
   .stylist-sub { color: var(--muted); font-size: var(--t-micro,11px); font-weight: 600; margin-bottom: 14px; }
   /* "Where it sells" — quiet editorial price headline above the store rows */
-  .wis-from { font-size: var(--t-lead,17px); font-weight: 800; letter-spacing: -.3px;
-    color: var(--text, #14110f); margin: 2px 0 12px; }
-  .combo { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+  .wis-from { font-size: var(--t-lead,17px); font-weight: 700; letter-spacing: -.3px;
+    color: var(--fg, #f0ecf5); margin: 2px 0 12px; }
+  .combo { background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836);
     border-radius: 16px; padding: 12px; margin-bottom: 10px; }
-  .combo-cap { font-size: var(--t-caption,12px); font-weight: 800; margin-bottom: 10px; color: var(--text);
+  .combo-cap { font-size: var(--t-caption,12px); font-weight: 700; margin-bottom: 10px; color: var(--fg, #f0ecf5);
     display: flex; align-items: center; gap: 6px; }
   .combo-cap .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
-    background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+    background: var(--accent2, #c4855a); }
   .combo-row { display: flex; align-items: stretch; gap: 8px; }
   .combo-pc { flex: 1; min-width: 0; text-align: center; }
   .combo-thumb { width: 100%; aspect-ratio: 4/5; border-radius: 12px; overflow: hidden;
@@ -780,12 +779,12 @@
   .combo-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; background: transparent; }
   .combo-thumb .img-fallback { width: 100%; height: 100%; background: var(--card, #fbfbfd); color: var(--muted, #b8b8c4); }
   .combo-pc.is-this .combo-thumb { box-shadow: 0 0 0 2px var(--accent) inset; }
-  .combo-tag { position: absolute; top: 6px; right: 6px; font-size: var(--t-micro,9px); font-weight: 900;
-    padding: 3px 7px; border-radius: 12px; background: rgba(255,61,119,.92); color: #fff; }
-  .combo-nm { font-size: var(--t-micro,11px); font-weight: 700; color: rgba(246,246,249,.85); margin-top: 6px;
+  .combo-tag { position: absolute; top: 6px; right: 6px; font-size: var(--t-micro,9px); font-weight: 700;
+    padding: 3px 7px; border-radius: 12px; background: var(--accent, #e8526a); color: var(--on-accent,#fff); }
+  .combo-nm { font-size: var(--t-micro,11px); font-weight: 700; color: var(--fg, #f0ecf5); margin-top: 6px;
     line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .combo-plus { align-self: center; color: var(--muted); flex-shrink: 0; font-weight: 800; }
-  .combo-empty { background: rgba(123,92,255,.08); border: 1px dashed rgba(123,92,255,.3);
+  .combo-plus { align-self: center; color: var(--muted); flex-shrink: 0; font-weight: 600; }
+  .combo-empty { background: var(--card, #1e1a22); border: 1px dashed var(--line, #2e2836);
     border-radius: 16px; padding: 18px 16px; text-align: center; color: var(--muted);
     font-size: var(--t-caption,12px); font-weight: 600; line-height: 1.55; }
   .combo-empty .ic-svg { color: var(--accent2); margin-bottom: 8px; }
@@ -795,8 +794,8 @@
   .sheet-look-row {
     display: flex; align-items: center; gap: 12px;
     padding: 10px 12px; border-radius: 14px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.06);
+    background: var(--card, #1e1a22);
+    border: 1px solid var(--line, #2e2836);
   }
   .sheet-look-emoji { font-size: var(--t-h1,26px); width: 40px; text-align: center; flex-shrink: 0; }
   .sheet-look-name { flex: 1; font-weight: 700; font-size: var(--t-small,13px); min-width: 0;
@@ -810,23 +809,21 @@
     border-top: 1px solid var(--line);
   }
   .sheet-total-label { font-size: var(--t-small); color: var(--muted); font-weight: 700; }
-  .sheet-total-amt { font-family: "Poppins", sans-serif; font-size: var(--t-h1,22px); font-weight: 800;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sheet-total-amt { font-family: "Poppins", sans-serif; font-size: var(--t-h1,22px); font-weight: 700;
+    color: var(--fg, #f0ecf5); }
 
   /* CTA */
   .sheet-footer {
     padding: 12px 20px 4px;
     flex-shrink: 0;
-    border-top: 1px solid rgba(255,255,255,.05);
+    border-top: 1px solid var(--line, #2e2836);
   }
   .sheet-buy {
     width: 100%; padding: 16px;
     border: 0; border-radius: 16px;
-    font-family: inherit; font-size: var(--t-h3,16px); font-weight: 900;
-    color: #fff; cursor: pointer;
+    font-family: inherit; font-size: var(--t-h3,16px); font-weight: 700;
+    color: var(--on-accent,#fff); cursor: pointer;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
-    box-shadow: 0 8px 28px rgba(255,61,119,.42);
     transition: transform .14s, filter .14s;
     display: flex; align-items: center; justify-content: center; gap: 8px;
     min-height: 52px;
