@@ -49,6 +49,13 @@ jobs:
           prev.update(people)
           json.dump(prev, open(path, "w"), ensure_ascii=False, indent=2)
           print("captured:", prev)
+          # Self-diagnostic I can read via git (no Actions-log access locally):
+          os.makedirs("ci-debug", exist_ok=True)
+          ok = upd.get("ok")
+          n = len(upd.get("result", []))
+          with open("ci-debug/whoami.txt", "w") as f:
+              f.write(f"ok={ok} updates={n} people={people}\n")
+              f.write("raw=" + json.dumps(upd)[:1200] + "\n")
           if people and chat:
               names = ", ".join(f"{v} (id {k})" for k, v in people.items())
               try:
@@ -61,11 +68,11 @@ jobs:
       - name: Commit captured IDs
         run: |
           git config user.name "awear-bot"; git config user.email "bot@awear.local"
-          if ! git diff --quiet -- tg_whoami.json 2>/dev/null; then
-            git add tg_whoami.json
-            git commit -m "chore(tg): capture founder Telegram user id(s) [skip ci]"
+          git add tg_whoami.json ci-debug/whoami.txt 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(tg): whoami debug + captured id(s) [skip ci]"
             git pull --rebase origin main || true
             git push origin HEAD:main || echo "nothing to push"
           else
-            echo "no new ids"
+            echo "nothing changed"
           fi
