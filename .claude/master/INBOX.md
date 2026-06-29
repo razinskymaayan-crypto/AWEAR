@@ -11,7 +11,6 @@
 
 הקשר־על: יעד = דמו מלוטש. החזון המלא ב-docs/PRODUCT_VISION.md — קראו אותו לפני עבודה. עבדו לפי הסדר, משימה אחת לכל ריצה, מקצה לקצה, עם VALUE GATE אמיתי. אל תעשו סקרים/מחקר כל עוד יש כאן משימות.
 
-האסתטיקה: הביאו את מסכי הליבה (Feed, מסך פריט, פרופיל) לסטנדרט מינימל-פרימיום עם נשמה עריכתית (Zara × Vogue) — light נקי, תמונות גדולות, טיפוגרפיה חזקה. גבאנה 8.5+.
 AI Stylist: לוק יומי לפי הקשר (יום בשבוע / שעה ביום) + צ'אט ליצירת לוקים, והוסיפו סינון לוקים בסטייל טינדר. החליטו איפה זה יושב במסך ה-AI ותעדו ב-IDEAS.md מאיזו מכסה יומית מתחילים פרימיום.
 
 [מערכת — תהליך אוטומטי] Phase 2 (ג'ף ממזג): בנו workflow .github/workflows/jeff-merge.yml שממזג את הענפים auto/mark, auto/steve, auto/ayalon ל-main רק אם npm run check-render עובר ושער gabbana 8+ עובר; בקונפליקט מיזוג — פתחו דיון קצר בין הסוכנים המעורבים (Task tool) ואז מזגו; auto-revert אם מיזוג שובר בילד. manual-dispatch בלבד, אל תפעילו רציף, ואל תשברו את autopilot.yml הקיים. תוכנית: .claude/plans/1-wiggly-seal.md.
@@ -20,6 +19,7 @@ AI Stylist: לוק יומי לפי הקשר (יום בשבוע / שעה ביום
 ═══════════════════════════════════════
 
 ## הושלם
+- Core-screens editorial pass (Feed, item sheet, profile) — DONE. All three brought to Zara×Vogue minimal-premium, each Gabbana 8.5+ across audit→fix→re-gate. Item-detail sheet (this run): killed pink-glow Buy CTA + rainbow gradient price, weight-700 ceiling, off-token→DS tokens, light-mode color-bug fix; confirmation survey 6.5→8.06 no SEVERE. (Feed + Profile passes done in prior runs.)
 - Public profile → real users — done (rewrote bios for Tamar/Carmel/Maayan to on-brand vibes; populated each public profile Posts grid with their REAL look photos via a profile-only manifest — Tamar 3, Maayan 3, Carmel 12 — seeded posts first, deduped image-only tiles, no fabricated items/prices, global feed untouched; Gabbana fixes: scrim-pill likes badge for contrast over light/dark photos, "More looks coming" filler for sparse grids, "Shop this look — coming soon" row on image-only sheets; Gabbana 9/10 PASS, check-render OK, Tamar+Carmel screenshots verified).
 - Stories row → real users — done (replaced 6 fictional stories with Add story + Tamar/Carmel/Maayan real avatar photos; tap opens each user's public profile; fixed avatar/initials overlap CSS; Gabbana 8.5 PASS, screenshot verified).
 - Real Claude-Vision scan e2e — done (agent side complete: verified full wiring camera->/api/analyze->structured Claude Vision->closet->buy_options + correct GA SDK call shape; added GET /api/scan-health?probe=1 liveness check that proves the key is actually VALID, /api/analyze beta-parse fallback so an older deploy SDK runs LIVE not demo, scan_smoke.py one-command LIVE/DEMO+key_valid check. Final LIVE confirmation is a human one-command step on the keyed box — see TODO_FOR_TAMAR/NEEDS_YOU).
