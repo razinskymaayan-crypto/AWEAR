@@ -228,28 +228,26 @@
   /* ---- Feed Instagram-style ---- */
   #feed.view.active { display: flex; flex-direction: column; height: 100%; }
 
-  .feed-filters { display: flex; gap: 8px; padding: 10px 14px; overflow-x: auto; scrollbar-width: none;
-    flex-shrink: 0; background: var(--surface,#161318);
-    border-bottom: 1px solid var(--line,#2e2836); z-index: 5; }
+  .feed-filters { display: flex; gap: 8px; padding: 8px 16px; overflow-x: auto; scrollbar-width: none;
+    flex-shrink: 0; background: transparent; z-index: 5; }
   .feed-filters::-webkit-scrollbar { display: none; }
   .ff { flex-shrink: 0; border: 1px solid var(--line,#2e2836); background: transparent; color: var(--muted,#8a8498);
     font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; padding: 6px 14px; border-radius: 20px;
     cursor: pointer; transition: all .15s; }
-  .ff.active { background: var(--fg,#f0ecf5); border-color: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); }
+  .ff.active { background: transparent; border-color: var(--fg,#f0ecf5); color: var(--fg,#f0ecf5); font-weight: 700; }
 
   .feed-scroll { flex: 1; overflow-y: auto; scrollbar-width: none; }
   .feed-scroll::-webkit-scrollbar { display: none; }
 
   /* Card — natural height, Instagram card style */
-  .feed-card-full { position: relative; height: auto; background: var(--bg,#0e0c0f); border-bottom: 6px solid var(--surface,#161318); }
-  .feed-card-full.is-mine { border-left: 3px solid var(--accent,#e8526a); }
+  .feed-card-full { position: relative; height: auto; background: var(--bg,#0e0c0f); border-bottom: 1px solid var(--line,#2e2836); }
 
   /* ---- Card header (above image) ---- */
   .fc-header { display: flex; align-items: center; gap: 10px; padding: 10px 14px 8px; }
   .fc-hdr-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: var(--t-micro,11px); font-weight: 900; color: var(--text,#fbfbfd); overflow: hidden; background: linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a)); }
   .fc-hdr-info { flex: 1; min-width: 0; }
-  .fc-hdr-user { font-size: var(--t-small,13px); font-weight: 900; display: flex; align-items: center; gap: 5px; color: var(--fg,#f0ecf5); }
-  .fc-hdr-time { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; margin-top: 2px; }
+  .fc-hdr-user { font-size: var(--t-h3,15px); font-weight: 700; display: flex; align-items: center; gap: 5px; color: var(--fg,#f0ecf5); }
+  .fc-hdr-time { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 500; margin-top: 2px; }
 
   /* ---- Image area (4:5 portrait, image+pills+reactions inside) ---- */
   .fc-image-wrap { position: relative; width: 100%; aspect-ratio: 4/5; overflow: hidden; background: var(--surface,#161318); }
@@ -260,9 +258,9 @@
 
   /* ---- Below-image area ---- */
   .fc-below { padding: 4px 14px 14px; }
-  .fc-likes { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); margin-bottom: 5px; }
+  .fc-likes { font-size: var(--t-small,13px); font-weight: 700; color: var(--fg,#f0ecf5); margin-bottom: 5px; }
   .fc-caption-blk { font-size: var(--t-small,13px); line-height: 1.5; margin-bottom: 6px; color: var(--fg,#f0ecf5); }
-  .fc-caption-uname { font-weight: 900; margin-right: 5px; cursor: pointer; }
+  .fc-caption-uname { font-weight: 700; margin-right: 5px; cursor: pointer; }
 
   /* double-tap heart burst */
   .heart-burst { position: absolute; top: 46%; left: 50%; z-index: 6; font-size: var(--t-display,100px);
@@ -278,29 +276,15 @@
   .fc-top { position: absolute; top: 14px; left: 14px; right: 14px;
     display: flex; justify-content: space-between; align-items: flex-start; z-index: 5; }
   .mine-tag {
-    background: rgba(232,74,95,.92);
-    color: #fff;
+    background: transparent;
+    color: var(--muted,#8a8498);
     font-size: var(--t-micro, 11px);
-    font-weight: 900;
-    padding: 6px 14px;
-    border-radius: 999px;
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,.15);
+    font-weight: 700;
+    padding: 0;
+    border: 0;
+    display: inline-flex; align-items: center; gap: 4px;
   }
-  .trend-badge {
-    background: rgba(0,0,0,.58);
-    color: #fff;
-    font-size: var(--t-micro, 11px);
-    font-weight: 800;
-    padding: 6px 12px;
-    border-radius: 999px;
-    backdrop-filter: blur(8px);
-    margin-inline-start: auto;
-    border: 1px solid rgba(255,255,255,.1);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
+  .mine-tag svg { color: var(--muted,#8a8498); }
   .fc-more-btn {
     width: 44px; height: 44px;
     flex-shrink: 0;
@@ -318,22 +302,24 @@
   /* old fc-actions hidden — replaced by fc-item-pills + fc-action-bar */
   .fc-actions { display: none; }
 
-  /* ---- Item category icons — right side vertical stack ---- */
+  /* ---- Items in this look — quiet strip below the image ---- */
   .fc-item-pills {
-    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: 8px; z-index: 5;
-    align-items: center;
+    display: flex; flex-direction: row; gap: 8px;
+    align-items: center; padding: 8px 0 2px;
   }
   .fc-pill {
-    width: 36px; height: 36px;
+    position: relative;
+    width: 32px; height: 32px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(8,6,12,.70); backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid rgba(255,255,255,.12); border-radius: 50%;
-    cursor: pointer; color: rgba(255,255,255,.88);
-    transition: transform 150ms ease, background 150ms ease;
+    background: transparent;
+    border: 1px solid var(--line,#2e2836); border-radius: 50%;
+    cursor: pointer; color: var(--muted,#8a8498);
+    transition: transform 150ms ease, color 150ms ease, border-color 150ms ease;
     flex-shrink: 0;
   }
-  .fc-pill:active { transform: scale(.88); background: rgba(255,255,255,.18); }
+  /* 44px hit-area while keeping 32px visual (ui-ux-pro-max minHeight:44) */
+  .fc-pill::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; }
+  .fc-pill:active { transform: scale(.9); color: var(--fg,#f0ecf5); border-color: var(--fg,#f0ecf5); }
   .fc-pill-name { display: none; }
   .fc-pill-price { display: none; }
 
@@ -349,7 +335,7 @@
     color: var(--fg,#f0ecf5);
     font-family: inherit;
     font-size: var(--t-small,13px);
-    font-weight: 800;
+    font-weight: 600;
     display: flex; align-items: center; gap: 5px;
     cursor: pointer;
     padding: 6px 10px 6px 0;
@@ -359,10 +345,10 @@
   .fca-btn:active { transform: scale(.88); }
   .fca-ico { display: flex; align-items: center; flex-shrink: 0; }
   .fca-spacer { flex: 1; }
-  /* liked / saved state */
+  /* quiet chrome at rest — the ONE accent appears only on active states */
   .fca-btn.liked { color: var(--accent,#e8526a); }
   .fca-btn.saved { color: var(--accent2,#c4855a); }
-  .fca-btn.buy-btn { color: var(--accent3,#7a6af0); font-weight: 900; }
+  .fca-btn.buy-btn { color: var(--fg,#f0ecf5); font-weight: 700; }
 
   /* fc-info hidden (replaced by .fc-below content) */
   .fc-info { display: none; }
@@ -376,7 +362,7 @@
     background: var(--card,#1e1a22);
     border: 1.5px solid var(--line,#2e2836);
     border-radius: var(--r-pill,999px);
-    font-size: var(--t-micro,11px); font-weight: 900; color: var(--fg,#f0ecf5);
+    font-size: var(--t-micro,11px); font-weight: 700; color: var(--fg,#f0ecf5);
     font-family: inherit; cursor: pointer; transition: all .18s;
     white-space: nowrap; display: inline-flex; align-items: center;
   }
@@ -391,7 +377,7 @@
     display: inline-flex; align-items: center; gap: 5px;
     background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836);
     color: var(--accent,#e8526a);
-    font-size: var(--t-micro,11px); font-weight: 900;
+    font-size: var(--t-micro,11px); font-weight: 700;
     padding: 4px 10px; border-radius: var(--r-pill,999px);
     margin-bottom: 6px;
   }
@@ -1191,7 +1177,7 @@
   .up-store-price { font-size: var(--t-small,13px); font-weight: 900; color: var(--accent,#e8526a); margin-top: 5px; }
   .up-empty { text-align: center; padding: 40px 20px; color: var(--muted,#8a8498); font-size: var(--t-small,13px); display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .up-privacy-note { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); padding: 7px 12px; background: var(--surface,#161318); border-radius: var(--r-sm,10px); margin-bottom: 12px; display: flex; align-items: center; gap: 5px; border: 1px solid var(--line,#2e2836); }
-  .fc-username-tap { cursor: pointer; background: none; border: 0; color: inherit; font: inherit; padding: 0; font-weight: 900; }
+  .fc-username-tap { cursor: pointer; background: none; border: 0; color: inherit; font: inherit; padding: 0; font-weight: inherit; }
 
   /* ---- Seasonal Report ---- */
   .sr-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
@@ -4151,18 +4137,17 @@
         </div>
         ${(!isMine&&followKey)
           ?`<button class="fc-follow-btn${isFollowing?' following':''}" data-follow-uid="${attr(followKey)}">${isFollowing?'Following':'+ Follow'}</button>`
-          :isMine?`<span class="mine-tag" style="display:inline-flex;align-items:center;gap:4px;font-size:var(--t-micro,11px)">${icon('sparkle',12)} Your look</span>`:''}
+          :isMine?`<span class="mine-tag">${icon('sparkle',12)} Your look</span>`:''}
         ${!isMine?`<button class="fc-more-btn" data-more-user="${attr(post.user||'')}" aria-label="More options">${icon('more',18)}</button>`:''}
       </div>
 
       <div class="fc-image-wrap">
         <div class="fcbg" style="background:${attr(post.grad||'linear-gradient(160deg,#a18cd1,#fbc2eb)')}">${bgImg}</div>
         <div class="heart-burst">${icon('heartFill',100)}</div>
-        ${pillsHTML?`<div class="fc-item-pills">${pillsHTML}</div>`:''}
-        <span class="trend-badge" style="position:absolute;top:10px;left:14px;z-index:5;display:inline-flex;align-items:center;gap:4px">${icon('flame',12)} ${esc(post.trend||80)}</span>
       </div>
 
       <div class="fc-below">
+        ${pillsHTML?`<div class="fc-item-pills">${pillsHTML}</div>`:''}
         <div class="fc-action-bar">
           <button class="fca-btn${liked?' liked':''}" data-action="like" data-id="${attr(post.id||'')}">
             <div class="fca-ico">${icon(liked?'heartFill':'heart',26)}</div>
