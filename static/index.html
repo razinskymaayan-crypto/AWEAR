@@ -94,9 +94,10 @@
   .shop-look { display: flex; align-items: center; justify-content: center; gap: 8px;
     margin: 2px 0 16px; padding: 14px; border-radius: 15px; font-weight: 900; font-size: var(--t-h3,15px);
     color: #111; background: #fff; border: 0; cursor: pointer; width: 100%; font-family: inherit;
-    box-shadow: 0 6px 20px rgba(255,255,255,.12); }
-  .share-look { color: #fff; background: linear-gradient(135deg, var(--accent2), var(--accent));
-    margin-top: -8px; box-shadow: 0 6px 20px rgba(123,92,255,.3); }
+    box-shadow: 0 4px 14px rgba(20,17,15,.10); }
+  .share-look { color: var(--fg); background: transparent;
+    border: 1px solid var(--line); box-shadow: none; margin-top: var(--space-3,12px); }
+  .share-look svg { color: var(--accent); }
   .stylist { background: var(--card); border: 1px solid var(--line); border-radius: 16px;
     padding: 14px 16px; margin: 0 0 14px; }
   .stylist-h { font-weight: 800; font-size: var(--t-small); margin-bottom: 5px;
@@ -151,30 +152,32 @@
   .seg button.on { background: var(--text); color: var(--bg);
     box-shadow: 0 2px 8px rgba(20,17,15,.18); }
   .shelf { margin-bottom: 22px; }
-  .shelf-title { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: var(--t-body,14px); margin: 0 2px 12px; }
-  .shelf-title .cnt { color: var(--muted); font-size: var(--t-caption); font-weight: 700; }
+  .shelf-title { display: flex; align-items: center; gap: 7px; font-weight: 900; font-size: var(--t-h3,15px); letter-spacing: -.2px; margin: 0 2px 12px; }
+  .shelf-title svg { color: var(--accent2); flex-shrink: 0; }
+  .shelf-title .cnt { color: var(--muted); font-size: var(--t-caption,12px); font-weight: 700; margin-inline-start: 2px; }
   .shelf-row { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 0; scrollbar-width: none; }
   .shelf-row::-webkit-scrollbar { display: none; }
   .shelf-ledge { height: 10px; border-radius: 3px; margin: 0 2px;
     background: linear-gradient(180deg, var(--line) 0%, #d4cfc9 100%);
     box-shadow: 0 4px 12px rgba(20,17,15,.1), inset 0 1px 0 rgba(255,255,255,.6); }
-  .ptile { flex-shrink: 0; width: 122px; background: var(--card); border-radius: 16px; padding: 11px;
+  .ptile { flex-shrink: 0; width: 132px; background: var(--card); border-radius: 16px; padding: 8px;
     cursor: pointer; display: flex; flex-direction: column;
-    box-shadow: 0 2px 12px rgba(20,17,15,.08), 0 0 0 1px var(--line);
+    border: 1px solid var(--line);
     transition: transform .15s; }
   .ptile:active { transform: scale(.97); }
-  .ptile .pimg { height: 88px; display: flex; align-items: center; justify-content: center;
-    filter: drop-shadow(0 4px 6px rgba(20,17,15,.12)); }
-  .ptile .pname { color: var(--text); font-size: var(--t-caption,12px); font-weight: 800; line-height: 1.25; margin-top: 8px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ptile .pimg { height: 104px; display: flex; align-items: center; justify-content: center;
+    overflow: hidden; border-radius: 10px; }
+  .ptile .pname { color: var(--text); font-size: var(--t-small,13px); font-weight: 800; line-height: 1.25; margin-top: 8px;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+    min-height: calc(2 * 1.25em); }
   .ptile .pbrand { color: var(--muted); font-size: var(--t-micro); font-weight: 700; margin-top: 2px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ptile .pprice { color: var(--text); font-size: var(--t-body); font-weight: 900; margin-top: 5px; font-family: "Poppins", sans-serif; }
-  .ptile .pacts { display: flex; gap: 6px; margin-top: 10px; }
-  .ptile .pbuy { flex: 1; border: 0; border-radius: 9px; padding: 7px 0; font-size: var(--t-micro);
-    font-weight: 800; cursor: pointer; font-family: inherit; transition: filter .15s; }
-  .ptile .pbuy { color: var(--bg); background: var(--text); }
-  .ptile .pbuy:active { filter: brightness(.92); }
+  .ptile .pacts { display: flex; gap: 6px; margin-top: auto; padding-top: 10px; }
+  .ptile .pbuy { flex: 1; min-height: 44px; border-radius: 9px; padding: 7px 0; font-size: var(--t-micro);
+    font-weight: 800; cursor: pointer; font-family: inherit; transition: background .15s, border-color .15s;
+    color: var(--fg); background: transparent; border: 1px solid var(--line); }
+  .ptile .pbuy:active { background: var(--card-hover); }
   .looks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
   .look-cell { position: relative; aspect-ratio: 3 / 4; border-radius: 10px; overflow: hidden;
     cursor: pointer; background: var(--surface); transition: transform .15s; }
@@ -2262,7 +2265,7 @@
   .pimg img, .sheet-hero-img img, .sheet-look-emoji img, .listing .ic img {
     width: 100%; height: 100%; object-fit: contain; display: block; border-radius: inherit;
     background: var(--surface, #161318); }
-  .pimg img { object-fit: contain; }
+  .pimg img { object-fit: cover; width: 100%; height: 100%; }
   /* fallback line-art icon shown when product photo fails to load */
   .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
     color: var(--muted, #8a8498); background: var(--card, #1e1a22); border-radius: inherit; }
@@ -2317,20 +2320,14 @@
   .diary-submit:disabled { opacity: .4; cursor: default; transform: none; }
 
   /* ---- Season Entry Card (profile) ---- */
-  .season-entry-card { background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent3,#7a6af0)); border-radius: var(--r-lg,20px); padding: 16px 18px; margin: 0 16px 16px; cursor: pointer; min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3,12px); transition: opacity .15s; }
-  .season-entry-card:active { opacity: .85; }
+  .season-entry-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg,20px); padding: 16px 18px; margin: 0 16px 16px; cursor: pointer; min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3,12px); transition: background .15s, border-color .15s; }
+  .season-entry-card:active { background: var(--card-hover); }
   .season-entry-left { display: flex; flex-direction: column; gap: var(--space-1,4px); }
   .season-entry-row { display: flex; align-items: center; gap: var(--space-2,8px); }
-  .season-entry-icon { color: var(--on-accent,#fff); display: inline-flex; }
-  .season-entry-title { font-size: var(--t-h3,15px); font-weight: 800; color: var(--on-accent,#fff); letter-spacing: -.2px; }
-  .season-entry-sub { font-size: var(--t-micro,11px); font-weight: 600; color: rgba(255,255,255,.8); }
-  .season-entry-arrow { color: var(--on-accent,#fff); flex-shrink: 0; }
-  /* Summer = sunny yellow card with dark text for contrast */
-  .season-entry-card.s-summer { background: linear-gradient(135deg, var(--summer-1,#f5c84b), var(--summer-2,#e89a2c)); }
-  .season-entry-card.s-summer .season-entry-icon,
-  .season-entry-card.s-summer .season-entry-title,
-  .season-entry-card.s-summer .season-entry-arrow { color: var(--summer-ink,#3a2a08); }
-  .season-entry-card.s-summer .season-entry-sub { color: color-mix(in srgb, var(--summer-ink,#3a2a08) 78%, transparent); }
+  .season-entry-icon { color: var(--accent2); display: inline-flex; }
+  .season-entry-title { font-size: var(--t-h3,15px); font-weight: 800; color: var(--fg); letter-spacing: -.2px; }
+  .season-entry-sub { font-size: var(--t-micro,11px); font-weight: 600; color: var(--muted); }
+  .season-entry-arrow { color: var(--accent2); flex-shrink: 0; }
 
   /* ---- Season Recap full screen ---- */
   #season-recap { overflow-y: auto; background: var(--bg,#0e0c0f); }
@@ -3759,7 +3756,7 @@
     wardrobe.forEach(it=>{const c=(it.category||'').toLowerCase();(byCat[c]=byCat[c]||[]).push(it);});
     const known=new Set(SHELF_GROUPS.flatMap(g=>g.cats));
     const shelf=(ic,title,items)=>`<div class="shelf">
-      <div class="shelf-title">${icon(ic,18)} ${esc(title)} <span class="cnt">· ${items.length}</span></div>
+      <div class="shelf-title">${icon(ic,15)} ${esc(title)} <span class="cnt">· ${items.length}</span></div>
       <div class="shelf-row">${items.map(productTile).join('')}</div>
       <div class="shelf-ledge"></div></div>`;
     let html=SHELF_GROUPS.map(g=>{const items=g.cats.flatMap(c=>byCat[c]||[]);return items.length?shelf(g.icon,g.title,items):'';}).join('');
@@ -3885,8 +3882,7 @@
       </div>
       ${(() => {
         const s = season;
-        const summer = s.name==='Summer';
-        return `<div class="season-entry-card${summer?' s-summer':''}" id="season-entry-card" role="button" tabindex="0" aria-label="View ${s.name} ${s.year} season recap">
+        return `<div class="season-entry-card" id="season-entry-card" role="button" tabindex="0" aria-label="View ${s.name} ${s.year} season recap">
           <div class="season-entry-left">
             <div class="season-entry-row">
               <span class="season-entry-icon">${icon(s.icon, 20)}</span>
