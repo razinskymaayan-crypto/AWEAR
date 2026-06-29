@@ -52,7 +52,12 @@ async function main() {
   try {
     await page.goto(`http://localhost:${port}/static/index.html`, { waitUntil: 'networkidle', timeout: 25000 });
     // Navigate to the requested view, tolerating either showView() or a nav button.
+    // Special form "user:<id>" opens a public user profile via openUserProfile().
     await page.evaluate((v) => {
+      if (v.startsWith('user:')) {
+        const uid = v.slice('user:'.length);
+        try { if (typeof openUserProfile === 'function') { openUserProfile(uid); return; } } catch {}
+      }
       try { if (typeof showView === 'function') showView(v); } catch {}
       const btn = document.querySelector(`[data-view="${v}"]`);
       if (btn) btn.click();

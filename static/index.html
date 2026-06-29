@@ -466,7 +466,7 @@
   .up-grid-thumb { position: relative; aspect-ratio: 1; background: none; border: 0; padding: 0; cursor: pointer; overflow: hidden; display: block; }
   .up-thumb-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--muted,#8a8498); background: var(--surface,#161318); }
   .up-thumb-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .up-thumb-likes { position: absolute; bottom: 5px; left: 5px; display: flex; align-items: center; gap: 3px; font-size: var(--t-micro,11px); font-weight: 800; color: var(--text,#fbfbfd); text-shadow: 0 1px 4px rgba(0,0,0,.8); }
+  .up-thumb-likes { position: absolute; bottom: 5px; left: 5px; display: flex; align-items: center; gap: 3px; padding: 3px 7px; border-radius: var(--r-pill,999px); background: rgba(0,0,0,.42); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-size: var(--t-micro,11px); font-weight: 800; color: #fff; text-shadow: none; }
   .feed-empty p { font-size: var(--t-body, 14px); font-weight: 600; }
 
   /* ---- modal ---- */
@@ -10195,6 +10195,31 @@
 
     const userPosts = SEED_POSTS.filter(p => p.userId === u.id || p.user === u.handle.replace(/^@/,''));
 
+    // ---- Real look-image manifest (PROFILE GRID ONLY — never touch global SEED_POSTS) ----
+    // Maps each real user → the real look photos on disk under /static/img/users/<name>/.
+    // Carmel is CAPPED at 12 (look1..look12) of her 17 files.
+    const LOOK_MANIFEST = {
+      u1: { dir:'tamar',  files:['look1.jpg','look2.jpg','look3.jpg'] },
+      u2: { dir:'carmel', files:['look1.jpg','look2.jpg','look3.jpg','look4.jpg','look5.jpg','look6.jpg','look7.jpg','look8.jpg','look9.jpg','look10.jpg','look11.jpg','look12.jpg'] },
+      u3: { dir:'maayan', files:['look1.jpg','look2.jpg','look3.jpg'] },
+    };
+    // gridLooks = seeded posts FIRST (they carry real items/captions), THEN synthesized
+    // image-only tiles for any manifest photo not already used by a seeded post.
+    let gridLooks = userPosts;
+    const manifest = LOOK_MANIFEST[u.id];
+    if (manifest) {
+      const usedImgs = new Set(userPosts.map(p => p.img).filter(Boolean));
+      const SYNTH_LIKES = [612,847,503,729,418,956,634,521,803,447,688,572]; // static, plausible — not random
+      const synthTiles = [];
+      manifest.files.forEach((f, idx) => {
+        const path = '/static/img/users/' + manifest.dir + '/' + f;
+        if (usedImgs.has(path)) return;
+        usedImgs.add(path);
+        synthTiles.push({ img: path, likes: SYNTH_LIKES[idx % SYNTH_LIKES.length], caption: '', items: [] });
+      });
+      gridLooks = userPosts.concat(synthTiles);
+    }
+
     const wardrobeItems = [];
     const seenNames = new Set();
     userPosts.forEach(post => {
@@ -10225,9 +10250,9 @@
     const stats = STATS[u.id] || {followers:1200, following:300};
 
     const BIOS = {
-      u1:'Vintage collector · Y2K queen · street style TLV',
-      u2:'Sustainable fashion only · secondhand first',
-      u3:'Capsule wardrobe obsessed · less but better',
+      u1:'looks like she didn\'t try · always does',
+      u2:'streetwear · loud sneakers · soft attitude',
+      u3:'fewer pieces · cleaner lines · more intent',
       u4:'Street style documentation · TLV × Berlin · always in monochrome',
       u5:'Thrift queen · every item under $20 · proving budget = style',
       u6:'Oxford shirts forever · TLV-based stylist · menswear nerd',
@@ -10270,19 +10295,23 @@
 
       if (_upTab === 'posts') {
         // 3-column square grid — Instagram style
-        contentEl.innerHTML = userPosts.length ? `
+        contentEl.innerHTML = gridLooks.length ? `
           <div class="up-grid-ig">
-            ${userPosts.map((p,i) => `
+            ${gridLooks.map((p,i) => `
               <button class="up-grid-thumb" data-post-idx="${i}" aria-label="${attr(p.caption||'Post')}">
                 <div class="up-thumb-bg" style="background:${attr(p.grad||'var(--surface,#161318)')}">
                   ${p.img ? `<img src="${attr(p.img)}" alt="" loading="lazy">` : icon('image',20)}
                 </div>
                 <div class="up-thumb-likes">${icon('heart',9)} ${fmtN(p.likes||0)}</div>
               </button>`).join('')}
-          </div>` : `<div class="up-empty">${icon('image',36)}<div>No posts yet</div></div>`;
+          </div>${gridLooks.length < 4 ? `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:32px 16px;margin-top:16px;background:var(--surface,#161318);border:1px solid var(--line,#2e2836);border-radius:var(--r-md,14px);color:var(--muted,#8a8498)">
+            <span style="color:var(--muted,#8a8498)">${icon('camera',24)}</span>
+            <div style="font-size:var(--t-small,13px);font-weight:700">More looks coming</div>
+          </div>` : ''}` : `<div class="up-empty">${icon('image',36)}<div>No posts yet</div></div>`;
         contentEl.querySelectorAll('[data-post-idx]').forEach(card => {
           card.addEventListener('click', () => {
-            const p = userPosts[Number(card.dataset.postIdx)];
+            const p = gridLooks[Number(card.dataset.postIdx)];
             if (!p) return;
             // Open same-design post card in sheet
             const lookItems = (p.items||[]).slice(0,5);
@@ -10312,7 +10341,11 @@
                     </div>
                     ${it.price_estimate_usd?`<span style="font-size:var(--t-small,13px);font-weight:900;color:var(--accent2,#c4855a);flex-shrink:0">$${esc(String(it.price_estimate_usd))}</span>`:''}
                   </div>`).join('')}
-                </div>` : ''}
+                </div>` : `
+                <div style="display:flex;align-items:center;gap:10px;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);border-radius:var(--r-sm,10px);padding:11px 12px;color:var(--muted,#8a8498)">
+                  <span style="color:var(--accent2,#c4855a)">${icon('shoppingBag',18)}</span>
+                  <div style="font-size:var(--t-small,13px);font-weight:700">Shop this look — coming soon</div>
+                </div>`}
               </div>`;
             sheetFooter.innerHTML = `<button class="sheet-buy" style="background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#8a8498)" onclick="closeSheet()">Close</button>`;
             showSheet();
