@@ -49,9 +49,20 @@ SYSTEM_PROMPT = (
 histories: dict[int, list] = {}
 
 # ── Two-way control: founder auth, agent routing, pause/status ──────────────
-# Only these Telegram user IDs may issue commands / route tasks. Comma-separated
-# in env TG_ALLOWED_IDS (Carmel + Razi). Empty => allow everyone (dev only).
-ALLOWED = {int(x) for x in os.getenv("TG_ALLOWED_IDS", "").replace(" ", "").split(",") if x}
+# Only these Telegram user IDs may issue commands / route tasks. Sources, unioned:
+#   1) env TG_ALLOWED_IDS (comma-separated), and
+#   2) tg_whoami.json — IDs the whoami workflow captured when a founder messaged the bot.
+# Empty from both => allow everyone (dev only).
+def _load_allowed() -> set[int]:
+    ids = {int(x) for x in os.getenv("TG_ALLOWED_IDS", "").replace(" ", "").split(",") if x.strip().isdigit()}
+    try:
+        with open("tg_whoami.json") as f:
+            ids |= {int(k) for k in json.load(f).keys()}
+    except Exception:  # noqa: BLE001
+        pass
+    return ids
+
+ALLOWED = _load_allowed()
 
 # Agents that can be addressed directly with @name. Managers + ICs + Jeff.
 AGENTS = {
