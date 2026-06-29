@@ -9,6 +9,7 @@
 ---
 
 ## Open — needs your attention
+- 2026-06-29 — **GitHub Actions stopped (all agents halted).** No workflow has run since my last push — likely the free **2,000 Actions-minutes/month ran out** (the faster cadence I set burned them; my mistake, now reverted to the sustainable baseline). Free tier fundamentally can't run agents 24/7. **THE unblocker = the cloud VM** (self-hosted runner = unlimited minutes). To restart NOW before the VM: GitHub → Settings → Billing → raise the Actions spending limit, OR give me a GitHub **token** so I can check/fix billing + dispatch. Until one of these, nothing autonomous runs.
 - 2026-06-29 — **Always-on parallel agent org** (approved plan `.claude/plans/1-wiggly-seal.md`). To turn it on, 3 things only you/Razi can provide:
   1. **Two valid Anthropic API keys** — the current one in `.env` is **invalid (401)**. Need a working key from Carmel's account AND Razi's account (these pool the daily token budget). 
   2. **A small always-on cloud VM** (Hetzner/DigitalOcean/Lightsail ~$5–12/mo) to host the runner 24/7 — create it (or approve me scripting it) + share SSH.

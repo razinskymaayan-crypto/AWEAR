@@ -6,7 +6,7 @@ name: tg-whoami
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: '*/5 * * * *'   # every 5 min — short-lived; delete this workflow once IDs are captured
+    - cron: '*/30 * * * *'   # every 30 min — short-lived; delete this workflow once IDs are captured (reverted from */5 to save Actions minutes)
 
 concurrency:
   group: tg-whoami
