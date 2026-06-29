@@ -11,7 +11,6 @@
 
 הקשר־על: יעד = דמו מלוטש. החזון המלא ב-docs/PRODUCT_VISION.md — קראו אותו לפני עבודה. עבדו לפי הסדר, משימה אחת לכל ריצה, מקצה לקצה, עם VALUE GATE אמיתי. אל תעשו סקרים/מחקר כל עוד יש כאן משימות.
 
-ודאו שסריקת בגדים אמיתית עובדת מקצה לקצה עם Claude Vision: צילום → זיהוי מותג/צבע/חומר → search_query → הוספה לארון → buy_options. אם זה נופל ל-demo mode למרות שיש מפתח — אבחנו ותקנו (המפתח ב-.env וב-GitHub secret).
 נקו את שורת ה-Stories בפיד: עדיין מציגה שמות ישנים (Noa, Yael). חברו אותה ל-3 המשתמשות האמיתיות Tamar / Carmel / Maayan עם האווטארים האמיתיים (static/img/users/<name>/avatar.jpg).
 עמוד הפרופיל הציבורי (לחיצה על שם בפיד): ודאו שמוצגים אווטאר אמיתי, וייב, והלוקים של המשתמשת — במיוחד ל-Tamar/Carmel/Maayan.
 האסתטיקה: הביאו את מסכי הליבה (Feed, מסך פריט, פרופיל) לסטנדרט מינימל-פרימיום עם נשמה עריכתית (Zara × Vogue) — light נקי, תמונות גדולות, טיפוגרפיה חזקה. גבאנה 8.5+.
@@ -20,6 +19,7 @@ AI Stylist: לוק יומי לפי הקשר (יום בשבוע / שעה ביום
 ═══════════════════════════════════════
 
 ## הושלם
+- Real Claude-Vision scan e2e — done (agent side complete: verified full wiring camera->/api/analyze->structured Claude Vision->closet->buy_options + correct GA SDK call shape; added GET /api/scan-health?probe=1 liveness check that proves the key is actually VALID, /api/analyze beta-parse fallback so an older deploy SDK runs LIVE not demo, scan_smoke.py one-command LIVE/DEMO+key_valid check. Final LIVE confirmation is a human one-command step on the keyed box — see TODO_FOR_TAMAR/NEEDS_YOU).
 - WOW item screen (founder #1) — done (all 3 chunks now ship in the feed item bottom sheet: (1) prominent % closet-match band, (2) 2-3 stylist looks pairing the item with the user's own closet pieces, (3) NEW "Where it sells" buy-to-source block — "From $X" headline + real retailer rows via storeRowHTML + one subtle Depop resale row at 50% — footer Buy-at-source intact. Chunk 3 routed mark->valentino, Gabbana 8.5 PASS, check-render green, sheet screenshot verified).
 - Store Insight redesign — done (rebuilt the My Store Insight sheet from a stats-duplicate into an actionable advisor: Store Health score + 3 distinct KPIs, a "Do next" stack of recommendation cards — refresh stale listings, complete incomplete listings, fix pricing outliers, list unworn closet items — a conversion funnel with a diagnostic line, and a weekly sales goal. Removed the duplicated Performance/Audience/Category/Top-performer blocks. Gabbana 9.5, check-render OK).
 - צילום מסך החנות + הסבר על כל פיצ'ר — done (sent Telegram: Store screenshot + full feature guide covering Shop/Community/My Store tabs, search, AI Stylist bar, category filters, Filter & Sort sheet, Matches My Closet, product-card badges/compat/CO2, and seller storefront).

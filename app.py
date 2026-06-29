@@ -146,6 +146,37 @@ client = anthropic.Anthropic(timeout=25.0)  # reads ANTHROPIC_API_KEY from the e
 # failed". Bounded values only; never holds raw exception text or any key material.
 _last_scan: dict = {"mode": None, "demo_reason": None}
 
+
+def _classify_api_error(e: Exception) -> str:
+    """Map an Anthropic call failure to a bounded enum — never raw exception text.
+
+    Returns one of: "auth" | "rate_limit" | "timeout" | "parse" | "sdk_shape" |
+    "unknown". The getattr(...) guards keep this safe if the installed SDK lacks a
+    given exception class (older/newer anthropic than requirements pins). Used by
+    /api/analyze (prefixed "api_error:") and the /api/scan-health probe so a key
+    holder can SEE *why* a live call failed without leaking secrets.
+    """
+    auth_err = getattr(anthropic, "AuthenticationError", ())
+    rate_err = getattr(anthropic, "RateLimitError", ())
+    timeout_err = getattr(anthropic, "APITimeoutError", ())
+    if auth_err and isinstance(e, auth_err):
+        return "auth"
+    if rate_err and isinstance(e, rate_err):
+        return "rate_limit"
+    if timeout_err and isinstance(e, timeout_err):
+        return "timeout"
+    if isinstance(e, ValueError) and str(e) == "empty parse":
+        return "parse"
+    # Catch-all for any AttributeError. Primary case: an older installed SDK lacks
+    # client.messages.parse (parse is beta-only there). Also covers a response of an
+    # unexpected shape (e.g. .parsed_output access after an SDK change). Either way it
+    # signals "SDK surface mismatch" — check the installed anthropic version vs
+    # requirements (>=0.109).
+    if isinstance(e, AttributeError):
+        return "sdk_shape"
+    return "unknown"
+
+
 app = FastAPI(title="AWEAR demo")
 
 
@@ -437,7 +468,7 @@ async def analyze(request: Request, photo: UploadFile):
     # Try live AI recognition; on any failure (e.g. invalid key) fall back to a
     # realistic demo so the app NEVER breaks during a live pitch.
     try:
-        response = client.messages.parse(
+        parse_args = dict(
             model=MODEL,
             max_tokens=4000,
             system=SYSTEM_PROMPT,
@@ -462,6 +493,17 @@ async def analyze(request: Request, photo: UploadFile):
             ],
             output_format=OutfitAnalysis,
         )
+        # The deploy box may run an older `anthropic` than requirements pins, where
+        # structured `messages.parse(...)` lives only under the beta namespace. Try the
+        # stable surface first; on AttributeError retry the beta surface with the SAME
+        # args. If beta is absent too, AttributeError propagates and classifies as
+        # "sdk_shape" (graceful demo, no crash mid-pitch).
+        try:
+            response = client.messages.parse(**parse_args)
+        except AttributeError:
+            response = client.beta.messages.parse(
+                betas=["structured-outputs-2025-11-13"], **parse_args
+            )
         if response.parsed_output is None:
             raise ValueError("empty parse")
         result = response.parsed_output.model_dump()
@@ -478,19 +520,7 @@ async def analyze(request: Request, photo: UploadFile):
         else:
             # Key IS present — the founder's exact scenario. Map to a bounded enum and
             # log LOUD (ERROR) with the traceback so the failure is visible in logs.
-            auth_err = getattr(anthropic, "AuthenticationError", ())
-            rate_err = getattr(anthropic, "RateLimitError", ())
-            timeout_err = getattr(anthropic, "APITimeoutError", ())
-            if auth_err and isinstance(e, auth_err):
-                demo_reason = "api_error:auth"
-            elif rate_err and isinstance(e, rate_err):
-                demo_reason = "api_error:rate_limit"
-            elif timeout_err and isinstance(e, timeout_err):
-                demo_reason = "api_error:timeout"
-            elif isinstance(e, ValueError) and str(e) == "empty parse":
-                demo_reason = "api_error:parse"
-            else:
-                demo_reason = "api_error:unknown"
+            demo_reason = "api_error:" + _classify_api_error(e)
             logger.error(
                 "analyze fell to demo despite a configured key (%s): %s",
                 demo_reason,
@@ -515,22 +545,63 @@ async def analyze(request: Request, photo: UploadFile):
 
 
 @app.get("/api/scan-health")
-async def scan_health(request: Request):
-    """Diagnostics for /api/analyze. Never calls Claude; never returns key material.
+async def scan_health(request: Request, probe: int = 0):
+    """Diagnostics for /api/analyze. Read-only; never returns key material.
 
-    Lets the founder SEE whether the real scan is running ("live") or silently
-    falling back to demo, and WHY (bounded ``demo_reason``). Read-only.
+    Default (no ``probe``): does NOT call Claude — reports config + the last
+    /api/analyze outcome (bounded ``demo_reason``) so the founder can SEE whether
+    the real scan is running ("live") or silently falling back to demo, and WHY.
+
+    ``?probe=1``: opt-in liveness check — makes ONE minimal real Claude call to
+    confirm the key is actually valid & the API reachable (the config flag only
+    says a key STRING is set, not that it works). Results are bounded enums only.
     """
     user_key = (request.client.host if request.client else None) or "anon"
     if not check_rate_limit(user_key, "scan-health", 30):
         raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
 
-    return {
+    result = {
         "key_configured": bool(os.getenv("ANTHROPIC_API_KEY")),
         "model": MODEL,
         "last_analyze_mode": _last_scan["mode"],
         "last_demo_reason": _last_scan["demo_reason"],
+        # Populated only when ?probe=1 actually ran a live call; None otherwise.
+        "key_valid": None,
+        "probe_error": None,
     }
+
+    if not probe:
+        return result
+
+    # Opt-in liveness probe: a separate, tighter bucket on top of the 30/min above
+    # (a probe consumes BOTH) so the real Claude call can't be hammered.
+    if not check_rate_limit_window(user_key, "scan-health-probe", 3, 60):
+        raise HTTPException(status_code=429, detail="Probe rate limit exceeded — max 3 requests/minute.")
+
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        # No key STRING set — nothing to validate; don't spend a call.
+        result["key_valid"] = False
+        result["probe_error"] = "no_api_key"
+        return result
+
+    try:
+        # max_tokens=5 is a deliberate cost ceiling — we only need a successful
+        # round-trip to prove credentials + reachability, not real output. Use
+        # messages.create (NOT parse): create exists on every SDK version, so a
+        # probe failure means credentials/reachability, not SDK shape.
+        client.messages.create(
+            model="claude-haiku-4-5",
+            max_tokens=5,
+            messages=[{"role": "user", "content": "ok"}],
+        )
+        result["key_valid"] = True
+        result["probe_error"] = "none"
+    except Exception as e:  # noqa: BLE001 — bounded enum out, raw text never leaves the box
+        result["key_valid"] = False
+        result["probe_error"] = _classify_api_error(e)
+        logger.error("scan-health probe failed (%s)", result["probe_error"], exc_info=True)
+
+    return result
 
 
 # ---------------------------------------------------------------------------

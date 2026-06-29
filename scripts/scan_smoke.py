@@ -80,8 +80,11 @@ def main() -> int:
     print(f"  look_total_usd : {data.get('look_total_usd')}")
 
     # Also surface the diagnostics endpoint so the founder sees the same truth.
-    h = client.get("/api/scan-health").json()
+    # ?probe=1 makes one tiny extra live call to confirm the key is actually VALID
+    # (not just present) — this is what distinguishes "key set but dead" from "key works".
+    h = client.get("/api/scan-health?probe=1").json()
     print(f"  scan-health    : {h}")
+    print(f"  key_valid      : {h.get('key_valid')}  (probe_error={h.get('probe_error')})")
 
     return 0 if mode == "live" else 1
 
