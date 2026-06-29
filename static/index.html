@@ -545,6 +545,7 @@
   }
   .story-ring.seen { background: var(--line); }
   .story-inner {
+    position: relative;
     width: 100%; height: 100%;
     border-radius: 50%;
     background: var(--bg2);
@@ -552,7 +553,7 @@
     overflow: hidden;
     display: flex; align-items: center; justify-content: center;
   }
-  .story-inner img { width: 100%; height: 100%; object-fit: cover; }
+  .story-inner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .story-initials { font-size: var(--t-small, 13px); font-weight: 700; color: var(--text); line-height: 1; letter-spacing: 0; }
   .story-name {
     font-size: var(--t-micro, 11px);
@@ -8896,13 +8897,10 @@
 
   // ---- Stories data ----
   const STORIES = [
-    {id:'st0', name:'Add story',     initials:'+',  color:'var(--card)', seen:false, isAdd:true},
-    {id:'st1', name:'Y2K Challenge', initials:'YK', color:'linear-gradient(135deg, var(--accent2), var(--accent))', seen:false},
-    {id:'st2', name:'Noa',           initials:'NL', color:'linear-gradient(135deg, var(--accent), #c45a8e)', seen:false},
-    {id:'st3', name:'Yael',          initials:'YA', color:'linear-gradient(135deg, #7b5cf5, var(--accent))', seen:true},
-    {id:'st4', name:'Minimal Day',   initials:'MD', color:'linear-gradient(135deg, var(--accent2), var(--accent))', seen:false},
-    {id:'st5', name:'Mika',          initials:'MK', color:'linear-gradient(135deg, var(--accent), #c45a8e)', seen:true},
-    {id:'st6', name:'Streetwear',    initials:'SW', color:'linear-gradient(135deg, #7b5cf5, var(--accent))', seen:false},
+    {id:'st0', name:'Add story', initials:'+', color:'var(--card)', seen:false, isAdd:true},
+    {id:'st1', name:'Tamar',  userId:'u1', avatar:'/static/img/users/tamar/avatar.jpg',  initials:'TG', seen:false},
+    {id:'st2', name:'Carmel', userId:'u2', avatar:'/static/img/users/carmel/avatar.jpg', initials:'CP', seen:false},
+    {id:'st3', name:'Maayan', userId:'u3', avatar:'/static/img/users/maayan/avatar.jpg', initials:'MA', seen:true},
   ];
   // ===== REACTIONS + COMMENTS (Shira) =====
   const REACTIONS_KEY = 'awear_reactions';
@@ -9432,9 +9430,15 @@
     bar.className = 'stories-bar';
     bar.innerHTML = STORIES.map(s=>{
       const seen = !s.isAdd && seenStories.has(s.id);
-      return `<div class="story-item" data-story="${attr(s.id)}">
+      // Avatar items: neutral background + initials behind, real photo on top.
+      // If the photo fails to load it removes itself, revealing the initials —
+      // never an empty circle. Add story keeps its gradient + "+" glyph.
+      const inner = s.avatar
+        ? `<div class="story-inner"><span class="story-initials">${s.initials||''}</span><img src="${attr(s.avatar)}" alt="${attr(s.name)}" loading="eager" onerror="this.onerror=null;this.remove()"></div>`
+        : `<div class="story-inner" style="background:${s.color||'var(--card)'}"><span class="story-initials">${s.initials||''}</span></div>`;
+      return `<div class="story-item" data-story="${attr(s.id)}"${s.userId?` data-uid="${attr(s.userId)}"`:''}>
         <div class="story-ring${seen?' seen':''}">
-          <div class="story-inner" style="background:${s.color||'var(--card)'}"><span class="story-initials">${s.initials||''}</span></div>
+          ${inner}
         </div>
         <span class="story-name">${esc(s.name)}</span>
       </div>`;
@@ -9445,6 +9449,8 @@
       seenStories.add(item.dataset.story);
       localStorage.setItem('awear_stories_seen',JSON.stringify([...seenStories]));
       item.querySelector('.story-ring').classList.add('seen');
+      const uid=item.dataset.uid;
+      if(uid){ openUserProfile(uid); return; }
       showToast('Story viewed');
     });
     return bar;
