@@ -35,3 +35,7 @@ ios/
 
 # OS
 .DS_Store
+
+# Raw camera originals — app serves converted JPGs in static/img/users/
+static/img/closet/*.HEIC
+static/img/closet/*pic/
