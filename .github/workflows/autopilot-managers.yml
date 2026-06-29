@@ -10,6 +10,9 @@ on:
       manager:
         description: 'Run a single manager (mark|steve|ayalon) or "all"'
         default: 'all'
+  push:
+    paths:
+      - '.agents_trigger'   # self-serve trigger: commit this file to fire a run
 
 concurrency:
   group: autopilot-managers
