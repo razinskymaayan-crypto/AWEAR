@@ -980,7 +980,7 @@
     transition: background .15s;
     min-height: 48px;
   }
-  .store-row:active { background: rgba(255,255,255,.08); }
+  /* .store-row is now informational (in-app sourcing), not a tappable outbound link. */
   .store-logo {
     width: 32px; height: 32px; border-radius: 8px; background: #fff;
     border: 1px solid var(--line);
@@ -991,7 +991,7 @@
   }
   .store-name { flex: 1; font-size: var(--t-small,13px); font-weight: 800; }
   .store-scope { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 2px; }
-  .store-arrow { color: var(--muted); font-size: var(--t-h3,16px); flex-shrink: 0; }
+  .buy-alt-card:active { opacity: .8; transform: scale(.97); }
 
   /* ---- In-App Checkout States ---- */
   .checkout-processing { display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 0; }
@@ -3294,7 +3294,6 @@
     'Nike': `<svg viewBox="0 0 100 40" width="26" height="10.4" aria-hidden="true" fill="#111"><path d="M9 26.5 92 .5C72 14 36 30 18 34.5c-5 1.2-8 1-9.6-1-1.9-2.4-.4-5 .6-7Z"/></svg>`,
     'adidas':`<svg viewBox="0 0 60 40" width="24" height="16" aria-hidden="true" fill="#111"><path d="M2 38 22 2l6 0L8 38Zm14 0L34 6l6 0L22 38Zm14 0L46 12l6 0L36 38Z"/></svg>`,
     'Depop':`<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="#111"><path d="M14 3h3.4v18H14v-1.5A5 5 0 0 1 9.6 21a6 6 0 0 1 0-12 5 5 0 0 1 4.4 2.5Zm-4 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Z"/></svg>`,
-    'Google Shopping':`<svg viewBox="0 0 32 32" width="17" height="17" aria-hidden="true" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11h18l-1.6 13.4a2 2 0 0 1-2 1.8H10.6a2 2 0 0 1-2-1.8Z"/><path d="M11.5 11V8.5a4.5 4.5 0 0 1 9 0V11"/></svg>`,
   };
   const STORE_LOGOS = {
     'ASOS':'ASOS', 'Zara':'Zara', 'H&M':'H&M', 'SHEIN':'SHN',
@@ -3318,33 +3317,40 @@
     return s || '';
   }
 
+  // In-app sourcing row (informational, NOT an outbound link). Purchase happens
+  // through AWEAR's own Buy button; this just names where the piece is sourced from.
   function storeRowHTML(opt){
-    return `<a class="store-row" href="${attr(opt.url||'#')}" target="_blank" rel="noopener" aria-label="Shop at ${attr(opt.retailer)}">
+    return `<div class="store-row" aria-label="Sourced from ${attr(opt.retailer)}">
       <div class="store-logo">${storeLogo(opt.retailer)}</div>
       <div style="flex:1;min-width:0">
         <div class="store-name">${esc(opt.retailer||'Store')}</div>
         <div class="store-scope">${esc(scopeLabel(opt.scope))}</div>
       </div>
-      <span class="store-arrow">${icon('arrowOut', 16)}</span>
-    </a>`;
+    </div>`;
   }
 
-  // affiliate retailers (mirror of app.py RETAILERS) — build a real shopping link for any item
-  const AFF_RETAILERS=[
-    ['Google Shopping','https://www.google.com/search?tbm=shop&q='],
-    ['ASOS','https://www.asos.com/search/?q='],
-    ['Depop','https://www.depop.com/search/?q='],
-    ['ZARA','https://www.zara.com/ww/en/search?searchTerm='],
-  ];
+  // Every purchase is in-app (Carmel: "every purchase through OUR app"). We no longer
+  // send the buyer to any external retailer / shopping aggregator. For NEW retail the
+  // user feels in-app; behind the scenes the backend fulfils via dropshipping/affiliate.
+  // itemStores() is kept only to power the informational "Where it sells" sourcing rows
+  // (no external navigation) — partner retailers, never Google.
+  const AFF_RETAILERS=['ASOS','Depop','ZARA'];
   function buildBuyOptions(query){
     if(!query) return [];
-    const q=encodeURIComponent(query);
-    return AFF_RETAILERS.map(([retailer,base])=>({retailer,scope:'',url:base+q+'&aff=awear'}));
+    // No url -> the row is informational only (in-app), never an outbound link.
+    return AFF_RETAILERS.map(retailer=>({retailer,scope:''}));
   }
-  // an item always resolves to real stores: use API buy_options, else derive from its name/query
+  // an item always resolves to source stores (informational): use API buy_options,
+  // else derive from its name/query. These NO LONGER carry external buy links.
   function itemStores(it){
     if(it.buy_options&&it.buy_options.length) return it.buy_options;
     return buildBuyOptions(it.search_query||it.q||it.name);
+  }
+  // Stable idempotency key for a Buy tap — same product within a 4s window dedups
+  // server-side (POST /api/orders client_ref) so double-taps never double-order.
+  function buyClientRef(it){
+    const id = (it && (it.id || it.name || 'item')) || 'item';
+    return String(id) + '_' + Math.floor(Date.now()/4000);
   }
 
   function openSheetSingle(it, earnAmt, influencerUser){
@@ -3369,10 +3375,12 @@
       ${earnLine}
       <div style="height:16px"></div>`;
 
-    _checkoutCtx = {it, influencerUser: influencerUser || null};
+    // Resolve in-app purchase kind (preloved vs retail) once, so handleCheckout sends
+    // the right kind + seller_key to /api/orders. Caller-supplied kind wins.
+    _checkoutCtx = {it: {...it, kind: it.kind||itemKind(it), seller_key: it.seller_key||it.seller||''}, influencerUser: influencerUser || null};
     sheetFooter.innerHTML = it.price_estimate_usd
       ? `<button class="sheet-buy" data-action="checkout" aria-label="Buy ${attr(it.name)}">
-           ${icon('bag',18)} Buy Now
+           ${icon('bag',18)} Buy
            <span class="sheet-buy-price">$${esc(it.price_estimate_usd)}</span>
          </button>`
       : `<div style="text-align:center;color:var(--muted,#8a8498);font-size:var(--t-small,13px);padding:10px 0">Price not available for this item</div>`;
@@ -3395,10 +3403,12 @@
         sheetBody.insertAdjacentHTML('beforeend',
           `<div style="display:flex;align-items:center;gap:6px;justify-content:center;color:var(--muted,#8a8498);font-size:12px;margin-top:-8px">${icon('check',13)} Sourced from ${esc(r.retailer||'partner store')}${r.checkout==='in_app'?' · in-app':''}</div>`);
       } else if(r.status==='similar' && (r.alternatives||[]).length){
+        // In-app "shop similar": each alternative re-opens the AWEAR sheet for that
+        // piece (data-buy-alt) — never an outbound redirect. Buy stays in-app.
         const alts=r.alternatives.slice(0,3);
         sheetBody.insertAdjacentHTML('beforeend',
-          `<div style="margin-top:4px"><div style="font-weight:800;font-size:13px;margin-bottom:8px">Not sold new — shop similar</div><div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none">${alts.map(a=>`<a href="${attr(a.buy_url)}" target="_blank" rel="noopener" style="flex:0 0 100px;text-decoration:none"><div style="aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--surface,#f3f1ec)"><img src="${attr(a.image_url)}" loading="lazy" data-cat="${attr(it.category||'')}" style="width:100%;height:100%;object-fit:cover" onerror="this.onerror=null;imgFallback(this)"></div><div style="font-size:11px;font-weight:700;color:var(--text,#14110f);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.brand)}</div><div style="font-size:11px;color:var(--muted,#8a8498)">$${esc(a.price_usd)}</div></a>`).join('')}</div></div>`);
-        sheetFooter.innerHTML = `<div style="text-align:center;color:var(--muted,#8a8498);font-size:13px;padding:8px 0">Pick a similar piece ↑ — or keep it in your closet</div>`;
+          `<div style="margin-top:4px"><div style="font-weight:800;font-size:13px;margin-bottom:8px">Not sold new — shop similar</div><div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none">${alts.map(a=>`<button type="button" class="buy-alt-card" data-buy-alt="${attr(JSON.stringify({name:a.brand,brand_vibe:a.brand,category:it.category||'',price_estimate_usd:a.price_usd,image_url:a.image_url,search_query:a.brand}))}" style="flex:0 0 100px;text-align:left;background:none;border:none;padding:0;cursor:pointer;font-family:inherit"><div style="aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--surface,#f3f1ec)"><img src="${attr(a.image_url)}" loading="lazy" data-cat="${attr(it.category||'')}" style="width:100%;height:100%;object-fit:cover" onerror="this.onerror=null;imgFallback(this)"></div><div style="font-size:11px;font-weight:700;color:var(--fg,#f0ecf5);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.brand)}</div><div style="font-size:11px;color:var(--muted,#8a8498)">$${esc(a.price_usd)}</div></button>`).join('')}</div></div>`);
+        sheetFooter.innerHTML = `<div style="text-align:center;color:var(--muted,#8a8498);font-size:13px;padding:8px 0">Pick a similar piece above — or keep it in your closet</div>`;
       } else if(r.status==='archive'){
         sheetFooter.innerHTML = `<div style="text-align:center;color:var(--muted,#8a8498);font-size:13px;padding:10px 0;line-height:1.5">${esc(r.message||'Not sold new anymore — style it from your closet or list it for resale.')}</div>`;
       }
@@ -3641,16 +3651,26 @@
       ${whereHTML}
       <div style="height:8px"></div>`;
 
-    const primary=stores[0];
-    sheetFooter.innerHTML = primary
-      ? `<a class="sheet-buy" href="${attr(primary.url)}" target="_blank" rel="noopener"
-            style="text-decoration:none" aria-label="Buy ${attr(it.name)} at ${attr(primary.retailer)}">
-           Buy at ${esc(primary.retailer)}
-           <span class="sheet-buy-price">$${esc(it.price_estimate_usd||it.price||0)}</span>
-         </a>`
-      : `<div style="text-align:center;color:var(--muted);font-size:var(--t-small);padding:10px 0">No shopping link available for this item yet</div>`;
+    // In-app Buy — purchase happens through AWEAR, never a redirect to an external store.
+    _checkoutCtx = { it: {...it, kind: itemKind(it), seller_key: it.seller_key||it.seller||''}, influencerUser: null };
+    sheetFooter.innerHTML = priceVal
+      ? `<button class="sheet-buy" data-action="checkout" aria-label="Buy ${attr(it.name)}">
+           ${icon('bag',18)} Buy
+           <span class="sheet-buy-price">$${esc(priceVal)}</span>
+         </button>`
+      : `<div style="text-align:center;color:var(--muted);font-size:var(--t-small);padding:10px 0">Price not available for this item yet</div>`;
 
     showSheet();
+  }
+  // A buy is preloved (P2P second-hand, 8% AWEAR commission) when the item is a
+  // community/resale listing — flagged by isNew===false, a seller handle, or a
+  // condition grade. Everything else is retail (in-app dropshipping/affiliate facade).
+  function itemKind(it){
+    if(!it) return 'retail';
+    if(it.kind==='preloved'||it.kind==='retail') return it.kind;
+    const preloved = it.isNew===false || !!it.seller || !!it.seller_key ||
+                     !!it.condGrade || !!it.condition || it.preloved===true;
+    return preloved ? 'preloved' : 'retail';
   }
 
   function openSheetLook(label, items, totalPrice, earnAmt, influencerUser){
@@ -3788,11 +3808,17 @@
     if (!_checkoutCtx || !_checkoutCtx.it) return;
     const {it, influencerUser} = _checkoutCtx;
     sheetFooter.innerHTML = `<div class="checkout-processing"><div class="co-spin"></div><div class="co-label">Placing your order…</div></div>`;
-    // Fire-and-forget to backend (BE A7) — localStorage remains source of truth for instant UI
+    // In-app order via POST /api/orders. kind=preloved (8% AWEAR commission, P2P) vs
+    // retail (dropshipping/affiliate facade). client_ref makes double-taps idempotent.
+    const price = Number(it.price_estimate_usd||it.price||0);
     fetch('/api/orders', {method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({product_name: it.name||'', product_id: it.id||'',
-        amount_usd: it.price_estimate_usd||0, influencer_id: influencerUser||'', post_id:''})
-    }).catch(()=>{});
+        amount_usd: price, price: price, kind: it.kind||'retail', seller_key: it.seller_key||'',
+        client_ref: buyClientRef(it), influencer_id: influencerUser||'', post_id:''})
+    }).then(r=>{ if(!r.ok) throw new Error('order http '+r.status); })
+      .catch(err=>{ // never fail silently — surface to logs/admin (optimistic UI already shown)
+        console.error('[orders] POST failed', err);
+        logAdminEvent('order_error', 'Order POST failed: '+(it.name||'item')); });
     setTimeout(() => {
       const w = loadWardrobe();
       if (!w.find(x => x.name === it.name)) {
@@ -3828,11 +3854,16 @@
     if (!_checkoutCtx || !_checkoutCtx.items) return;
     const {items, influencerUser, totalPrice} = _checkoutCtx;
     sheetFooter.innerHTML = `<div class="checkout-processing"><div class="co-spin"></div><div class="co-label">Placing your order…</div></div>`;
-    // Fire-and-forget to backend (BE A7) — record the look purchase as a single order
+    // In-app order — the whole look as a single retail order. client_ref (item count +
+    // total in a 4s window) makes double-taps idempotent server-side.
     fetch('/api/orders', {method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({product_name: items.length+'-item look', product_id:'',
-        amount_usd: totalPrice||0, influencer_id: influencerUser||'', post_id:''})
-    }).catch(()=>{});
+        amount_usd: totalPrice||0, price: totalPrice||0, kind:'retail', seller_key:'',
+        client_ref: buyClientRef({id:'look_'+items.length+'_'+(totalPrice||0)}),
+        influencer_id: influencerUser||'', post_id:''})
+    }).then(r=>{ if(!r.ok) throw new Error('order http '+r.status); })
+      .catch(err=>{ console.error('[orders] look POST failed', err);
+        logAdminEvent('order_error', 'Look order POST failed ('+items.length+' items)'); });
     setTimeout(() => {
       const w = loadWardrobe();
       items.forEach((it,i) => {
@@ -3879,7 +3910,15 @@
     }
   });
 
-  // ---- buy confirm — opens product sheet with real retailers (no fake animation) ----
+  // In-app "shop similar" alternatives — re-open the AWEAR sheet for the chosen
+  // piece (never an external redirect). Buy stays inside the app.
+  sheetBody.addEventListener('click', e => {
+    const alt = e.target.closest('[data-buy-alt]');
+    if (!alt) return;
+    try { openSheetSingle(JSON.parse(alt.dataset.buyAlt), 0, ''); } catch(err){}
+  });
+
+  // ---- buy confirm — opens product sheet (no fake animation) ----
   function buyConfirm(synth) {
     openSheetSingle(synth);
   }
@@ -7365,7 +7404,8 @@
           const isNewArrival = isRetail && (item.arrived_days || 0) <= 7;
           const badgeText = isNewArrival ? 'New Arrival' : (isRetail ? 'Brand New' : 'Pre-loved');
           const btnClass = isRetail ? 'mp-buy-btn retail-btn' : 'mp-buy-btn resale-btn';
-          const btnLabel = isRetail ? 'Shop at ' + esc(item.brand) : 'Buy Now';
+          // Single in-app "Buy" for both — purchase happens through AWEAR, no external store.
+          const btnLabel = 'Buy';
           // Condition grade for resale
           const grade = item.condGrade || '';
           const gradeColor = gradeColors[grade] || 'var(--muted,#8a8498)';
@@ -7558,10 +7598,12 @@
     logAdminEvent('buy_intent', 'Opened MP item: ' + (item.name || 'item'));
     const store = SEED_USERS.find(u => u.handle === item.seller) || null;
     _mpSheetStore = store ? store.id : null;
+    // Community listing = preloved (P2P second-hand) → 8% AWEAR commission, record seller.
     _checkoutCtx = { it: {
-      name: item.name, category: item.category, color: item.color,
+      id: item.id, name: item.name, category: item.category, color: item.color,
       brand_vibe: item.seller, price_estimate_usd: item.price,
       search_query: item.name, style_tags: item.style_tags || [],
+      kind: 'preloved', seller_key: item.seller || '',
     }, influencerUser: null };
 
     const storeName = store ? store.name : (item.seller || '');
@@ -7585,7 +7627,7 @@
       <div class="mp-sheet-actions">
         ${store ? `<button class="sheet-buy-secondary" data-action="view-seller-profile" aria-label="View ${attr(storeName)} profile">${icon('user',16)} View profile</button>` : ''}
         <button class="sheet-buy" data-action="checkout" aria-label="Buy ${attr(item.name)}">
-          ${icon('bag',18)} Buy Now <span class="sheet-buy-price">$${esc(item.price)}</span>
+          ${icon('bag',18)} Buy <span class="sheet-buy-price">$${esc(item.price)}</span>
         </button>
       </div>`;
     showSheet();
@@ -7593,15 +7635,25 @@
 
   function handleMPBuy(id, isNew) {
     if (isNew === 'true') {
+      // Retail (brand-new) — feels in-app; backend fulfils via dropshipping/affiliate.
+      // No external "Opening store" redirect — open the AWEAR Buy sheet (kind=retail).
       const item = MP_NEW_SEED.find(i => i.id === id);
-      if (item) showToast('Opening ' + item.brand + ' store…');
+      if (!item) return;
+      openSheetSingle({
+        id: item.id, name: item.name, category: item.category, color: item.color,
+        brand_vibe: item.brand, price_estimate_usd: item.price,
+        search_query: item.name, style_tags: item.style_tags || [],
+        kind: 'retail', seller_key: '',
+      }, null, null);
     } else {
+      // Community listing — preloved (P2P), 8% AWEAR commission, record seller.
       const item = loadMPListings().find(i => i.id === id);
       if (!item) return;
       openSheetSingle({
-        name: item.name, category: item.category, color: item.color,
+        id: item.id, name: item.name, category: item.category, color: item.color,
         brand_vibe: item.seller, price_estimate_usd: item.price,
         search_query: item.name, style_tags: item.style_tags || [],
+        kind: 'preloved', seller_key: item.seller || '',
       }, null, null);
     }
   }
