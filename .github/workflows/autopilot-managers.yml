@@ -22,6 +22,8 @@ jobs:
   manager:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       max-parallel: 3
@@ -125,3 +127,27 @@ jobs:
         if: steps.gate.outputs.skip != 'true'
         run: |
           git push origin "HEAD:auto/${{ matrix.manager }}" || echo "nothing to push"
+
+      - name: Self-diagnostic (commit status to main so failures are visible without gh)
+        if: ${{ always() && steps.gate.outputs.skip != 'true' }}
+        run: |
+          AHEAD=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "?")
+          mkdir -p ci-debug
+          {
+            echo "manager=${{ matrix.manager }}"
+            echo "branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) commits_ahead_of_main=$AHEAD"
+            echo "claude_installed=$(command -v claude || echo NO)"
+            echo "node=$(node -v 2>/dev/null || echo NO)  npm=$(npm -v 2>/dev/null || echo NO)"
+            echo "key_present=$([ -n "$ANTHROPIC_API_KEY" ] && echo yes || echo NO)"
+            echo "last_commit=$(git log -1 --oneline 2>/dev/null)"
+          } > "ci-debug/mgr-${{ matrix.manager }}.txt"
+          git config user.name "awear-dbg"; git config user.email "dbg@awear.local"
+          git stash -u >/dev/null 2>&1 || true
+          git fetch origin main -q || true
+          git checkout -B main origin/main
+          git stash pop >/dev/null 2>&1 || true
+          git add "ci-debug/mgr-${{ matrix.manager }}.txt"
+          git commit -m "debug: mgr ${{ matrix.manager }} status [skip ci]" || true
+          for i in 1 2 3; do git pull --rebase origin main -q && git push origin HEAD:main && break || sleep 3; done
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
