@@ -1528,6 +1528,7 @@
   .create-opt-ico { width: 42px; height: 42px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm,10px); color: var(--text,#f0ecf5); }
   .create-opt-ico.post { background: color-mix(in srgb, var(--accent,#e8526a) 16%, transparent); color: var(--accent,#e8526a); }
   .create-opt-ico.scan { background: color-mix(in srgb, var(--accent3,#7a6af0) 16%, transparent); color: var(--accent3,#7a6af0); }
+  .create-opt-ico.checkin { background: color-mix(in srgb, var(--accent2,#c4855a) 16%, transparent); color: var(--accent2,#c4855a); }
   .create-opt-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .create-opt-label { font-size: var(--t-body,14px); font-weight: 800; color: var(--text,#f0ecf5); }
   .create-opt-sub { font-size: var(--t-caption,12px); font-weight: 600; color: var(--muted,#8a8498); }
@@ -2378,6 +2379,77 @@
   .diary-submit:active { transform: scale(.97); }
   .diary-submit:disabled { opacity: .4; cursor: default; transform: none; }
 
+  /* ---- Daily check-in: note + privacy toggle (in diary sheet) ---- */
+  .diary-extra { padding: 4px 16px 8px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+  .diary-note { width: 100%; box-sizing: border-box; resize: none; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 10px 12px; font-family: inherit; font-size: var(--t-small,13px); color: var(--fg,#f0ecf5); line-height: 1.4; }
+  .diary-note::placeholder { color: var(--muted,#8a8498); }
+  .diary-note:focus { outline: none; border-color: color-mix(in srgb, var(--accent2,#c4855a) 50%, var(--line,#2e2836)); }
+  .diary-private { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 8px 12px; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); cursor: pointer; font-family: inherit; text-align: start; transition: border-color .15s; }
+  .diary-private.on { border-color: color-mix(in srgb, var(--accent2,#c4855a) 40%, var(--line,#2e2836)); }
+  .diary-private-ico { width: 34px; height: 34px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm,10px); background: color-mix(in srgb, var(--accent2,#c4855a) 16%, transparent); color: var(--accent2,#c4855a); }
+  .diary-private-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .diary-private-label { font-size: var(--t-small,13px); font-weight: 800; color: var(--fg,#f0ecf5); }
+  .diary-private-sub { font-size: var(--t-micro,11px); font-weight: 600; color: var(--muted,#8a8498); }
+
+  /* ---- AI tab: Duolingo-style streak panel ---- */
+  .og-streak { margin: 0 18px 12px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; background: linear-gradient(135deg, color-mix(in srgb, var(--accent,#e8526a) 10%, transparent), color-mix(in srgb, var(--accent2,#c4855a) 9%, transparent)); border: 1px solid color-mix(in srgb, var(--accent,#e8526a) 22%, transparent); border-radius: var(--r-lg,20px); }
+  .ogs-flame { width: 46px; height: 46px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: var(--r-md,14px); background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); color: #fff; }
+  .ogs-info { flex: 1; min-width: 0; }
+  .ogs-headline { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+  .ogs-num { font-family: 'Poppins', sans-serif; font-size: var(--t-h1,24px); font-weight: 800; line-height: 1; color: var(--fg,#f0ecf5); }
+  .ogs-unit { font-size: var(--t-small,13px); font-weight: 700; color: var(--muted,#8a8498); }
+  .ogs-best { font-size: var(--t-micro,11px); font-weight: 700; color: var(--accent2,#c4855a); }
+  .ogs-dots { display: flex; gap: 5px; margin-top: 8px; }
+  .ogs-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line,#2e2836); flex-shrink: 0; }
+  .ogs-dot.done { background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); }
+  .ogs-cta { min-width: 92px; min-height: 44px; padding: 10px 16px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; gap: 5px; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; color: #fff; cursor: pointer; transition: transform .1s; }
+  .ogs-cta:active { transform: scale(.95); }
+  .ogs-done { min-height: 44px; padding: 8px 14px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; gap: 5px; border-radius: var(--r-pill,999px); background: color-mix(in srgb, var(--success,#52c97a) 15%, transparent); border: 1.5px solid var(--success,#52c97a); font-size: var(--t-caption,12px); font-weight: 800; color: var(--success,#52c97a); }
+
+  /* ---- AI tab: private journal entry card ---- */
+  .og-journal { margin: 0 18px 16px; width: calc(100% - 36px); min-height: 60px; display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface,#161318); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); cursor: pointer; font-family: inherit; text-align: start; transition: background .15s; }
+  .og-journal:active { background: var(--card-hover,#262030); }
+  .ogj-ico { width: 40px; height: 40px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm,10px); background: color-mix(in srgb, var(--accent2,#c4855a) 14%, transparent); color: var(--accent2,#c4855a); }
+  .ogj-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .ogj-title { font-size: var(--t-body,14px); font-weight: 800; color: var(--fg,#f0ecf5); }
+  .ogj-sub { font-size: var(--t-caption,12px); font-weight: 600; color: var(--muted,#8a8498); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ogj-arrow { flex-shrink: 0; color: var(--muted,#8a8498); display: inline-flex; }
+
+  /* ---- Journal modal (reuses .diary-overlay / .diary-sheet) ---- */
+  .journal-sheet { max-height: 84vh; }
+  .journal-tools { padding: 4px 20px 10px; flex-shrink: 0; }
+  .journal-remind { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+  .jr-label { display: inline-flex; align-items: center; gap: 7px; font-size: var(--t-small,13px); font-weight: 700; color: var(--fg,#f0ecf5); }
+  .jr-label svg { color: var(--accent2,#c4855a); }
+  .jr-input { background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-sm,10px); padding: 8px 10px; min-height: 40px; font-family: inherit; font-size: var(--t-small,13px); color: var(--fg,#f0ecf5); color-scheme: dark; }
+  .journal-list { overflow-y: auto; flex: 1; padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .journal-loading { padding: 24px; text-align: center; color: var(--muted,#8a8498); font-size: var(--t-small,13px); font-weight: 600; }
+  .journal-empty { text-align: center; padding: 36px 20px; color: var(--muted,#8a8498); font-size: var(--t-small,13px); font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .journal-empty .je-sub { font-weight: 500; }
+  .journal-empty .je-cta { margin-top: 8px; }
+  .journal-row { background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .jr-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .jr-date { font-size: var(--t-small,13px); font-weight: 800; color: var(--fg,#f0ecf5); }
+  .jr-private, .jr-shared { display: inline-flex; align-items: center; gap: 4px; font-size: var(--t-micro,11px); font-weight: 700; color: var(--muted,#8a8498); }
+  .jr-shared { color: var(--accent2,#c4855a); }
+  .jr-thumbs { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .jr-thumb { width: 44px; height: 56px; border-radius: var(--r-xs,6px); overflow: hidden; background: var(--surface,#161318); flex-shrink: 0; display: block; }
+  .jr-thumb .pi-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .jr-thumb .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--muted,#8a8498); }
+  .jr-more { font-size: var(--t-caption,12px); font-weight: 700; color: var(--muted,#8a8498); align-self: center; }
+  .jr-noitems { font-size: var(--t-caption,12px); font-weight: 600; color: var(--muted,#8a8498); }
+  .jr-items { font-size: var(--t-caption,12px); font-weight: 600; color: var(--muted,#8a8498); line-height: 1.4; }
+  .jr-note { font-size: var(--t-small,13px); font-weight: 500; color: var(--fg,#f0ecf5); line-height: 1.45; }
+
+  /* ---- In-app check-in reminder banner ---- */
+  .checkin-reminder { position: fixed; left: 50%; bottom: 88px; transform: translate(-50%, 16px); width: min(360px, calc(100% - 32px)); z-index: 460; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--surface,#161318); border: 1px solid color-mix(in srgb, var(--accent,#e8526a) 30%, var(--line,#2e2836)); border-radius: var(--r-lg,20px); box-shadow: 0 8px 28px rgba(0,0,0,.4); opacity: 0; transition: opacity .24s, transform .24s; pointer-events: none; }
+  .checkin-reminder.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .cr-ico { flex-shrink: 0; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm,10px); background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); color: #fff; }
+  .cr-txt { flex: 1; min-width: 0; font-size: var(--t-small,13px); font-weight: 600; color: var(--fg,#f0ecf5); line-height: 1.35; }
+  .cr-cta { flex-shrink: 0; min-height: 40px; padding: 8px 14px; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; color: #fff; cursor: pointer; }
+  .cr-x { flex-shrink: 0; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--muted,#8a8498); cursor: pointer; border-radius: var(--r-sm,10px); }
+  .cr-x:active { background: var(--card-hover,#262030); }
+
   /* ---- Season Entry Card (profile) ---- */
   .season-entry-card { background: transparent; border: 1px solid var(--line); border-radius: var(--r-pill,999px); padding: var(--space-2,8px) var(--space-3,12px); margin: 0 16px 12px; cursor: pointer; min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2,8px); transition: background .15s, border-color .15s; }
   .season-entry-card:active { background: var(--card-hover); }
@@ -2622,7 +2694,9 @@
     <section id="outfits" class="view">
       <div class="og-wrap" id="og-wrap">
         <div id="og-daily"></div>
+        <div id="og-streak-panel"></div>
         <div id="og-entries"></div>
+        <div id="og-journal-card"></div>
         <div class="og-header">
           <div class="og-title" style="display:flex;align-items:center;gap:8px"><span class="ic-svg" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l1.7 4.8L18.5 9.5l-4.8 1.7L12 16l-1.7-4.8L5.5 9.5l4.8-1.7L12 3Z" stroke-linejoin="round"/><path d="M18.5 15l.7 2 .8 2-2-.7-2-.8 2-.7.5-1.8Z" stroke-linejoin="round"/></svg></span> Outfit Generator</div>
           <div class="og-sub">Tell us the occasion — AI builds looks from your wardrobe</div>
@@ -2812,6 +2886,13 @@
           <span class="create-opt-sub">Add an item to your closet</span>
         </span>
       </button>
+      <button class="create-opt" id="create-opt-checkin" type="button">
+        <span class="create-opt-ico checkin" id="create-ico-checkin"></span>
+        <span class="create-opt-txt">
+          <span class="create-opt-label">Daily check-in</span>
+          <span class="create-opt-sub">Log what you wore — keep your streak</span>
+        </span>
+      </button>
     </div>
   </div>
 </div>
@@ -2946,6 +3027,9 @@
     flower:'<circle cx="12" cy="12" r="2.1"/><path d="M12 9.7a2.4 2.4 0 1 1 0-4.8 2.4 2.4 0 0 1 0 4.8ZM12 19.1a2.4 2.4 0 1 1 0-4.8 2.4 2.4 0 0 1 0 4.8ZM9.7 12a2.4 2.4 0 1 1-4.8 0 2.4 2.4 0 0 1 4.8 0ZM19.1 12a2.4 2.4 0 1 1-4.8 0 2.4 2.4 0 0 1 4.8 0Z" stroke-linejoin="round"/>',
     minimal:'<circle cx="12" cy="12" r="7.5"/><path d="M8.2 12h7.6"/>',
     globe:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.3 3.7 5.4 3.7 8.5s-1.3 6.2-3.7 8.5c-2.4-2.3-3.7-5.4-3.7-8.5s1.3-6.2 3.7-8.5Z" stroke-linejoin="round"/>',
+    lock:'<rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><circle cx="12" cy="15" r="1.2" fill="currentColor" stroke="none"/>',
+    book:'<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5V4.5Z" stroke-linejoin="round"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3M9 7h6M9 10.5h6"/>',
+    chevronRight:'<path d="m9 6 6 6-6 6" stroke-linejoin="round"/>',
     storefront:'<path d="M4 9.5 5 4h14l1 5.5" stroke-linejoin="round"/><path d="M4 9.5a2.2 2.2 0 0 0 4.4.3 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4-.3" stroke-linejoin="round"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/>',
     more:'<circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>',
     blockUser:'<circle cx="12" cy="12" r="8.5"/><path d="M6.5 17.5 17.5 6.5" stroke-linecap="round"/>',
@@ -4532,8 +4616,10 @@
     // inject icons (icon() returns SVG string; safe innerHTML)
     const ip = document.getElementById('create-ico-post');
     const is = document.getElementById('create-ico-scan');
+    const ic = document.getElementById('create-ico-checkin');
     if(ip) ip.innerHTML = icon('plus', 22);
     if(is) is.innerHTML = icon('camera', 22);
+    if(ic) ic.innerHTML = icon('calendar', 22);
     ov.classList.add('show');
     ov.setAttribute('aria-hidden','false');
   }
@@ -4550,8 +4636,10 @@
   (function wireCreateMenu(){
     const post = document.getElementById('create-opt-post');
     const scan = document.getElementById('create-opt-scan');
+    const checkin = document.getElementById('create-opt-checkin');
     if(post) post.addEventListener('click', ()=>{ closeCreateMenu(); openNewPostComposer(); });
     if(scan) scan.addEventListener('click', ()=>{ closeCreateMenu(); document.getElementById('file-input').click(); });
+    if(checkin) checkin.addEventListener('click', ()=>{ closeCreateMenu(); showDiaryModal(); });
   })();
 
   // ---- static UI icons (nav bar) ----
@@ -4743,6 +4831,13 @@
         '<div class="diary-title">' + icon('calendar', 18) + ' What did you wear today?</div>' +
         '<div class="diary-sub">Tap the items you wore. Abigail learns your style with every entry.</div>' +
         '<div class="diary-grid" id="diary-grid">' + itemsHtml + '</div>' +
+        '<div class="diary-extra">' +
+          '<textarea class="diary-note" id="diary-note" rows="2" maxlength="280" placeholder="Add a note — how did it feel? (optional)">' + esc(diaryEntry && diaryEntry.note ? diaryEntry.note : '') + '</textarea>' +
+          '<button class="diary-private" id="diary-private" type="button" aria-pressed="' + (diaryEntry && diaryEntry.private === false ? 'false' : 'true') + '">' +
+            '<span class="diary-private-ico" id="diary-private-ico"></span>' +
+            '<span class="diary-private-txt"><span class="diary-private-label" id="diary-private-label"></span><span class="diary-private-sub" id="diary-private-sub"></span></span>' +
+          '</button>' +
+        '</div>' +
         '<div class="diary-footer">' +
           '<button class="diary-submit" id="diary-submit"' + (wardrobe.length ? '' : ' disabled') + '>' +
             icon('check', 16) + ' Log outfit' +
@@ -4755,6 +4850,20 @@
 
     var grid = overlay.querySelector('#diary-grid');
     var submitBtn = overlay.querySelector('#diary-submit');
+    var noteEl = overlay.querySelector('#diary-note');
+    var privBtn = overlay.querySelector('#diary-private');
+    // Private by default (true). Restore prior choice if the user already logged today.
+    var isPrivate = !(diaryEntry && diaryEntry.private === false);
+
+    function refreshPrivacy() {
+      privBtn.classList.toggle('on', isPrivate);
+      privBtn.setAttribute('aria-pressed', isPrivate ? 'true' : 'false');
+      overlay.querySelector('#diary-private-ico').innerHTML = icon(isPrivate ? 'lock' : 'globe', 16);
+      overlay.querySelector('#diary-private-label').textContent = isPrivate ? 'Private journal' : 'Shared on profile';
+      overlay.querySelector('#diary-private-sub').textContent = isPrivate ? 'Only you can see this entry' : 'Visible to people who view your profile';
+    }
+    refreshPrivacy();
+    privBtn.addEventListener('click', function(){ isPrivate = !isPrivate; refreshPrivacy(); });
 
     function refreshBtn() {
       submitBtn.innerHTML = icon('check', 16) + ' Log outfit' +
@@ -4775,16 +4884,20 @@
     });
 
     submitBtn.addEventListener('click', function() {
+      var note = (noteEl.value || '').trim();
       var diary = loadDiary().filter(function(e){ return e.date !== today; });
       var items = wardrobe.filter(function(it){ return selectedIds.has(it.id); })
         .map(function(it){ return {id: it.id, name: it.name || '', category: it.category || ''}; });
-      diary.push({date: today, items: items, ts: Date.now()});
+      diary.push({date: today, items: items, note: note, private: isPrivate, ts: Date.now()});
       saveDiary(diary);
+      // Local streak first = instant feedback / offline-safe cache.
       var s = computeAndSaveStreak();
       closeDiaryModal(overlay);
       renderHome();
       var milestones = {3: '3-day streak! You\'re building a habit.', 7: 'Week streak! Abigail knows your style.', 30: '30-day streak! You\'re AWEAR\'s top stylist.'};
       showToast(milestones[s.count] || ('Outfit logged · ' + s.count + '-day streak'));
+      // Server = source of truth: sync in the background, reconcile the streak when it returns.
+      dailyLogSync(today, items, note, isPrivate);
     });
   }
 
@@ -4792,6 +4905,105 @@
     overlay.classList.remove('show');
     setTimeout(function(){ if (overlay.parentNode) overlay.remove(); }, 260);
   }
+
+  // ---- Daily-log backend sync (server = source of truth, localStorage = fast cache/fallback) ----
+  const SERVER_STREAK_KEY = 'awear_server_streak';   // last server streak snapshot {current_streak,best_streak,logged_today}
+  const REMINDER_KEY      = 'awear_reminder_time';   // "HH:MM" or "" (off)
+  const REMINDER_SHOWN_KEY = 'awear_reminder_shown'; // date string — banner already shown today
+
+  function loadServerStreak(){ try { return JSON.parse(localStorage.getItem(SERVER_STREAK_KEY) || 'null'); } catch(e){ return null; } }
+  function saveServerStreak(s){ if (s) localStorage.setItem(SERVER_STREAK_KEY, JSON.stringify(s)); }
+
+  // Map server streak shape -> local streak cache so existing widgets stay consistent.
+  function reconcileLocalStreak(server){
+    if (!server) return;
+    var s = loadStreak();
+    s.count = (typeof server.current_streak === 'number') ? server.current_streak : s.count;
+    s.best  = Math.max(s.best || 0, server.best_streak || 0, s.count || 0);
+    if (server.logged_today) s.lastDate = todayStr();
+    saveStreak(s);
+  }
+
+  // POST today's check-in. Graceful: any failure leaves the local cache intact (already saved).
+  async function dailyLogSync(date, items, note, isPrivate){
+    try {
+      const res = await fetch('/api/daily-log', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ date: date, items: items, note: note || '', private: isPrivate !== false })
+      });
+      if (!res.ok) { console.warn('[daily-log] POST', res.status); return; }
+      const data = await res.json();
+      if (data && data.streak) { saveServerStreak(data.streak); reconcileLocalStreak(data.streak); }
+      renderStreakPanel();
+      renderJournalPreview();
+    } catch(err){ console.warn('[daily-log] POST failed — local cache kept', err); }
+  }
+
+  // GET the authoritative streak; reconcile + refresh the AI-section panel.
+  async function refreshServerStreak(){
+    try {
+      const res = await fetch('/api/daily-log/streak');
+      if (!res.ok) return null;
+      const s = await res.json();
+      saveServerStreak(s); reconcileLocalStreak(s);
+      renderStreakPanel();
+      return s;
+    } catch(err){ return null; }
+  }
+
+  // GET the private journal (newest first). Returns [] on any failure (caller falls back to local).
+  async function fetchJournal(){
+    try {
+      const res = await fetch('/api/daily-log');
+      if (!res.ok) return null;
+      const data = await res.json();
+      return (data && Array.isArray(data.items)) ? data.items : [];
+    } catch(err){ return null; }
+  }
+
+  // ---- In-app daily reminder (lightweight, no web-push) ----
+  function loadReminderTime(){ return localStorage.getItem(REMINDER_KEY) || ''; }
+  function saveReminderTime(v){ if (v) localStorage.setItem(REMINDER_KEY, v); else localStorage.removeItem(REMINDER_KEY); }
+
+  // On app load: if a reminder time is set, it has passed, and today isn't logged → show a dismissible banner once/day.
+  async function maybeShowReminderBanner(){
+    const rt = loadReminderTime();
+    if (!rt) return;
+    const today = todayStr();
+    if (localStorage.getItem(REMINDER_SHOWN_KEY) === today) return;
+    const now = new Date();
+    const cur = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    if (cur < rt) return; // reminder time not reached yet
+    // Prefer server truth for logged_today; fall back to local diary.
+    let loggedToday = isDiaryLoggedToday();
+    const srv = loadServerStreak();
+    if (srv && typeof srv.logged_today === 'boolean') loggedToday = srv.logged_today;
+    if (loggedToday) return;
+    showReminderBanner();
+  }
+
+  function showReminderBanner(){
+    if (document.getElementById('checkin-reminder')) return;
+    localStorage.setItem(REMINDER_SHOWN_KEY, todayStr());
+    const bar = document.createElement('div');
+    bar.id = 'checkin-reminder';
+    bar.className = 'checkin-reminder';
+    bar.innerHTML =
+      '<span class="cr-ico">' + icon('flame', 18) + '</span>' +
+      '<span class="cr-txt">Keep your streak alive — log what you wore today.</span>' +
+      '<button class="cr-cta" id="cr-cta">Check in</button>' +
+      '<button class="cr-x" id="cr-x" aria-label="Dismiss">' + icon('x', 16) + '</button>';
+    document.body.appendChild(bar);
+    requestAnimationFrame(function(){ bar.classList.add('show'); });
+    function dismiss(){ bar.classList.remove('show'); setTimeout(function(){ if (bar.parentNode) bar.remove(); }, 240); }
+    bar.querySelector('#cr-x').addEventListener('click', dismiss);
+    bar.querySelector('#cr-cta').addEventListener('click', function(){ dismiss(); showDiaryModal(); });
+    setTimeout(function(){ if (bar.parentNode) dismiss(); }, 8000);
+  }
+
+  // Kick off server reconcile + reminder check once the app is up (deferred, non-blocking).
+  requestAnimationFrame(function(){ refreshServerStreak().then(maybeShowReminderBanner); });
 
   // ---- Shared occasion engine (home "Today's Look" + AI Stylist daily hero) ----
   // Single source of truth for the time+day → occasion mapping. Both renderHome()
@@ -5682,7 +5894,10 @@
 
   function initOutfitGen() {
     renderDailyLook();
+    renderStreakPanel();
     renderOgEntries();
+    renderJournalPreview();
+    refreshServerStreak(); // reconcile streak with server each time the AI tab opens
     const scenariosEl = document.getElementById('og-scenarios');
     scenariosEl.innerHTML = OG_SCENARIOS.map(s =>
       `<button class="og-chip" data-q="${attr(s.label)}">${icon(s.icon,14)} ${esc(s.label)}</button>`
@@ -5767,6 +5982,126 @@
     const swipe = el.querySelector('[data-action="og-swipe"]');
     if (chat) chat.addEventListener('click', () => showView('chat'));
     if (swipe) swipe.addEventListener('click', () => showStyleSwipe());
+  }
+
+  // ---- Daily check-in: Duolingo-style streak panel in the AI Stylist tab ----
+  // Server streak (cached) is preferred; local streak is the offline fallback.
+  function renderStreakPanel() {
+    const el = document.getElementById('og-streak-panel');
+    if (!el) return;
+    const local = loadStreak();
+    const server = loadServerStreak();
+    const current = server ? server.current_streak : local.count;
+    const best = server ? Math.max(server.best_streak || 0, local.best || 0) : (local.best || 0);
+    const loggedToday = server && typeof server.logged_today === 'boolean' ? server.logged_today : isDiaryLoggedToday();
+    const dotCount = Math.min(current, 7);
+    const dots = Array.from({length: 7}, (_, i) =>
+      `<span class="ogs-dot${i < dotCount ? ' done' : ''}"></span>`).join('');
+    el.innerHTML = `
+      <div class="og-streak">
+        <div class="ogs-flame">${icon('flame',24)}</div>
+        <div class="ogs-info">
+          <div class="ogs-headline"><span class="ogs-num">${current}</span><span class="ogs-unit">day${current===1?'':'s'}</span><span class="ogs-best">${best>1?'· best '+best:''}</span></div>
+          <div class="ogs-dots">${dots}</div>
+        </div>
+        ${loggedToday
+          ? `<div class="ogs-done">${icon('check',14)} Logged today</div>`
+          : `<button class="ogs-cta" data-action="ogs-checkin">${icon('plus',14)} Check in</button>`}
+      </div>`;
+    const cta = el.querySelector('[data-action="ogs-checkin"]');
+    if (cta) cta.addEventListener('click', () => showDiaryModal());
+  }
+
+  // ---- Private journal: preview card linking to the full journal ----
+  function renderJournalPreview() {
+    const el = document.getElementById('og-journal-card');
+    if (!el) return;
+    const local = loadDiary();
+    const count = local.length;
+    const last = local.slice().sort((a,b)=>(b.ts||0)-(a.ts||0))[0];
+    const sub = count
+      ? (last ? `${count} entr${count===1?'y':'ies'} · last ${esc(prettyDate(last.date))}` : `${count} entries`)
+      : 'Private by default — only you can see it';
+    el.innerHTML = `
+      <button class="og-journal" data-action="og-journal">
+        <span class="ogj-ico">${icon('book',18)}</span>
+        <span class="ogj-txt"><span class="ogj-title">Your style journal</span><span class="ogj-sub">${sub}</span></span>
+        <span class="ogj-arrow">${icon('chevronRight',18)}</span>
+      </button>`;
+    const btn = el.querySelector('[data-action="og-journal"]');
+    if (btn) btn.addEventListener('click', () => showJournalModal());
+  }
+
+  // Short human date for journal rows ("Jul 1" / "Today" / "Yesterday").
+  function prettyDate(dateStr) {
+    if (!dateStr) return '';
+    const today = todayStr();
+    if (dateStr === today) return 'Today';
+    const y = new Date(); y.setDate(y.getDate()-1);
+    const yStr = y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
+    if (dateStr === yStr) return 'Yesterday';
+    const parts = dateStr.split('-');
+    const d = new Date(Number(parts[0]), Number(parts[1])-1, Number(parts[2]));
+    return d.toLocaleDateString(undefined, {month:'short', day:'numeric'});
+  }
+
+  // ---- Full private journal modal (server list, falls back to local) ----
+  async function showJournalModal() {
+    const existing = document.getElementById('journal-overlay');
+    if (existing) existing.remove();
+    const overlay = document.createElement('div');
+    overlay.id = 'journal-overlay';
+    overlay.className = 'diary-overlay';
+    overlay.innerHTML =
+      '<div class="diary-sheet journal-sheet">' +
+        '<div class="diary-handle"></div>' +
+        '<div class="diary-title">' + icon('book',18) + ' Your style journal</div>' +
+        '<div class="diary-sub">Private by default. Every check-in trains Abigail on your taste.</div>' +
+        '<div class="journal-tools">' +
+          '<label class="journal-remind"><span class="jr-label">' + icon('bell',15) + ' Daily reminder</span>' +
+            '<input type="time" id="journal-remind-time" class="jr-input" value="' + attr(loadReminderTime()) + '"></label>' +
+        '</div>' +
+        '<div class="journal-list" id="journal-list"><div class="journal-loading">Loading…</div></div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function(){ overlay.classList.add('show'); });
+    overlay.addEventListener('click', function(e){ if (e.target === overlay) closeDiaryModal(overlay); });
+
+    const timeEl = overlay.querySelector('#journal-remind-time');
+    timeEl.addEventListener('change', function(){
+      saveReminderTime(timeEl.value || '');
+      showToast(timeEl.value ? ('Reminder set for ' + timeEl.value) : 'Reminder turned off');
+    });
+
+    // Server is source of truth; fall back to local diary if the fetch fails.
+    let entries = await fetchJournal();
+    if (entries === null) {
+      entries = loadDiary().slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).map(function(e){
+        return { date:e.date, items:e.items||[], note:e.note||'', private:e.private!==false };
+      });
+    }
+    const listEl = overlay.querySelector('#journal-list');
+    if (!entries.length) {
+      listEl.innerHTML = '<div class="journal-empty">' + icon('calendar',32) +
+        '<span>No check-ins yet</span><span class="je-sub">Log your first outfit to start your journal.</span>' +
+        '<button class="ogs-cta je-cta" id="journal-first">' + icon('plus',14) + ' Check in now</button></div>';
+      const fb = listEl.querySelector('#journal-first');
+      if (fb) fb.addEventListener('click', function(){ closeDiaryModal(overlay); showDiaryModal(); });
+      return;
+    }
+    listEl.innerHTML = entries.map(function(e){
+      const items = (e.items || []);
+      const names = items.map(function(i){ return esc(i.name || catLabel(i.category) || 'Item'); }).filter(Boolean);
+      const thumbs = items.slice(0,4).map(function(i){ return '<span class="jr-thumb">' + productImage(i, 'jr-thumb-img') + '</span>'; }).join('');
+      const more = items.length > 4 ? '<span class="jr-more">+' + (items.length-4) + '</span>' : '';
+      return '<div class="journal-row">' +
+        '<div class="jr-head"><span class="jr-date">' + esc(prettyDate(e.date)) + '</span>' +
+          (e.private !== false ? '<span class="jr-private">' + icon('lock',12) + ' Private</span>' : '<span class="jr-shared">' + icon('globe',12) + ' Shared</span>') + '</div>' +
+        '<div class="jr-thumbs">' + (thumbs || '<span class="jr-noitems">No items tagged</span>') + more + '</div>' +
+        (names.length ? '<div class="jr-items">' + esc(names.join(' · ')) + '</div>' : '') +
+        (e.note ? '<div class="jr-note">' + esc(e.note) + '</div>' : '') +
+      '</div>';
+    }).join('');
   }
 
   // ---- Style Swipe / Taste Training (L4-d) ----
