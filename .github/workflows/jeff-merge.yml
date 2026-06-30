@@ -1,0 +1,70 @@
+# Phase 2: Jeff the merger. After the managers run, integrate each auto/<manager>
+# branch into main — but ONLY if it still builds (npm run check-render). Auto-revert
+# a merge that breaks the build; skip (and flag) a branch that conflicts. Fires
+# automatically when autopilot-managers finishes; no extra cron minutes.
+name: jeff-merge
+
+on:
+  workflow_run:
+    workflows: ["autopilot-managers"]
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeff-merge
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Install (for check-render gate)
+        run: npm install --no-audit --no-fund || true
+      - name: Merge manager branches into main (gated)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          git config user.name "jeff"; git config user.email "jeff@awear.local"
+          git fetch origin -q
+          git checkout -B main origin/main
+          merged=""; reverted=""; conflicted=""
+          for m in mark steve ayalon; do
+            git rev-parse --verify "origin/auto/$m" >/dev/null 2>&1 || continue
+            ahead=$(git rev-list --count "main..origin/auto/$m" 2>/dev/null || echo 0)
+            [ "${ahead:-0}" -eq 0 ] && continue
+            if git merge --no-ff -m "jeff: merge auto/$m" "origin/auto/$m"; then
+              if npm run check-render; then
+                merged="$merged $m"
+              else
+                git reset --hard origin/main; reverted="$reverted $m"
+              fi
+            else
+              git merge --abort || true; conflicted="$conflicted $m"
+            fi
+          done
+          if [ -n "$merged" ]; then
+            for i in 1 2 3; do git pull --rebase origin main -q && git push origin HEAD:main && break || sleep 3; done
+            # reset merged branches so managers start fresh from main next round
+            for m in $merged; do git push origin --delete "auto/$m" || true; done
+          fi
+          MSG="jeff: merged ->${merged:- none}"
+          [ -n "$reverted" ] && MSG="$MSG | REVERTED (broke build):$reverted"
+          [ -n "$conflicted" ] && MSG="$MSG | CONFLICT (needs reconciliation):$conflicted"
+          echo "$MSG"
+          bash scripts/tg.sh text "$MSG" || true
+          # Record conflicts for the next round to reconcile (joint-discussion v2)
+          if [ -n "$conflicted" ]; then
+            mkdir -p ci-debug; echo "$(date -u +%FT%TZ) conflict:$conflicted" >> ci-debug/jeff-conflicts.txt
+            git add ci-debug/jeff-conflicts.txt
+            git commit -m "chore(jeff): log unmerged conflict branches [skip ci]" || true
+            git pull --rebase origin main -q || true; git push origin HEAD:main || true
+          fi
