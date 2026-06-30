@@ -760,6 +760,86 @@ class OutfitRequest(BaseModel):
     style_vibes: list = []
 
 
+def _fallback_outfits(wardrobe: list, occasion: str) -> dict:
+    """Build 2-3 outfit suggestions server-side from the provided wardrobe.
+
+    Used when the Claude call fails OR returns no usable outfits, so the AI
+    Stylist screen is never empty. Mirrors the FE buildFallbackOutfits output
+    shape exactly so renderOutfitResults renders it unchanged. Real owned items
+    are used where present; missing categories get a generic placeholder with
+    _missing=True (the FE turns that into a shoppable suggestion).
+    """
+    wardrobe = wardrobe or []
+
+    def _by_cat(*cats: str) -> list:
+        return [
+            it for it in wardrobe
+            if isinstance(it, dict) and (it.get("category") or "").lower() in cats
+        ]
+
+    tops = _by_cat("top")
+    bottoms = _by_cat("bottoms", "dress")
+    shoes = _by_cat("shoes")
+    bags = _by_cat("bag")
+
+    occ = (occasion or "").strip().lower()
+    # occasion-aware placeholders + tips (non "go buy something" styling tips)
+    if any(k in occ for k in ("interview", "work", "office", "business")):
+        tip = "Keep it clean and structured — a tucked-in top and one quiet accessory read as polished."
+        ph_top, ph_bottom, ph_shoe, ph_bag = "White button-up", "Tailored trousers", "Classic loafers", "Structured tote"
+    elif any(k in occ for k in ("date", "dinner", "romant")):
+        tip = "Let one piece do the talking and keep the rest soft — confidence is the real accessory."
+        ph_top, ph_bottom, ph_shoe, ph_bag = "Silk blouse", "Midi skirt", "Low heel", "Small shoulder bag"
+    elif any(k in occ for k in ("workout", "gym", "sport", "run")):
+        tip = "Match your top and bottom tones so the look stays sharp even mid-workout."
+        ph_top, ph_bottom, ph_shoe, ph_bag = "Sport crop top", "Leggings", "Training sneakers", "Compact gym bag"
+    elif any(k in occ for k in ("party", "night", "club", "festive")):
+        tip = "Go monochrome and let texture or shine carry the drama for the evening."
+        ph_top, ph_bottom, ph_shoe, ph_bag = "Statement top", "Black trousers", "Heeled boots", "Mini clutch"
+    elif any(k in occ for k in ("beach", "vacation", "summer", "holiday")):
+        tip = "Breathable layers in light tones keep the look easy and the day comfortable."
+        ph_top, ph_bottom, ph_shoe, ph_bag = "Linen shirt", "Flowy skirt", "Leather sandals", "Straw tote"
+    else:
+        tip = "Mix neutral basics with one statement piece — that contrast is what makes a look intentional."
+        ph_top, ph_bottom, ph_shoe, ph_bag = "Basic top", "Matching bottoms", "Everyday shoes", "Day bag"
+
+    def _real(it: dict, category: str) -> dict:
+        return {"name": it.get("name") or "Item", "category": category, "_missing": False}
+
+    def _ph(name: str, category: str) -> dict:
+        return {"name": name, "category": category, "_missing": True}
+
+    def _pick(pool: list, idx: int, ph_name: str, category: str) -> dict:
+        if pool:
+            it = pool[idx % len(pool)]
+            return _real(it, (it.get("category") or category).lower())
+        return _ph(ph_name, category)
+
+    # Number of looks: 3 when we have variety, otherwise 2 (1-2 starter looks if empty).
+    look_names = ["The everyday edit", "Off-duty look", "Statement version"]
+    n = 3 if (len(tops) >= 2 or len(bottoms) >= 2) else 2
+
+    outfits: list = []
+    for i in range(n):
+        items = [
+            _pick(tops, i, ph_top, "top"),
+            _pick(bottoms, i, ph_bottom, "bottoms"),
+            _pick(shoes, i, ph_shoe, "shoes"),
+            _pick(bags, i, ph_bag, "bag"),
+        ]
+        owned = sum(1 for it in items if not it["_missing"])
+        # honest match: more owned items => higher score (62 base, +9 per owned, capped 94)
+        match_pct = min(94, 62 + owned * 9)
+        outfits.append({
+            "name": look_names[i] if i < len(look_names) else f"Look {i + 1}",
+            "match_pct": match_pct,
+            "tip": tip,
+            "items": items,
+        })
+
+    return {"outfits": outfits}
+
+
 @app.post("/api/outfit/generate")
 async def generate_outfit(request: Request, data: OutfitRequest):
     """Generate outfit suggestions for a given occasion using the user's wardrobe."""
@@ -802,10 +882,15 @@ async def generate_outfit(request: Request, data: OutfitRequest):
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:])
             text = text.rstrip("`").strip()
-        return json.loads(text)
+        result = json.loads(text)
+        # Guard junk/empty model replies: if no usable outfits, fall back so the
+        # screen is never empty (missing key, not a list, or empty list).
+        if not isinstance(result, dict) or not isinstance(result.get("outfits"), list) or not result["outfits"]:
+            return _fallback_outfits(data.wardrobe, data.occasion)
+        return result
     except Exception as e:
         print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
-        return {"outfits": []}
+        return _fallback_outfits(data.wardrobe, data.occasion)
 
 
 class DeclutterRequest(BaseModel):
