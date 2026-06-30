@@ -280,6 +280,7 @@ AFFILIATE_TAG = "awear"  # replace with the real network publisher id once signe
 RESALE_SUGGESTION_PCT = 0.5   # suggested resale price = 50% of original price estimate
 AWEAR_COMMISSION_PCT = 0.15   # AWEAR's commission on a completed resale, on top of the above
 CREATOR_CREDIT_PCT = 0.05   # creator earns 5% of order amount_usd. LOCKED economics — do not change.
+ORDER_DEDUP_WINDOW_SEC = 15  # collapse double-fired orders that carry no client_ref (legacy path defense)
 
 # ---------------------------------------------------------------------------
 # Currency — static reference rates, NOT live FX.
@@ -1174,6 +1175,13 @@ def init_db() -> None:
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_orders_userkey_ref "
             "ON orders (user_key, client_ref)"
+        )
+        # Supports the legacy (empty client_ref) natural-key dedup lookup in
+        # create_order: filter by user_key, then time-window on created_at.
+        # Additive, non-unique — never blocks an insert.
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_orders_userkey_created "
+            "ON orders (user_key, created_at)"
         )
         conn.execute("""
             CREATE TABLE IF NOT EXISTS credits (
@@ -3222,6 +3230,36 @@ async def create_order(order: OrderCreate, request: Request):
         if existing:
             logger.info("order dedup hit: user=%s client_ref=%s -> %s",
                         user_key, client_ref, existing["id"])
+            return {"order_id": existing["id"], "status": "completed",
+                    "credit_amount": 0.0, "deduped": True}
+    else:
+        # Legacy path: the client sent NO client_ref (IDEA #22 — web client does not
+        # yet supply an idempotency key). A demo double-tap / fire-and-forget retry of
+        # "Buy" would otherwise create a DUPLICATE order AND a duplicate creator credit,
+        # doubling the Creator Wallet live in front of investors. Defensive, narrow,
+        # time-windowed natural-key dedup: same (user_key, product_id, product_name,
+        # amount_usd, influencer_id) seen within ORDER_DEDUP_WINDOW_SEC collapses to the
+        # first order. created_at is stored as datetime.utcnow().isoformat(); comparing
+        # the same fixed-width ISO format lexicographically is equivalent to time order.
+        cutoff = (datetime.datetime.utcnow()
+                  - datetime.timedelta(seconds=ORDER_DEDUP_WINDOW_SEC)).isoformat()
+        with _get_db() as db:
+            existing = db.execute(
+                """SELECT id FROM orders
+                   WHERE user_key = ?
+                     AND product_id = ?
+                     AND product_name = ?
+                     AND amount_usd = ?
+                     AND COALESCE(influencer_id, '') = ?
+                     AND created_at >= ?
+                   ORDER BY created_at DESC
+                   LIMIT 1""",
+                (user_key, order.product_id, product_name, amount_usd,
+                 order.influencer_id or "", cutoff),
+            ).fetchone()
+        if existing:
+            logger.info("order natural-dedup hit: user=%s product=%s amount=%.2f -> %s",
+                        user_key, product_name, amount_usd, existing["id"])
             return {"order_id": existing["id"], "status": "completed",
                     "credit_amount": 0.0, "deduped": True}
 
