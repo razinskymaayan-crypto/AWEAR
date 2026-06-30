@@ -349,6 +349,11 @@
   .fca-btn.liked { color: var(--accent,#e8526a); }
   .fca-btn.saved { color: var(--accent2,#c4855a); }
   .fca-btn.buy-btn { color: var(--fg,#f0ecf5); font-weight: 700; }
+  /* comment count beside the comment icon — quiet, muted at rest */
+  .fca-btn[data-action="comment"] .fca-count {
+    font-size: var(--t-small,13px); font-weight: 600; color: var(--fg,#f0ecf5);
+    min-width: 10px;
+  }
 
   /* fc-info hidden (replaced by .fc-below content) */
   .fc-info { display: none; }
@@ -427,13 +432,13 @@
     color: var(--muted, #8a8498); transition: color 150ms ease; }
   .fc-comment-report:hover, .fc-comment-report:active { color: var(--text, #fbfbfd); }
   .fc-comment-text { font-size: var(--t-small, 13px); color: var(--text, #fbfbfd); line-height: 1.4; margin-top: 3px; }
-  .fc-comment-input-row { display: flex; gap: 8px; margin-top: 12px; }
-  .fc-comment-input { flex: 1; background: var(--card); border: 1px solid var(--line);
-    border-radius: 999px; padding: 9px 16px; font-size: var(--t-small); color: var(--text);
-    font-family: inherit; outline: none; }
-  .fc-comment-send { background: var(--accent); border: none; border-radius: 999px;
-    padding: 9px 18px; font-size: var(--t-small); font-weight: 800; color: #fff;
-    cursor: pointer; font-family: inherit; }
+  .fc-comment-input-row { display: flex; gap: 8px; margin-top: 12px; align-items: center; }
+  .fc-comment-input { flex: 1; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836);
+    border-radius: 999px; padding: 9px 16px; min-height: 44px; font-size: var(--t-small,13px);
+    color: var(--text,#fbfbfd); font-family: inherit; outline: none; box-sizing: border-box; }
+  .fc-comment-send { background: var(--accent,#e8526a); border: none; border-radius: 999px;
+    padding: 9px 18px; min-height: 44px; font-size: var(--t-small,13px); font-weight: 800;
+    color: var(--text,#fbfbfd); cursor: pointer; font-family: inherit; flex: 0 0 auto; }
   /* Own badge — now below image */
   .fc-own-badge {
     display: inline-flex; align-items: center; gap: 5px;
@@ -4330,6 +4335,10 @@
           <button class="fca-btn${saved?' saved':''}" data-action="save" data-id="${attr(post.id||'')}">
             <div class="fca-ico">${icon(saved?'bookmarkFill':'bookmark',24)}</div>
           </button>
+          <button class="fca-btn" data-action="comment" data-id="${attr(post.id||'')}" aria-label="Comments">
+            <div class="fca-ico">${icon('messageCircle',26)}</div>
+            ${(()=>{const cc=getPostComments(post.id||'').length;return cc?`<span class="fca-count">${esc(String(cc))}</span>`:'';})()}
+          </button>
           <button class="fca-btn" data-action="share">
             <div class="fca-ico">${icon('share',24)}</div>
           </button>
@@ -4485,6 +4494,10 @@
       showToast(on?'Saved to your wishlist':'Removed from saved');
     }
     if(type==='share')showToast('Link copied');
+    if(type==='comment'){
+      e.stopPropagation();
+      openCommentsSheet(id);
+    }
     if(type==='report'){
       const post=feedPostById(id);
       reportContent('post', id, post?(post.caption||post.name||''):'');
@@ -9433,11 +9446,7 @@
         removeComment(postId, comment.id);
         const node = (host || document).querySelector(`[data-comment-id="${comment.id}"]`);
         if (node) node.remove();
-        const openBtn = document.querySelector(`[data-comment-open="${postId}"]`);
-        if (openBtn) {
-          const cnt = getPostComments(postId).length;
-          openBtn.innerHTML = `${icon('chat',16)} ${cnt||''}`;
-        }
+        _updateCommentCountBtn(postId);
         logAdminEvent('comment_hidden', postId + ': "' + comment.text.slice(0,40) + '" — severity high, removed by moderation');
       } else if (data.severity === 'medium') {
         logAdminEvent('comment_flagged', postId + ': "' + comment.text.slice(0,40) + '" — severity medium, visible, flagged for review');
@@ -9480,7 +9489,7 @@
       <div class="comments-sheet-title">Comments</div>
       <div class="cs-list"></div>
       <div class="fc-comment-input-row">
-        <input class="fc-comment-input" placeholder="Add a comment..." />
+        <input class="fc-comment-input" placeholder="Add a comment..." maxlength="500" />
         <button class="fc-comment-send">Send</button>
       </div>`;
     document.body.appendChild(sheet);
@@ -9493,7 +9502,9 @@
         return;
       }
       const postId = _commentsPostId;
-      const text = input.value.trim();
+      // Backend caps text at 500 chars; trim client-side so we never POST a
+      // body the server will reject for length.
+      const text = input.value.trim().slice(0, 500);
 
       // Optimistic display — show comment immediately before API responds.
       const localComment = addComment(postId, text);
@@ -9513,26 +9524,39 @@
       csList.appendChild(newItem);
       input.value = '';
 
-      // Update comment count button in card.
-      const openBtn = document.querySelector(`[data-comment-open="${postId}"]`);
-      if (openBtn) {
-        const cnt = getPostComments(postId).length;
-        openBtn.innerHTML = `${icon('chat',16)} ${cnt}`;
-      }
+      // Update the comment count on the feed action-bar button for this post
+      // (and the legacy data-comment-open button if it's ever rendered).
+      _updateCommentCountBtn(postId);
 
-      // POST to API — persists the comment server-side.
-      // Fails silently: local copy already stored in localStorage above.
+      // POST to API — persists the comment server-side. The server runs
+      // moderation: a harmful comment comes back as 400 "content rejected".
+      // On 400 we roll back the optimistic row + toast; on network failure we
+      // fail open (comment survives in localStorage) per the moderation rule.
       try {
-        await fetch(`/api/posts/${encodeURIComponent(postId)}/comments`, {
+        const res = await fetch(`/api/posts/${encodeURIComponent(postId)}/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text }),
         });
+        if (res.status === 400) {
+          // Rejected by server-side moderation — undo the optimistic insert.
+          removeComment(postId, localComment.id);
+          newItem.remove();
+          _updateCommentCountBtn(postId);
+          if (!csList.querySelector('.fc-comment-item')) {
+            csList.innerHTML = `<div style="color:rgba(255,255,255,.35);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
+          }
+          showToast("Comment couldn't be posted");
+          logAdminEvent('comment_rejected', postId + ': "' + text.slice(0,40) + '" — rejected by server moderation (400)');
+          return;
+        }
       } catch (_e) {
         // API unreachable — comment survives in localStorage only.
       }
 
-      // Moderation runs async; only acts if harmful (never blocks UI).
+      // Belt-and-suspenders: the /api/moderate path (used when the POST above
+      // fails open, e.g. no API key on the comments endpoint) still runs async
+      // and removes a high-severity comment after the fact.
       moderateCommentAsync(postId, localComment, csList);
     });
 
@@ -9658,6 +9682,24 @@
   function closeCommentsSheet() {
     if (_commentsSheet) _commentsSheet.classList.remove('open');
     _commentsPostId = null;
+  }
+
+  // Repaint the comment count on the feed action-bar button (data-action=
+  // "comment") for a post, plus the legacy [data-comment-open] button if it's
+  // present. Count 0 → no badge (matches feedCardHTML's initial render).
+  function _updateCommentCountBtn(postId) {
+    const cnt = getPostComments(postId).length;
+    document.querySelectorAll(`.fca-btn[data-action="comment"][data-id="${postId}"]`).forEach(btn => {
+      let badge = btn.querySelector('.fca-count');
+      if (cnt) {
+        if (!badge) { badge = document.createElement('span'); badge.className = 'fca-count'; btn.appendChild(badge); }
+        badge.textContent = String(cnt);
+      } else if (badge) {
+        badge.remove();
+      }
+    });
+    const legacy = document.querySelector(`[data-comment-open="${postId}"]`);
+    if (legacy) legacy.innerHTML = cnt ? `${icon('chat',16)} ${cnt}` : icon('chat',16);
   }
 
   function bindReactions(host) {
