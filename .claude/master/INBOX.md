@@ -12,7 +12,6 @@
 הקשר־על: יעד = דמו מלוטש. החזון המלא ב-docs/PRODUCT_VISION.md — קראו אותו לפני עבודה. עבדו לפי הסדר, משימה אחת לכל ריצה, מקצה לקצה, עם VALUE GATE אמיתי. אל תעשו סקרים/מחקר כל עוד יש כאן משימות.
 
 
-[מערכת — תהליך אוטומטי] Phase 2 (ג'ף ממזג): בנו workflow .github/workflows/jeff-merge.yml שממזג את הענפים auto/mark, auto/steve, auto/ayalon ל-main רק אם npm run check-render עובר ושער gabbana 8+ עובר; בקונפליקט מיזוג — פתחו דיון קצר בין הסוכנים המעורבים (Task tool) ואז מזגו; auto-revert אם מיזוג שובר בילד. manual-dispatch בלבד, אל תפעילו רציף, ואל תשברו את autopilot.yml הקיים. תוכנית: .claude/plans/1-wiggly-seal.md.
 [מערכת — תהליך אוטומטי] Phase 5 (דיווח): כוונו את הדוח היומי ל-20:00 שעון ישראל (daily-report.yml / retrospective.yml), וודאו שכל הודעת סוכן בטלגרם חתומה בשם הסוכן.
 
 ═══════════════════════════════════════
