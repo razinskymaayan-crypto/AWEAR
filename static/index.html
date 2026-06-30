@@ -839,10 +839,41 @@
   .combo-nm { font-size: var(--t-micro,11px); font-weight: 700; color: var(--fg, #f0ecf5); margin-top: 6px;
     line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .combo-plus { align-self: center; color: var(--muted); flex-shrink: 0; font-weight: 600; }
+  .combo .flatlay { margin-top: 2px; }
+  .combo-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .combo-leg { font-size: var(--t-micro,11px); font-weight: 700; color: var(--muted, #8a8498);
+    padding: 3px 9px; border-radius: var(--r-pill,999px); border: 1px solid var(--line, #2e2836);
+    max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .combo-leg.is-this { color: var(--fg, #f0ecf5); border-color: var(--accent2, #c4855a); }
   .combo-empty { background: var(--card, #1e1a22); border: 1px dashed var(--line, #2e2836);
     border-radius: 16px; padding: 18px 16px; text-align: center; color: var(--muted);
     font-size: var(--t-caption,12px); font-weight: 600; line-height: 1.55; }
   .combo-empty .ic-svg { color: var(--accent2); margin-bottom: 8px; }
+
+  /* Whering-style flat-lay collage — garment images placed by category zone on a 6x6 grid
+     so the silhouette reads top→bottom down the centre with bag/accessories to the sides.
+     Image wrappers (.fl-img) carry NO font-size (DS-009). */
+  .flatlay { position: relative; display: grid; grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr); gap: 4px; aspect-ratio: 1 / 1; width: 100%;
+    background: var(--surface, #161318); border-radius: var(--r-md,14px); padding: 8px; }
+  .fl-cell { position: relative; min-width: 0; min-height: 0; }
+  .fl-img { width: 100%; height: 100%; display: block; overflow: hidden; border-radius: var(--r-sm,10px); }
+  .fl-img img { width: 100%; height: 100%; object-fit: contain; display: block; background: transparent; }
+  .fl-img .img-fallback { width: 100%; height: 100%; background: var(--card, #1e1a22); color: var(--muted, #8a8498); }
+  /* zone placement (grid lines 1..7 over a 6-col/6-row canvas) */
+  .fl-cell.zone-outer     { grid-column: 1 / 4; grid-row: 1 / 4; }
+  .fl-cell.zone-top       { grid-column: 3 / 6; grid-row: 1 / 4; }
+  .fl-cell.zone-dress     { grid-column: 2 / 6; grid-row: 1 / 5; }
+  .fl-cell.zone-bottom    { grid-column: 2 / 5; grid-row: 4 / 6; }
+  .fl-cell.zone-shoes     { grid-column: 3 / 5; grid-row: 6 / 7; }
+  .fl-cell.zone-bag       { grid-column: 1 / 3; grid-row: 4 / 6; }
+  .fl-cell.zone-hat       { grid-column: 5 / 7; grid-row: 1 / 3; }
+  .fl-cell.zone-accessory { grid-column: 5 / 7; grid-row: 3 / 5; }
+  .fl-cell.zone-extra     { grid-column: 5 / 7; grid-row: 5 / 7; }
+  .fl-cell.zone-extra-b   { grid-column: 1 / 3; grid-row: 1 / 3; }
+  .fl-hero .fl-img { box-shadow: 0 0 0 2px var(--accent2, #c4855a); }
+  .flatlay-empty { display: flex; align-items: center; justify-content: center; }
+  .flatlay-empty .fl-empty { color: var(--muted, #8a8498); }
 
   /* look rows */
   .sheet-look-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
@@ -1113,6 +1144,14 @@
   .og-outfit-num { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: var(--t-small); font-weight: 900; color: #fff; flex-shrink: 0; }
   .og-outfit-name { font-size: var(--t-body); font-weight: 900; flex: 1; }
   .og-outfit-score { font-size: var(--t-caption); font-weight: 800; color: var(--accent2); }
+  /* Build Look — flat-lay collage (replaces the 4-up grid). Per-cell shop/owned badges. */
+  .og-flatlay-wrap { padding: 12px 14px 6px; }
+  .og-flatlay-wrap .flatlay { background: var(--surface,#161318); }
+  .og-fl-shop { cursor: pointer; }
+  .og-fl-shop:active { transform: scale(.97); opacity: .85; transition: transform .12s, opacity .12s; }
+  .og-fl-badge { position: absolute; top: 4px; left: 4px; z-index: 2; border-radius: var(--r-pill,999px); padding: 3px 8px; font-size: var(--t-micro,11px); font-weight: 800; display: inline-flex; align-items: center; gap: 3px; pointer-events: none; }
+  .og-fl-badge.shop { background: var(--accent,#e8526a); color: var(--bg,#0e0c0f); }
+  .og-fl-badge.owned { background: color-mix(in srgb, var(--success,#52c97a) 18%, transparent); border: 1px solid color-mix(in srgb, var(--success,#52c97a) 35%, transparent); color: var(--success,#52c97a); }
   .og-items-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 12px 14px 6px; }
   .og-item-cell { position: relative; aspect-ratio: 3/4; border-radius: var(--r-md,14px); overflow: hidden; background: var(--surface,#161318); transition: transform .12s, opacity .12s; }
   .og-item-cell.shop { cursor: pointer; }
@@ -1696,6 +1735,14 @@
   .mp-comm-toggle { display: flex; gap: 4px; margin: 0 16px 14px; padding: 3px; background: var(--surface,#161318); border: 1px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); }
   .mp-comm-tgl { flex: 1; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 6px; border: none; background: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#8a8498); cursor: pointer; transition: all .18s; }
   .mp-comm-tgl.active { background: var(--card,#1e1a22); color: var(--fg,#f0ecf5); box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+
+  /* Following | Discover scope — reuses the .ff feed-chip language, sized for touch */
+  .mp-comm-scope { display: flex; gap: 8px; margin: 0 16px 14px; }
+  .mp-comm-scope .ff { flex: 1; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: var(--r-pill,999px); }
+  .mp-comm-scope .ff .ic-svg { color: currentColor; }
+  .mp-comm-scope .ff.active { border-color: var(--accent2,#c4855a); color: var(--fg,#f0ecf5); }
+  .mp-scope-n { font-size: var(--t-micro,11px); font-weight: 800; padding: 1px 6px; border-radius: var(--r-pill,999px); background: var(--surface,#161318); color: var(--muted,#8a8498); }
+  .mp-comm-scope .ff.active .mp-scope-n { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
 
   /* Store-page cards (Mode A list) */
   .mp-store-pages { display: flex; flex-direction: column; gap: 14px; padding: 0 16px 24px; }
@@ -3413,12 +3460,61 @@
     </div>`;
   }
   function comboHTML(item,combo){
-    const pcs=[comboPieceHTML(item,true)];
-    combo.pieces.forEach(p=>pcs.push(comboPieceHTML(p,false)));
+    // Flat-lay collage: this item (hero) styled with its complementary closet pieces,
+    // then a quiet legend naming each piece so the look stays shoppable/scannable.
+    const lookItems=[item, ...combo.pieces];
+    const collage=flatLayCollageHTML(lookItems, { heroOf:(x)=>x===item });
+    const legend=lookItems.map((p,i)=>
+      `<span class="combo-leg${i===0?' is-this':''}">${esc(p.name)}</span>`
+    ).join('');
     return `<div class="combo">
       <div class="combo-cap"><span class="dot"></span>${esc(combo.caption)}</div>
-      <div class="combo-row">${pcs.join(`<span class="combo-plus">${icon('plus',16)}</span>`)}</div>
+      ${collage}
+      <div class="combo-legend">${legend}</div>
     </div>`;
+  }
+
+  // ---- Whering-style flat-lay collage (reusable; used in item sheet + Build Look) ----
+  // Arranges garment images by category ZONE inside a fixed-aspect canvas (not a flat grid):
+  //   outerwear/top → upper-centre · dress → centre · bottoms/skirt → lower-centre ·
+  //   shoes → bottom · bag → lower side · hat/accessory/jewelry → upper side.
+  // Real product photo via productImage(); line-art catIcon fallback baked in by imgFallback().
+  function flatLayZone(cat){
+    const c=(cat||'').toLowerCase();
+    const ic=CAT_ICON[c]||'hanger';
+    if(ic==='hoodie') return 'zone-outer';                       // jackets/coats/blazers
+    if(ic==='shirt') return 'zone-top';
+    if(ic==='dress') return 'zone-dress';
+    if(ic==='pants'||ic==='skirt') return 'zone-bottom';
+    if(ic==='shoe') return 'zone-shoes';
+    if(ic==='bag') return 'zone-bag';
+    if(ic==='cap') return 'zone-hat';
+    if(ic==='diamond'||ic==='watch'||ic==='sparkle') return 'zone-accessory';
+    return 'zone-extra';
+  }
+  // items: array of garment objects ({category,name,image_url,...}). Optional opts.zoneOf(item)->className
+  // lets callers force a zone (e.g. mark "this" item). Returns one .flatlay block.
+  function flatLayCollageHTML(items, opts){
+    const list=(items||[]).filter(Boolean).slice(0,6);
+    if(!list.length){
+      return `<div class="flatlay flatlay-empty"><div class="fl-empty">${icon('hanger',30)}</div></div>`;
+    }
+    const used={};
+    const cells=list.map(it=>{
+      let zone=(opts&&opts.zoneOf&&opts.zoneOf(it))||flatLayZone(it.category);
+      // de-collide: if a zone is already taken, demote to the generic side slot so nothing overlaps
+      if(used[zone]) zone='zone-extra'+(used['zone-extra']?'-b':'');
+      used[zone]=(used[zone]||0)+1;
+      const isHero=opts&&opts.heroOf&&opts.heroOf(it);
+      const img=(opts&&opts.imgOf&&opts.imgOf(it))||productImage(it);
+      const overlay=(opts&&opts.overlayOf&&opts.overlayOf(it))||'';
+      const attrs=(opts&&opts.cellAttrsOf&&opts.cellAttrsOf(it))||'';
+      const cls=(opts&&opts.cellClassOf&&opts.cellClassOf(it))||'';
+      return `<div class="fl-cell ${zone}${isHero?' fl-hero':''}${cls?' '+cls:''}"${attrs?' '+attrs:''}>
+        <div class="fl-img">${img}</div>${overlay}
+      </div>`;
+    }).join('');
+    return `<div class="flatlay">${cells}</div>`;
   }
 
   // Hero match band: prominent "% match to your closet" directly under the item image.
@@ -6376,24 +6472,31 @@
       <div style="padding:0 18px 10px;font-size:var(--t-micro);font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Looks for ${esc(occasion)}</div>
       <div class="og-result-section">
         ${outfits.map((o,i) => {
-          const cells = (o.items||[]).slice(0,4).map(item => {
+          // Resolve each slot to a real garment + a state (owned | shop | missing) so the
+          // flat-lay collage can carry the right badge / clickability per cell.
+          const resolved = (o.items||[]).slice(0,6).map(item => {
             if (item._missing) {
               const sp = findShopMatch(item.category, o.style_tags);
-              if (sp) return `<div class="og-item-cell shop" data-shop-id="${attr(sp.id)}">
-                ${productImage(sp)}
-                <div class="og-cell-label">${esc(sp.name)}</div>
-                <div class="og-shop-badge">${icon('shoppingBag',10)} Shop</div>
-              </div>`;
-              return `<div class="og-item-cell">
-                <div class="img-fallback">${icon(catIcon(item.category),28)}<span style="font-size:var(--t-micro,11px);color:var(--muted,#8a8498)">${esc(item.name)}</span></div>
-              </div>`;
+              if (sp) return { item: sp, state:'shop', shopId: sp.id, category: sp.category || item.category };
+              return { item, state:'missing', category: item.category };
             }
-            return `<div class="og-item-cell">
-              ${productImage(item)}
-              <div class="og-cell-label">${esc(item.name)}</div>
-              <div class="og-closet-badge">${icon('check',9)} Yours</div>
-            </div>`;
-          }).join('');
+            return { item, state:'owned', category: item.category };
+          });
+          // flat-lay over the garments (zone by category); per-cell badge + shop click via opts.
+          // Tag each collage item with a stable _flIdx so opts can recover its resolved state
+          // (owned/shop/missing) regardless of whether the underlying garment carries an id.
+          const flItems = resolved.map((r,ri) => ({ ...r.item, category: r.category, _flIdx: ri }));
+          const collage = flatLayCollageHTML(flItems, {
+            cellClassOf: (it) => { const r = resolved[it._flIdx]; return r && r.state==='shop' ? 'og-fl-shop' : ''; },
+            cellAttrsOf: (it) => { const r = resolved[it._flIdx]; return r && r.state==='shop' ? `data-action="og-fl-shop" data-shop-id="${attr(r.shopId)}"` : ''; },
+            overlayOf: (it) => {
+              const r = resolved[it._flIdx];
+              if (!r) return '';
+              if (r.state==='shop') return `<div class="og-fl-badge shop">${icon('shoppingBag',10)} Shop</div>`;
+              if (r.state==='owned') return `<div class="og-fl-badge owned">${icon('check',9)} Yours</div>`;
+              return '';
+            }
+          });
           return `
           <div class="og-outfit-card">
             <div class="og-outfit-header">
@@ -6401,13 +6504,13 @@
               <div class="og-outfit-name">${esc(o.name||'Look '+(i+1))}</div>
               ${o.match_pct ? `<div class="og-outfit-score">${o.match_pct}% match</div>` : ''}
             </div>
-            <div class="og-items-grid">${cells}</div>
+            <div class="og-flatlay-wrap">${collage}</div>
             ${o.tip ? `<div class="og-outfit-tip">${icon('sparkle',13)} ${esc(o.tip)}</div>` : ''}
             <button class="og-wear-btn" data-wear-idx="${i}">${icon('check',18)} Wear this look today</button>
           </div>`;
         }).join('')}
       </div>`;
-    el.querySelectorAll('.og-item-cell.shop').forEach(cell =>
+    el.querySelectorAll('[data-action="og-fl-shop"]').forEach(cell =>
       cell.addEventListener('click', () => openShopItem(cell.dataset.shopId))
     );
     el.querySelectorAll('.og-wear-btn').forEach(btn =>
@@ -6821,6 +6924,7 @@
   let msViewMode = 'today'; // My Store viewers stat: today | month | all (cyclical button)
   // Community tab (preloved) — view mode + selected store (TDZ-safe: before renderMarketplace)
   let mpCommunityView = 'stores'; // 'stores' = store pages | 'items' = item grid (reuses mp* filters)
+  let mpCommunityScope = 'following'; // 'following' = stores you follow | 'discover' = stores you don't (default foregrounds people you follow, Carmel)
   let mpStore = null; // selected store user id when drilled into a single store page
 
   function loadMPListings() {
@@ -6943,6 +7047,12 @@
       el.querySelectorAll('[data-action="mp-comm-view"]').forEach(btn => btn.addEventListener('click', () => {
         mpCommunityView = btn.dataset.view || 'stores';
         if (mpCommunityView === 'items') mpStore = null;
+        renderMarketplace();
+      }));
+      // Scope toggle: Following ⟷ Discover (store-pages list)
+      el.querySelectorAll('[data-action="mp-comm-scope"]').forEach(btn => btn.addEventListener('click', () => {
+        mpCommunityScope = btn.dataset.scope || 'following';
+        mpStore = null; // leaving the list scope resets any drilled store
         renderMarketplace();
       }));
       // Visit store (open in-tab store page)
@@ -7322,10 +7432,33 @@
       mpStore = null; // store no longer available
     }
 
-    // Store-page cards list (following first, then explore).
-    const ordered = [...storeData].sort((a, b) => Number(b.following) - Number(a.following));
+    // Store-page cards list — explicit Following | Discover scope (default Following, Carmel).
+    const followingCount = storeData.filter(s => s.following).length;
+    const discoverCount = storeData.length - followingCount;
+    const scopeHtml = `
+      <div class="mp-comm-scope" role="tablist" aria-label="Store scope">
+        <button class="ff${mpCommunityScope==='following'?' active':''}" data-action="mp-comm-scope" data-scope="following" role="tab" aria-selected="${mpCommunityScope==='following'}">${icon('heart',13)} Following${followingCount?` <span class="mp-scope-n">${followingCount}</span>`:''}</button>
+        <button class="ff${mpCommunityScope==='discover'?' active':''}" data-action="mp-comm-scope" data-scope="discover" role="tab" aria-selected="${mpCommunityScope==='discover'}">${icon('sparkle',13)} Discover${discoverCount?` <span class="mp-scope-n">${discoverCount}</span>`:''}</button>
+      </div>`;
+
+    const inScope = storeData.filter(s => mpCommunityScope==='discover' ? !s.following : s.following);
+    // Within Following, freshest-following feel; Discover ordered by inventory depth so there's something to browse.
+    const ordered = mpCommunityScope==='discover'
+      ? [...inScope].sort((a,b) => b.count - a.count)
+      : [...inScope];
+
+    if (!ordered.length) {
+      const empty = mpCommunityScope==='following'
+        ? `<div class="mp-empty">${icon('heart',36)}
+            <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">You're not following any stores yet</div>
+            <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">Switch to Discover to find sellers whose taste matches yours</div></div>`
+        : `<div class="mp-empty">${icon('sparkle',36)}
+            <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">You already follow everyone here</div>
+            <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">Nice taste — check Following to shop their listings</div></div>`;
+      return `${selectionHtml}${scopeHtml}${empty}`;
+    }
     const cardsHtml = ordered.map(sd => storePageCard(sd)).join('');
-    return `${selectionHtml}
+    return `${selectionHtml}${scopeHtml}
       <div class="mp-store-pages">${cardsHtml}</div>`;
   }
 
