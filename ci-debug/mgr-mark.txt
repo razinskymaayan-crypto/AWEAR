@@ -1,6 +1,6 @@
 manager=mark
-branch=auto/mark commits_ahead_of_main=0
+branch=auto/mark commits_ahead_of_main=1
 claude_installed=/opt/hostedtoolcache/node/20.20.2/x64/bin/claude
 node=v20.20.2  npm=10.8.2
-key_present=NO
-last_commit=44b6256 ci(agents): fire autopilot-managers diagnostic run [trigger]
+auth_present=yes
+last_commit=8ee38da feat(item-sheet): real retailer logos on "Where it sells" rows (IDEAS #23)
