@@ -8,6 +8,9 @@ on:
   workflow_run:
     workflows: ["autopilot-managers"]
     types: [completed]
+  push:
+    branches:
+      - 'auto/**'   # VM orchestrator pushes manager branches -> Jeff merges them
   workflow_dispatch: {}
 
 permissions:
