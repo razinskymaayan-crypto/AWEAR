@@ -634,16 +634,40 @@
     display: flex; flex-direction: column;
   }
   .sheet.show { transform: translateY(0); }
+  /* lock the page behind an open sheet so only .sheet-scroll scrolls */
+  body.sheet-open .phone main { overflow: hidden; }
 
+  /* Grab zone: the ONLY area that owns the drag-to-dismiss gesture.
+     Keeps swipe off the scrollable content so iOS scroll isn't trapped. */
+  .sheet-grab {
+    position: relative; flex-shrink: 0;
+    padding: 12px 8px 4px;
+    touch-action: none; /* this strip is for dragging, not scrolling */
+    cursor: grab;
+  }
+  .sheet-grab:active { cursor: grabbing; }
   .sheet-handle {
     width: 40px; height: 5px; border-radius: 3px;
-    background: var(--line);
-    margin: 12px auto 0;
-    flex-shrink: 0;
+    background: var(--line, #2e2836);
+    margin: 0 auto;
   }
+  .sheet-close {
+    position: absolute; top: 6px; right: 10px;
+    width: 44px; height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 0; border-radius: var(--r-pill, 999px);
+    background: var(--surface, #161318); color: var(--muted, #8a8498);
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+    transition: background .18s ease, color .18s ease, transform .12s ease;
+  }
+  .sheet-close:hover { background: var(--card-hover, #262030); color: var(--fg, #f0ecf5); }
+  .sheet-close:active { transform: scale(.92); }
 
   .sheet-scroll {
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain; /* don't chain scroll to body underneath */
+    touch-action: pan-y;          /* content scrolls; drag-dismiss lives on .sheet-grab */
     scrollbar-width: none;
     padding: 16px 20px 0;
     flex: 1; min-height: 0;
@@ -725,11 +749,19 @@
   /* ── Hero match band — the WOW number directly under the photo, before title ── */
   .match-band { background: var(--surface, #161318); border: 1px solid var(--line, #2e2836);
     border-radius: var(--r-md, 14px); padding: 16px 18px; margin-bottom: 16px; text-align: center; }
-  /* Hero exception: number is the WOW anchor — push past the display token for cover-authority. */
-  .match-band-num { font-family: "Poppins", sans-serif; font-size: clamp(38px, 11vw, 46px);
-    font-weight: 600; line-height: 1; letter-spacing: -1px; }
-  .match-band-pct { font-size: var(--t-title, 20px); font-weight: 500; color: var(--muted, #8a8498);
-    margin-inline-start: 2px; }
+  /* progress ring around the WOW number — fills to pct% on open (animateMatchBand) */
+  .match-band-ring { position: relative; width: 92px; height: 92px; margin: 0 auto 4px; }
+  .match-band-ring svg { display: block; }
+  .match-band-ring-fill { transition: stroke-dashoffset .6s cubic-bezier(.32,.72,0,1); }
+  @media (prefers-reduced-motion: reduce) {
+    .match-band-ring-fill { transition: none; }
+  }
+  /* number centered inside the ring — the WOW anchor */
+  .match-band-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: "Poppins", sans-serif; font-size: var(--t-h1, 26px);
+    font-weight: 700; line-height: 1; letter-spacing: -1px; }
+  .match-band-pct { font-size: var(--t-h3, 15px); font-weight: 500; color: var(--muted, #8a8498);
+    margin-inline-start: 1px; align-self: flex-start; margin-top: 6px; }
   .match-band-label { font-size: var(--t-caption, 12px); color: var(--muted, #8a8498);
     font-weight: 600; margin-top: 4px; }
   .match-band-reason { font-size: var(--t-small, 13px); color: var(--fg, #f0ecf5);
@@ -760,6 +792,21 @@
   .item-price { font-family: "Poppins", sans-serif; font-size: var(--t-h1,22px); font-weight: 700;
     color: var(--fg, #f0ecf5); }
   .item-brand { color: var(--muted); font-size: var(--t-caption,12px); font-weight: 600; }
+
+  /* ── Product-page (PDP) head: brand → title → price + category ── */
+  .pdp-head { margin-bottom: 16px; }
+  .pdp-brand { font-size: var(--t-micro, 11px); font-weight: 800; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent2, #c4855a); margin-bottom: 4px; }
+  .pdp-title { font-weight: 700; font-size: var(--t-lead, 17px); line-height: 1.25;
+    letter-spacing: -.3px; color: var(--fg, #f0ecf5); }
+  .pdp-pricerow { display: flex; align-items: center; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+  .pdp-price { font-family: "Poppins", sans-serif; font-size: var(--t-title, 20px); font-weight: 700;
+    color: var(--fg, #f0ecf5); }
+  .pdp-cat { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
+    border-radius: var(--r-pill, 999px); background: var(--surface, #161318);
+    border: 1px solid var(--line, #2e2836); color: var(--muted, #8a8498);
+    font-size: var(--t-micro, 11px); font-weight: 700; }
+  .pdp-cat svg { flex-shrink: 0; }
 
   /* stylist combos */
   .stylist-h2 { display: flex; align-items: center; gap: 7px; font-size: var(--t-small); font-weight: 700;
@@ -2731,7 +2778,12 @@
   <!-- Bottom Sheet -->
   <div id="sheet-overlay" class="sheet-overlay" role="dialog" aria-modal="true" aria-label="Shop"></div>
   <div id="buy-sheet" class="sheet" aria-hidden="true">
-    <div class="sheet-handle" aria-hidden="true"></div>
+    <div class="sheet-grab" id="sheet-grab">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <button type="button" id="sheet-close" class="sheet-close" aria-label="Close" onclick="closeSheet()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
     <div class="sheet-scroll" id="sheet-body"></div>
     <div class="sheet-footer" id="sheet-footer"></div>
   </div>
@@ -3309,8 +3361,20 @@
     const chips = matches.slice(0,3)
       .map(m=>`<span class="match-chip" style="border-color:${tierColor}">${esc(m)}</span>`)
       .join('');
+    // Progress ring: r=34 → circumference ≈ 213.6. animateMatchBand() fills it on open.
+    const R = 34, LEN = +(2 * Math.PI * R).toFixed(2);
     return `<div class="match-band match-band-${tier}">
-      <div class="match-band-num" style="color:${tierColor}">${pct}<span class="match-band-pct">%</span></div>
+      <div class="match-band-ring">
+        <svg width="92" height="92" viewBox="0 0 92 92" aria-hidden="true">
+          <circle class="match-band-ring-track" cx="46" cy="46" r="${R}" fill="none"
+            stroke="var(--line,#2e2836)" stroke-width="6"/>
+          <circle class="match-band-ring-fill" cx="46" cy="46" r="${R}" fill="none"
+            stroke="${tierColor}" stroke-width="6" stroke-linecap="round"
+            data-target="${pct}" data-len="${LEN}"
+            style="stroke-dasharray:${LEN};stroke-dashoffset:${LEN};transform:rotate(-90deg);transform-origin:46px 46px"/>
+        </svg>
+        <div class="match-band-num" data-target="${pct}" style="color:${tierColor}">0<span class="match-band-pct">%</span></div>
+      </div>
       <div class="match-band-label">match to your closet</div>
       <div class="match-band-reason">${reason}</div>
       ${chips?`<div class="match-band-chips">${chips}</div>`:''}
@@ -3349,17 +3413,21 @@
       ${basePrice ? `<div class="wis-from">From $${esc(basePrice)}</div>` : ''}
       <div class="sheet-stores">${retailRows}${resaleRow}</div>`;
 
+    const priceVal = it.price_estimate_usd||it.price||0;
     sheetBody.innerHTML = `
       <div class="item-hero">
         <span class="item-hero-cat">${icon(catIcon(it.category),14)} ${esc(catLabel(it.category))}</span>
         ${productImage(it)}
       </div>
-      ${matchBand}
-      <div class="item-name">${esc(it.name)}</div>
-      <div class="item-meta">
-        <span class="item-price">$${esc(it.price_estimate_usd||it.price||0)}</span>
-        ${it.brand_vibe?`<span class="item-brand">${esc(it.brand_vibe)}</span>`:''}
+      <div class="pdp-head">
+        ${it.brand_vibe?`<div class="pdp-brand">${esc(it.brand_vibe)}</div>`:''}
+        <div class="pdp-title">${esc(it.name)}</div>
+        <div class="pdp-pricerow">
+          <span class="pdp-price">$${esc(priceVal)}</span>
+          <span class="pdp-cat">${icon(catIcon(it.category),13)} ${esc(catLabel(it.category))}</span>
+        </div>
       </div>
+      ${matchBand}
       <div class="stylist-h2">${icon('sparkle',16)} Stylist picks</div>
       <div class="stylist-sub">Looks that pair this item with clothes from your closet</div>
       ${combosHTML}
@@ -3423,6 +3491,12 @@
     sheetOverlay.classList.add('show');
     buySheet.classList.add('show');
     buySheet.setAttribute('aria-hidden','false');
+    // lock page scroll behind the sheet (the .sheet-scroll handles its own scroll)
+    document.body.classList.add('sheet-open');
+    const sb = document.getElementById('sheet-body');
+    if(sb) sb.scrollTop = 0;
+    // animate the match% reveal once the sheet is on screen
+    requestAnimationFrame(()=> animateMatchBand());
     // focus trap — focus on first focusable element inside sheet
     requestAnimationFrame(()=>{
       const first = buySheet.querySelector('button, a');
@@ -3433,32 +3507,74 @@
     sheetOverlay.classList.remove('show');
     buySheet.classList.remove('show');
     buySheet.setAttribute('aria-hidden','true');
+    // ALWAYS restore page scroll + clear any in-flight drag transform/transition
+    document.body.classList.remove('sheet-open');
+    buySheet.style.transition = '';
+    buySheet.style.transform = '';
   }
   sheetOverlay.addEventListener('click', closeSheet);
 
-  // swipe-down to dismiss
+  // swipe-down to dismiss — gesture is scoped to the grab strip ONLY, so the
+  // scrollable content (.sheet-scroll) is never hijacked (iOS scroll-trap fix).
+  const sheetGrab = document.getElementById('sheet-grab');
   let sheetStartY = null;
-  buySheet.addEventListener('pointerdown', e => {
-    sheetStartY = e.clientY;
-    buySheet.style.transition = 'none'; // instant during drag
-  });
-  buySheet.addEventListener('pointermove', e => {
-    if(sheetStartY === null) return;
-    const dy = e.clientY - sheetStartY;
-    if(dy > 0) buySheet.style.transform = `translateY(${dy}px)`;
-  });
-  buySheet.addEventListener('pointerup', e => {
-    const dy = e.clientY - (sheetStartY||0);
-    buySheet.style.transition = ''; // restore CSS transition
-    buySheet.style.transform = '';
-    if(dy > 80) closeSheet();
-    sheetStartY = null;
-  });
-  buySheet.addEventListener('pointercancel', () => {
-    buySheet.style.transition = '';
-    buySheet.style.transform = '';
-    sheetStartY = null;
-  });
+  if(sheetGrab){
+    sheetGrab.addEventListener('pointerdown', e => {
+      // ignore drags that start on the close button
+      if(e.target.closest('.sheet-close')) return;
+      sheetStartY = e.clientY;
+      buySheet.style.transition = 'none'; // instant during drag
+      try { sheetGrab.setPointerCapture(e.pointerId); } catch(_){}
+    });
+    sheetGrab.addEventListener('pointermove', e => {
+      if(sheetStartY === null) return;
+      const dy = e.clientY - sheetStartY;
+      if(dy > 0) buySheet.style.transform = `translateY(${dy}px)`;
+    });
+    const endDrag = e => {
+      if(sheetStartY === null) return;
+      const dy = (e.clientY||0) - sheetStartY;
+      buySheet.style.transition = ''; // restore CSS transition
+      buySheet.style.transform = '';
+      sheetStartY = null;
+      if(dy > 80) closeSheet();
+    };
+    sheetGrab.addEventListener('pointerup', endDrag);
+    sheetGrab.addEventListener('pointercancel', () => {
+      buySheet.style.transition = '';
+      buySheet.style.transform = '';
+      sheetStartY = null;
+    });
+  }
+
+  // Count up the hero match% from 0 → target on sheet open (≤600ms).
+  // Respects prefers-reduced-motion (jumps straight to the value).
+  function animateMatchBand(){
+    const numEl = buySheet.querySelector('.match-band-num[data-target]');
+    if(!numEl) return;
+    const target = parseInt(numEl.getAttribute('data-target'), 10) || 0;
+    const pctSpan = numEl.querySelector('.match-band-pct');
+    const pctHTML = pctSpan ? pctSpan.outerHTML : '';
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ring = buySheet.querySelector('.match-band-ring-fill[data-target]');
+    if(ring){
+      const len = parseFloat(ring.getAttribute('data-len')) || 0;
+      ring.style.strokeDashoffset = String(len - (len * target / 100));
+    }
+    if(reduce || target <= 0){
+      numEl.firstChild && (numEl.firstChild.nodeValue = String(target));
+      return;
+    }
+    const dur = 600, start = performance.now();
+    function step(now){
+      const p = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      const val = Math.round(target * eased);
+      numEl.innerHTML = val + pctHTML;
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
 
   // ---- In-App Checkout ----
   function handleCheckout() {
