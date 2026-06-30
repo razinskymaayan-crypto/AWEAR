@@ -559,6 +559,71 @@
     max-width: 60px; text-align: center;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
+  .story-ring.add { background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); }
+  .story-add-glyph { display:flex; align-items:center; justify-content:center; color: var(--text, #f0ecf5); }
+
+  /* ---- Story viewer (full-screen ephemeral) ---- */
+  .story-viewer {
+    position: fixed; inset: 0; z-index: 10000;
+    background: var(--bg, #0e0c0f);
+    display: flex; align-items: center; justify-content: center;
+    touch-action: none; user-select: none;
+  }
+  .story-viewer-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    background: #000;
+  }
+  .story-viewer-bars {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; gap: 4px; padding: 10px 12px calc(8px + env(safe-area-inset-top, 0px));
+    z-index: 3;
+  }
+  .story-viewer-bar {
+    flex: 1; height: 3px; border-radius: var(--r-pill, 999px);
+    background: rgba(255,255,255,.32); overflow: hidden;
+  }
+  .story-viewer-bar > i {
+    display: block; height: 100%; width: 0;
+    background: var(--text, #f0ecf5);
+    border-radius: var(--r-pill, 999px);
+  }
+  .story-viewer-bar.done > i { width: 100%; }
+  .story-viewer-bar.active > i { animation: storyFill linear forwards; }
+  @keyframes storyFill { from { width: 0; } to { width: 100%; } }
+  .story-viewer-head {
+    position: absolute; top: calc(24px + env(safe-area-inset-top, 0px)); left: 12px; right: 12px;
+    display: flex; align-items: center; gap: 10px; z-index: 3;
+  }
+  .story-viewer-ava {
+    width: 36px; height: 36px; border-radius: 50%;
+    overflow: hidden; flex-shrink: 0; background: var(--card, #1e1a22);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text, #f0ecf5); font-weight: 700; font-size: var(--t-small, 13px);
+  }
+  .story-viewer-ava img { width: 100%; height: 100%; object-fit: cover; }
+  .story-viewer-name { font-weight: 800; font-size: var(--t-h3, 15px); color: var(--text, #f0ecf5); text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+  .story-viewer-time { font-size: var(--t-caption, 12px); color: rgba(255,255,255,.7); text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+  .story-viewer-close, .story-viewer-del {
+    margin-left: auto;
+    min-width: 44px; min-height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 0; cursor: pointer;
+    color: var(--text, #f0ecf5); text-shadow: 0 1px 4px rgba(0,0,0,.6);
+  }
+  .story-viewer-del { color: var(--danger, #e05252); }
+  .story-viewer-cap {
+    position: absolute; left: 16px; right: 16px; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+    z-index: 3; color: var(--text, #f0ecf5);
+    font-size: var(--t-body, 14px); font-weight: 600; line-height: 1.5;
+    text-shadow: 0 1px 6px rgba(0,0,0,.7);
+    background: linear-gradient(0deg, rgba(0,0,0,.35), rgba(0,0,0,0));
+    padding: 12px 4px 0;
+  }
+  .story-viewer-tap { position: absolute; top: 0; bottom: 0; width: 35%; z-index: 2; }
+  .story-viewer-tap.prev { left: 0; }
+  .story-viewer-tap.next { right: 0; }
 
   /* ---- Edit profile modal ---- */
   .edit-modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.75);
@@ -3101,6 +3166,7 @@
     chevronRight:'<path d="m9 6 6 6-6 6" stroke-linejoin="round"/>',
     storefront:'<path d="M4 9.5 5 4h14l1 5.5" stroke-linejoin="round"/><path d="M4 9.5a2.2 2.2 0 0 0 4.4.3 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0 4.4-.3" stroke-linejoin="round"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/>',
     more:'<circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>',
+    trash:'<path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/>',
     blockUser:'<circle cx="12" cy="12" r="8.5"/><path d="M6.5 17.5 17.5 6.5" stroke-linecap="round"/>',
     calendar:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/>',
     video:'<path d="M15 10l4.5-3v10L15 14v-4z" stroke-linejoin="round"/><rect x="3" y="8" width="12" height="8" rx="2"/>',
@@ -9661,11 +9727,12 @@
   }));
 
   // ---- Stories data ----
-  const STORIES = [
-    {id:'st0', name:'Add story', initials:'+', color:'var(--card)', seen:false, isAdd:true},
-    {id:'st1', name:'Tamar',  userId:'u1', avatar:'/static/img/users/tamar/avatar.jpg',  initials:'TG', seen:false},
-    {id:'st2', name:'Carmel', userId:'u2', avatar:'/static/img/users/carmel/avatar.jpg', initials:'CP', seen:false},
-    {id:'st3', name:'Maayan', userId:'u3', avatar:'/static/img/users/maayan/avatar.jpg', initials:'MA', seen:true},
+  // Demo seed = graceful fallback ONLY (used if GET /api/stories fails) so the
+  // bar is never empty in a demo. Real active (≤24h) stories come from the backend.
+  const STORIES_SEED = [
+    {id:'st1', name:'Tamar',  userId:'u1', avatar:'/static/img/users/tamar/avatar.jpg',  initials:'TG'},
+    {id:'st2', name:'Carmel', userId:'u2', avatar:'/static/img/users/carmel/avatar.jpg', initials:'CP'},
+    {id:'st3', name:'Maayan', userId:'u3', avatar:'/static/img/users/maayan/avatar.jpg', initials:'MA'},
   ];
   // ===== REACTIONS + COMMENTS (Shira) =====
   const REACTIONS_KEY = 'awear_reactions';
@@ -10242,37 +10309,194 @@
   // first render reads the seeded counts. Idempotent — safe on every load.
   seedFeedSocialProof();
 
-  let seenStories = new Set(JSON.parse(localStorage.getItem('awear_stories_seen')||'[]'));
+  // Seen-state persists per-story-id but resets daily (stories are ephemeral —
+  // yesterday's "seen" is meaningless once today's stories replace them).
+  function _todayKey(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+  let seenStories = (function(){
+    try{ const raw=JSON.parse(localStorage.getItem('awear_stories_seen')||'{}');
+      if(raw && raw.date===_todayKey() && Array.isArray(raw.ids)) return new Set(raw.ids);
+    }catch(e){}
+    return new Set();
+  })();
+  function _persistSeen(){ localStorage.setItem('awear_stories_seen', JSON.stringify({date:_todayKey(), ids:[...seenStories]})); }
+  // IDs of stories *I* posted (so the viewer can offer delete on owner-only rows).
+  let myStoryIds = (function(){ try{ return new Set(JSON.parse(localStorage.getItem('awear_my_stories')||'[]')); }catch(e){ return new Set(); } })();
+  function _rememberMyStory(id){ myStoryIds.add(id); localStorage.setItem('awear_my_stories', JSON.stringify([...myStoryIds])); }
+  function _forgetMyStory(id){ myStoryIds.delete(id); localStorage.setItem('awear_my_stories', JSON.stringify([...myStoryIds])); }
+
+  // storyBatches: one entry per user with active stories — { key, name, initials, avatar, items:[story,...] }.
+  // Newest user first; items newest-first within a batch.
+  let storyBatches = [];
+
+  function _initialsFor(name){
+    return (name||'').split(/\s+/).map(w=>w[0]).filter(Boolean).slice(0,2).join('').toUpperCase() || 'YOU';
+  }
+
+  // Group flat /api/stories items by user_key into batches, newest user first.
+  function _groupStories(items){
+    const order=[]; const map={};
+    items.forEach(it=>{
+      const k=it.user_key||'anon';
+      if(!map[k]){ map[k]={key:k, name:k, initials:_initialsFor(k), avatar:null, items:[]}; order.push(k); }
+      map[k].items.push(it);
+    });
+    return order.map(k=>map[k]);
+  }
+
+  // Fallback batches from the demo seed (one fake story each) — never empty bar.
+  function _seedBatches(){
+    return STORIES_SEED.map(s=>({
+      key:'seed_'+s.id, name:s.name, initials:s.initials, avatar:s.avatar,
+      items:[{id:s.id, image_url:s.avatar, caption:'', created_at:null, _seed:true}]
+    }));
+  }
+
+  async function loadStories(){
+    try{
+      const res = await fetch('/api/stories');
+      if(!res.ok) throw new Error('status '+res.status);
+      const data = await res.json();
+      const items = (data&&data.items)||[];
+      storyBatches = items.length ? _groupStories(items) : _seedBatches();
+    }catch(e){
+      // graceful fallback — bar is never empty in demo
+      storyBatches = _seedBatches();
+    }
+    const bar = document.querySelector('#feed-scroll .stories-bar');
+    if(bar) bar.replaceWith(renderStories());
+  }
 
   function renderStories(){
     const bar = document.createElement('div');
     bar.className = 'stories-bar';
-    bar.innerHTML = STORIES.map(s=>{
-      const seen = !s.isAdd && seenStories.has(s.id);
-      // Avatar items: neutral background + initials behind, real photo on top.
-      // If the photo fails to load it removes itself, revealing the initials —
-      // never an empty circle. Add story keeps its gradient + "+" glyph.
-      const inner = s.avatar
-        ? `<div class="story-inner"><span class="story-initials">${s.initials||''}</span><img src="${attr(s.avatar)}" alt="${attr(s.name)}" loading="eager" onerror="this.onerror=null;this.remove()"></div>`
-        : `<div class="story-inner" style="background:${s.color||'var(--card)'}"><span class="story-initials">${s.initials||''}</span></div>`;
-      return `<div class="story-item" data-story="${attr(s.id)}"${s.userId?` data-uid="${attr(s.userId)}"`:''}>
-        <div class="story-ring${seen?' seen':''}">
-          ${inner}
-        </div>
-        <span class="story-name">${esc(s.name)}</span>
+    // First item: Add story (post today's outfit).
+    let html = `<div class="story-item" data-add="1">
+        <div class="story-ring add"><div class="story-inner"><span class="story-add-glyph">${icon('plus',22)}</span></div></div>
+        <span class="story-name">${esc('Your story')}</span>
+      </div>`;
+    html += storyBatches.map((b,idx)=>{
+      // A batch is "seen" only when every story in it has been viewed.
+      const seen = b.items.every(it=>seenStories.has(String(it.id)));
+      const cover = b.items[0] && b.items[0].image_url;
+      const inner = cover
+        ? `<div class="story-inner"><span class="story-initials">${esc(b.initials||'')}</span><img src="${attr(cover)}" alt="${attr(b.name)}" loading="eager" onerror="this.onerror=null;this.remove()"></div>`
+        : `<div class="story-inner"><span class="story-initials">${esc(b.initials||'')}</span></div>`;
+      return `<div class="story-item" data-batch="${idx}">
+        <div class="story-ring${seen?' seen':''}">${inner}</div>
+        <span class="story-name">${esc(b.name)}</span>
       </div>`;
     }).join('');
+    bar.innerHTML = html;
     bar.addEventListener('click',e=>{
       const item=e.target.closest('.story-item');
-      if(!item||item.dataset.story==='st0') return;
-      seenStories.add(item.dataset.story);
-      localStorage.setItem('awear_stories_seen',JSON.stringify([...seenStories]));
-      item.querySelector('.story-ring').classList.add('seen');
-      const uid=item.dataset.uid;
-      if(uid){ openUserProfile(uid); return; }
-      showToast('Story viewed');
+      if(!item) return;
+      if(item.dataset.add!=null){ addStory(); return; }
+      const idx=parseInt(item.dataset.batch,10);
+      if(!isNaN(idx)) openStoryViewer(idx);
     });
     return bar;
+  }
+
+  // ---- Add story: reuse an existing image (most recent of my feed posts /
+  // captured look / closet item) — no camera flow. ----
+  function _myLatestImage(){
+    try{
+      const feed = (typeof loadFeedPosts==='function') ? loadFeedPosts() : [];
+      const withPhoto = feed.find(p=>p && p.photo);
+      if(withPhoto) return withPhoto.photo;
+    }catch(e){}
+    try{ const scan=JSON.parse(localStorage.getItem('awear_last_scan')||'null'); if(scan&&scan.photo) return scan.photo; }catch(e){}
+    try{ const w=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]'); const it=w.find(i=>i&&i.img); if(it) return it.img; }catch(e){}
+    return null;
+  }
+
+  async function addStory(){
+    const image_url=_myLatestImage();
+    if(!image_url){ showToast('Capture or save a look first to share a story'); return; }
+    showToast('Sharing your story...');
+    try{
+      const res=await fetch('/api/stories',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({image_url, caption:"Today's look"})});
+      if(!res.ok) throw new Error('status '+res.status);
+      const created=await res.json();
+      if(created&&created.id!=null) _rememberMyStory(String(created.id));
+      showToast('Your story is live for 24h');
+      await loadStories();
+    }catch(e){
+      showToast('Could not share story — try again');
+    }
+  }
+
+  // ---- Full-screen story viewer (progress bars, tap nav, auto-advance, delete) ----
+  let _storyTimer=null;
+  function openStoryViewer(batchIdx){
+    const batch=storyBatches[batchIdx]; if(!batch||!batch.items.length) return;
+    let i=0;
+    const ov=document.createElement('div');
+    ov.className='story-viewer';
+    ov.id='story-viewer-el';
+    document.body.appendChild(ov);
+
+    function close(){ if(_storyTimer){clearTimeout(_storyTimer);_storyTimer=null;} ov.remove(); document.removeEventListener('keydown',onKey); }
+    function markSeen(it){ seenStories.add(String(it.id)); _persistSeen(); }
+    function fmtTime(ts){ if(!ts) return ''; const diff=Date.now()-new Date(ts).getTime();
+      const h=Math.floor(diff/3600000); if(h>=1) return h+'h'; const m=Math.max(1,Math.floor(diff/60000)); return m+'m'; }
+
+    function paint(){
+      const it=batch.items[i];
+      markSeen(it);
+      const mine=myStoryIds.has(String(it.id)) && !it._seed;
+      const bars=batch.items.map((_,k)=>`<div class="story-viewer-bar${k<i?' done':''}${k===i?' active':''}"><i></i></div>`).join('');
+      ov.innerHTML=`
+        <img class="story-viewer-img" src="${attr(it.image_url)}" alt="" onerror="this.style.opacity=0">
+        <div class="story-viewer-bars">${bars}</div>
+        <div class="story-viewer-head">
+          <div class="story-viewer-ava">${batch.avatar?`<img src="${attr(batch.avatar)}" alt="">`:esc(batch.initials||'')}</div>
+          <div>
+            <div class="story-viewer-name">${esc(batch.name)}</div>
+            <div class="story-viewer-time">${esc(fmtTime(it.created_at))}</div>
+          </div>
+          ${mine?`<button class="story-viewer-del" data-del="${attr(it.id)}" aria-label="Delete story">${icon('trash',20)}</button>`:''}
+          <button class="story-viewer-close" aria-label="Close" data-close="1">${icon('x',22)}</button>
+        </div>
+        ${it.caption?`<div class="story-viewer-cap">${esc(it.caption)}</div>`:''}
+        <div class="story-viewer-tap prev" data-prev="1"></div>
+        <div class="story-viewer-tap next" data-next="1"></div>`;
+      // Drive the active progress bar + auto-advance (5s per story).
+      const active=ov.querySelector('.story-viewer-bar.active > i');
+      if(active){ active.style.animationDuration='5000ms'; }
+      if(_storyTimer) clearTimeout(_storyTimer);
+      _storyTimer=setTimeout(next,5000);
+    }
+    function next(){ if(i<batch.items.length-1){ i++; paint(); } else { close(); } }
+    function prev(){ if(i>0){ i--; paint(); } }
+
+    async function del(id){
+      try{
+        const res=await fetch('/api/stories/'+encodeURIComponent(id),{method:'DELETE'});
+        if(!res.ok) throw new Error('status '+res.status);
+        _forgetMyStory(String(id));
+        showToast('Story deleted');
+        close();
+        await loadStories();
+      }catch(e){ showToast('Could not delete story'); }
+    }
+
+    ov.addEventListener('click',e=>{
+      if(e.target.closest('[data-close]')){ close(); return; }
+      const delBtn=e.target.closest('[data-del]');
+      if(delBtn){ del(delBtn.dataset.del); return; }
+      if(e.target.closest('[data-prev]')){ prev(); return; }
+      if(e.target.closest('[data-next]')){ next(); return; }
+    });
+    // Swipe-down to dismiss.
+    let startY=null;
+    ov.addEventListener('touchstart',e=>{ startY=e.touches[0].clientY; },{passive:true});
+    ov.addEventListener('touchend',e=>{ if(startY!=null && e.changedTouches[0].clientY-startY>80) close(); startY=null; });
+    function onKey(e){ if(e.key==='Escape') close(); else if(e.key==='ArrowRight') next(); else if(e.key==='ArrowLeft') prev(); }
+    document.addEventListener('keydown',onKey);
+
+    paint();
   }
 
   // ---- Following empty state ----
@@ -10320,6 +10544,7 @@
       _renderFollowingTab(host); return;
     }
     host.appendChild(renderStories());
+    loadStories(); // async: swaps the seed/empty bar for real active (≤24h) stories
     loadFeedPosts().forEach(p=>{
       const wrap=document.createElement('div');
       wrap.innerHTML=feedCardHTML({...p,id:p.id||'mine_'+p.ts,user:'you',
