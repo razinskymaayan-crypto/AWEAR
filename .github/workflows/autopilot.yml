@@ -182,6 +182,8 @@ jobs:
 
           VERIFY (must pass before commit):
           - node --check on extracted JS AND npm run check-render both exit 0.
+          - bash scripts/guard_checks.sh exits 0 — BLOCKING. It enforces the locked invariants in docs/SURFACE_SPECS.md (notch safe-area, no "Google Shopping" wording, no new hardcoded hex/emoji, no known repeat-mistakes). If you intentionally changed a locked decision because of an ANSWERED founder directive, update docs/SURFACE_SPECS.md FIRST, then the gate.
+          - UI changes: also run "python3 scripts/check_notch.py" (real iPhone-15-Pro profile, needs the local server up) — it must exit 0 (Iron Rule #13). Do NOT re-touch a screen/topic already "done" in activity_log or a locked SURFACE_SPECS decision (OW-011).
           - Visual changes: pass the gabbana subagent design review at 8+ (fix and re-gate if below).
           - Demo-critical screens: also capture a screenshot and sanity-check it looks right. If screenshot tooling is not set up yet, set it up (or add it as the next TODO).
           - After a BIG visual change to a demo-critical screen (passed gabbana 8+): run a quick USER SURVEY of that screen (per step 3b) to confirm the change actually improved it, and include the survey in your Telegram report.
