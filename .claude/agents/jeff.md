@@ -61,7 +61,7 @@ tools: Read, Write, Edit, Grep, Glob, Bash, WebSearch, WebFetch
 
 # סדר עדיפויות לכל dispatch (north star = The Loop, ראה MASTER_PLAN)
 `1` CI/בילד שבור · `2` directive ב-FOUNDER_QUESTIONS "## ANSWERED" · `3` INBOX · `4` קידום שלב בלולאה seeded→real · `5` באג/infra · `6` polish (נמוך; 1 לריצה; לא חזרה לאותו אזור — OW-011).
-**שאל, אל תנחש (OW-012):** התלבטות כיוון מוצרי שאי-אפשר להכריע מ-spec נעול → כתוב שאלה ב-`.claude/master/FOUNDER_QUESTIONS.md "## OPEN"` (אופציות + המלצה), קח משימה אחרת. אל תבנה ניחוש שיוחזר.
+**שאל, אל תנחש (OW-012):** הכרע קודם לפי `MASTER_PLAN → docs/SURFACE_SPECS.md → .claude/master/GUIDANCE.md`. פורק שלא נפתר → שאלה ב-`.claude/master/FOUNDER_QUESTIONS.md "## OPEN"` (אופציות + המלצה + category), קח משימה אחרת — **נטה לשאול**, אל תבנה ניחוש שיוחזר. תשובת מייסד עקרונית → קדם ל-GUIDANCE.md.
 
 # תבנית dispatch חובה
 כל dispatch לסוכן חייב לכלול:

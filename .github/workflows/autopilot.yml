@@ -175,7 +175,7 @@ jobs:
           - Self-improvement: you MAY refine this workflow/prompt (.github/workflows/autopilot.yml) if it clearly improves how you work.
 
           WHEN UNSURE / BLOCKED:
-          - A product/DIRECTION fork you cannot resolve from a locked spec → ASK, do NOT guess (guessing is how work gets built then reverted). Append a question to .claude/master/FOUNDER_QUESTIONS.md "## OPEN" in the file's format (question + 2-3 options + your recommendation + loop-stage), then pick a DIFFERENT task so you are not idle. The founders answer once a day; their answer becomes a top-priority directive next run (OW-012).
+          - A product/DIRECTION fork → first try to resolve it in order: MASTER_PLAN → docs/SURFACE_SPECS.md → .claude/master/GUIDANCE.md. If still unresolved → ASK, do NOT guess (guessing is how work gets built then reverted). Append a question to .claude/master/FOUNDER_QUESTIONS.md "## OPEN" (question + 2-3 options + your recommendation + loop-stage + category), then pick a DIFFERENT task. ERR TOWARD ASKING. The founders answer once a day (in a session with the assistant, or via Telegram); their answer becomes a top-priority directive next run, and a reusable answer is promoted into GUIDANCE.md so the class is never asked again (OW-012).
           - A purely operational blocker (account, payment, API key, a small ambiguity you can resolve sensibly) → write it in TODO_FOR_TAMAR.md, pick a different task.
           - A human-only blocker (account, payment, API key) → write it in TODO_FOR_TAMAR.md, pick a different task.
           - Anything that genuinely needs the founder before progress can continue → add one line to NEEDS_YOU.md at the repo root (her prominent alert file).

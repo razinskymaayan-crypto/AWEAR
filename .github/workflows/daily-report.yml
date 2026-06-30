@@ -45,3 +45,10 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           FORCE_REPORT: ${{ github.event.inputs.force }}
         run: python3 scripts/daily_report.py
+
+      - name: Nudge unanswered founder questions
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: bash scripts/founder_questions_nudge.sh

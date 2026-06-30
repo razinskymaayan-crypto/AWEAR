@@ -7,16 +7,34 @@ top the backlog. Then the loop repeats. (OW-012)
 
 **The daily cadence:**
 1. Agents append direction questions to `## OPEN` as they work (with options + a recommendation).
-2. Once a day, Carmel/Razi move each answered item to `## ANSWERED` with the chosen direction.
+2. The founders answer **at the start of a session with the assistant** (a SessionStart hook surfaces
+   open questions, and the assistant raises them), or in Telegram. Each answer moves to `## ANSWERED`.
 3. Agents execute `## ANSWERED` directives at top priority (after a broken build), then mark them
    `[done]` and move them to `## ARCHIVE`.
+
+## Before you ask (so "err toward asking" doesn't become noise)
+1. Try to resolve the fork yourself, in order: **MASTER_PLAN → docs/SURFACE_SPECS.md →
+   `.claude/master/GUIDANCE.md`**. If any of them answers it, do NOT ask.
+2. Only a genuinely unresolved **direction** fork becomes a question. (When still unsure after the
+   three sources — **err toward asking** rather than guessing and getting reverted.)
+3. Don't ask things you can resolve sensibly yourself (naming, micro-UX, obvious defaults) — decide
+   and log those.
+
+## Compounding (this loop gets cheaper over time)
+When a founder answer states a **reusable principle** (not a one-off), the assistant/Jeff appends a
+one-line rule to the matching section of `.claude/master/GUIDANCE.md`. That class is then resolved by
+GUIDANCE and never asked again.
+
+## Stale questions
+An OPEN question that sits unanswered gets pushed to the founders' Telegram by the daily report
+(`scripts/founder_questions_nudge.sh` via `daily-report.yml`) until answered.
 
 ---
 
 ## How agents write a question (format)
 ```
-### Q<n> — <one-line question>  ·  <agent>  ·  <YYYY-MM-DD>  ·  loop-stage: SCAN|MATCH|LOOKS|BUY|EARN|—
-What I'm blocked on: <1-2 sentences — the fork I can't resolve from a spec>
+### Q<n> — <one-line question>  ·  <agent>  ·  <YYYY-MM-DD>  ·  loop-stage: SCAN|MATCH|LOOKS|BUY|EARN|—  ·  category: product|design|scope|economics
+What I'm blocked on: <1-2 sentences — the fork I can't resolve from MASTER_PLAN/SURFACE_SPECS/GUIDANCE>
 Options:
   A) <option>  — <consequence>
   B) <option>  — <consequence>
@@ -27,7 +45,8 @@ What I'll do meanwhile: <the other task I picked so I'm not idle>
 
 ## How founders answer
 Edit the question's block, add a line `ANSWER (Carmel/Razi, <date>): <the direction>`, and move the
-whole block to `## ANSWERED`. Or reply in Telegram with `/answer Q<n> <direction>` (routed here).
+whole block to `## ANSWERED`. Or reply in Telegram with `/answer Q<n> <direction>`. If the answer is a
+reusable principle, also promote it to `.claude/master/GUIDANCE.md` (compounding).
 
 ---
 
