@@ -73,7 +73,7 @@ jobs:
       - name: Run manager
         if: steps.gate.outputs.skip != 'true'
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
@@ -138,7 +138,7 @@ jobs:
             echo "branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) commits_ahead_of_main=$AHEAD"
             echo "claude_installed=$(command -v claude || echo NO)"
             echo "node=$(node -v 2>/dev/null || echo NO)  npm=$(npm -v 2>/dev/null || echo NO)"
-            echo "key_present=$([ -n "$ANTHROPIC_API_KEY" ] && echo yes || echo NO)"
+            echo "auth_present=$([ -n "$CLAUDE_CODE_OAUTH_TOKEN" ] && echo yes || echo NO)"
             echo "last_commit=$(git log -1 --oneline 2>/dev/null)"
           } > "ci-debug/mgr-${{ matrix.manager }}.txt"
           git config user.name "awear-dbg"; git config user.email "dbg@awear.local"
@@ -150,4 +150,4 @@ jobs:
           git commit -m "debug: mgr ${{ matrix.manager }} status [skip ci]" || true
           for i in 1 2 3; do git pull --rebase origin main -q && git push origin HEAD:main && break || sleep 3; done
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
