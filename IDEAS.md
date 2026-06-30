@@ -95,3 +95,5 @@ Remaining bigger bets, ranked by survey impact:
 42. **"Why this look" 2-line rationale on the hero** — e.g. "evening + weekday → Date Night"; `pickOccasionForNow` already computes it. Cheap trust lift. Owner: Valentino via Mark.
 43. **Expand daily-look variety** — only 6 occasion buckets → similar days look identical (survey daily-return 6.4). Rotate within a bucket, weight by least-worn items, or factor weather so daily ≠ identical. Owner: Valentino via Mark.
 44. **Composited full-body hero image** — replace the single product photo + swatch with a styled full-look composite to close the wow ceiling (survey first-impression 7.6). Needs design + asset pipeline. Owner: Valentino/Netta via Mark.
+
+[backend safety net 2026-06-30, sam via steve] Server-side defensive dedup now SHIPPED on POST /api/orders (commit 9386340): the legacy no-client_ref path collapses an identical re-fired order within 15s, so a demo double-tap can no longer double-credit the Creator Wallet. The frontend client_ref wiring above is still the ideal complete fix (idempotent across the full window), but the money flow is now double-tap-safe end to end regardless of client.
