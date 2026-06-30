@@ -1212,6 +1212,25 @@ def init_db() -> None:
             CREATE INDEX IF NOT EXISTS idx_dm_owner_peer_created
             ON dm_messages (owner_key, peer_id, created_at)
         """)
+        # Daily documentation — private style journal + streak (Duolingo-style).
+        # One row per (user_key, log_date); re-logging a date upserts in place.
+        # items_json = JSON array of item ids/names. is_private default 1 (private).
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS daily_logs (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key   TEXT NOT NULL,
+                log_date   TEXT NOT NULL,
+                items_json TEXT NOT NULL DEFAULT '[]',
+                note       TEXT DEFAULT '',
+                is_private INTEGER NOT NULL DEFAULT 1,
+                created_at TEXT NOT NULL,
+                UNIQUE(user_key, log_date)
+            )
+        """)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_daily_logs_user_date "
+            "ON daily_logs (user_key, log_date)"
+        )
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 
@@ -1754,6 +1773,205 @@ async def get_comments(post_id: str, limit: int = 20, offset: int = 0):
         "items": comments[offset: offset + limit],
         "total": len(comments),
     }
+
+
+# ---------------------------------------------------------------------------
+# Daily documentation — private style journal + Duolingo-style streak.
+# Persisted in SQLite daily_logs (BE-005). Per-user scoping via MG-005 user_key.
+# One row per (user_key, log_date); POST upserts so re-logging a date overwrites.
+# ---------------------------------------------------------------------------
+
+
+def _compute_streak(dates: list) -> dict:
+    """Compute streak stats from a list of YYYY-MM-DD log_date strings.
+
+    current_streak: consecutive calendar days ending today OR yesterday
+                    (yesterday-anchored so a not-yet-logged today doesn't
+                    zero out an active streak). 0 if the most recent log is
+                    older than yesterday.
+    best_streak:    longest run of consecutive calendar days ever.
+    logged_today:   whether today's date is present.
+    """
+    today = datetime.date.today()
+    # Unique, parsed, valid dates only.
+    parsed = set()
+    for d in dates:
+        try:
+            parsed.add(datetime.date.fromisoformat(d))
+        except (ValueError, TypeError):
+            continue
+
+    logged_today = today in parsed
+
+    # current_streak: walk back from today (or yesterday) while days are present.
+    current_streak = 0
+    if parsed:
+        if today in parsed:
+            cursor = today
+        elif (today - datetime.timedelta(days=1)) in parsed:
+            cursor = today - datetime.timedelta(days=1)
+        else:
+            cursor = None
+        while cursor is not None and cursor in parsed:
+            current_streak += 1
+            cursor -= datetime.timedelta(days=1)
+
+    # best_streak: longest consecutive run across all logged dates.
+    best_streak = 0
+    if parsed:
+        ordered = sorted(parsed)
+        run = 1
+        best_streak = 1
+        for i in range(1, len(ordered)):
+            if (ordered[i] - ordered[i - 1]).days == 1:
+                run += 1
+            else:
+                run = 1
+            best_streak = max(best_streak, run)
+
+    return {
+        "current_streak": current_streak,
+        "best_streak": best_streak,
+        "logged_today": logged_today,
+    }
+
+
+def _daily_log_row_to_dict(row) -> dict:
+    """Serialize a daily_logs sqlite Row into the public JSON shape."""
+    try:
+        items = json.loads(row["items_json"]) if row["items_json"] else []
+    except (ValueError, TypeError):
+        items = []
+    return {
+        "id": row["id"],
+        "date": row["log_date"],
+        "items": items,
+        "note": row["note"] or "",
+        "private": bool(row["is_private"]),
+        "created_at": row["created_at"],
+    }
+
+
+@app.post("/api/daily-log")
+async def upsert_daily_log(request: Request):
+    """Create or update the current user's style-journal entry for a date.
+
+    Body:
+        date:    str  — YYYY-MM-DD (required)
+        items:   list — item ids/names (optional, default [])
+        note:    str  — free text (optional, default "")
+        private: bool — optional, default True
+
+    Returns:
+        log:    the saved row {id, date, items, note, private, created_at}
+        streak: {current_streak, best_streak, logged_today}
+    """
+    # MG-005 — per-user scoping.
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "daily-log", 30):
+        raise HTTPException(status_code=429, detail="rate limit exceeded")
+
+    body = await request.json()
+
+    log_date = (body.get("date") or "").strip()
+    # Validate date format strictly — keeps streak math sound.
+    try:
+        datetime.date.fromisoformat(log_date)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=400, detail="date required, format YYYY-MM-DD")
+
+    items = body.get("items", [])
+    if not isinstance(items, list):
+        raise HTTPException(status_code=400, detail="items must be a list")
+    items_json = json.dumps(items)
+
+    note = (body.get("note") or "").strip()
+    if len(note) > 2000:
+        raise HTTPException(status_code=400, detail="note max 2000 chars")
+
+    # default private=True; only an explicit False makes it non-private.
+    is_private = 0 if body.get("private") is False else 1
+
+    now_iso = datetime.datetime.utcnow().isoformat()
+
+    with _get_db() as conn:
+        # Upsert on the (user_key, log_date) unique constraint. created_at is
+        # preserved on update; items/note/private are overwritten.
+        conn.execute(
+            """
+            INSERT INTO daily_logs
+                (user_key, log_date, items_json, note, is_private, created_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(user_key, log_date) DO UPDATE SET
+                items_json = excluded.items_json,
+                note       = excluded.note,
+                is_private = excluded.is_private
+            """,
+            (user_key, log_date, items_json, note, is_private, now_iso),
+        )
+        conn.commit()
+
+        row = conn.execute(
+            "SELECT * FROM daily_logs WHERE user_key = ? AND log_date = ?",
+            (user_key, log_date),
+        ).fetchone()
+
+        all_dates = [
+            r["log_date"]
+            for r in conn.execute(
+                "SELECT log_date FROM daily_logs WHERE user_key = ?",
+                (user_key,),
+            ).fetchall()
+        ]
+
+    logger.info("daily_log_upsert user=%s date=%s items=%d", user_key, log_date, len(items))
+    return {
+        "log": _daily_log_row_to_dict(row),
+        "streak": _compute_streak(all_dates),
+    }
+
+
+@app.get("/api/daily-log")
+async def list_daily_logs(request: Request, limit: int = 60, offset: int = 0):
+    """Return the current user's private journal, most-recent date first."""
+    user_key = (request.client.host if request.client else None) or "anon"
+    limit = max(1, min(limit, 365))
+    offset = max(0, offset)
+
+    with _get_db() as conn:
+        rows = conn.execute(
+            """
+            SELECT * FROM daily_logs
+            WHERE user_key = ?
+            ORDER BY log_date DESC
+            LIMIT ? OFFSET ?
+            """,
+            (user_key, limit, offset),
+        ).fetchall()
+        total = conn.execute(
+            "SELECT COUNT(*) FROM daily_logs WHERE user_key = ?",
+            (user_key,),
+        ).fetchone()[0]
+
+    return {
+        "items": [_daily_log_row_to_dict(r) for r in rows],
+        "total": total,
+    }
+
+
+@app.get("/api/daily-log/streak")
+async def daily_log_streak(request: Request):
+    """Return streak stats for the current user computed from their log dates."""
+    user_key = (request.client.host if request.client else None) or "anon"
+    with _get_db() as conn:
+        dates = [
+            r["log_date"]
+            for r in conn.execute(
+                "SELECT log_date FROM daily_logs WHERE user_key = ?",
+                (user_key,),
+            ).fetchall()
+        ]
+    return _compute_streak(dates)
 
 
 # ---------------------------------------------------------------------------
