@@ -14,6 +14,10 @@
 | OW-004 | יודע שהכלי קיים ≠ מפעיל אותו — בדוק skills בתחילת task | [[OW.md]] |
 | OW-005 | תשתית קיימת ≠ בשימוש — grep לפני דיווח coverage | [[OW.md]] |
 | OW-006 | כלל ללא מנגנון אכיפה = המלצה בלבד | [[OW.md]] |
+| OW-007 | מיפוי live-data: לפתור שדה אמיתי, לא לקודד קבוע (`category:'top'` bug) | [[OW.md]] |
+| OW-008 | לחווט ל-DOM לפי ה-class האמיתי מאתר ה-render (`.fca-ico` vs `.fca-icon`) | [[OW.md]] |
+| OW-009 | grep למערכת קיימת-אך-לא-מחווטת לפני בנייה חדשה (orphaned comment sheet) | [[OW.md]] |
+| OW-010 | סוכנים במקביל על קובץ-ענק = worktrees + עוגני-CSS נפרדים, merge בטור | [[OW.md]] |
 
 ---
 
@@ -48,6 +52,7 @@
 | DS-013 | Gabbana audit = git diff (~8K tokens), לא קובץ שלם (~82K) | [[ds.md]] |
 | DS-014 | Light mode = החלטת board. כל קומפוננט חדש עובד בשני מצבים | [[ds.md]] |
 | DS-015 | Benchmark = Instagram + Pinterest + Zara (לא TikTok/Depop/Linear) | [[ds.md]] |
+| DS-018 | mobile bottom-sheet: drag-to-dismiss על רצועת-ידית בלבד, לא scroll-trap | [[ds.md]] |
 
 ---
 

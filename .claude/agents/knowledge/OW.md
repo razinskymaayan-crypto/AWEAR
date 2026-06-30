@@ -44,3 +44,31 @@
 **מקור:** mark_retrospective (2026-06-19) — Iron Rule נכתב ב-18.06, עוקף ב-18.06
 **לקח:** כלל שנכתב ב-CLAUDE.md ולא משנה workflow בפועל הוא הצהרה. כל כלל חייב: (1) מי אוכף, (2) מתי נבדק, (3) מה קורה כשמופר.
 **מנגנון:** לפני Board Sync — כל מנהל בודק: "כל כלל ברזל שכתבתי — יושם בcycle שעבר?"
+
+---
+
+### OW-007 | מיפוי live-data: לפתור שדה אמיתי, לא לקודד קבוע
+**מקור:** Carmel/Razi UX pass (2026-06-30) — `loadFeedData` קודד `category:'top'` לכל פריט מתויג → כל ה-pills בפיד הראו אייקון חולצה. ה-CAT_ICON map היה מושלם; הבאג היה ב-data.
+**לקח:** ערך קבוע בתוך פונקציית מיפוי API→UI הוא code smell. אם שדה יכול להשתנות (category/name/price) — חייבים לפתור אותו מהמקור (productMap[pid].category), לא literal.
+**מנגנון:** בכל מאפר API→UI — grep אחרי literals בשדות (`category:'`, `type:'`). שדה שמשתנה בין פריטים ולא נפתר מהמקור = באג.
+
+---
+
+### OW-008 | לחווט ל-DOM לפי הclass האמיתי מאתר ה-render
+**מקור:** Carmel/Razi UX pass (2026-06-30) — double-tap like קרס: ה-handler חיפש `.fca-icon` בעוד ה-render יוצר `.fca-ico`. querySelector החזיר null → `null.innerHTML` זרק.
+**לקח:** אל תנחש שם class. handler שמכוון לאלמנט שעבר render חייב את ה-class המדויק מפונקציית ה-render.
+**מנגנון:** כל querySelector/closest על markup שעבר render — grep את ה-class באותו קובץ קודם. אל תסמוך על זיכרון.
+
+---
+
+### OW-009 | grep למערכת קיימת-אך-לא-מחווטת לפני בנייה חדשה
+**מקור:** Shira, comments (2026-06-30) — sheet תגובות שלם כבר היה קיים (`openCommentsSheet`) אך יתום (`reactionsHTML` = dead code, ללא entry point). חיברה אותו במקום לכפול.
+**לקח:** feature שאתה עומד לבנות עשוי כבר להתקיים, לא-מחווט. כפילות = שני מקורות אמת.
+**מנגנון:** לפני בניית קומפוננטה — grep את שם ה-feature (comment/sheet/modal/collage) בקובץ. אם קיים אך לא נקרא — חווט, אל תכפול.
+
+---
+
+### OW-010 | סוכנים במקביל על אותו קובץ-ענק = worktrees + עוגני-CSS נפרדים
+**מקור:** Jeff orchestration, Carmel/Razi UX pass (2026-06-30) — 4 סוכני frontend על `index.html` דרך worktrees מבודדים, כל אחד הוסיף CSS ליד עוגן נפרד → 6 מיזוגים, 0 קונפליקטים. סוכן backend (`app.py`, קובץ אחר) רץ חופשי במקביל.
+**לקח:** שני סוכנים בו-זמנית על אותו קובץ גדול ב-tree המשותף = race/קונפליקט. קבצים שונים = מקביל בטוח.
+**מנגנון (ג'ף/אורקסטרטור):** (1) לעולם לא >1 סוכן על אותו קובץ ב-tree המשותף — בודד ב-worktree. (2) הנחה כל סוכן להוסיף CSS צמוד לבלוק הקיים של ה-feature שלו. (3) מזג בטור עם `node --check` בין מיזוגים. (4) backend (קובץ נפרד) רץ במקביל ל-frontend.

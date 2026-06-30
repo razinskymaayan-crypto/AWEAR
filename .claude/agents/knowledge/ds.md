@@ -92,3 +92,9 @@
 **מקור:** A6 demo reliability — avatar fallback (2026-06-26)
 **לקח:** imgFallback() כיסה רק product images (productImage()). 4 avatar imgs (feed card, peopleCard x2, user profile) נטענו ישירות מ-randomuser.me בלי onerror — אם ה-CDN חסום/איטי בדמו החי, כל avatar הופך ל-broken-image glyph. avatar שבור בפיד = בדיוק ההפך מ"התמונה היא הכוכב".
 **מנגנון:** קיים avatarFallback(img) (ליד imgFallback) שמחליף את ה-img ב-.avatar-fallback (עיגול ראשי-תיבות על gradient accent->accent2, מראה את .up-avatar-initials המאושר). כל <img> של avatar חייב data-name="${attr(name)}" + onerror="this.onerror=null;avatarFallback(this)". grep אכיפה: grep -nE "<img[^>]*(avatar|randomuser|portraits)" static/index.html — כל תוצאה חייבת avatarFallback. ל-img עם width:100% ה-helper נופל ל-parentElement.offsetWidth כדי לא לטעות בגודל העיגול.
+
+
+### DS-018 | mobile bottom-sheet: מחוות הסגירה על רצועת-ידית, לא על כל ה-sheet
+**מקור:** Valentino, item-sheet iOS fix (2026-06-30) — swipe-to-dismiss חובר לכל ה-buySheet → ב-iOS ה-pointer-drag תפס גם את אזור התוכן הנגלל ונלחם בגלילה הנייטיב. דיווח המשתמש: "החלון קופץ מלמטה, לא נותן לסגור למטה ולא לגלול נורמלי".
+**לקח:** bottom-sheet עם תוכן נגלל חייב להפריד את מחוות הסגירה (drag-down) מגלילת התוכן ומגלילת ה-body. drag על כל ה-sheet = scroll-trap.
+**מנגנון:** (1) scope את ה-pointer-drag לרצועת ידית בלבד (`.sheet-grab`, `touch-action:none`, עם pointer capture). (2) אזור התוכן: `overflow-y:auto` + `overscroll-behavior:contain` + `touch-action:pan-y` + `-webkit-overflow-scrolling:touch`. (3) נעל גלילת body ב-open (`body.sheet-open .phone main{overflow:hidden}`) ושחרר תמיד ב-close. (4) ספק 3 דרכי סגירה: גרירה / tap על הרקע / כפתור X ≥44px.
