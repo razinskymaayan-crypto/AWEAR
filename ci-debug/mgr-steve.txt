@@ -1,6 +1,6 @@
 manager=steve
-branch=auto/steve commits_ahead_of_main=1
+branch=auto/steve commits_ahead_of_main=4
 claude_installed=/opt/hostedtoolcache/node/20.20.2/x64/bin/claude
 node=v20.20.2  npm=10.8.2
 auth_present=yes
-last_commit=a6f15a5 fix(stylist): server-side fallback for /api/outfit/generate so WOW looks never render empty
+last_commit=9316975 docs(ideas): note #22 backend dedup safety net shipped (9386340)
