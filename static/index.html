@@ -413,17 +413,20 @@
   .fc-comment-avatar { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%;
     font-size: var(--t-micro, 11px); }
   .fc-comment-body { flex: 1 1 auto; min-width: 0; }
-  .fc-comment-user { font-size: var(--t-caption, 12px); font-weight: 800; color: var(--fg, #f0ecf5); margin-bottom: 3px;
+  .fc-comment-user { font-size: var(--t-caption, 12px); font-weight: 800; color: var(--fg, #f0ecf5);
     display: inline-flex; align-items: center; gap: 6px; }
   .fc-comment-creator-badge { font-size: var(--t-micro, 11px); font-weight: 700; color: var(--accent, #e8526a);
     border: 1px solid var(--accent, #e8526a); border-radius: var(--r-pill, 999px); padding: 1px 7px; line-height: 1.3; }
   .fc-comment-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .fc-comment-meta { display: inline-flex; align-items: center; gap: var(--space-2, 8px); min-width: 0; }
+  .fc-comment-time { color: color-mix(in srgb, var(--muted, #8a8498) 70%, var(--fg, #f0ecf5));
+    font-size: var(--t-micro, 11px); font-weight: 600; flex: 0 0 auto; white-space: nowrap; }
   .fc-comment-report { background: none; border: none; padding: 8px; margin: -8px;
     min-width: 44px; min-height: 44px;
     display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
     color: var(--muted, #8a8498); transition: color 150ms ease; }
   .fc-comment-report:hover, .fc-comment-report:active { color: var(--text, #fbfbfd); }
-  .fc-comment-text { font-size: var(--t-small, 13px); color: var(--text, #fbfbfd); line-height: 1.4; }
+  .fc-comment-text { font-size: var(--t-small, 13px); color: var(--text, #fbfbfd); line-height: 1.4; margin-top: 3px; }
   .fc-comment-input-row { display: flex; gap: 8px; margin-top: 12px; }
   .fc-comment-input { flex: 1; background: var(--card); border: 1px solid var(--line);
     border-radius: 999px; padding: 9px 16px; font-size: var(--t-small); color: var(--text);
@@ -9168,11 +9171,17 @@
       });
       Object.keys(FEED_COMMENTS_SEED).forEach(pid => {
         if (!comments[pid] || !comments[pid].length) {
+          const n = FEED_COMMENTS_SEED[pid].length;
           comments[pid] = FEED_COMMENTS_SEED[pid].map((c, i) => ({
             id: 'seed_' + pid + '_' + i,
             user: c.user,
             text: c.text,
-            ts: 0,
+            // Deterministic, plausible spread: oldest first → newest last (render
+            // iterates array order). minutes-ago shrinks as i grows so the LAST
+            // comment is the most recent (~6m) and the first is oldest (~up to 2d).
+            // The trailing - i*1000 keeps every ts strictly unique within a post.
+            // Stamped once at first seed (idempotent localStorage cache).
+            ts: Date.now() - Math.round((6 + (n - 1 - i) * (2880 / (n + 1))) * 60000) - i * 1000,
             seed: true,
           }));
           cChanged = true;
@@ -9419,6 +9428,19 @@
     } catch (e) { return ''; }
   }
 
+  // Relative time for comments — takes epoch ms (our comment ts), NOT an ISO
+  // string like dmTimeAgo. Mirrors dmTimeAgo's thresholds/labels. Legacy/seed
+  // rows carry ts:0 → returns '' so we render NOTHING (never a false "now").
+  function commentTimeAgo(ts) {
+    if (!ts || ts <= 0 || isNaN(ts)) return '';
+    const sec = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+    if (sec < 60)       return 'now';
+    const min = Math.floor(sec / 60); if (min < 60) return min + 'm';
+    const hr  = Math.floor(min / 60); if (hr  < 24) return hr  + 'h';
+    const day = Math.floor(hr / 24);  if (day < 7)  return day + 'd';
+    return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
   // Renders a single comment item — used by both openCommentsSheet and the
   // optimistic send path so the DOM structure is always identical.
   // creatorHandle: the look's creator handle for the open post — when the
@@ -9429,6 +9451,7 @@
     const username = '@' + esc(handle.split('.').join(''));
     const isCreator = !!creatorHandle && handle === creatorHandle;
     const badge = isCreator ? `<span class="fc-comment-creator-badge">Creator</span>` : '';
+    const time = commentTimeAgo(c.ts);
     // Initials avatar rendered INLINE (not via <img onerror=avatarFallback>):
     // a valid src never fires onerror, so the fallback never painted. Same
     // initials rule avatarFallback() uses — split on [ .@], first 2 words.
@@ -9437,7 +9460,10 @@
       <span class="fc-comment-avatar avatar-fallback">${esc(initials)}</span>
       <div class="fc-comment-body">
         <div class="fc-comment-row">
-          <div class="fc-comment-user">${username}${badge}</div>
+          <div class="fc-comment-meta">
+            <div class="fc-comment-user">${username}${badge}</div>
+            ${time ? `<span class="fc-comment-time" dir="ltr">${esc(time)}</span>` : ''}
+          </div>
           <button class="fc-comment-report" data-report-comment="${esc(c.id||'')}" aria-label="Report comment">${icon('flag',14)}</button>
         </div>
         <div class="fc-comment-text">${esc(c.text)}</div>
