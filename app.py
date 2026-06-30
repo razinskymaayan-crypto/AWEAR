@@ -281,6 +281,7 @@ RESALE_SUGGESTION_PCT = 0.5   # suggested resale price = 50% of original price e
 AWEAR_COMMISSION_PCT = 0.15   # AWEAR's commission on a completed resale, on top of the above
 CREATOR_CREDIT_PCT = 0.05   # creator earns 5% of order amount_usd. LOCKED economics — do not change.
 ORDER_DEDUP_WINDOW_SEC = 15  # collapse double-fired orders that carry no client_ref (legacy path defense)
+PRELOVED_COMMISSION_PCT = 0.08  # AWEAR's commission on a preloved (P2P second-hand) deal
 
 # ---------------------------------------------------------------------------
 # Currency — static reference rates, NOT live FX.
@@ -1172,6 +1173,17 @@ def init_db() -> None:
         cols = {r[1] for r in conn.execute("PRAGMA table_info(orders)").fetchall()}
         if "client_ref" not in cols:
             conn.execute("ALTER TABLE orders ADD COLUMN client_ref TEXT DEFAULT ''")
+        # Additive migration: preloved/retail facade columns. The live orders table
+        # records every in-app purchase (retail dropshipping/affiliate facade). For
+        # preloved (P2P second-hand) we also record the counterparty (seller_key) and
+        # AWEAR's 8% commission. Existing rows default to retail / no seller / 0 commission,
+        # preserving the live POST contract and the Creator-Wallet credit flow unchanged.
+        if "kind" not in cols:
+            conn.execute("ALTER TABLE orders ADD COLUMN kind TEXT DEFAULT 'retail'")
+        if "seller_key" not in cols:
+            conn.execute("ALTER TABLE orders ADD COLUMN seller_key TEXT DEFAULT ''")
+        if "commission_usd" not in cols:
+            conn.execute("ALTER TABLE orders ADD COLUMN commission_usd REAL DEFAULT 0")
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_orders_userkey_ref "
             "ON orders (user_key, client_ref)"
@@ -1230,6 +1242,22 @@ def init_db() -> None:
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_daily_logs_user_date "
             "ON daily_logs (user_key, log_date)"
+        )
+        # Ephemeral 24h stories (outfit-of-the-day). A story is "active" while
+        # created_at is within the last 24h; GET filters expired ones in SQL.
+        # created_at stored as datetime.utcnow().isoformat() (UTC, same as orders).
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS stories (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key   TEXT NOT NULL,
+                image_url  TEXT NOT NULL,
+                caption    TEXT DEFAULT '',
+                created_at TEXT NOT NULL
+            )
+        """)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_stories_created "
+            "ON stories (created_at)"
         )
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
@@ -3409,12 +3437,19 @@ async def analytics_seasons_archive(request: Request):
 # ---------------------------------------------------------------------------
 
 class OrderCreate(BaseModel):
-    product_name: str
+    product_name: str = ""
     product_id: str = ""
     amount_usd: float = 0.0
     influencer_id: str = ""
     post_id: str = ""
     client_ref: str = ""
+    # In-app order facade (preloved / retail). All optional & backward-compatible:
+    # the live web checkout sends only amount_usd/influencer_id and gets kind='retail',
+    # commission 0 — unchanged. ``price`` is an alias for amount_usd (spec body); when
+    # supplied it takes precedence. ``kind``: 'preloved' (P2P, 8% commission) | 'retail'.
+    price: Optional[float] = None
+    kind: str = "retail"
+    seller_key: str = ""
 
 
 @app.post("/api/orders")
@@ -3434,9 +3469,18 @@ async def create_order(order: OrderCreate, request: Request):
     if not product_name:
         raise HTTPException(status_code=400, detail="product_name is required.")
 
-    if order.amount_usd < 0:
-        raise HTTPException(status_code=400, detail="amount_usd must be >= 0.")
-    amount_usd = round(order.amount_usd, 2)
+    # ``price`` (spec) aliases amount_usd (live web checkout). price wins when provided.
+    raw_price = order.price if order.price is not None else order.amount_usd
+    if raw_price < 0:
+        raise HTTPException(status_code=400, detail="price/amount_usd must be >= 0.")
+    amount_usd = round(raw_price, 2)
+
+    kind = (order.kind or "retail").strip().lower()
+    if kind not in ("preloved", "retail"):
+        raise HTTPException(status_code=400, detail="kind must be 'preloved' or 'retail'.")
+    seller_key = (order.seller_key or "").strip()
+    # AWEAR commission: 8% on preloved (P2P), 0 on retail (dropshipping/affiliate).
+    commission_usd = round(amount_usd * PRELOVED_COMMISSION_PCT, 2) if kind == "preloved" else 0.0
 
     client_ref = (order.client_ref or "").strip()
     if client_ref:
@@ -3448,8 +3492,8 @@ async def create_order(order: OrderCreate, request: Request):
         if existing:
             logger.info("order dedup hit: user=%s client_ref=%s -> %s",
                         user_key, client_ref, existing["id"])
-            return {"order_id": existing["id"], "status": "completed",
-                    "credit_amount": 0.0, "deduped": True}
+            return {"order_id": existing["id"], "id": existing["id"],
+                    "status": "placed", "credit_amount": 0.0, "deduped": True}
     else:
         # Legacy path: the client sent NO client_ref (IDEA #22 — web client does not
         # yet supply an idempotency key). A demo double-tap / fire-and-forget retry of
@@ -3478,8 +3522,8 @@ async def create_order(order: OrderCreate, request: Request):
         if existing:
             logger.info("order natural-dedup hit: user=%s product=%s amount=%.2f -> %s",
                         user_key, product_name, amount_usd, existing["id"])
-            return {"order_id": existing["id"], "status": "completed",
-                    "credit_amount": 0.0, "deduped": True}
+            return {"order_id": existing["id"], "id": existing["id"],
+                    "status": "placed", "credit_amount": 0.0, "deduped": True}
 
     now = datetime.datetime.utcnow().isoformat()
     order_id = "ord_" + uuid.uuid4().hex[:12]
@@ -3487,10 +3531,12 @@ async def create_order(order: OrderCreate, request: Request):
     with _get_db() as db:
         db.execute(
             """INSERT INTO orders (id, user_key, post_id, product_id, product_name,
-                                   amount_usd, status, influencer_id, client_ref, created_at)
-               VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                                   amount_usd, status, influencer_id, client_ref, created_at,
+                                   kind, seller_key, commission_usd)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (order_id, user_key, order.post_id, order.product_id, product_name,
-             amount_usd, "completed", order.influencer_id, client_ref, now),
+             amount_usd, "placed", order.influencer_id, client_ref, now,
+             kind, seller_key, commission_usd),
         )
         credit_amount = 0.0
         if order.influencer_id:
@@ -3504,9 +3550,77 @@ async def create_order(order: OrderCreate, request: Request):
             )
         db.commit()
 
-    logger.info("order created: id=%s user=%s influencer=%s credit=%.2f",
-                order_id, user_key, order.influencer_id or "none", credit_amount)
-    return {"order_id": order_id, "status": "completed", "credit_amount": credit_amount}
+    logger.info("order created: id=%s user=%s kind=%s price=%.2f commission=%.2f influencer=%s credit=%.2f",
+                order_id, user_key, kind, amount_usd, commission_usd,
+                order.influencer_id or "none", credit_amount)
+    # Return the full order row (spec) while keeping the legacy keys the live web
+    # checkout already ignores-safely (order_id, status, credit_amount).
+    return {
+        "order_id": order_id,
+        "id": order_id,
+        "buyer_key": user_key,
+        "seller_key": seller_key or None,
+        "product_id": order.product_id,
+        "product_name": product_name,
+        "kind": kind,
+        "price_usd": amount_usd,
+        "amount_usd": amount_usd,
+        "commission_usd": commission_usd,
+        "status": "placed",
+        "created_at": now,
+        "credit_amount": credit_amount,
+        "deduped": False,
+    }
+
+
+@app.get("/api/orders")
+async def list_orders(request: Request):
+    """Return the caller's in-app orders, newest first.
+
+    MG-005 ``user_key`` = ``buyer_key``. Rate limited to 30 requests/minute.
+
+    Response::
+
+        {
+          "items": [
+            {"id": "ord_abc", "buyer_key": "127.0.0.1", "seller_key": null,
+             "product_id": "p1", "product_name": "Linen blazer",
+             "kind": "preloved", "price_usd": 50.0, "commission_usd": 4.0,
+             "status": "placed", "created_at": "2026-06-30T10:00:00"}
+          ],
+          "total": 1
+        }
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "orders_list", 30):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    with _get_db() as db:
+        rows = db.execute(
+            """SELECT id, user_key, seller_key, product_id, product_name, kind,
+                      amount_usd, commission_usd, status, created_at
+               FROM orders WHERE user_key = ?
+               ORDER BY created_at DESC, id DESC LIMIT 200""",
+            (user_key,),
+        ).fetchall()
+
+    items = [
+        {
+            "id": r["id"],
+            "buyer_key": r["user_key"],
+            "seller_key": r["seller_key"] or None,
+            "product_id": r["product_id"],
+            "product_name": r["product_name"],
+            "kind": r["kind"] or "retail",
+            "price_usd": r["amount_usd"],
+            "commission_usd": r["commission_usd"] if r["commission_usd"] is not None else 0.0,
+            "status": r["status"],
+            "created_at": r["created_at"],
+        }
+        for r in rows
+    ]
+    logger.info("orders list: user=%s count=%d", user_key, len(items))
+    return {"items": items, "total": len(items)}
 
 
 @app.get("/api/wallet")
@@ -3546,6 +3660,114 @@ async def get_wallet(request: Request):
     balance = round(sum(r["amount_usd"] for r in rows), 2)
     logger.info("wallet: user=%s balance=%.2f credits=%d", user_key, balance, len(credits))
     return {"balance": balance, "credits": credits}
+
+
+# ---------------------------------------------------------------------------
+# Ephemeral 24h Stories (outfit-of-the-day) — POST/GET/DELETE /api/stories
+# SQLite-backed (stories). MG-005 user_key. A story is visible for 24h from
+# created_at; GET filters expired ones in SQL. Only the owner can delete.
+# ---------------------------------------------------------------------------
+
+STORY_TTL_HOURS = 24  # a story is active for 24h from created_at
+
+
+class StoryCreate(BaseModel):
+    image_url: str
+    caption: str = ""
+
+
+@app.post("/api/stories")
+async def create_story(story: StoryCreate, request: Request):
+    """Post an ephemeral 24h story. Rate limited to 20 requests/minute (MG-005)."""
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "stories_post", 20):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 20 requests/minute.")
+
+    image_url = (story.image_url or "").strip()
+    if not image_url:
+        raise HTTPException(status_code=400, detail="image_url is required.")
+    caption = (story.caption or "").strip()
+    now = datetime.datetime.utcnow().isoformat()
+
+    with _get_db() as db:
+        cur = db.execute(
+            "INSERT INTO stories (user_key, image_url, caption, created_at) VALUES (?,?,?,?)",
+            (user_key, image_url, caption, now),
+        )
+        db.commit()
+        story_id = cur.lastrowid
+
+    logger.info("story created: id=%s user=%s", story_id, user_key)
+    return {
+        "id": story_id,
+        "user_key": user_key,
+        "image_url": image_url,
+        "caption": caption,
+        "created_at": now,
+    }
+
+
+@app.get("/api/stories")
+async def list_stories(request: Request):
+    """Return only ACTIVE stories (created_at within the last 24h), newest first.
+
+    Expired stories (>24h) are filtered out in the SQL query. Rate limited to
+    60 requests/minute.
+
+    Response: {"items": [{id,user_key,image_url,caption,created_at}], "total": N}
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "stories_list", 60):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    # created_at is a UTC ISO string of fixed format, so lexicographic >= is
+    # equivalent to chronological >= against the same-format cutoff.
+    cutoff = (datetime.datetime.utcnow()
+              - datetime.timedelta(hours=STORY_TTL_HOURS)).isoformat()
+    with _get_db() as db:
+        rows = db.execute(
+            """SELECT id, user_key, image_url, caption, created_at
+               FROM stories
+               WHERE created_at >= ?
+               ORDER BY created_at DESC, id DESC
+               LIMIT 200""",
+            (cutoff,),
+        ).fetchall()
+
+    items = [
+        {
+            "id": r["id"],
+            "user_key": r["user_key"],
+            "image_url": r["image_url"],
+            "caption": r["caption"] or "",
+            "created_at": r["created_at"],
+        }
+        for r in rows
+    ]
+    logger.info("stories list: user=%s active=%d", user_key, len(items))
+    return {"items": items, "total": len(items)}
+
+
+@app.delete("/api/stories/{story_id}")
+async def delete_story(story_id: int, request: Request):
+    """Delete a story. Only the owner (matching user_key) may delete; else 403."""
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "stories_delete", 30):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT user_key FROM stories WHERE id = ?", (story_id,)
+        ).fetchone()
+        if row is None:
+            raise HTTPException(status_code=404, detail="Story not found.")
+        if row["user_key"] != user_key:
+            raise HTTPException(status_code=403, detail="Only the owner can delete this story.")
+        db.execute("DELETE FROM stories WHERE id = ?", (story_id,))
+        db.commit()
+
+    logger.info("story deleted: id=%s user=%s", story_id, user_key)
+    return {"deleted": True, "id": story_id}
 
 
 # ---------------------------------------------------------------------------
