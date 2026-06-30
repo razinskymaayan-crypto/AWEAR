@@ -1015,8 +1015,8 @@
   /* ---- Outfit Generator ---- */
   .og-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
   .og-header { padding: 16px 18px 10px; }
-  .og-title { font-size: var(--t-title,20px); font-weight: 900; letter-spacing: -.4px; }
-  .og-sub { font-size: var(--t-caption); color: var(--muted); font-weight: 600; margin-top: 4px; }
+  .og-title { font-size: var(--t-title,20px); font-weight: 700; letter-spacing: -.4px; }
+  .og-sub { font-size: var(--t-caption); color: var(--muted); font-weight: 500; margin-top: 4px; }
   .og-input-row { display: flex; gap: 8px; padding: 0 18px 12px; }
   .og-input { flex: 1; background: var(--card); border: 1.5px solid var(--line); border-radius: 18px; padding: 13px 16px; font-family: inherit; font-size: var(--t-body); color: var(--text); outline: none; transition: border .18s; }
   .og-input:focus { border-color: var(--accent2); }
@@ -1024,11 +1024,31 @@
   .og-go:active { transform: scale(.96); }
   .og-scenarios { display: flex; gap: 8px; padding: 0 18px 16px; overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
   .og-scenarios::-webkit-scrollbar { display: none; }
-  .og-abigail-btn { display: flex; align-items: center; gap: 10px; width: calc(100% - 36px); margin: 4px 18px 14px; min-height: 52px; padding: 10px 16px; background: color-mix(in srgb, var(--accent3, #7a6af0) 12%, var(--card, #1e1a22)); border: 1.5px solid color-mix(in srgb, var(--accent3, #7a6af0) 35%, transparent); border-radius: var(--r-md, 14px); color: var(--fg, #f0ecf5); font-family: inherit; font-size: var(--t-body, 14px); font-weight: 800; cursor: pointer; text-align: left; transition: transform .15s, background .15s; }
-  .og-abigail-btn:active { transform: scale(.98); }
-  .og-abigail-ico { width: 36px; height: 36px; min-width: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); display: flex; align-items: center; justify-content: center; color: var(--fg, #f0ecf5); flex-shrink: 0; }
-  .og-abigail-txt { display: flex; flex-direction: column; gap: 1px; }
-  .og-abigail-sub { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); }
+  /* Today's Look — daily hero (headline of the AI tab) */
+  .og-daily { margin: 16px 18px 16px; background: var(--card, #FFFFFF); border: 1px solid var(--line, #E9E5DF); border-radius: var(--r-lg, 20px); overflow: hidden; display: flex; flex-direction: column; }
+  .ogd-media { position: relative; aspect-ratio: 16/10; background: var(--surface, #F3F1EC); }
+  .ogd-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ogd-media .img-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted, #8A857E); }
+  .ogd-swatch { position: absolute; right: var(--space-3, 12px); bottom: var(--space-3, 12px); width: 26%; aspect-ratio: 4/5; border-radius: var(--r-sm, 10px); overflow: hidden; border: 1px solid var(--line, #E9E5DF); box-shadow: 0 2px 8px rgba(0,0,0,.12); background: var(--surface, #F3F1EC); }
+  .ogd-swatch-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ogd-body { padding: var(--space-4, 16px); display: flex; flex-direction: column; gap: var(--space-2, 8px); }
+  .ogd-eyebrow { display: flex; align-items: center; gap: 6px; font-size: var(--t-caption, 12px); font-weight: 600; color: var(--accent2, #3D3833); letter-spacing: .2px; text-transform: capitalize; }
+  .ogd-name { font-size: var(--t-title, 20px); font-weight: 700; letter-spacing: -.4px; color: var(--fg, #14110F); line-height: 1.15; }
+  .ogd-pairs { font-size: var(--t-small, 13px); font-weight: 500; color: var(--muted, #8A857E); }
+  .ogd-cta { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: var(--space-2, 8px); padding: 0 18px; background: var(--fg, #14110F); border: 0; border-radius: var(--r-pill, 999px); font-family: inherit; font-size: var(--t-body, 14px); font-weight: 700; color: var(--bg, #FAF9F7); cursor: pointer; transition: opacity .15s, transform .12s; }
+  .og-daily-empty { padding: var(--space-4, 16px); gap: var(--space-2, 8px); }
+  .ogd-empty-title { font-size: var(--t-lead, 17px); font-weight: 700; color: var(--fg, #14110F); }
+  .ogd-empty-sub { font-size: var(--t-small, 13px); font-weight: 500; color: var(--muted, #8A857E); line-height: 1.5; }
+  .ogd-cta:active { transform: scale(.97); opacity: .9; }
+
+  /* Secondary entry points (quiet — must not compete with the hero) */
+  .og-entries { display: flex; gap: var(--space-2, 8px); padding: 0 18px var(--space-4, 16px); }
+  .og-entry { flex: 1; display: flex; align-items: center; gap: 9px; min-height: 56px; padding: 10px 12px; background: transparent; border: 1px solid var(--line, #E9E5DF); border-radius: var(--r-md, 14px); color: var(--fg, #14110F); font-family: inherit; cursor: pointer; text-align: left; transition: background .15s, transform .12s; }
+  .og-entry:active { transform: scale(.98); background: var(--card, #FFFFFF); }
+  .og-entry-ico { width: 32px; height: 32px; min-width: 32px; border-radius: 50%; background: var(--surface, #F3F1EC); border: 1px solid var(--line, #E9E5DF); display: flex; align-items: center; justify-content: center; color: var(--accent2, #3D3833); flex-shrink: 0; }
+  .og-entry-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .og-entry-title { font-size: var(--t-small, 13px); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .og-entry-sub { font-size: var(--t-micro, 11px); font-weight: 500; color: var(--muted, #8A857E); }
   .og-chip { flex-shrink: 0; padding: 8px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: var(--t-caption); font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; transition: all .18s; display: flex; align-items: center; gap: 5px; }
   .og-chip:active { border-color: var(--accent2); background: rgba(123,92,255,.1); }
   .og-result-section { padding: 0 18px; display: flex; flex-direction: column; gap: 14px; }
@@ -2545,11 +2565,12 @@
     <!-- OUTFIT GENERATOR -->
     <section id="outfits" class="view">
       <div class="og-wrap" id="og-wrap">
+        <div id="og-daily"></div>
+        <div id="og-entries"></div>
         <div class="og-header">
           <div class="og-title" style="display:flex;align-items:center;gap:8px"><span class="ic-svg" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l1.7 4.8L18.5 9.5l-4.8 1.7L12 16l-1.7-4.8L5.5 9.5l4.8-1.7L12 3Z" stroke-linejoin="round"/><path d="M18.5 15l.7 2 .8 2-2-.7-2-.8 2-.7.5-1.8Z" stroke-linejoin="round"/></svg></span> Outfit Generator</div>
           <div class="og-sub">Tell us the occasion — AI builds looks from your wardrobe</div>
         </div>
-        <button class="og-abigail-btn" id="og-abigail-btn"></button>
         <div id="og-taste-banner"></div>
         <div class="og-input-row">
           <input class="og-input" id="og-input" placeholder='e.g. "I have a date tonight"' />
@@ -4602,6 +4623,43 @@
     setTimeout(function(){ if (overlay.parentNode) overlay.remove(); }, 260);
   }
 
+  // ---- Shared occasion engine (home "Today's Look" + AI Stylist daily hero) ----
+  // Single source of truth for the time+day → occasion mapping. Both renderHome()
+  // and the AI Stylist "Today's Look" hero call pickOccasionForNow() — do NOT duplicate.
+  const OCC_POOL = [
+    {label:'Date Night',    icon:'heartFill', tags:['elegant','evening','minimal'],       tip:'Elevate with your gold necklace for the final touch.'},
+    {label:'Work Ready',    icon:'briefcase', tags:['office','minimal','classic'],         tip:'Polished, confident, and investment-piece ready.'},
+    {label:'Street Style',  icon:'flame',     tags:['streetwear','urban','vintage','y2k'], tip:'Let your sneakers anchor the whole look.'},
+    {label:'Casual Day',    icon:'coffee',    tags:['casual','retro','sporty','denim'],    tip:'Your most comfortable fit that still turns heads.'},
+    {label:'Weekend Vibes', icon:'wave',      tags:['casual','y2k','streetwear'],          tip:'Off-duty energy with just the right amount of style.'},
+    {label:'Editorial',     icon:'sparkle',   tags:['minimal','clean','classic'],          tip:'Clean lines, quiet confidence — the AWEAR signature.'},
+  ];
+  // Ranked occasion list for "now" — the first entry is the primary pick for the moment.
+  function occasionRankForNow(now) {
+    now = now || new Date();
+    const hr = now.getHours();
+    const dow = now.getDay();
+    const order = [];
+    if (hr >= 18) order.push(0);                                  // evening → Date Night
+    else if (dow >= 1 && dow <= 4 && hr >= 8) order.push(1);      // weekday daytime → Work Ready
+    else if (dow === 0 || dow === 6) order.push(4);               // weekend → Weekend Vibes
+    else order.push(3);                                          // default → Casual Day
+    [2, 5, 3, 4, 0, 1].forEach(function(idx){ if (order.indexOf(idx) === -1) order.push(idx); });
+    return order.map(function(idx){ return OCC_POOL[idx]; });
+  }
+  function _timeOfDayLabel(hr) {
+    return hr < 5 ? 'late night' : hr < 12 ? 'morning' : hr < 17 ? 'afternoon' : 'evening';
+  }
+  // Returns {occ, dayLabel, timeLabel, eyebrow} for the current moment.
+  function pickOccasionForNow(now) {
+    now = now || new Date();
+    const occ = occasionRankForNow(now)[0];
+    const dateLocale = (typeof LOCALE !== 'undefined' && LOCALE === 'he') ? 'he-IL' : 'en-US';
+    const dayLabel = now.toLocaleDateString(dateLocale, {weekday:'long'});
+    const timeLabel = _timeOfDayLabel(now.getHours());
+    return { occ, dayLabel, timeLabel, eyebrow: dayLabel + ' ' + timeLabel + ' · ' + occ.label };
+  }
+
   function renderHome() {
     const prof = loadProfile();
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
@@ -4617,26 +4675,9 @@
     const shoes   = wardrobe.filter(i => i.category === 'shoes');
     const hasOutfits = tops.length > 0 && bottoms.length > 0;
 
-    // L4(a) — proactive occasion picks: context-aware outfit suggestions by time + day
-    const _OCC_POOL = [
-      {label:'Date Night',    icon:'heartFill', tags:['elegant','evening','minimal'],       tip:'Elevate with your gold necklace for the final touch.'},
-      {label:'Work Ready',    icon:'briefcase', tags:['office','minimal','classic'],         tip:'Polished, confident, and investment-piece ready.'},
-      {label:'Street Style',  icon:'flame',     tags:['streetwear','urban','vintage','y2k'], tip:'Let your sneakers anchor the whole look.'},
-      {label:'Casual Day',    icon:'coffee',    tags:['casual','retro','sporty','denim'],    tip:'Your most comfortable fit that still turns heads.'},
-      {label:'Weekend Vibes', icon:'wave',      tags:['casual','y2k','streetwear'],          tip:'Off-duty energy with just the right amount of style.'},
-      {label:'Editorial',     icon:'sparkle',   tags:['minimal','clean','classic'],          tip:'Clean lines, quiet confidence — the AWEAR signature.'},
-    ];
-    const _occHr = hour;
-    const _occDow = now.getDay();
-    const _occ3 = (() => {
-      const order = [];
-      if (_occHr >= 18) order.push(0);
-      else if (_occDow >= 1 && _occDow <= 4 && _occHr >= 8) order.push(1);
-      else if (_occDow === 0 || _occDow === 6) order.push(4);
-      else order.push(3);
-      [2, 5, 3, 4, 0, 1].forEach(function(idx){ if (order.indexOf(idx) === -1) order.push(idx); });
-      return order.slice(0, 3).map(function(idx){ return _OCC_POOL[idx]; });
-    })();
+    // L4(a) — proactive occasion picks: context-aware outfit suggestions by time + day.
+    // Uses the shared occasion engine (occasionRankForNow) — same source as the AI Stylist hero.
+    const _occ3 = occasionRankForNow(now).slice(0, 3);
     function _tagScore(item, occTags) {
       var itTags = (item.style_tags || []).map(function(t){ return t.toLowerCase(); });
       return occTags.filter(function(t){ return itTags.indexOf(t) !== -1; }).length;
@@ -5470,14 +5511,8 @@
   let ogLoading = false;
 
   function initOutfitGen() {
-    const abBtn = document.getElementById('og-abigail-btn');
-    if (abBtn) {
-      abBtn.innerHTML =
-        `<span class="og-abigail-ico">${icon('chat',18)}</span>`+
-        `<span class="og-abigail-txt"><span>Chat with Abigail</span>`+
-        `<span class="og-abigail-sub">Your AI stylist — ask anything</span></span>`;
-      if (!abBtn._bound) { abBtn._bound = true; abBtn.addEventListener('click', () => showView('chat')); }
-    }
+    renderDailyLook();
+    renderOgEntries();
     const scenariosEl = document.getElementById('og-scenarios');
     scenariosEl.innerHTML = OG_SCENARIOS.map(s =>
       `<button class="og-chip" data-q="${attr(s.label)}">${icon(s.icon,14)} ${esc(s.label)}</button>`
@@ -5494,6 +5529,74 @@
       input.addEventListener('keydown', e => { if(e.key==='Enter'){const q=input.value.trim();if(q)runOutfitGen(q);} });
     }
     _updateTasteBanner();
+  }
+
+  // ---- "Today's Look" daily hero — headline of the AI Stylist tab ----
+  // Adapts to real day-of-week + hour via the shared pickOccasionForNow() engine,
+  // and builds the look from the user's OWN closet via buildFallbackOutfits().
+  function renderDailyLook() {
+    const el = document.getElementById('og-daily');
+    if (!el) return;
+    const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
+    const ctx = pickOccasionForNow();
+
+    // Empty closet → tasteful prompt to scan, never a broken card.
+    if (!wardrobe.length) {
+      el.innerHTML = `
+        <div class="og-daily og-daily-empty">
+          <div class="ogd-eyebrow">${icon('sparkle',12)} <span>${esc(ctx.eyebrow)}</span></div>
+          <div class="ogd-empty-title">Your stylist is ready</div>
+          <div class="ogd-empty-sub">Add a few pieces and I'll build your look for ${esc(ctx.dayLabel + ' ' + ctx.timeLabel)} every day.</div>
+          <button class="ogd-cta" data-action="ogd-scan">${icon('camera',16)} Scan your first item</button>
+        </div>`;
+      const scan = el.querySelector('[data-action="ogd-scan"]');
+      if (scan) scan.addEventListener('click', () => { const f = document.getElementById('file-input'); if (f) f.click(); });
+      return;
+    }
+
+    // Build today's look from the user's own closet (reuse the combo builder).
+    const looks = buildFallbackOutfits(ctx.occ.label, wardrobe);
+    const look = looks[0];
+    const items = (look.items || []).filter(it => it && !it._missing);
+    const hero = items[0] || (look.items || [])[0];
+    const pairLabels = items.slice(1, 3).map(it => it.name).filter(Boolean);
+
+    el.innerHTML = `
+      <div class="og-daily">
+        <div class="ogd-media">
+          ${hero ? productImage(hero, 'ogd-hero-img') : `<div class="img-fallback">${icon('hanger',32)}</div>`}
+          ${items[1] ? `<div class="ogd-swatch">${productImage(items[1], 'ogd-swatch-img')}</div>` : ''}
+        </div>
+        <div class="ogd-body">
+          <div class="ogd-eyebrow">${icon(ctx.occ.icon,12)} <span>${esc(ctx.eyebrow)}</span></div>
+          <div class="ogd-name">${esc(look.name || ctx.occ.label)}</div>
+          ${pairLabels.length ? `<div class="ogd-pairs">${esc(pairLabels.join(' · '))}</div>` : ''}
+          <button class="ogd-cta" data-action="ogd-wear">See the full look ${icon('arrowRight',16)}</button>
+        </div>
+      </div>`;
+    const wearBtn = el.querySelector('[data-action="ogd-wear"]');
+    if (wearBtn) wearBtn.addEventListener('click', () => runOutfitGen(ctx.occ.label));
+  }
+
+  // ---- Secondary entry points (must NOT compete with the hero) ----
+  function renderOgEntries() {
+    const el = document.getElementById('og-entries');
+    if (!el) return;
+    el.innerHTML = `
+      <div class="og-entries">
+        <button class="og-entry" data-action="og-chat">
+          <span class="og-entry-ico">${icon('chat',16)}</span>
+          <span class="og-entry-txt"><span class="og-entry-title">Chat with Abigail</span><span class="og-entry-sub">Ask your stylist</span></span>
+        </button>
+        <button class="og-entry" data-action="og-swipe">
+          <span class="og-entry-ico">${icon('sparkle',16)}</span>
+          <span class="og-entry-txt"><span class="og-entry-title">Style Swipe</span><span class="og-entry-sub">Train your taste</span></span>
+        </button>
+      </div>`;
+    const chat = el.querySelector('[data-action="og-chat"]');
+    const swipe = el.querySelector('[data-action="og-swipe"]');
+    if (chat) chat.addEventListener('click', () => showView('chat'));
+    if (swipe) swipe.addEventListener('click', () => showStyleSwipe());
   }
 
   // ---- Style Swipe / Taste Training (L4-d) ----

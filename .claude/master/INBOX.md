@@ -11,7 +11,6 @@
 
 הקשר־על: יעד = דמו מלוטש. החזון המלא ב-docs/PRODUCT_VISION.md — קראו אותו לפני עבודה. עבדו לפי הסדר, משימה אחת לכל ריצה, מקצה לקצה, עם VALUE GATE אמיתי. אל תעשו סקרים/מחקר כל עוד יש כאן משימות.
 
-AI Stylist: לוק יומי לפי הקשר (יום בשבוע / שעה ביום) + צ'אט ליצירת לוקים, והוסיפו סינון לוקים בסטייל טינדר. החליטו איפה זה יושב במסך ה-AI ותעדו ב-IDEAS.md מאיזו מכסה יומית מתחילים פרימיום.
 
 [מערכת — תהליך אוטומטי] Phase 2 (ג'ף ממזג): בנו workflow .github/workflows/jeff-merge.yml שממזג את הענפים auto/mark, auto/steve, auto/ayalon ל-main רק אם npm run check-render עובר ושער gabbana 8+ עובר; בקונפליקט מיזוג — פתחו דיון קצר בין הסוכנים המעורבים (Task tool) ואז מזגו; auto-revert אם מיזוג שובר בילד. manual-dispatch בלבד, אל תפעילו רציף, ואל תשברו את autopilot.yml הקיים. תוכנית: .claude/plans/1-wiggly-seal.md.
 [מערכת — תהליך אוטומטי] Phase 5 (דיווח): כוונו את הדוח היומי ל-20:00 שעון ישראל (daily-report.yml / retrospective.yml), וודאו שכל הודעת סוכן בטלגרם חתומה בשם הסוכן.
@@ -19,6 +18,7 @@ AI Stylist: לוק יומי לפי הקשר (יום בשבוע / שעה ביום
 ═══════════════════════════════════════
 
 ## הושלם
+- AI Stylist daily look — done (Phase 1): shipped "Today's Look" daily contextual hero at top of the AI tab — adapts to real day-of-week + hour (shared occasion engine reused from home), builds a look from the user's own closet, quiet "See the full look" CTA, graceful empty state; surfaced Chat-with-Abigail + Style-Swipe as secondary entries beneath it. Gabbana 9/10 PASS, check-render OK, screenshot verified. Premium quota documented (3 free looks/day, IDEAS #35). NOTE: chat already existed; Tinder-style LOOK swiping (vs the existing taste-archetype swipe) is deferred to Phase 2 (IDEAS #36) — task NOT fully closed on that sub-feature.
 - Core-screens editorial pass (Feed, item sheet, profile) — DONE. All three brought to Zara×Vogue minimal-premium, each Gabbana 8.5+ across audit→fix→re-gate. Item-detail sheet (this run): killed pink-glow Buy CTA + rainbow gradient price, weight-700 ceiling, off-token→DS tokens, light-mode color-bug fix; confirmation survey 6.5→8.06 no SEVERE. (Feed + Profile passes done in prior runs.)
 - Public profile → real users — done (rewrote bios for Tamar/Carmel/Maayan to on-brand vibes; populated each public profile Posts grid with their REAL look photos via a profile-only manifest — Tamar 3, Maayan 3, Carmel 12 — seeded posts first, deduped image-only tiles, no fabricated items/prices, global feed untouched; Gabbana fixes: scrim-pill likes badge for contrast over light/dark photos, "More looks coming" filler for sparse grids, "Shop this look — coming soon" row on image-only sheets; Gabbana 9/10 PASS, check-render OK, Tamar+Carmel screenshots verified).
 - Stories row → real users — done (replaced 6 fictional stories with Add story + Tamar/Carmel/Maayan real avatar photos; tap opens each user's public profile; fixed avatar/initials overlap CSS; Gabbana 8.5 PASS, screenshot verified).
