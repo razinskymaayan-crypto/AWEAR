@@ -1744,6 +1744,22 @@
   .mp-scope-n { font-size: var(--t-micro,11px); font-weight: 800; padding: 1px 6px; border-radius: var(--r-pill,999px); background: var(--surface,#161318); color: var(--muted,#8a8498); }
   .mp-comm-scope .ff.active .mp-scope-n { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
 
+  /* ---- Local / radius "Near me" control (pre-loved item grid, item 18) ---- */
+  .mp-near { display: flex; flex-direction: column; gap: 8px; padding: 0 16px 12px; }
+  .mp-near-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .mp-near-btn { flex-shrink: 0; min-height: 44px; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--r-pill,999px); border: 1px solid var(--accent2,#c4855a); background: transparent; color: var(--accent2,#c4855a); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; cursor: pointer; transition: all .18s; }
+  .mp-near-btn .ic-svg { color: currentColor; }
+  .mp-near-btn.active { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
+  .mp-near-hint { font-size: var(--t-caption,12px); color: var(--muted,#8a8498); font-weight: 600; }
+  .mp-near-loc { font-size: var(--t-caption,12px); color: var(--fg,#f0ecf5); font-weight: 700; }
+  .mp-near-note { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; line-height: 1.4; }
+  .mp-near-radii { display: flex; gap: 8px; flex-wrap: wrap; }
+  .mp-near-radii .ff { min-height: 44px; padding: 8px 14px; border-radius: var(--r-pill,999px); display: inline-flex; align-items: center; }
+  .mp-near-radii .ff.active { border-color: var(--accent2,#c4855a); color: var(--fg,#f0ecf5); background: color-mix(in srgb, var(--accent2,#c4855a) 14%, transparent); }
+  /* Listing city + distance line */
+  .mp-loc-row { display: inline-flex; align-items: center; gap: 4px; font-size: var(--t-micro,11px); color: var(--muted,#8a8498); font-weight: 600; margin-top: 3px; }
+  .mp-loc-row .ic-svg { color: var(--accent2,#c4855a); }
+
   /* Store-page cards (Mode A list) */
   .mp-store-pages { display: flex; flex-direction: column; gap: 14px; padding: 0 16px 24px; }
   .mp-sp-card { background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-lg,20px); padding: 14px; cursor: pointer; transition: border-color .18s, transform .16s; }
@@ -3083,6 +3099,7 @@
     alert:'<path d="M12 3 1.5 21h21L12 3Z" stroke-linejoin="round"/><path d="M12 9v5M12 17.5v.01"/>',
     trophy:'<path d="M8 4h8v3a4 4 0 0 1-8 0V4Z" stroke-linejoin="round"/><path d="M8 5H5.5A1.5 1.5 0 0 0 4 6.5 3.5 3.5 0 0 0 7.5 10M16 5h2.5A1.5 1.5 0 0 1 20 6.5 3.5 3.5 0 0 1 16.5 10"/><path d="M12 11v3M9 20h6M10 17h4v3h-4v-3Z" stroke-linejoin="round"/>',
     leaf:'<path d="M19 5c-7 0-13 4-13 11 0 1.5.3 2.5.3 2.5S7 12 19 5Z" stroke-linejoin="round"/><path d="M6.3 18.5C9 14 13 9.5 19 5"/>',
+    mapPin:'<path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5"/>',
     crown:'<path d="M4 18h16l-1.3-8-3.2 3.5L12 8l-3.5 5.5L5.3 10 4 18Z" stroke-linejoin="round"/><path d="M4 18h16v2H4v-2Z"/>',
     users:'<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M14.8 12.2A4 4 0 0 1 20.5 16"/>',
     briefcase:'<rect x="3.5" y="8" width="17" height="11" rx="1.5"/><path d="M8.5 8V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/><path d="M3.5 13h17"/>',
@@ -6898,18 +6915,18 @@
   // ---- Marketplace ----
   const MP_KEY = 'awear_marketplace';
   const MP_SEED = [
-    {id:'mp1', name:'Barrel Jeans Light Wash', search_query:'barrel jeans light wash denim', category:'bottoms', size:'M', price:180, orig:450, condition:'like-new', condGrade:'A', seller:'@noalevi', seller_rating:4.9, seller_sales:38, seller_badge:'Top Seller', listed_days:2, style_tags:['y2k','denim'], color:'Blue', occasion:'casual', material:'denim'},
-    {id:'mp2', name:'Black Vintage Leather Jacket', search_query:'black vintage leather jacket', category:'outerwear', size:'S', price:320, orig:800, condition:'used', condGrade:'B', seller:'@mayacohen', seller_rating:4.7, seller_sales:12, seller_badge:'Fast Shipper', listed_days:5, style_tags:['streetwear','vintage'], color:'Black', occasion:'casual', material:'synthetic'},
-    {id:'mp3', name:'Adidas Samba White Sneakers', search_query:'Adidas Samba white sneakers', category:'shoes', size:'38', price:390, orig:560, condition:'new', condGrade:'A', seller:'@shirastyle', seller_rating:5.0, seller_sales:61, seller_badge:'Top Seller', listed_days:1, style_tags:['retro','iconic'], color:'White', occasion:'casual', material:'synthetic'},
-    {id:'mp4', name:'Black Mini Crossbody Bag', search_query:'black mini bag crossbody', category:'bag', price:95, orig:220, condition:'like-new', condGrade:'A', seller:'@danakatz', seller_rating:4.8, seller_sales:23, seller_badge:'Fast Shipper', listed_days:3, style_tags:['minimal','everyday'], color:'Black', occasion:'casual'},
-    {id:'mp5', name:'Cream Rib Knit Crop Top', search_query:'cream rib knit crop top', category:'top', size:'XS', price:45, orig:120, condition:'used', condGrade:'B', seller:'@ronigold', seller_rating:4.5, seller_sales:7, seller_badge:'New Seller', listed_days:8, style_tags:['minimal','y2k'], color:'Cream', occasion:'casual', material:'cotton'},
-    {id:'mp6', name:'Green Satin Midi Skirt', search_query:'green satin midi skirt formal', category:'dress', size:'S', price:160, orig:380, condition:'like-new', condGrade:'A', seller:'@liorsade', seller_rating:4.9, seller_sales:44, seller_badge:'Top Seller', listed_days:4, style_tags:['formal','romantic'], color:'Green', occasion:'evening', material:'silk'},
-    {id:'mp7', name:'Black Baseball Cap', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', condGrade:'C', seller:'@noalevi', seller_rating:4.9, seller_sales:38, seller_badge:'Top Seller', listed_days:14, style_tags:['streetwear','casual'], color:'Black', occasion:'sport'},
-    {id:'mp8', name:'Beige Cargo Pants', search_query:'beige cargo pants utility', category:'bottoms', size:'L', price:140, orig:320, condition:'like-new', condGrade:'B', seller:'@mayacohen', seller_rating:4.7, seller_sales:12, seller_badge:'Fast Shipper', listed_days:6, style_tags:['streetwear','utility'], color:'Beige', occasion:'casual', material:'cotton'},
-    {id:'mp9', name:'Ivory Linen Blazer', search_query:'ivory linen blazer oversized vintage', category:'outerwear', size:'M', price:85, orig:200, condition:'like-new', condGrade:'A', seller:'@shirastyle', seller_rating:5.0, seller_sales:61, seller_badge:'Top Seller', listed_days:2, style_tags:['chic','minimal'], color:'Cream', occasion:'work', material:'linen'},
-    {id:'mp10', name:'Vintage Silk Slip Dress', search_query:'vintage silk slip dress 90s minimal', category:'dress', size:'S', price:120, orig:280, condition:'used', condGrade:'B', seller:'@danakatz', seller_rating:4.8, seller_sales:23, seller_badge:'Fast Shipper', listed_days:10, style_tags:['vintage','romantic'], color:'Beige', occasion:'evening', material:'silk'},
-    {id:'mp11', name:'Chunky Knit Wool Sweater', search_query:'chunky knit wool sweater oversized cozy', category:'top', size:'L', price:65, orig:180, condition:'like-new', condGrade:'A', seller:'@ronigold', seller_rating:4.5, seller_sales:7, seller_badge:'New Seller', listed_days:3, style_tags:['cozy','minimal'], color:'Grey', occasion:'casual', material:'wool'},
-    {id:'mp12', name:'Black Wide-Leg Trousers', search_query:'black wide leg trousers tailored minimal', category:'bottoms', size:'M', price:95, orig:240, condition:'like-new', condGrade:'A', seller:'@liorsade', seller_rating:4.9, seller_sales:44, seller_badge:'Top Seller', listed_days:7, style_tags:['office','minimal'], color:'Black', occasion:'work', material:'synthetic'},
+    {id:'mp1', name:'Barrel Jeans Light Wash', search_query:'barrel jeans light wash denim', category:'bottoms', size:'M', price:180, orig:450, condition:'like-new', condGrade:'A', seller:'@noalevi', seller_rating:4.9, seller_sales:38, seller_badge:'Top Seller', listed_days:2, style_tags:['y2k','denim'], color:'Blue', occasion:'casual', material:'denim', city:'Tel Aviv', lat:32.0853, lng:34.7818},
+    {id:'mp2', name:'Black Vintage Leather Jacket', search_query:'black vintage leather jacket', category:'outerwear', size:'S', price:320, orig:800, condition:'used', condGrade:'B', seller:'@mayacohen', seller_rating:4.7, seller_sales:12, seller_badge:'Fast Shipper', listed_days:5, style_tags:['streetwear','vintage'], color:'Black', occasion:'casual', material:'synthetic', city:'Ramat Gan', lat:32.0684, lng:34.8248},
+    {id:'mp3', name:'Adidas Samba White Sneakers', search_query:'Adidas Samba white sneakers', category:'shoes', size:'38', price:390, orig:560, condition:'new', condGrade:'A', seller:'@shirastyle', seller_rating:5.0, seller_sales:61, seller_badge:'Top Seller', listed_days:1, style_tags:['retro','iconic'], color:'White', occasion:'casual', material:'synthetic', city:'Herzliya', lat:32.1624, lng:34.8443},
+    {id:'mp4', name:'Black Mini Crossbody Bag', search_query:'black mini bag crossbody', category:'bag', price:95, orig:220, condition:'like-new', condGrade:'A', seller:'@danakatz', seller_rating:4.8, seller_sales:23, seller_badge:'Fast Shipper', listed_days:3, style_tags:['minimal','everyday'], color:'Black', occasion:'casual', city:'Tel Aviv', lat:32.0739, lng:34.7925},
+    {id:'mp5', name:'Cream Rib Knit Crop Top', search_query:'cream rib knit crop top', category:'top', size:'XS', price:45, orig:120, condition:'used', condGrade:'B', seller:'@ronigold', seller_rating:4.5, seller_sales:7, seller_badge:'New Seller', listed_days:8, style_tags:['minimal','y2k'], color:'Cream', occasion:'casual', material:'cotton', city:'Jerusalem', lat:31.7683, lng:35.2137},
+    {id:'mp6', name:'Green Satin Midi Skirt', search_query:'green satin midi skirt formal', category:'dress', size:'S', price:160, orig:380, condition:'like-new', condGrade:'A', seller:'@liorsade', seller_rating:4.9, seller_sales:44, seller_badge:'Top Seller', listed_days:4, style_tags:['formal','romantic'], color:'Green', occasion:'evening', material:'silk', city:'Ramat Gan', lat:32.0809, lng:34.8140},
+    {id:'mp7', name:'Black Baseball Cap', search_query:'black baseball cap streetwear', category:'hat', price:60, orig:150, condition:'used', condGrade:'C', seller:'@noalevi', seller_rating:4.9, seller_sales:38, seller_badge:'Top Seller', listed_days:14, style_tags:['streetwear','casual'], color:'Black', occasion:'sport', city:'Haifa', lat:32.7940, lng:34.9896},
+    {id:'mp8', name:'Beige Cargo Pants', search_query:'beige cargo pants utility', category:'bottoms', size:'L', price:140, orig:320, condition:'like-new', condGrade:'B', seller:'@mayacohen', seller_rating:4.7, seller_sales:12, seller_badge:'Fast Shipper', listed_days:6, style_tags:['streetwear','utility'], color:'Beige', occasion:'casual', material:'cotton', city:'Tel Aviv', lat:32.0617, lng:34.7700},
+    {id:'mp9', name:'Ivory Linen Blazer', search_query:'ivory linen blazer oversized vintage', category:'outerwear', size:'M', price:85, orig:200, condition:'like-new', condGrade:'A', seller:'@shirastyle', seller_rating:5.0, seller_sales:61, seller_badge:'Top Seller', listed_days:2, style_tags:['chic','minimal'], color:'Cream', occasion:'work', material:'linen', city:'Herzliya', lat:32.1556, lng:34.8532},
+    {id:'mp10', name:'Vintage Silk Slip Dress', search_query:'vintage silk slip dress 90s minimal', category:'dress', size:'S', price:120, orig:280, condition:'used', condGrade:'B', seller:'@danakatz', seller_rating:4.8, seller_sales:23, seller_badge:'Fast Shipper', listed_days:10, style_tags:['vintage','romantic'], color:'Beige', occasion:'evening', material:'silk', city:'Beer Sheva', lat:31.2518, lng:34.7913},
+    {id:'mp11', name:'Chunky Knit Wool Sweater', search_query:'chunky knit wool sweater oversized cozy', category:'top', size:'L', price:65, orig:180, condition:'like-new', condGrade:'A', seller:'@ronigold', seller_rating:4.5, seller_sales:7, seller_badge:'New Seller', listed_days:3, style_tags:['cozy','minimal'], color:'Grey', occasion:'casual', material:'wool', city:'Jerusalem', lat:31.7857, lng:35.2007},
+    {id:'mp12', name:'Black Wide-Leg Trousers', search_query:'black wide leg trousers tailored minimal', category:'bottoms', size:'M', price:95, orig:240, condition:'like-new', condGrade:'A', seller:'@liorsade', seller_rating:4.9, seller_sales:44, seller_badge:'Top Seller', listed_days:7, style_tags:['office','minimal'], color:'Black', occasion:'work', material:'synthetic', city:'Tel Aviv', lat:32.0908, lng:34.7806},
   ];
   const MP_NEW_SEED = [
     {id:'n1', name:'Wide Leg Trousers', search_query:'zara wide leg black trousers fashion', category:'bottoms', size:'M', price:59, brand:'Zara', style_tags:['minimal','chic'], isNew:true, occasion:'work', arrived_days:3},
@@ -6948,6 +6965,77 @@
   let mpCommunityView = 'stores'; // 'stores' = store pages | 'items' = item grid (reuses mp* filters)
   let mpCommunityScope = 'following'; // 'following' = stores you follow | 'discover' = stores you don't (default foregrounds people you follow, Carmel)
   let mpStore = null; // selected store user id when drilled into a single store page
+
+  // ---- Local / radius ("Near me") for pre-loved listings (item 18, Carmel: buy second-hand near home) ----
+  // Client-side only — pre-loved seeds carry demo lat/lng/city. No backend geo.
+  const MP_DEFAULT_COORDS = { lat: 32.0853, lng: 34.7818, city: 'Tel Aviv' }; // fallback center when geolocation denied/unavailable
+  const MP_RADII = [5, 15, 50]; // km chips; 'any' (null) disables distance filtering
+  let mpNearMe = localStorage.getItem('awear_mp_nearme') === 'true';
+  let mpRadius = (() => {
+    const r = localStorage.getItem('awear_mp_radius');
+    if (r === 'any' || r === null || r === '') return 'any';
+    const n = parseInt(r, 10);
+    return MP_RADII.includes(n) ? n : 15;
+  })();
+  let mpUserCoords = null;    // {lat,lng} once resolved (geolocation or default)
+  let mpUsingDefaultLoc = false; // true = we fell back to MP_DEFAULT_COORDS (denied/unavailable) → quiet note
+  let mpGeoPending = false;   // true while awaiting getCurrentPosition
+
+  // Haversine great-circle distance in km between two {lat,lng} points.
+  function haversineKm(lat1, lng1, lat2, lng2) {
+    const toRad = d => d * Math.PI / 180;
+    const R = 6371; // earth radius km
+    const dLat = toRad(lat2 - lat1);
+    const dLng = toRad(lng2 - lng1);
+    const a = Math.sin(dLat/2) ** 2 +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  // Distance (km, rounded) from active user coords to a listing, or null if not computable.
+  function mpListingDistanceKm(item) {
+    if (!mpUserCoords || typeof item.lat !== 'number' || typeof item.lng !== 'number') return null;
+    return haversineKm(mpUserCoords.lat, mpUserCoords.lng, item.lat, item.lng);
+  }
+
+  // Apply the active "Near me" radius filter to a pre-loved item list. 'any' = no distance filtering.
+  function mpApplyRadiusFilter(list) {
+    if (!mpNearMe || !mpUserCoords || mpRadius === 'any') return list;
+    return list.filter(it => {
+      const d = mpListingDistanceKm(it);
+      return d !== null && d <= mpRadius;
+    });
+  }
+
+  // Request geolocation (opt-in). On success → real coords; on denial/error/unsupported → default center + quiet note.
+  // Never throws/crashes; re-renders the marketplace when resolved.
+  function mpRequestGeolocation() {
+    mpNearMe = true;
+    localStorage.setItem('awear_mp_nearme', 'true');
+    const fallback = (usedDefault) => {
+      mpUserCoords = { lat: MP_DEFAULT_COORDS.lat, lng: MP_DEFAULT_COORDS.lng };
+      mpUsingDefaultLoc = !!usedDefault;
+      mpGeoPending = false;
+      renderMarketplace();
+    };
+    if (!('geolocation' in navigator)) { fallback(true); return; }
+    mpGeoPending = true;
+    renderMarketplace();
+    try {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          mpUserCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          mpUsingDefaultLoc = false;
+          mpGeoPending = false;
+          renderMarketplace();
+        },
+        () => { fallback(true); }, // denial or error → graceful default, no crash
+        { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
+      );
+    } catch (_e) {
+      fallback(true);
+    }
+  }
 
   function loadMPListings() {
     const user = JSON.parse(localStorage.getItem(MP_KEY) || '[]');
@@ -7086,6 +7174,23 @@
       el.querySelector('[data-action="mp-store-back"]')?.addEventListener('click', () => {
         mpStore = null; renderMarketplace();
       });
+      // "Near me" enable → geolocation opt-in (graceful denial inside)
+      el.querySelector('[data-action="mp-near-enable"]')?.addEventListener('click', () => {
+        mpRequestGeolocation();
+      });
+      // "Near me" disable → back to all listings
+      el.querySelector('[data-action="mp-near-disable"]')?.addEventListener('click', () => {
+        mpNearMe = false;
+        localStorage.setItem('awear_mp_nearme', 'false');
+        renderMarketplace();
+      });
+      // Radius chips (5 / 15 / 50 / Any) — persisted
+      el.querySelectorAll('[data-action="mp-radius"]').forEach(btn => btn.addEventListener('click', () => {
+        const raw = btn.dataset.radius;
+        mpRadius = (raw === 'any') ? 'any' : parseInt(raw, 10);
+        localStorage.setItem('awear_mp_radius', String(mpRadius));
+        renderMarketplace();
+      }));
     }
 
     // Condition chips (closet chip is toggle, others are exclusive)
@@ -7393,6 +7498,14 @@
                     </span>
                   </div>
                   ${ratingStr ? `<div class="mp-seller-rating">${icon('star',10)} ${esc(ratingStr)}</div>` : ''}
+                  ${(() => {
+                    if (!item.city) return '';
+                    const d = (typeof mpListingDistanceKm === 'function') ? mpListingDistanceKm(item) : null;
+                    const distStr = (mpNearMe && d !== null)
+                      ? ` · ${d < 1 ? '<1' : Math.round(d)} km away`
+                      : '';
+                    return `<div class="mp-loc-row">${icon('mapPin',10)} ${esc(item.city)}${distStr}</div>`;
+                  })()}
                   <div class="mp-cond-grade-row">
                     <span class="mp-cond-grade" style="background:color-mix(in srgb,${gradeColor} 18%,transparent);color:${gradeColor};border-color:color-mix(in srgb,${gradeColor} 35%,transparent)">${grade} — ${gradeLabel}</span>
                     ${item.listed_days ? `<span class="mp-listed-time">${_listedAgo(item.listed_days)}</span>` : ''}
@@ -7407,6 +7520,35 @@
             </div>
           </div>`;
         }).join('');
+  }
+
+  // "Near me" local/radius control for the pre-loved item grid (item 18).
+  // Reuses .ff chip language. Off state = one compact opt-in button. On state = status line + radius chips.
+  function mpNearMeControlHtml() {
+    if (!mpNearMe) {
+      return `<div class="mp-near">
+        <button class="mp-near-btn" data-action="mp-near-enable">${icon('mapPin',15)} Shop near me</button>
+        <span class="mp-near-hint">Find pre-loved pieces close to home</span>
+      </div>`;
+    }
+    if (mpGeoPending) {
+      return `<div class="mp-near">
+        <button class="mp-near-btn active" data-action="mp-near-disable">${icon('mapPin',15)} Locating…</button>
+      </div>`;
+    }
+    const locLabel = mpUsingDefaultLoc ? MP_DEFAULT_COORDS.city : 'your location';
+    const chips = [...MP_RADII.map(r => ({ v: r, label: `${r} km` })), { v: 'any', label: 'Any' }];
+    const chipsHtml = chips.map(c =>
+      `<button class="ff${(mpRadius===c.v)?' active':''}" data-action="mp-radius" data-radius="${c.v}" aria-pressed="${mpRadius===c.v}">${esc(c.label)}</button>`
+    ).join('');
+    return `<div class="mp-near">
+      <div class="mp-near-row">
+        <button class="mp-near-btn active" data-action="mp-near-disable" aria-label="Turn off near me">${icon('mapPin',15)} Near me</button>
+        <span class="mp-near-loc">${esc(locLabel)}</span>
+      </div>
+      ${mpUsingDefaultLoc ? `<div class="mp-near-note">Location off — showing pre-loved around ${esc(MP_DEFAULT_COORDS.city)}. Enable location for true distances.</div>` : ''}
+      <div class="mp-near-radii" role="group" aria-label="Distance radius">${chipsHtml}</div>
+    </div>`;
   }
 
   // ---- Community tab (preloved) ----
@@ -7442,8 +7584,22 @@
     const selectionHtml = `${toggleHtml}${searchHtml}`;
 
     // ---- Mode B: View by items → reuse existing shop grid (filters/sort/chips) ----
+    // + local/radius "Near me" control (item 18): pre-loved is bought near home.
     if (mpCommunityView === 'items') {
-      return `${selectionHtml}${renderMPShopGrid(items, wardrobe)}`;
+      const geoItems = mpApplyRadiusFilter(items);
+      const nearHtml = mpNearMeControlHtml();
+      // Empty state specific to radius (nudge to widen) — only when Near me trimmed everything out.
+      if (mpNearMe && mpUserCoords && mpRadius !== 'any' && !geoItems.length && items.length) {
+        const here = mpUsingDefaultLoc ? MP_DEFAULT_COORDS.city : 'your location';
+        const radiusEmpty = `<div class="mp-empty">
+          ${icon('mapPin', 36)}
+          <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">Nothing within ${mpRadius} km</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">No pre-loved listings near ${esc(here)} yet — widen the radius to see more.</div>
+          <button class="mp-empty-cta" data-action="mp-radius" data-radius="any">Show any distance</button>
+        </div>`;
+        return `${selectionHtml}${nearHtml}${radiusEmpty}`;
+      }
+      return `${selectionHtml}${nearHtml}${renderMPShopGrid(geoItems, wardrobe)}`;
     }
 
     // ---- Mode A: Store pages ----
