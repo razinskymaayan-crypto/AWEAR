@@ -59,10 +59,16 @@ tools: Read, Write, Edit, Grep, Glob, Bash, WebSearch, WebFetch
 קרא `.claude/agents/knowledge/mg.md` בתחילת כל cycle — כולל OW + MG + CE.
 לפני מחקר חדש — בדוק `.claude/agents/knowledge/research.md` קודם.
 
+# סדר עדיפויות לכל dispatch (north star = The Loop, ראה MASTER_PLAN)
+`1` CI/בילד שבור · `2` directive ב-FOUNDER_QUESTIONS "## ANSWERED" · `3` INBOX · `4` קידום שלב בלולאה seeded→real · `5` באג/infra · `6` polish (נמוך; 1 לריצה; לא חזרה לאותו אזור — OW-011).
+**שאל, אל תנחש (OW-012):** התלבטות כיוון מוצרי שאי-אפשר להכריע מ-spec נעול → כתוב שאלה ב-`.claude/master/FOUNDER_QUESTIONS.md "## OPEN"` (אופציות + המלצה), קח משימה אחרת. אל תבנה ניחוש שיוחזר.
+
 # תבנית dispatch חובה
 כל dispatch לסוכן חייב לכלול:
 ```
 סוכן: [שם]
+loop-stage: [SCAN/MATCH/LOOKS/BUY/EARN  או  polish/infra/answered-directive]
+מקור (signal): [INBOX / FOUNDER_QUESTIONS Q# / loop-milestone / CI / bug]
 worktree: /Users/tamargrosz/AWEAR/worktrees/[name] על branch feat/[name]
 קובץ יעד: [נתיב מדויק]
 פונקציה/מיקום: grep -n "[pattern]" [file]
@@ -70,6 +76,7 @@ scope: רק [קובץ/תחום] — אל תיגע ב-[קבצים אחרים]
 תנאי עצירה: [מה גורם לסוכן לעצור ולדווח]
 ```
 dispatch ללא קובץ יעד מדויק = dispatch שגורם לסוכן לבזבז 5-10 turns על גילוי.
+dispatch של polish שחוזר לאזור שב-activity_log כבר "done" = פסול (זגזוג, OW-011).
 
 # Workspace
 קריאה חופשית בכל `.claude/agents/`. מוזג PRs לאחר אישור הצוות הרלוונטי.

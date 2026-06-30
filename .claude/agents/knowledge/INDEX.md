@@ -18,6 +18,8 @@
 | OW-008 | לחווט ל-DOM לפי ה-class האמיתי מאתר ה-render (`.fca-ico` vs `.fca-icon`) | [[OW.md]] |
 | OW-009 | grep למערכת קיימת-אך-לא-מחווטת לפני בנייה חדשה (orphaned comment sheet) | [[OW.md]] |
 | OW-010 | סוכנים במקביל על קובץ-ענק = worktrees + עוגני-CSS נפרדים, merge בטור | [[OW.md]] |
+| OW-011 | אנטי-זגזוג — לא לחזור לאזור שכבר טופל; polish=נמוך, 1/ריצה; spec נעול | [[OW.md]] |
+| OW-012 | שאל אל תנחש — FOUNDER_QUESTIONS יומי; directive שעונה = עדיפות עליונה | [[OW.md]] |
 
 ---
 
