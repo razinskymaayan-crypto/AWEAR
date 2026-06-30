@@ -2316,49 +2316,71 @@
   .chat-send-btn:active { transform: scale(.92); }
 
   /* ---- Direct Messages (user-to-user) ---- */
-  .dm-outer { display: flex; flex-direction: column; height: 100%; }
-  .dm-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px 10px; border-bottom: 1px solid var(--line, #2e2836); flex-shrink: 0; }
-  .dm-head-title { font-size: var(--t-lead, 17px); font-weight: 900; color: var(--fg, #f0ecf5); }
-  .dm-head-sub { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); }
-  .dm-back { width: 44px; height: 44px; min-width: 44px; border-radius: 50%; background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); color: var(--fg, #f0ecf5); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: transform .15s, background .15s; }
-  .dm-back:active { transform: scale(.92); background: var(--card-hover, #262030); }
-  .dm-list { flex: 1; overflow-y: auto; scrollbar-width: none; padding-bottom: 84px; }
+  .dm-outer { display: flex; flex-direction: column; height: 100%; background: var(--bg, #0e0c0f); }
+  /* sticky, blurred header — reads as a fixed chrome layer above the scroll */
+  .dm-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; min-height: 60px; border-bottom: 1px solid var(--line, #2e2836); flex-shrink: 0; background: color-mix(in srgb, var(--bg, #0e0c0f) 82%, transparent); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); position: sticky; top: 0; z-index: 5; }
+  .dm-head-text { min-width: 0; flex: 1; }
+  .dm-head-title { font-size: var(--t-lead, 17px); font-weight: 900; letter-spacing: -.3px; color: var(--fg, #f0ecf5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dm-head-sub { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dm-head-avatar { width: 40px; height: 40px; min-width: 40px; border-radius: 50%; object-fit: cover; display: block; flex-shrink: 0; }
+  .dm-head-avatar.avatar-fallback { display: flex; align-items: center; justify-content: center; font-size: var(--t-small, 13px); font-weight: 800; color: var(--fg, #f0ecf5); background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); border-width: 1px; }
+  .dm-back { width: 44px; height: 44px; min-width: 44px; border-radius: 50%; background: transparent; border: 0; color: var(--fg, #f0ecf5); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; margin-inline-start: -8px; transition: transform .15s, background .15s; }
+  .dm-back:hover { background: var(--card, #1e1a22); }
+  .dm-back:active { transform: scale(.9); background: var(--card-hover, #262030); }
+  .dm-back:focus-visible { outline: 2px solid var(--accent, #e8526a); outline-offset: 2px; }
+  .dm-list { flex: 1; overflow-y: auto; scrollbar-width: none; padding: 4px 0 90px; }
   .dm-list::-webkit-scrollbar { display: none; }
-  .dm-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; min-height: 44px; border-bottom: 1px solid var(--line, #2e2836); cursor: pointer; transition: background .15s; }
+  .dm-row { display: flex; align-items: center; gap: 13px; padding: 11px 16px; min-height: 44px; cursor: pointer; position: relative; transition: background .16s ease; }
+  .dm-row::after { content: ''; position: absolute; inset-inline: 16px; bottom: 0; height: 1px; background: var(--line, #2e2836); }
+  .dm-row:last-child::after { display: none; }
+  .dm-row:hover { background: color-mix(in srgb, var(--card, #1e1a22) 55%, transparent); }
   .dm-row:active { background: var(--card-hover, #262030); }
-  .dm-row:focus-visible { outline: 2px solid var(--accent, #e8526a); outline-offset: -2px; }
-  .dm-avatar { width: 50px; height: 50px; min-width: 50px; border-radius: 50%; object-fit: cover; display: block; flex-shrink: 0; }
-  .dm-avatar.avatar-fallback { display: flex; align-items: center; justify-content: center; font-size: var(--t-body, 14px); font-weight: 800; color: var(--fg, #f0ecf5); background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); }
+  .dm-row:focus-visible { outline: 2px solid var(--accent, #e8526a); outline-offset: -2px; border-radius: var(--r-md, 14px); }
+  .dm-avatar { width: 56px; height: 56px; min-width: 56px; border-radius: 50%; object-fit: cover; display: block; flex-shrink: 0; }
+  .dm-avatar.avatar-fallback { display: flex; align-items: center; justify-content: center; font-size: var(--t-lead, 17px); font-weight: 800; color: var(--fg, #f0ecf5); background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); border-width: 1px; }
   .dm-row-body { flex: 1; min-width: 0; }
   .dm-row-top { display: flex; align-items: baseline; gap: 8px; justify-content: space-between; }
-  .dm-row-name { font-size: var(--t-body, 14px); font-weight: 800; color: var(--fg, #f0ecf5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dm-row-name { font-size: var(--t-body, 14px); font-weight: 800; letter-spacing: -.1px; color: var(--fg, #f0ecf5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dm-row-time { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); flex-shrink: 0; }
-  .dm-row-preview { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+  .dm-row.unread .dm-row-time { color: var(--accent, #e8526a); font-weight: 800; }
+  .dm-row-preview { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
   .dm-row-last { flex: 1; min-width: 0; font-size: var(--t-small, 13px); font-weight: 600; color: var(--muted, #8a8498); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dm-row-last.unread { color: var(--fg, #f0ecf5); font-weight: 700; }
-  .dm-badge { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--accent, #e8526a); color: var(--on-accent, #fff); font-size: var(--t-micro, 11px); font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .dm-empty { padding: 48px 24px; text-align: center; color: var(--muted, #8a8498); }
-  .dm-empty-ico { color: var(--accent, #e8526a); opacity: .85; margin-bottom: 12px; }
+  .dm-badge { min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--r-pill, 999px); background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); color: var(--on-accent, #fff); font-size: var(--t-micro, 11px); font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px color-mix(in srgb, var(--accent, #e8526a) 40%, transparent); }
+  .dm-empty { padding: 64px 32px; text-align: center; color: var(--muted, #8a8498); display: flex; flex-direction: column; align-items: center; }
+  .dm-empty-ico { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent, #e8526a); background: color-mix(in srgb, var(--accent, #e8526a) 12%, transparent); margin-bottom: 16px; }
   .dm-empty-title { font-size: var(--t-h3, 15px); font-weight: 800; color: var(--fg, #f0ecf5); margin-bottom: 6px; }
-  .dm-empty-sub { font-size: var(--t-small, 13px); font-weight: 600; line-height: 1.5; }
-  .dm-thread { flex: 1; overflow-y: auto; padding: 14px 14px 6px; display: flex; flex-direction: column; gap: 8px; scrollbar-width: none; }
+  .dm-empty-sub { font-size: var(--t-small, 13px); font-weight: 600; line-height: 1.55; max-width: 260px; }
+  .dm-thread { flex: 1; overflow-y: auto; padding: 16px 14px 8px; display: flex; flex-direction: column; gap: 9px; scrollbar-width: none; }
   .dm-thread::-webkit-scrollbar { display: none; }
-  .dm-bubble-wrap { display: flex; flex-direction: column; max-width: 80%; }
+  .dm-bubble-wrap { display: flex; flex-direction: column; max-width: 78%; }
   .dm-bubble-wrap.me { align-self: flex-end; align-items: flex-end; }
   .dm-bubble-wrap.them { align-self: flex-start; align-items: flex-start; }
-  /* grouped = same sender as the bubble above; tighten the 8px thread gap to 2px */
+  /* grouped = same sender as the bubble above; tighten the thread gap */
   .dm-bubble-wrap.grouped { margin-top: -6px; }
-  .dm-bubble { padding: 10px 14px; border-radius: 18px; font-size: var(--t-body, 14px); font-weight: 600; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
-  .dm-bubble-wrap.me .dm-bubble { background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); color: var(--on-accent, #fff); border-end-end-radius: 5px; }
-  .dm-bubble-wrap.them .dm-bubble { background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); color: var(--fg, #f0ecf5); border-end-start-radius: 5px; }
-  .dm-bubble-time { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); padding: 2px 4px 0; }
-  .dm-bubble-status { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); padding: 1px 4px 0; }
-  .dm-input-row { display: flex; gap: 8px; padding: 8px 14px calc(16px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line, #2e2836); flex-shrink: 0; }
-  .dm-input { flex: 1; background: var(--card, #1e1a22); border: 1.5px solid var(--line, #2e2836); border-radius: 22px; padding: 11px 16px; font-family: inherit; font-size: var(--t-body, 14px); color: var(--fg, #f0ecf5); outline: none; transition: border .18s; }
-  .dm-input:focus { border-color: var(--accent, #e8526a); }
-  .dm-send { width: 44px; height: 44px; min-width: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); border: 0; color: var(--on-accent, #fff); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: transform .15s; }
-  .dm-send:active { transform: scale(.92); }
-  .dm-send:disabled { opacity: .5; cursor: default; }
+  .dm-bubble { padding: 10px 15px; border-radius: 20px; font-size: var(--t-body, 14px); font-weight: 500; line-height: 1.45; white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+  .dm-bubble-wrap.me .dm-bubble { background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); color: var(--on-accent, #fff); border-end-end-radius: 6px; box-shadow: 0 3px 12px color-mix(in srgb, var(--accent, #e8526a) 26%, transparent); }
+  .dm-bubble-wrap.them .dm-bubble { background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); color: var(--fg, #f0ecf5); border-end-start-radius: 6px; }
+  /* grouped bubbles soften the tail-side corner so a run reads as one column */
+  .dm-bubble-wrap.me.grouped .dm-bubble { border-start-end-radius: 6px; }
+  .dm-bubble-wrap.them.grouped .dm-bubble { border-start-start-radius: 6px; }
+  .dm-bubble-time { font-size: var(--t-micro, 11px); font-weight: 600; color: var(--muted, #8a8498); padding: 4px 6px 0; }
+  .dm-bubble-status { font-size: var(--t-micro, 11px); font-weight: 700; color: var(--accent2, #c4855a); padding: 3px 6px 0; }
+  /* subtle appear — the newest bubble rises into place */
+  @keyframes dm-bubble-in { from { opacity: 0; transform: translateY(7px) scale(.985); } to { opacity: 1; transform: none; } }
+  .dm-bubble-wrap { animation: dm-bubble-in .22s cubic-bezier(.2,.7,.3,1) both; }
+  .dm-input-row { display: flex; align-items: flex-end; gap: 8px; padding: 10px 14px calc(14px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line, #2e2836); background: color-mix(in srgb, var(--bg, #0e0c0f) 82%, transparent); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); flex-shrink: 0; }
+  .dm-input { flex: 1; min-height: 44px; background: var(--card, #1e1a22); border: 1.5px solid var(--line, #2e2836); border-radius: var(--r-pill, 999px); padding: 11px 18px; font-family: inherit; font-size: var(--t-body, 14px); color: var(--fg, #f0ecf5); outline: none; transition: border-color .18s, box-shadow .18s; }
+  .dm-input::placeholder { color: var(--muted, #8a8498); }
+  .dm-input:focus { border-color: var(--accent, #e8526a); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #e8526a) 16%, transparent); }
+  .dm-send { width: 44px; height: 44px; min-width: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent, #e8526a), var(--accent2, #c4855a)); border: 0; color: var(--on-accent, #fff); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 3px 10px color-mix(in srgb, var(--accent, #e8526a) 32%, transparent); transition: transform .15s, box-shadow .15s, opacity .15s; }
+  .dm-send:hover { transform: scale(1.04); }
+  .dm-send:active { transform: scale(.9); }
+  .dm-send:disabled { opacity: .45; box-shadow: none; cursor: default; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .dm-bubble-wrap { animation: none; }
+    .dm-row, .dm-back, .dm-send, .dm-input { transition: none; }
+  }
 
   /* ---- icon system ---- */
   .ic-svg { display: inline-block; vertical-align: middle; flex-shrink: 0; }
@@ -9029,7 +9051,7 @@
     if(!root) return;
     document.querySelector('nav')?.classList.remove('conv-nav-hidden'); // list is a top-level tab — keep the nav
     root.innerHTML =
-      `<div class="dm-head"><div><div class="dm-head-title">Messages</div>`+
+      `<div class="dm-head"><div class="dm-head-text"><div class="dm-head-title">Messages</div>`+
       `<div class="dm-head-sub">Direct messages</div></div></div>`+
       `<div class="dm-list" id="dm-list"><div class="dm-empty">Loading…</div></div>`;
     const listEl = document.getElementById('dm-list');
@@ -9057,8 +9079,9 @@
       const unread  = Number(c.unread) || 0;
       const handle  = c.handle ? '@'+String(c.handle).replace(/^@/,'') : '';
       const lastCls = unread > 0 ? 'dm-row-last unread' : 'dm-row-last';
+      const rowCls  = unread > 0 ? 'dm-row unread' : 'dm-row';
       const aria    = unread > 0 ? `${name}, ${unread} unread` : name;
-      return `<div class="dm-row" role="button" tabindex="0" aria-label="${attr(aria)}" data-uid="${attr(c.user_id)}" `+
+      return `<div class="${rowCls}" role="button" tabindex="0" aria-label="${attr(aria)}" data-uid="${attr(c.user_id)}" `+
         `data-name="${attr(name)}" data-handle="${attr(handle)}" data-avatar="${attr(c.avatar||'')}">`+
         dmAvatarHTML(name, c.avatar, 'dm-avatar')+
         `<div class="dm-row-body">`+
@@ -9094,7 +9117,8 @@
     root.innerHTML =
       `<div class="dm-head">`+
         `<button class="dm-back" id="dm-back" aria-label="Back to messages">${icon('arrowLeft',20)}</button>`+
-        `<div><div class="dm-head-title">${esc(peerName)}</div>`+
+        dmAvatarHTML(peerName, dmPeer.avatar, 'dm-head-avatar')+
+        `<div class="dm-head-text"><div class="dm-head-title">${esc(peerName)}</div>`+
         (dmPeer.handle ? `<div class="dm-head-sub">${esc(dmPeer.handle)}</div>` : '')+`</div>`+
       `</div>`+
       `<div class="dm-thread" id="dm-thread"><div class="dm-empty">Loading…</div></div>`+
