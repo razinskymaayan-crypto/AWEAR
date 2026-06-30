@@ -1,6 +1,6 @@
 manager=ayalon
-branch=auto/ayalon commits_ahead_of_main=1
+branch=auto/ayalon commits_ahead_of_main=3
 claude_installed=/opt/hostedtoolcache/node/20.20.2/x64/bin/claude
 node=v20.20.2  npm=10.8.2
 auth_present=yes
-last_commit=57cb90a feat(social): relative timestamps on feed comments (IDEAS #12)
+last_commit=595ad4a feat(social): restore feed comments + reactions layer (IDEAS #11)
