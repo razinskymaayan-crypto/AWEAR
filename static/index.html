@@ -897,6 +897,7 @@
   .store-row:active { background: rgba(255,255,255,.08); }
   .store-logo {
     width: 32px; height: 32px; border-radius: 8px; background: #fff;
+    border: 1px solid var(--line);
     display: flex; align-items: center; justify-content: center;
     font-size: var(--t-micro); font-weight: 900; color: #111;
     flex-shrink: 0; letter-spacing: -.3px;
@@ -3063,12 +3064,42 @@
   const sheetBody    = document.getElementById('sheet-body');
   const sheetFooter  = document.getElementById('sheet-footer');
 
+  // Brand wordmark SVGs for the "Where it sells" rows — instantly-recognizable,
+  // monochrome (#111 on the white chip), tight viewBox so the mark fills 32px.
+  // These are simple original lettermark renderings, not vendor logo files.
+  // Unknown retailers fall back to an escaped 3-char text monogram (see storeLogo).
+  // All marks normalized to one optical scale: WORDMARKS render ~10px tall
+  // (shared cap-height) so ZARA/asos/H&M/MANGO/SHEIN read as equal-volume
+  // strips; GLYPH marks (Nike/adidas/Depop "d"/Google bag) sit ~16-18px.
+  // Long wordmarks (PULL&BEAR, BERSHKA) turn to mush at 28px width, so they
+  // intentionally fall back to the text monogram instead (no SVG entry).
+  const STORE_SVGS = {
+    'ZARA': `<svg viewBox="0 0 100 30" width="28" height="10" aria-hidden="true" fill="#111"><text x="50" y="25" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="30" font-weight="700" letter-spacing="2">ZARA</text></svg>`,
+    'ASOS': `<svg viewBox="0 0 100 30" width="27" height="10" aria-hidden="true" fill="#111"><text x="50" y="25" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="30" font-weight="800" letter-spacing="-.5">asos</text></svg>`,
+    'H&M':  `<svg viewBox="0 0 100 30" width="26" height="10" aria-hidden="true" fill="#111"><text x="50" y="25" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="30" font-weight="800" letter-spacing="-1">H&amp;M</text></svg>`,
+    'Mango':`<svg viewBox="0 0 116 30" width="29" height="9.5" aria-hidden="true" fill="#111"><text x="58" y="25" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="27" font-weight="700" letter-spacing="3">MANGO</text></svg>`,
+    'SHEIN':`<svg viewBox="0 0 116 30" width="29" height="9.5" aria-hidden="true" fill="#111"><text x="58" y="25" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="28" font-weight="800" letter-spacing="-.5">SHEIN</text></svg>`,
+    'Nike': `<svg viewBox="0 0 100 40" width="26" height="10.4" aria-hidden="true" fill="#111"><path d="M9 26.5 92 .5C72 14 36 30 18 34.5c-5 1.2-8 1-9.6-1-1.9-2.4-.4-5 .6-7Z"/></svg>`,
+    'adidas':`<svg viewBox="0 0 60 40" width="24" height="16" aria-hidden="true" fill="#111"><path d="M2 38 22 2l6 0L8 38Zm14 0L34 6l6 0L22 38Zm14 0L46 12l6 0L36 38Z"/></svg>`,
+    'Depop':`<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="#111"><path d="M14 3h3.4v18H14v-1.5A5 5 0 0 1 9.6 21a6 6 0 0 1 0-12 5 5 0 0 1 4.4 2.5Zm-4 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Z"/></svg>`,
+    'Google Shopping':`<svg viewBox="0 0 32 32" width="17" height="17" aria-hidden="true" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11h18l-1.6 13.4a2 2 0 0 1-2 1.8H10.6a2 2 0 0 1-2-1.8Z"/><path d="M11.5 11V8.5a4.5 4.5 0 0 1 9 0V11"/></svg>`,
+  };
   const STORE_LOGOS = {
     'ASOS':'ASOS', 'Zara':'Zara', 'H&M':'H&M', 'SHEIN':'SHN',
     'Depop':'DEP', 'adidas':'ADI', 'Nike':'NK', 'Mango':'MNG',
     'Pull&Bear':'P&B', 'Bershka':'BSK',
   };
-  function storeLogo(name){ return STORE_LOGOS[name] || (name||'').slice(0,3).toUpperCase(); }
+  // Returns ready-to-inject SAFE HTML: a raw inline-SVG wordmark for known
+  // retailers, or an esc()'d text monogram for anything else (XSS-safe).
+  function storeLogo(name){
+    const key = name || '';
+    if(STORE_SVGS[key]) return STORE_SVGS[key];
+    // case/spacing-insensitive match (e.g. 'Zara' vs 'ZARA')
+    const norm = key.trim().toLowerCase();
+    for(const k in STORE_SVGS){ if(k.toLowerCase() === norm) return STORE_SVGS[k]; }
+    const txt = STORE_LOGOS[key] || key.slice(0,3).toUpperCase();
+    return esc(txt);
+  }
   function scopeLabel(s){
     if(s==='global') return 'Ships internationally';
     if(s==='il')     return 'Ships to Israel';
@@ -3077,7 +3108,7 @@
 
   function storeRowHTML(opt){
     return `<a class="store-row" href="${attr(opt.url||'#')}" target="_blank" rel="noopener" aria-label="Shop at ${attr(opt.retailer)}">
-      <div class="store-logo">${esc(storeLogo(opt.retailer))}</div>
+      <div class="store-logo">${storeLogo(opt.retailer)}</div>
       <div style="flex:1;min-width:0">
         <div class="store-name">${esc(opt.retailer||'Store')}</div>
         <div class="store-scope">${esc(scopeLabel(opt.scope))}</div>
