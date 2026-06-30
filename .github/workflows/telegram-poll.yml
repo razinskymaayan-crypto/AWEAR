@@ -1,0 +1,71 @@
+# TEMP live-test poller for the two-way Telegram bridge. Polls getUpdates every 2 min,
+# runs the real routing logic from telegram_bot.py (/task, @agent, /status, auth), and
+# replies. Lets the founders test "write to the bot -> get an answer" without the VM.
+# REMOVE (or stop the schedule) after the test — it costs Actions minutes.
+name: telegram-poll
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '*/2 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: telegram-poll
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 1 }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Poll + route + reply
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          ANTHROPIC_API_KEY: dummy   # only so telegram_bot imports; command path doesn't use it
+        run: |
+          [ -z "$TG_TOKEN" ] && { echo "no token"; exit 0; }
+          pip -q install anthropic python-dotenv >/dev/null 2>&1 || true
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          import telegram_bot as tb
+          TOKEN = os.environ["TG_TOKEN"].strip()
+          BASE = f"https://api.telegram.org/bot{TOKEN}"
+          def api(method, params):
+              data = urllib.parse.urlencode(params).encode()
+              return json.loads(urllib.request.urlopen(f"{BASE}/{method}", data=data, timeout=30).read())
+          off = 0
+          try: off = int(open(".tg_offset").read().strip())
+          except Exception: pass
+          r = api("getUpdates", {"offset": off, "timeout": 0})
+          acted = 0
+          for u in r.get("result", []):
+              off = u["update_id"] + 1
+              m = u.get("message") or {}
+              if "text" not in m: continue
+              uid = m.get("from", {}).get("id", 0)
+              who = m.get("from", {}).get("first_name") or str(uid)
+              chat = m["chat"]["id"]
+              if not tb._is_allowed(uid):
+                  api("sendMessage", {"chat_id": chat, "text": "בוט פרטי לצוות Awear."}); continue
+              reply = tb._parse_command(m["text"], who)
+              if reply is None:
+                  reply = f"✅ קיבלתי: \"{m['text']}\". הבוט עובד! (פקודות: /task <משימה> · @<סוכן> <משימה> · /status · /pause)"
+              api("sendMessage", {"chat_id": chat, "text": reply})
+              acted += 1
+          open(".tg_offset", "w").write(str(off))
+          print(f"processed {acted} message(s)")
+          PY
+      - name: Commit offset + any routed tasks
+        run: |
+          git config user.name "awear-bot"; git config user.email "bot@awear.local"
+          git add .tg_offset .claude/agents/assignments .claude/master/INBOX.md .agents_paused 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(tg): live-test poll — offset + routed tasks [skip ci]"
+            for i in 1 2 3; do git pull --rebase origin main -q && git push origin HEAD:main && break || sleep 3; done
+          else echo "nothing to commit"; fi
