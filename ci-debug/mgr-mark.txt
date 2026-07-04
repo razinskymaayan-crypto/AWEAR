@@ -1,6 +1,6 @@
 manager=mark
-branch=auto/mark commits_ahead_of_main=3
+branch=auto/mark commits_ahead_of_main=0
 claude_installed=/opt/hostedtoolcache/node/20.20.2/x64/bin/claude
 node=v20.20.2  npm=10.8.2
 auth_present=yes
-last_commit=5831504 fix(a11y): light-mode legibility — near-white text → DS tokens (IDEAS #18)
+last_commit=6de0428 docs(log): record mechanism-hardening cycle in activity log
