@@ -1,5 +1,5 @@
 # knowledge/sf.md — Social Features
-> **קרא גם:** [[OW.md]] (OW-001..OW-006 — Org-Wide Iron Rules, single source of truth)
+> **קרא גם:** [[OW.md]] (כל קודי OW-* — Org-Wide Iron Rules, single source of truth; אל תעצור ב-006, יש עוד)
 
 ## ○ SOCIAL FEATURES — שירה
 

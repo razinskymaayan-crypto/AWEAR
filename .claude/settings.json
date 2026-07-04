@@ -6,11 +6,24 @@
           {
             "type": "command",
             "command": "bash scripts/founder_questions_surface.sh 2>/dev/null || true"
+          },
+          {
+            "type": "command",
+            "command": "bash scripts/session_knowledge_inject.sh 2>/dev/null || true"
           }
         ]
       }
     ],
     "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 scripts/hook_pretool_guard.py"
+          }
+        ]
+      },
       {
         "matcher": "Bash",
         "hooks": [

@@ -32,7 +32,7 @@
 
 **כללים:**
 - כל IC עובד ב-worktree מבודד (Iron Rule #14)
-- קרא `agents/learnings.md` לפני שמתחיל
+- קרא לפני שמתחיל: `.claude/agents/knowledge/OW.md` + קובץ הדומיין שלך (`ds`/`be`/`mb`/`sf`/`mg`) — או grep את `.claude/agents/knowledge/INDEX.md` לקוד ספציפי
 - תוך 48 שעות — commit ראשון נראה-לעין, לא draft
 
 ---
@@ -71,9 +71,37 @@ GOOD — מה עבד טוב (חובה! למידה דו-כיוונית)
 ### Phase 5 — MERGE + LEARN
 
 - ג'ף מוזג PRs שקיבלו clearance
-- לקחים חדשים → `agents/learnings.md` (סעיף המתאים)
-- `agents/activity_log.md` מתעדכן
+- לקח חדש → **3 צעדים, לא אחד** (אחרת הלמידה לא מתקמפלת):
+  1. כתוב את הלקח בקובץ הדומיין `.claude/agents/knowledge/{ds,be,mb,sf,mg}.md` עם הקוד הבא בסדרה (פורמט `### XX-NNN | כותרת`)
+  2. הוסף שורה ל-`.claude/agents/knowledge/INDEX.md` (למידה שלא ב-INDEX = למידה שלא תיקרא)
+  3. entry ב-`agents/activity_log.md` שמצטט את הקוד
 - **Cycle N+1 מתחיל**
+
+---
+
+## Intelligence Lane — מודיעין רציף (Scout)
+
+> **בעלים:** Scout ([[../scout.md]]) · כפוף לאיילון. **מקורות + כללים:** [[knowledge/in.md]] (IN-001..IN-006). **מאגר:** `intel_insights` דרך `scripts/intel_db.py`.
+
+### Cadence — נתח מובטח, לא מילוי זמן פנוי
+המלכודת ההיסטורית: מחקר ישב מתחת להכל וה-INBOX אמר "אל תחקור כל עוד יש משימות" → אפס ריצות מחקר ב-24 סייקלים. התיקון הוא **cadence rule, לא priority tier**:
+
+- **כל ריצה רביעית (~25%)** — אם אין CI-fix פתוח **ואין** ANSWERED directive **ואין** [פתוח] INBOX — היא **ריצת Intelligence** בבעלות Scout, במקום משימת build.
+- מבטיח ~רבע מהקיבולת למודיעין בלי לדרוס אף פעם build שבור או directive של מייסד (הם תמיד גוברים).
+- ריצת מודיעין: בחר נושא בעל-ערך → **DEDUP** (`intel_db.py known`) → gather (≤6 fetches) → `docs/research/YYYY-MM-DD-<topic>.md` → שורות ב-`intel_insights` → החלט (טבלה למטה) → דווח בטלגרם.
+
+### דיון + הכרעה — לבצע לבד מול להסלים
+לכל תובנה עם `proposal`: `priority = impact*confidence - effort` (`intel_db.py score <id>`).
+
+| תנאי | פעולה | status |
+|------|-------|--------|
+| priority גבוה **AND** הפיך **AND** בתחום **AND** לא "אזור done" (OW-011) **AND** לא סותר GUIDANCE/SURFACE_SPECS | **בצע לבד** → משימה ל-INBOX (win קטן) או IDEAS (בנייה גדולה-בטוחה) | `acted` |
+| בינוני / ספק | **דיון** → שתי חוות דעת ב-doc (איילון: "משתמש 18-35 צריך עכשיו?" + סטיב: היתכנות) + סינתזה → אחת מהשורות | `deliberating`→ |
+| בלתי-הפיך **OR** אסטרטגי/כלכלי **OR** סותר spec נעול **OR** impact גבוה + confidence נמוך | **הסלם למייסדים** → FOUNDER_QUESTIONS `## OPEN` + `tg.sh doc` push | `escalated` |
+
+> **הכרעת מייסד נעולה:** רק אסטרטגי/בלתי-הפיך מגיע לכרמל+רזי. כל השאר — Scout פועל לבד (רעש נמוך).
+
+אסקלציה ממחזרת את הערוץ הקיים: שאלה ל-FOUNDER_QUESTIONS `## OPEN` (פורמט Q) → `bash scripts/tg.sh doc` למייסדים → תשובה `/answer` חוזרת בדפוס ANSWERED → הריצה הבאה מבצעת בעדיפות עליונה → `intel_db.py set-status <id> acted`, ועיקרון מקודם ל-GUIDANCE + [[knowledge/in.md]].
 
 ---
 

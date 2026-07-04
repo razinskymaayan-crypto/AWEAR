@@ -1,5 +1,5 @@
 # knowledge/mg.md — Management
-> **קרא גם:** [[OW.md]] (OW-001..OW-006 — Org-Wide Iron Rules, single source of truth)
+> **קרא גם:** [[OW.md]] (כל קודי OW-* — Org-Wide Iron Rules, single source of truth; אל תעצור ב-006, יש עוד)
 
 ## ○ MANAGEMENT — ג'ף, סטיב, איילון, מארק, וראן
 

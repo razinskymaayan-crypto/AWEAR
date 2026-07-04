@@ -36,10 +36,48 @@ if grep -q '\.fca-icon\b' "$F"; then
   note "reference to non-existent class '.fca-icon' (canonical is '.fca-ico') — repeat of OW-008"
 fi
 
+# ---- KNOWLEDGE-INDEX SYNC (the learning loop only compounds if new codes are discoverable) ----
+# Every learning code defined in a domain file MUST have a row in INDEX.md.
+# (This is the gate that would have caught DS-016/DS-017/BE-IDEMPOTENT going un-indexed.)
+KDIR=".claude/agents/knowledge"
+if [ -d "$KDIR" ] && [ -f "$KDIR/INDEX.md" ]; then
+  MISSING=$(grep -hoE '^#{2,3} [A-Z]{2}-[A-Z0-9-]+' "$KDIR"/ds.md "$KDIR"/be.md "$KDIR"/mb.md "$KDIR"/sf.md "$KDIR"/mg.md "$KDIR"/in.md 2>/dev/null \
+    | sed -E 's/^#+ //' | sort -u \
+    | while read -r code; do grep -q "| $code " "$KDIR/INDEX.md" || echo "$code"; done)
+  if [ -n "$MISSING" ]; then
+    note "learning code(s) defined in a domain file but MISSING from knowledge/INDEX.md (un-indexed = never re-read):"
+    printf '%s\n' "$MISSING" | head -5 | sed 's/^/      /'
+  fi
+fi
+
+# ---- SECURITY GATES (app.py — blocking; a merged secret or injectable SQL is a silent disaster) ----
+if [ -f "app.py" ]; then
+  # SQL built with f-string/format/concat interpolation instead of ? params
+  # (DDL like ALTER/CREATE can't take ? placeholders — allowed when identifiers are code constants)
+  SQLI=$(grep -nE '(execute|executemany)\(\s*f["'\'']|(execute|executemany)\([^)]*(%\s*\(|\.format\(|"\s*\+|\x27\s*\+)' app.py \
+    | grep -viE 'ALTER TABLE|CREATE (TABLE|INDEX)|DROP TABLE' || true)
+  if [ -n "$SQLI" ]; then
+    note "SQL built by string interpolation in app.py — use ? placeholders (injection risk):"
+    printf '%s\n' "$SQLI" | head -3 | sed 's/^/      /'
+  fi
+  # hardcoded secrets (long opaque literals assigned to key/token/secret/password names)
+  SECRETS=$(grep -nEi '(api_key|apikey|secret|token|password)\s*=\s*["'\''][A-Za-z0-9_\-]{20,}["'\'']' app.py telegram_bot.py telegram_send.py 2>/dev/null \
+    | grep -viE 'os\.getenv|environ|example|placeholder|xxx|<' || true)
+  if [ -n "$SECRETS" ]; then
+    note "possible hardcoded secret (must come from env, never a literal):"
+    printf '%s\n' "$SECRETS" | head -3 | sed 's/^/      /'
+  fi
+fi
+
 # ---- DIFF GATES (only on lines this commit adds) ----
+# Prefer the staged diff; if nothing is staged (e.g. CI verifying AFTER the agent committed),
+# fall back to everything this run added on top of origin/main — so the gate still bites post-commit.
 ADDED=""
 if git rev-parse --git-dir >/dev/null 2>&1; then
   ADDED=$(git diff --cached -U0 -- "$F" 2>/dev/null | grep '^+' | grep -v '^+++' || true)
+  if [ -z "$ADDED" ] && git rev-parse origin/main >/dev/null 2>&1; then
+    ADDED=$(git diff origin/main...HEAD -U0 -- "$F" 2>/dev/null | grep '^+' | grep -v '^+++' || true)
+  fi
 fi
 
 if [ -n "$ADDED" ]; then

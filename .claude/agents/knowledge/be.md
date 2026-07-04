@@ -1,5 +1,5 @@
 # knowledge/be.md — Backend + Integration
-> **קרא גם:** [[OW.md]] (OW-001..OW-006 — Org-Wide Iron Rules, single source of truth)
+> **קרא גם:** [[OW.md]] (כל קודי OW-* — Org-Wide Iron Rules, single source of truth; אל תעצור ב-006, יש עוד)
 
 ## ○ BACKEND + INTEGRATION — סאם, אורן
 
@@ -29,6 +29,11 @@
 ### BE-003 | schema owner = סאם. integration = אורן. לא מתחלפים.
 **מקור:** oren_retrospective (2026-06-19)
 **לקח:** אורן מצא בעיות schema (look_total_usd), סאם ביצע. הסדר נכון. אך: אורן לא מחליט על schema, סאם לא מחליט על integration. הגבול ברור — ולא משתנה תחת לחץ.
+
+### BE-006 | user_key pattern — חובה בכל endpoint חדש
+**מקור:** תוקן שיוך — CLAUDE.md כינה את זה בטעות "MG-005" (שהוא בכלל לקח על CTO audits). הדפוס הוא backend, אז הוא חי כאן (2026-07-05).
+**לקח:** כל endpoint שכותב/קורא state פר-משתמש חייב: `user_key = (request.client.host if request.client else None) or "anon"`. בלי זה — `request.client` יכול להיות None מאחורי proxy/test client וה-endpoint קורס.
+**מנגנון:** grep לפני commit של endpoint חדש: `grep -n "user_key" app.py` — הדפוס חייב להופיע בכל handler חדש שנוגע בנתוני משתמש. בנוסף `check_rate_limit` לכל endpoint חדש.
 
 ---
 

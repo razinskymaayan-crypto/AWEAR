@@ -1,5 +1,5 @@
 # OW — Org-Wide Iron Rules (source of truth)
-> **כל סוכן קורא את זה, ללא יוצא מן הכלל.** קובץ זה הוא ה-single source of truth ל-OW-001..OW-006.
+> **כל סוכן קורא את זה, ללא יוצא מן הכלל.** קובץ זה הוא ה-single source of truth לכל קודי OW-* (כרגע OW-001..OW-012 — אל תעצור ב-006).
 > Domain files (be/ds/mb/sf/mg.md) מפנים לכאן — לא מכפילים.
 
 ---

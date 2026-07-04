@@ -1,5 +1,6 @@
 # AWEAR — Research Index
 > לפני מחקר חדש — בדוק כאן קודם. אם הנושא נחקר — קרא את ה-doc, אל תשחזר.
+> **מודיעין חי (Scout):** ה-dedup registry האמיתי הוא בסיס `intel_insights` — הרץ `python3 scripts/intel_db.py known "<topic>"` לפני כל מחקר תחרותי/שוק. ה-R-* למטה הם מחקרי היסוד; מודיעין שוטף נכתב ל-`docs/research/YYYY-MM-DD-*.md` ומאונדקס ב-intel_insights. ראה [[in.md]] + [[scout.md]].
 > **קבצים deprecated (אל תשלח agents לקרוא אותם):** `docs/DESIGN_STANDARDS.md`, `docs/COLOR_SYSTEM.md`, `docs/ICON_SYSTEM.md` — כולם מוחלפים על ידי `docs/VISUAL_VISION.md`.
 
 ---

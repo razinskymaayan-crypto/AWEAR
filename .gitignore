@@ -22,6 +22,7 @@ __pycache__/
 # Runtime data — regenerated, not source of truth
 data/awear.db
 agents/data/dashboard_data.json
+.intel_run_count
 
 # Local tools — binaries, not source
 tools/

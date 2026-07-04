@@ -32,6 +32,10 @@
 | BE-003 | Schema owner = סאם. Integration = אורן. לא מתחלפים | [[be.md]] |
 | BE-004 | in-memory store → SQLite: init_db() + _get_db() + row_factory | [[be.md]] |
 | BE-005 | saves/bookmarks/likes = SQLite מיום ראשון, לא in-memory | [[be.md]] |
+| BE-006 | `user_key = (request.client.host if request.client else None) or "anon"` — בכל endpoint חדש | [[be.md]] |
+| BE-IDEMPOTENT | כתיבת כסף/קרדיט = idempotency key (`client_ref`, SELECT-before-INSERT) | [[be.md]] |
+| BE-TAG-INTEGRITY | הפניות id בין קבצים = orphan check פרוגרמטי + cache reload + curl verify | [[be.md]] |
+| BE-DIAG-LIVENESS | "key configured" ≠ "key works" — probe אמיתי opt-in עם error enum | [[be.md]] |
 
 ---
 
@@ -54,6 +58,8 @@
 | DS-013 | Gabbana audit = git diff (~8K tokens), לא קובץ שלם (~82K) | [[ds.md]] |
 | DS-014 | Light mode = החלטת board. כל קומפוננט חדש עובד בשני מצבים | [[ds.md]] |
 | DS-015 | Benchmark = Instagram + Pinterest + Zara (לא TikTok/Depop/Linear) | [[ds.md]] |
+| DS-016 | פריט שנקנה/נסרק חייב לשאת image_url עד הארון (כל w.unshift) | [[ds.md]] |
+| DS-017 | כל avatar img חיצוני חייב onerror→avatarFallback, לא רק product images | [[ds.md]] |
 | DS-018 | mobile bottom-sheet: drag-to-dismiss על רצועת-ידית בלבד, לא scroll-trap | [[ds.md]] |
 
 ---
@@ -76,6 +82,7 @@
 | SF-001 | Moderation severity thresholds = product decision (איילון), לא engineering | [[sf.md]] |
 | SF-002 | "קוד moderation קיים" ≠ "עובד" — curl test חובה לפני "done" | [[sf.md]] |
 | SF-003 | ANTHROPIC_API_KEY חסר = fail-open — **P0 לפני production** | [[sf.md]] |
+| SF-AVATAR-01 | initials avatar = render inline span, לא onerror placeholder (gif תקין לא מפעיל onerror) | [[sf.md]] |
 
 ---
 
@@ -106,3 +113,16 @@
 |-----|--------|------|
 | CE-001 | שאלת פתיחה קנונית: "מה ג'ף צריך להחליט? מה מואצל?" — ראשון בכל cycle | [[mg.md]] |
 | CE-002 | בעיה מבנית = שלוש שכבות בו-זמנית, לא תיקון סדרתי | [[mg.md]] |
+
+---
+
+## Intelligence / מודיעין (Scout)
+
+| קוד | תקציר | קובץ |
+|-----|--------|------|
+| IN-001 | DEDUP FIRST — `intel_db.py known "<topic>"` לפני כל WebSearch; ידוע → קרא doc | [[in.md]] |
+| IN-002 | תקרת fetch ≤6 לריצה — עומק על מקור אחד > סריקה רדודה | [[in.md]] |
+| IN-003 | API רשמי/affiliate/RSS בלבד — אין scraping מאחורי login / עקיפת robots | [[in.md]] |
+| IN-004 | כל תובנה נסגרת — priority=impact*confidence-effort → בוצע או הוסלם, לא תלויה | [[in.md]] |
+| IN-005 | אסקלציה = רק אסטרטגי/בלתי-הפיך; כל השאר Scout מבצע לבד | [[in.md]] |
+| IN-006 | מקור → Loop stage; מודיעין שלא מקדם לולאה = polish נמוך | [[in.md]] |

@@ -1259,6 +1259,37 @@ def init_db() -> None:
             "CREATE INDEX IF NOT EXISTS idx_stories_created "
             "ON stories (created_at)"
         )
+        # Intelligence base — the compounding store the Scout agent writes to.
+        # Source of truth for dedup ("what do we already know about X") + queryable
+        # ranking of insights harvested from the web. Markdown syntheses live in
+        # docs/research/ and link back here via doc_path. See .claude/agents/scout.md.
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS intel_insights (
+                id           TEXT PRIMARY KEY,              -- INS-YYYYMMDD-nnn
+                topic        TEXT NOT NULL,                 -- normalized slug for dedup
+                source_type  TEXT NOT NULL,                 -- competitor|trend|pricing|social|tech_ux|other
+                source_url   TEXT DEFAULT '',
+                title        TEXT NOT NULL,
+                summary      TEXT NOT NULL,                 -- 1-3 sentence claim
+                evidence     TEXT DEFAULT '',               -- quotes / data points
+                loop_stage   TEXT DEFAULT '',               -- SCAN|MATCH|LOOKS|BUY|EARN|''
+                confidence   INTEGER DEFAULT 3,             -- 1-5
+                impact       INTEGER DEFAULT 3,             -- 1-5 (potential value to AWEAR)
+                effort       INTEGER DEFAULT 3,             -- 1-5 (to act on)
+                status       TEXT DEFAULT 'new',            -- new|deliberating|acted|escalated|parked|superseded
+                proposal     TEXT DEFAULT '',               -- recommended action, if any
+                doc_path     TEXT DEFAULT '',               -- link to markdown synthesis
+                created_by   TEXT DEFAULT 'scout',
+                created_at   TEXT DEFAULT (datetime('now')),
+                updated_at   TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_intel_topic ON intel_insights (topic)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_intel_status ON intel_insights (status)"
+        )
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 

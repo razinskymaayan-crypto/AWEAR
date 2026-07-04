@@ -12,7 +12,7 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 6. **Rename = grep 3 layers**: `app.py` + `static/index.html` + `mobile/` (OW-001)
 7. **Worktrees under `AWEAR/worktrees/`** — never in `~/` directly
 8. **DoD = grep verified** — "I think it works" is not DoD (OW-002)
-9. **MG-005**: `user_key = (request.client.host if request.client else None) or "anon"` — always
+9. **BE-006**: `user_key = (request.client.host if request.client else None) or "anon"` — always
 
 ## Design tokens (Mediterranean Modern — `static/tokens.css` is source of truth)
 ```
@@ -66,7 +66,7 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 - `_get_db()` returns SQLite connection with `row_factory = sqlite3.Row`
 - `_init_db()` runs at startup — add new tables here
 - Rate limiting: `check_rate_limit(client_ip, endpoint, limit)` — add to new endpoints
-- All new endpoints need MG-005 pattern for `user_key`
+- All new endpoints need BE-006 pattern for `user_key`
 
 ## Mobile orientation (mobile/)
 - Tokens: `import { color, typography, spacing, radius } from '../theme/tokens'`
@@ -91,7 +91,7 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 ### BACKEND — סאם, אורן
 - קרא: `knowledge/OW.md` + `knowledge/be.md` + `docs/BACKEND_ARCHITECTURE.md`
 - Scope: `app.py`, `schema.sql`, `data/`
-- Gate: MG-005 pattern + rate limit + SQLite (לא in-memory) + curl test
+- Gate: BE-006 pattern + rate limit + SQLite (לא in-memory) + curl test
 - Iron Rules: BE-003 (Sam=schema, Oren=integration), BE-004/BE-005 (SQLite מיום 1), OW-001 (rename=3 שכבות)
 
 ### MOBILE — דנה, רועי (וראן — כיוון בלבד, לא קוד)
