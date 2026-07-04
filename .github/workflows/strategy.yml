@@ -1,0 +1,123 @@
+# Autonomous strategy department. Solves the business-plan riddles in
+# .claude/master/strategy/ at a "world category leader" bar, embodying the owning
+# strategist persona (Tobi/Anna/Bernard/Amancio — .claude/agents/<name>.md).
+#
+# CADENCE (founder decision 2026-07-05): DAILY while riddles 05-08 are missing —
+# each run writes the next missing one (round 1). Once all 8 exist, WEEKLY —
+# each run deepens the stalest riddle. The cheap gate below enforces this without
+# spending tokens on skip days.
+#
+# Work lands on branch auto/strategy; jeff-merge.yml merges it to main through the
+# same gates as every lane (review-before-merge — nothing lands on main unreviewed).
+name: AWEAR Strategy
+
+on:
+  schedule:
+    - cron: '30 5 * * *'   # 05:30 UTC ≈ 08:30 Israel, daily heartbeat — the gate decides
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: awear-strategy
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+      mode: ${{ steps.decide.outputs.mode }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Decide — daily while 05-08 missing, weekly refresh after
+        id: decide
+        run: |
+          set -euo pipefail
+          if [ -f .agents_paused ]; then
+            echo "agents paused"; echo "run=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          MISSING=""
+          for n in 05 06 07 08; do
+            ls .claude/master/strategy/${n}-*.md >/dev/null 2>&1 || MISSING="$MISSING $n"
+          done
+          if [ -n "$MISSING" ]; then
+            echo "missing riddles:$MISSING -> create mode"
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "mode=create" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          LAST=$(git log -1 --format=%ct -- .claude/master/strategy/ || echo 0)
+          AGE_DAYS=$(( ( $(date +%s) - LAST ) / 86400 ))
+          if [ "$AGE_DAYS" -ge 7 ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "strategy last touched ${AGE_DAYS}d ago -> refresh mode"
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "mode=refresh" >> "$GITHUB_OUTPUT"
+          else
+            echo "strategy fresh (${AGE_DAYS}d) -> skip"; echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  strategist:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Prepare strategy branch (auto/strategy, synced with main)
+        run: |
+          git config user.name "awear-strategy"
+          git config user.email "strategy@awear.local"
+          git fetch origin
+          git checkout -B auto/strategy origin/auto/strategy 2>/dev/null || git checkout -B auto/strategy origin/main
+          git merge origin/main --no-edit || { git merge --abort || true; git checkout -B auto/strategy origin/main; }
+      - name: Run strategist (one riddle)
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MODE: ${{ needs.gate.outputs.mode }}
+        run: |
+          claude -p "$(cat <<'PROMPT'
+          You are AWEAR's autonomous STRATEGY department. This run you solve exactly ONE business-plan riddle at the bar of a world category leader, then stop. Mode (env MODE): "create" = write the next missing riddle file; "refresh" = deepen the stalest existing one.
+
+          RIDDLE -> OWNER (embody the owner; read the persona file .claude/agents/<owner>.md FIRST and answer in their voice and standards):
+            01-payments-commission-credits -> tobi     · 02-distribution-cold-start -> anna
+            03-catalog-brands-supply       -> amancio  · 04-geo-routing-transactions -> tobi
+            05-unit-economics              -> tobi     · 06-moat-differentiation     -> bernard
+            07-retention-habit             -> anna     · 08-company-legal-fundraising -> bernard
+
+          STEPS:
+          1. Read .claude/master/strategy/INDEX.md + the existing riddle files (they cross-feed: unit economics depends on payments; moat depends on distribution). Read .claude/master/MASTER_PLAN.md for locked founder decisions — never contradict a locked decision, build on it.
+          2. Pick the riddle: MODE=create -> the FIRST of 05/06/07/08 whose file is missing (file name pattern: NN-<slug>.md matching the INDEX row). MODE=refresh -> the riddle file with the oldest git date; deepen it with what changed since (market moves, new internal decisions), marked as a new dated round.
+          3. DEDUP FIRST (IN-001): before web research run: python3 scripts/intel_db.py known "<topic>" — build on prior findings instead of re-researching. Then deep-dive with WebSearch/WebFetch (competitors, benchmarks, real numbers — cite sources inline).
+          4. Write the riddle file in the SAME structure as 01-04 (read one as a template): the riddle, alternatives seriously examined, the DECISIVE answer (one recommendation, not a survey), numbers/assumptions, what must be true, first 3 moves, open questions for the founders (only ones truly theirs).
+          5. Update .claude/master/strategy/INDEX.md: the riddle's status -> "סבב 1" (or "סבב N — הועמק"), owner, and a "Last updated: YYYY-MM-DD" stamp on the file's row.
+          6. Record insights worth keeping: python3 scripts/intel_db.py add '<json>' (see .claude/agents/knowledge/in.md for the schema).
+          7. Append one activity_log.md row (agent = the persona, e.g. "tobi").
+          8. Telegram summary SIGNED as the persona: bash scripts/tg.sh text "<owner>: riddle <NN> solved/deepened — <3-line decisive takeaway + the one thing founders must decide, if any>".
+          9. Commit to THIS branch (auto/strategy). Do NOT push, do NOT touch main — Jeff's merge gate lands it. End the commit message with the Co-Authored-By line.
+
+          Truly-founder decisions (money commitments, legal structure choices, equity) go to .claude/master/FOUNDER_QUESTIONS.md "## OPEN" — decide everything else yourself, decisively (that is the department's mandate).
+          PROMPT
+          )" \
+            --model claude-fable-5 \
+            --permission-mode acceptEdits \
+            --allowedTools \
+              "Edit" "Write" "Read" "Glob" "Grep" "Task" "WebSearch" "WebFetch" \
+              "Bash(git add:*)" "Bash(git commit:*)" "Bash(git status:*)" \
+              "Bash(git log:*)" "Bash(git diff:*)" \
+              "Bash(python3:*)" "Bash(bash scripts/tg.sh:*)" \
+            --output-format text
+      - name: Push strategy branch (never main)
+        run: |
+          for i in 1 2 3; do
+            git push origin HEAD:auto/strategy && break
+            git pull --rebase origin auto/strategy || true
+            sleep 3
+          done
