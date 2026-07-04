@@ -1623,8 +1623,8 @@
   /* Reusable global create chooser (drop-in for any header) */
   .create-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); z-index: 70; pointer-events: none; transition: background .25s ease; }
   .create-overlay.show { background: rgba(0,0,0,.62); pointer-events: auto; backdrop-filter: blur(3px); }
-  .create-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card,#1e1a22); border-radius: var(--r-xl,28px) var(--r-xl,28px) 0 0; border-top: 1px solid var(--line,#2e2836); padding: 8px 16px calc(env(safe-area-inset-bottom, 0px) + 16px); z-index: 71; transform: translateY(110%); transition: transform .3s cubic-bezier(.32,.72,0,1); box-shadow: 0 -8px 32px rgba(20,17,15,.28); }
-  .create-overlay.show .create-sheet { transform: translateY(0); }
+  .create-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card,#1e1a22); border-radius: var(--r-xl,28px) var(--r-xl,28px) 0 0; border-top: 1px solid var(--line,#2e2836); padding: 8px 16px calc(env(safe-area-inset-bottom, 0px) + 16px); z-index: 71; transform: translateY(110%); visibility: hidden; transition: transform .3s cubic-bezier(.32,.72,0,1), visibility 0s linear .3s; box-shadow: 0 -8px 32px rgba(20,17,15,.28); }
+  .create-overlay.show .create-sheet { transform: translateY(0); visibility: visible; transition: transform .3s cubic-bezier(.32,.72,0,1), visibility 0s; }
   .create-sheet-handle { width: 38px; height: 4px; border-radius: var(--r-pill,999px); background: var(--line,#2e2836); margin: 8px auto 14px; }
   .create-sheet-title { font-size: var(--t-small,13px); font-weight: 800; color: var(--muted,#8a8498); text-transform: uppercase; letter-spacing: .6px; margin: 0 4px 10px; }
   .create-opt { width: 100%; min-height: 60px; display: flex; align-items: center; gap: 14px; padding: 12px 14px; margin-bottom: 8px; background: var(--surface,#161318); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); cursor: pointer; font-family: inherit; text-align: start; transition: background .15s; }
@@ -4514,16 +4514,23 @@
           trend:    Math.min(99, 70 + (post.likes ? Math.floor(post.likes / 50) : 0)),
           earn:     Math.round((post.likes || 100) / 80),
           items:    (post.items_tagged || []).slice(0, 4).map(pid => {
-            const prod = productMap[pid] || {};
+            const prod = productMap[pid];
+            // Fail loud, not silently: an unresolved tag must never leak a raw
+            // product id (e.g. "prod_015") into the UI as a garment name. Drop
+            // the pill entirely and log so a data mismatch is visible, not fake.
+            if (!prod || !prod.name) {
+              console.warn('[AWEAR] feed item tag did not resolve to a product:', pid, '(post', post.id + ')');
+              return null;
+            }
             return {
               category: prod.category || 'top',
-              name:     prod.name     || pid,
+              name:     prod.name,
               brand_vibe: prod.brand  || '',
               price_estimate_usd: prod.price_estimate_usd || 0,
               image_url: prod.image_url || null,
-              q:        prod.name     || pid
+              q:        prod.name
             };
-          })
+          }).filter(Boolean)
         };
       });
     } catch(e) {
