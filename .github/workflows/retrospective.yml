@@ -66,6 +66,8 @@ jobs:
           8. Commit (end message with the Co-Authored-By line). Do NOT push — the workflow pushes for you.
 
           If the day had no meaningful signals, say so briefly in LEARNING_LOG.md and send a one-line "quiet day, no new lessons" Telegram note. Do not invent lessons.
+
+          NON-NEGOTIABLE (the workflow verifies this and FAILS the run otherwise): LEARNING_LOG.md must gain a "## <today's UTC date>" section EVERY run — even a quiet day gets its one-line section. A retrospective that writes nothing did not happen.
           PROMPT
           )" \
             --model claude-fable-5 \
@@ -77,7 +79,31 @@ jobs:
               "Bash(bash scripts/tg.sh:*)" \
             --output-format text
 
-      - name: Push changes
+      # OW-006 applied to the learning loop itself: 7 straight runs "succeeded"
+      # (2026-06-27..07-03) while writing ZERO learnings — success theater. Now a
+      # run that produced no dated LEARNING_LOG section fails loudly + alerts Telegram.
+      - name: Verify — today's LEARNING_LOG section exists (BLOCKING)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          git pull --rebase origin main || true
-          git push origin HEAD:main || echo "nothing to push"
+          TODAY=$(date -u +%F)
+          if ! grep -q "^## $TODAY" .claude/agents/knowledge/LEARNING_LOG.md; then
+            bash scripts/tg.sh text "Retrospective enforcement FAILED: no LEARNING_LOG entry for $TODAY — the learning loop wrote nothing. Check the retrospective run logs." || true
+            exit 1
+          fi
+
+      - name: Push changes (honest — a lost learning commit must not vanish silently)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if git diff --quiet origin/main...HEAD 2>/dev/null; then
+            echo "nothing to push"; exit 0
+          fi
+          for i in 1 2 3; do
+            git pull --rebase origin main -q && git push origin HEAD:main && exit 0
+            sleep 3
+          done
+          bash scripts/tg.sh text "Retrospective: push to main FAILED after 3 attempts — today's learnings did not land." || true
+          exit 1
