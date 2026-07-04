@@ -61,7 +61,14 @@ def send(text: str) -> None:
     if not chat_id:
         print("❌ לא נמצא chat id — שלחו הודעה אחת לבוט שלכם בטלגרם ונסו שוב.")
         sys.exit(1)
-    res = _call("sendMessage", {"chat_id": chat_id, "text": text, "parse_mode": "Markdown"})
+    try:
+        res = _call("sendMessage", {"chat_id": chat_id, "text": text, "parse_mode": "Markdown"})
+    except Exception:  # noqa: BLE001 — a 400 (e.g. unescaped _/*) raises HTTPError
+        res = {}
+    if not res.get("ok"):
+        # Markdown parse errors lose the whole message. Retry as plain text —
+        # an unformatted report beats a vanished one.
+        res = _call("sendMessage", {"chat_id": chat_id, "text": text})
     if res.get("ok"):
         print(f"✅ נשלח לטלגרם (chat {chat_id})")
         if not CHAT_ID:

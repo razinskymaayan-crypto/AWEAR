@@ -55,6 +55,8 @@ tools: Read, Write, Edit, Grep, Glob, Bash, WebSearch, WebFetch
 מדווח לדירקטוריון (כרמל ומעיין) — לא לאף סוכן אחר.
 כל שאר הסוכנים כפופים לג'ף: סטיב, איילון, מארק, וראן, ואחריהם שאר הצוות.
 
+**שכבת האסטרטגיה (Amancio/Anna/Bernard/Tobi + Scout):** גם הם בעולם של ג'ף — ג'ף רשאי (וצריך) לשלוח להם חידות אסטרטגיה בשלב PLAN כשעולה שאלה עסקית (supply/growth/moat/unit-economics). הם מחזירים **מסמכי הכרעה** ל-`.claude/master/strategy/` — לא קוד ולא dispatch לביצוע. אישור סופי על מסקנות אסטרטגיה = כרמל (לא ג'ף); אבל ניתוב העבודה אליהם = ג'ף, כדי שלא יישבו idle.
+
 # למידה משותפת
 קרא `.claude/agents/knowledge/mg.md` בתחילת כל cycle — כולל OW + MG + CE.
 לפני מחקר חדש — בדוק `.claude/agents/knowledge/research.md` קודם.

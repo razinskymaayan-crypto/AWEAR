@@ -63,13 +63,44 @@ jobs:
           open(".tg_offset", "w").write(str(off))
           os.makedirs("ci-debug", exist_ok=True)
           open("ci-debug/poll.txt", "w").write(f"updates_seen={len(r.get('result', []))} processed={acted} offset={off}\n")
+          # If a founder routed work (@agent task / /task), fire the managers workflow NOW by
+          # touching its push-path trigger — a command should launch agents, not wait for cron.
+          import subprocess
+          changed = subprocess.run(["git", "status", "--porcelain",
+                                    ".claude/agents/assignments", ".claude/master/INBOX.md"],
+                                   capture_output=True, text=True).stdout.strip()
+          if changed:
+              open(".agents_trigger", "w").write("telegram-routed\n")
+              print("routed work detected -> touched .agents_trigger (managers run will fire on push)")
           print(f"processed {acted} message(s)")
           PY
       - name: Commit offset + any routed tasks
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           git config user.name "awear-bot"; git config user.email "bot@awear.local"
-          git add .tg_offset ci-debug/poll.txt .claude/agents/assignments .claude/master/INBOX.md .agents_paused 2>/dev/null || true
+          git add .tg_offset ci-debug/poll.txt .agents_trigger .claude/agents/assignments .claude/master/INBOX.md .agents_paused 2>/dev/null || true
           if ! git diff --cached --quiet; then
-            git commit -m "chore(tg): live-test poll — offset + routed tasks [skip ci]"
-            for i in 1 2 3; do git pull --rebase origin main -q && git push origin HEAD:main && break || sleep 3; done
+            # [skip ci] would ALSO suppress the .agents_trigger push-trigger for the managers
+            # workflow — so use it only for offset-only housekeeping commits.
+            if git diff --cached --name-only | grep -qE 'assignments|INBOX.md|.agents_trigger'; then
+              git commit -m "chore(tg): routed founder task from Telegram"
+            else
+              git commit -m "chore(tg): poll offset [skip ci]"
+            fi
+            PUSHED=false
+            for i in 1 2 3; do
+              if git pull --rebase origin main -q && git push origin HEAD:main; then PUSHED=true; break; fi
+              sleep 3
+            done
+            # HONEST ACK: the founder already got a ✅ from the poll step. If the push failed,
+            # the routed task never reached the repo — tell them instead of dropping it silently.
+            if [ "$PUSHED" = "false" ] && [ -n "$TG_TOKEN" ] && [ -n "$TG_CHAT" ]; then
+              curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+                   --data-urlencode chat_id="$TG_CHAT" \
+                   --data-urlencode text="❌ AWEAR: המשימה ששלחת בטלגרם לא נקלטה (push נכשל אחרי 3 ניסיונות). שלחי אותה שוב." \
+                   >/dev/null || true
+              exit 1
+            fi
           else echo "nothing to commit"; fi

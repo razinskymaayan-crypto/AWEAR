@@ -14,7 +14,7 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 8. **DoD = grep verified** — "I think it works" is not DoD (OW-002)
 9. **BE-006**: `user_key = (request.client.host if request.client else None) or "anon"` — always
 
-## Design tokens (Mediterranean Modern — `static/tokens.css` is source of truth)
+## Design tokens (Mediterranean Modern — source chain: `awear-tokens.json` ⟶ generates `static/tokens.css` (web) + feeds `mobile/theme/tokens.js` (RN). לשינוי token — ערוך את ה-json, לא את ה-css)
 ```
 --bg:#0e0c0f    --surface:#161318   --card:#1e1a22   --card-hover:#262030
 --fg:#f0ecf5    --muted:#8a8498     --line:#2e2836   --text:#fbfbfd (alias of --fg)
@@ -32,7 +32,7 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 ## Key file paths
 | What | Where |
 |------|-------|
-| Design tokens (web) | `static/tokens.css` |
+| Design tokens (SoT) | `awear-tokens.json` (→ מייצר את `static/tokens.css`) |
 | Token mirror (RN) | `mobile/theme/tokens.js` (imports from `awear-tokens.json`) |
 | **Master plan (תוכנית אב)** | `.claude/master/MASTER_PLAN.md` ← read this first |
 | Design master plan | `docs/VISUAL_VISION.md` ← single source of truth |

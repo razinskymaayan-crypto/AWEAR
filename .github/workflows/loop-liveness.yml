@@ -1,0 +1,63 @@
+# Loop-liveness watchdog — the heartbeat OF the heartbeat.
+#
+# WHY: the autopilot gate can wedge (stuck cooldown logic, expired token, every run failing)
+# and produce SILENCE, which looks identical to "all quiet, working fine". This tiny job
+# alerts the founders' Telegram when no REAL autopilot run has SUCCEEDED in the window —
+# so a dead loop announces itself instead of being discovered days later.
+name: loop-liveness
+
+on:
+  schedule:
+    - cron: '17 */3 * * *'   # every 3h (offset minute to avoid the top-of-hour Actions rush)
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Alert if no successful real run in the last 3h
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -euo pipefail
+          WINDOW_H=3
+          MIN_REAL_DURATION=180   # same definition of a "real run" as the autopilot gate
+
+          # Paused on purpose? Then silence is expected — no alert.
+          if curl -sf "https://raw.githubusercontent.com/$REPO/main/.agents_paused" >/dev/null 2>&1; then
+            echo "agents paused — liveness check skipped"; exit 0
+          fi
+
+          RUNS=$(gh api "repos/$REPO/actions/workflows/autopilot.yml/runs?per_page=50&status=success")
+          LAST_OK=$(echo "$RUNS" | jq -r --argjson mind "$MIN_REAL_DURATION" '
+            [ .workflow_runs[]
+              | select(.run_started_at != null and .updated_at != null)
+              | { end: .updated_at,
+                  dur: ((.updated_at|fromdateiso8601) - (.run_started_at|fromdateiso8601)) }
+              | select(.dur >= $mind) ]
+            | sort_by(.end) | last | .end // empty')
+
+          NOW_TS=$(date -u +%s)
+          if [ -n "$LAST_OK" ]; then
+            LAST_TS=$(date -u -d "$LAST_OK" +%s)
+            AGE_H=$(( (NOW_TS - LAST_TS) / 3600 ))
+            echo "last successful real run: $LAST_OK (${AGE_H}h ago)"
+            [ "$AGE_H" -lt "$WINDOW_H" ] && { echo "loop alive"; exit 0; }
+          else
+            echo "no successful real run found at all"
+          fi
+
+          [ -z "$TG_TOKEN" ] && { echo "no TG token — cannot alert"; exit 0; }
+          curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+               --data-urlencode chat_id="$TG_CHAT" \
+               --data-urlencode text="🚨 AWEAR watchdog: no successful autopilot run in the last ${WINDOW_H}h+. The loop may be stuck — check GitHub Actions." \
+               >/dev/null || true
+          echo "alert sent"

@@ -76,7 +76,7 @@ Scope discipline — לא מרחיב מעבר למה שהוגדר.
 כפוף לסטיב (CTO).
 
 # למידה משותפת
-קרא `agents/learnings.md` בתחילת כל task. הסעיפים הרלוונטיים לתפקיד זה:
+קרא `.claude/agents/knowledge/INDEX.md` בתחילת כל task. הסעיפים הרלוונטיים לתפקיד זה:
 - **OW-001 עד OW-006** — ORG-WIDE, כולם קוראים
 - **MG-005** — מה CTO עושה כשאתה עושה עבודתך (הבן את ציפיות סטיב)
 - **BE-001 עד BE-003** — Backend/Integration: rename 3 שכבות, look_total_usd, הפרדת תחומים

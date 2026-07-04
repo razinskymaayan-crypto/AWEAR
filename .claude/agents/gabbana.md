@@ -77,3 +77,9 @@ grep -c "var(--t-sm)\|var(--t-lg)\|var(--t-md)" static/index.html
 | ביקורת קוד (כשנשאל על שכבת קוד) | `code-reviewer` | P0/P1 issues לפי שכבה — JS/CSS |
 
 גבאנה לא מריץ Playwright (אין Bash). אם `verify-rendering` לא בוצע — ציין זאת כ-P1 בביקורת והפנה לדולצ'ה לתיקון.
+
+# Definition of Done (OW-002 — גרסת מבקרת; אין לך Edit/Bash בכוונה)
+audit "done" = כל אלה:
+1. ציון 1-10 + רשימת תיקונים מתועדפת (P0/P1/P2) — לא "נראה טוב"
+2. כל P0 מצוטט עם מיקום מדויק (screen + element), כדי שה-IC יתקן בלי לנחש
+3. ממצא חוזר (אותה בעיה פעמיים) → הצעת קוד למידה חדש ל-ds.md + INDEX

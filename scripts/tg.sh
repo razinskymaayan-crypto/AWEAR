@@ -20,17 +20,32 @@ CHAT="$(printf '%s' "$CHAT" | tr -d '[:space:]')"
 API="https://api.telegram.org/bot${TOKEN}"
 MODE="${1:-text}"
 
+# send <method> <curl args...> — retry up to 3x with backoff, and SURFACE failures instead of
+# swallowing them (>/dev/null used to hide every 4xx/timeout — reports silently vanished).
+send() {
+  local method="$1"; shift
+  local attempt resp
+  for attempt in 1 2 3; do
+    resp=$(curl -s --max-time 30 -X POST "$API/$method" "$@" || true)
+    if printf '%s' "$resp" | grep -q '"ok":true'; then
+      echo "tg: $method sent"
+      return 0
+    fi
+    echo "tg: $method attempt $attempt failed: $(printf '%s' "$resp" | head -c 200)" >&2
+    sleep $((attempt * 3))
+  done
+  echo "tg: $method FAILED after 3 attempts" >&2
+  return 1
+}
+
 case "$MODE" in
   text)
-    curl -s -X POST "$API/sendMessage" --data-urlencode chat_id="$CHAT" \
-         --data-urlencode text="${2:-}" >/dev/null && echo "tg: text sent" ;;
+    send sendMessage --data-urlencode chat_id="$CHAT" --data-urlencode text="${2:-}" ;;
   photo)
     [ -f "${2:-}" ] || { echo "tg: photo not found: ${2:-}"; exit 0; }
-    curl -s -X POST "$API/sendPhoto" -F chat_id="$CHAT" \
-         -F photo=@"$2" -F caption="${3:-}" >/dev/null && echo "tg: photo sent" ;;
+    send sendPhoto -F chat_id="$CHAT" -F photo=@"$2" -F caption="${3:-}" ;;
   doc)
     [ -f "${2:-}" ] || { echo "tg: doc not found: ${2:-}"; exit 0; }
-    curl -s -X POST "$API/sendDocument" -F chat_id="$CHAT" \
-         -F document=@"$2" -F caption="${3:-}" >/dev/null && echo "tg: doc sent" ;;
+    send sendDocument -F chat_id="$CHAT" -F document=@"$2" -F caption="${3:-}" ;;
   *) echo "tg.sh: unknown mode '$MODE' (use text|photo|doc)"; exit 0 ;;
 esac

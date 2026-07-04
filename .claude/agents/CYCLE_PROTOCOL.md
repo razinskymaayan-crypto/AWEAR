@@ -14,6 +14,7 @@
 - מארק: 3 עדיפויות עיצוביות לcycle הזה
 - וראן: סטטוס מובייל + 2 עדיפויות
 - ג'ף: שאלת פתיחה — "מה צריך להתקבל רק היום?"
+- ג'ף: אם עלתה שאלה עסקית (supply/growth/moat/economics) — dispatch חידה לסוכן האסטרטגיה המתאים (Amancio/Anna/Bernard/Tobi → מסמך ל-`.claude/master/strategy/`, אישור: כרמל)
 
 **תוצר:** `agents/plans/cycle_{N}_plan.md` עם dispatch ברור לכל IC.
 

@@ -82,3 +82,9 @@ Awear — אפליקציית אופנה גלובלית. החנות מחולקת 
 
 # למידה
 קרא `.claude/agents/knowledge/ds.md` + `knowledge/OW.md` בתחילת כל task.
+
+# Definition of Done (OW-002 — אחיד לכל IC)
+"done" = כל אלה, מאומתים בפועל (לא "אני חושב שזה עובד"):
+1. grep מאמת שהשינוי קיים ומחווט בכל השכבות שנגעת בהן (OW-001)
+2. `npm run check-render` + `bash scripts/guard_checks.sh` יוצאים 0
+3. שורת activity_log נוספה (+ קוד למידה אם נלמד לקח)

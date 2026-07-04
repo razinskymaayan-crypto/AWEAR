@@ -52,7 +52,9 @@ histories: dict[int, list] = {}
 # Only these Telegram user IDs may issue commands / route tasks. Sources, unioned:
 #   1) env TG_ALLOWED_IDS (comma-separated), and
 #   2) tg_whoami.json — IDs the whoami workflow captured when a founder messaged the bot.
-# Empty from both => allow everyone (dev only).
+# Empty from both => FAIL CLOSED (deny everyone). An empty allowlist used to mean
+# "allow everyone", which left the command channel (/pause, @agent <task>) open to
+# anyone who found the bot. Set TG_ALLOW_ALL=1 explicitly for local dev only.
 def _load_allowed() -> set[int]:
     ids = {int(x) for x in os.getenv("TG_ALLOWED_IDS", "").replace(" ", "").split(",") if x.strip().isdigit()}
     try:
@@ -76,18 +78,29 @@ BUDGET_STATE = ".agent_budget.json"
 
 
 def _is_allowed(user_id: int) -> bool:
-    return not ALLOWED or user_id in ALLOWED
+    if ALLOWED:
+        return user_id in ALLOWED
+    # FAIL CLOSED: no allowlist configured => deny, unless dev explicitly opts out.
+    return os.getenv("TG_ALLOW_ALL", "") == "1"
 
 
-def _route_to_agent(agent: str, task: str, who: str) -> None:
-    """Queue a task for a specific agent — its run reads this file each cycle."""
-    os.makedirs(ASSIGN_DIR, exist_ok=True)
-    with open(f"{ASSIGN_DIR}/{agent}.md", "a") as f:
-        f.write(f"- [ ] (from {who} via Telegram) {task.strip()}\n")
+def _route_to_agent(agent: str, task: str, who: str) -> bool:
+    """Queue a task for a specific agent — its run reads this file each cycle.
+    Returns True only if the write actually succeeded (honest acks, no fake ✅)."""
+    try:
+        os.makedirs(ASSIGN_DIR, exist_ok=True)
+        with open(f"{ASSIGN_DIR}/{agent}.md", "a") as f:
+            f.write(f"- [ ] (from {who} via Telegram) {task.strip()}\n")
+        return True
+    except Exception:  # noqa: BLE001
+        return False
 
 
-def _queue_inbox(task: str, who: str) -> None:
-    """Untagged /task -> shared INBOX 'new tasks' section (Jeff routes it)."""
+def _queue_inbox(task: str, who: str) -> bool:
+    """Untagged /task -> shared INBOX 'new tasks' section (Jeff routes it).
+    Returns True only if the task landed in INBOX.md itself. The old silent fallback
+    to .tg_inbox (gitignored => invisible to CI agents) reported success while the
+    task was effectively lost — now it is reported as a failure to the founder."""
     line = f"{task.strip()}  _(from {who} via Telegram)_\n"
     try:
         with open(".claude/master/INBOX.md", "r") as f:
@@ -97,11 +110,15 @@ def _queue_inbox(task: str, who: str) -> None:
             content = content.replace(marker, marker + "\n" + line, 1)
             with open(".claude/master/INBOX.md", "w") as f:
                 f.write(content)
-            return
+            return True
     except Exception:  # noqa: BLE001
         pass
-    with open(".tg_inbox", "a") as f:  # fallback
-        f.write(line)
+    try:
+        with open(".tg_inbox", "a") as f:  # local trace only — NOT a delivery
+            f.write(line)
+    except Exception:  # noqa: BLE001
+        pass
+    return False
 
 
 def _set_pause(paused: bool) -> None:
@@ -141,14 +158,16 @@ def _parse_command(text: str, who: str) -> str | None:
         task = text[len("/task"):].strip()
         if not task:
             return "כתבי /task ואז המשימה. או @<סוכן> משימה כדי לכוון לסוכן ספציפי."
-        _queue_inbox(task, who)
-        return "✅ נכנס ל-INBOX. ג'ף ינתב לסוכן הנכון."
+        if _queue_inbox(task, who):
+            return "✅ נכנס ל-INBOX. ג'ף ינתב לסוכן הנכון בריצה הקרובה."
+        return "❌ לא הצלחתי לכתוב ל-INBOX — המשימה לא נקלטה. נסי שוב, ואם זה חוזר ספרי לצוות."
     if text.lstrip().startswith("@"):
         tag, _, task = text.lstrip()[1:].partition(" ")
         agent = tag.lower().rstrip(":,.")
         if agent in AGENTS and task.strip():
-            _route_to_agent(agent, task, who)
-            return f"✅ נשלח ל-{agent}. הוא יבצע במחזור הקרוב ויחזור אליך חתום בשמו."
+            if _route_to_agent(agent, task, who):
+                return f"✅ נשלח ל-{agent}. הוא יבצע במחזור הקרוב ויחזור אליך חתום בשמו."
+            return f"❌ הניתוב ל-{agent} נכשל — המשימה לא נקלטה. נסי שוב."
         if agent in AGENTS:
             return f"מה לבקש מ-{agent}? כתבי: @{agent} <המשימה>"
         return f"לא מכיר סוכן בשם '{agent}'. סוכנים: {', '.join(sorted(AGENTS))}"
