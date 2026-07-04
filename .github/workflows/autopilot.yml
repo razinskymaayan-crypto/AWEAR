@@ -41,7 +41,7 @@ jobs:
           MIN_REAL_DURATION=180   # secs — runs shorter than this are skipped gate-heartbeats, not real work
 
           # KILL-SWITCH: founders can pause ALL autonomous runs by committing a .agents_paused file
-          # (Telegram /pause creates it). Works for Actions too, not just the VM orchestrator.
+          # (Telegram /pause creates it). Pauses every autonomous lane.
           if curl -sf "https://raw.githubusercontent.com/$REPO/main/.agents_paused" >/dev/null 2>&1; then
             echo ".agents_paused present -> paused"; echo "run=false" >> "$GITHUB_OUTPUT"; exit 0
           fi
@@ -137,6 +137,18 @@ jobs:
           git config user.name "Tamar Grosz"
           git config user.email "carmelph16@gmail.com"
 
+      # REVIEW-BEFORE-MERGE: the engine no longer pushes to main. It works on
+      # auto/engine, and Jeff's merge gate (jeff-merge.yml: build + guard +
+      # adversarial persona review) is the ONLY path into main — same contract
+      # as every manager lane. Nothing unreviewed lands on main.
+      - name: Prepare engine branch (auto/engine, synced with main)
+        run: |
+          git fetch origin
+          git checkout -B auto/engine origin/auto/engine 2>/dev/null || git checkout -B auto/engine origin/main
+          # Carry over unmerged work from a previous run; on conflict start fresh
+          # from main (Jeff already logged the old branch as conflicted).
+          git merge origin/main --no-edit || { git merge --abort || true; git checkout -B auto/engine origin/main; }
+
       - name: Detect previous-run failure (self-healing)
         continue-on-error: true
         env:
@@ -154,7 +166,8 @@ jobs:
 
           SAFETY FIRST (before anything else):
           A0. SELF-HEAL — read .claude/agents/knowledge/CI_FAILURES.md. If it has an [UNRESOLVED] entry (the previous CI run failed), fixing it is your TOP priority this run, before INBOX: diagnose the root cause from the log tail, FIX it (in the app code OR directly in the failing .github/workflows/*.yml — e.g. a flaky install, a bad command, a timeout), verify, then change [UNRESOLVED] → [FIXED] with a one-line note, and send Telegram: bash scripts/tg.sh text "Auto-fix: <what failed> -> <the fix>". A broken pipeline blocks everything, so heal it first.
-          A. Sync — git fetch + merge origin/main. Never overwrite the other team's work.
+          A. Sync — you are already on branch auto/engine, merged with latest main (the workflow prepared it). Never overwrite the other team's work. Your commits land on this branch; Jeff's merge gate reviews and merges them to main — you never push to main yourself.
+          A1. REJECTION FEEDBACK — read ci-debug/jeff-rejections.txt. If its LAST "engine:" line is newer than this branch's last merge to main, Jeff's reviewer REJECTED your previous work for that reason — fixing that rejection IS your task this run, before anything else below.
           B. Health check — run "npm install && npm run check-render". If it FAILS on current HEAD, the previous change broke the app: your ONLY job this run is to fix or "git revert" the breaking commit so the app renders again, then stop. (Auto-rollback.) ALSO append one row to .claude/agents/knowledge/FAILURES.md (| date | what broke | root cause | rule it violated or "new" |) so the daily retrospective can learn from it.
 
           PICK YOUR TASK — strict priority, stop at the first that applies:
@@ -237,20 +250,18 @@ jobs:
         if: always()
         continue-on-error: true
         env:
-          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           # Sends a Telegram message to the "Awear Alerts" group. Only fires when an
           # agent touched NEEDS_YOU.md (something needs you) or INBOX.md (a task is done).
-          [ -z "$TG_TOKEN" ] && exit 0
-          send() { curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
-                     -d chat_id="${TG_CHAT}" -d text="$1" >/dev/null || true; }
+          # Delivery goes through scripts/tg.sh -> tglib.py (retries, audit log).
           FILES=$(git show --name-only --pretty=format: HEAD 2>/dev/null || true)
           if echo "$FILES" | grep -q "NEEDS_YOU.md"; then
-            send "AWEAR — something needs you. An agent flagged something only you can do. Open NEEDS_YOU.md on GitHub."
+            bash scripts/tg.sh text "AWEAR — something needs you. An agent flagged something only you can do. Open NEEDS_YOU.md on GitHub." || true
           fi
           if echo "$FILES" | grep -q "INBOX.md"; then
-            send "AWEAR — a task is done. An agent finished a task you gave. Check INBOX.md on GitHub."
+            bash scripts/tg.sh text "AWEAR — a task is done. An agent finished a task you gave. Check INBOX.md on GitHub." || true
           fi
 
       # INDEPENDENT VERIFY GATE (OW-006: a rule without an enforcement mechanism is only a
@@ -269,22 +280,21 @@ jobs:
           npm run check-render
           bash scripts/guard_checks.sh
 
-      - name: Push changes
+      - name: Push engine branch (never main — jeff-merge is the only path to main)
         if: success()
         run: |
-          git pull --rebase origin main || true
-          git push origin HEAD:main || echo "nothing to push"
+          for i in 1 2 3; do
+            git push origin HEAD:auto/engine && break
+            git pull --rebase origin auto/engine || true
+            sleep 3
+          done
 
       - name: Run status to Telegram (every run — proves the pipe + surfaces failures)
         if: always()
         continue-on-error: true
         env:
-          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          [ -z "$TG_TOKEN" ] && exit 0
           LAST=$(git log -1 --pretty=%s 2>/dev/null || echo "no commit")
-          curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
-               --data-urlencode chat_id="$TG_CHAT" \
-               --data-urlencode text="AWEAR autopilot — run status: ${{ job.status }}. Latest commit: ${LAST}" \
-               >/dev/null || true
+          bash scripts/tg.sh text "AWEAR autopilot — run status: ${{ job.status }}. Latest commit: ${LAST}" || true
