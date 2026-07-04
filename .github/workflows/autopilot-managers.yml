@@ -1,15 +1,20 @@
-# Phase 1 of the parallel-agent org: one autonomous run PER MANAGER, in parallel,
-# each on its own branch (auto/<manager>). Managers delegate to their ICs and commit
+# Phase 1 of the parallel-agent org: one autonomous run PER LANE, in parallel,
+# each on its own branch (auto/<lane>). Lane owners delegate to their ICs and commit
 # to their branch only — Jeff (Phase 2) merges branches to main with gates.
-# Manual-dispatch for now (no schedule) so it's testable without continuous cost.
+# Repo is public => Actions minutes are free/unlimited, so this runs on a schedule.
+# ANTI-COLLISION: each lane OWNS a disjoint set of files (the "OWNS files" line below).
+# Two lanes never touch the same file => Jeff merges cleanly. Violating your lane's
+# file ownership is how merge wrecks happen — it is an Iron-Rule-level offense.
 name: autopilot-managers
 
 on:
   workflow_dispatch:
     inputs:
       manager:
-        description: 'Run a single manager (mark|steve|ayalon) or "all"'
+        description: 'Run a single lane (mark|steve|oren|ayalon|scout|gabbana) or "all"'
         default: 'all'
+  schedule:
+    - cron: '*/30 * * * *'   # every 30 min — public repo, unlimited free minutes
   push:
     paths:
       - '.agents_trigger'   # self-serve trigger: commit this file to fire a run
@@ -26,19 +31,29 @@ jobs:
       contents: write
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 6
       matrix:
         include:
           - manager: mark
             lane: "Design/UI lane. ICs: dolce (feed/home/profile/closet/onboarding), valentino (shop/marketplace/analytics/stylist/explore), netta (tokens); gabbana = design gate. OWNS files: static/index.html, static/tokens.css, awear-tokens.json. Knowledge: OW.md + ds.md."
           - manager: steve
-            lane: "Backend/integration lane. ICs: sam (app.py endpoints/models), oren (cross-layer integration/security/data). OWNS files: app.py, schema.sql, static/data/*.json. Knowledge: OW.md + be.md + sf.md."
+            lane: "Backend lane. IC: sam (app.py endpoints/models/DB). OWNS files: app.py, schema.sql. Knowledge: OW.md + be.md. Do NOT touch static/data/*.json (oren's lane) or static/index.html (mark's lane)."
+          - manager: oren
+            lane: "Data & integrity lane. You are oren, Integration Engineer, running as a lane owner. OWNS files: static/data/*.json (posts/products/profiles), scripts/*.py data-integrity tooling. Mission: data correctness — orphan ids, price/tag integrity, cross-file consistency (BE-TAG-INTEGRITY class). Knowledge: OW.md + be.md. Do NOT touch app.py (steve's lane) or static/index.html (mark's lane)."
           - manager: ayalon
-            lane: "Product/social lane. IC: shira (comments/moderation/reactions). OWNS files: docs/* (research, surveys, PITCH_DECK, IDEAS.md), business docs, social feature sections. Knowledge: OW.md + mg.md + sf.md."
+            lane: "Product/social lane. IC: shira (comments/moderation/reactions). OWNS files: docs/* except docs/research and docs/design_reviews (PITCH_DECK, surveys, IDEAS.md), business docs. Knowledge: OW.md + mg.md + sf.md."
+          - manager: scout
+            lane: "Intelligence lane. You are Scout (.claude/agents/scout.md) — EVERY run is an intelligence run: DEDUP FIRST (python3 scripts/intel_db.py known '<topic>'), <=6 web fetches, write docs/research/<date>-<topic>.md, record insights (python3 scripts/intel_db.py add '<json>'), act-vs-escalate per your decision table. OWNS files: docs/research/*, intel db. Do NOT edit app code."
+          - manager: gabbana
+            lane: "Adversarial QA lane. You are Gabbana, the design critic, running as an independent auditor: pick ONE screen or recent merge from the last 24h of activity_log, audit it hard against the Instagram/Pinterest/Zara bar (visual + UX + data correctness in what renders), score 0-10. OWNS files: docs/design_reviews/* (your audit reports) and .claude/agents/assignments/mark.md (file concrete fix tasks for the design lane). Do NOT edit app code yourself — you find and file, others fix."
     steps:
-      - name: Skip if a single manager was requested and it's not this one
+      - name: Skip if a single manager was requested and it's not this one (or agents are paused)
         id: gate
         run: |
+          # KILL-SWITCH: .agents_paused on main pauses all lanes (Telegram /pause creates it).
+          if curl -sf "https://raw.githubusercontent.com/${{ github.repository }}/main/.agents_paused" >/dev/null 2>&1; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"; echo "agents paused -> skipping ${{ matrix.manager }}"; exit 0
+          fi
           REQ="${{ github.event.inputs.manager }}"
           if [ -n "$REQ" ] && [ "$REQ" != "all" ] && [ "$REQ" != "${{ matrix.manager }}" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"; echo "skipping ${{ matrix.manager }}"
@@ -78,13 +93,14 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           claude -p "$(cat <<'PROMPT'
-          You are the MANAGER agent "${{ matrix.manager }}" at AWEAR, running autonomously and IN PARALLEL with the other managers. North star: a polished investor demo of the WOW flow (docs/PRODUCT_VISION.md). You do ONE end-to-end task this run, then stop.
+          You are the LANE-OWNER agent "${{ matrix.manager }}" at AWEAR, running autonomously and IN PARALLEL with the other lanes. North star: a polished investor demo of the WOW flow (docs/PRODUCT_VISION.md). You do ONE end-to-end task this run, then stop.
 
-          YOUR LANE (stay strictly inside it — other managers own other files; touching their files causes merge wrecks):
+          YOUR LANE (stay strictly inside it — other lanes own other files; touching their files causes merge wrecks):
           ${{ matrix.lane }}
 
           SAFETY FIRST:
           - You are already on branch auto/${{ matrix.manager }}, merged with latest main. Read .claude/agents/knowledge/OW.md + your domain knowledge file(s) and APPLY the rules.
+          - REJECTION FEEDBACK: check ci-debug/jeff-rejections.txt — if its LAST line for "${{ matrix.manager }}" is newer than your branch's last merge to main, Jeff's adversarial reviewer REJECTED your previous work for that reason. Fixing that rejection IS your task this run (fix it on this branch), before anything else below.
           - Health check: run "npm install && npm run check-render". If it FAILS on the current branch, your ONLY job is to fix or revert what broke it, then stop.
 
           PICK YOUR TASK — strict priority, stop at the first that applies:
@@ -121,6 +137,7 @@ jobs:
               "Bash(node:*)" "Bash(python3:*)" "Bash(awk:*)" \
               "Bash(pip install:*)" "Bash(pip3 install:*)" \
               "Bash(bash scripts/tg.sh:*)" "Bash(node scripts/shot.mjs:*)" "Bash(python3 scripts/chart.py:*)" \
+              "Bash(sqlite3:*)" \
             --output-format text
 
       - name: Push manager branch (never main)

@@ -29,27 +29,51 @@ jobs:
         with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - name: Install (for check-render gate)
-        run: npm install --no-audit --no-fund || true
+      - name: Install (for check-render gate + adversarial review)
+        run: |
+          npm install --no-audit --no-fund || true
+          npm install -g @anthropic-ai/claude-code || true
       - name: Merge manager branches into main (gated)
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           git config user.name "jeff"; git config user.email "jeff@awear.local"
           git fetch origin -q
           git checkout -B main origin/main
-          merged=""; reverted=""; conflicted=""
-          for m in mark steve ayalon; do
+          merged=""; reverted=""; conflicted=""; rejected=""
+          for m in mark steve oren ayalon scout gabbana; do
             git rev-parse --verify "origin/auto/$m" >/dev/null 2>&1 || continue
             ahead=$(git rev-list --count "main..origin/auto/$m" 2>/dev/null || echo 0)
             [ "${ahead:-0}" -eq 0 ] && continue
             if git merge --no-ff -m "jeff: merge auto/$m" "origin/auto/$m"; then
-              if npm run check-render; then
-                merged="$merged $m"
-              else
-                git reset --hard origin/main; reverted="$reverted $m"
+              # GATE 1 — build: the app must still render.
+              if ! npm run check-render; then
+                git reset --hard origin/main; reverted="$reverted $m"; continue
               fi
+              # GATE 2 — locked invariants: SURFACE_SPECS guard (hex/emoji/wording/notch rules).
+              if ! bash scripts/guard_checks.sh; then
+                git reset --hard origin/main; reverted="$reverted $m(guard)"; continue
+              fi
+              # GATE 3 — adversarial review: a skeptic Claude reviews the merge diff and can reject.
+              # Docs-only lanes (scout/gabbana/ayalon) skip it — nothing executable to break.
+              CODE_TOUCHED=$(git diff --name-only origin/main...HEAD -- app.py schema.sql static/index.html static/tokens.css static/data/ scripts/ | head -1)
+              if [ -n "$CODE_TOUCHED" ] && [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+                git diff origin/main...HEAD -- . ':!package-lock.json' ':!*.png' > /tmp/merge_diff.txt || true
+                head -c 80000 /tmp/merge_diff.txt > /tmp/merge_diff_capped.txt
+                VERDICT=$(cat /tmp/merge_diff_capped.txt | claude -p "You are an ADVERSARIAL merge reviewer for AWEAR. Piped input = a merge diff from lane '$m'. Try to find a reason to REJECT it: a real bug, broken data reference (ids that don't exist), an Iron Rule violation (hardcoded hex, emoji in UI chrome, font-size on image containers, in-memory user data), a change OUTSIDE the lane's file ownership (mark:index.html/tokens.css; steve:app.py/schema.sql; oren:static/data+scripts; ayalon/scout/gabbana:docs only), or oscillation (re-changing something activity_log marks done). Style nitpicks are NOT grounds for rejection. Reply with EXACTLY one first line: 'APPROVE' or 'REJECT: <one-line reason>'." \
+                  --model claude-fable-5 --output-format text 2>/dev/null | head -5 || echo "APPROVE")
+                echo "adversarial verdict for $m: $VERDICT"
+                if echo "$VERDICT" | grep -q "^REJECT"; then
+                  git reset --hard origin/main
+                  rejected="$rejected $m"
+                  REASON=$(echo "$VERDICT" | head -1)
+                  mkdir -p ci-debug; echo "$(date -u +%FT%TZ) $m: $REASON" >> ci-debug/jeff-rejections.txt
+                  continue
+                fi
+              fi
+              merged="$merged $m"
             else
               git merge --abort || true; conflicted="$conflicted $m"
             fi
@@ -60,14 +84,16 @@ jobs:
             for m in $merged; do git push origin --delete "auto/$m" || true; done
           fi
           MSG="jeff: merged ->${merged:- none}"
-          [ -n "$reverted" ] && MSG="$MSG | REVERTED (broke build):$reverted"
+          [ -n "$reverted" ] && MSG="$MSG | REVERTED (broke build/guard):$reverted"
+          [ -n "$rejected" ] && MSG="$MSG | REJECTED (adversarial review):$rejected — see ci-debug/jeff-rejections.txt"
           [ -n "$conflicted" ] && MSG="$MSG | CONFLICT (needs reconciliation):$conflicted"
           echo "$MSG"
           bash scripts/tg.sh text "$MSG" || true
-          # Record conflicts for the next round to reconcile (joint-discussion v2)
-          if [ -n "$conflicted" ]; then
-            mkdir -p ci-debug; echo "$(date -u +%FT%TZ) conflict:$conflicted" >> ci-debug/jeff-conflicts.txt
-            git add ci-debug/jeff-conflicts.txt
-            git commit -m "chore(jeff): log unmerged conflict branches [skip ci]" || true
+          # Record conflicts/rejections for the next round to reconcile (joint-discussion v2)
+          if [ -n "$conflicted$rejected" ]; then
+            mkdir -p ci-debug
+            [ -n "$conflicted" ] && echo "$(date -u +%FT%TZ) conflict:$conflicted" >> ci-debug/jeff-conflicts.txt
+            git add ci-debug/ || true
+            git commit -m "chore(jeff): log unmerged branches (conflict/rejected) [skip ci]" || true
             git pull --rebase origin main -q || true; git push origin HEAD:main || true
           fi

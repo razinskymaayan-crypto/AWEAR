@@ -2,17 +2,17 @@ name: AWEAR Autopilot
 
 # Runs the autonomous AWEAR engineer in GitHub's cloud — no local machine needed.
 #
-# CADENCE MODEL: a new run starts ~1 HOUR AFTER THE PREVIOUS RUN FINISHES — NOT on a fixed
+# CADENCE MODEL: a new run starts ~15 MIN AFTER THE PREVIOUS RUN FINISHES — NOT on a fixed
 # wall-clock schedule. GitHub cron can only fire on the clock, so the cron below is just a cheap
 # HEARTBEAT that wakes the lightweight `gate` job. The gate starts a real run only when BOTH:
 #   (a) no other run is currently active, AND
-#   (b) >=60 min have passed since the last REAL run finished.
-# Result: exactly one run at a time, each runs to completion, then a 1-hour cooldown, then the
-# next. No overlap, and nothing is cancelled mid-work. To change the cooldown, edit COOLDOWN_MIN
-# in the gate; to change how soon after the hour it can re-fire, edit the heartbeat frequency.
+#   (b) >=COOLDOWN_MIN min have passed since the last REAL run finished.
+# Repo is PUBLIC => Actions minutes are free/unlimited. The real governor is the Claude token
+# budget (subscription session limits), NOT minutes. Founders can pause everything by committing
+# a .agents_paused file (Telegram /pause). To slow down, raise COOLDOWN_MIN in the gate.
 on:
   schedule:
-    - cron: '9,29,49 * * * *'   # heartbeat ~20 min (reverted from */10 — free Actions minutes can't sustain faster; VM is the path to continuous)
+    - cron: '*/10 * * * *'      # heartbeat every 10 min — repo is PUBLIC, Actions minutes are free/unlimited. Token budget (not minutes) is the real governor now.
   workflow_dispatch:            # manual trigger — bypasses the cooldown (still never overlaps a running job)
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
     outputs:
       run: ${{ steps.decide.outputs.run }}
     steps:
-      - name: Decide — run only if idle AND >=60 min since the last real run finished
+      - name: Decide — run only if idle AND cooldown passed since the last real run finished
         id: decide
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -37,12 +37,26 @@ jobs:
         run: |
           set -euo pipefail
           WF="autopilot.yml"
-          COOLDOWN_MIN=60
+          COOLDOWN_MIN=15         # was 60 (Actions-minutes scarcity). Public repo => near-continuous; token budget is the governor.
           MIN_REAL_DURATION=180   # secs — runs shorter than this are skipped gate-heartbeats, not real work
+
+          # KILL-SWITCH: founders can pause ALL autonomous runs by committing a .agents_paused file
+          # (Telegram /pause creates it). Works for Actions too, not just the VM orchestrator.
+          if curl -sf "https://raw.githubusercontent.com/$REPO/main/.agents_paused" >/dev/null 2>&1; then
+            echo ".agents_paused present -> paused"; echo "run=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
 
           # Manual dispatch always runs (the job-level concurrency below still prevents overlap).
           if [ "$EVENT" = "workflow_dispatch" ]; then
             echo "manual dispatch -> run"; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          # FAST-HEAL: an [UNRESOLVED] CI failure bypasses the cooldown (still never overlaps a
+          # running job). A broken pipeline should heal in minutes, not wait a full cooldown.
+          HEAL_NOW=false
+          if curl -sf "https://raw.githubusercontent.com/$REPO/main/.claude/agents/knowledge/CI_FAILURES.md" 2>/dev/null | grep -q '\[UNRESOLVED\]'; then
+            echo "CI_FAILURES has [UNRESOLVED] -> cooldown bypass armed"
+            HEAL_NOW=true
           fi
 
           RUNS=$(gh api "repos/$REPO/actions/workflows/$WF/runs?per_page=40")
@@ -69,6 +83,11 @@ jobs:
 
           if [ -z "$LAST_END" ]; then
             echo "no previous real run found -> run"; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          if [ "$HEAL_NOW" = "true" ]; then
+            echo "idle + unresolved failure -> run now (cooldown bypassed)"
+            echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
 
           LAST_TS=$(date -u -d "$LAST_END" +%s)
@@ -234,7 +253,24 @@ jobs:
             send "AWEAR — a task is done. An agent finished a task you gave. Check INBOX.md on GitHub."
           fi
 
+      # INDEPENDENT VERIFY GATE (OW-006: a rule without an enforcement mechanism is only a
+      # recommendation). The agent is INSTRUCTED to run check-render + guard_checks, but this
+      # step enforces it at the workflow level — a run that crashed mid-task, ignored the
+      # instruction, or committed broken code can NOT reach main. If this fails, the job fails
+      # and the push below is skipped; detect_ci_failure.sh records it for the next run to heal.
+      - name: Verify gate — build + locked invariants (BLOCKING, workflow-enforced)
+        run: |
+          set -euo pipefail
+          # Only gate if the run actually committed something on top of origin/main.
+          if git diff --quiet origin/main...HEAD 2>/dev/null; then
+            echo "no new commits this run — nothing to gate"; exit 0
+          fi
+          npm install --no-audit --no-fund
+          npm run check-render
+          bash scripts/guard_checks.sh
+
       - name: Push changes
+        if: success()
         run: |
           git pull --rebase origin main || true
           git push origin HEAD:main || echo "nothing to push"
