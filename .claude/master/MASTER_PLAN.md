@@ -137,6 +137,11 @@ Server:    venv312/bin/uvicorn app:app --reload --port 8000
 Dashboard: tools/dashboard_server.py, פורט 8001
 ```
 
+### שכבת מודיעין (Intelligence — חיה מ-04-05.07.2026)
+- **Scout** (`.claude/agents/scout.md`) — ראש מודיעין; רץ כ-lane אוטונומי (ראו חלק י"א): dedup תחילה, ≤6 web fetches, דוח ב-`docs/research/`, act-vs-escalate לפי טבלת החלטה.
+- **Intel DB**: `scripts/intel_db.py` — טבלת תובנות ב-`data/awear.db` + mirror מקומט (git-tracked) ב-`docs/research/intel_insights.jsonl` לצורך dedup.
+- **ידע דומיין**: `.claude/agents/knowledge/in.md`.
+
 ### iOS — Capacitor Strategy (A1)
 ```
 @capacitor/ios: webDir → static/
@@ -363,6 +368,17 @@ Wallet shows creator earned credit →
 עבודה מקבילה → Board Sync → ג'ף מסכם לכרמל → dispatch חדש → חזור
 ```
 כל IC: commit ראשון תוך 48 שעות מdispatch. בלי commit = stall alert אוטומטי.
+
+**מימוש בפועל — GitHub Actions (מ-05.07.2026):** המחזור רץ אוטונומית ב-6 lanes מקביליים כל 30 דק׳ (`.github/workflows/autopilot-managers.yml`), כל lane על branch משלו `auto/<lane>`:
+`mark` (עיצוב/UI) · `steve` (backend) · `oren` (data & integrity) · `ayalon` (product/social) · `scout` (מודיעין) · `gabbana` (adversarial QA).
+בנוסף — המנוע הכללי (`autopilot.yml`, heartbeat כל 10 דק׳) עובד על `auto/engine`. **אף lane לא נוגע ב-main ישירות**: ג'ף (`jeff-merge.yml`) הוא סמכות ה-merge היחידה — engine ראשון, ואז שאר ה-lanes — עם gates: build/render + `scripts/guard_checks.sh` + adversarial persona review. דחייה נרשמת ב-`ci-debug/jeff-rejections.txt` וה-lane מתקן אותה בריצה הבאה. Kill-switch: קובץ `.agents_paused` על main (Telegram `/pause`).
+
+### עדכון תשתית 2026-07-05
+- **Review לפני merge גם למנוע הראשי:** `autopilot.yml` דוחף ל-`auto/engine` בלבד, לעולם לא ישירות ל-main; `jeff-merge.yml` ממזג את engine ראשון. ה-review האדברסרי הוא persona-based: עדשת **גבאנה** ל-`static/index.html` + tokens, עדשת **סטיב (CTO)** ל-`app.py` / `scripts/` / workflows.
+- **מחלקת אסטרטגיה אוטונומית:** `.github/workflows/strategy.yml` — רץ DAILY עד שחידות 05-08 (`.claude/master/strategy/`) קיימות, ואז WEEKLY refresh לחידה הכי ישנה. Personas: tobi / anna / bernard / amancio. התוצרים נוחתים דרך `auto/strategy` בשער jeff-merge.
+- **שכבת Telegram קנונית:** `scripts/tglib.py` — chunking ל-4096 תווים, retries כולל 429, markdown fallback, audit log של כשלים ב-`.claude/telegram_failures.log`. `scripts/tg.sh` ו-`telegram_send.py` = wrappers דקים בלבד; `telegram_bot.py` שומר getUpdates offset מתמיד (`.tg_bot_offset`).
+- **Retrospective אוכף כתיבה:** `retrospective.yml` נכשל (BLOCKING) אם `LEARNING_LOG.md` לא קיבל section מתוארך של אותו יום — אחרי 7 ריצות שכתבו כלום.
+- **נמחקו (superseded):** `scripts/orchestrator.py` + `scripts/autopilot.sh` (הוחלפו במערכת ה-lanes), `docs/MASTER_PLAN.md` (עותק zombie — המסמך הזה הקנוני), `docs/DESIGN_STANDARDS.md` / `COLOR_SYSTEM.md` / `ICON_SYSTEM.md` (הוחלפו ב-`docs/VISUAL_VISION.md`), ותיקיית `agents/` הישנה בשורש הריפו.
 
 ### Scope Report (פותח כל Board Sync)
 ```

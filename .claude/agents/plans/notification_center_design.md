@@ -1,3 +1,5 @@
+> ⚠️ הפניות במסמך זה ל-DESIGN_STANDARDS התיישנו — המקור העדכני: docs/VISUAL_VISION.md. תוכנית אב: .claude/master/MASTER_PLAN.md.
+
 # Notification Center — Visual Design Brief
 
 **כיוון:** מארק | **תאריך:** 2026-06-19 | **ביצוע:** דולצ'ה | **QA:** גבאנה

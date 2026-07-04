@@ -1,3 +1,5 @@
+> ⚠️ הפניות במסמך זה ל-DESIGN_STANDARDS התיישנו — המקור העדכני: docs/VISUAL_VISION.md. תוכנית אב: .claude/master/MASTER_PLAN.md.
+
 # Empty States Design Guide
 
 **כיוון:** מארק | **תאריך:** 2026-06-19 | **ביצוע:** דולצ'ה | **QA:** גבאנה

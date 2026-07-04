@@ -1,3 +1,5 @@
+> ⚠️ הפניות במסמך זה ל-ICON_SYSTEM התיישנו — המקור העדכני: docs/VISUAL_VISION.md. תוכנית אב: .claude/master/MASTER_PLAN.md.
+
 # Cycle 2 — Product Roadmap
 
 **תאריך יעד:** 3 ימים מעכשיו (יעד: 2026-06-22)

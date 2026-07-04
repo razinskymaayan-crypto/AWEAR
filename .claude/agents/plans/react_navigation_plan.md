@@ -1,3 +1,5 @@
+> ⚠️ הפניות במסמך זה ל-ICON_SYSTEM התיישנו — המקור העדכני: docs/VISUAL_VISION.md. תוכנית אב: .claude/master/MASTER_PLAN.md.
+
 # React Navigation — Cycle 2 P0 Plan
 
 ## מה צריך להיות מוכן לפני הinstall

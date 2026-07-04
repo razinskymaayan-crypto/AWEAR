@@ -1,3 +1,5 @@
+> ⚠️ הפניות במסמך זה ל-DESIGN_STANDARDS התיישנו — המקור העדכני: docs/VISUAL_VISION.md. תוכנית אב: .claude/master/MASTER_PLAN.md.
+
 # שאלה למארק: typography token alignment — שלוש החלטות פתוחות
 
 **deadline:** לפני Cycle 2 typography migration.

@@ -1,202 +1,173 @@
 ---
 name: spa-navigation
-description: Orientation map for AWEAR's static/index.html — 5101-line vanilla JS SPA. Use before editing any frontend code to find the right function, HTML target, line range, or pattern. Covers view routing, render function map, i18n, localStorage state, and the global const/let order critical for TDZ safety.
+description: Orientation map for AWEAR's static/index.html — an 11,754-line vanilla JS SPA. Use before editing any frontend code to find the right function, HTML target, line range, or pattern. Covers view routing, render function map, i18n, localStorage state, and the global const/let order critical for TDZ safety.
 ---
 
 # SPA Navigation — static/index.html
 
-5101 lines · 146 functions · vanilla JS/HTML/CSS · no build step · served by FastAPI.
+11,754 lines · ~290 functions · vanilla JS/HTML/CSS · no build step · served by FastAPI.
 
-## The Only Router: `showView(name)` — line 1604
+> **Generated 2026-07-05 against 11,754 lines. Line numbers drift — trust the grep pattern; the number is only a hint.** If `wc -l static/index.html` differs by more than ~200 lines, regenerate this skill.
+
+## File Structure — where you are
+
+| Zone | ~Lines | Find it with |
+|------|--------|--------------|
+| CSS (`<style>`) | 15–2702 | `grep -n "^<style>\|^</style>" static/index.html` |
+| HTML views (`<main>`) | 2717–2957 | `grep -n "<main id=\|</main>" static/index.html` |
+| Bottom nav (`<nav>`) | 2959–2966 | `grep -n "data-view=" static/index.html \| head -6` |
+| JS (`<script>`) | 3050–11752 | `grep -n "^<script>\|^</script>" static/index.html` |
+
+## The Only Router: `showView(name)` — ~L3316 — `grep -n "function showView"`
 
 Every screen transition goes through one function. It:
-1. Toggles `.active` on `<section class="view" id="name">` elements
+1. Toggles `.active` on `<section class="view" id="name">` elements and nav buttons
 2. Calls the render/init function for that view
-3. Sets `feed-mode` / `chat-mode` CSS class on `<main>`
+3. Sets `feed-mode` / `chat-mode` class on `<main>`, hides nav for chat, updates `VIEW_TITLES` header
 
 **To navigate programmatically:** call `showView('viewname')`. Never toggle `.active` directly.
 
----
-
-## View Map — all 18 screens
-
-| `showView(name)` | Function called | Defined at line | HTML render target |
-|-----------------|----------------|-----------------|--------------------|
-| `home` | `renderHome()` | 2473 | `#home-wrap` |
-| `closet` | `renderCloset()` | 2143 | `#closet-body` |
-| `feed` | `renderFeed()` | 2324 | `#feed-scroll` |
-| `explore` | `initExplore()` | 3879 | `#ex-wrap` |
-| `analytics` | `renderAnalytics()` | 2708 | `#analytics-wrap` |
-| `outfits` | `initOutfitGen()` | 2822 | `#og-wrap` |
-| `rewards` | `renderRewards()` | 3001 | `#rw-wrap` |
-| `sustainability` | `renderSustainability()` | 3072 | `#sus-wrap` |
-| `marketplace` | `renderMarketplace()` | 3147 | `#mp-wrap` |
-| `publicclosets` | `renderPublicClosets()` | 3424 | `#pc-wrap` |
-| `seasonal` | `renderSeasonalReport()` | 3498 | `#sr-wrap` |
-| `compare` | `initCompare()` | 4933 | `#cmp-wrap` |
-| `shopping` | `initShoppingFeed()` | 4866 | `#shopping` section |
-| `admin` | `renderAdminDashboard()` | 4651 | `#adm-wrap` |
-| `stylists` | `renderStylistMarketplace()` | 4729 | `#styl-wrap` |
-| `wishlist` | `renderWishlist()` | 3662 | `#wl-wrap` |
-| `chat` | `initChat()` | 3747 | `#chat-messages` |
-
-**`home` is the default** — its `<section>` has `class="view active"` in HTML and `renderHome()` is called on page load. All constants it uses must be declared before that call.
+**Default view is `feed`** (not home): `<section id="feed" class="view active">` ~L2927, booted by `requestAnimationFrame(() => showView('feed'))` ~L5021 — `grep -n "Auto-render feed on load"`.
 
 ---
 
-## Adding a New View — 4 steps
+## View Map — all 22 screens
 
-1. **Add HTML section** (after line ~1353, before the `</main>`):
+Sections: ~L2719–2956 — `grep -n '<section id=.*class="view'`
+
+| `showView(name)` | Function | ~Line | Grep pattern | Render target |
+|-----------------|----------|-------|--------------|---------------|
+| `home` | `renderHome()` | 5292 | `"function renderHome"` | `#home-wrap` |
+| `closet` | `renderCloset()` | 4314 | `"function renderCloset"` | `#closet-body` |
+| `feed` | `renderFeed()` | 4699 | `"function renderFeed"` | `#feed-scroll` |
+| `explore` | `initExplore()` | 9561 | `"function initExplore"` | `#ex-wrap` |
+| `analytics` | `renderAnalytics()` | 5830 | `"function renderAnalytics"` | `#analytics-wrap` |
+| `season-recap` | `renderSeasonRecap(getActiveSeason())` | 5558 | `"function renderSeasonRecap"` | `#season-recap-wrap` |
+| `outfits` | `initOutfitGen()` | 6142 | `"function initOutfitGen"` | `#og-wrap` |
+| `rewards` | `renderRewards()` | 6724 | `"function renderRewards"` | `#rw-wrap` |
+| `wallet` | `renderWallet()` | 6795 | `"function renderWallet"` | `#wl-wrap` (see ⚠ below) |
+| `agents` | `renderAgents()` | 6877 | `"function renderAgents"` | `#agents-wrap` |
+| `sustainability` | `renderSustainability()` | 6970 | `"function renderSustainability"` | `#sus-wrap` |
+| `marketplace` | `renderMarketplace()` | 7157 | `"function renderMarketplace"` | `#mp-wrap` |
+| `publicclosets` | `renderPublicClosets()` | 8835 | `"function renderPublicClosets"` | `#pc-wrap` |
+| `seasonal` | `renderSeasonalReport()` | 8921 | `"function renderSeasonalReport"` | `#sr-wrap` |
+| `wishlist` | `renderWishlist()` | 9085 | `"function renderWishlist"` | `#wl-list` |
+| `chat` | `initChat()` | 9172 | `"function initChat"` | `#chat-messages` |
+| `dm` | `renderDM()` | 9325 | `"function renderDM("` | `#dm-outer` (list ~9330 / thread ~9393) |
+| `admin` | `renderAdminDashboard()` | 10871 | `"function renderAdminDashboard"` | `#adm-wrap` |
+| `stylists` | `renderStylistMarketplace()` | 10949 | `"function renderStylistMarketplace"` | `#styl-wrap` |
+| `shopping` | `initShoppingFeed()` | 11086 | `"function initShoppingFeed"` | `#shopping` section |
+| `compare` | `initCompare()` | 11160 | `"function initCompare"` | `#cmp-wrap` |
+| `user-profile` | `renderUserProfile()` | 11416 | `"function renderUserProfile"` | `#up-wrap` |
+
+⚠ **Duplicate id gotcha:** both the wallet section (~L2745) and wishlist section (~L2866) contain a `<div id="wl-wrap">`. `getElementById` returns the wallet one (first in DOM); wishlist renders into `#wl-list` instead. Don't add a third.
+
+---
+
+## Adding a New View — 5 steps
+
+1. **Add HTML section** (inside `<main>`, before `</main>` ~L2957):
    ```html
    <section id="myview" class="view">
      <div class="mv-wrap" id="mv-wrap"></div>
    </section>
    ```
-
-2. **Add nav button** (inside `<nav>`):
-   ```html
-   <button class="nav-btn" data-view="myview" data-i18n="nav.myview"></button>
-   ```
-
-3. **Add to `showView()`** (line ~1626, inside the function body):
+2. **Add routing** inside `showView()` (`grep -n "function showView"`):
    ```js
    if (name === 'myview') renderMyView();
    ```
-
-4. **Write the render function** (after the last existing render function, around line 5000):
-   ```js
-   function renderMyView() {
-     const data = loadWardrobe(); // or whatever state you need
-     document.getElementById('mv-wrap').innerHTML = `
-       <div class="section-header">${t('myview.title')}</div>
-       ...
-     `;
-   }
-   ```
-
-5. **Add i18n keys** to both `static/i18n/en.json` and `static/i18n/he.json`.
-
-6. **Wire it up check**: after adding, verify `showView('myview')` in console actually calls your function.
+   Also add a title to `VIEW_TITLES` (~L3123 — `grep -n "const VIEW_TITLES"`).
+3. **Add entry point** — either a nav button (`<button data-view="myview">`, only 5 slots) or an `onclick="showView('myview')"` chip (see the home quick-actions row — `grep -n "hq-btn"`).
+4. **Write the render function** near related features (see Render Function Pattern). Declare any new global `const`/`let` in the TDZ-safe zone (below), not next to the function.
+5. **Add i18n keys** to `static/i18n/en.json` + `static/i18n/he.json`, then verify: `showView('myview')` in console actually renders.
 
 ---
 
 ## Render Function Pattern
 
-Every render function follows this structure:
-
 ```js
 function renderFoo() {
-  // 1. Load state
-  const wardrobe = loadWardrobe();              // helper: returns array
-  const prof = loadProfile();                   // helper: returns {name, handle, city, bio, photo}
-  const meta = loadMeta();                      // helper: returns {}
-
-  // 2. Compute derived data
-  const items = wardrobe.filter(i => i.category === 'top');
-
-  // 3. Build HTML and inject
-  document.getElementById('foo-wrap').innerHTML = `
+  const wardrobe = loadWardrobe();            // 1. Load state via helpers
+  const items = wardrobe.filter(i => i.category === 'top');  // 2. Derive
+  document.getElementById('foo-wrap').innerHTML = `           // 3. Inject
     <div class="foo-header">${t('foo.title')}</div>
     ${items.map(item => `
-      <div class="foo-card" data-id="${attr(item.id)}">
-        ${esc(item.name)}
-      </div>
+      <div class="foo-card" data-id="${attr(item.id)}">${esc(item.name)}</div>
     `).join('')}
   `;
-
-  // 4. Attach event listeners AFTER innerHTML is set
-  document.querySelectorAll('.foo-card').forEach(card => {
-    card.addEventListener('click', () => handleFooClick(card.dataset.id));
-  });
+  document.querySelectorAll('.foo-card').forEach(card =>      // 4. Listeners AFTER innerHTML
+    card.addEventListener('click', () => handleFooClick(card.dataset.id)));
 }
 ```
 
-**Always use** `esc()` for user-visible values, `attr()` for HTML attribute values.  
-**Never** use `innerHTML +=` — always replace the full target at once.
+**Always** `esc()` for user-visible values, `attr()` for attribute values. **Never** `innerHTML +=` — replace the full target at once.
+
+**Event delegation:** ~108 `data-action` attributes exist; larger views (marketplace, sheets) use one delegated listener reading `dataset.action` — `grep -n "dataset.action"`. Follow the existing pattern of the view you're editing.
 
 ---
 
-## i18n Pattern
+## i18n — ~L3058–3110 — `grep -n "function t(\|applyStaticI18n\|let LOCALE"`
 
 ```js
-// In JS render functions:
-t('home.greeting_morning')          // simple key
-t('home.look_n', {n: 3})           // with substitution → replaces {n}
-
-// In static markup (HTML that exists before JS runs):
-<span data-i18n="nav.closet"></span>   // applyStaticI18n() fills these at startup
-
-// Adding new strings:
-// static/i18n/en.json  →  { "home": { "my_key": "My text" } }
-// static/i18n/he.json  →  { "home": { "my_key": "הטקסט שלי" } }
+t('home.greeting_morning')        // simple key      — t() defined ~L3075
+t('home.look_n', {n: 3})          // {n} substitution
+<span data-i18n="nav.closet">     // static markup — applyStaticI18n() (~L3091) fills at startup
 ```
 
-`t()` fails loud — returns the key itself if missing. Never returns blank. Means a missing key is immediately visible in the UI.
-
-**LOCALE**: `'en'` (default) or `'he'` (opt-in). RTL applied automatically via `applyDocumentDirection()`.
+New strings go in **both** `static/i18n/en.json` and `static/i18n/he.json`. `t()` fails loud — returns the key itself if missing, never blank. `LOCALE` (~L3058): `'en'` default, `'he'` opt-in, persisted as `awear_locale`; RTL applied automatically.
 
 ---
 
-## State — localStorage Helpers
+## State — localStorage Helpers — ~L4150–4171 — `grep -n "const WARDROBE_KEY"`
 
-All state lives in `localStorage`. Never read/write localStorage directly — use the helpers:
+Never touch localStorage directly — use the helpers:
 
 ```js
-loadWardrobe()      / saveWardrobe(arr)    // array of clothing items
-loadProfile()       / saveProfile(obj)     // {name, handle, city, bio, photo}
-loadMeta()          / saveMeta(obj)        // metadata object
-loadShelf()         / saveShelf(arr)       // shelf items
-loadFeedPosts()     / saveFeedPosts(arr)   // feed content
-loadLastScan()      / saveLastScan(v)      // last scan timestamp
-
-// Raw helper (for new keys):
-ls.load('my_key')   // JSON.parse with null fallback
-ls.save('my_key', value)  // JSON.stringify
+loadWardrobe()  / saveWardrobe(arr)    // awear_wardrobe — clothing items
+loadProfile()   / saveProfile(obj)     // awear_profile — {name, handle, city, bio, photo}
+loadMeta()      / saveMeta(obj)        // awear_meta
+loadShelf()     / saveShelf(arr)       // awear_shelf — resale listings
+loadFeedPosts() / saveFeedPosts(arr)   // awear_feed
+loadLastScan()  / saveLastScan(v)      // awear_lastscan
+ls.load('key')  / ls.save('key', v)    // raw JSON helper (~L4155) for new keys
+loadSet(k) / saveSet(k, s)             // Set persistence (~L4574) — likes/follows
 ```
 
-**Clothing item shape** (from `ClothingItem` in app.py):
-```js
-{
-  category: 'top' | 'bottoms' | 'dress' | 'outerwear' | 'shoes' | 'bag' | 'accessory',
-  name: string,
-  color: string,
-  price_estimate_usd: number,
-  wear_count: number,   // incremented on outfit use
-  search_query: string, // for affiliate link generation
-  buy_options: [...],
-}
-```
+Other keys in the wild: `awear_credits` (CREDITS_KEY), `awear_locale`, `awear_feed_style_filter`, `awear_wallet_seeded` — grep `"awear_"` before inventing a key.
+
+**Clothing item shape** (from `ClothingItem` in app.py): `{category: 'top'|'bottoms'|'dress'|'outerwear'|'shoes'|'bag'|'accessory', name, color, price_estimate_usd, wear_count, search_query, buy_options: [...]}`
 
 ---
 
 ## Global const/let Order — TDZ Safety Map
 
-Declarations execute top-to-bottom. Any `const`/`let` used inside a function called early must be declared at a lower line number than that call. **`renderHome()` is called at page load — line ~2473 and all its dependencies must be declared before that.**
+Declarations execute top-to-bottom. `showView('feed')` fires at startup (~L5021), so **everything `renderFeed()` touches must be declared above ~L5021** — and anything used by `showView` itself above ~L3316.
 
-Critical ranges:
-| Lines | What's declared |
-|-------|----------------|
-| ~1434 | `LOCALE`, `STRINGS` (let) |
-| ~1491 | DOM refs: `fileInput`, `closetBody`, `modal`, `modalCard`, `mainEl` |
-| ~1499–1598 | `ICONS`, `CAT_ICON`, `CAT_LABEL`, `CAT_EMOJI` |
-| ~1635–1732 | `sheetOverlay`, `STORE_LOGOS`, `AFF_RETAILERS`, `COMPLEMENTS` |
-| ~2024–2045 | localStorage keys + helpers (`loadProfile`, `loadWardrobe`, etc.) |
-| ~2054 | `profileTab` (let) |
-| ~2143–4933 | All render functions |
+| ~Lines | What's declared | Grep anchor |
+|--------|----------------|-------------|
+| 3058–3110 | `LOCALE`, `STRINGS`, `t()`, `applyStaticI18n()` | `"let LOCALE"` |
+| 3115–3119 | DOM refs: `fileInput`, `closetBody`, `modal`, `modalCard`, `mainEl` | `"const fileInput"` |
+| 3123 | `VIEW_TITLES` | `"const VIEW_TITLES"` |
+| 3134–3240 | `ICONS`, `icon()`, `CAT_ICON`, `CAT_LABEL` | `"const ICONS"` |
+| 3304–3305 | `esc()`, `attr()` | `"function esc("` |
+| 3357–3504 | `sheetOverlay`, `STORE_LOGOS`, `AFF_RETAILERS`, `COMPLEMENTS` | `"const sheetOverlay"` |
+| 4150–4171 | storage keys + load/save helpers | `"const WARDROBE_KEY"` |
+| 4183 | `profileTab` (let) | `"let profileTab"` |
+| 4314–11740 | render/init functions (hoisted — safe anywhere) | — |
 
-**Safe zone to add a new constant:** between lines 2024–2100 (after the localStorage helpers, before the first render function).  
-**Never add** a `const`/`let` after line 2473 that is referenced inside `renderHome()`.
+**Safe zone for a new global constant:** right after the localStorage helpers (~L4171–4195), before `renderCloset()`. **Never** declare a `const`/`let` below ~L5021 that startup rendering references. `function` declarations hoist; `const`/`let` do not. (See `js-tzdead-zone` skill.)
 
 ---
 
 ## Key Helpers Reference
 
-| Helper | Purpose |
-|--------|---------|
-| `esc(s)` | HTML-escape for `innerHTML` content |
-| `attr(s)` | HTML-escape for attribute values |
-| `t(key, vars?)` | i18n string lookup |
-| `showView(name)` | Navigate to a screen |
-| `showToast(msg)` | Display a toast notification — line 2426 |
-| `showSheet()` / closing at line 1885 | Bottom sheet for buy options |
-| `storeLogo(name)` | 3-letter retailer abbreviation |
+| Helper | ~Line | Grep pattern |
+|--------|-------|--------------|
+| `esc(s)` / `attr(s)` — HTML escaping | 3304 | `"function esc("` |
+| `t(key, vars?)` — i18n lookup | 3075 | `"function t("` |
+| `icon(name, size)` — SVG icon (ICONS has 40+) | 3215 | `"function icon("` |
+| `showView(name)` — navigate | 3316 | `"function showView"` |
+| `showToast(msg)` — toast notification | 4852 | `"function showToast"` |
+| `openSheetSingle` / `openSheetItem` / `openSheetLook` / `closeSheet` — buy bottom sheet | 3439–3816 | `"function openSheet"` |
+| `storeLogo(name)` — retailer wordmark/monogram | 3388 | `"function storeLogo"` |
+| `getActiveSeason()` — for season-recap | 5548 | `"function getActiveSeason"` |
