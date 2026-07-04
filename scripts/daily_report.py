@@ -38,10 +38,17 @@ def israel_now():
 
 
 def tg(mode, *args):
+    """Send via the canonical layer and SURFACE failures — a daily report that
+    silently vanishes leaves the founders blind (the old check=False did that)."""
     try:
-        subprocess.run(["bash", str(TG), mode, *args], check=False)
+        r = subprocess.run(["bash", str(TG), mode, *args], check=False)
+        if r.returncode != 0:
+            print(f"tg FAILED (mode={mode}, rc={r.returncode}) — "
+                  f"see .claude/telegram_failures.log", file=sys.stderr)
+        return r.returncode == 0
     except Exception as e:
-        print(f"tg failed: {e}")
+        print(f"tg failed: {e}", file=sys.stderr)
+        return False
 
 
 def parse_ledger(day: str):

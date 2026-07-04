@@ -15,8 +15,10 @@ Keep this running (in its own terminal) while you want to work remotely.
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -24,12 +26,17 @@ import urllib.request
 import anthropic
 from dotenv import load_dotenv
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "scripts"))
+import tglib  # canonical Telegram layer — chunking, retries, failure audit log
+
 load_dotenv()
 
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 BASE = f"https://api.telegram.org/bot{TOKEN}"
 MODEL = "claude-opus-4-8"
 MAX_HISTORY = 20  # keep last N messages per chat
+OFFSET_FILE = ".tg_bot_offset"  # survives restarts — a crash must not re-process
+                                # (or skip) founder commands. CI poller uses .tg_offset.
 
 client = anthropic.Anthropic()  # uses ANTHROPIC_API_KEY from .env
 
@@ -100,17 +107,21 @@ def _queue_inbox(task: str, who: str) -> bool:
     """Untagged /task -> shared INBOX 'new tasks' section (Jeff routes it).
     Returns True only if the task landed in INBOX.md itself. The old silent fallback
     to .tg_inbox (gitignored => invisible to CI agents) reported success while the
-    task was effectively lost — now it is reported as a failure to the founder."""
+    task was effectively lost — now it is reported as a failure to the founder.
+    Holds an exclusive flock for the whole read-modify-write: agents and the CI
+    poller also write INBOX.md, and an unlocked RMW can silently drop their edit."""
     line = f"{task.strip()}  _(from {who} via Telegram)_\n"
     try:
-        with open(".claude/master/INBOX.md", "r") as f:
+        with open(".claude/master/INBOX.md", "r+") as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
             content = f.read()
-        marker = "## משימות חדשות\n"
-        if marker in content:
-            content = content.replace(marker, marker + "\n" + line, 1)
-            with open(".claude/master/INBOX.md", "w") as f:
+            marker = "## משימות חדשות\n"
+            if marker in content:
+                content = content.replace(marker, marker + "\n" + line, 1)
+                f.seek(0)
                 f.write(content)
-            return True
+                f.truncate()
+                return True
     except Exception:  # noqa: BLE001
         pass
     try:
@@ -227,7 +238,9 @@ def main() -> None:
         return
     print(f"✅ הבוט @{me['result']['username']} רץ. כתבו לו /start בטלגרם. (Ctrl+C לעצור)")
 
-    offset = 0
+    # Persisted offset: a restart must not re-fetch (and re-execute) old founder
+    # commands, nor lose its place in the update stream.
+    offset = tglib.load_offset(OFFSET_FILE)
     while True:
         try:
             updates = tg("getUpdates", {"offset": offset, "timeout": 30}, timeout=40)
@@ -238,6 +251,7 @@ def main() -> None:
 
         for upd in updates.get("result", []):
             offset = upd["update_id"] + 1
+            tglib.save_offset(OFFSET_FILE, offset)
             msg = upd.get("message")
             if not msg or "text" not in msg:
                 continue
@@ -250,31 +264,31 @@ def main() -> None:
 
             # Founder-only: only Carmel & Razi (TG_ALLOWED_IDS) may use the bot.
             if not _is_allowed(user_id):
-                tg("sendMessage", {"chat_id": chat_id,
-                                   "text": "מצטער, הבוט הזה פרטי לצוות Awear."})
+                tglib.send_text("מצטער, הבוט הזה פרטי לצוות Awear.",
+                                chat_id=str(chat_id), markdown=False)
                 continue
 
             if text == "/start":
-                tg("sendMessage", {
-                    "chat_id": chat_id,
-                    "text": "היי! אני הצוות של Awear 👗\n"
-                            "• כתבי חופשי — אסטרטגיה/מוצר/גיוס.\n"
-                            "• /task <משימה> — מכניס לתור (ג'ף ינתב).\n"
-                            "• @<סוכן> <משימה> — ישר לסוכן (dolce/sam/valentino/...).\n"
-                            "• /status · /pause · /resume — שליטה.",
-                })
+                tglib.send_text(
+                    "היי! אני הצוות של Awear 👗\n"
+                    "• כתבי חופשי — אסטרטגיה/מוצר/גיוס.\n"
+                    "• /task <משימה> — מכניס לתור (ג'ף ינתב).\n"
+                    "• @<סוכן> <משימה> — ישר לסוכן (dolce/sam/valentino/...).\n"
+                    "• /status · /pause · /resume — שליטה.",
+                    chat_id=str(chat_id), markdown=False)
                 histories[chat_id] = []
                 continue
 
             # Commands + @agent routing take precedence over free chat.
             cmd_reply = _parse_command(text, who)
             if cmd_reply is not None:
-                tg("sendMessage", {"chat_id": chat_id, "text": cmd_reply})
+                tglib.send_text(cmd_reply, chat_id=str(chat_id), markdown=False)
                 continue
 
             tg("sendChatAction", {"chat_id": chat_id, "action": "typing"})
             answer = reply_for(chat_id, text)
-            tg("sendMessage", {"chat_id": chat_id, "text": answer})
+            # tglib chunks answers over 4096 chars — a long AI reply must arrive, not 400.
+            tglib.send_text(answer, chat_id=str(chat_id), markdown=False)
 
 
 if __name__ == "__main__":

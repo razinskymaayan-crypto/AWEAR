@@ -1,6 +1,9 @@
 """
 Send a summary message to the founders' Telegram chat.
 
+Thin CLI over scripts/tglib.py — the canonical Telegram layer (chunking, retries,
+markdown fallback, failure audit log all live THERE, not here).
+
 One-time setup (30 sec):
   1. In Telegram, open @BotFather -> /newbot -> follow prompts -> copy the bot TOKEN.
   2. Open your new bot and send it any message (e.g. "hi") so it can find your chat.
@@ -10,42 +13,23 @@ Then run:
 It auto-detects your chat id (prints it so you can save TELEGRAM_CHAT_ID in .env).
 """
 
-import json
-import os
 import sys
-import urllib.parse
-import urllib.request
+from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
-CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
-BASE = f"https://api.telegram.org/bot{TOKEN}"
-
-
-def _call(method: str, params: dict | None = None) -> dict:
-    url = f"{BASE}/{method}"
-    if params:
-        req = urllib.request.Request(url, data=urllib.parse.urlencode(params).encode())
-    else:
-        req = urllib.request.Request(url)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.loads(r.read().decode())
+sys.path.insert(0, str(Path(__file__).resolve().parent / "scripts"))
+import tglib  # noqa: E402
 
 
 def resolve_chat_id() -> str | None:
-    if CHAT_ID:
-        return CHAT_ID
-    if os.path.exists(".tg_chat"):  # saved by telegram_bot.py — avoids getUpdates conflict
-        try:
-            cid = open(".tg_chat").read().strip()
-            if cid:
-                return cid
-        except Exception:  # noqa: BLE001
-            pass
-    res = _call("getUpdates")
+    chat = tglib.get_chat_id()  # env var, then .tg_chat saved by telegram_bot.py
+    if chat:
+        return chat
+    # Last resort: ask getUpdates (only works if the founder messaged the bot recently
+    # and no poller consumed the update).
+    try:
+        res = tglib.api("getUpdates")
+    except tglib.TgError:
+        return None
     for upd in reversed(res.get("result", [])):
         msg = upd.get("message") or upd.get("edited_message") or upd.get("channel_post")
         if msg and msg.get("chat", {}).get("id") is not None:
@@ -54,27 +38,19 @@ def resolve_chat_id() -> str | None:
 
 
 def send(text: str) -> None:
-    if not TOKEN:
+    if not tglib.get_token():
         print("❌ אין TELEGRAM_BOT_TOKEN ב-.env — צרו בוט ב-@BotFather והוסיפו אותו.")
         sys.exit(1)
     chat_id = resolve_chat_id()
     if not chat_id:
         print("❌ לא נמצא chat id — שלחו הודעה אחת לבוט שלכם בטלגרם ונסו שוב.")
         sys.exit(1)
-    try:
-        res = _call("sendMessage", {"chat_id": chat_id, "text": text, "parse_mode": "Markdown"})
-    except Exception:  # noqa: BLE001 — a 400 (e.g. unescaped _/*) raises HTTPError
-        res = {}
-    if not res.get("ok"):
-        # Markdown parse errors lose the whole message. Retry as plain text —
-        # an unformatted report beats a vanished one.
-        res = _call("sendMessage", {"chat_id": chat_id, "text": text})
-    if res.get("ok"):
+    if tglib.send_text(text, chat_id=chat_id):
         print(f"✅ נשלח לטלגרם (chat {chat_id})")
-        if not CHAT_ID:
+        if not tglib.get_chat_id():
             print(f"💡 לשמירה, הוסיפו ל-.env:  TELEGRAM_CHAT_ID={chat_id}")
     else:
-        print("❌ שגיאת טלגרם:", res)
+        print("❌ שגיאת טלגרם — הפרטים ב-.claude/telegram_failures.log")
         sys.exit(1)
 
 

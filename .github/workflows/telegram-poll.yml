@@ -1,7 +1,7 @@
-# TEMP live-test poller for the two-way Telegram bridge. Polls getUpdates every 2 min,
-# runs the real routing logic from telegram_bot.py (/task, @agent, /status, auth), and
-# replies. Lets the founders test "write to the bot -> get an answer" without the VM.
-# REMOVE (or stop the schedule) after the test — it costs Actions minutes.
+# PRODUCTION two-way Telegram bridge (promoted from "temp test" 2026-07-05 — it IS the
+# primary channel: the local telegram_bot.py has no supervisor and is optional).
+# Polls getUpdates every 2 min, runs the real routing logic from telegram_bot.py
+# (/task, @agent, /status, auth), and replies. Sends go through scripts/tglib.py.
 name: telegram-poll
 
 on:
@@ -34,17 +34,13 @@ jobs:
           [ -z "$TG_TOKEN" ] && { echo "no token"; exit 0; }
           pip -q install anthropic python-dotenv >/dev/null 2>&1 || true
           python3 - <<'PY'
-          import json, os, urllib.parse, urllib.request
+          import os, sys
+          sys.path.insert(0, "scripts")
+          import tglib                     # canonical layer: chunking, retries, 429, audit log
           import telegram_bot as tb
           TOKEN = os.environ["TG_TOKEN"].strip()
-          BASE = f"https://api.telegram.org/bot{TOKEN}"
-          def api(method, params):
-              data = urllib.parse.urlencode(params).encode()
-              return json.loads(urllib.request.urlopen(f"{BASE}/{method}", data=data, timeout=30).read())
-          off = 0
-          try: off = int(open(".tg_offset").read().strip())
-          except Exception: pass
-          r = api("getUpdates", {"offset": off, "timeout": 0})
+          r = tglib.api("getUpdates", {"offset": tglib.load_offset(".tg_offset"), "timeout": 0}, token=TOKEN)
+          off = tglib.load_offset(".tg_offset")
           acted = 0
           for u in r.get("result", []):
               off = u["update_id"] + 1
@@ -52,15 +48,15 @@ jobs:
               if "text" not in m: continue
               uid = m.get("from", {}).get("id", 0)
               who = m.get("from", {}).get("first_name") or str(uid)
-              chat = m["chat"]["id"]
+              chat = str(m["chat"]["id"])
               if not tb._is_allowed(uid):
-                  api("sendMessage", {"chat_id": chat, "text": "בוט פרטי לצוות Awear."}); continue
+                  tglib.send_text("בוט פרטי לצוות Awear.", chat_id=chat, markdown=False, token=TOKEN); continue
               reply = tb._parse_command(m["text"], who)
               if reply is None:
                   reply = f"✅ קיבלתי: \"{m['text']}\". הבוט עובד! (פקודות: /task <משימה> · @<סוכן> <משימה> · /status · /pause)"
-              api("sendMessage", {"chat_id": chat, "text": reply})
+              tglib.send_text(reply, chat_id=chat, markdown=False, token=TOKEN)
               acted += 1
-          open(".tg_offset", "w").write(str(off))
+          tglib.save_offset(".tg_offset", off)
           os.makedirs("ci-debug", exist_ok=True)
           open("ci-debug/poll.txt", "w").write(f"updates_seen={len(r.get('result', []))} processed={acted} offset={off}\n")
           # If a founder routed work (@agent task / /task), fire the managers workflow NOW by
@@ -96,11 +92,9 @@ jobs:
             done
             # HONEST ACK: the founder already got a ✅ from the poll step. If the push failed,
             # the routed task never reached the repo — tell them instead of dropping it silently.
-            if [ "$PUSHED" = "false" ] && [ -n "$TG_TOKEN" ] && [ -n "$TG_CHAT" ]; then
-              curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
-                   --data-urlencode chat_id="$TG_CHAT" \
-                   --data-urlencode text="❌ AWEAR: המשימה ששלחת בטלגרם לא נקלטה (push נכשל אחרי 3 ניסיונות). שלחי אותה שוב." \
-                   >/dev/null || true
+            if [ "$PUSHED" = "false" ]; then
+              TELEGRAM_BOT_TOKEN="$TG_TOKEN" TELEGRAM_CHAT_ID="$TG_CHAT" \
+                bash scripts/tg.sh text "❌ AWEAR: המשימה ששלחת בטלגרם לא נקלטה (push נכשל אחרי 3 ניסיונות). שלחי אותה שוב." || true
               exit 1
             fi
           else echo "nothing to commit"; fi
