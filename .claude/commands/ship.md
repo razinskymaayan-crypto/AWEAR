@@ -7,7 +7,7 @@ You are running the AWEAR **ship workflow** for this change: $ARGUMENTS
 Follow every step in order. Do NOT skip the gates. Stop and report if a gate fails.
 
 1. **Sync first.** `git fetch origin` then merge the latest (`git merge origin/main -X theirs --no-edit` if behind) so you build on current code and don't overwrite the other team. Confirm JS still valid after merge.
-2. **Build / confirm the change.** Implement `$ARGUMENTS` if not already done (delegate UI work to the `dolce` subagent per `docs/DESIGN_STANDARDS.md`). Keep it scoped — no unrelated edits.
+2. **Build / confirm the change.** Implement `$ARGUMENTS` if not already done (delegate UI work to the `dolce` subagent per `docs/VISUAL_VISION.md`). Keep it scoped — no unrelated edits.
 3. **Design gate (visual changes only).** Run the `gabbana` subagent to review against the standards. Score must be **8+**. If below, fix (via `dolce`) and re-gate until it passes.
 4. **Code gate.** For non-trivial logic, run the `code-reviewer` skill.
 5. **Verify (required — all must pass).**

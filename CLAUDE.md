@@ -1,7 +1,16 @@
 # AWEAR — Agent Briefing (auto-loaded, do not remove)
 
 ## Project
-Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.html`, ~5500 lines) + React Native (`mobile/`). DB: SQLite (`data/awear.db`). Server: `venv312/bin/uvicorn app:app --reload --port 8000`.
+Fashion social app. Stack: FastAPI (`app.py`, ~4,100 lines) + Vanilla JS SPA (`static/index.html`, ~11,800 lines) + React Native (`mobile/` — dormant, web-first). DB: SQLite (`data/awear.db`). Server: `venv312/bin/uvicorn app:app --reload --port 8000`.
+> קבצי הענק גדלים כל הזמן — מספרי שורות במסמכים הם רמז, לא אמת. grep הוא האמת.
+
+## Autonomous pipeline (מי מריץ מה)
+- **Engine**: `.github/workflows/autopilot.yml` — ריצה כל ~15 דק', עובד על branch `auto/engine` (לא על main!)
+- **Lanes**: `autopilot-managers.yml` — 6 lanes מקביליים (mark/steve/oren/ayalon/scout/gabbana) על `auto/<lane>`, כל 30 דק'
+- **Strategy**: `strategy.yml` — מחלקת אסטרטגיה אוטונומית (tobi/anna/bernard/amancio), יומי עד סגירת חידות 05-08 ואז שבועי, על `auto/strategy`
+- **Merge gate**: `jeff-merge.yml` — **הדרך היחידה ל-main**: build + guard_checks + ביקורת אדברסרית בפרסונות (Gabbana לעיצוב, Steve לקוד). דחייה → `ci-debug/jeff-rejections.txt` והסוכן מתקן בריצה הבאה
+- **Learning**: `retrospective.yml` יומי — חייב לכתוב סקציה יומית ל-`knowledge/LEARNING_LOG.md` או שהריצה נכשלת
+- **Telegram**: הכל דרך `scripts/tglib.py` (canonical: chunking 4096, retries, 429, לוג כשלים ב-`.claude/telegram_failures.log`). `tg.sh` ו-`telegram_send.py` הם wrappers דקים — לא להוסיף curl ישיר
 
 ## Iron Rules — violation = task rejected by Gabbana/Steve
 1. **No emoji in UI chrome** — `icon()` in JS templates, inline SVG in static HTML (DS-008)
@@ -38,7 +47,8 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 | Design master plan | `docs/VISUAL_VISION.md` ← single source of truth |
 | **Knowledge INDEX** | `.claude/agents/knowledge/INDEX.md` ← כל קודי הלמידה במקום אחד |
 | Domain knowledge | `.claude/agents/knowledge/OW.md` (org-wide) + `ds.md` / `be.md` / `mb.md` / `sf.md` / `mg.md` |
-| Research index | `.claude/agents/knowledge/research.md` — check before doing any research |
+| Research dedup | `python3 scripts/intel_db.py known "<topic>"` לפני כל מחקר (IN-001) + `knowledge/in.md` |
+| Strategy riddles | `.claude/master/strategy/INDEX.md` — חידות התוכנית העסקית + סטטוס |
 | **Plans INDEX** | `.claude/agents/plans/INDEX.md` ← כל הplans עם status |
 | Activity log | `.claude/agents/activity_log.md` (last 20 entries — check for concurrent file edits) |
 | Specs / plans | `.claude/agents/plans/` |
@@ -53,7 +63,7 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 - **Trust the Edit tool** — it errors on failure. Do NOT re-read a file after editing to verify.
 - **Grep to verify, not Read** — `grep -n "your_change" file` costs ~10 tokens; re-reading costs thousands.
 
-## SPA orientation (static/index.html — 5500 lines)
+## SPA orientation (static/index.html — ~11,800 lines and growing)
 - View routing: `showView('home'|'feed'|'profile'|'wardrobe'|'market'|'book'|'closet')`
 - `icon(name, size)` works **only in JS template literals** — never in static HTML
 - ICONS object has 40+ icons — check before adding new SVG
@@ -61,7 +71,7 @@ Fashion social app. Stack: FastAPI (`app.py`) + Vanilla JS SPA (`static/index.ht
 - TDZ risk: global `const`/`let` must be declared before first `renderXxx()` call
 - Use `spa-navigation` skill for a function/line map before editing
 
-## Backend orientation (app.py — ~1300 lines)
+## Backend orientation (app.py — ~4,100 lines and growing)
 - `_posts_cache`, `_products_cache`, `_profiles_cache` — loaded at startup from JSON
 - `_get_db()` returns SQLite connection with `row_factory = sqlite3.Row`
 - `_init_db()` runs at startup — add new tables here
