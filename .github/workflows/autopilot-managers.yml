@@ -111,7 +111,7 @@ jobs:
           - Commit to THIS branch (end message with Co-Authored-By). Do NOT touch main. One task per run, then stop.
           PROMPT
           )" \
-            --model opus \
+            --model claude-fable-5 \
             --permission-mode acceptEdits \
             --allowedTools \
               "Edit" "Write" "Read" "Glob" "Grep" "Task" "WebSearch" "WebFetch" \
