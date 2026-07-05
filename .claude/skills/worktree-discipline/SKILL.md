@@ -1,6 +1,6 @@
 ---
 name: worktree-discipline
-description: Worktree isolation discipline — Iron Rule #14 (.claude/agents/docs/daily_model.md). Use at the START of every worktree-assigned task, before writing any file, to verify you're in the correct worktree (not the main repo) and it isn't forked from a stale HEAD. Also covers what to do if Edit/Write refuses to work in your worktree (stop and report — never write to the main checkout). NOT needed if you were explicitly told to work on the main checkout.
+description: "Worktree isolation discipline — Iron Rule #14 (.claude/agents/docs/daily_model.md). Use at the START of every worktree-assigned task, before writing any file, to verify you're in the correct worktree (not the main repo) and it isn't forked from a stale HEAD. Also covers what to do if Edit/Write refuses to work in your worktree (stop and report — never write to the main checkout). NOT needed if you were explicitly told to work on the main checkout."
 allowed-tools: Read, Grep, Glob, Bash
 ---
 

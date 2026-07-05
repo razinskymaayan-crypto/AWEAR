@@ -66,6 +66,15 @@
 |---|---|---|---|
 | 0 | 3 subagents + verification | 3 subagents + 1 bash verification | One false-positive security claim caught by direct verification — lesson: subagent findings that drive drastic action must be re-verified in main context. |
 | 1 | main-context edits only, ~6 files | 8 files, no subagents | Under estimate. |
+| 2 | 3 parallel subagents + review | 3 subagents (~170k tok) + 1 reviewer (~61k) + main fixes | On estimate. |
+
+## Phase 2 — Skills (DONE 2026-07-05)
+
+**Changes:** all 15 SKILL.md files: sharp fire/not-fire descriptions, minimal `allowed-tools`, `context: fork` on code-reviewer only (report-producing), `disable-model-invocation: true` on skill-gardener + ship + sync (side effects). Progressive disclosure splits: code-reviewer 274→69 lines (+checklist.md), ui-ux-pro-max 252→77 (+ux-rules.md), spa-navigation 174→81 (+function-map.md), backend-patterns 208→101 (+reference.md). Nothing deleted — relocated; Hebrew/incident stories verbatim (reviewer-verified).
+**Accuracy fixes:** backend-patterns rewritten against app.py reality — real `_get_db()`/`init_db()` (repo truth is `init_db`, old CLAUDE.md's `_init_db` was wrong), `data/awear.db`, startup caches, BE-006 + `check_rate_limit` in the endpoint template, schema.sql correctly labeled aspirational-PostgreSQL (live schema = `CREATE TABLE` in `init_db()`). spa-navigation numbers refreshed (296 functions, 67 icons); rotting line numbers replaced with grep recipes.
+**New:** skill-gardener — evidence-driven maintenance of existing skills (reads knowledge codes, jeff-rejections, LEARNING_LOG, activity log; proposals via `gardener/<date>` branch through the jeff-merge gate; dedup vs previously-rejected proposals; never applies silently).
+**P4 review findings & resolution:** 1 BLOCKER (unquoted YAML descriptions truncated at ` #` — worktree-discipline lost its whole trigger text at runtime) + strict-parse failure in skill-creator (`Sibling:` colon) + 1 false claim (`or "unknown"`) → all fixed; every frontmatter now passes `yaml.safe_load` strictly. Decision logged: deterministic checks (orphan-data-check, token-adoption-audit) become scripts/guard-checks in Phases 4/7, NOT skills — skills are for judgment, hooks for determinism (OW-006).
+**Open knowledge gap noted:** SF-004 cited in CLAUDE.md has no sf.md entry — add in Phase 4 when rules get canonical enforcement notes.
 
 ## Phase 1 — CLAUDE.md pruning + hook slimming (DONE 2026-07-05)
 

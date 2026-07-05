@@ -1,6 +1,6 @@
 ---
 name: verify-rendering
-description: Verify AWEAR's static SPA actually renders in a real browser (not just JS syntax check) — loads a screen via headless Playwright, captures console/page errors, and screenshots it. Required before merging any commit that touches static/index.html rendering (DOM/CSS/JS), per Iron Rule #9 in .claude/agents/docs/daily_model.md. NOT needed for backend-only (app.py) or mobile/ changes that don't touch the SPA.
+description: "Verify AWEAR's static SPA actually renders in a real browser (not just JS syntax check) — loads a screen via headless Playwright, captures console/page errors, and screenshots it. Required before merging any commit that touches static/index.html rendering (DOM/CSS/JS), per Iron Rule #9 in .claude/agents/docs/daily_model.md. NOT needed for backend-only (app.py) or mobile/ changes that don't touch the SPA."
 allowed-tools: Read, Grep, Glob, Bash
 ---
 

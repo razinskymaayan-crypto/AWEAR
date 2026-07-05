@@ -1,6 +1,7 @@
 ---
 name: backend-rename-safety
 description: Use BEFORE renaming any field, endpoint, key, or data structure in app.py or schema.sql — fire the moment a rename is discussed or planned, not after. Prevents silent breakage across static/index.html and mobile/ (the price_estimate_ils→usd incident broke 54 callers with no console errors). NOT needed for brand-new fields/endpoints with no existing consumers — use backend-patterns for those.
+allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Backend Rename Safety Checklist

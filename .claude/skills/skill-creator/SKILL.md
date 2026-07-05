@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: Create new skills, improve existing ones, and measure skill performance for the AWEAR agent system. Use when building a skill from scratch, editing or optimizing an existing one, writing a SKILL.md, running evals to test quality, or improving a skill's triggering description. Trigger whenever the user mentions creating, editing, testing, or evaluating a skill. Sibling: skill-gardener — creator builds and evals NEW skills; gardener maintains EXISTING ones from accumulated correction evidence (rejections, learning codes, rework).
+description: "Create new skills, improve existing ones, and measure skill performance for the AWEAR agent system. Use when building a skill from scratch, editing or optimizing an existing one, writing a SKILL.md, running evals to test quality, or improving a skill's triggering description. Trigger whenever the user mentions creating, editing, testing, or evaluating a skill. Sibling: skill-gardener — creator builds and evals NEW skills; gardener maintains EXISTING ones from accumulated correction evidence (rejections, learning codes, rework)."
 ---
 
 # Skill Creator — AWEAR

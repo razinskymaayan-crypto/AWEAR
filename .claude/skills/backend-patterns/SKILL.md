@@ -1,6 +1,7 @@
 ---
 name: backend-patterns
 description: Orientation and patterns for AWEAR's app.py FastAPI backend (~4,100 lines). Use BEFORE adding a new endpoint, Pydantic model, Claude API call, or SQLite query — covers the endpoint template (BE-006 + rate limit), _get_db()/init_db() data access, startup caches, demo fallback, and where constants live. NOT for renames (use backend-rename-safety), frontend work, or mobile/.
+allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Backend Patterns — app.py
@@ -60,7 +61,7 @@ async def my_feature(data: MyRequest, request: Request):
 
 Rules:
 - `async def` always; request body = Pydantic BaseModel (add near existing models at top of file), never raw dict.
-- **BE-006 exactly as written** — older endpoints use `or "unknown"`; new code uses `or "anon"`.
+- **BE-006 exactly as written** — older endpoints use the ternary `... if request.client else "unknown"`; new code uses `or "anon"`.
 - `check_rate_limit_window(key, endpoint, limit, window)` exists for custom windows.
 - **No HTTP calls inside async ASGI endpoints** — never `fetch`/`httpx`/`requests` to your own server; call the function directly (SF-004, CLAUDE.md Iron Rule 5).
 - AI calls wrapped in try/except → demo fallback, and always return `"mode": "live"|"demo"` — the frontend reads it.
