@@ -1,6 +1,6 @@
 manager=steve
-branch=auto/steve commits_ahead_of_main=1
+branch=auto/steve commits_ahead_of_main=0
 claude_installed=/opt/hostedtoolcache/node/20.20.2/x64/bin/claude
 node=v20.20.2  npm=10.8.2
 auth_present=yes
-last_commit=3320cbe feat(reporting): daily report at 20:00 Israel + enforced agent-signed Telegram messages (Phase 5, INBOX)
+last_commit=5cf8d68 chore(jeff): log unmerged branches (conflict/rejected) [skip ci]
