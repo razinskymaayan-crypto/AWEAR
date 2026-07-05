@@ -2364,7 +2364,7 @@
         const hasFeed = loadFeedPosts().length > 0;
         const steps = [
           {done: wardrobe.length > 0, label: t('home.step_scan_item'), action: "document.getElementById('file-input').click()", pts: 25},
-          {done: onboarded, label: t('home.step_style_quiz'), action: "showView('onboarding')", pts: 25},
+          {done: onboarded, label: t('home.step_style_quiz'), action: "showOnboarding()", pts: 25},
           {done: hasName, label: t('home.step_add_name'), action: "showView('closet')", pts: 20},
           {done: hasPhoto, label: t('home.step_add_photo'), action: "showView('closet')", pts: 15},
           {done: hasFeed, label: t('home.step_share_feed'), action: "showView('feed')", pts: 15},
@@ -4399,7 +4399,7 @@
       if (closeModal) { document.getElementById('purchase-modal')?.classList.remove('show'); return; }
 
       const goWardrobe = e.target.closest('[data-action="go-wardrobe"]');
-      if (goWardrobe) { showView('wardrobe'); return; }
+      if (goWardrobe) { showView('closet'); return; }
     });
   }
 
