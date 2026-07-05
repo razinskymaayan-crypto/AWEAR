@@ -42,7 +42,7 @@ jobs:
       matrix:
         include:
           - manager: mark
-            lane: "Design/UI lane — the demo's look & feel is your job. ICs: dolce (feed/home/profile/closet/onboarding), valentino (shop/marketplace/analytics/stylist/explore), netta (tokens); gabbana = mandatory design gate (must score 8+). OWNS files (edit ONLY these): static/index.html, static/tokens.css, awear-tokens.json. Knowledge: OW.md + ds.md."
+            lane: "Design/UI lane — the demo's look & feel is your job. ICs: dolce (feed/home/profile/closet/onboarding), valentino (shop/marketplace/analytics/stylist/explore), netta (tokens); gabbana = mandatory design gate (must score 8+). OWNS files (edit ONLY these): static/index.html, static/app.css, static/app.js, static/tokens.css, awear-tokens.json. Knowledge: OW.md + ds.md. NOTE: the SPA is now split — HTML shell in index.html, all CSS in app.css, all JS in app.js."
           - manager: steve
             lane: "Backend + data lane. ICs: sam (app.py endpoints/models/DB), oren (data integrity in static/data/*.json). OWNS files (edit ONLY these): app.py, schema.sql, static/data/*.json, scripts/*.py. Knowledge: OW.md + be.md. Do NOT touch static/index.html (mark's lane) or docs/* (ayalon's lane)."
           - manager: ayalon

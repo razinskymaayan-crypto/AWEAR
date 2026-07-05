@@ -12,7 +12,11 @@
 # Exit:  0 = pass, 1 = a gate failed (prints the violation + citing code).
 
 set -u
+# The SPA was split out of index.html: HTML shell = index.html, CSS = app.css, JS = app.js.
+# Each check now targets the file its concern actually lives in.
 F="static/index.html"
+CSS="static/app.css"
+JS="static/app.js"
 fail=0
 note() { echo "  ❌ $1"; fail=1; }
 
@@ -20,19 +24,19 @@ note() { echo "  ❌ $1"; fail=1; }
 
 # ---- INVARIANTS (whole-file; these are locked decisions in docs/SURFACE_SPECS.md) ----
 
-# notch: header must reserve the top safe-area, viewport must opt in (Dynamic Island)
-grep -Eq 'header[^}]*env\(safe-area-inset-top\)' "$F" \
+# notch: header must reserve the top safe-area (CSS, in app.css), viewport must opt in (HTML meta)
+grep -Eq 'header[^}]*env\(safe-area-inset-top\)' "$CSS" 2>/dev/null || grep -Eq 'header[^}]*env\(safe-area-inset-top\)' "$F" \
   || note "header lost env(safe-area-inset-top) — Dynamic Island collision (SURFACE_SPECS/notch)"
 grep -q 'viewport-fit=cover' "$F" \
   || note "viewport meta lost viewport-fit=cover — notch not honored (SURFACE_SPECS/notch)"
 
 # locked: no external 'Google Shopping' wording/redirect — buy is in-app (SURFACE_SPECS item-sheet)
-if grep -iq 'google shopping' "$F"; then
+if grep -iq 'google shopping' "$F" "$JS" "$CSS" 2>/dev/null; then
   note "'Google Shopping' wording is back — buy must stay in-app via /api/orders (OW-011, SURFACE_SPECS)"
 fi
 
 # repeat-mistake registry: known non-existent class that crashed double-tap like (OW-008)
-if grep -q '\.fca-icon\b' "$F"; then
+if grep -q '\.fca-icon\b' "$CSS" "$JS" "$F" 2>/dev/null; then
   note "reference to non-existent class '.fca-icon' (canonical is '.fca-ico') — repeat of OW-008"
 fi
 
@@ -74,9 +78,9 @@ fi
 # fall back to everything this run added on top of origin/main — so the gate still bites post-commit.
 ADDED=""
 if git rev-parse --git-dir >/dev/null 2>&1; then
-  ADDED=$(git diff --cached -U0 -- "$F" 2>/dev/null | grep '^+' | grep -v '^+++' || true)
+  ADDED=$(git diff --cached -U0 -- "$F" "$CSS" "$JS" 2>/dev/null | grep '^+' | grep -v '^+++' || true)
   if [ -z "$ADDED" ] && git rev-parse origin/main >/dev/null 2>&1; then
-    ADDED=$(git diff origin/main...HEAD -U0 -- "$F" 2>/dev/null | grep '^+' | grep -v '^+++' || true)
+    ADDED=$(git diff origin/main...HEAD -U0 -- "$F" "$CSS" "$JS" 2>/dev/null | grep '^+' | grep -v '^+++' || true)
   fi
 fi
 

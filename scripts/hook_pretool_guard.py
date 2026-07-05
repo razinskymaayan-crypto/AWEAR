@@ -37,7 +37,9 @@ def main() -> int:
         )
         return 2
 
-    if not path.endswith("static/index.html"):
+    # The SPA was split: CSS -> app.css, JS -> app.js. Design invariants (DS-004 hex,
+    # DS-008 emoji, DS-009) now live in those files too, so guard all three.
+    if not path.endswith(("static/index.html", "static/app.css", "static/app.js")):
         return 0
 
     # The text this call ADDS (Edit -> new_string, Write -> content)

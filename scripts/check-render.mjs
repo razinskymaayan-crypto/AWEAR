@@ -10,12 +10,24 @@
 //
 // Run: node scripts/check-render.mjs   (needs: npm install)
 import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { JSDOM, VirtualConsole } from 'jsdom';
 
 const target = process.argv[2]
   ? new URL(process.argv[2], `file://${process.cwd()}/`)
   : new URL('../static/index.html', import.meta.url);
-const html = readFileSync(target, 'utf8');
+let html = readFileSync(target, 'utf8');
+
+// The SPA was split out of index.html into /static/app.css + /static/app.js. JSDOM only
+// executes INLINE <script>, so re-inline the external files here (function replacement so
+// literal `$` in the source isn't treated as a regex substitution). No-ops on an unsplit
+// file, so this stays backward-compatible.
+const baseDir = dirname(fileURLToPath(target));
+html = html.replace(/<link rel="stylesheet" href="\/static\/app\.css">/,
+  () => `<style>${readFileSync(resolve(baseDir, 'app.css'), 'utf8')}</style>`);
+html = html.replace(/<script src="\/static\/app\.js"><\/script>/,
+  () => `<script>${readFileSync(resolve(baseDir, 'app.js'), 'utf8')}</script>`);
 const errors = [];
 const vc = new VirtualConsole();
 vc.on('jsdomError', (e) => errors.push(e.message + (e.detail ? ` :: ${e.detail}` : '')));
