@@ -19,7 +19,7 @@ Fashion social app. FastAPI `app.py` (~4.1k lines) + vanilla JS SPA `static/inde
 - Plans: master `.claude/master/MASTER_PLAN.md` · design SoT `docs/VISUAL_VISION.md` · specs `.claude/agents/plans/INDEX.md`
 - Tokens SoT: `awear-tokens.json` (edit the json — it generates `static/tokens.css`)
 - Memory: `STATE.md` · `DECISIONS.md` · `notes/` (per-task) · rules of who-writes-what: `.claude/rules/memory.md`
-- Pipeline/automation docs: `.claude/agents/docs/PIPELINE.md` · role quick-starts: `.claude/agents/docs/role-quickstart.md` · Telegram only via `scripts/tglib.py`
+- Pipeline/automation docs: `.claude/agents/docs/PIPELINE.md` · agent briefs: `.claude/agents/docs/briefs/` · Telegram only via `scripts/tglib.py`
 
 ## Verify (fast commands)
 `bash scripts/guard_checks.sh` · `npm run check-render` · `bash scripts/verify.sh` (tests+lint). Before editing giant files, load the matching skill: `spa-navigation` (index.html), `backend-patterns` (app.py).

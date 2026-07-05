@@ -67,6 +67,15 @@
 | 0 | 3 subagents + verification | 3 subagents + 1 bash verification | One false-positive security claim caught by direct verification — lesson: subagent findings that drive drastic action must be re-verified in main context. |
 | 1 | main-context edits only, ~6 files | 8 files, no subagents | Under estimate. |
 | 2 | 3 parallel subagents + review | 3 subagents (~170k tok) + 1 reviewer (~61k) + main fixes | On estimate. |
+| 3 | 4 parallel subagents + review | 4 subagents (~238k tok) + reviewer | On estimate. |
+
+## Phase 3 — Agents (DONE 2026-07-05)
+
+**Changes:** all 19 agent definitions rewritten to the ~30-line format — **1,986 → 535 total lines** (-73%). Uniform template: quoted-YAML frontmatter (Phase 2 lesson applied), minimal tool allowlists (gabbana = read-only auditor; ayalon/varan = no Bash, direction-only; scout's scoped Bash preserved verbatim), persona identity kept in Hebrew voice, unique scope/gates/escalation kept, learnings read/write instructions added (domain file + INDEX row after corrections), output = focused summary + `.claude/rules/reporting.md` block.
+**Model routing:** implementers (dolce/netta/valentino/sam/oren/shira/scout/dana/roei) → `model: sonnet`; judgment/gate/strategy agents (jeff/steve/gabbana/mark/ayalon/varan/tobi/anna/bernard/amancio) inherit the session's strongest model. No pure-mechanical agents exist → nothing routed to haiku (status pings are workflow-level, addressed in Phase 9).
+**Vision self-critique:** dolce/netta/valentino must run verify-rendering (screenshot) and compare vs VISUAL_VISION.md before reporting done; gabbana requires the implementer's screenshot as audit input.
+**Content preservation:** displaced unique content moved VERBATIM to `.claude/agents/docs/briefs/<name>.md` (12 briefs); generic conduct sections (חשיבה אנליטית, פירוק משימה, אימות כלים, etc.) deleted — canonical distillation now at `.claude/agents/docs/agent-common.md`, originals in git history.
+**Deletions:** `role-quickstart.md` (Phase 1 holding doc) — folded into the 19 agent files; CLAUDE.md pointer updated to `briefs/`.
 
 ## Phase 2 — Skills (DONE 2026-07-05)
 
@@ -90,4 +99,5 @@
 ### Deletion log (P1 — nothing deleted without an entry here)
 | Date | What | Why | Where preserved |
 |---|---|---|---|
-| — | (none yet) | | |
+| 2026-07-05 | Generic conduct sections in 19 agent files | Duplicated boilerplate; model-default behavior | Distilled: `.claude/agents/docs/agent-common.md`; originals: git history (pre-Phase-3) |
+| 2026-07-05 | `.claude/agents/docs/role-quickstart.md` | Folded into the 19 agent definitions | git history (commits 78765b9..) |
