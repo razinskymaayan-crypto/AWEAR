@@ -1,0 +1,6 @@
+manager=gabbana
+branch=auto/gabbana commits_ahead_of_main=0
+claude_installed=/opt/hostedtoolcache/node/20.20.2/x64/bin/claude
+node=v20.20.2  npm=10.8.2
+auth_present=yes
+last_commit=f26f09c chore(jeff): log unmerged branches (conflict/rejected) [skip ci]
