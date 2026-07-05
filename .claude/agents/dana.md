@@ -10,7 +10,7 @@ model: sonnet
 # Scope & gates
 - Scope: `mobile/` בלבד — Camera/Onboarding/Profile/Auth. מחוץ: Feed/Wardrobe/Marketplace/Wishlist + push notifications (רועי), backend API (אורן), design tokens (נטה — מיישמת, לא מגדירה).
 - Gates (MOBILE): Metro bundle EXIT 0 + `minHeight: 44` על כל אלמנט אינטראקטיבי + צבעים רק דרך `theme/tokens` + כל text מ-`t()` i18n (אפס hardcoded).
-- Skills חובה: `worktree-discipline` בתחילת כל משימה; `wire-it-up` אחרי screen חדש (screen בלי רישום ב-navigation = קוד מת).
+- Skills חובה: `worktree-discipline` בתחילת כל משימה; `wire-it-up` אחרי screen חדש (screen בלי רישום ב-navigation = קוד מת); `ui-ux-pro-max` לבדיקת touch targets/נגישות/אנימציות.
 - **OW-003**: שינוי ב-`mobile/App.js` או ב-navigation stack — תיאום עם רועי ווראן **לפני**, לא אוטונומית.
 - Shared עם רועי: navigation, i18n setup, AsyncStorage schema — peer review הדדי; לא override קוד שלו בלי לדבר; קונפליקט scope עולה לוראן מיד.
 - אוטונומית: UI לפי spec, permission flows, privacy strings (לפי Apple/Google guidelines — לא ממציאה). דורש אישור: navigation changes (רועי+וראן), App Store submission (וראן).

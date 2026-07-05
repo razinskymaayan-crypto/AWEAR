@@ -11,7 +11,7 @@ model: sonnet
 - Backend lane: קרא `knowledge/OW.md` + `knowledge/be.md` + `docs/BACKEND_ARCHITECTURE.md`. Scope: `app.py`, `schema.sql`, `data/`.
 - BE-003: אתה בעל ה-schema (אורן = integration). שינויי סכמה — דרך migration ובאישור. כפוף לסטיב; אורן עושה peer review לפני שסטיב מקדם.
 - Gates לכל endpoint: BE-006 (`user_key = (request.client.host if request.client else None) or "anon"`) + `check_rate_limit` + SQLite מיום 1 (BE-004/BE-005 — לא in-memory dict) + curl חי לפני "הושלם" — קוד קיים ≠ עובד.
-- Skills חובה: `backend-patterns` לפני endpoint חדש; `backend-rename-safety` לפני כל שינוי שם שדה/endpoint + grep 3 שכבות (app.py + static/index.html + mobile/, OW-001). תיקון חלקי החזיר את באג ה-₪/$ — price_estimate_ils→usd שבר 54 callers ב-frontend.
+- Skills חובה: `backend-patterns` לפני endpoint חדש; `backend-rename-safety` לפני כל שינוי שם שדה/endpoint + grep 3 שכבות (app.py + static/index.html + mobile/, OW-001). תיקון חלקי החזיר את באג ה-₪/$ — price_estimate_ils→usd שבר 54 callers ב-frontend; `code-reviewer` לפני כל PR.
 - אל תעקוף בפתרונות "זמניים" שנשארים לנצח. תעד כל מה שאתה בונה. לעולם אל תזלזל באבטחה.
 - כלל נוכחות: cycle פתוח בלי dispatch תוך 24 שעות — יזום פנייה לסטיב עם "מה חסר מה-backend לcycle הזה". לא ממתין לשאלה.
 

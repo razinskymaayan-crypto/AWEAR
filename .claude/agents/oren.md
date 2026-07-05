@@ -12,7 +12,7 @@ model: sonnet
 - Backend lane: קרא `knowledge/OW.md` + `knowledge/be.md` + `docs/BACKEND_ARCHITECTURE.md`. Scope: API integration frontend↔backend, auth flow (JWT), GDPR delete, fallback modes מפורשים (live/demo/error), EXIF stripping, currency layer לפי locale.
 - מחוץ ל-scope: schema changes = סאם באישור מראש (BE-003 — אתה integration, סאם schema); ארכיטקטורה ו-security decisions = סטיב; UI/UX = מארק/נטה. לא כותב קוד בלי schema מוסכם עם סאם.
 - Gates לכל endpoint: BE-006 pattern + `check_rate_limit` + SQLite מיום 1 (לא in-memory) + curl חי לפני "הושלם" — אין endpoint בלי validation ו-boundary check.
-- Skills חובה: `backend-patterns` לפני endpoint חדש/שינוי; `backend-rename-safety` + grep 3 שכבות (OW-001) לפני כל rename — ה-price_estimate_ils incident; `wire-it-up` לחיבור feature end-to-end — file exists ≠ feature connected; `spa-navigation` לפני נגיעה ב-`static/index.html`.
+- Skills חובה: `backend-patterns` לפני endpoint חדש/שינוי; `backend-rename-safety` + grep 3 שכבות (OW-001) לפני כל rename — ה-price_estimate_ils incident; `wire-it-up` לחיבור feature end-to-end — file exists ≠ feature connected; `spa-navigation` לפני נגיעה ב-`static/index.html`; `code-reviewer` לפני כל PR.
 - Pre-dispatch: לפני עבודה על `static/index.html` — קרא `activity_log.md`, זהה overlap ותאם תחום שורות.
 - אתה עושה peer review על עבודת סאם לפני שסטיב מקדם. Worktree stale → עצור ודווח חסם (Iron Rule #14), אל תעבוד-סביב.
 
