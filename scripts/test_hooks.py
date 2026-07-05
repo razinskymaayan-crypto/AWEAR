@@ -22,6 +22,17 @@ BASH_BLOCK = [
     "git add " + ".env",
     "git reset " + "--hard origin/main",
     "git clean " + "-fd",
+    # reviewer probes (Phase 4 P4 review)
+    RMRF + " $CLAUDE_PROJECT_DIR",
+    RMRF + " ./",
+    RMRF + " ./*",
+    "rm " + "-r -f /",
+    "rm " + "--recursive --force /",
+    "git push origin " + "+main",
+    "cat " + ".env",
+    "mv " + ".env /tmp/x",
+    "cp " + ".env /tmp/",
+    "base64 " + ".env",
 ]
 BASH_PASS = [
     RMRF + " worktrees/agent-x",
@@ -33,6 +44,12 @@ BASH_PASS = [
     "git add STATE.md",
     "grep -rn env static/",
     "bash scripts/guard_checks.sh",
+    # reviewer probes — must stay allowed
+    "git add " + ".env.example",
+    "echo K=x >" + " .env.example",
+    "cat " + ".env.example",
+    RMRF + " $CLAUDE_PROJECT_DIR/worktrees/agent-x",
+    "python3 scripts/tglib.py send hello",
 ]
 EDIT_BLOCK = [
     ("/Users/x/AWEAR/.env", "X=1"),
@@ -45,7 +62,7 @@ EDIT_PASS = [
     ("static/index.html", "color: var(--accent, #e8526a);"),
     ("app.py", "x = 1"),
     ("static/index.html", "<div class='sf-card-img'></div>"),
-    (".env.example", "KEY=placeholder"),  # example file is fine? -> see note below
+    (".env.example", "KEY=placeholder"),
 ]
 
 

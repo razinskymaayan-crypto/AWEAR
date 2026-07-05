@@ -7,32 +7,70 @@ this hook makes it mechanical. Exit 2 blocks the call; stderr goes back to the m
 
 Scope: only Claude-issued Bash commands. CI (GitHub Actions) does not pass through
 this hook — jeff-merge's `git reset --hard` etc. are unaffected.
+Tests: python3 scripts/test_hooks.py
 """
 import json
 import re
 import sys
 
+SECRET_FILE = r"(\.env\b(?!\.(example|sample|template))|client_secret[^ ]*\.json|google_credentials\.json|google_token\.json|[^ ]*\.key\b)"
+
 BLOCKERS = [
-    # rm -rf on dangerous targets (repo root, home, git dir, parent, bare wildcard).
-    # Scoped deletes (worktrees/agent-x, /tmp/..., node_modules) pass.
-    (re.compile(r"\brm\s+(-[a-zA-Z]*[rR][a-zA-Z]*f[a-zA-Z]*|-[a-zA-Z]*f[a-zA-Z]*[rR][a-zA-Z]*)\s+"
-                r"(--\S+\s+)*[\"']?(/(?!tmp/|private/tmp/|var/folders/)|~|\$HOME|\.\.?(?=[\s\"']|$)|\.git\b|\*)"),
-     "rm -rf on repo root / home / .git / parent / wildcard. Delete a NARROW path instead, "
-     "or log the intent in NEEDS_DECISION.md for the founder."),
-    # force push (any remote/branch — history rewrite is a founder decision)
-    (re.compile(r"\bgit\s+push\b[^|;&]*(\s--force\b|\s-f\b|\s--force-with-lease\b)"),
+    # force push (any remote/branch — history rewrite is a founder decision), incl. +refspec
+    (re.compile(r"\bgit\s+push\b[^|;&]*(\s--force\b|\s-f\b|\s--force-with-lease\b|\s\+\S+)"),
      "force push rewrites shared history. Land through the jeff-merge gate instead."),
-    # dropping tables (sqlite3 CLI or inline SQL)
+    # dropping tables (sqlite3 CLI, inline SQL, heredocs)
     (re.compile(r"\bDROP\s+TABLE\b", re.I),
      "DROP TABLE is irreversible on the live DB. Schema changes go through init_db() migration + Sam's approval (BE-003)."),
     # writing/appending/staging secret files
-    (re.compile(r"(>>?\s*|tee\s+(-a\s+)?|git\s+add\s+[^|;&]*)(\.env\b|client_secret[^ ]*\.json|google_credentials\.json|[^ ]*\.key\b)"),
+    (re.compile(r"(>>?\s*|tee\s+(-a\s+)?|git\s+add\s+[^|;&]*)" + SECRET_FILE),
      "writing/staging secret files (.env, credentials, keys) is blocked. Secrets are managed by the founder only."),
+    # reading/copying secrets out (Read-tool deny alone doesn't cover Bash)
+    (re.compile(r"\b(cat|head|tail|less|more|base64|xxd|strings|cp|mv|scp)\s+[^|;&]*" + SECRET_FILE),
+     "reading/moving secret files via shell is blocked (same policy as the Read deny-list)."),
     # history-destroying local resets (CI does this in Actions, agents must not)
     (re.compile(r"\bgit\s+(reset\s+--hard|clean\s+-[a-zA-Z]*f)"),
      "git reset --hard / git clean -f can destroy uncommitted agent work. Commit/stash first, "
      "or escalate via stall-escalation if you believe a hard reset is required."),
 ]
+
+RM_MSG = ("rm -rf on repo root / home / .git / parent / wildcard / absolute path outside tmp. "
+          "Delete a NARROW relative path instead, or log the intent in NEEDS_DECISION.md for the founder.")
+
+TMP_PREFIXES = ("/tmp/", "/private/tmp/", "/var/folders/")
+
+
+def _rm_is_dangerous(cmd: str) -> bool:
+    """True if any rm invocation has recursive+force flags aimed at a dangerous target.
+
+    Parses flags token-wise so split forms (`rm -r -f`, `rm --recursive --force`) are caught.
+    """
+    for m in re.finditer(r"(?:^|[|;&]\s*|\$\(\s*|`\s*|\bsudo\s+)rm\s+([^|;&`]*)", cmd):
+        tokens = m.group(1).split()
+        letters, targets = set(), []
+        for tok in tokens:
+            if tok == "--recursive":
+                letters.add("r")
+            elif tok == "--force":
+                letters.add("f")
+            elif tok.startswith("--"):
+                continue
+            elif tok.startswith("-") and len(tok) > 1:
+                letters.update(tok[1:].lower().replace("r", "r"))
+            else:
+                targets.append(tok.strip("\"'"))
+        if not ({"r", "f"} <= {c for c in letters if c in "rf"}):
+            continue
+        for t in targets:
+            if t in ("/", "~", ".", "..", "./", "*", "./*", ".git", "$HOME", "${HOME}",
+                     "$CLAUDE_PROJECT_DIR", "${CLAUDE_PROJECT_DIR}",
+                     "$CLAUDE_PROJECT_DIR/", "${CLAUDE_PROJECT_DIR}/"):
+                return True
+            if t.startswith(("~/", "$HOME/", "${HOME}/", ".git/")):
+                return True
+            if t.startswith("/") and not t.startswith(TMP_PREFIXES):
+                return True
+    return False
 
 
 def main() -> int:
@@ -45,16 +83,23 @@ def main() -> int:
     if not cmd:
         return 0
 
-    for pattern, why in BLOCKERS:
-        if pattern.search(cmd):
-            print(
-                f"BLOCKED by bash guard: {why}\n"
-                f"Command was: {cmd[:200]}\n"
-                f"Do NOT try to bypass (no eval/base64/sh -c tricks) — adjust the approach or escalate.",
-                file=sys.stderr,
-            )
-            return 2
+    why = None
+    if _rm_is_dangerous(cmd):
+        why = RM_MSG
+    else:
+        for pattern, msg in BLOCKERS:
+            if pattern.search(cmd):
+                why = msg
+                break
 
+    if why:
+        print(
+            f"BLOCKED by bash guard: {why}\n"
+            f"Command was: {cmd[:200]}\n"
+            f"Do NOT try to bypass (no eval/base64/sh -c tricks) — adjust the approach or escalate.",
+            file=sys.stderr,
+        )
+        return 2
     return 0
 
 

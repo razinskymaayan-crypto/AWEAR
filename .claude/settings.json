@@ -6,6 +6,9 @@
       "Read(./client_secret*.json)",
       "Read(./google_credentials.json)",
       "Read(./google_token.json)",
+      "Read(**/.env)",
+      "Read(**/client_secret*.json)",
+      "Read(**/google_credentials.json)",
       "Read(**/*.key)"
     ]
   },
@@ -50,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/scripts/hook_posttool_check.sh\" 2>/dev/null || true"
+            "command": "HOOK=\"${CLAUDE_PROJECT_DIR:-.}/scripts/hook_posttool_check.sh\"; if [ -f \"$HOOK\" ]; then bash \"$HOOK\"; else exit 0; fi"
           }
         ]
       }

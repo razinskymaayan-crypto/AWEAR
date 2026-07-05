@@ -80,6 +80,7 @@
 - `scripts/test_hooks.py`: 32-case regression suite for the guards (self-referencing-safe); wired into Phase 7's verify script. **Live-fire proof:** the Bash guard blocked this session's own first test command (contained literal rm -rf patterns).
 **Prose↔rail dedup:** INDEX.md header now records which codes are hook-enforced (DS-004/008/009, secrets, SQLi) — CLAUDE.md kept only pointer-form (done in Phase 1). SF-004 gap closed: canonical entry added to sf.md + INDEX row (passes guard_checks' index-sync gate).
 **Calibration during testing:** /tmp deletes and .env.example edits initially false-positived — fixed; edge cases (rm -rf ./build passes, `.`/`..` block) verified.
+**P4 review hardening (post-03ba2f1):** rm parsing rewritten as token-wise flag logic (catches `rm -r -f`, `--recursive --force`, `$CLAUDE_PROJECT_DIR`, `./`, `./*`); force-push `+refspec` covered; secrets now blocked on shell READ too (cat/cp/mv/base64 — closes the Read-deny bypass); `.env.example` staging un-blocked; PostToolUse switched to correct semantics (stderr + exit 2 reaches the model; exit-0 stdout is transcript-only and was inert); nested-path Read denies added; suite now 44 cases. Live-fire ×2: guard blocked this session's own test-editing heredoc — Edit-tool workflow used instead, as designed. Accepted residuals (reviewer-judged out of scope): `find . -delete`, `truncate`, `git branch -D`, `curl|sh`, literal "DROP TABLE" in grep commands.
 
 ## Phase 3 — Agents (DONE 2026-07-05)
 
