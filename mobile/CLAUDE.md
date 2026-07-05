@@ -1,6 +1,7 @@
 # Mobile / React Native rules (auto-loaded in mobile/ context)
 
 Supplement to root CLAUDE.md. Applies to Dana, Roei, Netta, Varan.
+Token values + usage rules: `.claude/rules/design-tokens.md` (SoT: `awear-tokens.json`).
 
 ## Token imports — always use theme/tokens
 ```js

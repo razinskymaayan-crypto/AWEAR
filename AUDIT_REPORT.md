@@ -65,6 +65,18 @@
 | Phase | Est. | Actual | Notes |
 |---|---|---|---|
 | 0 | 3 subagents + verification | 3 subagents + 1 bash verification | One false-positive security claim caught by direct verification — lesson: subagent findings that drive drastic action must be re-verified in main context. |
+| 1 | main-context edits only, ~6 files | 8 files, no subagents | Under estimate. |
+
+## Phase 1 — CLAUDE.md pruning + hook slimming (DONE 2026-07-05)
+
+**Assumptions:** nested `static/CLAUDE.md` + `mobile/CLAUDE.md` remain the path-scoped load mechanism (native, reliable); `.claude/rules/*.md` files are loaded by reference (pointers from CLAUDE.md and nested files), not assumed auto-loaded.
+
+**Changes:**
+- Root CLAUDE.md rewritten: 8,552 B (~2,140 tok) → **2,288 B (~570 tok)**. Now: stack one-liner, start-here protocol (STATE/effort-tier/activity-log/DECISIONS), Iron Rules in pointer form, key paths, verify commands, compaction directive.
+- Displaced content (nothing lost): pipeline section → `.claude/agents/docs/PIPELINE.md`; role quick-starts → `.claude/agents/docs/role-quickstart.md` (Phase 3 folds into agent files); design-token block → `.claude/rules/design-tokens.md`; editing discipline → `.claude/rules/editing.md`; SPA/backend/mobile orientation deleted — verified covered by `spa-navigation`/`backend-patterns` skills + nested CLAUDE.md files.
+- `session_knowledge_inject.sh`: full INDEX (12,071 B) → org-wide table only + domain pointers + last 3 activity lines + STATE.md head-20 → **4,406 B (~1,300 tok)**.
+
+**Before/after auto-load per session:** ~5,900 tokens → **~2,600 tokens** (CLAUDE.md ~570 + hook ~1,300 + MEMORY.md ~740). Remaining chunk is the Hebrew OW table (12 org-wide rules — highest-value content, kept deliberately). Forward references created intentionally: `.claude/rules/{effort,memory,reporting}.md`, `scripts/verify.sh` — land in Phases 5–8; tracked in STATE.md.
 
 ### Deletion log (P1 — nothing deleted without an entry here)
 | Date | What | Why | Where preserved |

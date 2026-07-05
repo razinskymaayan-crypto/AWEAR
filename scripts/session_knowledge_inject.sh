@@ -13,12 +13,18 @@ K=".claude/agents/knowledge"
 [ -f "$K/INDEX.md" ] || exit 0
 
 echo "=== AWEAR KNOWLEDGE (auto-injected; OW-006 enforcement) ==="
-echo "Learning-code INDEX — before domain work, read the FULL entry in the cited file:"
+echo "Org-wide learning codes (mandatory for ALL agents). For domain work, grep $K/INDEX.md"
+echo "for your domain's codes (BE/DS/MB/SF/MG/IN) and read the FULL entry in the cited file:"
 echo ""
-cat "$K/INDEX.md"
+# Inject ONLY the org-wide table — the full INDEX (~3k tokens) was the biggest auto-load leak.
+awk '/^## Org-Wide/{f=1; next} /^## /{if(f) exit} f && /^\|/' "$K/INDEX.md"
 echo ""
-echo "=== LAST 5 ACTIVITY-LOG ENTRIES (check for concurrent edits / done areas — OW-003, OW-011) ==="
-grep -E '^\|' ".claude/agents/activity_log.md" 2>/dev/null | tail -5
+echo "Domain files: $K/{be,ds,mb,sf,mg,in}.md · full registry: $K/INDEX.md"
 echo ""
+echo "=== LAST 3 ACTIVITY-LOG ENTRIES (concurrent-edit check — OW-003, OW-011) ==="
+grep -E '^\|' ".claude/agents/activity_log.md" 2>/dev/null | tail -3
+echo ""
+echo "=== STATE (resume point — read STATE.md for full detail) ==="
+head -20 "STATE.md" 2>/dev/null
 echo "=== END AUTO-INJECTED KNOWLEDGE ==="
 exit 0

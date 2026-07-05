@@ -1,6 +1,7 @@
 # Frontend / static/ rules (auto-loaded in static/ context)
 
 Supplement to root CLAUDE.md. Applies to Dolce, Oren, Shira, Gabbana, Netta.
+Token values + usage rules: `.claude/rules/design-tokens.md` (SoT: `awear-tokens.json`).
 
 ## DS self-check before every Gabbana review
 ```bash
