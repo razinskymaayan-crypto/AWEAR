@@ -1,0 +1,52 @@
+# main-canary: post-push smoke for commits that BYPASS the jeff gate.
+# WHY: jeff's gates (check-render/pytest/guards/persona review) protect only the auto/**
+# lane path. The 2026-07-05 SPA split was pushed DIRECTLY to main from an interactive
+# session and shipped 2 blank-screen bugs — no gate saw it. This canary runs the same
+# deterministic checks on every human/PAT push to main and alerts Telegram on red.
+# Alert-only by design: main belongs to humans; the canary never reverts.
+# Cost: ~3 runner-minutes per human push, zero tokens. Pushes made by Actions with the
+# default GITHUB_TOKEN (jeff, breaker, ledgers) don't trigger `on: push` at all, and
+# [skip ci] commits are skipped by GitHub — so this fires only on the uncovered path.
+name: main-canary
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: main-canary
+  cancel-in-progress: true   # a newer push supersedes — only the latest state matters
+
+jobs:
+  smoke:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Install
+        run: |
+          npm install --no-audit --no-fund
+          pip install -q -r requirements.txt pytest
+      - name: Smoke — render + tests + guards (same gates jeff runs)
+        run: |
+          npm run check-render
+          python3 -m pytest -q
+          bash scripts/guard_checks.sh
+      - name: Alert founders — main is red
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PUSHER: ${{ github.actor }}
+          SHA: ${{ github.sha }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          bash scripts/tg.sh text "canary: direct push to main by ${PUSHER} FAILED the smoke checks (render/pytest/guards). main is RED. Commit ${SHA:0:7}: $(echo "$COMMIT_MSG" | head -1). Fix or revert — lanes will branch from a broken base until then." || true

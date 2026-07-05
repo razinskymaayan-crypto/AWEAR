@@ -18,10 +18,11 @@
 | 9 | Rules enforceable by code live in hooks/guard_checks, not prose; prose keeps pointer-form only | OW-006: unenforced rule = recommendation | foundation Phase 4 |
 | 10 | Agent model routing: implementers `model: sonnet`; judgment/gate/strategy agents inherit the session's strongest model | Cost scales with volume of implementation work, judgment stays sharp | foundation Phase 3 |
 | 11 | Parallel work on shared files = worktrees under `AWEAR/worktrees/` + separate anchors, serial merge | OW-010 incident-derived | knowledge/OW.md |
-| 12 | Autonomous lanes stay PAUSED (`.agents_paused`) until founders pick a resume cadence | Quota burn 2026-07-05; cadence table prepared | NEEDS_DECISION #4 |
+| 12 | ~~Lanes stay PAUSED~~ REVERSED 2026-07-05 (remote session): lanes RESUMED on the 3-disjoint-lane architecture, 6h cadence — cadence IS the budget cap | Quota burn root-caused (lane overlap, not cadence alone); fix `d321558` | autopilot-managers.yml |
 | 13 | `data/awear.db`: schema is created idempotently at startup (`init_db()`); demo content seeds from `static/data/*.json`; **user-persisted rows (likes/follows/saves/users) live ONLY in the db file — deleting it loses them**. Untrack-from-git intent per NEEDS_DECISION #2 | BE-005: SQLite is THE store for user data; the .gitignore "regenerated" comment is about schema, not data | app.py:1045; NEEDS_DECISION #2 |
 | 14 | Skills carry judgment/orientation; fully deterministic checks are scripts/hooks, never skills | Determinism belongs to the harness | foundation Phase 2 |
 | 15 | Session auto-load budget ≈ 2.6k tokens: CLAUDE.md ≤ ~600, knowledge hook injects org-wide table + pointers only (never the full INDEX) | Context is for decisions, not orientation dumps | foundation Phase 1 |
+| 16 | Jeff STAYS as the merge gate (question "remove jeff-merge?" settled NO 2026-07-06); hardened with deterministic layers instead: ownership GATE 0, failure circuit-breaker, conflict TTL, main-canary, union-merge logs | jeff-merge was 7/7 green — failures were upstream (lane overlap); gate is the only barrier between autonomous agents and main | jeff-merge.yml, autopilot-managers.yml, main-canary.yml, .gitattributes |
 
 ## How to add a decision
 One row, one line of rationale, cite the source (incident, founder call, phase). If it reverses an existing row — edit that row, note the date, don't append a contradiction.

@@ -1,0 +1,10 @@
+# Append-only shared logs: 3 parallel lanes + jeff all append rows to these files each
+# cycle. Default git merge treats two appended tails as a conflict — with disjoint code
+# ownership these logs are the #1 REMAINING conflict source. merge=union concatenates
+# both sides instead of conflicting (safe for append-only files; do NOT add structured
+# or hand-edited files like STATE.md / DECISIONS.md / assignments here).
+.claude/agents/activity_log.md merge=union
+.claude/agents/contributions/*.md merge=union
+ci-debug/*.txt merge=union
+ci-debug/*.md merge=union
+NEEDS_YOU.md merge=union

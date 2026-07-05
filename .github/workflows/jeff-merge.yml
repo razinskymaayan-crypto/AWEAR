@@ -52,6 +52,30 @@ jobs:
             ahead=$(git rev-list --count "main..origin/auto/$m" 2>/dev/null || echo 0)
             [ "${ahead:-0}" -eq 0 ] && continue
             if git merge --no-ff -m "jeff: merge auto/$m" "origin/auto/$m"; then
+              # GATE 0 — deterministic lane ownership (OW-006: a rule without a mechanism is a
+              # recommendation; until now disjoint ownership was enforced only by the persona
+              # prompt in GATE 3). Instant + token-free, so it runs FIRST. Blocks only files
+              # that unambiguously belong to ANOTHER lane; grey zones fall through to GATE 3.
+              # Shared bookkeeping (activity_log, contributions, assignments, INBOX, NEEDS_*,
+              # knowledge, notes, IDEAS, ci-debug) is writable by every lane by design.
+              SHARED='^(\.claude/agents/(activity_log\.md|contributions/|assignments/|knowledge/)|\.claude/master/INBOX\.md|NEEDS_YOU\.md|NEEDS_DECISION\.md|notes/|docs/IDEAS\.md|ci-debug/)'
+              case "$m" in
+                mark)   DENY='^(app\.py|schema\.sql|static/data/|scripts/.*\.py$|tests/|docs/|\.github/|mobile/)' ;;
+                steve)  DENY='^(static/(index\.html|app\.css|app\.js|tokens\.css)|awear-tokens\.json|docs/|\.github/|mobile/)' ;;
+                oren)   DENY='^(static/(index\.html|app\.css|app\.js|tokens\.css)|awear-tokens\.json|app\.py|schema\.sql|docs/|\.github/|mobile/)' ;;
+                ayalon|scout|gabbana|strategy) DENY='^(app\.py|schema\.sql|static/|scripts/|awear-tokens\.json|tests/|\.github/|mobile/)' ;;
+                *)      DENY='' ;;   # engine: general-purpose, any file — judged on substance in GATE 3
+              esac
+              if [ -n "$DENY" ]; then
+                VIOL=$(git diff --name-only origin/main...HEAD | grep -vE "$SHARED" | grep -E "$DENY" | head -5 || true)
+                if [ -n "$VIOL" ]; then
+                  git reset --hard origin/main
+                  rejected="$rejected $m(ownership)"
+                  mkdir -p ci-debug
+                  echo "$(date -u +%FT%TZ) $m: REJECT: out-of-lane files: $(echo "$VIOL" | tr '\n' ' ')" >> ci-debug/jeff-rejections.txt
+                  continue
+                fi
+              fi
               # GATE 1 — build: the app must still render.
               if ! npm run check-render; then
                 git reset --hard origin/main; reverted="$reverted $m"; continue
@@ -111,6 +135,16 @@ jobs:
           mkdir -p ci-debug
           echo "$(date -u +%FT%TZ) | $MSG" >> ci-debug/gate-ledger.md
           [ -n "$conflicted" ] && echo "$(date -u +%FT%TZ) conflict:$conflicted" >> ci-debug/jeff-conflicts.txt
+          # CONFLICT TTL — a branch that conflicts 3+ times is chronic: silently re-flagging it
+          # every cycle is noise nobody owns (auto/ayalon + auto/scout were flagged 8x over a
+          # week with no resolution path). Escalate to Telegram ONCE, then stay quiet.
+          for b in $conflicted; do
+            CNT=$(grep -c "conflict:.*\b$b\b" ci-debug/jeff-conflicts.txt 2>/dev/null || true)   # no-match: grep prints 0 AND exits 1 — `|| echo 0` would double it
+            if [ "${CNT:-0}" -ge 3 ] && ! grep -q "^$b " ci-debug/escalated-conflicts.txt 2>/dev/null; then
+              bash scripts/tg.sh text "jeff: auto/$b conflicted ${CNT}x — chronic, needs a founder call: reconcile what's valuable, then delete the branch (git push origin --delete auto/$b). It will keep failing to merge until then. Diff summary: $(git diff --stat main...origin/auto/$b 2>/dev/null | tail -1)" || true
+              echo "$b escalated $(date -u +%FT%TZ) after ${CNT}x" >> ci-debug/escalated-conflicts.txt
+            fi
+          done
           git add ci-debug/ || true
           git commit -m "chore(jeff): gate-ledger [skip ci]" || true
           git pull --rebase origin main -q || true; git push origin HEAD:main || true

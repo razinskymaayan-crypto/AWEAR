@@ -26,7 +26,56 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # CIRCUIT BREAKER — the old autopilot failed 7x in a row burning tokens until a human
+  # noticed and disabled it manually. This job costs ~15s and zero tokens: 3 consecutive
+  # failed cycles -> create .agents_paused (the existing kill-switch) + Telegram alert,
+  # so a broken loop stops itself instead of burning the founder's quota until discovered.
+  # Manual workflow_dispatch bypasses it (human intent), same spirit as the kill-switch docs.
+  breaker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: write
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - name: Trip breaker after 3 consecutive failed cycles
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -uo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "skip=false" >> "$GITHUB_OUTPUT"; echo "manual dispatch — breaker bypassed"; exit 0
+          fi
+          LAST3=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/$REPO/actions/workflows/autopilot-managers.yml/runs?status=completed&per_page=10" \
+            | python3 -c 'import json,sys; rs=json.load(sys.stdin).get("workflow_runs",[]); print(" ".join((r.get("conclusion") or "?") for r in rs[:3]))')
+          echo "last 3 completed cycles: ${LAST3:-none}"
+          if [ "$LAST3" = "failure failure failure" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            # Latch via the existing kill-switch so every later cycle skips at the gate step
+            # (and loop-liveness knows silence is intentional). Founder resumes by deleting
+            # .agents_paused (or Telegram /resume).
+            BODY=$(printf 'auto-paused by circuit breaker: 3 consecutive failed autopilot-managers cycles (%s UTC).\nDelete this file (or Telegram /resume) to re-enable the lanes.\n' "$(date -u +%FT%TZ)" | base64 -w0)
+            curl -s -X PUT -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/repos/$REPO/contents/.agents_paused" \
+              -d "{\"message\":\"chore(breaker): auto-pause after 3 consecutive failed cycles [skip ci]\",\"content\":\"$BODY\"}" >/dev/null || true
+            [ -n "$TG_TOKEN" ] && curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+              --data-urlencode chat_id="$TG_CHAT" \
+              --data-urlencode text="AWEAR breaker: autopilot-managers failed 3 cycles in a row — lanes AUTO-PAUSED (.agents_paused created) to stop the token burn. Check the Actions logs, fix, then delete .agents_paused to resume." \
+              >/dev/null || true
+            echo "breaker TRIPPED — lanes paused"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
   manager:
+    needs: breaker
+    if: needs.breaker.outputs.skip != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:

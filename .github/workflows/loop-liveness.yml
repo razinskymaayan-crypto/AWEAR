@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Alert if no successful real run in the last 3h
+      - name: Alert if no successful real run in the last window
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -28,15 +28,18 @@ jobs:
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           set -euo pipefail
-          WINDOW_H=3
-          MIN_REAL_DURATION=180   # same definition of a "real run" as the autopilot gate
+          # Watches autopilot-managers (the LIVE pipeline since the 2026-07-05 overhaul;
+          # autopilot.yml is disabled_manually — watching it would false-alert forever).
+          # Cadence is 6h, so the window must be cycle + runtime + cron jitter: 7h.
+          WINDOW_H=7
+          MIN_REAL_DURATION=180   # a real lane cycle takes minutes; sub-3min = gate-skip, not a run
 
           # Paused on purpose? Then silence is expected — no alert.
           if curl -sf "https://raw.githubusercontent.com/$REPO/main/.agents_paused" >/dev/null 2>&1; then
             echo "agents paused — liveness check skipped"; exit 0
           fi
 
-          RUNS=$(gh api "repos/$REPO/actions/workflows/autopilot.yml/runs?per_page=50&status=success")
+          RUNS=$(gh api "repos/$REPO/actions/workflows/autopilot-managers.yml/runs?per_page=50&status=success")
           LAST_OK=$(echo "$RUNS" | jq -r --argjson mind "$MIN_REAL_DURATION" '
             [ .workflow_runs[]
               | select(.run_started_at != null and .updated_at != null)
@@ -58,6 +61,6 @@ jobs:
           [ -z "$TG_TOKEN" ] && { echo "no TG token — cannot alert"; exit 0; }
           curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
                --data-urlencode chat_id="$TG_CHAT" \
-               --data-urlencode text="🚨 AWEAR watchdog: no successful autopilot run in the last ${WINDOW_H}h+. The loop may be stuck — check GitHub Actions." \
+               --data-urlencode text="AWEAR watchdog: no successful autopilot-managers cycle in the last ${WINDOW_H}h+. The loop may be stuck — check GitHub Actions." \
                >/dev/null || true
           echo "alert sent"
