@@ -18,7 +18,7 @@
 | 1 — CLAUDE.md pruning + hook slimming | ✅ done — auto-load 5.9k→2.6k tokens; awaiting P4 review |
 | 2 — Skills upgrade + skill-gardener | ✅ done (a6abfb9 + review fixes) — P4 reviewed, YAML blocker fixed |
 | 3 — Agents: 30-line format + model routing | ✅ done — 1,986→535 lines, briefs/ created, sonnet routing on implementers |
-| 4 — Hooks & settings rails | ⬜ |
+| 4 — Hooks & settings rails | ✅ done — bash guard, secret deny, DS-009, posttool checks, 32-case test suite |
 | 5 — Memory architecture | ⬜ |
 | 6 — Effort tiers | ⬜ |
 | 7 — Verification harness (pytest/ruff/evals) | ⬜ |

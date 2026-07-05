@@ -22,8 +22,22 @@ def main() -> int:
         return 0  # never break the pipeline on hook-parse issues
 
     tool_input = data.get("tool_input", {}) or {}
-    path = str(tool_input.get("file_path", ""))
-    if not path.replace("\\", "/").endswith("static/index.html"):
+    path = str(tool_input.get("file_path", "")).replace("\\", "/")
+
+    # Secret files: never edited by agents, regardless of content (foundation Phase 4)
+    base = path.rsplit("/", 1)[-1]
+    is_example = base.endswith((".example", ".sample", ".template"))
+    if not is_example and (base == ".env" or base.startswith(".env.") or base.startswith("client_secret")
+            or base == "google_credentials.json" or base == "google_token.json"
+            or base.endswith(".key")):
+        print(
+            "BLOCKED: secret files (.env, credentials, keys) are managed by the founder only — "
+            "never edited by agents. If a secret is missing, log it in NEEDS_DECISION.md.",
+            file=sys.stderr,
+        )
+        return 2
+
+    if not path.endswith("static/index.html"):
         return 0
 
     # The text this call ADDS (Edit -> new_string, Write -> content)
@@ -45,6 +59,11 @@ def main() -> int:
     for line in new_text.splitlines():
         if chrome_emoji.search(line) and not excl.search(line):
             problems.append(f"DS-008: emoji as UI chrome — use icon() instead: {line.strip()[:100]}")
+
+    # DS-009: no font-size on image containers (breaks image sizing; classes from static/CLAUDE.md)
+    img_containers = re.compile(r"\.(sf-card-img|mp-item-img|pimg|pc-feat-cover)\b[^}]*font-size", re.S)
+    if img_containers.search(new_text):
+        problems.append("DS-009: font-size on an image container (.sf-card-img/.mp-item-img/.pimg/.pc-feat-cover) — remove it")
 
     if problems:
         print(

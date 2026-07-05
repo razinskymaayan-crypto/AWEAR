@@ -1,4 +1,14 @@
 {
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./client_secret*.json)",
+      "Read(./google_credentials.json)",
+      "Read(./google_token.json)",
+      "Read(**/*.key)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -21,6 +31,26 @@
           {
             "type": "command",
             "command": "GUARD=\"${CLAUDE_PROJECT_DIR:-.}/scripts/hook_pretool_guard.py\"; if [ -f \"$GUARD\" ]; then python3 \"$GUARD\"; else exit 0; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "GUARD=\"${CLAUDE_PROJECT_DIR:-.}/scripts/hook_bash_guard.py\"; if [ -f \"$GUARD\" ]; then python3 \"$GUARD\"; else exit 0; fi"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/scripts/hook_posttool_check.sh\" 2>/dev/null || true"
           }
         ]
       }

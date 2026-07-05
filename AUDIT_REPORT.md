@@ -68,6 +68,18 @@
 | 1 | main-context edits only, ~6 files | 8 files, no subagents | Under estimate. |
 | 2 | 3 parallel subagents + review | 3 subagents (~170k tok) + 1 reviewer (~61k) + main fixes | On estimate. |
 | 3 | 4 parallel subagents + review | 4 subagents (~238k tok) + reviewer | On estimate. |
+| 4 | main-context, ~6 files | 8 files + 32-case test suite | Under estimate. |
+
+## Phase 4 — Hooks & settings: deterministic rails (DONE 2026-07-05)
+
+**New rails:**
+- `scripts/hook_bash_guard.py` (PreToolUse, matcher Bash): blocks rm -rf on root/home/.git/parent/wildcard (scoped deletes + /tmp allowed), any force push, DROP TABLE, writing/staging secret files, `git reset --hard`/`git clean -f` (CI's own use in Actions is unaffected — hooks only see Claude's Bash).
+- `hook_pretool_guard.py` extended: secret-file edit block (.env*, client_secret*, google creds, *.key; .example/.sample pass) + DS-009 (font-size on image containers) added to the existing DS-004/DS-008 checks.
+- `scripts/hook_posttool_check.sh` (PostToolUse, Edit|Write): py_compile syntax check on *.py (broken app.py caught at edit time), ruff-if-installed (activates when Phase 7 installs it), viewport-fit invariant echo for index.html. Advisory (exit 0) — blocking stays in PreToolUse.
+- `settings.json`: `permissions.deny` on Read of .env*, client_secret*, google creds, *.key — agents cannot even read secrets now.
+- `scripts/test_hooks.py`: 32-case regression suite for the guards (self-referencing-safe); wired into Phase 7's verify script. **Live-fire proof:** the Bash guard blocked this session's own first test command (contained literal rm -rf patterns).
+**Prose↔rail dedup:** INDEX.md header now records which codes are hook-enforced (DS-004/008/009, secrets, SQLi) — CLAUDE.md kept only pointer-form (done in Phase 1). SF-004 gap closed: canonical entry added to sf.md + INDEX row (passes guard_checks' index-sync gate).
+**Calibration during testing:** /tmp deletes and .env.example edits initially false-positived — fixed; edge cases (rm -rf ./build passes, `.`/`..` block) verified.
 
 ## Phase 3 — Agents (DONE 2026-07-05)
 

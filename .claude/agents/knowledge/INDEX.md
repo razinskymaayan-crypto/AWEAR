@@ -1,6 +1,7 @@
 # Knowledge INDEX — AWEAR Agent Learning Codes
 > Entry point לכל סוכן. מצא את הקודים הרלוונטיים לתפקידך, ואז קרא את הקובץ המלא.
 > **Single source of truth לכל קוד לימוד — כולל OW-* שקיים רק ב-[[OW.md]].**
+> **אכיפה מכנית (OW-006):** DS-004/DS-008/DS-009 + הגנת קבצי-סוד נאכפים ב-PreToolUse hooks (`scripts/hook_pretool_guard.py`, `scripts/hook_bash_guard.py`); SQLi/secrets/invariants ב-`scripts/guard_checks.sh` בשער jeff-merge. בדיקות: `python3 scripts/test_hooks.py`.
 
 ---
 
@@ -82,6 +83,7 @@
 | SF-001 | Moderation severity thresholds = product decision (איילון), לא engineering | [[sf.md]] |
 | SF-002 | "קוד moderation קיים" ≠ "עובד" — curl test חובה לפני "done" | [[sf.md]] |
 | SF-003 | ANTHROPIC_API_KEY חסר = fail-open — **P0 לפני production** | [[sf.md]] |
+| SF-004 | אין HTTP calls בתוך async ASGI endpoints — קרא לפונקציה ישירות | [[sf.md]] |
 | SF-AVATAR-01 | initials avatar = render inline span, לא onerror placeholder (gif תקין לא מפעיל onerror) | [[sf.md]] |
 
 ---

@@ -22,5 +22,12 @@
 ---
 
 
+### SF-004 | אין קריאות HTTP בתוך async ASGI endpoints
+**מקור:** Iron Rule (CLAUDE.md היסטורי); קובע כאן כערך קנוני אחרי שנמצא לא-מתועד (foundation Phase 4, 2026-07-05)
+**לקח:** endpoint אסינכרוני שקורא ל-endpoint אחר ב-HTTP (httpx/requests אל localhost) חוסם את ה-event loop ויוצר deadlock תחת עומס. קרא לפונקציה ישירות.
+**מנגנון:** code-reviewer skill בודק; jeff-merge guard.
+
+---
+
 ## SF-AVATAR-01 — avatarFallback() needs a FAILING img, not a valid placeholder
 `avatarFallback(img)` is wired via `onerror`. A valid transparent gif (e.g. a 1x1 base64 data: URI) LOADS successfully, so `onerror` never fires and the avatar stays invisible (empty column). For seeded/initials avatars where there is no real photo URL, do NOT use an onerror placeholder — render the fallback span inline directly: `<span class="...-avatar avatar-fallback">${initials}</span>` (compute initials with `name.split(/[ .@]/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?'`). Apply the sizing class + `avatar-fallback` (gradient/centering) together. One render path = all callers consistent. (Feed comments seed, 2026-06-27.)
