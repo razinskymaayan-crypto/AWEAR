@@ -11,10 +11,12 @@ on:
   workflow_dispatch:
     inputs:
       manager:
-        description: 'Run a single lane (mark|steve|oren|ayalon|scout|gabbana) or "all"'
+        description: 'Run a single lane (mark|steve|ayalon) or "all"'
         default: 'all'
   schedule:
-    - cron: '*/30 * * * *'   # every 30 min — public repo, unlimited free minutes
+    - cron: '0 */6 * * *'    # every 6h -> 4 cycles/day x 3 lanes = ~12 meaningful runs/day.
+                             # Cadence IS the budget cap: paces the founder's Max quota evenly across the month.
+                             # (Was */30 with 6 lanes = ~288 runs/day -> burned a Max weekly in ~a day.)
   push:
     paths:
       - '.agents_trigger'   # self-serve trigger: commit this file to fire a run
@@ -31,21 +33,20 @@ jobs:
       contents: write
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 3
+      # THREE lanes, STRICTLY DISJOINT file ownership => two lanes can never touch the same
+      # file => Jeff always merges cleanly => the merge-conflict failures (78% of the old 6-lane
+      # runs) are gone by construction. gabbana is a design GATE invoked inside the design lane
+      # (Task tool in VERIFY), not a parallel lane; oren's data work folds into steve's backend
+      # lane; scout's research is deferred (token-heavy, zero demo value) until the demo is solid.
       matrix:
         include:
           - manager: mark
-            lane: "Design/UI lane. ICs: dolce (feed/home/profile/closet/onboarding), valentino (shop/marketplace/analytics/stylist/explore), netta (tokens); gabbana = design gate. OWNS files: static/index.html, static/tokens.css, awear-tokens.json. Knowledge: OW.md + ds.md."
+            lane: "Design/UI lane — the demo's look & feel is your job. ICs: dolce (feed/home/profile/closet/onboarding), valentino (shop/marketplace/analytics/stylist/explore), netta (tokens); gabbana = mandatory design gate (must score 8+). OWNS files (edit ONLY these): static/index.html, static/tokens.css, awear-tokens.json. Knowledge: OW.md + ds.md."
           - manager: steve
-            lane: "Backend lane. IC: sam (app.py endpoints/models/DB). OWNS files: app.py, schema.sql. Knowledge: OW.md + be.md. Do NOT touch static/data/*.json (oren's lane) or static/index.html (mark's lane)."
-          - manager: oren
-            lane: "Data & integrity lane. You are oren, Integration Engineer, running as a lane owner. OWNS files: static/data/*.json (posts/products/profiles), scripts/*.py data-integrity tooling. Mission: data correctness — orphan ids, price/tag integrity, cross-file consistency (BE-TAG-INTEGRITY class). Knowledge: OW.md + be.md. Do NOT touch app.py (steve's lane) or static/index.html (mark's lane)."
+            lane: "Backend + data lane. ICs: sam (app.py endpoints/models/DB), oren (data integrity in static/data/*.json). OWNS files (edit ONLY these): app.py, schema.sql, static/data/*.json, scripts/*.py. Knowledge: OW.md + be.md. Do NOT touch static/index.html (mark's lane) or docs/* (ayalon's lane)."
           - manager: ayalon
-            lane: "Product/social lane. IC: shira (comments/moderation/reactions). OWNS files: docs/* except docs/research and docs/design_reviews (PITCH_DECK, surveys, IDEAS.md), business docs. Knowledge: OW.md + mg.md + sf.md."
-          - manager: scout
-            lane: "Intelligence lane. You are Scout (.claude/agents/scout.md) — EVERY run is an intelligence run: DEDUP FIRST (python3 scripts/intel_db.py known '<topic>'), <=6 web fetches, write docs/research/<date>-<topic>.md, record insights (python3 scripts/intel_db.py add '<json>'), act-vs-escalate per your decision table. OWNS files: docs/research/*, intel db. Do NOT edit app code."
-          - manager: gabbana
-            lane: "Adversarial QA lane. You are Gabbana, the design critic, running as an independent auditor: pick ONE screen or recent merge from the last 24h of activity_log, audit it hard against the Instagram/Pinterest/Zara bar (visual + UX + data correctness in what renders), score 0-10. OWNS files: docs/design_reviews/* (your audit reports) and .claude/agents/assignments/mark.md (file concrete fix tasks for the design lane). Do NOT edit app code yourself — you find and file, others fix."
+            lane: "Product + business + investor lane. IC: shira (social features spec). OWNS files (edit ONLY these): docs/* (PITCH_DECK, BUSINESS_PLAN, MASTER_PLAN, surveys, research, IDEAS.md). Mission: business plan, pitch deck, strategy, unit economics, investor narrative. Knowledge: OW.md + mg.md + sf.md. Do NOT touch app.py / static/* (code lanes)."
     steps:
       - name: Skip if a single manager was requested and it's not this one (or agents are paused)
         id: gate
@@ -107,7 +108,7 @@ jobs:
           1. YOUR DIRECT QUEUE: .claude/agents/assignments/${{ matrix.manager }}.md — founder tasks routed to you from Telegram (@${{ matrix.manager }} ...) AND any IC you manage (.claude/agents/assignments/<ic>.md). Do the first unchecked one; check it off when done.
           2. INBOX (.claude/master/INBOX.md "## משימות חדשות") items that fall in YOUR lane. Interpret the Hebrew generously.
           3. Highest unfinished MASTER_PLAN / PRODUCT_VISION item in your lane.
-          4. ADVANCE (nothing above): do domain-forward work in YOUR area — market research, a user survey of one of your screens, or design/architecture thinking — and write it to your OWN dated doc (docs/research/<date>-<topic>.md or docs/surveys/<date>-<target>.md) or IDEAS.md. NO idle, but state one line of value first (no busywork).
+          4. ADVANCE THE DEMO (nothing above): ship the single highest-leverage improvement to the WOW flow in YOUR lane — a real feature, a fixed bug, or a visibly better screen. Prefer shipping working UI/backend over writing documents. Market research and user surveys are DEFERRED until the demo is investor-ready (they burn tokens with zero demo value) — the ONLY exception is the ayalon lane, whose job IS the business plan / pitch / strategy docs. State the concrete user-facing value in ONE line before you build; if you cannot, you have no task — stop this run rather than invent busywork.
 
           STRICT DELEGATION: route domain craft to your ICs via the Task tool (you coordinate + glue + verify + commit; you do not do IC craft yourself). Map for your lane is in OW.md / the autopilot prompt. Record real IC attribution.
 
@@ -146,27 +147,7 @@ jobs:
         if: steps.gate.outputs.skip != 'true'
         run: |
           git push origin "HEAD:auto/${{ matrix.manager }}" || echo "nothing to push"
-
-      - name: Self-diagnostic (commit status to main so failures are visible without gh)
-        if: ${{ always() && steps.gate.outputs.skip != 'true' }}
-        run: |
-          AHEAD=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "?")
-          mkdir -p ci-debug
-          {
-            echo "manager=${{ matrix.manager }}"
-            echo "branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) commits_ahead_of_main=$AHEAD"
-            echo "claude_installed=$(command -v claude || echo NO)"
-            echo "node=$(node -v 2>/dev/null || echo NO)  npm=$(npm -v 2>/dev/null || echo NO)"
-            echo "auth_present=$([ -n "$CLAUDE_CODE_OAUTH_TOKEN" ] && echo yes || echo NO)"
-            echo "last_commit=$(git log -1 --oneline 2>/dev/null)"
-          } > "ci-debug/mgr-${{ matrix.manager }}.txt"
-          git config user.name "awear-dbg"; git config user.email "dbg@awear.local"
-          git stash -u >/dev/null 2>&1 || true
-          git fetch origin main -q || true
-          git checkout -B main origin/main
-          git stash pop >/dev/null 2>&1 || true
-          git add "ci-debug/mgr-${{ matrix.manager }}.txt"
-          git commit -m "debug: mgr ${{ matrix.manager }} status [skip ci]" || true
-          for i in 1 2 3; do git pull --rebase origin main -q && git push origin HEAD:main && break || sleep 3; done
-        env:
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      # NOTE: removed the old "Self-diagnostic" step that had every parallel lane checkout main,
+      # commit a ci-debug/mgr-*.txt status file, and race to push to main. With 3-6 lanes pushing
+      # to main at once it caused merge races + failures + commit noise (audit waste-pattern #2:
+      # "33 debug status commits"). Run health is visible via `gh run list` / the Actions UI.
