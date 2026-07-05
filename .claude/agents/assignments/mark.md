@@ -3,18 +3,21 @@
 > Source: Fable-5 frontend audit, 2026-07-05. Files: index.html (shell), app.css (CSS), app.js (JS).
 > Do the demo-breaking bugs FIRST, one per run. Verify each: `npm run check-render` + screenshot the screen.
 
-## [ ] P0 — Two blank-screen navigation bugs (make the app look broken in a demo)
+## [x] P0 — Two blank-screen navigation bugs (make the app look broken in a demo)
+> DONE (commit e862b2d; verified 2026-07-05 by mark: grep finds no showView('wardrobe')/showView('onboarding') in app.js)
 1. `showView('wardrobe')` — there is NO `#wardrobe` view; the Marketplace sell-tab CTA blanks the whole
    screen. Change to `showView('closet')`. Evidence: `app.js:4402` (handler), `app.js:4477` (button).
 2. Home checklist "style quiz" step calls `showView('onboarding')` (not a `.view`) → blanks the main area.
    Replace with `showOnboarding()`. Evidence: `app.js:2367`; correct fn at `app.js:6718`.
 Verify: navigate both paths in a browser (node scripts/shot.mjs) — no blank screen.
 
-## [ ] P0 — Raw `${icon('sparkle',16)}` text ships literally in the Compare CTA
+## [x] P0 — Raw `${icon('sparkle',16)}` text ships literally in the Compare CTA
+> DONE (commit e862b2d; verified 2026-07-05 by mark: grep finds no icon('sparkle' literal in index.html)
 Evidence: `index.html:151` — it's static HTML, not a JS template, so the user sees the literal string.
 Replace with inline SVG (DS-008: icon() is JS-templates-only).
 
-## [ ] P1 — Dark-theme relics on the light theme (this IS the "black on black")
+## [x] P1 — Dark-theme relics on the light theme (this IS the "black on black")
+> DONE 2026-07-05 (mark run, netta craft, gabbana gate 9/10): .adm-grade-card/.sus-score-card → var(--success-surface) + color-mix borders; AA ink on mint (10.5:1); body/shelf-ledge bare hex tokenized. app.css bare hex outside :root now 0 (except intentional #ffffff color-mixes).
 `.adm-grade-card` / `.sus-score-card` hardcode `linear-gradient(135deg,#0d1f10,#122018)` (near-black) while
 `--success` is now dark green → dark-green text on near-black. Evidence: `app.css:1379,1382,1550-1551`.
 Swap to a light-safe treatment (var(--success-surface) bg + readable text). Screenshot to confirm contrast.
@@ -53,3 +56,9 @@ design decision. Fixing it fixes the whole class at once and makes BOTH themes c
 **Definition of done for the whole P0:** `grep -c '#[0-9a-fA-F]\{6\}' static/index.html` trends
 toward ~0 in CSS contexts (per static/CLAUDE.md self-check), zero black-on-black on any screen,
 both light and dark render cleanly. Track progress in DAILY_DIGEST.md.
+
+## [ ] P2 — Token reconciliation: --success defined 3x with 3 values + --muted fails AA on white (netta)
+Gabbana re-gate finding (2026-07-05): awear-tokens.json says --success:#4ade80, tokens.css #52c97a/#1A9E52,
+app.css :root (the winner) #1a7a4a — SoT drift, DS-005. Also --muted #8A857E on white = 3.66:1 (fails AA for
+sub-labels like "10/13 items worn"). Reconcile the three sources to one audited value set + darken --muted
+to an AA-passing value. WCAG check + screenshot comparison before merge (DS-005).
