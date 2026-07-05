@@ -1,208 +1,101 @@
 ---
 name: backend-patterns
-description: Orientation and patterns for AWEAR's app.py FastAPI backend. Use before adding a new endpoint, Pydantic model, Claude API call, or database query. Covers the standard endpoint template, demo fallback pattern, constants location, SQLite access, and how the commerce/currency layers work.
+description: Orientation and patterns for AWEAR's app.py FastAPI backend (~4,100 lines). Use BEFORE adding a new endpoint, Pydantic model, Claude API call, or SQLite query — covers the endpoint template (BE-006 + rate limit), _get_db()/init_db() data access, startup caches, demo fallback, and where constants live. NOT for renames (use backend-rename-safety), frontend work, or mobile/.
 ---
 
 # Backend Patterns — app.py
 
-FastAPI + Pydantic + Anthropic SDK + SQLite. Served via uvicorn on port 8000.
+FastAPI + Pydantic + Anthropic SDK + SQLite. Run: `venv312/bin/uvicorn app:app --reload --port 8000`.
+Line numbers below are hints, not truth — the file grows constantly. **Grep is the truth.**
 
-## File Structure
+## Orientation (grep, don't scroll)
 
-```
-app.py
-├── Imports + optional Google services (lines 1–48)
-├── Pydantic models — ClothingItem, OutfitAnalysis, request models (lines 53–...)
-├── SYSTEM_PROMPT — Claude vision instructions (line 74)
-├── Commerce constants — AFFILIATE_TAG, RESALE_SUGGESTION_PCT, AWEAR_COMMISSION_PCT
-├── Currency — STATIC_FX_RATES_PER_USD, convert_from_usd()
-├── Helper functions — convert_from_usd(), affiliate_url(), build_buy_options(), _demo_analysis()
-├── Endpoints:
-│   GET  /                    → serves static/index.html
-│   POST /api/analyze         → photo → Claude Vision → outfit items + buy links
-│   POST /api/outfit/generate → wardrobe + occasion → Claude → outfit suggestions
-│   POST /api/declutter       → wardrobe → Claude → sell/donate suggestions
-│   POST /api/stylist/chat    → message → Claude → stylist reply
-│   POST /api/moderate        → comment → Claude → moderation decision
-│   POST /api/agent/summary   → meeting summary → email via Google
-│   POST /api/agent/schedule  → event data → Google Calendar
-│   POST /api/agent/meeting   → meeting request → Google Calendar
-└── Static file mount — serves /static/
+```bash
+grep -n "^@app\." app.py                 # all ~60 endpoints (GET/POST/PATCH/DELETE)
+grep -n "class .*(BaseModel)" app.py     # Pydantic models
+grep -n "CREATE TABLE" app.py            # live SQLite schema (inside init_db)
 ```
 
----
+Rough map: rate limiting (`check_rate_limit`, ~L69) → `MODEL = "claude-opus-4-8"` (~L135) → `SYSTEM_PROMPT` (~L235) → commerce constants (~L271–344) → `_demo_analysis()` (~L434) → AI endpoints (analyze/outfit/declutter/stylist/moderate) → DB layer (`DB_PATH`/`_get_db`/`init_db`, ~L1035+) → startup caches (~L1298) → social/commerce/analytics endpoints → static mount.
 
-## Standard Endpoint Template
+⚠️ `schema.sql` is a **PostgreSQL** aspirational schema — it is NOT what runs. The live SQLite tables are the `CREATE TABLE IF NOT EXISTS` statements inside `init_db()` in app.py. Read those before writing any query.
+
+## SQLite Access — the real pattern
 
 ```python
-class MyRequest(BaseModel):
-    field1: str
-    field2: list = []
-    field3: int = 0  # optional with default
+DB_PATH = Path("data/awear.db")           # NOT "awear.db" in repo root
 
-@app.post("/api/my-feature")
-async def my_feature(data: MyRequest):
-    try:
-        response = client.messages.create(
-            model=MODEL,
-            max_tokens=800,
-            system="Your system prompt here.",
-            messages=[{"role": "user", "content": data.field1}],
-        )
-        result = response.content[0].text.strip()
-        return {"result": result, "mode": "live"}
-    except Exception:  # noqa: BLE001
-        return {"result": _demo_fallback(), "mode": "demo"}
+def _get_db() -> sqlite3.Connection:      # ~L1038
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row        # dict-like row access: row["col"]
+    return conn
+
+# Usage everywhere in the codebase:
+with _get_db() as db:
+    row = db.execute("SELECT * FROM saves WHERE user_key = ?", (user_key,)).fetchone()
 ```
 
-**Rules:**
-- Always `async def` for endpoints
-- Request body = Pydantic BaseModel, never raw dict
-- Return plain `dict` — FastAPI serializes it
-- AI calls always wrapped in try/except with demo fallback
-- Always return `"mode": "live"` or `"mode": "demo"` — frontend reads this
+- **Always parameterized** (`?`) — never f-string into SQL.
+- **New tables go inside `init_db()`** (`CREATE TABLE IF NOT EXISTS ...`). It runs at startup via the `@app.on_event("startup")` handler, before any request. (CLAUDE.md calls it `_init_db()`; the actual function name is `init_db` — grep confirms.)
+- **SQLite from day 1** for any user-persisted data — never an in-memory dict (Iron Rule BE-005).
 
----
+## Startup Caches (read-only fixture data)
+
+`_posts_cache`, `_products_cache`, `_profiles_cache` (~L1298) are loaded once at startup from JSON files by `load_data_files()`. Demo/fixture content is served from these; **user-generated state goes to SQLite**, not into these lists.
+
+## Standard Endpoint Template — every new endpoint
+
+```python
+@app.post("/api/my-feature")
+async def my_feature(data: MyRequest, request: Request):
+    # BE-006 — mandatory identity pattern, exact spelling:
+    user_key = (request.client.host if request.client else None) or "anon"
+    # Rate limit — mandatory (def check_rate_limit(client_ip, endpoint, limit) ~L69):
+    if not check_rate_limit(user_key, "my_feature", 20):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+    with _get_db() as db:
+        ...
+    return {"result": ..., "mode": "live"}   # plain dict; FastAPI serializes
+```
+
+Rules:
+- `async def` always; request body = Pydantic BaseModel (add near existing models at top of file), never raw dict.
+- **BE-006 exactly as written** — older endpoints use `or "unknown"`; new code uses `or "anon"`.
+- `check_rate_limit_window(key, endpoint, limit, window)` exists for custom windows.
+- **No HTTP calls inside async ASGI endpoints** — never `fetch`/`httpx`/`requests` to your own server; call the function directly (SF-004, CLAUDE.md Iron Rule 5).
+- AI calls wrapped in try/except → demo fallback, and always return `"mode": "live"|"demo"` — the frontend reads it.
 
 ## Demo Mode Pattern
 
-Every endpoint that calls Claude must degrade gracefully when the API key is missing or invalid (live pitch, dev env without key):
+Every Claude-calling endpoint degrades gracefully when the API key is missing/invalid:
 
 ```python
 try:
-    # ... call Claude ...
+    ...call Claude...
     result["mode"] = "live"
 except Exception:  # noqa: BLE001 — auth/api/parse failure → demo fallback
-    result = _demo_analysis()   # or your own _demo_X() function
+    result = _demo_analysis()   # ~L434; add your own _demo_X() near it
     result["mode"] = "demo"
 ```
 
-`_demo_analysis()` is at line ~260 — returns a realistic hardcoded `OutfitAnalysis` dict. Add your own `_demo_X()` helper near it for new features.
+Verify the frontend reads it: `grep -n "\.mode" static/index.html`.
 
-**The frontend must read `result.mode`** — if it doesn't, users never know they're seeing demo data. Always verify with `grep -n "result\.mode\|data\.mode\|\.mode" static/index.html`.
+## Constants
 
----
+Top-level constants live ~L135–344 (`MODEL`, `AFFILIATE_TAG`, `RESALE_SUGGESTION_PCT`, `AWEAR_COMMISSION_PCT`, `STATIC_FX_RATES_PER_USD`). Business rules (rates, thresholds, model name) go at the top with a one-line business comment — never hardcoded inside an endpoint. Always use `MODEL`, never a literal model string.
 
-## Claude API Calls
+## Checklist — new endpoint
 
-Two patterns used in the codebase:
+1. Pydantic request model near existing models
+2. `async def` + `@app.post("/api/name")` + `request: Request`
+3. BE-006 `user_key` + `check_rate_limit(...)`
+4. SQLite via `with _get_db() as db:` — new tables in `init_db()`
+5. Claude call (if any) in try/except → `_demo_X()` fallback + `"mode"` field
+6. No self-HTTP (SF-004) — direct function calls only
+7. Wire it up: `grep -n "/api/name" static/index.html` must hit (see /wire-it-up)
+8. Field names: grep frontend for every returned field — names must match exactly
+9. curl test the endpoint before declaring done (grep-verified DoD, OW-002)
 
-**Pattern A — Structured output** (when you need a specific schema back):
-```python
-response = client.messages.parse(
-    model=MODEL,
-    max_tokens=4000,
-    system=SYSTEM_PROMPT,
-    messages=[{"role": "user", "content": [...]}],
-    output_format=OutfitAnalysis,   # Pydantic model
-)
-result = response.parsed_output.model_dump()
-```
+## More detail
 
-**Pattern B — Free text** (when you parse the response yourself):
-```python
-response = client.messages.create(
-    model=MODEL,
-    max_tokens=800,
-    system="...",
-    messages=[{"role": "user", "content": "..."}],
-)
-text = response.content[0].text.strip()
-# Strip markdown fences if Claude wraps JSON:
-if text.startswith("```"):
-    text = "\n".join(text.split("\n")[1:]).rstrip("`").strip()
-import json as _json
-return _json.loads(text)
-```
-
-**`MODEL`** is defined at line 39 (`"claude-opus-4-8"`). Always use `MODEL`, never hardcode a model name.
-
-**System prompts**: must instruct Claude to respond in the user's language. Template:
-```python
-"You are AWEAR's AI [role], serving users worldwide. ... "
-"Reply in the same language as the user's input (default to English if unsure)."
-```
-
----
-
-## Pydantic Models — Where to Add
-
-Add new request/response models near the top of the file, with the existing models (lines 53–150). Keep them grouped: request models together, response models together.
-
-```python
-class MyFeatureRequest(BaseModel):
-    wardrobe: list = []          # always default to [] for optional lists
-    occasion: str = ""           # "" for optional strings
-    limit: int = 10              # sensible defaults
-
-class MyFeatureResponse(BaseModel):
-    items: list[dict]
-    mode: str                    # always include mode
-```
-
----
-
-## Constants — Where to Add
-
-Top-level constants live between lines 39–150. Pattern:
-```python
-# One-line comment explaining the business rule, not the code
-MY_CONSTANT = 0.15  # per Ayalon's decision doc if product-owned
-```
-
-If a constant encodes a business rule (commission rate, price threshold, model name), it belongs at the top — **not** hardcoded inside an endpoint function. This is the single source of truth. See `RESALE_SUGGESTION_PCT` for an example with the decision doc reference.
-
----
-
-## SQLite Pattern
-
-```python
-import sqlite3
-conn = sqlite3.connect("awear.db")
-cursor = conn.cursor()
-
-# ✅ Always parameterized — never f-string into SQL
-cursor.execute("SELECT * FROM items WHERE user_id = ?", (user_id,))
-rows = cursor.fetchall()
-conn.close()
-```
-
-`schema.sql` defines all tables. Read it before writing any query — don't assume column names.
-
----
-
-## Commerce Layer
-
-```
-affiliate_url(url)       → wraps a retailer URL with affiliate tag (line ~174)
-build_buy_options(query) → generates shoppable links from a search query (line ~180)
-convert_from_usd(amount, currency) → display-only currency conversion (line ~152)
-```
-
-`STATIC_FX_RATES_PER_USD` = hardcoded rates, not live FX. Display-only. Don't use for payment math.
-
-New endpoints that return prices: always store/compute in USD (`price_estimate_usd`), convert for display only.
-
----
-
-## Google Services (Optional)
-
-```python
-# These are no-ops if Google creds aren't configured:
-create_calendar_event(...)
-schedule_agent_meeting(...)
-send_summary_email(...)
-```
-
-They're imported with a try/except at line ~30. Any new Google feature must follow the same optional pattern — the app must run without Google creds in dev.
-
----
-
-## Adding a New Endpoint — Checklist
-
-1. Define Pydantic request model (top of file)
-2. Write `async def` endpoint with `@app.post("/api/name")`
-3. Wrap Claude call in try/except → demo fallback
-4. Return `{"...", "mode": "live"}` or `"mode": "demo"`
-5. **Wire it up**: `grep -n "/api/name" static/index.html` — must find a fetch call
-6. **Field names**: grep frontend for any field you return to verify names match exactly
+Claude API call patterns (structured `messages.parse` with beta fallback, free-text parsing), currency/commerce layer, Pydantic conventions, and Google services — see [reference.md](reference.md).

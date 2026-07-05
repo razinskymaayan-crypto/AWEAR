@@ -1,6 +1,7 @@
 ---
 name: wire-it-up
-description: "File exists" is not "feature connected". Use after creating any new CSS file, i18n file, API field, config, or endpoint to verify the system actually uses it. Covers link tags, t() calls, frontend field reads, and import chains.
+description: '"File exists" is not "feature connected". Use after creating any new CSS file, i18n file, API response field, config/token file, or endpoint — before declaring it done — to verify the system actually consumes it (link tags, t() calls, frontend field reads, import chains). NOT needed for edits to already-wired files or pure refactors with no new artifacts.'
+allowed-tools: Read, Grep, Glob, Bash, Edit
 ---
 
 # Wire It Up — Verify the Connection, Not Just the File
@@ -65,8 +66,10 @@ grep -n "\-\-bg" static/tokens.css static/index.html
 # Compare. If they differ, tokens.css is wrong, not index.html.
 ```
 
-For design tokens: `docs/VISUAL_VISION.md` is the canonical truth (Design Master Plan). Tokens must match it.
-The running app (`static/index.html` inline styles) is not the source of truth — the master plan is.
+For design tokens: the source chain is `awear-tokens.json` (SoT) → generates `static/tokens.css` → feeds
+`mobile/theme/tokens.js`. To change a token value, edit the json — never the css. `docs/VISUAL_VISION.md`
+is the design master plan the tokens must serve. The running app (`static/index.html` inline styles) is
+not the source of truth — the token chain and the master plan are.
 
 ## The definition of "done"
 

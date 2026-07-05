@@ -1,6 +1,7 @@
 ---
 name: js-tzdead-zone
-description: Prevent JavaScript Temporal Dead Zone (TDZ) crashes — const/let are NOT hoisted. Use before adding new constants/variables to static/index.html, especially in global scope or near render functions called early.
+description: Prevent JavaScript Temporal Dead Zone (TDZ) crashes — const/let are NOT hoisted. Use before adding new const/let to global scope in static/index.html, especially near render functions called at startup. Not needed for function declarations (hoisted) or variables local to a function.
+allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # JavaScript TDZ — const/let Are Not Hoisted
@@ -33,6 +34,9 @@ syntax validation (the code was parseable) and only surfaced in a real browser.
    ```
 
 3. Your `const` declaration must be at a **lower line number** than that first call.
+
+> The `spa-navigation` skill maintains the TDZ-safe declaration zone map for `static/index.html`
+> (safe slot: right after the localStorage helpers — `grep -n "const WARDROBE_KEY"`).
 
 ## Quick check after adding code
 

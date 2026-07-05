@@ -1,6 +1,7 @@
 ---
 name: worktree-discipline
-description: Worktree isolation discipline — Iron Rule #14. Use at the start of every task to verify you're in the correct worktree (not the main repo), before writing any file. Also covers stale-HEAD detection and what to do if Edit/Write refuses to work in your worktree.
+description: Worktree isolation discipline — Iron Rule #14 (.claude/agents/docs/daily_model.md). Use at the START of every worktree-assigned task, before writing any file, to verify you're in the correct worktree (not the main repo) and it isn't forked from a stale HEAD. Also covers what to do if Edit/Write refuses to work in your worktree (stop and report — never write to the main checkout). NOT needed if you were explicitly told to work on the main checkout.
+allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Worktree Discipline — Iron Rule #14
@@ -21,11 +22,15 @@ stale code and their diffs were based on outdated state.
 Agents using absolute paths (`/Users/tamargrosz/AWEAR/static/index.html`) bypassed their worktree
 and wrote directly to the main checkout. The worktree exists in a different directory.
 
-## Iron Rule #14
+## Iron Rule #14 (full text: `.claude/agents/docs/daily_model.md`)
 
 > Worktree isolation is never bypassed under any circumstances. If Edit/Write tools refuse to
 > operate inside your assigned worktree, **stop and report** — do not "solve" it by writing to
 > the main repo path. That is exactly what the rule is meant to prevent.
+
+Related — CLAUDE.md Iron Rule 7: manually created worktrees go under
+`/Users/tamargrosz/AWEAR/worktrees/` — never directly in `~/`. (Agent-tool worktrees are
+auto-created under `.claude/worktrees/agent-*` — both are valid locations; `~/` is not.)
 
 ## Before you start any task — verify your location
 
@@ -85,4 +90,6 @@ git commit -m "Description of change"
 # Then report back to Jeff with the commit hash — he reviews and merges
 ```
 
-The diff check + Playwright verify (`/verify-rendering`) happens **before** merge, done by Jeff.
+The diff check + Playwright verify (`/verify-rendering`) happens **before** merge. The only
+path to `main` is the jeff-merge gate (`.github/workflows/jeff-merge.yml`: build +
+guard_checks + adversarial persona review) — never merge to main yourself.

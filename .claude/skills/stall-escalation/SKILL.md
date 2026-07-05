@@ -1,6 +1,7 @@
 ---
 name: stall-escalation
-description: Stop-and-escalate protocol for AWEAR agents. Use when blocked, about to bypass an Iron Rule, or after two failed attempts at the same step. Covers how to write a stop report, the escalation path (you → team lead → Jeff → Carmel), and what NOT to do when stuck.
+description: Stop-and-escalate protocol for AWEAR agents. Use when blocked, about to bypass an Iron Rule (worktree isolation, render check, scope boundary), facing a decision outside your authority, or after TWO failed attempts at the same step. Covers how to write a stop report, the escalation path (you → team lead → Jeff → Carmel), and what NOT to do when stuck. NOT for a first-attempt error you can still debug yourself — try twice before invoking.
+allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Stall-Escalation Protocol
@@ -80,10 +81,11 @@ Jeff does not penalize clean stops. A stall report with:
 ...is a better output than a partial implementation that silently broke something, or a workaround
 that violated isolation rules.
 
-The record of "stopped cleanly and reported" is visible in `agents/logs/activity_log.md`. It is
-not a failure entry — it is a process entry.
+The record of "stopped cleanly and reported" is visible in `.claude/agents/activity_log.md`
+(append-only format: `| YYYY-MM-DD | agent | branch/file | status | short description |`).
+It is not a failure entry — it is a process entry.
 
-## The worktree stall specifically (Iron Rule #14)
+## The worktree stall specifically (Iron Rule #14, `.claude/agents/docs/daily_model.md`)
 
 If Edit/Write tools refuse to operate inside your assigned worktree:
 - Do NOT try to write to `/Users/tamargrosz/AWEAR/` (the main repo) as a workaround

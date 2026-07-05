@@ -1,5 +1,6 @@
 ---
 description: Ship a change to AWEAR's quality bar — sync, build, design-gate (Gabbana 8+), verify (Playwright + JS), commit, push.
+disable-model-invocation: true
 ---
 
 You are running the AWEAR **ship workflow** for this change: $ARGUMENTS

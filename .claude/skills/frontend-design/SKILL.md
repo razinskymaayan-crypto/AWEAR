@@ -1,6 +1,7 @@
 ---
 name: frontend-design
-description: Create distinctive, production-grade frontend interfaces for AWEAR with high design quality. Use when building web components, pages, or UI elements in static/index.html or mobile/. Generates creative, polished code within AWEAR's established design system — not from scratch.
+description: Create distinctive, production-grade frontend interfaces for AWEAR with high design quality. Use when building web components, pages, or UI elements in static/index.html or mobile/. Generates creative, polished code within AWEAR's established design system — not from scratch. Not for UX/accessibility audits (ui-ux-pro-max) or post-hoc code review (code-reviewer).
+allowed-tools: Read, Grep, Glob, Edit, Write, Bash
 ---
 
 This skill guides creation of distinctive, production-grade frontend interfaces for AWEAR that
@@ -15,8 +16,8 @@ AWEAR has an established visual system. You do not choose fonts, colors, or spac
 
 **Sources of truth (read in this order):**
 1. `docs/VISUAL_VISION.md` — Design Master Plan: vision, colors, typography, motion, grid, DoD
-2. `static/tokens.css` — all CSS variables (`--bg`, `--card`, `--accent`, `--fg`, etc.)
-3. `awear-tokens.json` — design token values, synced to `tokens.css`
+2. `.claude/rules/design-tokens.md` — the token table + usage rules (single source; do not copy it here)
+3. `awear-tokens.json` — token SoT that generates `static/tokens.css` — to change a token, edit the json, never the css
 
 **Hard rules:**
 - Use `var(--token-name)` for every color, spacing, radius, shadow, and z-index value

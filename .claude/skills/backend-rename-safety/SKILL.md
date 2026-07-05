@@ -1,6 +1,6 @@
 ---
 name: backend-rename-safety
-description: Use before renaming any field, endpoint, or key in app.py or schema.sql. Prevents silent breakage across static/index.html and mobile/ — the price_estimate_ils→usd incident broke 54 callers with no console errors. Trigger whenever a backend rename is discussed or planned.
+description: Use BEFORE renaming any field, endpoint, key, or data structure in app.py or schema.sql — fire the moment a rename is discussed or planned, not after. Prevents silent breakage across static/index.html and mobile/ (the price_estimate_ils→usd incident broke 54 callers with no console errors). NOT needed for brand-new fields/endpoints with no existing consumers — use backend-patterns for those.
 ---
 
 # Backend Rename Safety Checklist
@@ -67,7 +67,13 @@ grep -n "CPW\|threshold\|> 50\|< 100\|cost_per_wear" static/index.html | head -2
 
 Ask: are these numbers still valid with the new field's units/scale?
 
-### 5. For endpoint renames
+### 5. Schema renames — check the live schema, not schema.sql
+
+`schema.sql` is a PostgreSQL aspirational schema — the live SQLite tables are the
+`CREATE TABLE IF NOT EXISTS` statements inside `init_db()` in `app.py` (`grep -n "CREATE TABLE" app.py`).
+A column rename means: `init_db()` + every `db.execute(...)` touching that column + all frontend/mobile consumers.
+
+### 6. For endpoint renames
 
 ```bash
 # Find all fetch/axios calls to the old endpoint

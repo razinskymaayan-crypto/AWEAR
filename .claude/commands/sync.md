@@ -1,5 +1,6 @@
 ---
 description: Safely pull & integrate the other team's latest work without overwriting it, then verify the app still runs.
+disable-model-invocation: true
 ---
 
 You are running the AWEAR **sync workflow**. Goal: integrate the latest `origin/main` (the other founder's team works in the same repo) without losing either side's work.
