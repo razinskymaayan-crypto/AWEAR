@@ -29,10 +29,13 @@ jobs:
         with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - name: Install (for check-render gate + adversarial review)
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Install (for check-render + pytest gate + adversarial review)
         run: |
           npm install --no-audit --no-fund || true
           npm install -g @anthropic-ai/claude-code || true
+          pip install -q -r requirements.txt pytest || true   # for the backend test gate
       - name: Merge manager branches into main (gated)
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -52,6 +55,13 @@ jobs:
               # GATE 1 — build: the app must still render.
               if ! npm run check-render; then
                 git reset --hard origin/main; reverted="$reverted $m"; continue
+              fi
+              # GATE 1.5 — backend tests: when app.py / schema.sql / tests changed, the
+              # pytest suite (money paths, validation, idempotency, auth, rate-limit) MUST pass.
+              if git diff --name-only origin/main...HEAD -- app.py schema.sql tests/ | grep -q .; then
+                if ! python3 -m pytest -q; then
+                  git reset --hard origin/main; reverted="$reverted $m(pytest)"; continue
+                fi
               fi
               # GATE 2 — locked invariants: SURFACE_SPECS guard (hex/emoji/wording/notch rules).
               if ! bash scripts/guard_checks.sh; then
