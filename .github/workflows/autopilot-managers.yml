@@ -112,6 +112,7 @@ jobs:
           STRICT DELEGATION: route domain craft to your ICs via the Task tool (you coordinate + glue + verify + commit; you do not do IC craft yourself). Map for your lane is in OW.md / the autopilot prompt. Record real IC attribution.
 
           RULES:
+          - EFFORT TIER: classify the task S/M/L per .claude/rules/effort.md BEFORE working and behave accordingly; tier escalation needs a one-line justification.
           - VALUE GATE: before coding, state in ONE line the concrete user-facing value. If you can't, propose it to IDEAS.md instead.
           - Scope: ONLY files your lane OWNS. No edits outside your lane. UI language English only.
           - A blocker only the founder can resolve -> add a line to NEEDS_YOU.md and pick a different task.
@@ -121,6 +122,7 @@ jobs:
           REPORT (after commit, helper bash scripts/tg.sh) — SIGN AS YOURSELF: prefix every message with "${{ matrix.manager }}: ". For a UI change send the screenshot: bash scripts/tg.sh photo /tmp/shot.png "${{ matrix.manager }}: <what changed, 2 sentences>". Else: bash scripts/tg.sh text "${{ matrix.manager }}: <one-line update>".
 
           FINISH:
+          - End your run summary with the exact report block from .claude/rules/reporting.md (TASK/TIER/CHANGED/WHY/VERIFIED/CONFIDENCE/NEEDS HUMAN). A jeff-merge rejection of this work must become a knowledge entry (domain file + INDEX row) at the start of your NEXT run.
           - Append an activity_log.md row (agent = the actual IC who did the craft).
           - TEAM LEDGER: .claude/agents/contributions/<UTC-date>.md — one row per agent you used: | HH:MM | <agent> | ${{ matrix.manager }} | ~<tokens> | <what they did> |.
           - Assignment/INBOX task done -> check it off / move to "## הושלם" with a one-line English note.

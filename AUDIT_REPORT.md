@@ -68,7 +68,15 @@
 | 1 | main-context edits only, ~6 files | 8 files, no subagents | Under estimate. |
 | 2 | 3 parallel subagents + review | 3 subagents (~170k tok) + 1 reviewer (~61k) + main fixes | On estimate. |
 | 3 | 4 parallel subagents + review | 4 subagents (~238k tok) + reviewer | On estimate. |
-| 4 | main-context, ~6 files | 8 files + 32-case test suite | Under estimate. |
+| 4 | main-context, ~6 files | 8 files + 44-case test suite (incl. review hardening) | On estimate. |
+| 5+6+8 | main-context, rule files + workflow wiring | 6 files + 2 workflow prompts | Batched — one combined P4 review (doc-only phases; waiver logged). |
+
+## Phases 5, 6, 8 — Memory, effort tiers, reporting (DONE 2026-07-05)
+
+**Phase 5 (memory):** DECISIONS.md seeded with 15 infra/architecture decisions (SQLite runtime vs aspirational schema.sql, token SoT chain, jeff-merge sole gate, tglib canon, single-file SPA hold, learnings=knowledge-registry decision, model routing, worktree discipline, paused-lanes status, awear.db regenerated, skills-vs-hooks split, auto-load budget); product-locked decisions stay in MASTER_PLAN ג׳ — pointer, not duplication. `.claude/rules/memory.md` defines owner + cadence per memory file (STATE=any agent continuously; DECISIONS=jeff/steve-level; learnings=domain owner + INDEX row; notes/=per task; NEEDS_DECISION=anyone, immediately). `notes/` + README/template created. Auto-memory verified writing (MEMORY.md current 2026-07-05). All 19 agents carry Learnings read/write lines (grep-verified).
+**Phase 6 (effort):** `.claude/rules/effort.md` — S/M/L exactly per master spec + hard rules (classify BEFORE work; S-that-sprouts-files reclassifies; L without fresh review ≠ done).
+**Phase 8 (reporting):** `.claude/rules/reporting.md` — exact TASK/TIER/CHANGED/WHY/VERIFIED/CONFIDENCE/NEEDS-HUMAN block; VERIFIED must name real commands; rejection→learning rule. **Wiring:** autopilot.yml engine prompt (EFFORT TIER line + STATE.md update + report block + rejection→learning in FINISH), autopilot-managers.yml (same, lane-scale). jeff-merge rejection feedback loop already existed (ci-debug/jeff-rejections.txt); the new prompts close it into knowledge entries.
+**Ordering note:** Phase 8 executed before Phase 7 — the rule files 5/6/8 are one coherent set and 7's harness references them; no dependency violated.
 
 ## Phase 4 — Hooks & settings: deterministic rails (DONE 2026-07-05)
 

@@ -19,10 +19,10 @@
 | 2 — Skills upgrade + skill-gardener | ✅ done (a6abfb9 + review fixes) — P4 reviewed, YAML blocker fixed |
 | 3 — Agents: 30-line format + model routing | ✅ done — 1,986→535 lines, briefs/ created, sonnet routing on implementers |
 | 4 — Hooks & settings rails | ✅ done — bash guard, secret deny, DS-009, posttool checks, 32-case test suite |
-| 5 — Memory architecture | ⬜ |
-| 6 — Effort tiers | ⬜ |
-| 7 — Verification harness (pytest/ruff/evals) | ⬜ |
-| 8 — Reporting protocol | ⬜ |
+| 5 — Memory architecture | ✅ done — DECISIONS seeded, rules/memory.md, notes/ |
+| 6 — Effort tiers | ✅ done — rules/effort.md + workflow wiring |
+| 7 — Verification harness (pytest/ruff/evals) | ⬜ next |
+| 8 — Reporting protocol | ✅ done (executed before 7) — rules/reporting.md + engine/lane prompt wiring |
 | 9 — Code quality + hygiene (parallel worktrees) | ⬜ |
 | 10 — Autonomy dry run | ⬜ |
 | Final — deliverables | ⬜ |

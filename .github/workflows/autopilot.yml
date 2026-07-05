@@ -194,6 +194,7 @@ jobs:
           Aligns with MG-002 (never skip the manager). Record real IC attribution (see FINISH).
 
           HOW YOU WORK:
+          - EFFORT TIER: classify the task S/M/L per .claude/rules/effort.md BEFORE working and behave accordingly (S = execute directly; M = 5-line plan; L = full plan + subagent research + fresh-context review). Escalating a tier needs a one-line justification.
           - APPLY LEARNING: before domain work, the assigned IC reads OW.md + its domain knowledge file (.claude/agents/knowledge/) and APPLIES those rules. Learning is only real if applied — do not repeat a documented mistake.
           - Scope: one main task + small directly-related fixes you run into. No unrelated edits, no speculative refactors, no renaming for taste. Never re-do anything already in activity_log.
           - VALUE GATE: before coding, state in ONE line (i) the concrete user-facing value AND (ii) which loop-stage it advances (SCAN/MATCH/LOOKS/BUY/EARN) or that it is "polish"/"infra"/"answered-directive". If you cannot, do not build it — propose it in IDEAS.md instead. "Done" = that value delivered, not merely "renders without error" (OW-002).
@@ -227,6 +228,8 @@ jobs:
           - Keep every report concise and in English. Always report — a silent run leaves the founders blind.
 
           FINISH:
+          - Update STATE.md (root) per .claude/rules/memory.md — a fresh session must be able to resume from it alone.
+          - End your run summary with the exact report block from .claude/rules/reporting.md (TASK/TIER/CHANGED/WHY/VERIFIED/CONFIDENCE/NEEDS HUMAN). If jeff-merge later rejects this work, converting the rejection into a knowledge entry (domain file + INDEX row) is a top-priority item for your NEXT run.
           - Append one activity_log.md entry (required format). The "agent" column must name the ACTUAL IC who did the work (dolce/valentino/sam/oren/gabbana/netta/shira/ayalon), NOT "orchestrator". Reusable lessons → the relevant .claude/agents/knowledge/ file.
           - TEAM LEDGER: for EVERY agent you delegated to this run, append one row to .claude/agents/contributions/<UTC-date>.md (create the file with a "| time | agent | manager | ~tokens | task |" header row if it does not exist) in the format: | HH:MM | <agent> | <manager> | ~<tokens> | <one-line of what they did> | . <tokens> is your rough order-of-magnitude estimate (e.g. ~120k). This feeds the daily team report.
           - Update DAILY_DIGEST.md at repo root: once per UTC day reset it; every run appends one line — what you did, what you proposed, what is blocked. ALL your notes/replies/docs to the founder are in ENGLISH.
