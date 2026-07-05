@@ -94,6 +94,40 @@ def test_wallet_shape(client):
     assert "balance" in r.json() or "balance_usd" in r.json()
 
 
+def test_wallet_credits_creator_by_user_id(client):
+    client.post("/api/orders", json=_order_body(
+        amount_usd=200.0, influencer_id="user_wallet_x", client_ref="wallet-x-1"))
+    r = client.get("/api/wallet", params={"user_id": "user_wallet_x"})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["balance"] == round(200.0 * CREATOR_PCT, 2)  # 10.0
+    assert any(c["item"] == "Linen blazer" for c in d["credits"])
+
+
+def test_wallet_balance_sums_beyond_limit_50(client):
+    import datetime as _dt
+    with appmod._get_db() as db:
+        for i in range(60):
+            db.execute(
+                """INSERT INTO credits (id, user_key, order_id, item_name, amount_usd, type, created_at)
+                   VALUES (?,?,?,?,?,?,?)""",
+                (f"crd_bulk_{i}", "user_wallet_bulk", f"ord_bulk_{i}", "Bulk item",
+                 1.0, "creator",
+                 (_dt.datetime.utcnow() - _dt.timedelta(seconds=i)).isoformat()),
+            )
+        db.commit()
+    r = client.get("/api/wallet", params={"user_id": "user_wallet_bulk"})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["balance"] == 60.0
+    assert len(d["credits"]) == 50
+
+
+def test_wallet_user_id_too_long_400(client):
+    r = client.get("/api/wallet", params={"user_id": "x" * 65})
+    assert r.status_code == 400
+
+
 # --------------------------------------------------------------------------- #
 # Buy-routing (resolve-product) — never a dead end
 # --------------------------------------------------------------------------- #

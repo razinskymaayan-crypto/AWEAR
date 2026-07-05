@@ -3657,11 +3657,24 @@ async def list_orders(request: Request):
 
 
 @app.get("/api/wallet")
-async def get_wallet(request: Request):
-    """Return the caller's creator-credit balance and history.
+async def get_wallet(request: Request, user_id: str = ""):
+    """Return a creator's credit balance and history.
 
-    Uses MG-005 ``user_key`` (IP-based) to identify the user.
-    Rate limited to 30 requests/minute.
+    ``credits`` rows are written with ``user_key = influencer_id`` (a profile id,
+    e.g. "user_carmel") by ``POST /api/orders`` — NOT the caller's IP. So the
+    caller-IP-based BE-006 ``user_key`` is only a fallback: pass the creator's
+    profile id as ``?user_id=`` to look up their actual wallet. When ``user_id``
+    is omitted, we fall back to the legacy (pre-fix) BE-006 IP-keyed lookup for
+    backward compatibility — no current frontend caller relies on it, but the
+    contract is kept.
+
+    ``balance`` is summed over the creator's FULL credits ledger (a separate
+    SELECT, no LIMIT) so it can't undercount past the history page size.
+    ``credits`` (the displayed history) stays capped at the most recent 50 rows.
+
+    Rate limited to 30 requests/minute, keyed on the caller's IP (BE-006) —
+    NOT on ``user_id`` — so one caller can't burn another creator's rate-limit
+    bucket by querying their wallet repeatedly.
 
     Response::
 
@@ -3673,16 +3686,25 @@ async def get_wallet(request: Request):
           ]
         }
     """
-    user_key = (request.client.host if request.client else None) or "anon"
-    if not check_rate_limit(user_key, "wallet", 30):
+    caller_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(caller_key, "wallet", 30):
         raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
 
+    wallet_user_id = (user_id or "").strip()
+    if len(wallet_user_id) > 64:
+        raise HTTPException(status_code=400, detail="user_id must be at most 64 characters.")
+    lookup_key = wallet_user_id or caller_key
+
     with _get_db() as db:
+        total_row = db.execute(
+            "SELECT COALESCE(SUM(amount_usd), 0) AS total FROM credits WHERE user_key = ?",
+            (lookup_key,),
+        ).fetchone()
         rows = db.execute(
             """SELECT id, order_id, item_name, amount_usd, created_at
                FROM credits WHERE user_key = ?
                ORDER BY created_at DESC LIMIT 50""",
-            (user_key,),
+            (lookup_key,),
         ).fetchall()
 
     credits = [
@@ -3690,8 +3712,8 @@ async def get_wallet(request: Request):
          "order_id": r["order_id"], "created_at": r["created_at"]}
         for r in rows
     ]
-    balance = round(sum(r["amount_usd"] for r in rows), 2)
-    logger.info("wallet: user=%s balance=%.2f credits=%d", user_key, balance, len(credits))
+    balance = round(total_row["total"], 2)
+    logger.info("wallet: user=%s balance=%.2f credits=%d", lookup_key, balance, len(credits))
     return {"balance": balance, "credits": credits}
 
 

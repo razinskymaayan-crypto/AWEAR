@@ -3,7 +3,8 @@
 > Source: Fable-5 backend audit, 2026-07-05 (founder-approved). Each item cites file:line.
 > Do them TOP-DOWN, one per run, each with a pytest that proves the fix. Verify: `python -m pytest -q` green.
 
-## [ ] P0 — Creator Wallet is disconnected: every creator sees $0 (flagship money feature broken)
+## [x] P0 — Creator Wallet is disconnected: every creator sees $0 (flagship money feature broken)
+> DONE 2026-07-05 (sam, branch auto/steve): `/api/wallet` accepts `?user_id=` and reads credits by profile id (IP fallback kept); balance = SUM over full ledger, LIMIT 50 only on history. 3 new pytests (fail-before/pass-after proven), suite 22/22. Follow-up for mark's lane: wallet UI must pass `?user_id=<creator id>`.
 **Evidence:** credits are inserted with `user_key = order.influencer_id` (a profile id) at `app.py:3582`,
 but `GET /api/wallet` reads `WHERE user_key = ?` using the caller's **IP** (`app.py:3680`). The two
 identities never match → balance is always $0. AND balance sums only `LIMIT 50` rows (`app.py:3684/3693`).
