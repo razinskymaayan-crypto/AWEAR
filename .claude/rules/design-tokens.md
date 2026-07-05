@@ -1,6 +1,6 @@
 # Design tokens (Mediterranean Modern)
 
-Scope: `static/**`, `mobile/**`. Source chain: `awear-tokens.json` → generates `static/tokens.css` (web) + feeds `mobile/theme/tokens.js` (RN). **To change a token, edit the json — never the css.**
+Scope: `static/**`, `mobile/**`. Source chain: `awear-tokens.json` → generates `static/tokens.css` (web) + feeds `mobile/theme/tokens.js` (RN). **To change a token, edit the json — never the css** (לשינוי token — ערוך את ה-json, לא את ה-css).
 
 ```
 --bg:#0e0c0f    --surface:#161318   --card:#1e1a22   --card-hover:#262030
