@@ -1,6 +1,14 @@
 manager=scout
+<<<<<<< Updated upstream
 branch=auto/scout commits_ahead_of_main=1
 claude_installed=/opt/hostedtoolcache/node/20.20.2/x64/bin/claude
 node=v20.20.2  npm=10.8.2
 auth_present=yes
 last_commit=c062a3b intel(scout): Alta + Style DNA teardown — item-tap % closet match uncontested by funded leaders
+=======
+branch=auto/scout commits_ahead_of_main=2
+claude_installed=/opt/hostedtoolcache/node/20.20.2/x64/bin/claude
+node=v20.20.2  npm=10.8.2
+auth_present=yes
+last_commit=35001f0 intel(scout): Phia teardown — resale-value-before-buy hook + two-front convergence (Alta closet-side, Phia BUY-side)
+>>>>>>> Stashed changes
