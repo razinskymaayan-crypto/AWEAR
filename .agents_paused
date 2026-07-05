@@ -1,0 +1,9 @@
+PAUSED ON PURPOSE — 2026-07-05 by Maayan.
+
+All autonomous agent workflows (autopilot, retrospective, daily-report,
+autopilot-managers) are intentionally DISABLED right now — they were
+consuming the founder's Claude quota too fast, even on Fable.
+
+This file tells the loop-liveness watchdog the silence is deliberate
+(no "loop stuck" alerts). Delete this file AND re-enable the workflows
+(GitHub → Actions → each workflow → Enable) to resume autonomous work.
