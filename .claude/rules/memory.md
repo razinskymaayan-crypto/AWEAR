@@ -4,7 +4,7 @@ The discipline that keeps five projects resumable. Every file below has ONE owne
 
 | File | Purpose | Who writes | When |
 |---|---|---|---|
-| `STATE.md` (root) | Live task state — the resume point. A fresh session must be able to continue from this file alone | ANY agent | Continuously: task start (what+plan), direction change, task end. Overwrite stale sections — it's a snapshot, not a log |
+| `STATE.md` (root) | Live task state — the resume point. A fresh session must be able to continue from this file alone | ANY agent in interactive sessions; in autonomous CI lanes — the ENGINE only (6 parallel manager lanes would merge-conflict on it; lanes record via activity_log) | Continuously: task start (what+plan), direction change, task end. Overwrite stale sections — it's a snapshot, not a log |
 | `DECISIONS.md` (root) | Settled infra/architecture questions, one line + rationale | Jeff/Steve-level calls only (founder, CTO-gate, or the main session) | When a question is settled or reversed |
 | `.claude/agents/knowledge/<domain>.md` + `INDEX.md` row | Incident-derived learning codes — short, general, deduplicated | The domain owner agent, after a human correction or discovered edge case | Same cycle as the incident; INDEX row is mandatory (guard_checks blocks un-indexed codes) |
 | `.claude/agents/activity_log.md` | Concurrency log — who touched what | Every agent | One row per completed task |

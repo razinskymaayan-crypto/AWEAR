@@ -27,8 +27,18 @@
 | 10 — Autonomy dry run | ⬜ |
 | Final — deliverables | ⬜ |
 
-## What's next
-Phase 3 (agents → 30-line format, model routing). Note: CLAUDE.md forward-references `.claude/rules/{effort,memory,reporting}.md` + `scripts/verify.sh` — these land in Phases 5–8; dangling until then by design. SF-004 needs an sf.md entry (Phase 4).
+## ⏸️ PAUSED BY FOUNDER (2026-07-05)
+Carmel instructed: stop, push everything to GitHub, wait. **Resume only when Carmel or her partner says to continue.**
+Everything through Phase 8 is committed and pushed; P4 reviews done and findings fixed for all completed phases.
+
+## What's next (when resumed)
+1. **Phase 7 — verification harness**: pytest suite for app.py critical paths (<30s), ruff config, `scripts/verify.sh` (tests+lint+guards+render; referenced by CLAUDE.md — still a sanctioned dangling ref), `evals/` for the 3 gate agents (gabbana/steve-review/jeff-merge; mine ci-debug/jeff-rejections + knowledge incidents for scenarios), `/run-evals` skill, `/review` fresh-context diff skill, wire into jeff-merge.yml.
+2. **Phase 9 — code quality + hygiene** (parallel worktree subagents): conservative app.py module extraction, section markers in index.html (NO modularization), scripts/ dedupe + headers, `git rm --cached data/awear.db` (NEEDS_DECISION #2 default), delete 23 stale merged feat/* branches, worktree prune, archive .claude/agents/logs/, fix schema.sql "PostgreSQL" comment, delete whoami.yml.
+3. **Phase 10 — autonomy dry run**: M-tier task (candidate: comments persistence to SQLite — `_comments_store` in-memory dict, BE-005 violation), executed with the new machinery only; then crash-simulation resume test from this file alone.
+4. **Final deliverable**: AUDIT_REPORT before/after + template-extraction guide; present NEEDS_DECISION.md to founders.
+
+## Open questions
+See NEEDS_DECISION.md — 5 items, defaults applied, none blocking.
 
 ## Open questions
 See NEEDS_DECISION.md — 5 items, all with best-guess defaults applied; none blocking.

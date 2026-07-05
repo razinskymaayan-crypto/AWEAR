@@ -16,7 +16,7 @@ Multi-file changes within ONE module/layer (e.g. backend-only endpoint + its cal
 
 ## L (large)
 New features, architecture changes, anything touching >3 modules or crossing layers (app.py + index.html + mobile/), anything irreversible.
-- **Do**: full plan mode; research via subagents (P3 — exploration stays out of main context); unknowns surfaced explicitly (assumptions vs unknowns; human-only ones → `NEEDS_DECISION.md` with a default applied).
+- **Do**: full plan mode; research via subagents (exploration stays out of the main context — main context is for decisions and edits); unknowns surfaced explicitly (assumptions vs unknowns; human-only ones → `NEEDS_DECISION.md` with a default applied).
 - **Verify**: full harness — tests + lint + guards + render + fresh-context diff review (`/review`) before done.
 - **Report**: full format + confidence + risks.
 

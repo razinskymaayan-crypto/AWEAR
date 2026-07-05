@@ -9,8 +9,8 @@
 |---|---|---|---|
 | 1 | Runtime DB = SQLite via `init_db()` in app.py; `schema.sql` is aspirational PostgreSQL, NOT the live schema | One file, zero ops for demo stage; real schema lives where it runs | BE-004/BE-005; verified app.py:1045 |
 | 2 | Web-first; `mobile/` stays dormant; iOS ships as Capacitor wrap of the SPA | Founder-locked 19.06 (MASTER_PLAN #1) | MASTER_PLAN ג׳#1 |
-| 3 | Design-token SoT chain: `awear-tokens.json` → generates `static/tokens.css` → feeds `mobile/theme/tokens.js`; edit the json only | Single source; css/js are artifacts | .claude/rules/design-tokens.md |
-| 4 | Only path to main for autonomous lanes = `jeff-merge.yml` (build + guard_checks + adversarial persona review) | One gate, adversarial by design | .github/workflows/jeff-merge.yml |
+| 3 | Design-token SoT chain: `awear-tokens.json` is the source; `static/tokens.css` is hand-kept in sync (NO generator script exists yet); `mobile/theme/tokens.js` imports the json directly. Token change = edit json AND css together | Single conceptual source; automation of css generation is an open improvement | .claude/rules/design-tokens.md |
+| 4 | Only path to main for autonomous CODE lanes (auto/*) = `jeff-merge.yml` (build + guard_checks + adversarial persona review). Note: retrospective/telegram-poll/whoami push docs/state files directly to main — the gate governs code | One gate, adversarial by design | .github/workflows/jeff-merge.yml |
 | 5 | Telegram I/O only via `scripts/tglib.py` (chunking/retries/429); `tg.sh` is a thin wrapper; no raw curl | One battle-tested path; failures logged | project memory 2026-07-05 |
 | 6 | `static/index.html` stays single-file until a dedicated modularization project with the eval harness as safety net | TDZ/load-order risk >> aesthetic gain today | NEEDS_DECISION #5 (default applied) |
 | 7 | Internal currency = USD; FX = static table in v1 (live API needs Jeff/board approval) | Founder-locked 18.06 | MASTER_PLAN ג׳#7-8 |
@@ -19,7 +19,7 @@
 | 10 | Agent model routing: implementers `model: sonnet`; judgment/gate/strategy agents inherit the session's strongest model | Cost scales with volume of implementation work, judgment stays sharp | foundation Phase 3 |
 | 11 | Parallel work on shared files = worktrees under `AWEAR/worktrees/` + separate anchors, serial merge | OW-010 incident-derived | knowledge/OW.md |
 | 12 | Autonomous lanes stay PAUSED (`.agents_paused`) until founders pick a resume cadence | Quota burn 2026-07-05; cadence table prepared | NEEDS_DECISION #4 |
-| 13 | `data/awear.db` is regenerated at startup, never source of truth; seed truth = `static/data/*.json` + `init_db()` | Reproducible demos; no binary-in-git drift | .gitignore comment; NEEDS_DECISION #2 |
+| 13 | `data/awear.db`: schema is created idempotently at startup (`init_db()`); demo content seeds from `static/data/*.json`; **user-persisted rows (likes/follows/saves/users) live ONLY in the db file — deleting it loses them**. Untrack-from-git intent per NEEDS_DECISION #2 | BE-005: SQLite is THE store for user data; the .gitignore "regenerated" comment is about schema, not data | app.py:1045; NEEDS_DECISION #2 |
 | 14 | Skills carry judgment/orientation; fully deterministic checks are scripts/hooks, never skills | Determinism belongs to the harness | foundation Phase 2 |
 | 15 | Session auto-load budget ≈ 2.6k tokens: CLAUDE.md ≤ ~600, knowledge hook injects org-wide table + pointers only (never the full INDEX) | Context is for decisions, not orientation dumps | foundation Phase 1 |
 
