@@ -1141,7 +1141,9 @@ def init_db() -> None:
         for _col in ['color_primary TEXT', 'occasion TEXT', 'material_guess TEXT']:
             try:
                 conn.execute(f'ALTER TABLE wear_log ADD COLUMN {_col}')
-            except Exception:
+            except sqlite3.OperationalError:
+                # Column already exists (SQLite lacks ADD COLUMN IF NOT EXISTS) — expected
+                # on re-init, safe to skip. Any OTHER error (locked/corrupt DB) still surfaces.
                 pass
         conn.execute("""
             CREATE TABLE IF NOT EXISTS season_summaries (
