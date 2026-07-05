@@ -52,7 +52,10 @@ jobs:
 
           1. SYNC: git fetch + merge origin/main (never overwrite the other team).
           2. GATHER today's signals (use the UTC date):
-             - Failures: .claude/agents/knowledge/FAILURES.md rows dated today + any "revert" commits in git log.
+             - Failures: ci-debug/gate-ledger.md rows dated today (the durable merge/revert/reject/conflict
+               ledger — THIS is the real failure signal; `git reset --hard` leaves no revert commit) PLUS
+               .claude/agents/knowledge/FAILURES.md rows. If a lane was reverted/rejected/conflicted 2+ times
+               for the same reason, that is a REPEAT — write a concrete rule + escalate it in the report.
              - Founder feedback: changes in .claude/master/IDEAS.md (approved/rejected), INBOX "## הושלם" notes, NEEDS_YOU.md.
              - Surveys & research: files in docs/surveys/ and docs/research/ dated today — their key recommendations.
              - Successful patterns / wins: today's activity_log.md + DAILY_DIGEST.md + the contributions ledger.

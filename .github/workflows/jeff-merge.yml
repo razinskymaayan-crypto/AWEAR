@@ -102,11 +102,15 @@ jobs:
           [ -n "$conflicted" ] && MSG="$MSG | CONFLICT (needs reconciliation):$conflicted"
           echo "$MSG"
           bash scripts/tg.sh text "$MSG" || true
-          # Record conflicts/rejections for the next round to reconcile (joint-discussion v2)
-          if [ -n "$conflicted$rejected" ]; then
-            mkdir -p ci-debug
-            [ -n "$conflicted" ] && echo "$(date -u +%FT%TZ) conflict:$conflicted" >> ci-debug/jeff-conflicts.txt
-            git add ci-debug/ || true
-            git commit -m "chore(jeff): log unmerged branches (conflict/rejected) [skip ci]" || true
-            git pull --rebase origin main -q || true; git push origin HEAD:main || true
-          fi
+          # DURABLE GATE LEDGER — closes the #1 learning-loop gap. Every cycle's real outcome
+          # (merged / reverted / rejected / conflicted) is persisted where the retrospective looks,
+          # INCLUDING reverts — which were previously only a shell var + Telegram string and then
+          # shredded by `git reset --hard`. A learner can only correct what survives. One structured
+          # line per cycle (~every 6h), committed [skip ci]. This is the single most important
+          # self-correction fix from the 2026-07-05 post-mortem.
+          mkdir -p ci-debug
+          echo "$(date -u +%FT%TZ) | $MSG" >> ci-debug/gate-ledger.md
+          [ -n "$conflicted" ] && echo "$(date -u +%FT%TZ) conflict:$conflicted" >> ci-debug/jeff-conflicts.txt
+          git add ci-debug/ || true
+          git commit -m "chore(jeff): gate-ledger [skip ci]" || true
+          git pull --rebase origin main -q || true; git push origin HEAD:main || true

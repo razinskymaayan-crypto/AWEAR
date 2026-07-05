@@ -1,5 +1,31 @@
 # Design lane (mark) — assignments
 
+> Source: Fable-5 frontend audit, 2026-07-05. Files: index.html (shell), app.css (CSS), app.js (JS).
+> Do the demo-breaking bugs FIRST, one per run. Verify each: `npm run check-render` + screenshot the screen.
+
+## [ ] P0 — Two blank-screen navigation bugs (make the app look broken in a demo)
+1. `showView('wardrobe')` — there is NO `#wardrobe` view; the Marketplace sell-tab CTA blanks the whole
+   screen. Change to `showView('closet')`. Evidence: `app.js:4402` (handler), `app.js:4477` (button).
+2. Home checklist "style quiz" step calls `showView('onboarding')` (not a `.view`) → blanks the main area.
+   Replace with `showOnboarding()`. Evidence: `app.js:2367`; correct fn at `app.js:6718`.
+Verify: navigate both paths in a browser (node scripts/shot.mjs) — no blank screen.
+
+## [ ] P0 — Raw `${icon('sparkle',16)}` text ships literally in the Compare CTA
+Evidence: `index.html:151` — it's static HTML, not a JS template, so the user sees the literal string.
+Replace with inline SVG (DS-008: icon() is JS-templates-only).
+
+## [ ] P1 — Dark-theme relics on the light theme (this IS the "black on black")
+`.adm-grade-card` / `.sus-score-card` hardcode `linear-gradient(135deg,#0d1f10,#122018)` (near-black) while
+`--success` is now dark green → dark-green text on near-black. Evidence: `app.css:1379,1382,1550-1551`.
+Swap to a light-safe treatment (var(--success-surface) bg + readable text). Screenshot to confirm contrast.
+
+## [ ] P1 — Stubs & dead code
+- "New post" is a stub toast (`app.js:1829`); stylist "Video call"/"Chat" go nowhere (`app.js:7967`) — either
+  wire (chat → `showView('dm')`) or remove the buttons so the demo has no dead ends.
+- Dead code to DELETE: the entire emoji-reactions subsystem (`reactionsHTML` has zero call sites, ~150 lines,
+  `app.js:7185` + seeds `6905-6931` + no-op `bindReactions`), and 7 dead functions (buyFlow, buyConfirm,
+  comboPieceHTML, resetWardrobe, matchPercent, addPoints, addToWishlistFromItem).
+
 ## [ ] P0 — Tokenize hardcoded colors + kill black-on-black (theme migration finish)
 
 **Why (founder, verified):** ~762 hardcoded hex values live in `static/index.html` and
