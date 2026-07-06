@@ -173,6 +173,95 @@ def test_register_duplicate_409(client):
     assert r.status_code == 409
 
 
+def test_register_token_is_not_user_id(client):
+    r = client.post("/api/auth/register",
+                    json={"username": "carol_t", "email": "carol_t@ex.com", "password": "secret1"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["token"]
+    assert body["token"] != body["user_id"]
+
+
+def test_get_me_no_token_401(client):
+    r = client.post("/api/auth/register",
+                    json={"username": "dave_t", "email": "dave_t@ex.com", "password": "secret1"})
+    user_id = r.json()["user_id"]
+    r2 = client.get(f"/api/auth/me/{user_id}")
+    assert r2.status_code == 401
+
+
+def test_get_me_own_token_returns_email(client):
+    r = client.post("/api/auth/register",
+                    json={"username": "erin_t", "email": "erin_t@ex.com", "password": "secret1"})
+    body = r.json()
+    r2 = client.get(f"/api/auth/me/{body['user_id']}",
+                     headers={"Authorization": f"Bearer {body['token']}"})
+    assert r2.status_code == 200
+    assert r2.json()["email"] == "erin_t@ex.com"
+
+
+def test_get_me_other_users_token_403(client):
+    a = client.post("/api/auth/register",
+                    json={"username": "frank_t", "email": "frank_t@ex.com", "password": "secret1"}).json()
+    b = client.post("/api/auth/register",
+                    json={"username": "gina_t", "email": "gina_t@ex.com", "password": "secret1"}).json()
+    r = client.get(f"/api/auth/me/{b['user_id']}",
+                   headers={"Authorization": f"Bearer {a['token']}"})
+    assert r.status_code == 403
+
+
+def test_patch_other_users_token_403_and_unchanged(client):
+    a = client.post("/api/auth/register",
+                    json={"username": "harry_t", "email": "harry_t@ex.com", "password": "secret1"}).json()
+    b = client.post("/api/auth/register",
+                    json={"username": "ivy_t", "email": "ivy_t@ex.com", "password": "secret1"}).json()
+
+    r = client.patch(f"/api/auth/me/{b['user_id']}",
+                      json={"display_name": "hacked"},
+                      headers={"Authorization": f"Bearer {a['token']}"})
+    assert r.status_code == 403
+
+    # verify B's display_name is unchanged, via B's own GET
+    check = client.get(f"/api/auth/me/{b['user_id']}",
+                        headers={"Authorization": f"Bearer {b['token']}"})
+    assert check.json()["display_name"] != "hacked"
+
+
+def test_patch_junk_token_401(client):
+    a = client.post("/api/auth/register",
+                    json={"username": "jack_t", "email": "jack_t@ex.com", "password": "secret1"}).json()
+    r = client.patch(f"/api/auth/me/{a['user_id']}",
+                      json={"display_name": "whatever"},
+                      headers={"Authorization": "Bearer nonsense"})
+    assert r.status_code == 401
+
+
+def test_patch_own_profile_updates_field(client):
+    a = client.post("/api/auth/register",
+                    json={"username": "karen_t", "email": "karen_t@ex.com", "password": "secret1"}).json()
+    r = client.patch(f"/api/auth/me/{a['user_id']}",
+                      json={"display_name": "Karen T"},
+                      headers={"Authorization": f"Bearer {a['token']}"})
+    assert r.status_code == 200
+    assert "display_name" in r.json()["updated"]
+
+    check = client.get(f"/api/auth/me/{a['user_id']}",
+                        headers={"Authorization": f"Bearer {a['token']}"})
+    assert check.json()["display_name"] == "Karen T"
+
+
+def test_login_token_works_on_get_me(client):
+    reg = client.post("/api/auth/register",
+                      json={"username": "leo_t", "email": "leo_t@ex.com", "password": "secret1"}).json()
+    login = client.post("/api/auth/login",
+                        json={"email": "leo_t@ex.com", "password": "secret1"}).json()
+    assert login["token"]
+    r = client.get(f"/api/auth/me/{reg['user_id']}",
+                    headers={"Authorization": f"Bearer {login['token']}"})
+    assert r.status_code == 200
+    assert r.json()["email"] == "leo_t@ex.com"
+
+
 # --------------------------------------------------------------------------- #
 # Rate limiting (kept LAST — it deliberately exhausts the /api/orders budget)
 # --------------------------------------------------------------------------- #

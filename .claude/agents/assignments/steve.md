@@ -14,7 +14,8 @@ creator's credits, keep LIMIT only on the displayed history list.
 **Test (add to tests/):** POST an order with `influencer_id="user_x"` → `GET /api/wallet?user_id=user_x`
 → balance == 5% of the order amount; add 60 credits → balance sums all 60, not 50.
 
-## [ ] P1 — IDOR + plaintext-token auth: anyone can read any email / edit any profile
+## [x] P1 — IDOR + plaintext-token auth: anyone can read any email / edit any profile
+> DONE 2026-07-06 (sam, branch auto/steve): opaque session tokens (`secrets.token_urlsafe(32)`) in new SQLite `sessions` table, issued at register+login (response shape unchanged); GET+PATCH `/api/auth/me/{user_id}` now require `Authorization: Bearer` and assert token-subject == path id (401 missing/invalid, 403 mismatch). 8 new pytests, fail-before proven (5 vuln tests return 200 on old code), suite 30/30. No TTL yet (later cycle). Follow-up for varan's lane: `mobile/screens/EditProfileScreen.js:19` PATCHes without a Bearer header — must store the login token and send it (mobile is dormant; web SPA never calls these endpoints, unaffected).
 **Evidence:** `GET /api/auth/me/{user_id}` returns `email` for any id, `PATCH /api/auth/me/{user_id}` edits
 any user — no caller verification; the "token" is just the plaintext `user_id` (`app.py:2168-2216`).
 **Fix:** issue a real opaque session token at login/register (store `token→user_id` in SQLite); require it

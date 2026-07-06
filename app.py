@@ -19,6 +19,7 @@ import io
 import json
 import logging
 import os
+import secrets
 import sqlite3
 import uuid
 import time
@@ -1083,6 +1084,13 @@ def init_db() -> None:
             )
         """)
         conn.execute("""
+            CREATE TABLE IF NOT EXISTS sessions (
+                token      TEXT PRIMARY KEY,
+                user_id    TEXT NOT NULL,
+                created_at REAL NOT NULL
+            )
+        """)
+        conn.execute("""
             CREATE TABLE IF NOT EXISTS challenge_completions (
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_key    TEXT    NOT NULL,
@@ -2087,16 +2095,52 @@ async def mark_all_read(user_id: str):
 
 
 # ---------------------------------------------------------------------------
-# Auth — users table in SQLite (Cycle 2).
+# Auth — users + sessions tables in SQLite (Cycle 2, hardened Cycle 3).
 #
-# Passwords: SHA-256 hash (NOT bcrypt yet — Cycle 3 will upgrade to bcrypt).
-# Tokens: user_id as placeholder token (NO JWT yet — Cycle 3).
+# Passwords: SHA-256 hash (NOT bcrypt yet — a later cycle will upgrade to bcrypt).
+# Tokens: opaque session tokens (secrets.token_urlsafe(32)) stored in the
+#   `sessions` table (SQLite, no in-memory dict — BE-004/BE-005). No TTL/expiry
+#   yet — that's a later cycle; today a token is valid until the row is deleted.
+# Auth enforcement: `_session_user(request)` resolves the caller's user_id from
+#   the `Authorization: Bearer <token>` header. Endpoints that read/write a
+#   specific user_id verify caller == user_id (401 no/bad token, 403 mismatch).
 # Schema owner: Sam. Integration owner: Oren.
 # ---------------------------------------------------------------------------
 
 def _pw_hash(password: str) -> str:
-    """SHA-256 hash of password. NOT bcrypt — Cycle 3 will upgrade."""
+    """SHA-256 hash of password. NOT bcrypt — a later cycle will upgrade."""
     return hashlib.sha256(password.encode()).hexdigest()
+
+
+def _issue_token(db: sqlite3.Connection, user_id: str) -> str:
+    """Mint a new opaque session token for user_id, persist it, return it."""
+    token = secrets.token_urlsafe(32)
+    db.execute(
+        "INSERT INTO sessions (token, user_id, created_at) VALUES (?, ?, ?)",
+        (token, user_id, time.time()),
+    )
+    return token
+
+
+def _session_user(request: Request) -> Optional[str]:
+    """Resolve the calling user_id from the Authorization: Bearer <token> header.
+
+    Returns None (never raises) if the header is missing, malformed, or the
+    token doesn't match a live session — callers decide the HTTP status.
+    """
+    auth_header = request.headers.get("authorization") or ""
+    parts = auth_header.split(" ", 1)
+    if len(parts) != 2 or parts[0].lower() != "bearer":
+        return None
+    token = parts[1].strip()
+    if not token:
+        return None
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT user_id FROM sessions WHERE token=?",
+            (token,),
+        ).fetchone()
+    return row[0] if row else None
 
 
 @app.post("/api/auth/register")
@@ -2104,7 +2148,7 @@ async def register(request: Request):
     """Register a new user.
 
     Required body fields: username, email, password.
-    Returns {user_id, token (=user_id placeholder), username}.
+    Returns {user_id, token (opaque session token), username}.
     400 if any field missing or password < 6 chars.
     409 if username or email already exists.
     """
@@ -2135,16 +2179,17 @@ async def register(request: Request):
             if "UNIQUE" in str(exc) or "IntegrityError" in type(exc).__name__:
                 raise HTTPException(status_code=409, detail="username or email already exists")
             raise
+        token = _issue_token(db, user_id)
 
     logger.info("New user registered: %s (%s)", user_id, username)
-    return {"user_id": user_id, "token": user_id, "username": username}
+    return {"user_id": user_id, "token": token, "username": username}
 
 
 @app.post("/api/auth/login")
 async def login(request: Request):
     """Authenticate a user by email + password.
 
-    Returns {user_id, token (=user_id placeholder), username}.
+    Returns {user_id, token (opaque session token), username}.
     401 if credentials are invalid.
     """
     body = await request.json()
@@ -2157,17 +2202,28 @@ async def login(request: Request):
             "SELECT id, username FROM users WHERE email=? AND password_hash=?",
             (email, pw_hash),
         ).fetchone()
-
-    if not row:
-        raise HTTPException(status_code=401, detail="invalid credentials")
+        if not row:
+            raise HTTPException(status_code=401, detail="invalid credentials")
+        token = _issue_token(db, row[0])
 
     logger.info("User login: %s", row[0])
-    return {"user_id": row[0], "token": row[0], "username": row[1]}
+    return {"user_id": row[0], "token": token, "username": row[1]}
 
 
 @app.get("/api/auth/me/{user_id}")
-async def get_me(user_id: str):
-    """Return the full user object for user_id. 404 if not found."""
+async def get_me(user_id: str, request: Request):
+    """Return the full user object for user_id.
+
+    Requires Authorization: Bearer <token> for the SAME user_id.
+    401 if the token is missing/invalid, 403 if it belongs to another user,
+    404 if user_id doesn't exist.
+    """
+    caller = _session_user(request)
+    if caller is None:
+        raise HTTPException(status_code=401, detail="missing or invalid token")
+    if caller != user_id:
+        raise HTTPException(status_code=403, detail="forbidden")
+
     with _get_db() as db:
         row = db.execute(
             "SELECT id, username, email, display_name, bio, avatar_url, created_at FROM users WHERE id=?",
@@ -2182,11 +2238,19 @@ async def get_me(user_id: str):
 async def update_me(user_id: str, request: Request):
     """Update allowed profile fields for user_id.
 
+    Requires Authorization: Bearer <token> for the SAME user_id.
+    401 if the token is missing/invalid, 403 if it belongs to another user.
     Allowed fields: display_name (≤50 chars), bio (≤150 chars), avatar_url (≤500 chars).
     Unknown fields are silently ignored.
     Returns {user_id, updated: [field_names]}.
     400 if no valid fields provided.
     """
+    caller = _session_user(request)
+    if caller is None:
+        raise HTTPException(status_code=401, detail="missing or invalid token")
+    if caller != user_id:
+        raise HTTPException(status_code=403, detail="forbidden")
+
     body = await request.json()
     fields = {}
     if "display_name" in body:
