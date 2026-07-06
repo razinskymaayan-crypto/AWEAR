@@ -19,11 +19,11 @@
 | 02 | הפצה וצמיחה — 0 → מיליונים | Anna | [02-distribution-cold-start.md](02-distribution-cold-start.md) | סבב 1 — ממתין להעמקה (רענון שבועי אוטונומי) |
 | 03 | קטלוג ואספקה — מאיפה הבגדים בקנה מידה | Amancio | [03-catalog-brands-supply.md](03-catalog-brands-supply.md) | סבב 1 — ממתין להעמקה (רענון שבועי אוטונומי) |
 | 04 | ניתוב עסקאות גיאוגרפי | Tobi | [04-geo-routing-transactions.md](04-geo-routing-transactions.md) | סבב 1 — ממתין להעמקה (רענון שבועי אוטונומי) |
-| 05 | כלכלת יחידה ורווחיות (CAC/LTV) | Tobi | 05-unit-economics.md | **טרם נכתב** — ייווצר ע"י הריצה האוטונומית היומית |
+| 05 | כלכלת יחידה ורווחיות (CAC/LTV) | Tobi | [05-unit-economics.md](05-unit-economics.md) | סבב 1 — Last updated: 2026-07-06 (Tobi) |
 | 06 | בידול וחפיר — למה אנחנו, ומה מגן | Bernard | 06-moat-differentiation.md | **טרם נכתב** — ייווצר ע"י הריצה האוטונומית היומית |
 | 07 | Retention והרגל — אפליקציה לשנים | Anna | 07-retention-habit.md | **טרם נכתב** — ייווצר ע"י הריצה האוטונומית היומית |
 | 08 | מבנה חברה, משפטי, מיסוי, נרטיב גיוס | Bernard | 08-company-legal-fundraising.md | **טרם נכתב** — ייווצר ע"י הריצה האוטונומית היומית |
 
-_Last refreshed: 2026-07-05_
+_Last refreshed: 2026-07-06_
 
 > סבב 1 (הרדוד) של חידות 01-03 נשמר להשוואה — צלילת העומק מחליפה אותו בתשובה חותכת ברמת category-leader.

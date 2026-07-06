@@ -51,7 +51,11 @@ reusable principle, also promote it to `.claude/master/GUIDANCE.md` (compounding
 ---
 
 ## OPEN (need founder direction)
-_(empty — agents append here)_
+
+### 2026-07-06 · Tobi (strategy riddle 05 — unit economics)
+1. **[קריטי — לפני פגישת המשקיע]** תיקון מספרי ה-deck: "contribution ~$11/user/month" לא שורד diligence (המתמטיקה הכנה: $0.20-0.40 revenue/MAU/month ב-Phase 1; ‏$11 נכון רק per transacting user). אופציות: (א) להשאיר כמו שזה; (ב) framing כן — ‏"$2.98 net/attributed order, ‏~80% GM, מסלול מדורג" + תחזית M18 מתוקנת ($60-160K ARR base case). **המלצה: (ב)** — המודל הכן חזק יותר מול משקיע. פירוט: `.claude/master/strategy/05-unit-economics.md`.
+2. **[Phase 3, לא דחוף — החלטה נעולה #9]** עמלת resale ‏15% מול שוק שהתכנס ל-Depop ‏0% / Vinted buyer-pays ‏~5%. אופציות: (א) להשאיר 15%; (ב) buyer-pays ‏7-10%; (ג) hybrid ‏15% עם קרדיטים מוגדלים. **המלצה: (ג).** לא דורש הכרעה לפני הגיוס — כן כדאי תשובה מוכנה אם משקיע שואל.
+3. **[Phase 2]** אישור עקרוני ל-AWEAR Pro ‏$5.99/mo כ-tier בתשלום (scan בסיסי לעולם חינם). **המלצה: כן** — זה מנוע ה-margin הראשון (StyleDNA כבר גובה $7.99-19.99).
 
 ---
 
