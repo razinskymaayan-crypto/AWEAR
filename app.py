@@ -15,6 +15,7 @@ Then open http://localhost:8000
 import base64
 import datetime
 import hashlib
+import hmac
 import io
 import json
 import logging
@@ -36,6 +37,7 @@ from typing import Optional
 logger = logging.getLogger(__name__)
 
 import anthropic
+import bcrypt
 from dotenv import load_dotenv
 from fastapi import Body, FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, RedirectResponse, Response
@@ -2095,9 +2097,15 @@ async def mark_all_read(user_id: str):
 
 
 # ---------------------------------------------------------------------------
-# Auth — users + sessions tables in SQLite (Cycle 2, hardened Cycle 3).
+# Auth — users + sessions tables in SQLite (Cycle 2, hardened Cycle 3, bcrypt
+#   migration Cycle 4).
 #
-# Passwords: SHA-256 hash (NOT bcrypt yet — a later cycle will upgrade to bcrypt).
+# Passwords: bcrypt hash with a per-user salt (`bcrypt.hashpw`/`bcrypt.checkpw`).
+#   Legacy rows created before the migration store a plain SHA-256 hex digest
+#   (64 chars, no "$2" prefix) — `_pw_verify` detects the format by prefix and
+#   verifies against whichever scheme produced the stored hash. A successful
+#   legacy login is transparently re-hashed to bcrypt in place (self-healing
+#   migration — no bulk backfill needed, no forced password reset).
 # Tokens: opaque session tokens (secrets.token_urlsafe(32)) stored in the
 #   `sessions` table (SQLite, no in-memory dict — BE-004/BE-005). No TTL/expiry
 #   yet — that's a later cycle; today a token is valid until the row is deleted.
@@ -2108,8 +2116,30 @@ async def mark_all_read(user_id: str):
 # ---------------------------------------------------------------------------
 
 def _pw_hash(password: str) -> str:
-    """SHA-256 hash of password. NOT bcrypt — a later cycle will upgrade."""
-    return hashlib.sha256(password.encode()).hexdigest()
+    """bcrypt hash of password with a fresh per-user salt (str for TEXT column).
+
+    bcrypt truncates input at 72 bytes — acceptable for this app, no
+    pre-hashing needed (no password field here approaches that length).
+    """
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+
+def _pw_verify(password: str, stored_hash: str) -> bool:
+    """Verify password against stored_hash, supporting both hash schemes.
+
+    - bcrypt hashes always start with "$2" (e.g. $2b$12$...) -> bcrypt.checkpw.
+    - Legacy SHA-256 hex digests (pre-migration rows) have no such prefix ->
+      constant-time compare against hashlib.sha256(...).hexdigest().
+    """
+    if not stored_hash:
+        return False
+    if stored_hash.startswith("$2"):
+        try:
+            return bcrypt.checkpw(password.encode(), stored_hash.encode())
+        except ValueError:
+            return False
+    legacy_hash = hashlib.sha256(password.encode()).hexdigest()
+    return hmac.compare_digest(legacy_hash, stored_hash)
 
 
 def _issue_token(db: sqlite3.Connection, user_id: str) -> str:
@@ -2195,15 +2225,21 @@ async def login(request: Request):
     body = await request.json()
     email = (body.get("email") or "").strip()
     password = body.get("password") or ""
-    pw_hash = _pw_hash(password)
 
     with _get_db() as db:
         row = db.execute(
-            "SELECT id, username FROM users WHERE email=? AND password_hash=?",
-            (email, pw_hash),
+            "SELECT id, username, password_hash FROM users WHERE email=?",
+            (email,),
         ).fetchone()
-        if not row:
+        if not row or not _pw_verify(password, row[2]):
             raise HTTPException(status_code=401, detail="invalid credentials")
+        # Self-healing migration: a successful login against a legacy
+        # SHA-256 hash upgrades the stored hash to bcrypt transparently.
+        if not row[2].startswith("$2"):
+            db.execute(
+                "UPDATE users SET password_hash=? WHERE id=?",
+                (_pw_hash(password), row[0]),
+            )
         token = _issue_token(db, row[0])
 
     logger.info("User login: %s", row[0])

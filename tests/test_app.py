@@ -4,6 +4,8 @@ Focus: the money paths (orders, creator credits, commission), input validation,
 idempotency, auth, rate limiting, and buy-routing — the things a regression would
 break silently in front of an investor.
 """
+import hashlib
+
 import app as appmod
 from conftest import _order_body
 
@@ -260,6 +262,72 @@ def test_login_token_works_on_get_me(client):
                     headers={"Authorization": f"Bearer {login['token']}"})
     assert r.status_code == 200
     assert r.json()["email"] == "leo_t@ex.com"
+
+
+# --------------------------------------------------------------------------- #
+# Password hashing — bcrypt with per-user salt + legacy SHA-256 migration
+# --------------------------------------------------------------------------- #
+def _stored_hash(email):
+    with appmod._get_db() as db:
+        row = db.execute("SELECT password_hash FROM users WHERE email=?", (email,)).fetchone()
+    return row[0]
+
+
+def test_password_hashes_are_salted_and_bcrypt(client):
+    # Two users, SAME password -> stored hashes must differ (per-user salt)
+    # and both must be bcrypt (start with "$2"). This fails on the old
+    # unsalted SHA-256 code: identical passwords produced identical digests.
+    client.post("/api/auth/register",
+                json={"username": "mia_t", "email": "mia_t@ex.com", "password": "samepass1"})
+    client.post("/api/auth/register",
+                json={"username": "nina_t", "email": "nina_t@ex.com", "password": "samepass1"})
+    hash_a = _stored_hash("mia_t@ex.com")
+    hash_b = _stored_hash("nina_t@ex.com")
+    assert hash_a != hash_b
+    assert hash_a.startswith("$2")
+    assert hash_b.startswith("$2")
+
+
+def test_login_round_trip_correct_and_wrong_password(client):
+    client.post("/api/auth/register",
+                json={"username": "otto_t", "email": "otto_t@ex.com", "password": "correcthorse"})
+
+    ok = client.post("/api/auth/login",
+                      json={"email": "otto_t@ex.com", "password": "correcthorse"})
+    assert ok.status_code == 200
+    assert ok.json()["token"]
+
+    bad = client.post("/api/auth/login",
+                       json={"email": "otto_t@ex.com", "password": "wrongpassword"})
+    assert bad.status_code == 401
+
+
+def test_legacy_sha256_hash_migrates_to_bcrypt_on_login(client):
+    # Simulate a pre-migration user: stored hash is legacy SHA-256, not bcrypt.
+    email = "petra_t@ex.com"
+    password = "legacypass1"
+    legacy_hash = hashlib.sha256(password.encode()).hexdigest()
+    user_id = f"user_petra_t_{9999999}"
+    with appmod._get_db() as db:
+        db.execute(
+            """
+            INSERT INTO users (id, username, email, password_hash, display_name, created_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (user_id, "petra_t", email, legacy_hash, "petra_t", 0),
+        )
+
+    assert _stored_hash(email) == legacy_hash
+    assert not _stored_hash(email).startswith("$2")
+
+    r = client.post("/api/auth/login", json={"email": email, "password": password})
+    assert r.status_code == 200
+    assert r.json()["token"]
+
+    # After a successful legacy login, the stored hash is upgraded in place.
+    upgraded = _stored_hash(email)
+    assert upgraded.startswith("$2")
+    assert upgraded != legacy_hash
 
 
 # --------------------------------------------------------------------------- #
