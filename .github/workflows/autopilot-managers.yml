@@ -105,10 +105,22 @@ jobs:
             echo "skip=true" >> "$GITHUB_OUTPUT"; echo "agents paused -> skipping ${{ matrix.manager }}"; exit 0
           fi
           REQ="${{ github.event.inputs.manager }}"
-          if [ -n "$REQ" ] && [ "$REQ" != "all" ] && [ "$REQ" != "${{ matrix.manager }}" ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"; echo "skipping ${{ matrix.manager }}"
+          if [ -n "$REQ" ] && [ "$REQ" != "all" ]; then
+            # explicit single-lane manual dispatch -> run only that lane
+            if [ "$REQ" = "${{ matrix.manager }}" ]; then echo "skip=false" >> "$GITHUB_OUTPUT";
+            else echo "skip=true" >> "$GITHUB_OUTPUT"; echo "skipping ${{ matrix.manager }}"; fi
           else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
+            # scheduled OR manual "all": ROTATE one lane per 6h cycle. Running 3 Claude sessions
+            # in parallel blew the account's 5-hour session limit (that was the failure emails).
+            # Slot by the UTC 6-hour block so mark/steve/ayalon take turns across the day.
+            H=$((10#$(date -u +%H)))
+            LANES=(mark steve ayalon)
+            TURN=${LANES[$(( (H / 6) % 3 ))]}
+            if [ "${{ matrix.manager }}" = "$TURN" ]; then
+              echo "skip=false" >> "$GITHUB_OUTPUT"; echo "this cycle's lane -> ${{ matrix.manager }}"
+            else
+              echo "skip=true" >> "$GITHUB_OUTPUT"; echo "not this cycle's turn (turn=$TURN) -> skip ${{ matrix.manager }}"
+            fi
           fi
 
       - name: Checkout
@@ -142,6 +154,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
+          set +e   # we handle Claude's exit code ourselves (graceful skip on account/session limit)
           claude -p "$(cat <<'PROMPT'
           You are the LANE-OWNER agent "${{ matrix.manager }}" at AWEAR, running autonomously and IN PARALLEL with the other lanes. North star: a polished investor demo of the WOW flow (docs/PRODUCT_VISION.md). You do ONE end-to-end task this run, then stop.
 
@@ -190,7 +203,16 @@ jobs:
               "Bash(pip install:*)" "Bash(pip3 install:*)" \
               "Bash(bash scripts/tg.sh:*)" "Bash(node scripts/shot.mjs:*)" "Bash(python3 scripts/chart.py:*)" \
               "Bash(sqlite3:*)" \
-            --output-format text
+            --output-format text 2>&1 | tee /tmp/claude_out.txt
+          CODE=${PIPESTATUS[0]}
+          set -e
+          if [ "$CODE" -ne 0 ]; then
+            if grep -qiE "session limit|usage limit|hit your|rate.?limit|overloaded|resets [0-9]" /tmp/claude_out.txt; then
+              echo "::notice::Claude account/session limit reached — skipping ${{ matrix.manager }} this cycle (no work lost; retries next cycle)."
+              exit 0   # graceful skip: NOT a failure -> no failure email
+            fi
+            echo "::error::claude exited $CODE for a non-quota reason"; exit "$CODE"
+          fi
 
       - name: Push manager branch (never main)
         if: steps.gate.outputs.skip != 'true'
