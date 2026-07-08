@@ -150,6 +150,11 @@ jobs:
               echo "$b escalated $(date -u +%FT%TZ) after ${CNT}x" >> ci-debug/escalated-conflicts.txt
             fi
           done
-          git add ci-debug/ || true
-          git commit -m "chore(jeff): gate-ledger [skip ci]" || true
+          # SELF-HEAL WATCHDOG: detect a stuck repeat (same gate failure N cycles in a row, ending
+          # now) and file it as a top-priority [UNRESOLVED] task + Telegram alert — so the loop
+          # fixes its OWN repeats instead of a founder noticing "nothing is progressing" (the
+          # 2026-07-08 bcrypt loop repeated 6x before a human caught it).
+          python3 scripts/self_heal.py || true
+          git add ci-debug/ .claude/agents/knowledge/CI_FAILURES.md || true
+          git commit -m "chore(jeff): gate-ledger + self-heal [skip ci]" || true
           git pull --rebase origin main -q || true; git push origin HEAD:main || true

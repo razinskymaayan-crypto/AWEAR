@@ -167,6 +167,7 @@ jobs:
           - Health check: run "npm install && npm run check-render". If it FAILS on the current branch, your ONLY job is to fix or revert what broke it, then stop.
 
           PICK YOUR TASK — strict priority, stop at the first that applies:
+          0. SELF-HEAL (top priority): read .claude/agents/knowledge/CI_FAILURES.md. If it has an [UNRESOLVED] entry whose failure signature names YOUR lane (e.g. "${{ matrix.manager }}(pytest)") OR points at a gate/workflow, fixing it is your ONLY task this run — before your queue. Root-cause it: reproduce, fix the lane's code OR the failing gate. For a self-heal you MAY edit the failing .github/workflows/*.yml or scripts/ file even though it is outside your normal lane ownership (a false-rejecting gate blocks everyone). Verify, then change [UNRESOLVED] -> [FIXED] with a one-line root-cause note. A stuck loop starves the whole demo — heal it first.
           1. YOUR DIRECT QUEUE: .claude/agents/assignments/${{ matrix.manager }}.md — founder tasks routed to you from Telegram (@${{ matrix.manager }} ...) AND any IC you manage (.claude/agents/assignments/<ic>.md). Do the first unchecked one; check it off when done.
           2. INBOX (.claude/master/INBOX.md "## משימות חדשות") items that fall in YOUR lane. Interpret the Hebrew generously.
           3. Highest unfinished MASTER_PLAN / PRODUCT_VISION item in your lane.
