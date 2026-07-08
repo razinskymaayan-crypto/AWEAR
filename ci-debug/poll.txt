@@ -1,1 +1,1 @@
-updates_seen=1 processed=1 offset=507470591
+updates_seen=0 processed=0 offset=507470591
