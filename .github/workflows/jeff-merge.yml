@@ -80,9 +80,14 @@ jobs:
               if ! npm run check-render; then
                 git reset --hard origin/main; reverted="$reverted $m"; continue
               fi
-              # GATE 1.5 — backend tests: when app.py / schema.sql / tests changed, the
-              # pytest suite (money paths, validation, idempotency, auth, rate-limit) MUST pass.
-              if git diff --name-only origin/main...HEAD -- app.py schema.sql tests/ | grep -q .; then
+              # GATE 1.5 — backend tests: when app.py / schema.sql / tests / requirements changed,
+              # the pytest suite (money paths, validation, idempotency, auth, rate-limit) MUST pass.
+              if git diff --name-only origin/main...HEAD -- app.py schema.sql tests/ requirements.txt | grep -q .; then
+                # Re-install deps AFTER the merge: a lane may have ADDED a dependency (e.g. bcrypt).
+                # The top-level Install step ran on pre-merge requirements.txt, so a new dep would be
+                # missing and pytest would fail on import — reverting good work. (Fixes the steve/bcrypt
+                # revert loop seen in the gate-ledger 2026-07-07/08.)
+                pip install -q -r requirements.txt >/dev/null 2>&1 || true
                 if ! python3 -m pytest -q; then
                   git reset --hard origin/main; reverted="$reverted $m(pytest)"; continue
                 fi
