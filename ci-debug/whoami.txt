@@ -1,2 +1,2 @@
-ok=True updates=1 people={'7504259677': 'Maayan'}
-raw={"ok": true, "result": [{"update_id": 507470590, "message": {"message_id": 227, "from": {"id": 7504259677, "is_bot": false, "first_name": "Maayan", "last_name": "Razinsky", "language_code": "en"}, "chat": {"id": -5485939913, "title": "Awear Alerts", "type": "group", "all_members_are_administrators": false, "accepted_gift_types": {"unlimited_gifts": false, "limited_gifts": false, "unique_gifts": false, "premium_subscription": false, "gifts_from_channels": false}}, "date": 1783496379, "text": "\u05d0\u05e0\u05d9 \u05e8\u05d5\u05e6\u05d4 \u05e9\u05d4\u05e1\u05d5\u05db\u05e0\u05d9\u05dd \u05d9\u05e4\u05e1\u05d9\u05e7\u05d5 \u05dc\u05e8\u05d5\u05e5 \u05d4\u05d9\u05d5\u05dd\n\u05d4\u05dd \u05e1\u05ea\u05dd \u05de\u05d1\u05d6\u05d1\u05d6\u05d9\u05dd \u05d8\u05d5\u05e7\u05e0\u05d9\u05dd"}}]}
+ok=True updates=0 people={}
+raw={"ok": true, "result": []}
