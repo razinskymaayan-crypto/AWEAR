@@ -384,6 +384,119 @@ def test_comments_get_unknown_post_empty(client):
     assert r.json() == {"items": [], "total": 0}
 
 
+# --------------------------------------------------------------------------- #
+# Moderation fail-open/fail-closed (P2 audit fix): moderate_comment() must
+# distinguish "no key configured" (demo, SF-003, fails OPEN) from "key
+# configured but the call broke" (infra error, fails CLOSED for public
+# comments). Old code collapsed both into the same
+# {"harmful": False, "fallback": True} shape, so add_comment() always
+# published regardless of which case it was. See app.py moderate_comment()
+# and add_comment() docstrings for the full rationale.
+# --------------------------------------------------------------------------- #
+def test_moderate_infra_error_holds_comment(client, monkeypatch):
+    # Key IS configured (so we're NOT in the demo branch) but the actual
+    # Claude call raises -> must be classified "infra_error", not silently
+    # fail open. Old code: no "mode" distinction existed at all, and
+    # add_comment() published on ANY moderation failure -> this test's
+    # "status == held" assertion fails on the old code (comment publishes as
+    # if nothing happened), and the "not in GET" assertion fails too.
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key-for-infra-error-case")
+
+    def _raise(*a, **kw):
+        raise RuntimeError("simulated network failure")
+
+    monkeypatch.setattr(appmod.client.messages, "create", _raise)
+
+    post_id = "post_003"
+    r = client.post(f"/api/posts/{post_id}/comments", json={"text": "held comment probe"})
+    assert r.status_code == 200
+    comment = r.json()
+    assert comment["status"] == "held"
+
+    # Held comments must not appear in the public GET.
+    listing = client.get(f"/api/posts/{post_id}/comments", params={"limit": 100}).json()
+    assert comment["id"] not in [it["id"] for it in listing["items"]]
+    assert "held comment probe" not in [it["text"] for it in listing["items"]]
+
+    # The row still exists in SQLite (text not lost), just not public.
+    import sqlite3
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        row = conn.execute(
+            "SELECT status, text FROM comments WHERE id = ?", (comment["id"],)
+        ).fetchone()
+    finally:
+        conn.close()
+    assert row is not None
+    assert row[0] == "held"
+    assert row[1] == "held comment probe"
+
+
+def test_moderate_demo_mode_still_publishes(client, monkeypatch):
+    # Regression guard: with NO key configured (the default CI/demo state),
+    # a comment must still publish immediately (status visible, appears in
+    # GET) exactly as before this fix — the investor demo must work with
+    # zero keys (SF-003). This is the pre-existing fail-open path; it must
+    # NOT have been accidentally flipped to fail-closed by this change.
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+
+    post_id = "post_004"
+    r = client.post(f"/api/posts/{post_id}/comments", json={"text": "demo publish probe"})
+    assert r.status_code == 200
+    comment = r.json()
+    assert comment["status"] == "visible"
+
+    listing = client.get(f"/api/posts/{post_id}/comments", params={"limit": 100}).json()
+    assert comment["id"] in [it["id"] for it in listing["items"]]
+    assert "demo publish probe" in [it["text"] for it in listing["items"]]
+
+
+def test_moderate_endpoint_infra_error_mode_and_shape(client, monkeypatch):
+    # Direct /api/moderate contract test: key configured + client raising ->
+    # mode == "infra_error", error is a bounded enum string (never raw
+    # exception text), harmful is None (unknown, not "known safe"). Old code
+    # had no "mode" key at all, so `"mode" in body` fails on the old code,
+    # and `harmful is None` fails too (old code always returned False).
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key-for-moderate-endpoint")
+
+    def _raise(*a, **kw):
+        raise RuntimeError("simulated moderation backend failure")
+
+    monkeypatch.setattr(appmod.client.messages, "create", _raise)
+
+    r = client.post("/api/moderate", json={"text": "some comment text"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["mode"] == "infra_error"
+    assert body["harmful"] is None
+    assert body["fallback"] is True
+    # Bounded enum, never raw exception text leaking to the client.
+    assert body["error"] in ("auth", "rate_limit", "timeout", "parse", "sdk_shape", "unknown")
+    assert "simulated moderation backend failure" not in r.text
+
+
+def test_scan_health_reports_moderation_and_startup_smoke(client):
+    # scan-health is EXTENDED (OW-009), not duplicated, to surface moderation
+    # + the AI model-id startup smoke test. Old code had neither key at all.
+    r = client.get("/api/scan-health")
+    assert r.status_code == 200
+    body = r.json()
+    assert "moderation" in body
+    assert "last_mode" in body["moderation"]
+    assert "last_error" in body["moderation"]
+    assert "startup_smoke" in body
+    assert "ran" in body["startup_smoke"]
+    assert "model_ok" in body["startup_smoke"]
+    assert "error" in body["startup_smoke"]
+    # The session-scoped TestClient started up with no ANTHROPIC_API_KEY (the
+    # default CI/test environment), so the startup smoke call was SKIPPED
+    # (not attempted) rather than failed — assert the skipped/demo shape,
+    # not a "model_ok is True" live shape.
+    if not appmod.os.environ.get("ANTHROPIC_API_KEY"):
+        assert body["startup_smoke"]["ran"] is False
+        assert body["startup_smoke"]["model_ok"] is None
+
+
 def test_notification_emitted_via_like_and_read_all_persists(client):
     # /api/posts/{id}/like calls _emit_notification directly (SF-004) when a
     # like lands on someone else's post. post_001's owner is the target user.

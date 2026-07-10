@@ -22,17 +22,20 @@ any user — no caller verification; the "token" is just the plaintext `user_id`
 (header `Authorization: Bearer`) and assert token-subject == the `{user_id}` in the path. **Test:** user A's
 token cannot PATCH user B; missing/junk token → 401.
 
-## [ ] P1 — Passwords are unsalted SHA-256
+## [x] P1 — Passwords are unsalted SHA-256
+> DONE (merged to main before 2026-07-10; checkbox was stale — verified in code by steve 2026-07-10): `_pw_hash` is bcrypt with per-user salt (`app.py:2187`), legacy SHA-256 hashes transparently re-hashed at login, `bcrypt>=3.2` in requirements.txt.
 **Evidence:** `_pw_hash` = plain SHA-256 (`app.py:2097`). Rainbow-table / GPU-brute-forceable.
 **Fix:** switch to `bcrypt` (add to requirements.txt) with per-user salt; keep a migration path for existing
 rows. **Test:** same password → different stored hashes; verify() still authenticates.
 
-## [ ] P2 — Comments & notifications are in-memory dicts (BE-005): wiped on every restart
+## [x] P2 — Comments & notifications are in-memory dicts (BE-005): wiped on every restart
+> DONE (merged to main 2026-07-10 18:06Z, commit "fix(social): P2 BE-005"; checkbox was stale — verified by steve 2026-07-10): comments + notifications now SQLite tables; `_comments_store`/`_notifications_store` grep 0 hits in app.py.
 **Evidence:** `_comments_store` / `_notifications_store` (`app.py:1784, 2044`). User-persisted data must be SQLite.
 **Fix:** move both to SQLite tables (mirror the likes/follows pattern already in the file). **Test:** POST a
 comment → simulate restart (re-open DB) → comment still there.
 
-## [ ] P2 — Moderation fails OPEN silently + AI model id unverified
+## [x] P2 — Moderation fails OPEN silently + AI model id unverified
+> DONE 2026-07-10 (sam, branch auto/steve): `/api/moderate` now returns `mode` = live|demo|infra_error (no-key demo stays fail-open per SF-003; key-configured-but-call-failed fails CLOSED); public comments on infra error stored `status='held'` and excluded from GET (text not lost, not published); `/api/scan-health` extended (OW-009) with `moderation` + `startup_smoke`; startup makes ONE max_tokens=1 smoke call against MODEL only when a key is set (never in CI) and logs LIVE-vs-DEMO loudly. 4 new pytests (3 fail-before proven — `mode`/`status`/scan-health keys didn't exist), suite 42/42.
 **Evidence:** `/api/moderate` returns `{harmful:false}` on any exception (`app.py:1018`); with no
 `ANTHROPIC_API_KEY` all filtering is off and nothing surfaces it. Also the model id `claude-opus-4-8`
 (`app.py:135`) is never smoke-tested — if wrong, EVERY AI call silently returns demo data as "real."

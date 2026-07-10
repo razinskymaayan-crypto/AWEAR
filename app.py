@@ -149,6 +149,17 @@ client = anthropic.Anthropic(timeout=25.0)  # reads ANTHROPIC_API_KEY from the e
 # failed". Bounded values only; never holds raw exception text or any key material.
 _last_scan: dict = {"mode": None, "demo_reason": None}
 
+# Diagnostics-only holder for the LAST /api/moderate outcome — mirrors _last_scan
+# above. "mode" is one of "live" | "demo" | "infra_error" | None (never called
+# yet). Lets GET /api/scan-health show whether comment moderation is actually
+# running live or silently fell open/closed, and why. Bounded values only.
+_last_moderation: dict = {"mode": None, "error": None}
+
+# Result of the one-shot startup smoke-call that verifies MODEL (see below) is a
+# real, callable model id — not just a hardcoded string that happens to compile.
+# Populated by the startup hook below; exposed read-only via GET /api/scan-health.
+_startup_smoke: dict = {"ran": False, "model_ok": None, "error": None}
+
 
 def _classify_api_error(e: Exception) -> str:
     """Map an Anthropic call failure to a bounded enum — never raw exception text.
@@ -573,6 +584,16 @@ async def scan_health(request: Request, probe: int = 0):
         # Populated only when ?probe=1 actually ran a live call; None otherwise.
         "key_valid": None,
         "probe_error": None,
+        # Same live/demo/infra_error distinction as /api/analyze, but for
+        # POST /api/moderate (comment moderation) — see moderate_comment().
+        "moderation": {
+            "last_mode": _last_moderation["mode"],
+            "last_error": _last_moderation["error"],
+        },
+        # One-shot MODEL id verification made at process startup (see the
+        # startup hook below) — proves the MODEL constant is a real, callable
+        # model id rather than a hardcoded string nobody has verified.
+        "startup_smoke": dict(_startup_smoke),
     }
 
     if not probe:
@@ -987,10 +1008,25 @@ class CommentModerationRequest(BaseModel):
 async def moderate_comment(data: CommentModerationRequest):
     """Claude-based comment moderation (language-agnostic, not a keyword filter).
 
-    Returns {"harmful": bool, "severity": "none"|"medium"|"high"}.
-    Fails open (severity "none") on any error — moderation must never be the
-    reason a comment is silently blocked because of an infra issue. We log
-    the fallback so it's visible instead of invisible.
+    Returns {"harmful": bool, "severity": "none"|"medium"|"high", "mode": ...}.
+
+    "mode" distinguishes THREE outcomes that used to be indistinguishable (both
+    fell open with {"fallback": True}):
+      - "live"        real Claude verdict — the normal path.
+      - "demo"        no ANTHROPIC_API_KEY configured at all. This is the
+                      intentional investor-demo state (SF-003) — fails OPEN
+                      (harmful=False) so the demo works with zero keys.
+      - "infra_error" a key IS configured but the call/parse failed (timeout,
+                      auth, rate limit, bad JSON, ...). This is NOT the demo
+                      state — a configured key that can't reach Claude is an
+                      infra problem, not a "no moderation available" signal,
+                      so the caller (add_comment) fails CLOSED on this mode
+                      instead of publishing unmoderated content. harmful is
+                      None here (unknown, not "known safe") to make that
+                      distinction impossible to miss downstream.
+    Checking the env var BEFORE attempting the call (rather than only in the
+    except block) is what makes "demo" vs "infra_error" reliable — we decide
+    which bucket we're in before anything can fail.
     """
     system = (
         "You moderate comments on a global fashion social app. Given a single "
@@ -1003,6 +1039,13 @@ async def moderate_comment(data: CommentModerationRequest):
         "but not dangerous. \"high\" = clearly harmful (hate speech, harassment, "
         "threats, explicit content)."
     )
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        # No key STRING set at all — this is the demo/CI state, not an error.
+        # Fail open exactly as before; just label it so callers can tell it
+        # apart from a configured-but-broken key.
+        _last_moderation["mode"] = "demo"
+        _last_moderation["error"] = None
+        return {"harmful": False, "severity": "none", "fallback": True, "mode": "demo"}
     try:
         response = client.messages.create(
             model=MODEL,
@@ -1017,10 +1060,26 @@ async def moderate_comment(data: CommentModerationRequest):
         severity = parsed.get("severity", "none")
         if severity not in ("none", "medium", "high"):
             severity = "none"
-        return {"harmful": bool(parsed.get("harmful", False)), "severity": severity}
+        _last_moderation["mode"] = "live"
+        _last_moderation["error"] = None
+        return {"harmful": bool(parsed.get("harmful", False)), "severity": severity, "mode": "live"}
     except Exception as e:
         print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
-        return {"harmful": False, "severity": "none", "fallback": True}
+        # Key IS configured — this is an infra failure, not the demo state.
+        # harmful=None (unknown) rather than False so a caller can't mistake
+        # "we don't know" for "we checked and it's clean". _classify_api_error
+        # keeps the response bounded — never raw exception text or key material.
+        err = _classify_api_error(e)
+        logger.error("moderation_infra_error err=%s", err, exc_info=True)
+        _last_moderation["mode"] = "infra_error"
+        _last_moderation["error"] = err
+        return {
+            "harmful": None,
+            "severity": "none",
+            "fallback": True,
+            "mode": "infra_error",
+            "error": err,
+        }
 
 
 # ---------------------------------------------------------------------------
@@ -1311,9 +1370,17 @@ def init_db() -> None:
                 post_id    TEXT NOT NULL,
                 user_key   TEXT NOT NULL,
                 text       TEXT NOT NULL,
-                created_at TEXT NOT NULL
+                created_at TEXT NOT NULL,
+                status     TEXT NOT NULL DEFAULT 'visible'
             )
         """)
+        # Additive migration: 'status' ('visible'|'held'). Guarded — existing DBs
+        # already have the comments table from before moderation could fail closed;
+        # ALTER adds the column without touching existing rows (they default to
+        # 'visible', matching their pre-migration behavior of always being public).
+        _comment_cols = {r[1] for r in conn.execute("PRAGMA table_info(comments)").fetchall()}
+        if "status" not in _comment_cols:
+            conn.execute("ALTER TABLE comments ADD COLUMN status TEXT NOT NULL DEFAULT 'visible'")
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_comments_post_id ON comments (post_id)"
         )
@@ -1369,6 +1436,43 @@ async def load_data_files():
         # Log the error but don't crash — the endpoints will return empty lists
         # and the main analyze/scan flow continues to work.
         logger.error("Failed to load data files: %s", e)
+
+    # AI model-id startup smoke test. MODEL (see top of file) is a hardcoded
+    # string — nothing before this verified it's actually a real, callable
+    # model id vs a typo/deprecated/renamed id. If a key is configured, make
+    # ONE minimal real call so a bad MODEL id is LOUD in the logs at boot
+    # instead of silently discovered per-request via /api/analyze or
+    # /api/moderate falling back to demo/infra_error later. If no key is
+    # configured this is the demo/CI state — skip the call entirely so tests
+    # and offline dev never hit the network. The whole block is wrapped in a
+    # broad except: this is a diagnostic, and a broken diagnostic must never
+    # be the reason the server fails to start.
+    global _startup_smoke
+    try:
+        if os.getenv("ANTHROPIC_API_KEY"):
+            try:
+                client.messages.create(
+                    model=MODEL,
+                    max_tokens=1,
+                    messages=[{"role": "user", "content": "ok"}],
+                )
+                _startup_smoke["ran"] = True
+                _startup_smoke["model_ok"] = True
+                _startup_smoke["error"] = None
+                logger.warning("AI STARTUP SMOKE: LIVE — model %s ok", MODEL)
+            except Exception as e:
+                err = _classify_api_error(e)
+                _startup_smoke["ran"] = True
+                _startup_smoke["model_ok"] = False
+                _startup_smoke["error"] = err
+                logger.error("AI STARTUP SMOKE: DEMO — model %s failed (%s)", MODEL, err, exc_info=True)
+        else:
+            _startup_smoke["ran"] = False
+            _startup_smoke["model_ok"] = None
+            _startup_smoke["error"] = None
+            logger.warning("AI STARTUP SMOKE: DEMO — no ANTHROPIC_API_KEY configured, skipping model %s check", MODEL)
+    except Exception as e:  # noqa: BLE001 — startup must never crash on a diagnostic
+        logger.error("AI startup smoke wrapper failed unexpectedly: %s", e, exc_info=True)
 
 
 @app.get("/api/products")
@@ -1839,23 +1943,48 @@ async def add_comment(post_id: str, request: Request):
         if post is None:
             raise HTTPException(status_code=404, detail="Post not found")
 
-    # moderation — direct call to moderate_comment() to avoid HTTP self-call deadlock
+    # moderation — direct call to moderate_comment() to avoid HTTP self-call deadlock.
+    # Three outcomes now (see moderate_comment docstring):
+    #   "live"/harmful=True  -> reject (400), unchanged.
+    #   "demo"                -> no key configured; fail OPEN and publish, per
+    #                            SF-003 — the investor demo must work with zero keys.
+    #   "infra_error"          -> key IS configured but the call/parse broke. This
+    #                            used to be indistinguishable from "demo" and both
+    #                            failed open, silently publishing unmoderated public
+    #                            content. Now we fail CLOSED instead: the comment is
+    #                            still saved (the user's text isn't lost) but held
+    #                            out of public view (status='held') until moderation
+    #                            can actually run. A raised exception from
+    #                            moderate_comment() itself (should be rare — it has
+    #                            its own broad except) is treated the same way.
+    hold = False
+    hold_reason = None
     try:
         mod_result = await moderate_comment(CommentModerationRequest(text=text))
-        # fallback:true means API key missing — fail-open per SF-003
-        if not mod_result.get("fallback", False):
-            if mod_result.get("harmful", False):
-                severity = mod_result.get("severity", "high")
-                logger.warning(
-                    "comment_rejected post=%s severity=%s preview=%r",
-                    post_id, severity, text[:80],
-                )
-                raise HTTPException(status_code=400, detail="content rejected")
+        mode = mod_result.get("mode")
+        if mode == "infra_error":
+            hold = True
+            hold_reason = mod_result.get("error", "infra_error")
+        elif mod_result.get("harmful", False):
+            severity = mod_result.get("severity", "high")
+            logger.warning(
+                "comment_rejected post=%s severity=%s preview=%r",
+                post_id, severity, text[:80],
+            )
+            raise HTTPException(status_code=400, detail="content rejected")
+        # mode == "demo" (or "live" + not harmful) -> publish, unchanged behavior.
     except HTTPException:
         raise
     except Exception as e:
-        # moderation error — fail-open, log internally
+        # moderate_comment() itself raised (should be rare) — treat like an
+        # infra error and fail CLOSED rather than silently publishing.
         logger.error("moderation_error post=%s err=%s", post_id, e)
+        hold = True
+        hold_reason = "moderation_exception"
+
+    status = "held" if hold else "visible"
+    if hold:
+        logger.warning("comment_held post=%s reason=%s", post_id, hold_reason)
 
     user_key = (request.client.host if request.client else None) or "anon"
     with _get_db() as db:
@@ -1867,27 +1996,35 @@ async def add_comment(post_id: str, request: Request):
             "user_key": user_key,
             "text": text,
             "created_at": __import__("datetime").datetime.utcnow().isoformat(),
+            "status": status,
         }
         db.execute(
-            "INSERT INTO comments (id, post_id, user_key, text, created_at) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (comment["id"], post_id, comment["user_key"], comment["text"], comment["created_at"]),
+            "INSERT INTO comments (id, post_id, user_key, text, created_at, status) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (comment["id"], post_id, comment["user_key"], comment["text"],
+             comment["created_at"], comment["status"]),
         )
         db.commit()
-    logger.info("comment_added post=%s id=%s", post_id, comment["id"])
+    logger.info("comment_added post=%s id=%s status=%s", post_id, comment["id"], status)
     return comment
 
 
 @app.get("/api/posts/{post_id}/comments")
 async def get_comments(post_id: str, limit: int = 20, offset: int = 0):
+    # Only 'visible' comments are public. 'held' rows (infra-error moderation
+    # failures — see add_comment) are excluded from both items and total until
+    # a human/automated re-check publishes them; the row still exists so the
+    # author's text isn't lost.
     with _get_db() as db:
         rows = db.execute(
             "SELECT id, user_key, text, created_at FROM comments "
-            "WHERE post_id = ? ORDER BY created_at ASC, rowid ASC LIMIT ? OFFSET ?",
+            "WHERE post_id = ? AND status = 'visible' "
+            "ORDER BY created_at ASC, rowid ASC LIMIT ? OFFSET ?",
             (post_id, limit, offset),
         ).fetchall()
         total = db.execute(
-            "SELECT COUNT(*) FROM comments WHERE post_id = ?", (post_id,)
+            "SELECT COUNT(*) FROM comments WHERE post_id = ? AND status = 'visible'",
+            (post_id,),
         ).fetchone()[0]
     return {
         "items": [dict(r) for r in rows],
