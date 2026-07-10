@@ -1492,7 +1492,7 @@
   .rw-pts-label { font-size: var(--t-small); color: var(--muted, #8a8498); font-weight: 700; margin-top: 4px; }
   .rw-level-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
   .rw-level-badge { padding: 5px 12px; border-radius: 20px; font-size: var(--t-caption); font-weight: 900; }
-  .rw-level-track { flex: 1; height: 6px; background: rgba(255,255,255,.15); border-radius: 3px; overflow: hidden; }
+  .rw-level-track { flex: 1; height: 6px; background: var(--line, #e9e5df); border-radius: 3px; overflow: hidden; }
   .rw-level-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
   .rw-level-next { font-size: var(--t-micro); color: var(--muted, #8a8498); font-weight: 700; }
   .rw-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px 14px; }

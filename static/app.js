@@ -3694,7 +3694,7 @@
         <div class="rw-pts-num">${pts.toLocaleString()}</div>
         <div class="rw-pts-label">AWEAR points</div>
         <div class="rw-level-row">
-          <div class="rw-level-badge" style="background:${level.color}20;color:${level.color};display:inline-flex;align-items:center;gap:5px">${icon(level.icon,14)} ${esc(level.name)}</div>
+          <div class="rw-level-badge" style="background:color-mix(in srgb, ${level.color} 15%, transparent);color:${level.color};display:inline-flex;align-items:center;gap:5px">${icon(level.icon,14)} ${esc(level.name)}</div>
           <div class="rw-level-track"><div class="rw-level-fill" style="width:${progress}%"></div></div>
           <div class="rw-level-next" style="display:inline-flex;align-items:center;gap:3px">${nextLevel ? nextLevel.min+' to '+icon(nextLevel.icon,12) : icon('crown',12)+' Max!'}</div>
         </div>
