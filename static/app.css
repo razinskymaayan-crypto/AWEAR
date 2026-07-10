@@ -76,6 +76,7 @@
   .hint h2 { color: var(--text); font-size: var(--t-title,20px); font-weight: 800; margin-bottom: 8px; }
   .hint p { font-size: var(--t-body); line-height: 1.6; }
   .hint .cta { margin-top: 18px; display: inline-block; font-size: var(--t-small); color: var(--accent); font-weight: 700; }
+  /* intentional monochrome pair — theme-independent, not a token miss */
   .shop-look { display: flex; align-items: center; justify-content: center; gap: 8px;
     margin: 2px 0 16px; padding: 14px; border-radius: 15px; font-weight: 900; font-size: var(--t-h3,15px);
     color: #111; background: #fff; border: 0; cursor: pointer; width: 100%; font-family: inherit;
@@ -2263,7 +2264,7 @@
   .an-empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: var(--t-body); font-weight: 700; line-height: 1.8; }
 
   /* ---- Analytics v2 — Spotify Wrapped style ---- */
-  .an-identity-card { margin: 0 18px 14px; border-radius: 22px; padding: 22px 20px; background: linear-gradient(135deg, var(--hl, #e8526a) 0%, color-mix(in srgb, var(--hl, #e8526a) 55%, #c4855a) 50%, #c4855a 100%); border: 1px solid color-mix(in srgb, #c4855a 60%, transparent); position: relative; overflow: hidden; }
+  .an-identity-card { margin: 0 18px 14px; border-radius: 22px; padding: 22px 20px; background: linear-gradient(135deg, var(--hl, #e8526a) 0%, color-mix(in srgb, var(--hl, #e8526a) 55%, var(--accent2, #c4855a)) 50%, var(--accent2, #c4855a) 100%); border: 1px solid color-mix(in srgb, var(--accent2, #c4855a) 60%, transparent); position: relative; overflow: hidden; }
   .an-identity-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 18%, color-mix(in srgb, #ffffff 26%, transparent) 0%, transparent 62%); pointer-events: none; }
   .an-identity-kicker { position: relative; font-size: var(--t-micro, 11px); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: color-mix(in srgb, var(--text-on-accent, #fff7f2) 88%, transparent); margin-bottom: 6px; }
   .an-identity-name { position: relative; font-size: var(--t-h1, 24px); font-weight: 900; letter-spacing: -.5px; color: var(--text-on-accent, #fff7f2); line-height: 1.15; margin-bottom: 12px; }

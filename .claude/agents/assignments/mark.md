@@ -29,7 +29,13 @@ Swap to a light-safe treatment (var(--success-surface) bg + readable text). Scre
   `app.js:7185` + seeds `6905-6931` + no-op `bindReactions`), and 7 dead functions (buyFlow, buyConfirm,
   comboPieceHTML, resetWardrobe, matchPercent, addPoints, addToWishlistFromItem).
 
-## [ ] P0 — Tokenize hardcoded colors + kill black-on-black (theme migration finish)
+## [x] P0 — Tokenize hardcoded colors + kill black-on-black (theme migration finish)
+> DONE 2026-07-10 (mark run, netta craft, gabbana gate 9/10). Written when the SPA was one file; previous
+> runs already tokenized the mass. Final sweep evidence: app.css bare hex outside var() = 0 (last one —
+> `.an-identity-card` 3× #c4855a → var(--accent2,#c4855a); light mode was mixing dark-theme camel, contrast
+> 2.9:1→11.1:1). index.html: 1 hex, inside a var() fallback (correct DS-004). app.js style attrs: 0 bare hex
+> (rest is JS data/SVG — excluded by spec). Intentional monochrome exceptions kept: `.shop-look`, `.store-logo`
+> (#111-on-#fff pairs, theme-independent). Verified: check-render, light-mode screenshot, gabbana 9/10.
 
 **Why (founder, verified):** ~762 hardcoded hex values live in `static/index.html` and
 bypass the token system. `static/tokens.css` is a *designed* dual theme (dark `:root`
@@ -56,6 +62,12 @@ design decision. Fixing it fixes the whole class at once and makes BOTH themes c
 **Definition of done for the whole P0:** `grep -c '#[0-9a-fA-F]\{6\}' static/index.html` trends
 toward ~0 in CSS contexts (per static/CLAUDE.md self-check), zero black-on-black on any screen,
 both light and dark render cleanly. Track progress in DAILY_DIGEST.md.
+
+## [ ] P2 — Analytics identity-card pre-existing contrast (gabbana follow-up 2026-07-10, valentino)
+Gabbana gate findings, all pre-existing (NOT from the tokenization fix): (1) kicker "YOUR STYLE IDENTITY"
+~3.4:1 on the red gradient edge — set opacity 88%→100% + add the text-shadow already used on range/pills
+(app.css ~2269); (2) white-32% chips ~3.1:1 — drop pill bg to color-mix(#ffffff 20%, transparent) or darken;
+(3) `.an-identity-share` 36px wide → 44px touch target. Re-gate with gabbana after.
 
 ## [ ] P2 — Token reconciliation: --success defined 3x with 3 values + --muted fails AA on white (netta)
 Gabbana re-gate finding (2026-07-05): awear-tokens.json says --success:#4ade80, tokens.css #52c97a/#1A9E52,
