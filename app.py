@@ -1302,6 +1302,40 @@ def init_db() -> None:
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_intel_status ON intel_insights (status)"
         )
+        # Comments on posts (BE-005: persisted from day 1, was an in-memory dict).
+        # id format c_{post_id}_{n} — n is the per-post comment count at insert time
+        # (matches the old in-memory id scheme; see add_comment()).
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS comments (
+                id         TEXT PRIMARY KEY,
+                post_id    TEXT NOT NULL,
+                user_key   TEXT NOT NULL,
+                text       TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+        """)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_comments_post_id ON comments (post_id)"
+        )
+        # Notifications (BE-005: persisted from day 1, was an in-memory dict).
+        # id format n_{user_id}_{n} — n is the per-user notification count at insert
+        # time (matches the old in-memory id scheme; see _emit_notification()).
+        # "read" is a SQL keyword-adjacent name but is used unquoted elsewhere in this
+        # file (dm_messages.read) and works fine as a bare column name in SQLite.
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS notifications (
+                id            TEXT PRIMARY KEY,
+                user_id       TEXT NOT NULL,
+                type          TEXT NOT NULL,
+                from_user_key TEXT,
+                post_id       TEXT,
+                created_at    TEXT NOT NULL,
+                read          INTEGER NOT NULL DEFAULT 0
+            )
+        """)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications (user_id)"
+        )
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
 
@@ -1787,11 +1821,9 @@ async def get_saves(user_id: str, request: Request):
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
-# Comments — in-memory store (pre-DB, migration-ready)
-# { post_id: [ {id, user_key, text, created_at}, ... ] }
+# Comments — SQLite (BE-005: persisted from day 1, migrated off the old
+# in-memory dict). Table: comments (id, post_id, user_key, text, created_at).
 # ---------------------------------------------------------------------------
-
-_comments_store: dict = {}
 
 
 @app.post("/api/posts/{post_id}/comments")
@@ -1826,23 +1858,40 @@ async def add_comment(post_id: str, request: Request):
         logger.error("moderation_error post=%s err=%s", post_id, e)
 
     user_key = (request.client.host if request.client else None) or "anon"
-    comment = {
-        "id": f"c_{post_id}_{len(_comments_store.get(post_id, []))}",
-        "user_key": user_key,
-        "text": text,
-        "created_at": __import__("datetime").datetime.utcnow().isoformat(),
-    }
-    _comments_store.setdefault(post_id, []).append(comment)
+    with _get_db() as db:
+        count = db.execute(
+            "SELECT COUNT(*) FROM comments WHERE post_id = ?", (post_id,)
+        ).fetchone()[0]
+        comment = {
+            "id": f"c_{post_id}_{count}",
+            "user_key": user_key,
+            "text": text,
+            "created_at": __import__("datetime").datetime.utcnow().isoformat(),
+        }
+        db.execute(
+            "INSERT INTO comments (id, post_id, user_key, text, created_at) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (comment["id"], post_id, comment["user_key"], comment["text"], comment["created_at"]),
+        )
+        db.commit()
     logger.info("comment_added post=%s id=%s", post_id, comment["id"])
     return comment
 
 
 @app.get("/api/posts/{post_id}/comments")
 async def get_comments(post_id: str, limit: int = 20, offset: int = 0):
-    comments = _comments_store.get(post_id, [])
+    with _get_db() as db:
+        rows = db.execute(
+            "SELECT id, user_key, text, created_at FROM comments "
+            "WHERE post_id = ? ORDER BY created_at ASC, rowid ASC LIMIT ? OFFSET ?",
+            (post_id, limit, offset),
+        ).fetchall()
+        total = db.execute(
+            "SELECT COUNT(*) FROM comments WHERE post_id = ?", (post_id,)
+        ).fetchone()[0]
     return {
-        "items": comments[offset: offset + limit],
-        "total": len(comments),
+        "items": [dict(r) for r in rows],
+        "total": total,
     }
 
 
@@ -2046,12 +2095,11 @@ async def daily_log_streak(request: Request):
 
 
 # ---------------------------------------------------------------------------
-# In-memory notifications store
-# Structure: { user_id: [ {id, type, from_user_key, post_id, created_at, read}, ... ] }
+# Notifications — SQLite (BE-005: persisted from day 1, migrated off the old
+# in-memory dict). Table: notifications (id, user_id, type, from_user_key,
+# post_id, created_at, read).
 # SF-004: _emit_notification is called directly (NOT via HTTP) to avoid ASGI deadlock.
 # ---------------------------------------------------------------------------
-
-_notifications_store: dict = {}
 
 
 def _emit_notification(user_id: str, notif_type: str, from_key: str, post_id: str = None):
@@ -2060,15 +2108,19 @@ def _emit_notification(user_id: str, notif_type: str, from_key: str, post_id: st
     if not user_id:
         # No owner to notify — skip silently.
         return
-    notif = {
-        "id": f"n_{user_id}_{len(_notifications_store.get(user_id, []))}",
-        "type": notif_type,        # "like" | "comment" | "follow"
-        "from_user_key": from_key,
-        "post_id": post_id,
-        "created_at": datetime.datetime.utcnow().isoformat(),
-        "read": False,
-    }
-    _notifications_store.setdefault(user_id, []).append(notif)
+    with _get_db() as db:
+        count = db.execute(
+            "SELECT COUNT(*) FROM notifications WHERE user_id = ?", (user_id,)
+        ).fetchone()[0]
+        notif_id = f"n_{user_id}_{count}"
+        created_at = datetime.datetime.utcnow().isoformat()
+        db.execute(
+            "INSERT INTO notifications "
+            "(id, user_id, type, from_user_key, post_id, created_at, read) "
+            "VALUES (?, ?, ?, ?, ?, ?, 0)",
+            (notif_id, user_id, notif_type, from_key, post_id, created_at),
+        )
+        db.commit()
     logger.info(
         "notification emitted: user=%s type=%s from=%s post=%s",
         user_id, notif_type, from_key, post_id,
@@ -2078,21 +2130,38 @@ def _emit_notification(user_id: str, notif_type: str, from_key: str, post_id: st
 @app.get("/api/notifications/{user_id}")
 async def get_notifications(user_id: str, limit: int = 20, unread_only: bool = False):
     """Return recent notifications for a user, newest first."""
-    notifs = _notifications_store.get(user_id, [])
-    if unread_only:
-        notifs = [n for n in notifs if not n["read"]]
+    with _get_db() as db:
+        query = "SELECT id, type, from_user_key, post_id, created_at, read FROM notifications WHERE user_id = ?"
+        params = [user_id]
+        if unread_only:
+            query += " AND read = 0"
+        query += " ORDER BY created_at DESC, rowid DESC LIMIT ?"
+        params.append(limit)
+        rows = db.execute(query, params).fetchall()
+
+        total = db.execute(
+            "SELECT COUNT(*) FROM notifications WHERE user_id = ?", (user_id,)
+        ).fetchone()[0]
+        unread = db.execute(
+            "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND read = 0", (user_id,)
+        ).fetchone()[0]
+
+    items = [dict(r) for r in rows]
+    for item in items:
+        item["read"] = bool(item["read"])
     return {
-        "items": notifs[-limit:][::-1],
-        "total": len(notifs),
-        "unread": sum(1 for n in notifs if not n["read"]),
+        "items": items,
+        "total": total,
+        "unread": unread,
     }
 
 
 @app.post("/api/notifications/{user_id}/read-all")
 async def mark_all_read(user_id: str):
     """Mark all notifications as read for a user."""
-    for n in _notifications_store.get(user_id, []):
-        n["read"] = True
+    with _get_db() as db:
+        db.execute("UPDATE notifications SET read = 1 WHERE user_id = ?", (user_id,))
+        db.commit()
     return {"status": "ok"}
 
 

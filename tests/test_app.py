@@ -331,6 +331,115 @@ def test_legacy_sha256_hash_migrates_to_bcrypt_on_login(client):
 
 
 # --------------------------------------------------------------------------- #
+# Comments + notifications — SQLite persistence (BE-005 migration off the old
+# in-memory dicts, _comments_store / _notifications_store). These prove the
+# data survives a fresh connection (i.e. a process restart), not just that
+# the endpoint returns 200.
+# --------------------------------------------------------------------------- #
+def test_comment_persists_in_sqlite(client):
+    r = client.post("/api/posts/post_001/comments", json={"text": "sqlite persistence probe"})
+    assert r.status_code == 200
+    comment = r.json()
+    assert comment["id"].startswith("c_post_001_")
+    assert comment["text"] == "sqlite persistence probe"
+
+    # Open a BRAND NEW sqlite3 connection directly on the DB file (not the
+    # app's _get_db(), a fresh one) — proves the row lives in SQLite, not in
+    # process memory. Fails on the old in-memory-dict code: no "comments"
+    # table would exist at all.
+    import sqlite3
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        row = conn.execute(
+            "SELECT id, post_id, user_key, text FROM comments WHERE id = ?",
+            (comment["id"],),
+        ).fetchone()
+    finally:
+        conn.close()
+    assert row is not None
+    assert row[1] == "post_001"
+    assert row[3] == "sqlite persistence probe"
+
+
+def test_comments_pagination_and_total(client):
+    post_id = "post_002"
+    for i in range(5):
+        r = client.post(f"/api/posts/{post_id}/comments", json={"text": f"comment {i}"})
+        assert r.status_code == 200
+
+    all_items = client.get(f"/api/posts/{post_id}/comments", params={"limit": 100, "offset": 0}).json()
+    assert all_items["total"] == 5
+    assert len(all_items["items"]) == 5
+    # Insertion order preserved (oldest first, matching the old list-append order).
+    assert [it["text"] for it in all_items["items"]] == [f"comment {i}" for i in range(5)]
+
+    page = client.get(f"/api/posts/{post_id}/comments", params={"limit": 2, "offset": 2}).json()
+    assert page["total"] == 5
+    assert [it["text"] for it in page["items"]] == ["comment 2", "comment 3"]
+
+
+def test_comments_get_unknown_post_empty(client):
+    r = client.get("/api/posts/post_does_not_exist_xyz/comments")
+    assert r.status_code == 200
+    assert r.json() == {"items": [], "total": 0}
+
+
+def test_notification_emitted_via_like_and_read_all_persists(client):
+    # /api/posts/{id}/like calls _emit_notification directly (SF-004) when a
+    # like lands on someone else's post. post_001's owner is the target user.
+    posts = client.get("/api/posts").json()
+    post = posts["items"][0]
+    owner_id = post.get("user_id", "")
+    assert owner_id, "fixture post must have a user_id for this test to be meaningful"
+
+    like_r = client.post(f"/api/posts/{post['id']}/like")
+    assert like_r.status_code == 200
+
+    notifs = client.get(f"/api/notifications/{owner_id}").json()
+    assert notifs["total"] >= 1
+    assert notifs["unread"] >= 1
+    first = notifs["items"][0]
+    assert first["read"] is False  # JSON bool, not 0/1
+    assert isinstance(first["read"], bool)
+
+    # Read-all -> unread becomes 0, and it persists (fresh GET, fresh SQLite read).
+    mark = client.post(f"/api/notifications/{owner_id}/read-all")
+    assert mark.status_code == 200
+    assert mark.json() == {"status": "ok"}
+
+    after = client.get(f"/api/notifications/{owner_id}").json()
+    assert after["unread"] == 0
+    assert all(item["read"] is True for item in after["items"])
+
+    # And it's a real SQLite row, not memory — fresh raw connection.
+    import sqlite3
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        db_row = conn.execute(
+            "SELECT read FROM notifications WHERE user_id = ? LIMIT 1", (owner_id,)
+        ).fetchone()
+    finally:
+        conn.close()
+    assert db_row is not None
+    assert db_row[0] == 1  # stored as INTEGER 0/1 in SQLite; API layer bools it
+
+
+def test_emit_notification_skips_silently_on_empty_user_id(client):
+    # Direct call to the helper — must not raise and must not create a row
+    # (the old and new code both early-return when user_id is falsy).
+    appmod._emit_notification("", "like", "someone", "post_xyz")
+    import sqlite3
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        count = conn.execute(
+            "SELECT COUNT(*) FROM notifications WHERE user_id = ''"
+        ).fetchone()[0]
+    finally:
+        conn.close()
+    assert count == 0
+
+
+# --------------------------------------------------------------------------- #
 # Rate limiting (kept LAST — it deliberately exhausts the /api/orders budget)
 # --------------------------------------------------------------------------- #
 def test_orders_rate_limit_429(client):
