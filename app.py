@@ -694,7 +694,20 @@ def product_image(q: str = ""):
 
 @app.get("/")
 async def index():
-    return FileResponse("static/index.html")
+    # Serve index.html with a cache-buster stamped onto the split-out app.css/app.js so the
+    # iOS WebView (Capacitor) ALWAYS loads the latest code. Without this the WebView cached the
+    # external files and silently ran stale JS/CSS for a whole session ("why isn't the simulator
+    # updating?"). The stamp = the files' mtime, so the URL changes only when the code changes.
+    try:
+        html = Path("static/index.html").read_text(encoding="utf-8")
+        for asset in ("app.css", "app.js"):
+            p = Path("static") / asset
+            v = int(p.stat().st_mtime) if p.exists() else 0
+            html = html.replace(f"/static/{asset}", f"/static/{asset}?v={v}")
+        return Response(content=html, media_type="text/html",
+                        headers={"Cache-Control": "no-cache"})
+    except Exception:
+        return FileResponse("static/index.html")
 
 
 # ---------------------------------------------------------------------------

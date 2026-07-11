@@ -674,7 +674,13 @@
     transform: translateY(110%);
     transition: transform .3s cubic-bezier(.32,.72,0,1);
     box-shadow: 0 -8px 32px rgba(20,17,15,.12);
-    max-height: 88%;
+    /* Cap the height so the TOP of the sheet (the grab strip + the X close button) is ALWAYS
+       below the iOS status bar / notch. Before this, a tall item sheet grew up behind the
+       status bar on iOS, pushing the X off-screen -> the sheet "couldn't be closed" (the
+       founder had to force-quit). safe-area-inset-top is exposed via viewport-fit=cover. */
+    /* GUARANTEE a top gap of at least 56px even if the WebView reports env()=0 (Capacitor can),
+       so the X is never hidden behind the status bar. */
+    max-height: calc(100% - max(env(safe-area-inset-top, 0px), 56px) - 8px);
     display: flex; flex-direction: column;
   }
   .sheet.show { transform: translateY(0); }

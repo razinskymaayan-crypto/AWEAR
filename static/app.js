@@ -768,59 +768,58 @@
   }
   sheetOverlay.addEventListener('click', closeSheet);
 
-  // swipe-down to dismiss — gesture is scoped to the grab strip ONLY, so the
-  // scrollable content (.sheet-scroll) is never hijacked (iOS scroll-trap fix).
-  const sheetGrab = document.getElementById('sheet-grab');
-  let sheetStartY = null;
-  if(sheetGrab){
-    let sheetCaptured = false;
-    sheetGrab.addEventListener('pointerdown', e => {
-      // ignore drags that start on the close button
-      if(e.target.closest('.sheet-close')) return;
-      sheetStartY = e.clientY;
-      sheetCaptured = false;
-      // NOTE: do NOT capture the pointer yet. Capturing on pointerdown swallowed a plain TAP
-      // (incl. taps on/near the X during the open animation) so the close never fired — the
-      // "sheet opens but won't close" bug. We only take over once it's a real DRAG (below).
-    });
-    sheetGrab.addEventListener('pointermove', e => {
-      if(sheetStartY === null) return;
-      const dy = e.clientY - sheetStartY;
-      if(dy > 6 && !sheetCaptured){          // a real downward drag — now own the gesture
-        sheetCaptured = true;
-        buySheet.style.transition = 'none';  // instant during drag
-        try { sheetGrab.setPointerCapture(e.pointerId); } catch(_){}
-      }
-      if(sheetCaptured && dy > 0) buySheet.style.transform = `translateY(${dy}px)`;
-    });
-    const endDrag = e => {
-      if(sheetStartY === null) return;
-      const dy = (e.clientY||0) - sheetStartY;
-      buySheet.style.transition = ''; // restore CSS transition
-      buySheet.style.transform = '';
-      const wasDrag = sheetCaptured;
-      sheetStartY = null; sheetCaptured = false;
-      if(wasDrag && dy > 80) closeSheet();
+  // PULL-TO-DISMISS on the WHOLE sheet (like every native bottom sheet): drag down anywhere to
+  // close. Gated on the content being scrolled to the top, so mid-content scrolling still works.
+  // This is the primary, reliable close — it does NOT depend on the tiny X being on-screen (which
+  // could sit behind the iOS status bar). Works with pointer + touch.
+  {
+    let sy = null, dragging = false;
+    const scroller = () => document.getElementById('sheet-body');
+    const start = (y, target) => {
+      if (target && target.closest && target.closest('button, a, input, .sheet-buy')) { sy = null; return; }
+      const sc = scroller();
+      if (sc && sc.scrollTop > 0) { sy = null; return; }   // let content scroll first
+      sy = y; dragging = false;
     };
-    sheetGrab.addEventListener('pointerup', endDrag);
-    sheetGrab.addEventListener('pointercancel', () => {
+    const move = (y, ev) => {
+      if (sy === null) return;
+      const dy = y - sy;
+      const sc = scroller();
+      if (dy > 4 && (!sc || sc.scrollTop <= 0)) {
+        dragging = true;
+        buySheet.style.transition = 'none';
+        buySheet.style.transform = `translateY(${Math.max(0, dy)}px)`;
+        if (ev && ev.cancelable) { try { ev.preventDefault(); } catch(_){} }
+      }
+    };
+    const end = (y) => {
+      if (sy === null) return;
+      const dy = (y || 0) - sy; sy = null;
       buySheet.style.transition = '';
       buySheet.style.transform = '';
-      sheetStartY = null; sheetCaptured = false;
-    });
+      if (dragging && dy > 90) closeSheet();
+      dragging = false;
+    };
+    buySheet.addEventListener('pointerdown',  e => start(e.clientY, e.target));
+    buySheet.addEventListener('pointermove',  e => move(e.clientY, e), { passive: false });
+    buySheet.addEventListener('pointerup',    e => end(e.clientY));
+    buySheet.addEventListener('pointercancel',() => end(null));
+    // touch fallback for iOS WebViews where pointer events are flaky
+    buySheet.addEventListener('touchstart', e => start(e.touches[0].clientY, e.target), { passive: true });
+    buySheet.addEventListener('touchmove',  e => move(e.touches[0].clientY, e),        { passive: false });
+    buySheet.addEventListener('touchend',   e => end((e.changedTouches[0]||{}).clientY));
   }
   // BULLETPROOF CLOSE — a capture-phase listener on document fires BEFORE any grab/drag logic
   // or async re-render, so the X (or its child svg/path) ALWAYS dismisses the sheet. This is the
   // deterministic fix for the flaky "sheet opens but won't close" bug (it depended on animation
   // timing + pointer capture). Guarded to the X only, so nothing else is affected.
-  document.addEventListener('pointerdown', (e) => {
-    const x = e.target.closest && e.target.closest('#sheet-close');
-    if (x) { e.stopPropagation(); e.preventDefault(); closeSheet(); }
-  }, true);
-  document.addEventListener('click', (e) => {
-    const x = e.target.closest && e.target.closest('#sheet-close');
+  const _closeIfX = (e) => {
+    const x = e.target && e.target.closest && e.target.closest('#sheet-close');
     if (x) { e.stopPropagation(); closeSheet(); }
-  }, true);
+  };
+  document.addEventListener('touchend',   (e) => _closeIfX(e, 'touchend'),   true);
+  document.addEventListener('click',      (e) => _closeIfX(e, 'click'),      true);
+  document.addEventListener('pointerdown',(e) => _closeIfX(e, 'pointerdown'),true);
 
   // Count up the hero match% from 0 → target on sheet open (≤600ms).
   // Respects prefers-reduced-motion (jumps straight to the value).
