@@ -518,12 +518,6 @@
     return combos;
   }
 
-  function comboPieceHTML(it,isThis){
-    return `<div class="combo-pc${isThis?' is-this':''}">
-      <div class="combo-thumb">${productImage(it)}${isThis?`<span class="combo-tag">This item</span>`:''}</div>
-      <div class="combo-nm">${esc(it.name)}</div>
-    </div>`;
-  }
   function comboHTML(item,combo){
     // Flat-lay collage: this item (hero) styled with its complementary closet pieces,
     // then a quiet legend naming each piece so the look stays shoppable/scannable.
@@ -951,17 +945,6 @@
     try { openSheetSingle(JSON.parse(alt.dataset.buyAlt), 0, ''); } catch(err){}
   });
 
-  // ---- buy confirm — opens product sheet (no fake animation) ----
-  function buyConfirm(synth) {
-    openSheetSingle(synth);
-  }
-
-  // kept for internal use — routes to product sheet
-  function buyFlow(label, price, earnAmt, influencerUser) {
-    const synth = { name: label, price_estimate_usd: price, buy_options: [] };
-    openSheetSingle(synth, earnAmt, influencerUser);
-  }
-
   document.querySelector('main').addEventListener('click', e => {
     const profileTap = e.target.closest('[data-open-profile]');
     if (profileTap && profileTap.dataset.openProfile) {
@@ -1118,7 +1101,6 @@
   const saveLastScan=v=>ls.save(LASTSCAN_KEY,v);
   function addListing(it){const s=loadShelf();s.unshift({name:it.name,price:it.price,category:it.category,ts:Date.now()});saveShelf(s);}
   function removeListing(ts){saveShelf(loadShelf().filter(x=>x.ts!==ts));renderCloset();}
-  function resetWardrobe(){[WARDROBE_KEY,META_KEY,SHELF_KEY,FEED_KEY,LASTSCAN_KEY].forEach(k=>localStorage.removeItem(k));profileTab='closet';renderCloset();renderFeed();}
 
   // ---- Dolce closet / profile ----
   const SHELF_GROUPS=[
@@ -1360,12 +1342,6 @@
     loadWardrobe().forEach(it=>{(it.style_tags||[]).forEach(t=>set.add(String(t).toLowerCase()));if(it.category)set.add(String(it.category).toLowerCase());});
     return set;
   }
-  function matchPercent(tags){
-    const s=wardrobeTagSet();if(!s.size)return 72;
-    const t=(tags||[]).map(t=>String(t).toLowerCase()).filter(Boolean);if(!t.length)return 72;
-    let h=0;t.forEach(x=>{if(s.has(x))h++;});return Math.round(60+(h/t.length)*38);
-  }
-
   function shareLookToFeed(){
     const scan=loadLastScan();if(!scan){showToast('Scan a look first to share it');return;}
     const meta=scan.meta||{};
@@ -1811,10 +1787,8 @@
     const ov = document.getElementById('create-overlay');
     if(!ov) return;
     // inject icons (icon() returns SVG string; safe innerHTML)
-    const ip = document.getElementById('create-ico-post');
     const is = document.getElementById('create-ico-scan');
     const ic = document.getElementById('create-ico-checkin');
-    if(ip) ip.innerHTML = icon('plus', 22);
     if(is) is.innerHTML = icon('camera', 22);
     if(ic) ic.innerHTML = icon('calendar', 22);
     ov.classList.add('show');
@@ -1826,15 +1800,9 @@
     ov.classList.remove('show');
     ov.setAttribute('aria-hidden','true');
   }
-  // TODO: no real post composer exists yet — wire to it when built (grep "openNewPostComposer").
-  function openNewPostComposer(){
-    showToast('New post composer — coming soon');
-  }
   (function wireCreateMenu(){
-    const post = document.getElementById('create-opt-post');
     const scan = document.getElementById('create-opt-scan');
     const checkin = document.getElementById('create-opt-checkin');
-    if(post) post.addEventListener('click', ()=>{ closeCreateMenu(); openNewPostComposer(); });
     if(scan) scan.addEventListener('click', ()=>{ closeCreateMenu(); document.getElementById('file-input').click(); });
     if(checkin) checkin.addEventListener('click', ()=>{ closeCreateMenu(); showDiaryModal(); });
   })();
@@ -3661,15 +3629,6 @@
   // Constants (RW_KEY, LEVELS, PERKS, RW_ACTIONS) hoisted above renderHome() — see TDZ fix.
   function loadRewards() { return JSON.parse(localStorage.getItem(RW_KEY) || '{"points":0,"actions":{}}'); }
   function saveRewards(rw) { localStorage.setItem(RW_KEY, JSON.stringify(rw)); }
-  function addPoints(action, count) {
-    const rw = loadRewards();
-    const act = RW_ACTIONS.find(a => a.key === action);
-    if (!act) return;
-    rw.points += act.pts * (count || 1);
-    rw.actions[action] = (rw.actions[action] || 0) + (count || 1);
-    saveRewards(rw);
-    showToast(`+${act.pts} points!`);
-  }
 
   function renderRewards() {
     const wardrobe = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
@@ -6017,15 +5976,6 @@
     card.querySelector('.ha-btn')?.addEventListener('click', () => modal.classList.remove('show'));
   }
 
-  function addToWishlistFromItem(name) {
-    const wl = loadWishlist();
-    if (!wl.find(i => i.name === name)) {
-      wl.unshift({id: Date.now(), name, addedAt: new Date().toLocaleDateString('he-IL')});
-      saveWishlist(wl);
-      showToast('Added to Wishlist');
-    }
-  }
-
   // ---- Wishlist ----
   const WL_KEY = 'awear_wishlist';
 
@@ -6899,37 +6849,17 @@
     {id:'st2', name:'Carmel', userId:'u2', avatar:'/static/img/users/carmel/avatar.jpg', initials:'CP'},
     {id:'st3', name:'Maayan', userId:'u3', avatar:'/static/img/users/maayan/avatar.jpg', initials:'MA'},
   ];
-  // ===== REACTIONS + COMMENTS (Shira) =====
-  const REACTIONS_KEY = 'awear_reactions';
+  // ===== COMMENTS (Shira) =====
   const COMMENTS_KEY  = 'awear_comments';
-  const REACTION_SET  = ['❤️','🔥','⭐','✨'];
-  const REACTION_ICONS = {'❤️':'heartFill','🔥':'flame','⭐':'sparkle','✨':'sparkle'};
 
   // ===== SEEDED SOCIAL PROOF (Shira) =====
   // Demo-only seed so the feed reads as ALIVE: posts with 2.4k–7.2k likes must
-  // not show 0 reactions / 0 comments (an investor reads that as fake).
-  // - Counts are DETERMINISTIC constants (NOT Math.random) so they stay stable
-  //   across renders and screenshots.
-  // - Reaction totals ≈ 8–12% of like count, split uneven (❤️~45 / 🔥~30 /
-  //   ⭐~15 / ✨~10), skewed per look (streetwear 🔥-heavy, quiet-luxury ⭐/✨),
-  //   with irregular numbers (231 not 230) — round splits read as fake.
+  // not show 0 comments (an investor reads that as fake).
   // - Comments: ~likes/400 clamped 3–9, unique & look-specific per post, every
   //   post has a shopping-intent question AND a creator reply right under it
   //   (the ask→answer loop is the shop-the-look thesis on display).
   // - EMOJI RULE: emoji appears ONLY inside the comment `text` (user-generated
   //   content). All UI chrome stays emoji-free via icon()/SVG.
-  const FEED_REACTIONS_SEED = {
-    s1:  {'❤️':121,'🔥':58, '⭐':39, '✨':29},   // 2400 likes, casual cafe — balanced
-    s2:  {'❤️':203,'🔥':211,'⭐':52, '✨':37},   // 5100, streetwear — 🔥-heavy
-    s3:  {'❤️':97, '🔥':41, '⭐':38, '✨':33},   // 1800, thrift — hype + appreciation
-    s4:  {'❤️':167,'🔥':79, '⭐':51, '✨':38},   // 3300, minimal sunday
-    s5:  {'❤️':198,'🔥':161,'⭐':57, '✨':41},   // 4000, vintage — fire on the find
-    s6:  {'❤️':281,'🔥':119,'⭐':113,'✨':77},   // 6200, office quiet-lux — ⭐/✨ lift
-    s7:  {'❤️':181,'🔥':121,'⭐':54, '✨':39},   // 3800, beach
-    s8:  {'❤️':197,'🔥':86, '⭐':89, '✨':61},   // 4100, business casual — ⭐ lift
-    s9:  {'❤️':318,'🔥':121,'⭐':174,'✨':131},  // 7200, quiet luxury — ⭐/✨-heavy
-    s10: {'❤️':149,'🔥':96, '⭐':41, '✨':27},   // 2900, athleisure
-  };
   // Comment voice: warm, lowercase-leaning, SPECIFIC to that look + creator.
   // "user" is a handle string (rendered with @); the seeded creator reply uses
   // the post's own handle so the ask→answer loop is legible.
@@ -7037,20 +6967,13 @@
   };
 
   // Idempotent: writes a post's baseline ONLY if that post has no stored entry
-  // yet, so toggle/get/addComment all operate naturally on top of the baseline
+  // yet, so get/addComment all operate naturally on top of the baseline
   // (solves the toggle-drop trap — no merge math in getters needed). Safe to
   // call on every load. Uses the localStorage helpers below (hoisted fns).
   function seedFeedSocialProof() {
     try {
-      const reactions = loadReactions();
       const comments  = loadComments();
-      let rChanged = false, cChanged = false;
-      Object.keys(FEED_REACTIONS_SEED).forEach(pid => {
-        if (!reactions[pid]) {
-          reactions[pid] = { counts: Object.assign({}, FEED_REACTIONS_SEED[pid]), mine: null };
-          rChanged = true;
-        }
-      });
+      let cChanged = false;
       Object.keys(FEED_COMMENTS_SEED).forEach(pid => {
         if (!comments[pid] || !comments[pid].length) {
           const n = FEED_COMMENTS_SEED[pid].length;
@@ -7069,40 +6992,14 @@
           cChanged = true;
         }
       });
-      if (rChanged) saveReactions(reactions);
       if (cChanged) saveComments(comments);
     } catch (e) { /* seeding is additive; never block render */ }
   }
 
-  function loadReactions() {
-    try { return JSON.parse(localStorage.getItem(REACTIONS_KEY) || '{}'); } catch(e) { return {}; }
-  }
-  function saveReactions(r) { localStorage.setItem(REACTIONS_KEY, JSON.stringify(r)); }
   function loadComments() {
     try { return JSON.parse(localStorage.getItem(COMMENTS_KEY) || '{}'); } catch(e) { return {}; }
   }
   function saveComments(c) { localStorage.setItem(COMMENTS_KEY, JSON.stringify(c)); }
-
-  function getPostReactions(postId) {
-    const all = loadReactions();
-    return all[postId] || { counts: {'❤️':0,'🔥':0,'⭐':0,'✨':0}, mine: null };
-  }
-
-  function toggleReaction(postId, emoji) {
-    const all = loadReactions();
-    if (!all[postId]) all[postId] = { counts: {'❤️':0,'🔥':0,'⭐':0,'✨':0}, mine: null };
-    const prev = all[postId].mine;
-    if (prev === emoji) {
-      all[postId].counts[emoji] = Math.max(0, (all[postId].counts[emoji]||0) - 1);
-      all[postId].mine = null;
-    } else {
-      if (prev) all[postId].counts[prev] = Math.max(0, (all[postId].counts[prev]||0) - 1);
-      all[postId].counts[emoji] = (all[postId].counts[emoji]||0) + 1;
-      all[postId].mine = emoji;
-    }
-    saveReactions(all);
-    return all[postId];
-  }
 
   function getPostComments(postId) {
     const all = loadComments();
@@ -7180,24 +7077,6 @@
       // backend's own fallback logging — moderation being unreachable must
       // never silently block or remove a comment.
     }
-  }
-
-  function reactionsHTML(postId) {
-    const r = getPostReactions(postId);
-    const comments = getPostComments(postId);
-    const viewCount = Math.floor(Math.random() * 800 + 40);
-    const commentLabel = comments.length ? `${icon('chat',16)} ${comments.length}` : icon('chat',16);
-    return `
-      <div class="fc-reactions" data-post="${postId}">
-        ${REACTION_SET.map(e => `
-          <button class="fc-reaction-btn${r.mine===e?' reacted':''}" data-react="${e}" data-post="${postId}">
-            ${icon(REACTION_ICONS[e]||'heart',14)}<span class="rc-count">${r.counts[e]||0}</span>
-          </button>`).join('')}
-        <button class="fc-reaction-btn" data-comment-open="${postId}" style="gap:4px">
-          ${commentLabel}
-        </button>
-        <span class="fc-views">${viewCount} views</span>
-      </div>`;
   }
 
   // Global comments bottom sheet — single instance, reused per post
@@ -7426,32 +7305,6 @@
     if (legacy) legacy.innerHTML = cnt ? `${icon('chat',16)} ${cnt}` : icon('chat',16);
   }
 
-  function bindReactions(host) {
-    host.querySelectorAll('.fc-reaction-btn[data-react]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const postId = btn.dataset.post;
-        const emoji  = btn.dataset.react;
-        const updated = toggleReaction(postId, emoji);
-        const reactionRow = host.querySelector(`.fc-reactions[data-post="${postId}"]`);
-        if (reactionRow) {
-          reactionRow.querySelectorAll('.fc-reaction-btn[data-react]').forEach(b => {
-            b.classList.toggle('reacted', b.dataset.react === updated.mine);
-            const cnt = b.querySelector('.rc-count');
-            if (cnt) cnt.textContent = updated.counts[b.dataset.react] || 0;
-          });
-        }
-      });
-    });
-
-    host.querySelectorAll('[data-comment-open]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openCommentsSheet(btn.dataset.commentOpen);
-      });
-    });
-  }
-
   // Per-card "more" button on feed posts (Shira) — currently exposes only
   // "block this user". Additional per-post moderation actions (e.g. report)
   // can hang off this same icon/handler later without changing the binding.
@@ -7468,8 +7321,8 @@
     });
   }
 
-  // Seed demo social proof once everything it depends on (REACTIONS_KEY /
-  // COMMENTS_KEY consts + load/save helpers) is initialized above. Runs
+  // Seed demo social proof once everything it depends on (COMMENTS_KEY
+  // const + load/save helpers) is initialized above. Runs
   // synchronously before the deferred showView('feed') rAF fires, so the very
   // first render reads the seeded counts. Idempotent — safe on every load.
   seedFeedSocialProof();
@@ -7695,7 +7548,6 @@
       wrap.innerHTML=feedCardHTML(post,false);
       host.appendChild(wrap.firstElementChild);
     });
-    bindReactions&&bindReactions(host);
     bindFeedMoreMenu&&bindFeedMoreMenu(host);
   }
 
@@ -7735,7 +7587,6 @@
       host.appendChild(em); return;
     }
     seeds.forEach(post=>{const wrap=document.createElement('div');wrap.innerHTML=feedCardHTML(post,false);host.appendChild(wrap.firstElementChild);});
-    bindReactions(host);
     bindFeedMoreMenu(host);
   };
 
@@ -7919,8 +7770,8 @@
             <div class="styl-tags">${s.tags.map(t=>`<div class="styl-tag">${esc(t)}</div>`).join('')}</div>
             <div class="styl-actions">
               <button class="styl-btn primary" onclick="openBooking('${attr(s.id)}','${attr(s.name)}')" ${s.avail?'':'disabled style="opacity:.4"'} style="display:inline-flex;align-items:center;gap:5px">${icon('calendar',15)} Book</button>
-              <button class="styl-btn secondary" onclick="stylistVideoCall('${attr(s.name)}')" style="display:inline-flex;align-items:center;gap:5px">${icon('video',15)} Video</button>
-              <button class="styl-btn secondary" onclick="stylistChat('${attr(s.name)}')" style="display:inline-flex;align-items:center;gap:5px">${icon('chat',15)} Chat</button>
+              <button class="styl-btn secondary" onclick="openBookingPreset('${attr(s.id)}','${attr(s.name)}','video')" ${s.avail?'':'disabled style="opacity:.4"'} style="display:inline-flex;align-items:center;gap:5px">${icon('video',15)} Video</button>
+              <button class="styl-btn secondary" onclick="openBookingPreset('${attr(s.id)}','${attr(s.name)}','chat')" ${s.avail?'':'disabled style="opacity:.4"'} style="display:inline-flex;align-items:center;gap:5px">${icon('chat',15)} Chat</button>
             </div>
           </div>`).join('')}
       </div>
@@ -7952,6 +7803,15 @@
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
   }
 
+  // Open the booking overlay pre-set to a given session type (video/chat/home) —
+  // reused by the stylist card's Video/Chat quick actions so they land on the
+  // same real booking flow as the Book button instead of a dead-end toast.
+  function openBookingPreset(id, name, type) {
+    openBooking(id, name);
+    const sel = document.getElementById('book-type');
+    if (sel) sel.value = type;
+  }
+
   function submitBooking(name) {
     const nm = document.getElementById('book-nm')?.value.trim();
     const dt = document.getElementById('book-dt')?.value;
@@ -7963,9 +7823,6 @@
     logAdminEvent('booking', `Session with ${name} — ${typeLabel} on ${dt}`);
     addRewardPoints(50, 'booking');
   }
-
-  function stylistVideoCall(name) { showToast(`Connecting to video with ${name}...`); }
-  function stylistChat(name) { showToast(`Opening chat with ${name}...`); }
 
   // ===== SHOPPING FEED =====
   let SHOP_SEED = [
