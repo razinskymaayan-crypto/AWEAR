@@ -26,6 +26,8 @@
 
 [מערכת — נמצא בביקורת 2026-07-05] באג: id="wl-wrap" כפול ב-static/index.html — גם בסקציית ה-wallet (~L2745) וגם בסקציית ה-wishlist (~L2866). renderWallet תופס את הראשון; ה-wishlist מרנדר ל-#wl-list. לתקן: לתת id ייחודי לאחד מהם + grep לכל השימושים (OW-008 — לחווט לפי ה-class/id האמיתי מאתר ה-render).
 
+[עתידי — מייסד 2026-07-11] מסכי הכניסה וההרשמה: סרטון רקע שרץ (loop, muted, autoplay) מאחורי הטופס — בסגנון Depop (fashion/lifestyle cinematic). וידאו קשור לאופנה, עם overlay כהה עדין לקריאוּת הטקסט, fallback לתמונה סטטית אם הווידאו לא נטען, וקל-משקל (לא לתקוע את הטעינה). scope: onboarding/register/login.
+
 ═══════════════════════════════════════
 
 ## הושלם
