@@ -773,33 +773,54 @@
   const sheetGrab = document.getElementById('sheet-grab');
   let sheetStartY = null;
   if(sheetGrab){
+    let sheetCaptured = false;
     sheetGrab.addEventListener('pointerdown', e => {
       // ignore drags that start on the close button
       if(e.target.closest('.sheet-close')) return;
       sheetStartY = e.clientY;
-      buySheet.style.transition = 'none'; // instant during drag
-      try { sheetGrab.setPointerCapture(e.pointerId); } catch(_){}
+      sheetCaptured = false;
+      // NOTE: do NOT capture the pointer yet. Capturing on pointerdown swallowed a plain TAP
+      // (incl. taps on/near the X during the open animation) so the close never fired — the
+      // "sheet opens but won't close" bug. We only take over once it's a real DRAG (below).
     });
     sheetGrab.addEventListener('pointermove', e => {
       if(sheetStartY === null) return;
       const dy = e.clientY - sheetStartY;
-      if(dy > 0) buySheet.style.transform = `translateY(${dy}px)`;
+      if(dy > 6 && !sheetCaptured){          // a real downward drag — now own the gesture
+        sheetCaptured = true;
+        buySheet.style.transition = 'none';  // instant during drag
+        try { sheetGrab.setPointerCapture(e.pointerId); } catch(_){}
+      }
+      if(sheetCaptured && dy > 0) buySheet.style.transform = `translateY(${dy}px)`;
     });
     const endDrag = e => {
       if(sheetStartY === null) return;
       const dy = (e.clientY||0) - sheetStartY;
       buySheet.style.transition = ''; // restore CSS transition
       buySheet.style.transform = '';
-      sheetStartY = null;
-      if(dy > 80) closeSheet();
+      const wasDrag = sheetCaptured;
+      sheetStartY = null; sheetCaptured = false;
+      if(wasDrag && dy > 80) closeSheet();
     };
     sheetGrab.addEventListener('pointerup', endDrag);
     sheetGrab.addEventListener('pointercancel', () => {
       buySheet.style.transition = '';
       buySheet.style.transform = '';
-      sheetStartY = null;
+      sheetStartY = null; sheetCaptured = false;
     });
   }
+  // BULLETPROOF CLOSE — a capture-phase listener on document fires BEFORE any grab/drag logic
+  // or async re-render, so the X (or its child svg/path) ALWAYS dismisses the sheet. This is the
+  // deterministic fix for the flaky "sheet opens but won't close" bug (it depended on animation
+  // timing + pointer capture). Guarded to the X only, so nothing else is affected.
+  document.addEventListener('pointerdown', (e) => {
+    const x = e.target.closest && e.target.closest('#sheet-close');
+    if (x) { e.stopPropagation(); e.preventDefault(); closeSheet(); }
+  }, true);
+  document.addEventListener('click', (e) => {
+    const x = e.target.closest && e.target.closest('#sheet-close');
+    if (x) { e.stopPropagation(); closeSheet(); }
+  }, true);
 
   // Count up the hero match% from 0 → target on sheet open (≤600ms).
   // Respects prefers-reduced-motion (jumps straight to the value).
