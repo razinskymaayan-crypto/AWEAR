@@ -45,7 +45,7 @@ Swipe the **Feed** once so they see a real, full-screen, scrollable fashion feed
 > "She photographs an outfit. Our AI identifies every garment — top, bottoms, shoes — and turns each one into a *clean catalog image*, not a blurry phone photo."
 
 **When the items appear, say:**
-> "That's the magic: the closet builds itself. Every scan makes our recommendations sharper. That's our moat — a knowledge graph that compounds. A competitor starting today starts from zero."
+> "That's the magic: the closet builds itself — with her in the loop. The AI does the first pass, and the product is built so she confirms and corrects what it found — and every correction is saved as training signal we own. Every scan compounds into a labeled dataset of her *real* wardrobe — data nobody can scrape or buy. That's our moat. A competitor starting today starts from zero knowledge of her."
 
 > 💡 *This step has a built-in offline fallback — scan always returns a real, clean result even with no signal. You will never see an error here.*
 > 💡 *The same Create menu also has "Daily check-in" — mention in passing: "she logs what she wore every day, Duolingo-style streak — that's the retention engine and the data engine in one."*
@@ -160,7 +160,7 @@ Point at the live activity timeline (real recent commits) and the team grid.
 
 | Beat | The point an investor should take away |
 |------|----------------------------------------|
-| Scan | Defensible data moat that compounds per user |
+| Scan | Human-in-the-loop flywheel: every scan — and every user correction — adds proprietary labeled wardrobe data that compounds per user |
 | Today's Look | Zero-effort daily value — the retention engine, already live |
 | Shoppable feed | Distribution = real people's looks, built into the product |
 | **Item sheet (THE WOW)** | **The category bet: social ↔ closet ↔ commerce fused on one screen — nobody else can render "87% match to *your* closet"** |
