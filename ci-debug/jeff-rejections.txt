@@ -1,3 +1,4 @@
 2026-07-06T04:40:53Z steve: REJECT: out-of-lane files: static/app.css static/app.js static/index.html 
 2026-07-12T03:11:18Z mark: REJECT: awear-tokens.json (the SoT, dark palette bg #0a0a0e, imported directly by mobile/theme/tokens.js) was given the LIGHT-theme values — muted #726D66 (6.12:1→3.85:1, fails AA) and success #1a7a4a (10.22:1→3.33:1 on card, which the commit's own tokens.css:21 comment admits fails on dark) — and now contradicts tokens.css's dark block (#3FA46E/#9e99ad), breaking the json↔css sync rule.
 2026-07-12T08:50:35Z steve: REJECT: out-of-lane files: awear-tokens.json static/app.css static/app.js static/tokens.css 
+2026-07-12T13:31:02Z ayalon: REJECT: out-of-lane files: app.py tests/test_app.py 
