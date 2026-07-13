@@ -60,3 +60,13 @@ The autopilot changes `[UNRESOLVED]` → `[FIXED]` with a one-line note once han
 2026-06-30T17:15:36.5332328Z Cleaning up orphan processes
 2026-06-30T17:15:36.5611069Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
 ```
+
+## [UNRESOLVED] REPEAT-FAILURE: ayalon(ownership) — see ci-debug/jeff-rejections.txt (2026-07-13T03:10:30Z)
+The gate-ledger shows the SAME failure **3 cycles in a row (ending now)**: `ayalon(ownership) — see ci-debug/jeff-rejections.txt`.
+This is a STUCK LOOP — a lane keeps producing work the gate keeps rejecting the same way, so
+nothing lands. Do NOT just retry. ROOT-CAUSE it:
+- Is the lane's CODE genuinely wrong? Reproduce locally, fix it in the lane.
+- OR is the GATE/WORKFLOW wrong (flaky check, deps installed before the merge, a bad command,
+  a timeout)? Fix it in .github/workflows/ — a false-rejecting gate is as harmful as bad code.
+  (The 2026-07-08 bcrypt loop was exactly this: pytest ran before a new dep was installed.)
+Verify the fix, then change [UNRESOLVED] -> [FIXED] with a one-line note of the root cause.
