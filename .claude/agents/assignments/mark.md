@@ -70,6 +70,7 @@ Gabbana gate findings, all pre-existing (NOT from the tokenization fix): (1) kic
 (3) `.an-identity-share` 36px wide → 44px touch target. Re-gate with gabbana after.
 
 ## [ ] P2 — Token reconciliation: --success defined 3x with 3 values + --muted fails AA on white (netta)
+> PROGRESS 2026-07-13 (mark run, netta craft): json-css drift RESOLVED — root awear-tokens.json now matches tokens.css dark :root (values only); orphaned static/awear-tokens.json deleted (DS-019, IDEAS #20). Still open: --muted AA on white + app.css light --success #1a7a4a vs tokens.css light #1A9E52 (light-value audit, separate run).
 Gabbana re-gate finding (2026-07-05): awear-tokens.json says --success:#4ade80, tokens.css #52c97a/#1A9E52,
 app.css :root (the winner) #1a7a4a — SoT drift, DS-005. Also --muted #8A857E on white = 3.66:1 (fails AA for
 sub-labels like "10/13 items worn"). Reconcile the three sources to one audited value set + darken --muted

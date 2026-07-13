@@ -1,20 +1,20 @@
 {
   "color": {
-    "accent":       "#ff3d77",
-    "accent2":      "#7b5cff",
-    "accent3":      "#06b6d4",
+    "accent":       "#e8526a",
+    "accent2":      "#c4855a",
+    "accent3":      "#7a6af0",
     "on-accent":    "#fff",
-    "bg":           "#0a0a0e",
-    "surface":      "#13131f",
-    "card":         "#17171f",
-    "card-hover":   "#1f1f38",
-    "line":         "#24242e",
-    "fg":           "#f6f6f9",
-    "muted":        "#8e8e9c",
-    "success":      "#4ade80",
-    "warning":      "#fbbf24",
-    "danger":       "#ef4444",
-    "overlay":      "rgba(0,0,0,0.72)",
+    "bg":           "#0e0c0f",
+    "surface":      "#161318",
+    "card":         "#1e1a22",
+    "card-hover":   "#262030",
+    "line":         "#2e2836",
+    "fg":           "#f0ecf5",
+    "muted":        "#9e99ad",
+    "success":      "#52c97a",
+    "warning":      "#e8a84a",
+    "danger":       "#e05252",
+    "overlay":      "rgba(14,12,15,0.80)",
     "summer-1":     "#f3d27a",
     "summer-2":     "#ecbf72",
     "summer-ink":   "#3a2a08",
@@ -22,10 +22,10 @@
     "summer-blue2": "#5aacd4"
   },
   "gradient": {
-    "primary":      "linear-gradient(135deg, #ff3d77, #7b5cff)",
-    "secondary":    "linear-gradient(135deg, #06b6d4, #7b5cff)",
-    "success":      "linear-gradient(135deg, #4ade80, #22d3ee)",
-    "card-shine":   "linear-gradient(160deg, rgba(123,92,255,0.15), rgba(255,61,119,0.08))"
+    "primary":      "linear-gradient(135deg, #e8526a, #c4855a)",
+    "secondary":    "linear-gradient(135deg, #c4855a, #7a6af0)",
+    "success":      "linear-gradient(135deg, #52c97a, #3db8b8)",
+    "card-shine":   "linear-gradient(160deg, rgba(232,82,106,0.12), rgba(196,133,90,0.08))"
   },
   "spacing": {
     "2":   2,
@@ -70,8 +70,8 @@
     "sm":     "0 1px 4px rgba(0,0,0,0.24)",
     "md":     "0 2px 16px rgba(0,0,0,0.32)",
     "lg":     "0 8px 32px rgba(0,0,0,0.40)",
-    "accent": "0 4px 24px rgba(123,92,255,0.32)",
-    "glow":   "0 0 20px rgba(123,92,255,0.45)"
+    "accent": "0 4px 20px rgba(232,82,106,0.32)",
+    "glow":   "0 0 20px rgba(232,82,106,0.45)"
   },
   "motion": {
     "fast":     "150ms ease",

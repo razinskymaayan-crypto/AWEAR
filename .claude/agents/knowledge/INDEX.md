@@ -63,6 +63,7 @@
 | DS-016 | פריט שנקנה/נסרק חייב לשאת image_url עד הארון (כל w.unshift) | [[ds.md]] |
 | DS-017 | כל avatar img חיצוני חייב onerror→avatarFallback, לא רק product images | [[ds.md]] |
 | DS-018 | mobile bottom-sheet: drag-to-dismiss על רצועת-ידית בלבד, לא scroll-trap | [[ds.md]] |
+| DS-019 | awear-tokens.json = פלטת DARK בלבד (mobile מייבא); light רק ב-tokens.css/app.css | [[ds.md]] |
 
 ---
 

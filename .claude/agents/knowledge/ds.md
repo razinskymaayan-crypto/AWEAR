@@ -98,3 +98,9 @@
 **מקור:** Valentino, item-sheet iOS fix (2026-06-30) — swipe-to-dismiss חובר לכל ה-buySheet → ב-iOS ה-pointer-drag תפס גם את אזור התוכן הנגלל ונלחם בגלילה הנייטיב. דיווח המשתמש: "החלון קופץ מלמטה, לא נותן לסגור למטה ולא לגלול נורמלי".
 **לקח:** bottom-sheet עם תוכן נגלל חייב להפריד את מחוות הסגירה (drag-down) מגלילת התוכן ומגלילת ה-body. drag על כל ה-sheet = scroll-trap.
 **מנגנון:** (1) scope את ה-pointer-drag לרצועת ידית בלבד (`.sheet-grab`, `touch-action:none`, עם pointer capture). (2) אזור התוכן: `overflow-y:auto` + `overscroll-behavior:contain` + `touch-action:pan-y` + `-webkit-overflow-scrolling:touch`. (3) נעל גלילת body ב-open (`body.sheet-open .phone main{overflow:hidden}`) ושחרר תמיד ב-close. (4) ספק 3 דרכי סגירה: גרירה / tap על הרקע / כפתור X ≥44px.
+
+
+### DS-019 | awear-tokens.json (root) = פלטת ה-DARK בלבד; light חי רק ב-tokens.css/app.css
+**מקור:** jeff-rejection של mark (2026-07-12) — ריצה קודמת כתבה ערכי light-theme (muted #726D66, success #1a7a4a) לתוך awear-tokens.json → נפילת AA על dark וסתירה מול הבלוק הכהה של tokens.css. תוקן 2026-07-13 (netta): ה-json סונכרן לערכי ה-:root הכהים של tokens.css, והכפיל היתום static/awear-tokens.json (אפס צרכנים) נמחק.
+**לקח:** שרשרת הטוקנים היא כיוונית: awear-tokens.json (root) מחזיק את פלטת ה-DARK (Mediterranean Modern) ומיובא ישירות ע"י mobile/theme/tokens.js; ערכת ה-LIGHT קיימת רק ב-tokens.css @media (prefers-color-scheme: light) וב-:root של app.css (founder override 2026-06-21, מנצח בקסקדה). כתיבת ערכי light ל-json שוברת גם את mobile וגם את כלל הסנכרון json-css.
+**מנגנון:** לפני commit שנוגע בטוקנים: (1) ערכי color ב-json זהים לבלוק הכהה של tokens.css (עד ה-@media); (2) grep -c 'color-mix' awear-tokens.json = 0 (RN לא מפרסר color-mix — המר ל-rgba מקביל); (3) קובץ טוקנים חדש = צרכן מחווט או שאינו נולד (wire-it-up).
