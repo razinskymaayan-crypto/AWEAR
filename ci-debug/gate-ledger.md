@@ -35,3 +35,4 @@
 2026-07-12T13:31:12Z | jeff: merged -> steve | REJECTED (adversarial review): ayalon(ownership) — see ci-debug/jeff-rejections.txt
 2026-07-12T19:32:28Z | jeff: merged -> mark | REJECTED (adversarial review): ayalon(ownership) — see ci-debug/jeff-rejections.txt
 2026-07-13T03:10:30Z | jeff: merged -> mark | REJECTED (adversarial review): ayalon(ownership) — see ci-debug/jeff-rejections.txt
+2026-07-13T09:44:14Z | jeff: merged -> ayalon
