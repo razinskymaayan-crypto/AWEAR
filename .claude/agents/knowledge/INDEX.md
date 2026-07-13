@@ -21,6 +21,7 @@
 | OW-010 | סוכנים במקביל על קובץ-ענק = worktrees + עוגני-CSS נפרדים, merge בטור | [[OW.md]] |
 | OW-011 | אנטי-זגזוג — לא לחזור לאזור שכבר טופל; polish=נמוך, 1/ריצה; spec נעול | [[OW.md]] |
 | OW-012 | שאל אל תנחש — FOUNDER_QUESTIONS יומי; directive שעונה = עדיפות עליונה | [[OW.md]] |
+| OW-013 | מיזוג בטור: gate diff/reset מול $BASE פר-ענף, לא origin/main; תיקון gate = notes/*.patch + הסלמה למייסד | [[OW.md]] |
 
 ---
 
