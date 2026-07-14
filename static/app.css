@@ -5,7 +5,7 @@
     --card:   #FFFFFF;
     --surface:#F3F1EC;  /* subtle fills, chips */
     --text:   #14110F;  /* near-black editorial */
-    --muted:  #8A857E;  /* secondary text */
+    --muted:  #6F6A63;  /* secondary text — AA audited 2026-07-14 (was #8A857E, 3.66:1 fail) */
     --line:   #E9E5DF;  /* hairline borders */
     --accent: #14110F;  /* primary action = editorial black */
     --accent2:#3D3833;  /* subtle dark partner */
@@ -14,7 +14,7 @@
     --fg:     #14110F;
     --card-hover: #F3F1EC;
     --success-surface: rgba(52,211,153,.12);
-    --success: #1a7a4a;
+    --success: #1a7a4a;  /* AA audited 2026-07-14 — 5.35:1 on white, confirmed correct vs tokens.css drift */
     --danger:  #c0392b;
     --accent3: #3D3833;
     --bg-overlay: rgba(250,249,247,.92);
@@ -144,7 +144,7 @@
   .shelf-row { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 0; scrollbar-width: none; }
   .shelf-row::-webkit-scrollbar { display: none; }
   .shelf-ledge { height: 10px; border-radius: 3px; margin: 0 2px;
-    background: linear-gradient(180deg, var(--line,#E9E5DF) 0%, color-mix(in srgb, var(--line,#E9E5DF) 78%, var(--muted,#8A857E)) 100%);
+    background: linear-gradient(180deg, var(--line,#E9E5DF) 0%, color-mix(in srgb, var(--line,#E9E5DF) 78%, var(--muted,#6F6A63)) 100%);
     box-shadow: 0 4px 12px rgba(20,17,15,.1), inset 0 1px 0 rgba(255,255,255,.6); }
   .ptile { flex-shrink: 0; width: 132px; background: var(--card); border-radius: 16px; padding: 8px;
     cursor: pointer; display: flex; flex-direction: column;
@@ -1160,17 +1160,17 @@
   .og-daily { margin: 16px 18px 16px; background: var(--card, #FFFFFF); border: 1px solid var(--line, #E9E5DF); border-radius: var(--r-lg, 20px); overflow: hidden; display: flex; flex-direction: column; }
   .ogd-media { position: relative; aspect-ratio: 16/10; background: var(--surface, #F3F1EC); }
   .ogd-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .ogd-media .img-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted, #8A857E); }
+  .ogd-media .img-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted, #6F6A63); }
   .ogd-swatch { position: absolute; right: var(--space-3, 12px); bottom: var(--space-3, 12px); width: 26%; aspect-ratio: 4/5; border-radius: var(--r-sm, 10px); overflow: hidden; border: 1px solid var(--line, #E9E5DF); box-shadow: 0 2px 8px rgba(0,0,0,.12); background: var(--surface, #F3F1EC); }
   .ogd-swatch-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .ogd-body { padding: var(--space-4, 16px); display: flex; flex-direction: column; gap: var(--space-2, 8px); }
   .ogd-eyebrow { display: flex; align-items: center; gap: 6px; font-size: var(--t-caption, 12px); font-weight: 600; color: var(--accent2, #3D3833); letter-spacing: .2px; text-transform: capitalize; }
   .ogd-name { font-size: var(--t-title, 20px); font-weight: 700; letter-spacing: -.4px; color: var(--fg, #14110F); line-height: 1.15; }
-  .ogd-pairs { font-size: var(--t-small, 13px); font-weight: 500; color: var(--muted, #8A857E); }
+  .ogd-pairs { font-size: var(--t-small, 13px); font-weight: 500; color: var(--muted, #6F6A63); }
   .ogd-cta { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: var(--space-2, 8px); padding: 0 18px; background: var(--fg, #14110F); border: 0; border-radius: var(--r-pill, 999px); font-family: inherit; font-size: var(--t-body, 14px); font-weight: 700; color: var(--bg, #FAF9F7); cursor: pointer; transition: opacity .15s, transform .12s; }
   .og-daily-empty { padding: var(--space-4, 16px); gap: var(--space-2, 8px); }
   .ogd-empty-title { font-size: var(--t-lead, 17px); font-weight: 700; color: var(--fg, #14110F); }
-  .ogd-empty-sub { font-size: var(--t-small, 13px); font-weight: 500; color: var(--muted, #8A857E); line-height: 1.5; }
+  .ogd-empty-sub { font-size: var(--t-small, 13px); font-weight: 500; color: var(--muted, #6F6A63); line-height: 1.5; }
   .ogd-cta:active { transform: scale(.97); opacity: .9; }
 
   /* Secondary entry points (quiet — must not compete with the hero) */
@@ -1180,7 +1180,7 @@
   .og-entry-ico { width: 32px; height: 32px; min-width: 32px; border-radius: 50%; background: var(--surface, #F3F1EC); border: 1px solid var(--line, #E9E5DF); display: flex; align-items: center; justify-content: center; color: var(--accent2, #3D3833); flex-shrink: 0; }
   .og-entry-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
   .og-entry-title { font-size: var(--t-small, 13px); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .og-entry-sub { font-size: var(--t-micro, 11px); font-weight: 500; color: var(--muted, #8A857E); }
+  .og-entry-sub { font-size: var(--t-micro, 11px); font-weight: 500; color: var(--muted, #6F6A63); }
   .og-chip { flex-shrink: 0; padding: 8px 14px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: var(--t-caption); font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; transition: all .18s; display: flex; align-items: center; gap: 5px; }
   .og-chip:active { border-color: var(--accent2); background: rgba(123,92,255,.1); }
   .og-result-section { padding: 0 18px; display: flex; flex-direction: column; gap: 14px; }

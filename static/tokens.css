@@ -144,7 +144,7 @@
     /* Text */
     --fg:        #14110F;
     --text:      #14110F;
-    --muted:     #8A857E;
+    --muted:     #6F6A63;  /* AA audited 2026-07-14 (was #8A857E, 3.66:1 fail on white) */
 
     /* Structure */
     --line:      #E9E5DF;
@@ -157,9 +157,9 @@
     --hl:        #E84A5F;   /* brand highlight — used sparingly (like, brand badge) */
 
     /* Status (keep vivid for clear signal) */
-    --success:         #1A9E52;
-    --success-dark:    #16854A;
-    --success-surface: color-mix(in srgb, #1A9E52 10%, transparent);
+    --success:         #1a7a4a;  /* AA audited 2026-07-14, reconciled with app.css (was #1A9E52, 3.47:1 fail on white) */
+    --success-dark:    #156339;
+    --success-surface: color-mix(in srgb, #1a7a4a 10%, transparent);
     --warning:         #B8700A;
     --danger:          #C23636;
 
