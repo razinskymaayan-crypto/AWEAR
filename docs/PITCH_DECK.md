@@ -2,7 +2,7 @@
 
 > **C1 (שבוע 1) — Pitch deck skeleton: 8 slides.** Owner: CMO + Jeff. DoD: PDF draft.
 > מסמך זה הוא ה-**טיוטה המובנית** של ה-deck — slide-by-slide. כל תוכן כאן נגזר ממקורות נעולים בלבד:
-> `.claude/master/MASTER_PLAN.md` (חלק ז' מודל עסקי, Track C) + `docs/BUSINESS_PLAN.md`. אין כאן החלטות חדשות.
+> `.claude/master/MASTER_PLAN.md` (Track C) + `docs/BUSINESS_PLAN.md` + `.claude/master/strategy/05-unit-economics.md` (מספרי unit economics — המודל הכן, גובר על חלק ז' הישן). אין כאן החלטות חדשות.
 >
 > **קהל:** הדוד של כרמל (דובר עברית) → ה-deck בעברית, מונחי מוצר/מותג באנגלית.
 > **המרה ל-PDF:** ייצוא דרך Keynote/Google Slides/Pitch לפי המבנה למטה (כותרת + bullets + speaker note + visual). זה צעד אנושי/כלי.
@@ -70,42 +70,46 @@
 
 ---
 
-## Slide 5 — Business Model · Affiliate → Dropshipping → Creator Credits
+## Slide 5 — Business Model · The Staged Revenue Engine
 
-**Punchline:** *Awear מרוויחה מהיום הראשון — חוקי, מיידי, ללא תלות במותג.*
+**Punchline:** *Awear מרוויחה מהיום הראשון — חוקי, מיידי, ללא תלות במותג — וכל שלב במנוע כבר מוכח ע"י שחקן אמיתי בשוק.*
 
-- **שלב 1 (מהיום):** Affiliate — AWIN/Rakuten/Sovrn/Impact/CJ. עמלה **5–15%**. אפס מלאי, אפס לוגיסטיקה.
+ארבעה מנועים מדורגים — כל שלב מממן ומוכיח את הבא, אותו closet-graph מזין את כולם:
+- **Phase 1 (מהיום): Affiliate + Creator Credits — מנוע הוכחת-intent.** רשתות AWIN/Rakuten/Sovrn/Impact/CJ; עמלת אופנה ריאלית **7–10.5%, ‏blended ~8%** (‏~5.8% נטו מה-GMV אחרי ‏~27% reversals). אפס מלאי, אפס לוגיסטיקה. (Comp: Phia — affiliate-only, גייסה $35M בשווי ~$185M.)
   - נקודת ההכנסה היחידה בקוד: `affiliate_url()` — שורה אחת, וכל כפתור "קני" מתחיל להכניס כסף.
-- **שלב 2 (בסקייל):** ספקי dropshipping (Spocket/Zendrop/CJ) + מותגי D2C ישראלים.
-- **שלב 3 (post-PMF):** Dropshipping מלא — רק אחרי 1,000+ active ו-purchase intent מוכח.
-- **Resale:** הצעת מחיר 50% מהמקור · עמלת AWEAR 15% מהמכירה.
-- **Creator Credits:** פוסט נושא `influencer_id` → קנייה → ייחוס → creator מזוכה **5%** (ledger append-only, idempotent) → Wallet מציג balance.
+  - **Creator Credits:** פוסט נושא `influencer_id` → קנייה → ייחוס → creator מזוכה **5%** (ledger append-only, idempotent) → Wallet מציג balance.
+- **Phase 2 (post-raise): AWEAR Pro ‏$5.99/mo — מנוע ה-margin הראשון.** ה-scan הבסיסי לעולם חינם; Pro = unlimited + פיצ'רים כבדי-AI. (Comp: StyleDNA גובה $7.99–19.99/mo.) *⚠️ ממתין לאישור מייסדות.*
+- **Phase 3 (post-raise + פתרון payout): Resale + dropshipping סלקטיבי — מנוע ה-GMV.** ‏Resale: הצעת מחיר 50% מהמקור · עמלת AWEAR ‏**15%** מהמכירה. Dropshipping (Spocket/Zendrop/CJ + מותגי D2C ישראלים) רק בקטגוריות שה-match-data מוכיח בהן demand. (Comp: Vinted — רווחית.)
+- **Phase 4 (‏5M+ MAU): Sponsored placement ממותגים — מנוע ה-ARPU האינקרמנטלי.**
 
-> **Speaker note:** השקף שמבדיל "אפליקציה חמודה" מ"עסק". להדגיש: אנחנו לא תלויים באישור של אף מותג כדי להתחיל.
-> **Visual:** 3-step ladder (Affiliate → Dropshipping → Full). אייקון $ על כל שלב.
+> **Speaker note:** השקף שמבדיל "אפליקציה חמודה" מ"עסק". להדגיש: אנחנו לא תלויים באישור של אף מותג כדי להתחיל — וכל מרכיב במנוע כבר עובד אצל מישהו בשוק (Phia/StyleDNA/Vinted); היחד הוא ה-thesis.
+> **Visual:** 4-step ladder (Affiliate → Pro → Resale/Dropshipping → Sponsored). אייקון $ על כל שלב.
 
 ---
 
 ## Slide 6 — Traction Plan · Unit Economics
 
-**Punchline:** *המספר שמבדיל אפליקציה מעסק: LTV/CAC > 4x.*
+**Punchline:** *לא מוכרים "רווחיות per-user היום" — מוכרים intent-proof + מנוע מדורג, במספרים ששורדים diligence.*
 
 | מטריקה | ערך |
 |--------|-----|
-| Contribution / משתמשת פעילה / חודש | ~$11 |
-| Gross margin | ~85% |
-| CAC (אורגני) | $3–7 |
-| **LTV/CAC** | **>4x** |
+| Net revenue / הזמנה מיוחסת (אחרי reversals + קרדיטים) | **~$2.98** |
+| Gross margin על ההכנסה | ~80% |
+| Revenue / MAU / חודש (Phase 1) | $0.20–0.40 · contribution ≈ 0± עד ה-Pro tier |
+| מסלול מדורג (Pro + resale חיים) | $1–2 contribution / MAU / חודש |
+| CAC (אורגני) | $3–7 · ‏paid CAC ‏$20–50 ⇒ אפס paid acquisition בשלב ה-affiliate |
+| **LTV/CAC (במנוע המדורג)** | **2.5–5x** |
 
-**תחזית (תרחיש בסיס):**
-- **M6:** ~2,100 משתמשות פעילות · ~$9K monthly
-- **M12:** ~7,000 · ~$31K monthly
-- **M18:** ~$800K ARR
+**תחזית (תרחיש בסיס, מספרים כנים):**
+- **M12:** ~10–15K MAU ⇒ **$60–160K ARR run-rate**
+- **$800K ARR — תרחיש upside מפורש** (עם Pro + resale חיים), לא base case.
 
-**Target ל-90 יום:** App חי + 500 משתמשות בטא · **D30 retention > 25%** · 100+ קליקים "קני" · 10+ רכישות affiliate ראשונות. North-star ל-traction: **20K users**.
+**Target ל-90 יום:** App חי + 500 משתמשות בטא · **D30 ≥ 10%** (פי 2 מנורמת הקטגוריה ~5% ל-shopping apps; יעד פנימי 12%) · 100+ קליקים "קני" · 10+ רכישות affiliate ראשונות. North-star ל-traction: **20K users**.
 
-> **Speaker note:** לציין במפורש: כל ההנחות משוערות עד 30 יום נתוני בטא אמיתיים. ההנחה השברירית — Activation + Retention. כנות בונה אמון.
-> **Visual:** עקומת growth M6→M12→M18 + טבלת unit economics.
+**השורה התחתונה למשקיע:** (1) intent-graph שממיר פי 2–3 מ-shopping app רגיל · (2) קרדיטים רווחיים by construction (מודל A, ‏cap ≤50% — מתמטית אי אפשר להפסיד על עסקה) · (3) כל שלב במנוע מוכח ע"י comp אמיתי — Phia / StyleDNA / Vinted · (4) COGS משתנה נמוך (~$0.28/MAU) שיורד עם caching.
+
+> **Speaker note:** לציין במפורש: כל ההנחות משוערות עד 30 יום נתוני בטא אמיתיים — ובדיוק בגלל זה מציגים את המודל הכן ולא מספר-שיא; משקיע שיעשה את החשבון בעצמו יגיע לאותם מספרים. ההנחה הרגישה ביותר: attach rate ‏6.5% — נמדדת ב-cohort הראשון. כנות בונה אמון.
+> **Visual:** ladder של 4 מנועי ההכנסה + טבלת ה-unit economics הכנה.
 
 ---
 
@@ -122,7 +126,7 @@
 | משפטי / רישום / תשלומים | ~$5K |
 | Buffer (15%) | ~$10K |
 
-**אבני דרך שהכסף קונה:** App חי + 500 בטא (D30>25%) · purchase intent מוכח · 10K+ עוקבים + 5–10 Founding Creators · נייר מייסדות סגור (equity, vesting 4 שנים/cliff שנה, SAFE עם המשקיע).
+**אבני דרך שהכסף קונה:** App חי + 500 בטא (D30 ≥ 10%, פי 2 מנורמת הקטגוריה) · purchase intent מוכח · 10K+ עוקבים + 5–10 Founding Creators · נייר מייסדות סגור (equity, vesting 4 שנים/cliff שנה, SAFE עם המשקיע).
 
 > **Speaker note:** הכסף ממשפחה (הדוד) → להתייחס כעסקה מקצועית עם נייר ועו"ד, דווקא כי הוא משפחה. זה מוריד סיכון, לא מעלה.
 > **Visual:** עוגת תקציב + timeline 12 חודשים עם 4 milestones.
@@ -162,7 +166,8 @@
 
 - **מה הושלם:** טיוטת skeleton מלאה, 8 slides + appendix, מבוססת מקורות נעולים בלבד.
 - **עדכון 2026-07-12:** הנחיית המייסדים מ-2026-07-11 (מנוע זיהוי הפריטים + human-in-the-loop כ-wow וכ-moat) משוקפת ב-Slides 2, 3, 8 וב-appendix. מסך האישור "צדקנו?" עדיין בפיתוח — לא להציג כ-shipped.
+- **עדכון 2026-07-14:** מספרי ה-unit economics תוקנו למודל הכן לפי `.claude/master/strategy/05-unit-economics.md` (Tobi) — default מיושם בהיעדר מענה על FOUNDER_QUESTIONS מ-2026-07-06; ממתין לאישור/דריסה של Carmel.
 - **מה נשאר (אנושי):** (1) המרה ל-PDF/Keynote בעיצוב AWEAR · (2) screenshots אמיתיים ל-Slides 2,8 · (3) sign-off CMO + Jeff (owners) · (4) dry-run ×2 לפי C2.
 - **תלות:** A6 (demo reliability, 0 broken images) לפני הצגה חיה ב-Slide 8.
 
-*נגזר מ-MASTER_PLAN.md (Track C) + BUSINESS_PLAN.md. אין כאן החלטות אסטרטגיות חדשות — assembly בלבד.*
+*נגזר מ-MASTER_PLAN.md (Track C) + BUSINESS_PLAN.md + strategy/05-unit-economics.md. אין כאן החלטות אסטרטגיות חדשות — assembly בלבד.*

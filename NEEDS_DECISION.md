@@ -30,5 +30,10 @@ Agents were paused for quota burn. When resumed, current cadences (engine ~15min
 - **Options**: (a) dedicated future project with the new eval/verify harness as safety net; (b) fold into this overhaul.
 - **Recommendation & default applied**: (a) — Phase 9 only adds section markers + navigation map updates.
 
+### 6. Investor-deck unit economics — honest model applied (2026-07-14, ayalon/tobi)
+The deck claimed contribution ~$11/user/month, LTV/CAC >4x today, M18 $800K ARR base — numbers Tobi's diligence analysis (`.claude/master/strategy/05-unit-economics.md`) shows are off by ~20-40× and would burn investor trust. FOUNDER_QUESTIONS item open since 2026-07-06, meeting in 2-4 weeks.
+- **Options**: (a) keep the old headline numbers; (b) honest framing — $2.98 net/attributed order, ~80% GM, staged 4-phase engine, M12 $60-160K ARR base / $800K upside, D30 ≥10%.
+- **Recommendation & default applied**: (b) — applied to `docs/PITCH_DECK.md` + `docs/BUSINESS_PLAN.md`, both flagged in-doc as pending your override. Sub-decision bundled: AWEAR Pro $5.99/mo shown as Phase 2 marked "⚠️ pending founder approval". MASTER_PLAN חלק ז' still has old numbers (out of lane) — sync after your call.
+
 ## Answered
 (none yet)
