@@ -22,12 +22,11 @@ Replace with inline SVG (DS-008: icon() is JS-templates-only).
 `--success` is now dark green → dark-green text on near-black. Evidence: `app.css:1379,1382,1550-1551`.
 Swap to a light-safe treatment (var(--success-surface) bg + readable text). Screenshot to confirm contrast.
 
-## [ ] P1 — Stubs & dead code
-- "New post" is a stub toast (`app.js:1829`); stylist "Video call"/"Chat" go nowhere (`app.js:7967`) — either
-  wire (chat → `showView('dm')`) or remove the buttons so the demo has no dead ends.
-- Dead code to DELETE: the entire emoji-reactions subsystem (`reactionsHTML` has zero call sites, ~150 lines,
-  `app.js:7185` + seeds `6905-6931` + no-op `bindReactions`), and 7 dead functions (buyFlow, buyConfirm,
-  comboPieceHTML, resetWardrobe, matchPercent, addPoints, addToWishlistFromItem).
+## [x] P1 — Stubs & dead code
+> DONE — verified stale 2026-07-14 (mark run): all items already handled by prior runs. Grep evidence:
+> "New post"/newPost = 0 hits; stylist Video/Chat wired via openBookingPreset (app.js:7793-7841, avail-gated);
+> reactionsHTML/bindReactions = 0 hits; all 7 dead functions (buyFlow, buyConfirm, comboPieceHTML, resetWardrobe,
+> matchPercent, addPoints, addToWishlistFromItem) = 0 hits in app.js + index.html. node --check green.
 
 ## [x] P0 — Tokenize hardcoded colors + kill black-on-black (theme migration finish)
 > DONE 2026-07-10 (mark run, netta craft, gabbana gate 9/10). Written when the SPA was one file; previous
@@ -63,7 +62,12 @@ design decision. Fixing it fixes the whole class at once and makes BOTH themes c
 toward ~0 in CSS contexts (per static/CLAUDE.md self-check), zero black-on-black on any screen,
 both light and dark render cleanly. Track progress in DAILY_DIGEST.md.
 
-## [ ] P2 — Analytics identity-card pre-existing contrast (gabbana follow-up 2026-07-10, valentino)
+## [x] P2 — Analytics identity-card pre-existing contrast (gabbana follow-up 2026-07-10, valentino)
+> DONE 2026-07-14 (mark run, valentino craft, gabbana gate 8.5/10 PASS). Findings 1+2 needed a second pass —
+> prior opacity/text-shadow fix didn't move WCAG numbers (→ DS-020 filed by netta). Final fix: gradient 0% stop
+> darkened via color-mix 80%/#000 (kicker ~5.4:1) + pills inverted to dark-frosted #000 25% (leftmost ~8.5:1);
+> share button was already 44px. check-render green, screenshots /tmp/shot-analytics-fixed.png. Card is done
+> per OW-011 — remaining P2 nits (7px tag gap, 22px radius) explicitly non-blocking, do NOT re-polish.
 Gabbana gate findings, all pre-existing (NOT from the tokenization fix): (1) kicker "YOUR STYLE IDENTITY"
 ~3.4:1 on the red gradient edge — set opacity 88%→100% + add the text-shadow already used on range/pills
 (app.css ~2269); (2) white-32% chips ~3.1:1 — drop pill bg to color-mix(#ffffff 20%, transparent) or darken;

@@ -64,6 +64,7 @@
 | DS-017 | כל avatar img חיצוני חייב onerror→avatarFallback, לא רק product images | [[ds.md]] |
 | DS-018 | mobile bottom-sheet: drag-to-dismiss על רצועת-ידית בלבד, לא scroll-trap | [[ds.md]] |
 | DS-019 | awear-tokens.json = פלטת DARK בלבד (mobile מייבא); light רק ב-tokens.css/app.css | [[ds.md]] |
+| DS-020 | Contrast fix = background math, לא opacity/text-shadow — דרוש ratio מחדש ב-theme הרנדר בפועל | [[ds.md]] |
 
 ---
 

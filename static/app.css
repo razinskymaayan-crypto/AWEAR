@@ -2257,13 +2257,13 @@
   .an-empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: var(--t-body); font-weight: 700; line-height: 1.8; }
 
   /* ---- Analytics v2 — Spotify Wrapped style ---- */
-  .an-identity-card { margin: 0 18px 14px; border-radius: 22px; padding: 22px 20px; background: linear-gradient(135deg, var(--hl, #e8526a) 0%, color-mix(in srgb, var(--hl, #e8526a) 55%, var(--accent2, #c4855a)) 50%, var(--accent2, #c4855a) 100%); border: 1px solid color-mix(in srgb, var(--accent2, #c4855a) 60%, transparent); position: relative; overflow: hidden; }
+  .an-identity-card { margin: 0 18px 14px; border-radius: 22px; padding: 22px 20px; background: linear-gradient(135deg, color-mix(in srgb, var(--hl, #e8526a) 80%, #000) 0%, color-mix(in srgb, var(--hl, #e8526a) 55%, var(--accent2, #c4855a)) 50%, var(--accent2, #c4855a) 100%); border: 1px solid color-mix(in srgb, var(--accent2, #c4855a) 60%, transparent); position: relative; overflow: hidden; }
   .an-identity-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 18%, color-mix(in srgb, #ffffff 26%, transparent) 0%, transparent 62%); pointer-events: none; }
   .an-identity-kicker { position: relative; font-size: var(--t-micro, 11px); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-on-accent, #fff7f2); text-shadow: 0 1px 2px rgba(0,0,0,.18); margin-bottom: 6px; padding-right: 56px; }
   .an-identity-name { position: relative; font-size: var(--t-h1, 24px); font-weight: 900; letter-spacing: -.5px; color: var(--text-on-accent, #fff7f2); line-height: 1.15; margin-bottom: 12px; padding-right: 56px; }
   .an-identity-tags { position: relative; display: flex; gap: 7px; flex-wrap: wrap; }
   .an-identity-range { position: relative; margin-top: 10px; font-size: var(--t-caption, 12px); font-weight: 600; color: color-mix(in srgb, var(--text-on-accent, #fff7f2) 90%, transparent); text-shadow: 0 1px 2px rgba(0,0,0,.18); }
-  .an-identity-pill { padding: 5px 12px; border-radius: var(--r-pill, 999px); background: color-mix(in srgb, #ffffff 20%, transparent); border: 1px solid color-mix(in srgb, #ffffff 50%, transparent); font-size: var(--t-caption, 12px); font-weight: 700; color: var(--text-on-accent, #fff7f2); text-shadow: 0 1px 2px rgba(0,0,0,.18); }
+  .an-identity-pill { padding: 5px 12px; border-radius: var(--r-pill, 999px); background: color-mix(in srgb, #000 25%, transparent); border: 1px solid color-mix(in srgb, #ffffff 50%, transparent); font-size: var(--t-caption, 12px); font-weight: 700; color: var(--text-on-accent, #fff7f2); text-shadow: 0 1px 2px rgba(0,0,0,.18); }
   .an-identity-share { position: absolute; top: 16px; right: 18px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in srgb, #ffffff 18%, transparent); border: none; border-radius: var(--r-sm, 10px); cursor: pointer; color: var(--text-on-accent, #fff7f2); transition: background .18s; }
   .an-identity-share:active { background: color-mix(in srgb, #ffffff 30%, transparent); }
 

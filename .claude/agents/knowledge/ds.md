@@ -104,3 +104,9 @@
 **מקור:** jeff-rejection של mark (2026-07-12) — ריצה קודמת כתבה ערכי light-theme (muted #726D66, success #1a7a4a) לתוך awear-tokens.json → נפילת AA על dark וסתירה מול הבלוק הכהה של tokens.css. תוקן 2026-07-13 (netta): ה-json סונכרן לערכי ה-:root הכהים של tokens.css, והכפיל היתום static/awear-tokens.json (אפס צרכנים) נמחק.
 **לקח:** שרשרת הטוקנים היא כיוונית: awear-tokens.json (root) מחזיק את פלטת ה-DARK (Mediterranean Modern) ומיובא ישירות ע"י mobile/theme/tokens.js; ערכת ה-LIGHT קיימת רק ב-tokens.css @media (prefers-color-scheme: light) וב-:root של app.css (founder override 2026-06-21, מנצח בקסקדה). כתיבת ערכי light ל-json שוברת גם את mobile וגם את כלל הסנכרון json-css.
 **מנגנון:** לפני commit שנוגע בטוקנים: (1) ערכי color ב-json זהים לבלוק הכהה של tokens.css (עד ה-@media); (2) grep -c 'color-mix' awear-tokens.json = 0 (RN לא מפרסר color-mix — המר ל-rgba מקביל); (3) קובץ טוקנים חדש = צרכן מחווט או שאינו נולד (wire-it-up).
+
+
+### DS-020 | contrast fix = background math, לא text cosmetics
+**מקור:** gabbana — Analytics identity-card contrast re-gate, נכשל פעמיים (2026-07-14)
+**לקח:** opacity bump ו-text-shadow לא זזים את מספרי ה-WCAG — הצל מוחרג מחישוב הקונטרסט. ממצא contrast נסגר רק ע"י שינוי הרקע (darken של gradient stop / scrim / היפוך fill) ודריבת היחס מחדש בנקודת ה-gradient הגרועה ביותר, בתמה שבאמת נרנדרת (light `:root` override מנצח, לא dark fallback).
+**מנגנון:** לפני סגירת contrast finding — שאל "מה שינה את ה-background?" אם התשובה היא opacity/shadow/text-only → לא נסגר. חשב ratio מחדש ב-worst-case gradient position, ב-theme הרנדר בפועל.
