@@ -5,9 +5,11 @@ idempotency, auth, rate limiting, and buy-routing — the things a regression wo
 break silently in front of an investor.
 """
 import hashlib
+import io
+import sqlite3
 
 import app as appmod
-from conftest import _order_body
+from conftest import _order_body, _tiny_jpeg_bytes
 
 CREATOR_PCT = appmod.CREATOR_CREDIT_PCT      # 0.05
 PRELOVED_PCT = appmod.PRELOVED_COMMISSION_PCT  # 0.08
@@ -550,6 +552,251 @@ def test_emit_notification_skips_silently_on_empty_user_id(client):
     finally:
         conn.close()
     assert count == 0
+
+
+# --------------------------------------------------------------------------- #
+# Product-recognition pipeline: scan (/api/analyze) -> human confirm
+# (/api/closet/confirm) -> persisted closet (/api/closet). Corrections are the
+# learning signal recorded in scan_corrections.
+# --------------------------------------------------------------------------- #
+def _closet_confirm_body(**over):
+    body = {
+        "user_id": "user_closet_1",
+        "client_ref": "",
+        "items": [
+            {
+                "accepted": True,
+                "ai": {"name": "White Tee", "category": "top", "color": "white",
+                       "brand": "Zara", "search_query": "white tee", "price_estimate_usd": 25},
+                "final": {"name": "White Tee", "category": "top", "color": "white",
+                          "brand": "Zara", "search_query": "white tee", "price_estimate_usd": 25,
+                          "confidence": "high"},
+            },
+        ],
+    }
+    body.update(over)
+    return body
+
+
+def test_analyze_demo_mode_every_item_has_bounded_confidence(client):
+    # No ANTHROPIC_API_KEY in CI -> falls to demo. Every _DEMO_OUTFITS item must
+    # carry a confidence value in the bounded enum (the vision contract change).
+    files = {"photo": ("test.jpg", io.BytesIO(_tiny_jpeg_bytes()), "image/jpeg")}
+    r = client.post("/api/analyze", files=files)
+    assert r.status_code == 200
+    d = r.json()
+    assert d["mode"] == "demo"
+    assert len(d["items"]) > 0
+    for item in d["items"]:
+        assert item["confidence"] in ("high", "medium", "low")
+
+
+def test_closet_confirm_two_accepted_then_listed_newest_first(client):
+    body = _closet_confirm_body(
+        user_id="user_closet_list",
+        client_ref="",
+        items=[
+            {"accepted": True, "ai": {"name": "Item A"}, "final": {"name": "Item A Final"}},
+            {"accepted": True, "ai": {"name": "Item B"}, "final": {"name": "Item B Final"}},
+        ],
+    )
+    r = client.post("/api/closet/confirm", json=body)
+    assert r.status_code == 200
+    d = r.json()
+    assert d["deduped"] is False
+    ids = [it["id"] for it in d["saved"]]
+    assert len(ids) == 2
+    assert all(i.startswith("ci_") for i in ids)
+
+    r2 = client.get("/api/closet", params={"user_id": "user_closet_list"})
+    assert r2.status_code == 200
+    listed = r2.json()
+    assert listed["count"] == 2
+    names = [it["name"] for it in listed["items"]]
+    assert "Item A Final" in names and "Item B Final" in names
+    # newest-first: the second-saved item (Item B) should appear before the first.
+    assert listed["items"][0]["name"] == "Item B Final"
+    assert listed["items"][1]["name"] == "Item A Final"
+
+
+def test_closet_confirm_records_name_and_category_corrections(client):
+    body = _closet_confirm_body(
+        user_id="user_closet_correct",
+        client_ref="",
+        items=[{
+            "accepted": True,
+            "ai": {"name": "White Tee", "category": "top", "color": "white",
+                   "brand": "Zara", "search_query": "white tee", "price_estimate_usd": 25},
+            "final": {"name": "Ribbed Crop Top", "category": "crop-top", "color": "white",
+                      "brand": "Zara", "search_query": "white tee", "price_estimate_usd": 25,
+                      "confidence": "high"},
+        }],
+    )
+    r = client.post("/api/closet/confirm", json=body)
+    assert r.status_code == 200
+    assert r.json()["corrections_recorded"] == 2  # name + category differ; color/brand/search/price match
+
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        rows = conn.execute(
+            "SELECT field, ai_value, user_value FROM scan_corrections WHERE user_key = ?",
+            ("user_closet_correct",),
+        ).fetchall()
+    finally:
+        conn.close()
+    by_field = {r[0]: (r[1], r[2]) for r in rows}
+    assert by_field["name"] == ("White Tee", "Ribbed Crop Top")
+    assert by_field["category"] == ("top", "crop-top")
+    assert "color" not in by_field
+    assert "brand" not in by_field
+
+
+def test_closet_confirm_rejected_item_not_saved_records_rejection(client):
+    body = _closet_confirm_body(
+        user_id="user_closet_reject",
+        client_ref="",
+        items=[{"accepted": False, "ai": {"name": "Invisible Hat"}, "final": {}}],
+    )
+    r = client.post("/api/closet/confirm", json=body)
+    assert r.status_code == 200
+    d = r.json()
+    assert d["saved"] == []
+    assert d["corrections_recorded"] == 1
+
+    r2 = client.get("/api/closet", params={"user_id": "user_closet_reject"})
+    assert r2.json()["count"] == 0
+
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        row = conn.execute(
+            "SELECT ai_value, user_value FROM scan_corrections "
+            "WHERE user_key = ? AND field = 'rejected'",
+            ("user_closet_reject",),
+        ).fetchone()
+    finally:
+        conn.close()
+    assert row is not None
+    assert row[0] == "Invisible Hat"
+    assert row[1] == ""
+
+
+def test_closet_confirm_double_post_same_client_ref_dedupes(client):
+    body = _closet_confirm_body(user_id="user_closet_dedup", client_ref="dedup-ref-1")
+    first = client.post("/api/closet/confirm", json=body)
+    assert first.status_code == 200
+    assert first.json()["deduped"] is False
+    saved_count_after_first = len(first.json()["saved"])
+
+    second = client.post("/api/closet/confirm", json=body)
+    assert second.status_code == 200
+    d2 = second.json()
+    assert d2["deduped"] is True
+    assert len(d2["saved"]) == saved_count_after_first
+
+    r = client.get("/api/closet", params={"user_id": "user_closet_dedup"})
+    assert r.json()["count"] == saved_count_after_first  # unchanged, not doubled
+
+
+def test_closet_confirm_all_rejected_batch_replay_dedupes(client):
+    # An all-rejected batch writes NO closet_items row, so the dedup guard must
+    # also consult scan_corrections — otherwise a replay double-inserts
+    # 'rejected' rows and skews the append-only learning ledger.
+    body = _closet_confirm_body(
+        user_id="user_closet_reject_replay",
+        client_ref="reject-replay-ref-1",
+        items=[{"accepted": False, "ai": {"name": "Phantom Hat"}, "final": {}}],
+    )
+    first = client.post("/api/closet/confirm", json=body)
+    assert first.status_code == 200
+    d1 = first.json()
+    assert d1["deduped"] is False
+    assert d1["saved"] == []
+    assert d1["corrections_recorded"] == 1
+
+    second = client.post("/api/closet/confirm", json=body)
+    assert second.status_code == 200
+    d2 = second.json()
+    assert d2["deduped"] is True
+    assert d2["saved"] == []
+    assert d2["corrections_recorded"] == 0
+
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        count = conn.execute(
+            "SELECT COUNT(*) FROM scan_corrections WHERE user_key = ? AND client_ref = ?",
+            ("user_closet_reject_replay", "reject-replay-ref-1"),
+        ).fetchone()[0]
+    finally:
+        conn.close()
+    assert count == 1  # unchanged, not doubled
+
+
+def test_closet_confirm_persists_across_new_sqlite_connection(client):
+    body = _closet_confirm_body(user_id="user_closet_persist", client_ref="persist-ref-1")
+    r = client.post("/api/closet/confirm", json=body)
+    assert r.status_code == 200
+    item_id = r.json()["saved"][0]["id"]
+
+    # Simulate "server restart" — a brand-new sqlite3 connection to the same DB file.
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        row = conn.execute(
+            "SELECT id, user_key, name FROM closet_items WHERE id = ?", (item_id,)
+        ).fetchone()
+    finally:
+        conn.close()
+    assert row is not None
+    assert row[1] == "user_closet_persist"
+
+
+def test_closet_confirm_no_user_id_falls_back_to_ip_key_and_isolates(client):
+    body = _closet_confirm_body(client_ref="")
+    body.pop("user_id")
+    body["items"] = [{"accepted": True, "ai": {"name": "IP Item"}, "final": {"name": "IP Item Final"}}]
+    r = client.post("/api/closet/confirm", json=body)
+    assert r.status_code == 200
+    assert len(r.json()["saved"]) == 1
+
+    # Under a DIFFERENT explicit user_id, the IP-keyed item must not be visible.
+    r2 = client.get("/api/closet", params={"user_id": "some_other_explicit_user"})
+    names = [it["name"] for it in r2.json()["items"]]
+    assert "IP Item Final" not in names
+
+
+def test_closet_confirm_zero_items_400(client):
+    body = _closet_confirm_body(items=[])
+    r = client.post("/api/closet/confirm", json=body)
+    assert r.status_code == 400
+
+
+def test_closet_confirm_too_many_items_400(client):
+    one = {"accepted": True, "ai": {"name": "X"}, "final": {"name": "X Final"}}
+    body = _closet_confirm_body(items=[one] * 13)
+    r = client.post("/api/closet/confirm", json=body)
+    assert r.status_code == 400
+
+
+def test_closet_user_isolation_a_not_visible_to_b(client):
+    body_a = _closet_confirm_body(
+        user_id="user_iso_a",
+        client_ref="iso-a-ref",
+        items=[{"accepted": True, "ai": {"name": "A Item"}, "final": {"name": "A Item Final"}}],
+    )
+    body_b = _closet_confirm_body(
+        user_id="user_iso_b",
+        client_ref="iso-b-ref",
+        items=[{"accepted": True, "ai": {"name": "B Item"}, "final": {"name": "B Item Final"}}],
+    )
+    client.post("/api/closet/confirm", json=body_a)
+    client.post("/api/closet/confirm", json=body_b)
+
+    closet_a = client.get("/api/closet", params={"user_id": "user_iso_a"}).json()
+    closet_b = client.get("/api/closet", params={"user_id": "user_iso_b"}).json()
+
+    names_a = [it["name"] for it in closet_a["items"]]
+    names_b = [it["name"] for it in closet_b["items"]]
+    assert "A Item Final" in names_a and "B Item Final" not in names_a
+    assert "B Item Final" in names_b and "A Item Final" not in names_b
 
 
 # --------------------------------------------------------------------------- #

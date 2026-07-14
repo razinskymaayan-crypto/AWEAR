@@ -36,3 +36,14 @@ def _order_body(**over):
     body = {"product_name": "Linen blazer", "product_id": "p_test", "amount_usd": 100.0}
     body.update(over)
     return body
+
+
+def _tiny_jpeg_bytes() -> bytes:
+    """A minimal real JPEG (PIL round-trip) — /api/analyze rejects non-image bytes."""
+    import io as _io
+    from PIL import Image as _Image
+
+    img = _Image.new("RGB", (10, 10), color="red")
+    buf = _io.BytesIO()
+    img.save(buf, format="JPEG")
+    return buf.getvalue()

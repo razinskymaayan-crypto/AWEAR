@@ -235,6 +235,8 @@ class ClothingItem(BaseModel):
     resale_potential: str   # low | medium | high  (Layer 3: sell hook)
     search_query: str       # precise EN shopping query, e.g. "white ribbed cropped tee"
     price_estimate_usd: int  # estimated retail price in USD
+    confidence: str         # detection confidence: high | medium | low — low when the item
+                             # is partially visible, occluded, or the guess is uncertain
 
 
 class OutfitAnalysis(BaseModel):
@@ -266,6 +268,17 @@ SYSTEM_PROMPT = (
     "style tags (global fashion vocabulary: y2k, streetwear, minimal, vintage, preppy, coastal, etc.), "
     "resale potential, search_query (precise English for global retailers), "
     "price_estimate_usd (estimated retail price in USD — use integer).\n\n"
+    "HONESTY — this matters more than completeness:\n"
+    "• NEVER invent an item you cannot actually see. Only report clothing/accessories "
+    "that are genuinely visible in the photo — do not guess at items that might be "
+    "there (e.g. do not assume shoes are sneakers if they are out of frame or hidden).\n"
+    "• Set `confidence` honestly per item: 'high' when the item and its details are "
+    "clearly visible, 'medium' when mostly visible but some detail is a reasonable "
+    "guess, 'low' when the item is partially visible, occluded, cropped out of frame, "
+    "or you are genuinely unsure.\n"
+    "• When unsure between two interpretations of the same item, prefer setting "
+    "confidence='low' over guessing specific brand/material/color details — an honest "
+    "low-confidence guess is better than a confident-sounding invention.\n\n"
     "Then summarize the overall look in English and produce `stylist_tip` — "
     "one short, actionable styling suggestion in English. "
     "If you can confidently detect the user's language from any visible text or context, use that language instead."
@@ -371,16 +384,19 @@ _DEMO_OUTFITS = [
             {"category": "top", "name": "White Ribbed Crop Top", "color": "white",
              "material_guess": "cotton", "brand_vibe": "Zara", "style_tags": ["minimal", "y2k"],
              "resale_potential": "medium", "search_query": "white ribbed cropped sleeveless tank top women", "price_estimate_usd": 25,
+             "confidence": "high",
              "image_url": "https://image.hm.com/assets/hm/59/12/591234ce7947b24f9bbb9ce0abf536e0d0551563.jpg"},
             {"category": "bottoms", "name": "Barrel-Leg Light Wash Denim", "color": "light blue",
              "material_guess": "denim", "brand_vibe": "Levi's",
              "style_tags": ["denim", "y2k", "casual"], "resale_potential": "high",
              "search_query": "barrel leg light wash jeans women", "price_estimate_usd": 80,
+             "confidence": "high",
              "image_url": "https://n.nordstrommedia.com/it/15963ac9-5f3f-4207-b119-a021e1db52e7.jpeg?h=368&w=240&dpr=2"},
             {"category": "shoes", "name": "Adidas Samba OG White", "color": "white/black",
              "material_guess": "leather", "brand_vibe": "Adidas",
              "style_tags": ["retro", "sporty", "iconic"], "resale_potential": "high",
              "search_query": "adidas samba og white black sneakers", "price_estimate_usd": 120,
+             "confidence": "medium",
              "image_url": "https://assets.adidas.com/images/w_1880,f_auto,q_auto/c68f09963c6e47dcad68ac010115a208_9366/Stan_Smith_Shoes_White_FX5500_01_standard.jpg"},
         ],
         "overall_style": "Y2K Minimal",
@@ -395,16 +411,19 @@ _DEMO_OUTFITS = [
              "material_guess": "wool blend", "brand_vibe": "& Other Stories",
              "style_tags": ["preppy", "minimal", "smart-casual"], "resale_potential": "high",
              "search_query": "oversized camel blazer women wool", "price_estimate_usd": 150,
+             "confidence": "high",
              "image_url": "https://static.zara.net/assets/public/9885/e922/a0be46659e56/661cb395b150/08769916400-p/08769916400-p.jpg"},
             {"category": "bottoms", "name": "Straight-Leg Black Trousers", "color": "black",
              "material_guess": "polyester blend", "brand_vibe": "COS",
              "style_tags": ["minimal", "office", "classic"], "resale_potential": "medium",
              "search_query": "straight leg black tailored trousers women", "price_estimate_usd": 70,
+             "confidence": "high",
              "image_url": "https://n.nordstrommedia.com/it/742c046e-df5e-4844-95b4-61e1096c97ed.jpeg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=780&h=1196"},
             {"category": "shoes", "name": "Pointed-Toe Leather Mules", "color": "black",
              "material_guess": "leather", "brand_vibe": "Mango",
              "style_tags": ["minimal", "elegant"], "resale_potential": "medium",
              "search_query": "pointed toe black leather mules women", "price_estimate_usd": 60,
+             "confidence": "high",
              "image_url": "https://cdn.shopify.com/s/files/1/0610/1440/9428/files/10MM18-VENICE-20118-CASTAN.jpg"},
         ],
         "overall_style": "Minimal Chic",
@@ -419,21 +438,25 @@ _DEMO_OUTFITS = [
              "material_guess": "cotton", "brand_vibe": "vintage",
              "style_tags": ["streetwear", "vintage", "grunge"], "resale_potential": "high",
              "search_query": "vintage black band graphic tee oversized", "price_estimate_usd": 35,
+             "confidence": "medium",
              "image_url": "https://images.urbndata.com/is/image/UrbanOutfitters/89759898_049_b?$xlarge$&fit=constrain&qlt=80&wid=614"},
             {"category": "bottoms", "name": "Baggy Cargo Pants Khaki", "color": "khaki",
              "material_guess": "cotton twill", "brand_vibe": "Carhartt",
              "style_tags": ["streetwear", "utility", "y2k"], "resale_potential": "high",
              "search_query": "baggy cargo pants khaki women utility", "price_estimate_usd": 90,
+             "confidence": "high",
              "image_url": "https://is4.revolveassets.com/images/p4/n/uv/RTAR-WJ45_V1.jpg"},
             {"category": "shoes", "name": "New Balance 550 White Cream", "color": "white/cream",
              "material_guess": "leather", "brand_vibe": "New Balance",
              "style_tags": ["retro", "sporty", "streetwear"], "resale_potential": "high",
              "search_query": "new balance 550 white cream sneakers", "price_estimate_usd": 110,
+             "confidence": "high",
              "image_url": "https://assets.adidas.com/images/w_1880,f_auto,q_auto/7f58eea8063344908fafb96773b13a1e_9366/Superstar_Shoes_White_EG4958_01_standard.jpg"},
             {"category": "bag", "name": "Mini Crossbody Black Canvas", "color": "black",
              "material_guess": "canvas", "brand_vibe": "streetwear",
              "style_tags": ["streetwear", "everyday"], "resale_potential": "low",
              "search_query": "mini black canvas crossbody bag streetwear", "price_estimate_usd": 30,
+             "confidence": "low",
              "image_url": "https://shop.mango.com/assets/rcs/pics/static/T8/fotos/S/87046714_CU_B.jpg?ts=1714729382668"},
         ],
         "overall_style": "Urban Streetwear",
@@ -1415,6 +1438,50 @@ def init_db() -> None:
         """)
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications (user_id)"
+        )
+        # Product-recognition pipeline: scan (AI) -> human confirm -> persisted closet.
+        # closet_items only ever gets a row via POST /api/closet/confirm — never
+        # directly from /api/analyze — so nothing lands in a user's closet without a
+        # human-in-the-loop accept (BE-006/BE-IDEMPOTENT pattern below).
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS closet_items (
+                id                  TEXT PRIMARY KEY,
+                user_key            TEXT NOT NULL,
+                name                TEXT NOT NULL,
+                category            TEXT DEFAULT '',
+                color               TEXT DEFAULT '',
+                brand               TEXT DEFAULT '',
+                search_query        TEXT DEFAULT '',
+                price_estimate_usd  INTEGER DEFAULT 0,
+                image_url           TEXT DEFAULT '',
+                confidence          TEXT DEFAULT '',
+                source              TEXT DEFAULT 'scan',
+                source_url          TEXT DEFAULT '',
+                ai_original         TEXT DEFAULT '',
+                client_ref          TEXT DEFAULT '',
+                created_at          TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_closet_items_user_key ON closet_items (user_key)"
+        )
+        # Learning signal: every AI guess vs. the user's confirmed/corrected value,
+        # plus outright rejections. Not read back by any endpoint yet (append-only
+        # ledger) — future cycle can mine this to improve prompt/model accuracy.
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS scan_corrections (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_key   TEXT NOT NULL,
+                item_id    TEXT DEFAULT '',
+                field      TEXT NOT NULL,
+                ai_value   TEXT DEFAULT '',
+                user_value TEXT DEFAULT '',
+                client_ref TEXT DEFAULT '',
+                created_at TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_scan_corrections_user_key ON scan_corrections (user_key)"
         )
         conn.commit()
     logger.info("DB init complete: %s", DB_PATH)
@@ -3176,6 +3243,217 @@ async def get_wishlist_status(request: Request, item_ids: str = ""):
     counts_map = {iid: count_map.get(iid, 0) for iid in ids}
 
     return {"saved": saved_map, "counts": counts_map}
+
+
+# ---------------------------------------------------------------------------
+# Closet — persistent scan -> human-confirm -> closet pipeline.
+# POST /api/closet/confirm · GET /api/closet
+# The AI scan (/api/analyze) is a GUESS; nothing lands in a user's closet until
+# a human explicitly accepts (or corrects) it here. Every accept/correct/reject
+# is also recorded as a learning signal in scan_corrections (BE-006/BE-IDEMPOTENT).
+# ---------------------------------------------------------------------------
+
+_CLOSET_CORRECTION_FIELDS = (
+    "name", "category", "color", "brand", "search_query", "price_estimate_usd",
+)
+
+
+class ClosetItemFinal(BaseModel):
+    """What the user confirmed/corrected — may equal the AI guess unchanged."""
+    name: str = ""
+    category: str = ""
+    color: str = ""
+    brand: str = ""
+    search_query: str = ""
+    price_estimate_usd: int = 0
+    image_url: str = ""
+    confidence: str = ""
+    source_url: str = ""
+
+
+class ClosetConfirmItem(BaseModel):
+    accepted: bool = True
+    ai: dict = {}
+    final: ClosetItemFinal = ClosetItemFinal()
+
+
+class ClosetConfirmRequest(BaseModel):
+    user_id: str = ""
+    client_ref: str = ""
+    items: list[ClosetConfirmItem] = []
+
+
+def _closet_item_row_to_dict(row: sqlite3.Row) -> dict:
+    """Lean public shape — no ai_original (keep the response small; that field
+    is for the learning pipeline, not the client)."""
+    return {
+        "id": row["id"],
+        "name": row["name"],
+        "category": row["category"],
+        "color": row["color"],
+        "brand": row["brand"],
+        "search_query": row["search_query"],
+        "price_estimate_usd": row["price_estimate_usd"],
+        "image_url": row["image_url"],
+        "confidence": row["confidence"],
+        "source": row["source"],
+        "source_url": row["source_url"],
+        "created_at": row["created_at"],
+    }
+
+
+@app.post("/api/closet/confirm")
+async def confirm_closet_items(body: ClosetConfirmRequest, request: Request):
+    """Human-in-the-loop gate between /api/analyze and the persisted closet.
+
+    For each item: ``accepted=true`` writes a closet_items row (using ``final``,
+    falling back to the AI's ``name`` when the user left it blank) and records a
+    scan_corrections row for every field where ``final`` differs from ``ai`` —
+    the learning signal. ``accepted=false`` writes NO closet row but records a
+    'rejected' correction (the AI saw something that wasn't real).
+
+    Idempotent on (user_key, client_ref): a repeat POST with the same non-empty
+    client_ref returns the already-saved rows with ``deduped: true`` and writes
+    nothing new.
+    """
+    user_key = (body.user_id or "").strip() or (
+        (request.client.host if request.client else None) or "anon"
+    )
+    if not check_rate_limit(user_key, "closet_confirm", 20):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 20 requests/minute.")
+
+    n = len(body.items)
+    if n < 1 or n > 12:
+        raise HTTPException(status_code=400, detail="items must contain between 1 and 12 entries.")
+
+    client_ref = (body.client_ref or "").strip()
+    if client_ref:
+        with _get_db() as db:
+            existing_rows = db.execute(
+                """SELECT * FROM closet_items WHERE user_key = ? AND client_ref = ?
+                   ORDER BY created_at DESC""",
+                (user_key, client_ref),
+            ).fetchall()
+            # A batch that was ALL-rejected writes no closet_items row, so the
+            # dedup check must also look at scan_corrections — otherwise a replay
+            # of an all-rejected batch double-inserts 'rejected' rows and skews
+            # the append-only learning ledger (steve, adversarial review finding).
+            existing_correction = db.execute(
+                "SELECT 1 FROM scan_corrections WHERE user_key = ? AND client_ref = ? LIMIT 1",
+                (user_key, client_ref),
+            ).fetchone()
+        if existing_rows or existing_correction:
+            logger.info("closet confirm dedup hit: user=%s client_ref=%s -> %d rows",
+                        user_key, client_ref, len(existing_rows))
+            return {
+                "saved": [_closet_item_row_to_dict(r) for r in existing_rows],
+                "corrections_recorded": 0,
+                "deduped": True,
+            }
+
+    now = datetime.datetime.utcnow().isoformat()
+    saved_rows: list[dict] = []
+    corrections = 0
+
+    with _get_db() as db:
+        for entry in body.items:
+            ai = entry.ai or {}
+            final = entry.final
+
+            if not entry.accepted:
+                ai_name = str(ai.get("name") or "").strip()
+                db.execute(
+                    """INSERT INTO scan_corrections
+                           (user_key, item_id, field, ai_value, user_value, client_ref, created_at)
+                       VALUES (?,?,?,?,?,?,?)""",
+                    (user_key, "", "rejected", ai_name, "", client_ref, now),
+                )
+                corrections += 1
+                continue
+
+            final_name = (final.name or "").strip()
+            ai_name = str(ai.get("name") or "").strip()
+            name = final_name or ai_name
+            if not name:
+                # Neither AI nor user supplied a name — skip silently rather than 500.
+                logger.warning("closet confirm: skipped item with no name (user=%s)", user_key)
+                continue
+
+            item_id = "ci_" + uuid.uuid4().hex[:12]
+            db.execute(
+                """INSERT INTO closet_items
+                       (id, user_key, name, category, color, brand, search_query,
+                        price_estimate_usd, image_url, confidence, source, source_url,
+                        ai_original, client_ref, created_at)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (item_id, user_key, name, final.category or "", final.color or "",
+                 final.brand or "", final.search_query or "", final.price_estimate_usd or 0,
+                 final.image_url or "", final.confidence or "", "scan", final.source_url or "",
+                 json.dumps(ai), client_ref, now),
+            )
+
+            # Learning signal: diff ai vs final on the tracked fields.
+            for field in _CLOSET_CORRECTION_FIELDS:
+                final_value = getattr(final, field)
+                if field == "name":
+                    final_value = name  # the resolved name (may equal ai_name fallback)
+                ai_value = ai.get(field)
+                ai_str = "" if ai_value is None else str(ai_value)
+                final_str = "" if final_value is None else str(final_value)
+                has_final = final_str not in ("", "0") if field == "price_estimate_usd" else final_str != ""
+                if has_final and final_str != ai_str:
+                    db.execute(
+                        """INSERT INTO scan_corrections
+                               (user_key, item_id, field, ai_value, user_value, client_ref, created_at)
+                           VALUES (?,?,?,?,?,?,?)""",
+                        (user_key, item_id, field, ai_str, final_str, client_ref, now),
+                    )
+                    corrections += 1
+
+            if final.source_url:
+                db.execute(
+                    """INSERT INTO scan_corrections
+                           (user_key, item_id, field, ai_value, user_value, client_ref, created_at)
+                       VALUES (?,?,?,?,?,?,?)""",
+                    (user_key, item_id, "source_url", "", final.source_url, client_ref, now),
+                )
+                corrections += 1
+
+            row = db.execute(
+                "SELECT * FROM closet_items WHERE id = ?", (item_id,)
+            ).fetchone()
+            saved_rows.append(_closet_item_row_to_dict(row))
+
+        db.commit()
+
+    logger.info("closet confirm: user=%s saved=%d corrections=%d",
+                user_key, len(saved_rows), corrections)
+    return {"saved": saved_rows, "corrections_recorded": corrections, "deduped": False}
+
+
+@app.get("/api/closet")
+async def get_closet(request: Request, user_id: str = "", limit: int = 200):
+    """Return the caller's persisted closet, newest-first.
+
+    ``ai_original`` is intentionally omitted (keeps the response lean) — it's
+    the raw AI guess kept for the learning pipeline, not for display.
+    """
+    caller_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(caller_key, "closet_list", 60):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 60 requests/minute.")
+
+    user_key = (user_id or "").strip() or caller_key
+    capped_limit = max(1, min(limit or 200, 500))
+
+    with _get_db() as db:
+        rows = db.execute(
+            """SELECT * FROM closet_items WHERE user_key = ?
+               ORDER BY created_at DESC, rowid DESC LIMIT ?""",
+            (user_key, capped_limit),
+        ).fetchall()
+
+    items = [_closet_item_row_to_dict(r) for r in rows]
+    return {"items": items, "count": len(items)}
 
 
 # ---------------------------------------------------------------------------
