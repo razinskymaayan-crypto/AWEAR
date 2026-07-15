@@ -800,6 +800,204 @@ def test_closet_user_isolation_a_not_visible_to_b(client):
 
 
 # --------------------------------------------------------------------------- #
+# Scan-learning loop: /api/analyze must USE scan_corrections, not just let
+# POST /api/closet/confirm write to it. _corrections_context() builds a compact
+# per-user prompt block from past corrections/rejections; /api/analyze injects
+# it into the LIVE Claude call only and reports how many signals it used via
+# response["corrections_used"]. See app.py _corrections_context() + analyze().
+# --------------------------------------------------------------------------- #
+def _mock_parsed_outfit():
+    """A minimal but schema-valid OutfitAnalysis-shaped object, structured the
+    way response.parsed_output.model_dump() would return it on the live path."""
+    class _Parsed:
+        def model_dump(self):
+            return {
+                "items": [{
+                    "category": "top", "name": "White Tee", "color": "white",
+                    "material_guess": "cotton", "brand_vibe": "Zara",
+                    "style_tags": ["minimal"], "resale_potential": "medium",
+                    "search_query": "white tee women", "price_estimate_usd": 25,
+                    "confidence": "high",
+                }],
+                "overall_style": "Minimal",
+                "occasion": "Everyday",
+                "trend_score": 80,
+                "summary": "Clean look.",
+                "stylist_tip": "Add a jacket.",
+            }
+    return _Parsed()
+
+
+def _mock_live_parse(monkeypatch, captured: dict):
+    """Monkeypatch appmod.client.messages.parse to succeed and capture kwargs
+    (esp. the `messages` content) so tests can assert on what was sent."""
+    def _fake_parse(**kwargs):
+        captured.update(kwargs)
+
+        class _Resp:
+            parsed_output = _mock_parsed_outfit()
+        return _Resp()
+
+    monkeypatch.setattr(appmod.client.messages, "parse", _fake_parse)
+
+
+def _analyze_files():
+    return {"photo": ("test.jpg", io.BytesIO(_tiny_jpeg_bytes()), "image/jpeg")}
+
+
+def _confirm_correction(user_id, client_ref, ai_name, ai_brand, final_name, final_brand):
+    """Seed a learning signal through the REAL endpoint (not a direct DB write) —
+    exercises the exact same path a real user correction takes."""
+    body = {
+        "user_id": user_id,
+        "client_ref": client_ref,
+        "items": [{
+            "accepted": True,
+            "ai": {"name": ai_name, "category": "top", "color": "white",
+                   "brand": ai_brand, "search_query": "x", "price_estimate_usd": 25},
+            "final": {"name": final_name, "category": "top", "color": "white",
+                      "brand": final_brand, "search_query": "x", "price_estimate_usd": 25,
+                      "confidence": "high"},
+        }],
+    }
+    return body
+
+
+def test_analyze_live_uses_past_corrections(client, monkeypatch):
+    # Seed a real correction via POST /api/closet/confirm (name + brand differ
+    # from the AI guess) for user_learn_1, then scan again with the SAME user_id
+    # -> the corrected brand must appear in what we send Claude, and the response
+    # must report at least one signal used. Fails on pre-change code: no user_id
+    # param existed, no injected block, and "corrections_used" is not a key at all.
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key-for-corrections-live")
+    r = client.post("/api/closet/confirm", json=_confirm_correction(
+        "user_learn_1", "learn-ref-1", "White Tee", "Zara", "Ribbed Crop Top", "Reformation",
+    ))
+    assert r.status_code == 200
+    assert r.json()["corrections_recorded"] >= 1
+
+    captured: dict = {}
+    _mock_live_parse(monkeypatch, captured)
+
+    r2 = client.post("/api/analyze", files=_analyze_files(), params={"user_id": "user_learn_1"})
+    assert r2.status_code == 200
+    body = r2.json()
+    assert body["mode"] == "live"
+    assert body["corrections_used"] >= 1
+
+    content_blocks = captured["messages"][0]["content"]
+    text_blocks = [b["text"] for b in content_blocks if b.get("type") == "text"]
+    joined = "\n".join(text_blocks)
+    assert "Reformation" in joined
+    assert "Ribbed Crop Top" in joined
+    assert "Personal context from this user's correction history" in joined
+
+
+def test_analyze_live_fresh_user_no_context_injected(client, monkeypatch):
+    # A brand-new user_id with zero closet/correction history must NOT get the
+    # personal-context prefix, and corrections_used must be exactly 0.
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key-for-fresh-user")
+    captured: dict = {}
+    _mock_live_parse(monkeypatch, captured)
+
+    r = client.post("/api/analyze", files=_analyze_files(), params={"user_id": "user_never_scanned_before"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["mode"] == "live"
+    assert body["corrections_used"] == 0
+
+    content_blocks = captured["messages"][0]["content"]
+    text_blocks = [b["text"] for b in content_blocks if b.get("type") == "text"]
+    joined = "\n".join(text_blocks)
+    assert "Personal context from this user's correction history" not in joined
+
+
+def test_analyze_corrections_context_capped_at_1500_chars(client, monkeypatch):
+    # Seed many DISTINCT corrections for one user (distinct client_refs so none
+    # dedupe) — the injected block must never exceed the hard cap, and must not
+    # cut off mid-line (every included line, joined back, stays inside the cap).
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key-for-cap")
+    user_id = "user_learn_cap"
+    for i in range(40):
+        # closet_confirm is rate-limited to 20/min per user_key (BE-006) — clear
+        # the limiter mid-seed so this test can seed volume beyond that budget
+        # without tripping 429s; the seeding VOLUME is what's under test here,
+        # not the closet_confirm rate-limit behavior (covered elsewhere).
+        if i % 15 == 0:
+            appmod._rate_store.clear()
+        body = _confirm_correction(
+            user_id, f"cap-ref-{i}",
+            f"AI Guess Item Number {i} With Some Extra Descriptive Words",
+            f"AiBrand{i}",
+            f"User Corrected Item Number {i} With Even More Extra Descriptive Words",
+            f"UserBrand{i}",
+        )
+        resp = client.post("/api/closet/confirm", json=body)
+        assert resp.status_code == 200
+
+    captured: dict = {}
+    _mock_live_parse(monkeypatch, captured)
+    r = client.post("/api/analyze", files=_analyze_files(), params={"user_id": user_id})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["mode"] == "live"
+    assert body["corrections_used"] > 0
+
+    content_blocks = captured["messages"][0]["content"]
+    injected = next(b["text"] for b in content_blocks
+                     if b.get("type") == "text" and "Personal context" in b["text"])
+    assert len(injected) <= 1500
+
+
+def test_analyze_demo_path_corrections_used_zero(client, monkeypatch):
+    # Even with seeded corrections, if the live call fails (falls to demo),
+    # corrections_used must be 0 — demo never actually used them.
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key-for-demo-fallback")
+    client.post("/api/closet/confirm", json=_confirm_correction(
+        "user_learn_demo", "learn-demo-ref-1", "White Tee", "Zara", "Ribbed Crop Top", "Reformation",
+    ))
+
+    def _raise(**kwargs):
+        raise RuntimeError("simulated parse failure")
+
+    monkeypatch.setattr(appmod.client.messages, "parse", _raise)
+
+    r = client.post("/api/analyze", files=_analyze_files(), params={"user_id": "user_learn_demo"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["mode"] == "demo"
+    assert body["corrections_used"] == 0
+    assert len(body["items"]) > 0
+
+
+def test_analyze_live_mentions_rejected_item(client, monkeypatch):
+    # A past rejection (accepted=false) must show up in the injected block as an
+    # explicit "do not over-detect" instruction referencing the AI's guess name.
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key-for-rejection")
+    body = {
+        "user_id": "user_learn_reject",
+        "client_ref": "learn-reject-ref-1",
+        "items": [{"accepted": False, "ai": {"name": "Invisible Fedora Hat"}, "final": {}}],
+    }
+    r = client.post("/api/closet/confirm", json=body)
+    assert r.status_code == 200
+    assert r.json()["corrections_recorded"] == 1
+
+    captured: dict = {}
+    _mock_live_parse(monkeypatch, captured)
+
+    r2 = client.post("/api/analyze", files=_analyze_files(), params={"user_id": "user_learn_reject"})
+    assert r2.status_code == 200
+    assert r2.json()["corrections_used"] >= 1
+
+    content_blocks = captured["messages"][0]["content"]
+    text_blocks = [b["text"] for b in content_blocks if b.get("type") == "text"]
+    joined = "\n".join(text_blocks)
+    assert "Invisible Fedora Hat" in joined
+    assert "NOT in the" in joined  # rejection phrasing — "do not over-detect"
+
+
+# --------------------------------------------------------------------------- #
 # Rate limiting (kept LAST — it deliberately exhausts the /api/orders budget)
 # --------------------------------------------------------------------------- #
 def test_orders_rate_limit_429(client):

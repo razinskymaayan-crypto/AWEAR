@@ -20,15 +20,8 @@
 2. On confirm → `POST /api/closet/confirm` `{user_id, client_ref:<stable per scan>, items:[{accepted, ai:<original analyze item>, final:<edited fields>}]}`. Keep localStorage `awear_wardrobe` as the offline/demo cache but hydrate from `GET /api/closet` on load so the closet survives devices/restarts.
 3. Verify: check-render + gabbana 8+ on the confirm screen + screenshot.
 
-## Follow-up (future cycle, noted by sam)
-`scan_corrections` is write-only so far — needs a consumer (analytics / prompt-tuning job) to make the signal actionable.
+## Follow-up — CLOSED 2026-07-15 (steve run, sam craft)
+`scan_corrections` was write-only; now consumed. `/api/analyze` gained optional `?user_id=` (BE-006, wallet-style IP fallback; rate limit stays IP-keyed) and injects a per-user learning block built by `_corrections_context()` (app.py ~L478) into the LIVE Claude call: confirmed closet brands + per-field "AI said X → user corrected to Y" lines + rejection warnings, deduped, whole-line-truncated at a 1500-char hard cap, fail-open on any DB error (a context failure never breaks a scan). Response reports `corrections_used` (0 on the demo path — demo never used them). 5 new pytests (58/58 green): injection proven via captured parse kwargs, fresh-user no-injection, cap, demo honesty, rejection mention. SYSTEM_PROMPT untouched; additive only.
+Remaining follow-ups: (a) tune ROW_LIMIT=60 / cap=1500 if real usage shows drift; (b) frontend must pass `?user_id=` on scan (mark lane — same handoff as the confirm screen above); (c) longer-term: aggregate corrections into eval sets for prompt tuning.
 
-## PENDING BOOKKEEPING (all .claude/** writes were permission-blocked this run — engine/next agent: apply verbatim, then delete this section)
-`.claude/agents/activity_log.md` row:
-| 2026-07-14 | sam (steve lane) | auto/steve / app.py + tests/ | done | Founder ★★★ backend slice: persistent scan→closet + HITL. ClothingItem.confidence (high/med/low) + never-invent prompt rules; SQLite closet_items (ai_original snapshot, source_url) + scan_corrections learning ledger (per-field ai-vs-user diffs, rejections, client_ref replay-dedup incl. rejected-only batches — adversarial-review finding fixed); POST /api/closet/confirm (HITL gate, BE-006, idempotent, 20/min) + GET /api/closet (60/min, newest-first). 11 new pytests, 53/53 green, py_compile+check-render OK. UI half handed to mark lane — see notes/scan-closet-hitl-backend.md. |
-
-`.claude/agents/contributions/2026-07-14.md` rows:
-| 08:55 | sam | steve | ~211k | Implemented persistent closet_items + scan_corrections tables, POST /api/closet/confirm + GET /api/closet, confidence in vision contract, 11 pytests (2 dispatches incl. dedup-gap fix) |
-| 08:45 | claude (reviewer) | steve | ~49k | Fresh-context adversarial diff review: APPROVE, 3 LOW findings (1 fixed: rejected-only client_ref replay skewed scan_corrections; 2 deferred+documented) |
-
-INBOX ★★★ item annotation (backend half done; UI half = mark): see HANDOFF section above.
+(2026-07-14 pending bookkeeping applied 2026-07-15 by steve run — activity_log row, contributions rows, INBOX annotation all landed.)

@@ -476,6 +476,103 @@ def _demo_analysis() -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Closing the scan-learning loop (founder ★★★ directive item 3): scan_corrections
+# has been write-only since it was introduced (POST /api/closet/confirm records
+# every AI-guess-vs-user-correction diff, and every outright rejection) — nothing
+# ever read it back. This helper turns that ledger into a compact per-user prompt
+# block that /api/analyze injects into the LIVE Claude call only, so repeat scans
+# actually improve for a user who has corrected the AI before.
+# ---------------------------------------------------------------------------
+
+_CORRECTIONS_CONTEXT_MAX_CHARS = 1500   # hard cap — keep the extra prompt block cheap
+_CORRECTIONS_CONTEXT_ROW_LIMIT = 60     # "recent" window — newest-first
+
+
+def _corrections_context(user_key: str) -> tuple[str, int]:
+    """Build a compact personal-context block from this user's learning signals.
+
+    Reads (a) distinct non-empty brands from the user's confirmed closet_items
+    and (b) their most recent scan_corrections rows (field diffs + outright
+    'rejected' identifications), dedupes identical lines, and renders a short
+    text block for injection into the LIVE /api/analyze call only — this is a
+    prompt-time nudge, not a model retrain.
+
+    Returns ("", 0) when the user has no signals yet, and ALWAYS returns ("", 0)
+    on any DB/read failure rather than raising — a context-load problem must
+    never break a scan (same fail-open spirit as the rest of /api/analyze).
+    The int is the number of distinct signal lines actually included, so the
+    caller can report it honestly as ``corrections_used``.
+    """
+    if not user_key:
+        return "", 0
+    try:
+        with _get_db() as db:
+            brand_rows = db.execute(
+                """SELECT DISTINCT brand FROM closet_items
+                   WHERE user_key = ? AND brand != '' ORDER BY created_at DESC""",
+                (user_key,),
+            ).fetchall()
+            correction_rows = db.execute(
+                """SELECT field, ai_value, user_value FROM scan_corrections
+                   WHERE user_key = ? ORDER BY created_at DESC LIMIT ?""",
+                (user_key, _CORRECTIONS_CONTEXT_ROW_LIMIT),
+            ).fetchall()
+    except Exception:  # noqa: BLE001 — never let a context-load failure break a scan
+        logger.warning("_corrections_context: DB read failed for user_key=%s", user_key, exc_info=True)
+        return "", 0
+
+    lines: list[str] = []
+    seen: set[str] = set()
+
+    brands = [r["brand"] for r in brand_rows if r["brand"]]
+    if brands:
+        line = "User's confirmed closet brands: " + ", ".join(dict.fromkeys(brands)) + "."
+        if line not in seen:
+            seen.add(line)
+            lines.append(line)
+
+    for row in correction_rows:
+        field, ai_value, user_value = row["field"], row["ai_value"] or "", row["user_value"] or ""
+        if field == "rejected":
+            line = (
+                f"AI previously identified '{ai_value}' and the user said it was NOT in the "
+                "photo — do not over-detect similar items."
+            )
+        else:
+            if not user_value or user_value == ai_value:
+                continue
+            line = f"Past correction — {field}: AI said '{ai_value}' -> user corrected to '{user_value}'."
+        if line in seen:
+            continue
+        seen.add(line)
+        lines.append(line)
+
+    if not lines:
+        return "", 0
+
+    header = (
+        "Personal context from this user's correction history — prefer these "
+        "brands/names when they visually match, and avoid repeating rejected "
+        "identifications:"
+    )
+
+    # Hard-cap at _CORRECTIONS_CONTEXT_MAX_CHARS, truncating whole lines only
+    # (never mid-line — a half-sentence is worse than a shorter, coherent block).
+    included: list[str] = []
+    total_len = len(header)
+    for line in lines:
+        candidate_len = total_len + 1 + len(line)
+        if candidate_len > _CORRECTIONS_CONTEXT_MAX_CHARS:
+            break
+        included.append(line)
+        total_len = candidate_len
+
+    if not included:
+        return "", 0
+
+    block = header + "\n" + "\n".join(included)
+    return block, len(included)
+
 
 def _downscale_to_base64(raw: bytes) -> tuple[str, str]:
     """Resize the uploaded image and return (base64_data, media_type)."""
@@ -489,11 +586,18 @@ def _downscale_to_base64(raw: bytes) -> tuple[str, str]:
 
 
 @app.post("/api/analyze")
-async def analyze(request: Request, photo: UploadFile):
+async def analyze(request: Request, photo: UploadFile, user_id: str = ""):
     ip = request.client.host if request.client else "unknown"
     if not check_rate_limit(ip, "analyze", limit=5):
         logger.warning("Rate limit exceeded: analyze from %s", ip)
         raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
+
+    # BE-006 identity pattern (same shape as GET /api/wallet): an explicit
+    # user_id wins, else fall back to the caller's IP. This is ONLY used to look
+    # up the personal-context block below — rate limiting stays IP-keyed exactly
+    # as before (an anonymous scanner shouldn't get a cheaper/pricier limit just
+    # by passing a user_id).
+    user_key = user_id.strip() or ip
 
     raw = await photo.read()
     if not raw:
@@ -504,9 +608,32 @@ async def analyze(request: Request, photo: UploadFile):
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=400, detail=f"Bad image: {exc}") from exc
 
+    # Close the scan-learning loop (founder ★★★ #3): pull this user's past
+    # corrections/rejections and, if any exist, hand them to the LIVE call as
+    # extra context so repeat scans stop repeating mistakes the user already
+    # fixed. Never touches SYSTEM_PROMPT — purely an additional per-request block.
+    corrections_block, corrections_used = _corrections_context(user_key)
+
     # Try live AI recognition; on any failure (e.g. invalid key) fall back to a
     # realistic demo so the app NEVER breaks during a live pitch.
     try:
+        user_content = [
+            {
+                "type": "image",
+                "source": {
+                    "type": "base64",
+                    "media_type": media_type,
+                    "data": b64,
+                },
+            },
+            {
+                "type": "text",
+                "text": "Analyze this outfit, break it into wardrobe items, and make each shoppable.",
+            },
+        ]
+        if corrections_block:
+            user_content.append({"type": "text", "text": corrections_block})
+
         parse_args = dict(
             model=MODEL,
             max_tokens=4000,
@@ -514,20 +641,7 @@ async def analyze(request: Request, photo: UploadFile):
             messages=[
                 {
                     "role": "user",
-                    "content": [
-                        {
-                            "type": "image",
-                            "source": {
-                                "type": "base64",
-                                "media_type": media_type,
-                                "data": b64,
-                            },
-                        },
-                        {
-                            "type": "text",
-                            "text": "Analyze this outfit, break it into wardrobe items, and make each shoppable.",
-                        },
-                    ],
+                    "content": user_content,
                 }
             ],
             output_format=OutfitAnalysis,
@@ -548,6 +662,7 @@ async def analyze(request: Request, photo: UploadFile):
         result = response.parsed_output.model_dump()
         result["mode"] = "live"
         result["demo_reason"] = None
+        result["corrections_used"] = corrections_used
     except Exception as e:  # noqa: BLE001 — auth/api/parse failure -> graceful demo fallback
         # Classify the failure into a bounded enum so the founder can SEE whether the
         # real scan fell to demo because no key is configured vs. a live call failure
@@ -569,6 +684,9 @@ async def analyze(request: Request, photo: UploadFile):
         result = _demo_analysis()
         result["mode"] = "demo"
         result["demo_reason"] = demo_reason
+        # Demo never sees the user's real corrections (it's a canned outfit, not a
+        # real scan) — stay honest here the same way mode/demo_reason already do.
+        result["corrections_used"] = 0
 
     # Record the last scan outcome for the diagnostics endpoint (GET /api/scan-health).
     _last_scan["mode"] = result["mode"]
