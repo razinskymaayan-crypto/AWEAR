@@ -35,5 +35,10 @@ The deck claimed contribution ~$11/user/month, LTV/CAC >4x today, M18 $800K ARR 
 - **Options**: (a) keep the old headline numbers; (b) honest framing — $2.98 net/attributed order, ~80% GM, staged 4-phase engine, M12 $60-160K ARR base / $800K upside, D30 ≥10%.
 - **Recommendation & default applied**: (b) — applied to `docs/PITCH_DECK.md` + `docs/BUSINESS_PLAN.md`, both flagged in-doc as pending your override. Sub-decision bundled: AWEAR Pro $5.99/mo shown as Phase 2 marked "⚠️ pending founder approval". MASTER_PLAN חלק ז' still has old numbers (out of lane) — sync after your call.
 
+### 7. Pitch-deck Slide 3 moat edits — analysis done, deck deliberately NOT touched (2026-07-15, ayalon/bernard)
+Strategy riddle 06 (`.claude/master/strategy/06-moat-differentiation.md`) is now written — the adversarially-tested moat thesis behind Slide 3. It flags 4 deck tensions: (1) "Moat #2 — agentic company" should be relabeled "Advantage #2" (execution advantage, not a moat — a sharp investor will say it first); (2) speaker-note phrase "data you can't scrape or buy" reads as an aggregate-dataset claim that dies at small N — replace with "the moat grows with each user's tenure, not total user count"; (3) positive update: the correction-ledger flywheel is now shipped server-side (2026-07-15) — Slide 3 may honestly say "runs in code today"; (4) add a "Whering + Google money" row to the risks appendix (they raised $7M from eBay Ventures + Google AI Futures on 2026-07-07 at 10M users).
+- **Options**: (a) approve all 4 edits (~1 hour, ayalon lane applies next run); (b) approve subset; (c) leave deck as-is.
+- **Recommendation**: (a). **Default applied**: deck left untouched — Slide 3 was edited 3 runs in a row (oscillation guard) and the doc itself marks these as needing your call. Also decide riddle-06 rec: name Whering + its raise proactively in the meeting (recommended: yes).
+
 ## Answered
 (none yet)
