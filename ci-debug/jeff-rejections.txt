@@ -4,3 +4,4 @@
 2026-07-12T13:31:02Z ayalon: REJECT: out-of-lane files: app.py tests/test_app.py 
 2026-07-12T19:32:18Z ayalon: REJECT: out-of-lane files: awear-tokens.json static/app.css static/app.js static/tokens.css 
 2026-07-13T03:10:20Z ayalon: REJECT: out-of-lane files: awear-tokens.json static/app.css static/awear-tokens.json static/tokens.css 
+2026-07-16T08:28:17Z steve: REJECT: Lane-ownership violation — steve lane owns app.py/schema.sql only, but every changed file here (static/data/products.json, scripts/data_integrity_check.py, scripts/check_image_urls.py) sits in oren's domain (static/data + scripts); zero steve-owned files touched.
