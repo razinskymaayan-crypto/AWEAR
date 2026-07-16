@@ -40,5 +40,10 @@ Strategy riddle 06 (`.claude/master/strategy/06-moat-differentiation.md`) is now
 - **Options**: (a) approve all 4 edits (~1 hour, ayalon lane applies next run); (b) approve subset; (c) leave deck as-is.
 - **Recommendation**: (a). **Default applied**: deck left untouched — Slide 3 was edited 3 runs in a row (oscillation guard) and the doc itself marks these as needing your call. Also decide riddle-06 rec: name Whering + its raise proactively in the meeting (recommended: yes).
 
+### 8. Company structure + raise instrument — riddle 08 written, 6 decisions before the meeting (2026-07-16, ayalon/bernard)
+Strategy riddle 08 (`.claude/master/strategy/08-company-legal-fundraising.md`) is now written — incorporation, instrument, tax hygiene, and the raise narrative behind the $70-80K ask, adversarially tested and web-verified (2026 facts cited inline). Locked decisions (ask size, riddle-05 numbers, deck) untouched.
+- **Decisions**: (1) incorporation — Israeli Ltd. now, Delaware flip only on a US-lead trigger; (2) instrument — post-money SAFE, $3M cap (negotiation range $2.5-4M), no discount, MFN, 36-month date-conversion fallback, drafted to the ITA SAFE safe-harbor; (3) book a startup lawyer + accountant session THIS WEEK (registration, founders' agreement, IP assignment, SAFE draft) — human-only, no default possible; (4) proactively offer the uncle an accountant check on the Angels-Law up-to-~33% credit (expires 2026-12-31; may require shares → the one scenario reviving a minimal priced round); (5) reserve a 10% ESOP pool in the charter at incorporation; (6) IIA/Tnufa grants — recommendation: reject (royalties + IP-in-Israel lock that taxes a future flip).
+- **Recommendation & default applied**: all six as stated above are the narrative defaults in the riddle doc; nothing signed or filed — (3) cannot be defaulted and blocks the rest. Real lawyer/accountant review required before any signature.
+
 ## Answered
 (none yet)

@@ -62,6 +62,7 @@ The autopilot changes `[UNRESOLVED]` → `[FIXED]` with a one-line note once han
 ```
 
 ## [UNRESOLVED — ROOT-CAUSED, PATCH READY, NEEDS FOUNDER APPLY] REPEAT-FAILURE: ayalon(ownership) — see ci-debug/jeff-rejections.txt (2026-07-13T03:10:30Z)
+> Re-checked 2026-07-16 (ayalon run): grep -c 'BASE=' on origin/main jeff-merge.yml = 0 at c82b16a — patch STILL NOT applied. Not re-pinging (3 pings stand; NEEDS_YOU line stands); reminder folded into this run's TG report. Next agent: same check, do not re-analyze.
 > Re-checked 2026-07-15 (steve run): grep -c 'BASE=' on origin/main jeff-merge.yml = 0 — patch STILL NOT applied. Also verified GATE 0 DENY for steve includes .github/ (lane cannot land it). NOT re-pinging (founder pinged 3x; NEEDS_YOU line stands). Next agent: same check, do not re-analyze.
 > Re-checked 2026-07-14 later (ayalon run): grep -c 'BASE=' on origin/main jeff-merge.yml = 0 at 1ce951a — patch STILL NOT applied. Founder already re-pinged twice today; not pinging again to avoid spam (NEEDS_YOU line stands). Next agent: same check, do not re-analyze.
 > Re-checked 2026-07-14 (mark run): grep -c 'BASE=' on origin/main jeff-merge.yml = 0 at 2a009b0 — patch STILL NOT applied. Founder re-pinged via Telegram (2nd re-ping). Next agent: same check, do not re-analyze.

@@ -22,8 +22,8 @@
 | 05 | כלכלת יחידה ורווחיות (CAC/LTV) | Tobi | [05-unit-economics.md](05-unit-economics.md) | סבב 1 — Last updated: 2026-07-06 (Tobi) |
 | 06 | בידול וחפיר — למה אנחנו, ומה מגן | Bernard | [06-moat-differentiation.md](06-moat-differentiation.md) | סבב 1 — Last updated: 2026-07-15 (Bernard) — "Correction Ledger" thesis; 4 deck edits await Carmel (NEEDS_DECISION #7) |
 | 07 | Retention והרגל — אפליקציה לשנים | Anna | 07-retention-habit.md | **טרם נכתב** — ייווצר ע"י הריצה האוטונומית היומית |
-| 08 | מבנה חברה, משפטי, מיסוי, נרטיב גיוס | Bernard | 08-company-legal-fundraising.md | **טרם נכתב** — ייווצר ע"י הריצה האוטונומית היומית |
+| 08 | מבנה חברה, משפטי, מיסוי, נרטיב גיוס | Bernard | [08-company-legal-fundraising.md](08-company-legal-fundraising.md) | סבב 1 — Last updated: 2026-07-16 (Bernard) — Israeli Ltd. now + post-money SAFE $3M cap; 6 founder decisions await Carmel (NEEDS_DECISION #8) |
 
-_Last refreshed: 2026-07-15_
+_Last refreshed: 2026-07-16_
 
 > סבב 1 (הרדוד) של חידות 01-03 נשמר להשוואה — צלילת העומק מחליפה אותו בתשובה חותכת ברמת category-leader.
