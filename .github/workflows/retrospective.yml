@@ -63,7 +63,7 @@ jobs:
              - Org-wide (everyone) → append the next OW-0XX rule to .claude/agents/knowledge/OW.md.
              - Domain/agent-specific → append to the right domain file (ds.md design, be.md backend, sf.md social, mg.md management) — these are the per-team/agent memories.
           4. REPEAT-MISTAKE CHECK: for each failure today, check if it VIOLATED a rule that ALREADY existed. If yes it is a REPEAT — do NOT alert the founder; instead SILENTLY strengthen/clarify that rule (sharper wording, an example, an enforcement hook idea). Count repeats.
-          5. META-LEARNING: if a lesson means the autopilot's own instructions should change, you MAY edit the prompt in .github/workflows/autopilot.yml directly (keep it minimal and safe).
+          5. META-LEARNING: if a lesson means the autopilot's own instructions should change, you MAY edit the prompt in .github/workflows/autopilot-managers.yml directly (keep it minimal and safe).
           6. LOG: append one dated section to .claude/agents/knowledge/LEARNING_LOG.md (new lessons with codes; repeat-mistakes count + which rules; focus/areas improved).
           7. REPORT to Telegram (English, concise): bash scripts/tg.sh text "Learning Report <date>: <N> new lessons (<codes>); <M> repeat-mistakes (<rules or none>); focus: <one line>".
           8. Commit (end message with the Co-Authored-By line). Do NOT push — the workflow pushes for you.
