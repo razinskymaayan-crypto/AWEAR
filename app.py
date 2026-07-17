@@ -938,6 +938,7 @@ class OutfitRequest(BaseModel):
     occasion: str
     wardrobe: list = []
     style_vibes: list = []
+    user_id: str = ""  # optional; pulls confirmed closet items from DB when set
 
 
 def _fallback_outfits(wardrobe: list, occasion: str) -> dict:
@@ -1027,9 +1028,36 @@ async def generate_outfit(request: Request, data: OutfitRequest):
     if not check_rate_limit(ip, "outfit_generate", limit=10):
         logger.warning("Rate limit exceeded: outfit/generate from %s", ip)
         raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
+
+    # Merge confirmed closet items from DB when user_id is provided (BE-004/BE-005).
+    user_key = (data.user_id or "").strip() or ip
+    try:
+        with _get_db() as db:
+            rows = db.execute(
+                """SELECT name, category, color, brand FROM closet_items
+                   WHERE user_key = ? ORDER BY created_at DESC LIMIT 100""",
+                (user_key,),
+            ).fetchall()
+        if rows:
+            db_items = [
+                {"name": r["name"], "category": r["category"],
+                 "color": r["color"], "brand": r["brand"]}
+                for r in rows
+            ]
+            db_keys = {(it["name"], it["category"]) for it in db_items}
+            for client_item in data.wardrobe:
+                key = (client_item.get("name", ""), client_item.get("category", ""))
+                if key not in db_keys:
+                    db_items.append(client_item)
+            wardrobe = db_items
+        else:
+            wardrobe = list(data.wardrobe)
+    except Exception:
+        wardrobe = list(data.wardrobe)
+
     wardrobe_desc = ", ".join(
         f"{it.get('name','')} ({it.get('category','')})"
-        for it in data.wardrobe[:30]
+        for it in wardrobe[:30]
     ) or "empty wardrobe"
 
     system = (
@@ -1066,11 +1094,11 @@ async def generate_outfit(request: Request, data: OutfitRequest):
         # Guard junk/empty model replies: if no usable outfits, fall back so the
         # screen is never empty (missing key, not a list, or empty list).
         if not isinstance(result, dict) or not isinstance(result.get("outfits"), list) or not result["outfits"]:
-            return _fallback_outfits(data.wardrobe, data.occasion)
+            return _fallback_outfits(wardrobe, data.occasion)
         return result
     except Exception as e:
         print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
-        return _fallback_outfits(data.wardrobe, data.occasion)
+        return _fallback_outfits(wardrobe, data.occasion)
 
 
 class DeclutterRequest(BaseModel):

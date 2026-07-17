@@ -1024,3 +1024,55 @@ def test_orders_rate_limit_429(client):
              for _ in range(25)]
     assert 429 in codes                      # limit is 20/min -> must trip
     assert codes.count(200) <= 20
+
+
+# --------------------------------------------------------------------------- #
+# Outfit generate — DB closet merge (OW-014: regression tests shipped with fix)
+# --------------------------------------------------------------------------- #
+def test_outfit_generate_uses_db_closet_items_when_user_id_provided(client):
+    # Confirm a real top item to the DB for this user.
+    uid = "outfit_db_test_user"
+    confirm_body = {
+        "user_id": uid,
+        "client_ref": "outfit-closet-ref-1",
+        "items": [{
+            "accepted": True,
+            "ai":    {"name": "Silk Blouse", "category": "top", "color": "cream",
+                      "brand": "Zara", "search_query": "silk blouse", "price_estimate_usd": 60},
+            "final": {"name": "Silk Blouse", "category": "top", "color": "cream",
+                      "brand": "Zara", "search_query": "silk blouse", "price_estimate_usd": 60,
+                      "confidence": "high"},
+        }],
+    }
+    r = client.post("/api/closet/confirm", json=confirm_body)
+    assert r.status_code == 200
+
+    # Generate outfits with user_id but empty client wardrobe.
+    # Before fix: wardrobe stays empty -> all items _missing=True.
+    # After fix: DB item is merged in -> "Silk Blouse" appears as _missing=False.
+    r2 = client.post("/api/outfit/generate", json={
+        "occasion": "date night",
+        "wardrobe": [],
+        "user_id": uid,
+    })
+    assert r2.status_code == 200
+    outfits = r2.json()["outfits"]
+    assert len(outfits) >= 1
+    all_items = [it for o in outfits for it in o["items"]]
+    real_items = [it for it in all_items if not it.get("_missing", True)]
+    assert len(real_items) >= 1
+    assert any(it["name"] == "Silk Blouse" for it in real_items)
+
+
+def test_outfit_generate_backward_compat_no_user_id(client):
+    # No user_id -> client-sent wardrobe still works unchanged.
+    r = client.post("/api/outfit/generate", json={
+        "occasion": "casual day",
+        "wardrobe": [{"name": "Black Jeans", "category": "bottoms", "color": "black"}],
+    })
+    assert r.status_code == 200
+    outfits = r.json()["outfits"]
+    assert len(outfits) >= 1
+    all_items = [it for o in outfits for it in o["items"]]
+    real_items = [it for it in all_items if not it.get("_missing", True)]
+    assert any(it["name"] == "Black Jeans" for it in real_items)
