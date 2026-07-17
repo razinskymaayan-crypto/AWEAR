@@ -998,6 +998,25 @@ def test_analyze_live_mentions_rejected_item(client, monkeypatch):
 
 
 # --------------------------------------------------------------------------- #
+# WebView cache — the app's own JS/CSS MUST be no-store so an iOS/Capacitor fix
+# actually loads instead of the WebView silently running a stale cached copy.
+# This is a RECURRING bug ("why isn't the simulator updating?") — locked by test.
+# --------------------------------------------------------------------------- #
+def test_app_js_css_are_no_store(client):
+    for asset in ("/static/app.js", "/static/app.css"):
+        r = client.get(asset)
+        assert r.status_code == 200, asset
+        cc = r.headers.get("cache-control", "")
+        assert "no-store" in cc, f"{asset} must be no-store, got: {cc!r}"
+
+
+def test_non_app_static_stays_cacheable(client):
+    # only the app shell is no-store; data/images should NOT be forced no-store
+    r = client.get("/static/data/products.json")
+    assert "no-store" not in r.headers.get("cache-control", "")
+
+
+# --------------------------------------------------------------------------- #
 # Rate limiting (kept LAST — it deliberately exhausts the /api/orders budget)
 # --------------------------------------------------------------------------- #
 def test_orders_rate_limit_429(client):

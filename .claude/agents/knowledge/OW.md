@@ -1,5 +1,5 @@
 # OW — Org-Wide Iron Rules (source of truth)
-> **כל סוכן קורא את זה, ללא יוצא מן הכלל.** קובץ זה הוא ה-single source of truth לכל קודי OW-* (כרגע OW-001..OW-012 — אל תעצור ב-006).
+> **כל סוכן קורא את זה, ללא יוצא מן הכלל.** קובץ זה הוא ה-single source of truth לכל קודי OW-* (כרגע OW-001..OW-014 — אל תעצור ב-006).
 > Domain files (be/ds/mb/sf/mg.md) מפנים לכאן — לא מכפילים.
 
 ---
@@ -93,3 +93,10 @@
 **מקור:** jeff-merge stuck loop (2026-07-12/13) — GATE 0 בדק `diff origin/main...HEAD` בזמן שהלולאה ממזגת lanes בטור לאותו main מקומי. אחרי ש-lane מוקדם מוזג בהצלחה, ה-diff של ה-lane הבא הכיל גם את הקבצים שלו → `ayalon(ownership)` נדחה 3 מחזורים ברצף על `app.py` של steve ועל `static/*` של mark (קורלציה מלאה ב-gate-ledger בין `merged -> X` לקבצי הדחייה בכל מחזור); וה-`reset --hard` ל-origin/main בעת דחייה מחק בשקט את המיזוג שכבר אושר של ה-lane המוקדם — בעוד הענף שלו נמחק כ"merged" (עבודת ה-theme של mark "מוזגה" 3× ומעולם לא נחתה על main).
 **לקח:** בלולאת מיזוג סדרתית, כל בדיקה ו-rollback פר-ענף חייבים עוגן פר-ענף — ה-HEAD שנלכד רגע לפני המיזוג של אותו ענף (`$BASE`). עוגן גלובלי מאשים ענפים מאוחרים בעבודת המוקדמים, וה-rollback שלו משמיד עבודה מאושרת.
 **מנגנון:** (1) `BASE=$(git rev-parse HEAD)` לפני כל merge בלולאה; כל diff/rollback של ה-gates עובד מול `"$BASE"`. (2) תיקון self-heal שנוגע ב-`.github/workflows/` לא יכול לנחות מריצת lane בכלל: ה-workflow שרץ הוא תמיד הגרסה מ-main (workflow_run = default branch; push של GITHUB_TOKEN לא מפעיל triggers), GATE 0 דוחה `.github/` מ-lanes דוקומנטיים, ול-lane אין push מעבר ל-HEAD:auto/<lane>. המסלול: בנה+אמת את התיקון, שלח אותו כ-`notes/*.patch` בענף שלך, והסלם ב-NEEDS_YOU.md + Telegram ל-apply של המייסד.
+
+---
+
+### OW-014 | תיקון באג = לשלוח את בדיקת-הרגרסיה באותו PR (אחרת הבאג חוזר)
+**מקור:** כיוון מייסד (2026-07-13) — "אתה מתקן באגים אבל טעויות פשוט ממשיכות לחזור." שלושה מקרים: (א) באג מטמון ה-WebView (app.js/css נטענו stale) חזר למרות code-comment; (ב) `test_comments_pagination_and_total` נכשל שבועות כי טסט לא-הרמטי (מפתח AI ב-env הפך את המודרציה ל-LIVE ולא-דטרמיניסטית) — ירוק ב-CI, אדום מקומית, אף אחד לא סגר; (ג) הסוכנים רצו על `--model claude-fable-5` שמכסתו אזלה → כל ריצה מתה מיד + שלחה טלגרם-כשל, כי דפוס-הדילוג לא זיהה "reached your … limit".
+**לקח:** תיקון בלי בדיקה שנכשלת-לפני-ומצליחה-אחרי = המלצה, לא תיקון (ראה [[OW-006]]). באג שחזר פעמיים = חסרה לו בדיקה אוטומטית. טסט שמתנהג אחרת תלוי env מקומי = לא-הרמטי = "עובד אצלי" מזויף.
+**מנגנון:** כל bugfix חייב באותו PR: (1) בדיקה שמשחזרת את הבאג (pytest / `scripts/check-interactions.mjs` / assertion) שנכשלת על הקוד הישן ועוברת על החדש; (2) הבדיקה רצה בשער (jeff-merge pytest + check-render/interactions) כך שרגרסיה תיחסם. **טסטים הרמטיים בלבד** — לא תלויים במפתחות/רשת/שעון/סדר-ריצה (נטרל ב-conftest, ראה `_hermetic_ai_env`). באג ב-UX/אינטראקציה (sheet תקוע, כפתור מת) → הרחב את `check-interactions.mjs` לכסות אותו, לא רק תקן ידנית.

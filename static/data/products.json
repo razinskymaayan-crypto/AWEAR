@@ -8,7 +8,7 @@
     "color": "black",
     "price_estimate_usd": 19.99,
     "product_url": "https://www.carhartt.com/product/K87/mens-workwear-pocket-short-sleeve-t-shirt",
-    "image_url": "https://imgcdn.carhartt.com/is/image/Carhartt/K87_BLK?fit=constrain,1&wid=798",
+    "image_url": "/static/img/products/prod_ss_001.jpg",
     "description": "100% cotton jersey knit workwear staple featuring a functional left-chest pocket and loose silhouette designed for mobility. Includes rib-knit crewneck, tagless neck label, and side-seam construction to minimize twisting. Dependable work t-shirt trusted since 1992, available in Regular XS–5XL and Tall L–4XL.",
     "search_query": "carhartt k87 short sleeve pocket tee black",
     "tags": [
@@ -17,7 +17,8 @@
       "heavyweight",
       "classic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://imgcdn.carhartt.com/is/image/Carhartt/K87_BLK?fit=constrain,1&wid=798"
   },
   {
     "id": "prod_ss_002",
@@ -28,7 +29,7 @@
     "color": "carbon heather",
     "price_estimate_usd": 29.99,
     "product_url": "https://www.carhartt.com/product/K84/mens-workwear-short-sleeve-henley-t-shirt",
-    "image_url": "https://media-www.marks.com/product/marks-work-wearhouse/industrial-world/workwear/400007095892/heather-grey-carhartt-s-s-workwear-henley-w-pocket-9dc488b0-f304-4024-b74a-38e15573b549-jpgrendition.jpg",
+    "image_url": "/static/img/products/prod_ss_002.jpg",
     "description": "Heavyweight cotton jersey henley featuring a three-button front, left-chest pocket with Carhartt patch, and tagless neck label. 6.75-ounce 100% cotton jersey in most colors. Available in Regular and Tall fits in sizes S–4XL. Side-seam construction minimizes twisting for comfortable extended wear.",
     "search_query": "carhartt short sleeve henley pocket tee men",
     "tags": [
@@ -37,7 +38,8 @@
       "heavyweight",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://media-www.marks.com/product/marks-work-wearhouse/industrial-world/workwear/400007095892/heather-grey-carhartt-s-s-workwear-henley-w-pocket-9dc488b0-f304-4024-b74a-38e15573b549-jpgrendition.jpg"
   },
   {
     "id": "prod_ss_003",
@@ -48,7 +50,7 @@
     "color": "vintage navy",
     "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/tops-shirts/products/1140283-lazy-tee-vintage-navy",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1140283_VINN_1_b9fa8057-579c-4c93-a5c4-51ff6b0ed8e5.jpg?v=1760551841",
+    "image_url": "/static/img/products/prod_ss_003.jpg",
     "description": "Relaxed-fit short-sleeve tee crafted from 5.6oz pigment dyed cotton with distinctive inside-out seams. Features a ribbed crewneck and a reverse-side Stüssy smooth stock logo printed at the chest. Unisex, 100% cotton. This garment has been individually dyed, producing a one-of-a-kind result. Color may fade or bleed after wash.",
     "search_query": "stussy lazy tee vintage navy short sleeve",
     "tags": [
@@ -57,7 +59,8 @@
       "relaxed",
       "unisex"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1140283_VINN_1_b9fa8057-579c-4c93-a5c4-51ff6b0ed8e5.jpg?v=1760551841"
   },
   {
     "id": "prod_ss_004",
@@ -68,7 +71,7 @@
     "color": "washed red",
     "price_estimate_usd": 60.0,
     "product_url": "https://www.stussy.com/collections/tops-shirts/products/1140368-pigment-dyed-ss-thermal-washed-red",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1140368_WARE_1.jpg?v=1768584736",
+    "image_url": "/static/img/products/prod_ss_004.jpg",
     "description": "Relaxed fit waffle knit tee made from lightweight, pigment dyed stonewashed cotton. Features a short-sleeve design with a ribbed crewneck and a Stüssy printed cotton patch label sewn at back neck. Unisex, 100% cotton. This garment has been individually dyed, producing a one-of-a-kind result.",
     "search_query": "stussy pigment dyed short sleeve thermal waffle knit red",
     "tags": [
@@ -77,7 +80,8 @@
       "pigment-dyed",
       "unisex"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1140368_WARE_1.jpg?v=1768584736"
   },
   {
     "id": "prod_ss_005",
@@ -88,7 +92,7 @@
     "color": "black",
     "price_estimate_usd": 90.0,
     "product_url": "https://www.stussy.com/collections/tops-shirts/products/1140367-classic-pique-polo-black",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1140367_BLAC_3.jpg?v=1778691622",
+    "image_url": "/static/img/products/prod_ss_005.jpg",
     "description": "Classic fit pique polo shirt constructed from midweight cotton. Features rib knit collar and cuffs, mother of pearl buttons, and the brand's signature Stüssy swirly 'S' embroidery at chest. 100% cotton, imported. Unisex. Available in S through XXL.",
     "search_query": "stussy classic pique polo black short sleeve",
     "tags": [
@@ -97,7 +101,8 @@
       "pique",
       "logo"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1140367_BLAC_3.jpg?v=1778691622"
   },
   {
     "id": "prod_ss_006",
@@ -108,7 +113,7 @@
     "color": "black",
     "price_estimate_usd": 95.0,
     "product_url": "https://www.stussy.com/collections/tops-shirts/products/1140389-laguna-80-jersey-black",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1140389_BLAC_3.jpg?v=1780350091",
+    "image_url": "/static/img/products/prod_ss_006.jpg",
     "description": "Relaxed fit jersey in 7.08oz stonewashed cotton featuring a ribbed crewneck and graphic screenprinting on both the front and back. Includes stripe detailing at the sleeves. Unisex, 100% cotton, imported. Available in XS through XXL.",
     "search_query": "stussy laguna 80 jersey black graphic tee",
     "tags": [
@@ -117,7 +122,8 @@
       "relaxed",
       "logo"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1140389_BLAC_3.jpg?v=1780350091"
   },
   {
     "id": "prod_ss_007",
@@ -128,7 +134,7 @@
     "color": "tango pink",
     "price_estimate_usd": 370.0,
     "product_url": "https://www.acnestudios.com/us/en/fitted-logo-t-shirt-tango-pink/CL0395-CKQ.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw4ee43e09/images/CL/CL0395-/2000x/CL0395-CKQ_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ss_007.jpg",
     "description": "Crewneck T-shirt crafted from organic cotton/hemp blend jersey with an irregular surface, piece-dyed with a vintage spray. Detailed with an Acne Studios 1996 stamp logo and finished with distressed trim. Cut to a fitted silhouette and sits at waist. 85% Cotton, 15% True hemp.",
     "search_query": "acne studios fitted logo t-shirt tango pink short sleeve",
     "tags": [
@@ -137,7 +143,8 @@
       "fitted",
       "logo"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw4ee43e09/images/CL/CL0395-/2000x/CL0395-CKQ_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ss_008",
@@ -148,7 +155,7 @@
     "color": "tango pink",
     "price_estimate_usd": 390.0,
     "product_url": "https://www.acnestudios.com/us/en/sprayed-logo-t-shirt-tango-pink/CL0196-CKQ.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw9082f52a/images/CL/CL0196-/2000x/CL0196-CKQ_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ss_008.jpg",
     "description": "Crewneck tee crafted from organic cotton/hemp blend jersey with an irregular surface, piece-dyed with a vintage spray effect. Relaxed unisex fit with hip-length cut and distressed ribbed trim, finished with the brand's 1996 stamp logo on the front. 85% Cotton, 15% True hemp. Available in 6 colors.",
     "search_query": "acne studios sprayed logo t-shirt pink short sleeve",
     "tags": [
@@ -158,7 +165,8 @@
       "logo",
       "vintage-wash"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw9082f52a/images/CL/CL0196-/2000x/CL0196-CKQ_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ss_009",
@@ -169,7 +177,7 @@
     "color": "black",
     "price_estimate_usd": 320.0,
     "product_url": "https://www.acnestudios.com/us/en/t-shirt-stamp-logo---relaxed-fit-black/CL0274-900.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwd3a79310/images/CL/CL0274-/2000x/CL0274-900_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ss_009.jpg",
     "description": "Crew neck t-shirt showcasing an Acne Studios stamp logo, crafted from a midweight cotton jersey and cut to a relaxed unisex fit. Hip length with ribbed crew neckline and flatlock stitching at shoulders and side seams. 100% organically grown cotton.",
     "search_query": "acne studios stamp logo relaxed fit tee black short sleeve",
     "tags": [
@@ -179,7 +187,8 @@
       "logo",
       "unisex"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwd3a79310/images/CL/CL0274-/2000x/CL0274-900_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ss_010",
@@ -190,7 +199,7 @@
     "color": "off white",
     "price_estimate_usd": 410.0,
     "product_url": "https://www.acnestudios.com/us/en/rw-mn-tshi000007/BL0442-DYL.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw6a707d37/images/BL/BL0442-/2000x/BL0442-DYL_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ss_010.jpg",
     "description": "Short-sleeve crewneck T-shirt crafted from organic cotton jersey, featuring seasonal logo artwork on the chest and finished with a distressed trim. Regular fit and hip length construction. 100% Cotton.",
     "search_query": "acne studios graphic t-shirt off white seasonal logo short sleeve",
     "tags": [
@@ -199,7 +208,8 @@
       "graphic",
       "logo"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw6a707d37/images/BL/BL0442-/2000x/BL0442-DYL_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ss_011",
@@ -210,7 +220,7 @@
     "color": "black",
     "price_estimate_usd": 510.0,
     "product_url": "https://www.acnestudios.com/us/en/washed-logo-polo-black/BL0433-900.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwba0666e4/images/BL/BL0433-/2000x/BL0433-900_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ss_011.jpg",
     "description": "T-shirt with a polo collar and two-button closure. Crafted from cotton with a subtle worn finish and light all-over fade. Complete with an embroidered Acne Studios logo on the chest. Cut to a relaxed unisex fit with a hip-length silhouette. 100% organically grown cotton.",
     "search_query": "acne studios washed logo polo black short sleeve",
     "tags": [
@@ -220,7 +230,8 @@
       "logo",
       "washed"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwba0666e4/images/BL/BL0433-/2000x/BL0433-900_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ss_012",
@@ -231,7 +242,7 @@
     "color": "black",
     "price_estimate_usd": 105.0,
     "product_url": "https://www.apc-us.com/collections/men-t-shirts-polos/products/standard-grand-vpc-t-shirt-cohmb-m26384_jma",
-    "image_url": "http://www.apc-us.com/cdn/shop/files/COHMB-M26384JMA_00.jpg?v=1776186517&width=2070",
+    "image_url": "/static/img/products/prod_ss_012.jpg",
     "description": "Unisex model with a straight cut and crew neck. Features a V.P.C. logo with a velvet-feel finish on the chest. Made from 100% GOTS-certified organic cotton. Produced in Türkiye. Timeless collection piece. Sizes XXS–3XL.",
     "search_query": "apc grand vpc t-shirt black short sleeve logo",
     "tags": [
@@ -241,7 +252,8 @@
       "unisex",
       "minimal"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.apc-us.com/cdn/shop/files/COHMB-M26384JMA_00.jpg?v=1776186517&width=2070"
   },
   {
     "id": "prod_ss_013",
@@ -252,7 +264,7 @@
     "color": "navy/white stripe",
     "price_estimate_usd": 129.5,
     "product_url": "https://www.apc-us.com/collections/men-t-shirts-polos/products/striped-t-shirt-cohlv-h26534_aad",
-    "image_url": "http://www.apc-us.com/cdn/shop/files/COHLV-H26534AAD_00.jpg?v=1776186345&width=2070",
+    "image_url": "/static/img/products/prod_ss_013.jpg",
     "description": "Short-sleeve striped t-shirt crafted from organic cotton. A classic Breton-inspired stripe pattern in a clean, minimalist cut with a crew neck. Simple, modern and beautifully cut — suited to any occasion.",
     "search_query": "apc striped t-shirt navy white short sleeve breton",
     "tags": [
@@ -262,7 +274,8 @@
       "minimal",
       "breton"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.apc-us.com/cdn/shop/files/COHLV-H26534AAD_00.jpg?v=1776186345&width=2070"
   },
   {
     "id": "prod_ss_014",
@@ -273,7 +286,7 @@
     "color": "heather grey",
     "price_estimate_usd": 19.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=440775082",
-    "image_url": "https://www.gap.com/webcontent/0057/809/950/cn57809950.jpg",
+    "image_url": "/static/img/products/prod_ss_014.jpg",
     "description": "Men's classic short-sleeve t-shirt in soft cotton jersey, cut with a classic fit. An everyday essential available in a wide range of colors. Sizes XS to XXXL in Regular and Tall fits. Rated 4.71 out of 5 stars from 2,258 customer reviews.",
     "search_query": "gap men classic t-shirt short sleeve heather grey",
     "tags": [
@@ -282,7 +295,8 @@
       "classic",
       "everyday"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0057/809/950/cn57809950.jpg"
   },
   {
     "id": "prod_ss_015",
@@ -293,7 +307,7 @@
     "color": "black",
     "price_estimate_usd": 19.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=440768042",
-    "image_url": "https://www.gap.com/webcontent/0055/632/708/cn55632708.jpg",
+    "image_url": "/static/img/products/prod_ss_015.jpg",
     "description": "Soft cotton jersey T-shirt garment washed for everyday softness, cut with a slim fit and featuring short sleeves and a V-neck design. Available in men's sizes XS to XXXL in Regular and Tall fits. Rated 4.72 out of 5 stars from 848 reviews.",
     "search_query": "gap men cotton jersey v-neck t-shirt black short sleeve slim fit",
     "tags": [
@@ -302,7 +316,8 @@
       "slim-fit",
       "essential"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0055/632/708/cn55632708.jpg"
   },
   {
     "id": "prod_ss_016",
@@ -313,7 +328,7 @@
     "color": "heather grey",
     "price_estimate_usd": 29.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=796255412",
-    "image_url": "https://www.gap.com/webcontent/0059/225/456/cn59225456.jpg",
+    "image_url": "/static/img/products/prod_ss_016.jpg",
     "description": "Men's casual short-sleeve t-shirt in a relaxed fit. Available in multiple size options from XS to XXXL in Regular and Tall fits. Rated 4.61 out of 5 stars from 1,517 customer reviews.",
     "search_query": "gap adult relaxed t-shirt heather grey short sleeve",
     "tags": [
@@ -322,7 +337,8 @@
       "essential",
       "everyday"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0059/225/456/cn59225456.jpg"
   },
   {
     "id": "prod_ss_017",
@@ -333,7 +349,7 @@
     "color": "heather grey",
     "price_estimate_usd": 49.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=804453002",
-    "image_url": "https://cdn.platform.next/common/items/default/default/itemimages/3_4Ratio/product/lge/G11678s.jpg?im=Resize,width=750",
+    "image_url": "/static/img/products/prod_ss_017.jpg",
     "description": "Men's heavyweight short-sleeve t-shirt in a relaxed fit. Available in XS to XXXL in Regular and Tall options. A durable everyday tee with a lived-in feel, rated 4.74 out of 5 stars from 148 reviews.",
     "search_query": "gap men heavyweight relaxed t-shirt short sleeve grey",
     "tags": [
@@ -342,7 +358,8 @@
       "relaxed",
       "essential"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.platform.next/common/items/default/default/itemimages/3_4Ratio/product/lge/G11678s.jpg?im=Resize,width=750"
   },
   {
     "id": "prod_ss_018",
@@ -353,7 +370,7 @@
     "color": "sky captain navy",
     "price_estimate_usd": 49.5,
     "product_url": "https://usa.tommy.com/en/men/clothing/tops/signature-flag-stripe-logo-t-shirt/78JA523-100.html",
-    "image_url": "https://m.media-amazon.com/images/I/81wyd-4pPiL._AC_SL1500_.jpg",
+    "image_url": "/static/img/products/prod_ss_018.jpg",
     "description": "Made from lightweight cotton jersey, breathable and stretchy, with a comfortable crewneck cut in an easy fit and finished with the Signature Flag Stripe logo. Contains regenerative cotton grown using farming methods that seek to improve soil health, watersheds and biodiversity.",
     "search_query": "tommy hilfiger signature flag stripe logo t-shirt navy short sleeve",
     "tags": [
@@ -363,7 +380,8 @@
       "classic",
       "sustainable"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://m.media-amazon.com/images/I/81wyd-4pPiL._AC_SL1500_.jpg"
   },
   {
     "id": "prod_ss_019",
@@ -374,7 +392,7 @@
     "color": "white",
     "price_estimate_usd": 39.99,
     "product_url": "https://www.calvinklein.us/en/monogram-logo-crewneck-t-shirt/40QP894.html",
-    "image_url": "https://calvinklein.scene7.com/is/image/CalvinKlein/21651801_030_main",
+    "image_url": "/static/img/products/prod_ss_019.jpg",
     "description": "Designed with short sleeves and a crewneck, featuring CK monogram logo styling at the front. Crafted completely from 100% cotton. Classic fit, machine washable. A modern take on the essential tee with an iconic Calvin Klein branding detail.",
     "search_query": "calvin klein monogram logo crewneck t-shirt white short sleeve",
     "tags": [
@@ -383,7 +401,8 @@
       "classic-fit",
       "essential"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://calvinklein.scene7.com/is/image/CalvinKlein/21651801_030_main"
   },
   {
     "id": "prod_ss_020",
@@ -394,7 +413,7 @@
     "color": "white",
     "price_estimate_usd": 55.0,
     "product_url": "https://www.ralphlauren.com/men-clothing-t-shirts/jersey-crewneck-t-shirt---all-fits/440903-T.html",
-    "image_url": "https://www.ralphlauren.global/on/demandware.static/-/Library-Sites-RalphLauren_EU_Library/default/dw93446b2c/images/social-sharing/ralph_lauren_emea_og_image.png",
+    "image_url": "/static/img/products/prod_ss_020.jpg",
     "description": "Classic short-sleeve crewneck t-shirt made in jersey-knit of soft combed cotton. Features a ribbed crew neckline, left chest pocket, and signature Polo pony embroidery on the left chest pocket. Washed for a perfectly broken-in look and feel. Classic Fit is cut fuller through the chest, waist, and sleeve. 100% cotton jersey, machine washable.",
     "search_query": "ralph lauren polo classic fit jersey crewneck t-shirt white short sleeve",
     "tags": [
@@ -404,7 +423,8 @@
       "essential",
       "preppy"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.ralphlauren.global/on/demandware.static/-/Library-Sites-RalphLauren_EU_Library/default/dw93446b2c/images/social-sharing/ralph_lauren_emea_og_image.png"
   },
   {
     "id": "prod_ls_001",
@@ -415,7 +435,7 @@
     "color": "navy",
     "price_estimate_usd": 35.99,
     "product_url": "https://www.carhartt.com/product/K231/mens-dearborn-loose-fit-heavyweight-long-sleeve-logo-t-shirt",
-    "image_url": "https://www.supercasuals.com/images/Carhartt/K231_NVY_L.jpg",
+    "image_url": "/static/img/products/prod_ls_001.jpg",
     "description": "Heavyweight cotton long-sleeve t-shirt featuring a generous fit for comfort. Displays the iconic Carhartt logo on the sleeve. Made from 100% cotton jersey or cotton-polyester blend depending on color. Rib-knit crewneck and cuffs that maintain their shape, side-seams to reduce twisting, and a tagless neck label. Available in Regular XS–4XL and Tall L–3XL.",
     "search_query": "carhartt k231 long sleeve heavyweight logo t-shirt navy",
     "tags": [
@@ -424,7 +444,8 @@
       "long-sleeve",
       "logo"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.supercasuals.com/images/Carhartt/K231_NVY_L.jpg"
   },
   {
     "id": "prod_ls_002",
@@ -435,7 +456,7 @@
     "color": "black",
     "price_estimate_usd": 29.99,
     "product_url": "https://www.carhartt.com/product/K126/mens-dearborn-loose-fit-heavyweight-long-sleeve-pocket-t-shirt",
-    "image_url": "https://gemplers.com/cdn/shop/files/21126BLK.jpg?v=1707788412&width=1024",
+    "image_url": "/static/img/products/prod_ls_002.jpg",
     "description": "Durable workwear long-sleeve tee featuring 100% cotton jersey, 6.75-ounce construction. Left-chest pocket with sewn-on Carhartt patch. Rib-knit crewneck and cuffs designed to maintain their shape. Side-seam construction minimizes twisting. Tagless neck label for smooth feel. Cut generously for a roomy fit. Regular XS–5XL and Tall L–4XL.",
     "search_query": "carhartt k126 long sleeve pocket t-shirt black heavyweight",
     "tags": [
@@ -444,7 +465,8 @@
       "long-sleeve",
       "pocket"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://gemplers.com/cdn/shop/files/21126BLK.jpg?v=1707788412&width=1024"
   },
   {
     "id": "prod_ls_003",
@@ -455,7 +477,7 @@
     "color": "heather grey",
     "price_estimate_usd": 34.99,
     "product_url": "https://www.carhartt.com/product/104617/mens-force-relaxed-fit-midweight-long-sleeve-logo-graphic-t-shirt",
-    "image_url": "https://cdnp.sanmar.com/medias/sys_master/images/he4/h22/15317536964638/1200W_47881_CarbonHthr-12-CT106656CarbonHthrFlatFront/1200W-47881-CarbonHthr-12-CT106656CarbonHthrFlatFront.jpg",
+    "image_url": "/static/img/products/prod_ls_003.jpg",
     "description": "Sweat-fighting long-sleeve shirt featuring Force technology to wick sweat and dry fast. Ventilated side panels and raglan sleeves for enhanced mobility. FastDry® and Stain Breaker® technologies. Flatlock seams and droptail hem. UPF 25+ protection. Left-chest pocket and tagless neck label for comfort.",
     "search_query": "carhartt force long sleeve midweight pocket t-shirt heather grey performance",
     "tags": [
@@ -465,7 +487,8 @@
       "moisture-wicking",
       "UPF"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdnp.sanmar.com/medias/sys_master/images/he4/h22/15317536964638/1200W_47881_CarbonHthr-12-CT106656CarbonHthrFlatFront/1200W-47881-CarbonHthr-12-CT106656CarbonHthrFlatFront.jpg"
   },
   {
     "id": "prod_ls_004",
@@ -476,7 +499,7 @@
     "color": "navy",
     "price_estimate_usd": 80.0,
     "product_url": "https://www.stussy.com/collections/tops-shirts/products/1140356-basic-stussy-thermal-navy",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1140356_NAVY_1.jpg?v=1778692217",
+    "image_url": "/static/img/products/prod_ls_004.jpg",
     "description": "Relaxed-fit thermal featuring waffle knit construction made from stonewashed, pigment-dyed 100% cotton. Ribbed crewneck and cuffs along with raglan sleeves and flatlock-stitched seams. Stüssy basic logo appears on the left chest and back with a straight hem throughout. Unisex. Individually dyed for a one-of-a-kind result.",
     "search_query": "stussy basic thermal navy long sleeve waffle knit",
     "tags": [
@@ -486,7 +509,8 @@
       "long-sleeve",
       "logo"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1140356_NAVY_1.jpg?v=1778692217"
   },
   {
     "id": "prod_ls_005",
@@ -497,7 +521,7 @@
     "color": "faded black",
     "price_estimate_usd": 70.0,
     "product_url": "https://www.stussy.com/collections/tops-shirts/products/1140396-pigment-dyed-ls-thermal-faded-black",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1140396_FBLA_1.jpg?v=1771528229",
+    "image_url": "/static/img/products/prod_ls_005.jpg",
     "description": "Pigment dyed classic fit waffle knit thermal constructed from lightweight 8.6oz cotton. Ribbed crewneck and cuffs, flatlock-stitched seams, and a straight overlock-stitched hem. Stüssy printed cotton patch label at the back neck. Unisex, 100% cotton, imported.",
     "search_query": "stussy pigment dyed long sleeve thermal faded black waffle knit",
     "tags": [
@@ -507,7 +531,8 @@
       "long-sleeve",
       "pigment-dyed"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1140396_FBLA_1.jpg?v=1771528229"
   },
   {
     "id": "prod_ls_006",
@@ -518,7 +543,7 @@
     "color": "black",
     "price_estimate_usd": 100.0,
     "product_url": "https://www.stussy.com/collections/tops-shirts/products/1140374-wool-ls-thermal-black",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1140374_BLAC_3.jpg?v=1763068875",
+    "image_url": "/static/img/products/prod_ls_006.jpg",
     "description": "Classic fit thermal crewneck featuring a waffle-knit wool construction. Includes a ribbed neckline, flatlock-stitched seams, ribbed cuffs, and a straight cover-stitched hem. Unisex, 100% wool, imported.",
     "search_query": "stussy wool long sleeve thermal black waffle knit",
     "tags": [
@@ -528,7 +553,8 @@
       "waffle-knit",
       "long-sleeve"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1140374_BLAC_3.jpg?v=1763068875"
   },
   {
     "id": "prod_ls_007",
@@ -539,7 +565,7 @@
     "color": "charcoal",
     "price_estimate_usd": 80.0,
     "product_url": "https://www.stussy.com/collections/tops-shirts/products/1140382-extra-tough-raglan-thermal-charcoal",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1140382_CHAR_1.jpg?v=1771528174",
+    "image_url": "/static/img/products/prod_ls_007.jpg",
     "description": "Relaxed-fit waffle-knit thermal crafted from stonewashed pigment dyed 10.9oz cotton. Crew neck with ribbed detailing, raglan sleeves, and a tonal graphic on the back applied through water-based screenprint. Flatlock-stitched seams and a straight hem. Unisex, 100% cotton. Individually dyed for a one-of-a-kind result.",
     "search_query": "stussy extra tough raglan thermal charcoal long sleeve",
     "tags": [
@@ -549,7 +575,8 @@
       "raglan",
       "long-sleeve"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1140382_CHAR_1.jpg?v=1771528174"
   },
   {
     "id": "prod_ls_008",
@@ -560,7 +587,7 @@
     "color": "faded black",
     "price_estimate_usd": 400.0,
     "product_url": "https://www.acnestudios.com/us/en/rw-ux-tshi000028/CL0498-BM0.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwca39f812/images/CL/CL0498-/2000x/CL0498-BM0_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ls_008.jpg",
     "description": "Long-sleeve crewneck t-shirt made from organic cotton and hemp blend jersey with an irregular, vintage-sprayed surface finish. Features an Acne Studios 1996 stamp logo and distressed detailing on the neckline, cuffs, and hem. Fitted silhouette at waist length. 85% Cotton, 15% True hemp.",
     "search_query": "acne studios longsleeve logo t-shirt faded black long sleeve",
     "tags": [
@@ -570,7 +597,8 @@
       "logo",
       "vintage-wash"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwca39f812/images/CL/CL0498-/2000x/CL0498-BM0_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ls_009",
@@ -581,7 +609,7 @@
     "color": "dark navy",
     "price_estimate_usd": 450.0,
     "product_url": "https://www.acnestudios.com/us/en/jersey-t-shirt-with-logo-dark-navy/CL0487-833.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwbb796f9e/images/CL/CL0487-/2000x/CL0487-833_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ls_009.jpg",
     "description": "Long-sleeve crewneck T-shirt crafted from organic cotton jersey. Features a subtle embroidered Acne Studios logo on the chest and is designed with a relaxed unisex fit. GOTS Organic certified. 100% Cotton. Available in Dark navy and Dark green.",
     "search_query": "acne studios jersey t-shirt logo dark navy long sleeve",
     "tags": [
@@ -592,7 +620,8 @@
       "relaxed",
       "unisex"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwbb796f9e/images/CL/CL0487-/2000x/CL0487-833_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ls_010",
@@ -603,7 +632,7 @@
     "color": "dark green",
     "price_estimate_usd": 380.0,
     "product_url": "https://www.acnestudios.com/us/en/rw-ux-tshi000010/CL0480-833.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw631ce492/images/CL/CL0480-/2000x/CL0480-833_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ls_010.jpg",
     "description": "Long-sleeve crewneck T-shirt crafted from lightweight cotton jersey. Featuring a small embroidered logo on the chest. Cut to a relaxed unisex fit with a hip-length silhouette. GOTS certified organic cotton. 100% Cotton.",
     "search_query": "acne studios jersey logo t-shirt dark green long sleeve lightweight",
     "tags": [
@@ -613,7 +642,8 @@
       "logo",
       "relaxed"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw631ce492/images/CL/CL0480-/2000x/CL0480-833_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ls_011",
@@ -624,7 +654,7 @@
     "color": "off white",
     "price_estimate_usd": 420.0,
     "product_url": "https://www.acnestudios.com/us/en/1996-logo-t-shirt-off-white/CL0424-AEG.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwdc499be2/images/CL/CL0424-/2000x/CL0424-AEG_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ls_011.jpg",
     "description": "Long-sleeve crewneck tee made from organic cotton/hemp blend jersey with an irregular surface, finished with distressed trim. Features the brand's iconic 1996 logo stamp on the front and offers a relaxed, unisex cut designed to hit at the hip. 85% Cotton, 15% True hemp. Sizes XXS–XXXL.",
     "search_query": "acne studios 1996 logo t-shirt off white long sleeve",
     "tags": [
@@ -635,7 +665,8 @@
       "relaxed",
       "unisex"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwdc499be2/images/CL/CL0424-/2000x/CL0424-AEG_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ls_012",
@@ -646,7 +677,7 @@
     "color": "tango pink",
     "price_estimate_usd": 420.0,
     "product_url": "https://www.acnestudios.com/us/en/sprayed-1996-logo-t-shirt-tango-pink/CL0197-CKQ.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw19df2aec/images/CL/CL0197-/2000x/CL0197-CKQ_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ls_012.jpg",
     "description": "Long-sleeve crewneck T-shirt crafted from an organic cotton/hemp blend jersey with an irregular surface, piece-dyed with a vintage spray effect and finished with distressed ribbed trim. Features the Acne Studios 1996 logo print on the front. Relaxed unisex fit with a hip-length silhouette. 85% Cotton, 15% True hemp.",
     "search_query": "acne studios sprayed 1996 logo t-shirt tango pink long sleeve",
     "tags": [
@@ -657,7 +688,8 @@
       "vintage-wash",
       "relaxed"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw19df2aec/images/CL/CL0197-/2000x/CL0197-CKQ_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ls_013",
@@ -668,7 +700,7 @@
     "color": "navy stripe",
     "price_estimate_usd": 168.0,
     "product_url": "https://www.apc-us.com/collections/men-t-shirts-polos/products/long-sleeve-striped-polo-shirt-cohlv-h26519_aad",
-    "image_url": "http://www.apc-us.com/cdn/shop/files/COHLV-H26519AAD_00.jpg?v=1776186344&width=2070",
+    "image_url": "/static/img/products/prod_ls_013.jpg",
     "description": "Long-sleeve polo shirt in a classic Breton stripe construction made from organic cotton. Features a polo collar and button placket. A signature A.P.C. piece combining French minimalism with relaxed sportswear aesthetics.",
     "search_query": "apc long sleeve striped polo shirt navy breton",
     "tags": [
@@ -678,7 +710,8 @@
       "long-sleeve",
       "minimal"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.apc-us.com/cdn/shop/files/COHLV-H26519AAD_00.jpg?v=1776186344&width=2070"
   },
   {
     "id": "prod_ls_014",
@@ -689,7 +722,7 @@
     "color": "charcoal grey",
     "price_estimate_usd": 22.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=351427012",
-    "image_url": "https://cdn.shopify.com/s/files/1/0293/9277/products/05-29-19_Studio_4_RM_16-39-01_15__NMKT30218_Grey_1979_CROP_RA.jpg?v=1618943080&width=2400&height=3600&crop=center",
+    "image_url": "/static/img/products/prod_ls_014.jpg",
     "description": "Easy and lightweight long-sleeve crew tee — the perfect fitting everyday tee, now softer. Made from superfine pima jersey with long sleeves and a banded crewneck. An essential wardrobe staple in a streamlined, comfortable silhouette.",
     "search_query": "gap essential long sleeve crew tee charcoal grey pima",
     "tags": [
@@ -698,7 +731,8 @@
       "long-sleeve",
       "pima-cotton"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0293/9277/products/05-29-19_Studio_4_RM_16-39-01_15__NMKT30218_Grey_1979_CROP_RA.jpg?v=1618943080&width=2400&height=3600&crop=center"
   },
   {
     "id": "prod_ls_015",
@@ -709,7 +743,7 @@
     "color": "charcoal grey",
     "price_estimate_usd": 24.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=498995062",
-    "image_url": "https://www.gap.com/webcontent/0016/407/486/cn16407486.jpg",
+    "image_url": "/static/img/products/prod_ls_015.jpg",
     "description": "Soft featherweight jersey knit long-sleeve tee with banded cuffs and rib-knit trim at crewneck. A lighter-weight option for layering when you want long-sleeve coverage without bulk. Available in multiple colors, sizes XS–XXL. Rated 4.72 out of 5 stars from 420 reviews.",
     "search_query": "gap featherweight long sleeve crewneck t-shirt grey",
     "tags": [
@@ -718,7 +752,8 @@
       "featherweight",
       "layering"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0016/407/486/cn16407486.jpg"
   },
   {
     "id": "prod_ls_016",
@@ -729,7 +764,7 @@
     "color": "bodega bay",
     "price_estimate_usd": 34.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=365968042",
-    "image_url": "https://bananarepublicfactory.gapfactory.com/webcontent/0056/498/080/cn56498080.jpg",
+    "image_url": "/static/img/products/prod_ls_016.jpg",
     "description": "Long-sleeve thermal henley featuring a soft waffle knit and henley button-front placket. A classic layering piece with a comfortable, relaxed feel. Available in sizes XS through XXXL. Rated 4.38 out of 5 stars from 39 reviews.",
     "search_query": "gap long sleeve thermal henley bodega bay waffle knit",
     "tags": [
@@ -739,7 +774,8 @@
       "waffle-knit",
       "long-sleeve"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://bananarepublicfactory.gapfactory.com/webcontent/0056/498/080/cn56498080.jpg"
   },
   {
     "id": "prod_ls_017",
@@ -750,7 +786,7 @@
     "color": "faded apricot",
     "price_estimate_usd": 54.5,
     "product_url": "https://usa.tommy.com/en/long-sleeve-tonal-flag-logo-t-shirt/78JB627.html",
-    "image_url": "https://tommy-europe.scene7.com/is/image/TommyEurope/DM0DM22668_YBH_alternate1?$b2c_updp_m_mainImage_1920$",
+    "image_url": "/static/img/products/prod_ls_017.jpg",
     "description": "Classic long-sleeve crewneck tee featuring a tonal play on an embroidered flag logo at the chest. Made from premium cotton. Regular fit. Body length from high point of shoulder: 29\". A versatile everyday essential with subtle, tonal brand detailing.",
     "search_query": "tommy hilfiger long sleeve tonal flag logo t-shirt apricot",
     "tags": [
@@ -760,7 +796,8 @@
       "classic",
       "tonal"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://tommy-europe.scene7.com/is/image/TommyEurope/DM0DM22668_YBH_alternate1?$b2c_updp_m_mainImage_1920$"
   },
   {
     "id": "prod_ls_018",
@@ -771,7 +808,7 @@
     "color": "dark sapphire",
     "price_estimate_usd": 47.5,
     "product_url": "https://www.calvinklein.us/en/relaxed-fit-standard-logo-crewneck-long-sleeve-tee/21892300.html",
-    "image_url": "https://calvinklein.scene7.com/is/image/CalvinKlein/21892300_410_main",
+    "image_url": "/static/img/products/prod_ls_018.jpg",
     "description": "Cut from 100% premium weight cotton jersey in a perfect relaxed fit and finished with a high density Calvin Klein standard logo. Features a crewneck and long sleeves with a straight hem, topstitching and seaming details.",
     "search_query": "calvin klein relaxed fit standard logo long sleeve crewneck tee dark sapphire",
     "tags": [
@@ -781,7 +818,8 @@
       "relaxed",
       "cotton"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://calvinklein.scene7.com/is/image/CalvinKlein/21892300_410_main"
   },
   {
     "id": "prod_ls_019",
@@ -792,7 +830,7 @@
     "color": "white",
     "price_estimate_usd": 49.5,
     "product_url": "https://www.calvinklein.us/en/archive-logo-long-sleeve-t-shirt/40WP256.html",
-    "image_url": "https://cdna.lystit.com/photos/nordstrom/bfbbce73/calvin-klein-Brilliant-White-Stacked-Logo-Long-Sleeve-T-shirt.jpeg",
+    "image_url": "/static/img/products/prod_ls_019.jpg",
     "description": "Long-sleeve crewneck t-shirt crafted completely from cotton, styled with banded cuffs at the sleeve openings and finished with CK monogram logo embroidery at the upper chest. A clean, refined long-sleeve essential with archive logo detailing.",
     "search_query": "calvin klein archive logo long sleeve t-shirt white",
     "tags": [
@@ -802,7 +840,8 @@
       "embroidered",
       "minimal"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdna.lystit.com/photos/nordstrom/bfbbce73/calvin-klein-Brilliant-White-Stacked-Logo-Long-Sleeve-T-shirt.jpeg"
   },
   {
     "id": "prod_ls_020",
@@ -813,7 +852,7 @@
     "color": "navy",
     "price_estimate_usd": 65.0,
     "product_url": "https://www.ralphlauren.com/men-clothing-t-shirts/classic-fit-soft-cotton-crewneck-t-shirt/565685.html",
-    "image_url": "https://www.ralphlauren.global/on/demandware.static/-/Library-Sites-RalphLauren_EU_Library/default/dw93446b2c/images/social-sharing/ralph_lauren_emea_og_image.png",
+    "image_url": "/static/img/products/prod_ls_020.jpg",
     "description": "Classic long-sleeve crewneck t-shirt in soft cotton, cut fuller through the chest, waist, and sleeve with a lower armhole. Features ribbed cuffs and the signature Polo pony embroidery. Washed for a perfectly broken-in look and feel. Classic Fit for a comfortable, relaxed silhouette.",
     "search_query": "ralph lauren polo classic fit soft cotton long sleeve crewneck t-shirt navy",
     "tags": [
@@ -823,7 +862,8 @@
       "long-sleeve",
       "preppy"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.ralphlauren.global/on/demandware.static/-/Library-Sites-RalphLauren_EU_Library/default/dw93446b2c/images/social-sharing/ralph_lauren_emea_og_image.png"
   },
   {
     "id": "prod_sh_001",
@@ -834,7 +874,7 @@
     "color": "desert sand",
     "price_estimate_usd": 29.99,
     "product_url": "https://www.dickies.com/en-us/products/flex-relaxed-fit-cargo-shorts-13-dk0wr5570ds",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0WR5570DS-FR.jpg?v=1772839924",
+    "image_url": "/static/img/products/prod_sh_001.jpg",
     "description": "These cargo shorts blend comfort with durability, featuring a relaxed fit that sits slightly below the waist and hits near the knee. An abundance of useful pockets on the front, back, and sides with flap designs for security. 7.25 oz. Mechanical Stretch Twill, 65% Polyester/35% Cotton. Wrinkle-resistant.",
     "search_query": "dickies flex cargo shorts men",
     "tags": [
@@ -843,7 +883,8 @@
       "stretch",
       "utility"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0WR5570DS-FR.jpg?v=1772839924"
   },
   {
     "id": "prod_sh_002",
@@ -854,7 +895,7 @@
     "color": "rinsed khaki",
     "price_estimate_usd": 24.99,
     "product_url": "https://www.dickies.com/en-us/products/loose-fit-cargo-shorts-13-dk043214rkh",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK043214RKH-FR.jpg?v=1772843380",
+    "image_url": "/static/img/products/prod_sh_002.jpg",
     "description": "Relaxed silhouette crafted from soft cotton twill with an extended 13-inch inseam that lands near the knee. Roomier cut through the seat and thigh, paired with multiple pockets on the front, back, and sides. 8.5 oz. Twill, 100% Cotton. Fade-resistant finish.",
     "search_query": "dickies loose cargo shorts khaki men",
     "tags": [
@@ -863,7 +904,8 @@
       "cotton",
       "loose fit"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK043214RKH-FR.jpg?v=1772843380"
   },
   {
     "id": "prod_sh_003",
@@ -874,7 +916,7 @@
     "color": "dark navy",
     "price_estimate_usd": 39.99,
     "product_url": "https://www.dickies.com/en-us/products/pro-series-cargo-shorts-11-dk0a85zh0dn",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0A85ZH0DN-FR.jpg?v=1757672200",
+    "image_url": "/static/img/products/prod_sh_003.jpg",
     "description": "Work shorts with modern fit and enhanced mobility. Flex waistband, stain-release treatment, fade resistance, and quick-drying fabric. Secure zippered pocket, tool pocket with pencil slot, and hammer loop. 67% Cotton/31% Polyester/2% Elastane. 11-inch inseam.",
     "search_query": "dickies pro series cargo shorts navy men",
     "tags": [
@@ -884,7 +926,8 @@
       "utility",
       "professional"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0A85ZH0DN-FR.jpg?v=1757672200"
   },
   {
     "id": "prod_sh_004",
@@ -895,7 +938,7 @@
     "color": "dark khaki",
     "price_estimate_usd": 54.99,
     "product_url": "https://www.carhartt.com/product/103543/force-relaxed-fit-ripstop-cargo-work-short",
-    "image_url": "https://gemplers.com/cdn/shop/products/103543_Dark-Khaki-Back_800x800.jpg?v=1585577509",
+    "image_url": "/static/img/products/prod_sh_004.jpg",
     "description": "Men's 11-inch cargo shorts engineered with sweat-wicking technology. Reinforced front slash pockets, utility cargo pockets, and heavy-duty back pockets. FastDry technology for moisture wicking. Rugged Flex stretch for enhanced mobility. 7-ounce, 69% Cotton/31% Poly Stretch Ripstop.",
     "search_query": "carhartt force ripstop cargo shorts men khaki",
     "tags": [
@@ -905,7 +948,8 @@
       "moisture-wicking",
       "utility"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://gemplers.com/cdn/shop/products/103543_Dark-Khaki-Back_800x800.jpg?v=1585577509"
   },
   {
     "id": "prod_sh_005",
@@ -916,7 +960,7 @@
     "color": "black",
     "price_estimate_usd": 29.99,
     "product_url": "https://www.dickies.com/en-us/products/flex-regular-fit-cargo-shorts-11-dk0wr5560bk",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0WR5560BK-FR.jpg?v=1772839392",
+    "image_url": "/static/img/products/prod_sh_005.jpg",
     "description": "Engineered for demanding work environments with Dickies FLEX fabric. Wrinkle-resistant and stain-release finishes. Wide tunnel belt loops, multiple button-closure storage pockets, dedicated cell phone pocket. 7.25 oz. Mechanical Stretch Twill, 65% Polyester/35% Cotton. 11-inch inseam.",
     "search_query": "dickies flex regular cargo shorts black men",
     "tags": [
@@ -925,7 +969,8 @@
       "stretch",
       "regular fit"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0WR5560BK-FR.jpg?v=1772839392"
   },
   {
     "id": "prod_sh_006",
@@ -936,7 +981,7 @@
     "color": "stone",
     "price_estimate_usd": 29.99,
     "product_url": "https://oldnavy.gap.com/browse/product.do?pid=861861052",
-    "image_url": "https://oldnavy.gapcanada.ca/webcontent/0057/898/311/cn57898311.jpg",
+    "image_url": "/static/img/products/prod_sh_006.jpg",
     "description": "Men's slim-fit chino shorts featuring an 8-inch inseam and built-in flex capabilities. Built-In Flex technology for all-day comfort and movement. Available in regular and tall fits. Rated 4.74 out of 5 stars from 4,690 customers.",
     "search_query": "old navy slim chino shorts men built-in flex 8 inch",
     "tags": [
@@ -945,7 +990,8 @@
       "casual",
       "flex"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://oldnavy.gapcanada.ca/webcontent/0057/898/311/cn57898311.jpg"
   },
   {
     "id": "prod_sh_007",
@@ -956,7 +1002,7 @@
     "color": "heritage green",
     "price_estimate_usd": 39.99,
     "product_url": "https://oldnavy.gap.com/browse/product.do?pid=889988032",
-    "image_url": "https://oldnavy.gap.com/webcontent/0054/916/842/cn54916842.jpg",
+    "image_url": "/static/img/products/prod_sh_007.jpg",
     "description": "Chino shorts featuring a hybrid design with a 10-inch inseam. Combines chino aesthetics with athletic performance technology. Available in sizes 28W to 54W. Rated 4.71 out of 5 stars from 109 customers.",
     "search_query": "old navy tech hybrid chino shorts men 10 inch",
     "tags": [
@@ -965,7 +1011,8 @@
       "athletic",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://oldnavy.gap.com/webcontent/0054/916/842/cn54916842.jpg"
   },
   {
     "id": "prod_sh_008",
@@ -976,7 +1023,7 @@
     "color": "black",
     "price_estimate_usd": 29.99,
     "product_url": "https://oldnavy.gap.com/browse/product.do?pid=545878012",
-    "image_url": "https://oldnavy.gap.com/webcontent/0052/989/977/cn52989977.jpg",
+    "image_url": "/static/img/products/prod_sh_008.jpg",
     "description": "High-performance fabric with stretch for 24/7 comfort. Elastic-drawstring waist, hip pockets, breathable pocket lining, and quick-drying properties. 88% polyester and 12% spandex. Relaxed fit through the hip and thigh. 7-inch inseam. Rated 4.8 out of 5 stars from 5,608 reviews.",
     "search_query": "old navy essential woven workout shorts men black 7 inch",
     "tags": [
@@ -985,7 +1032,8 @@
       "quick-dry",
       "stretch"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://oldnavy.gap.com/webcontent/0052/989/977/cn52989977.jpg"
   },
   {
     "id": "prod_sh_009",
@@ -996,7 +1044,7 @@
     "color": "toasted almond",
     "price_estimate_usd": 64.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=8878370020029",
-    "image_url": "https://www.gap.com/webcontent/0055/127/198/cn55127198.jpg",
+    "image_url": "/static/img/products/prod_sh_009.jpg",
     "description": "Signature linen cotton pairing a soft hand feel with airy-light texture. Naturally cool linen-cotton blend shorts with button closure, zip fly, side slant pockets, and back welt pockets. 7.5-inch inseam. Naturally breathable for warm weather.",
     "search_query": "gap linen cotton shorts men 7.5 inch",
     "tags": [
@@ -1005,7 +1053,8 @@
       "summer",
       "breathable"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0055/127/198/cn55127198.jpg"
   },
   {
     "id": "prod_sh_010",
@@ -1016,7 +1065,7 @@
     "color": "grey",
     "price_estimate_usd": 59.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=8878380120000",
-    "image_url": "https://www.gap.com/webcontent/0055/762/764/cn55762764.jpg",
+    "image_url": "/static/img/products/prod_sh_010.jpg",
     "description": "Relaxed fit linen-blend shorts with 5.5-inch inseam. Lightweight, breathable fabric combining the natural softness of linen with the durability of cotton. Easy casual styling for warm weather. Rated 4.36 out of 5 stars.",
     "search_query": "gap linen blend relaxed shorts men grey 5.5 inch",
     "tags": [
@@ -1025,7 +1074,8 @@
       "casual",
       "summer"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0055/762/764/cn55762764.jpg"
   },
   {
     "id": "prod_sh_011",
@@ -1036,7 +1086,7 @@
     "color": "black",
     "price_estimate_usd": 40.0,
     "product_url": "https://www.nike.com/t/challenger-mens-dri-fit-7-brief-lined-running-shorts-GJ36hw",
-    "image_url": "https://static.nike.com/a/images/t_web_pw_592_v2/f_auto/4413cdc0-04f5-4097-9a3e-de3d42f50bc0/M+NK+DF+CHALLENGER+7BF+SHORT.png",
+    "image_url": "/static/img/products/prod_sh_011.jpg",
     "description": "Nike Dri-FIT technology moves sweat away from skin for quicker evaporation. Brief lining offers lightweight support. Lightweight and stretchy woven fabric with mesh at the lower side panels for cooling. 7-inch inseam. Body: 100% polyester. Lining: 92% polyester/8% spandex.",
     "search_query": "nike challenger dri-fit running shorts men 7 inch black",
     "tags": [
@@ -1045,7 +1095,8 @@
       "dri-fit",
       "moisture-wicking"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://static.nike.com/a/images/t_web_pw_592_v2/f_auto/4413cdc0-04f5-4097-9a3e-de3d42f50bc0/M+NK+DF+CHALLENGER+7BF+SHORT.png"
   },
   {
     "id": "prod_sh_012",
@@ -1056,7 +1107,7 @@
     "color": "midnight navy",
     "price_estimate_usd": 40.0,
     "product_url": "https://www.nike.com/t/challenger-mens-dri-fit-5-brief-lined-running-shorts-uSmBST72",
-    "image_url": "https://static.nike.com/a/images/t_default/u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/b04f2039-2f2d-4240-af32-40d7fcf5d773/M+NK+DF+CHALLENGER+5BF+SHORT.png",
+    "image_url": "/static/img/products/prod_sh_012.jpg",
     "description": "Sweat-wicking design with a relaxed fit geared for running, training and yoga. Nike Dri-FIT technology. Brief lining offers lightweight support. Lightweight and stretchy woven fabric with mesh at lower side panels. 5-inch inseam. Body: 100% polyester. Lining: 92% polyester/8% spandex.",
     "search_query": "nike challenger dri-fit running shorts men 5 inch navy",
     "tags": [
@@ -1065,7 +1116,8 @@
       "dri-fit",
       "moisture-wicking"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://static.nike.com/a/images/t_default/u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/b04f2039-2f2d-4240-af32-40d7fcf5d773/M+NK+DF+CHALLENGER+5BF+SHORT.png"
   },
   {
     "id": "prod_sh_013",
@@ -1076,7 +1128,7 @@
     "color": "turkish coffee",
     "price_estimate_usd": 80.0,
     "product_url": "https://www.vans.com/en-us/p/mens/clothing/pants-5585/authentic-chino-loose-pants-VN000HZCD4C",
-    "image_url": "https://assets.vans.eu/images/t_img/c_fill,g_center,f_auto,h_815,w_652,e_unsharp_mask:100/dpr_2.0/v1739561100/VN000HZCCUQ-ALT7/Authentic-Chino-Loose-Trousers.png",
+    "image_url": "/static/img/products/prod_sh_013.jpg",
     "description": "Versatile chino pant built with workwear fabrication. Loose chino with classic front hand pockets with coin pocket on the right, rear welt pockets with button closures, and embroidered Drop V bartacks for reinforcement. 10 oz. heavyweight twill blend: 64% polyester, 34% cotton, 2% elastane.",
     "search_query": "vans authentic chino loose pants men brown",
     "tags": [
@@ -1085,7 +1137,8 @@
       "skate",
       "loose fit"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://assets.vans.eu/images/t_img/c_fill,g_center,f_auto,h_815,w_652,e_unsharp_mask:100/dpr_2.0/v1739561100/VN000HZCCUQ-ALT7/Authentic-Chino-Loose-Trousers.png"
   },
   {
     "id": "prod_sh_014",
@@ -1096,7 +1149,7 @@
     "color": "vintage camo",
     "price_estimate_usd": 55.0,
     "product_url": "https://www.vans.com/en-us/p/mens/clothing/shorts-1205/range-cargo-loose-22-shorts-VN000G6SLVB",
-    "image_url": "https://assets.vans.com/images/t_img/c_fill,g_center,f_auto,h_573,w_458,e_unsharp_mask:100/dpr_2.0/v1748983206/VN000G6SLVB-ALT2/Range-Cargo-Loose-22-Shorts.png",
+    "image_url": "/static/img/products/prod_sh_014.jpg",
     "description": "Everyday, durable cargo short with a loose fit. Comfortable elastic waist and drawcord for easy wear, faux fly, front slash hand pockets, rear pockets with flaps, cargo pockets with logo patch, and signature key loop. At least 30% recycled/renewable materials. 8.3 oz. Canvas. 22-inch inseam.",
     "search_query": "vans range cargo shorts men camo loose 22 inch",
     "tags": [
@@ -1107,7 +1160,8 @@
       "camo",
       "sustainable"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://assets.vans.com/images/t_img/c_fill,g_center,f_auto,h_573,w_458,e_unsharp_mask:100/dpr_2.0/v1748983206/VN000G6SLVB-ALT2/Range-Cargo-Loose-22-Shorts.png"
   },
   {
     "id": "prod_sh_015",
@@ -1118,7 +1172,7 @@
     "color": "loden green",
     "price_estimate_usd": 55.0,
     "product_url": "https://www.vans.com/en-us/p/mens/clothing/shorts-1205/range-relaxed-18-sport-shorts-VN0005ZYZBF",
-    "image_url": "https://assets.vans.com/images/t_img/c_fill,g_center,f_auto,h_573,w_458,e_unsharp_mask:100/dpr_2.0/v1742403025/VN0005ZYZBF-FLATLAY/Range-Relaxed-18-Sport-Shorts.png",
+    "image_url": "/static/img/products/prod_sh_015.jpg",
     "description": "Water-resistant volley style sport shorts with 4-way mechanical stretch and an elastic waist. 18-inch inseam. Relaxed fit with comfortable drawcord closure. Designed for outdoor and athletic activities with Vans branding.",
     "search_query": "vans range relaxed sport shorts men green 18 inch",
     "tags": [
@@ -1127,7 +1181,8 @@
       "stretch",
       "water-resistant"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://assets.vans.com/images/t_img/c_fill,g_center,f_auto,h_573,w_458,e_unsharp_mask:100/dpr_2.0/v1742403025/VN0005ZYZBF-FLATLAY/Range-Relaxed-18-Sport-Shorts.png"
   },
   {
     "id": "prod_sh_016",
@@ -1138,7 +1193,7 @@
     "color": "charcoal grey",
     "price_estimate_usd": 29.9,
     "product_url": "https://www.uniqlo.com/us/en/products/E485856-000/00",
-    "image_url": "https://image.uniqlo.com/UQ/ST3/us/imagesgoods/485856/item/usgoods_01_485856_3x4.jpg",
+    "image_url": "/static/img/products/prod_sh_016.jpg",
     "description": "7-inch sweat shorts with a straight-leg silhouette. Made with fluffy yarn sweat fabric providing a comfortable, soft, cushioned feel. Ultra stretch for free movement. Elastic waistband with drawcord. Lightweight and casual for daily wear.",
     "search_query": "uniqlo ultra stretch sweat shorts men charcoal grey 7 inch",
     "tags": [
@@ -1147,7 +1202,8 @@
       "stretch",
       "comfortable"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://image.uniqlo.com/UQ/ST3/us/imagesgoods/485856/item/usgoods_01_485856_3x4.jpg"
   },
   {
     "id": "prod_sh_017",
@@ -1158,7 +1214,7 @@
     "color": "navy",
     "price_estimate_usd": 29.9,
     "product_url": "https://www.uniqlo.com/us/en/products/E487905-000/00",
-    "image_url": "https://image.uniqlo.com/UQ/ST3/us/imagesgoods/487905/item/usgoods_01_487905_3x4.jpg",
+    "image_url": "/static/img/products/prod_sh_017.jpg",
     "description": "AIRism Cotton Easy Shorts featuring AIRism technology for comfort and quick-drying properties. Lightweight cotton-blend fabric with moisture management. Easy pull-on style with elastic waistband and drawcord. Versatile for casual daily wear and light activity.",
     "search_query": "uniqlo airism cotton easy shorts men navy",
     "tags": [
@@ -1167,7 +1223,8 @@
       "lightweight",
       "airism"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://image.uniqlo.com/UQ/ST3/us/imagesgoods/487905/item/usgoods_01_487905_3x4.jpg"
   },
   {
     "id": "prod_sh_018",
@@ -1178,7 +1235,7 @@
     "color": "olive",
     "price_estimate_usd": 39.9,
     "product_url": "https://www.uniqlo.com/us/en/products/E463886-000/00",
-    "image_url": "https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/463886/item/goods_01_463886_3x4.jpg",
+    "image_url": "/static/img/products/prod_sh_018.jpg",
     "description": "Men's cargo shorts with 8.5-inch inseam. Multiple practical pockets including cargo side pockets. Relaxed fit for everyday casual wear. Lightweight and comfortable fabric blend suitable for warm-weather activities.",
     "search_query": "uniqlo men cargo shorts olive 8.5 inch",
     "tags": [
@@ -1187,7 +1244,8 @@
       "lightweight",
       "summer"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/463886/item/goods_01_463886_3x4.jpg"
   },
   {
     "id": "prod_sh_019",
@@ -1198,7 +1256,7 @@
     "color": "stone",
     "price_estimate_usd": 29.99,
     "product_url": "https://oldnavy.gap.com/browse/product.do?pid=868641022",
-    "image_url": "https://oldnavy.gap.com/webcontent/0054/902/152/cn54902152.jpg",
+    "image_url": "/static/img/products/prod_sh_019.jpg",
     "description": "Chino shorts combining chino aesthetics with athletic performance. 7-inch inseam. Rated 4.57 out of 5 stars from 190 customers. Available in multiple waist sizes for regular and tall fits.",
     "search_query": "old navy hybrid tech chino shorts men stone 7 inch",
     "tags": [
@@ -1207,7 +1265,8 @@
       "athletic",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://oldnavy.gap.com/webcontent/0054/902/152/cn54902152.jpg"
   },
   {
     "id": "prod_sh_020",
@@ -1218,7 +1277,7 @@
     "color": "sage green",
     "price_estimate_usd": 26.99,
     "product_url": "https://oldnavy.gap.com/browse/product.do?pid=846540042",
-    "image_url": "https://oldnavy.gap.com/webcontent/0052/594/733/cn52594733.jpg",
+    "image_url": "/static/img/products/prod_sh_020.jpg",
     "description": "Men's chino shorts with slim fit, built-in flex technology, and a 5-inch inseam. Rated 4.7 out of 5 stars from 328 customers. Available in sizes 28W-54W in regular and tall fits. Built-In Flex technology allows effortless movement throughout the day.",
     "search_query": "old navy slim chino shorts men sage 5 inch",
     "tags": [
@@ -1228,7 +1287,8 @@
       "casual",
       "summer"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://oldnavy.gap.com/webcontent/0052/594/733/cn52594733.jpg"
   },
   {
     "id": "prod_lp_001",
@@ -1239,7 +1299,7 @@
     "color": "reflecting pond",
     "price_estimate_usd": 45.0,
     "product_url": "https://www.dickies.com/en-us/products/original-874-r-work-pants-dk000874yt9",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK000874YT9-FR.jpg?v=1757683157",
+    "image_url": "/static/img/products/prod_lp_001.jpg",
     "description": "Timeless work pant with iconic design since 1967. Relaxed fit with a high-rise waist and straight leg that tapers slightly at the hem. Rigid twill workwear fabric built to wear in over time. Creased at the center for an instantly recognizable look. Heavyweight 8.5 oz. twill, 65% polyester/35% cotton. Best Seller.",
     "search_query": "dickies 874 original work pants men",
     "tags": [
@@ -1248,7 +1308,8 @@
       "straight leg",
       "twill"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK000874YT9-FR.jpg?v=1757683157"
   },
   {
     "id": "prod_lp_002",
@@ -1259,7 +1320,7 @@
     "color": "desert sand",
     "price_estimate_usd": 34.99,
     "product_url": "https://www.dickies.com/en-us/products/874-r-flex-work-pants-dk00874f0ds",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK00874F0DS-FR.jpg?v=1772831968",
+    "image_url": "/static/img/products/prod_lp_002.jpg",
     "description": "874 line with FLEX fabric for all-day comfort and freedom of movement. Professional appearance with wrinkle resistance and moisture-wicking technology. High rise sits at waist with a slightly tapered leg. Stain release finish. 8.2 oz. Mechanical Stretch Twill, 65% Polyester/35% Cotton.",
     "search_query": "dickies 874 flex work pants men desert sand",
     "tags": [
@@ -1268,7 +1329,8 @@
       "moisture-wicking",
       "professional"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK00874F0DS-FR.jpg?v=1772831968"
   },
   {
     "id": "prod_lp_003",
@@ -1279,7 +1341,7 @@
     "color": "dark navy",
     "price_estimate_usd": 34.99,
     "product_url": "https://www.dickies.com/en-us/products/relaxed-fit-cargo-work-pants-dk0wp5920dn",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0WP5920DN-FR.jpg?v=1772837420",
+    "image_url": "/static/img/products/prod_lp_003.jpg",
     "description": "Wrinkle-resistant cargo work pants in a relaxed fit. Designed for durability and functionality in professional or trade settings. Multiple cargo pockets for ample tool and accessory storage.",
     "search_query": "dickies relaxed fit cargo work pants navy",
     "tags": [
@@ -1288,7 +1350,8 @@
       "relaxed fit",
       "wrinkle-resistant"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0WP5920DN-FR.jpg?v=1772837420"
   },
   {
     "id": "prod_lp_004",
@@ -1299,7 +1362,7 @@
     "color": "dark stone",
     "price_estimate_usd": 34.99,
     "product_url": "https://www.dickies.com/en-us/products/flex-relaxed-fit-cargo-pants-dk0wp5980ds",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0WP5980DS-FR.jpg?v=1757669474",
+    "image_url": "/static/img/products/prod_lp_004.jpg",
     "description": "FLEX twill fabric engineered for enhanced mobility and comfort during demanding work. Ample room through the seat and thighs with a straight leg cut. Multiple pockets for storing tools and essentials. 7.25 oz. Mechanical Stretch Twill, 65% Polyester/35% Cotton.",
     "search_query": "dickies flex cargo pants men dark stone",
     "tags": [
@@ -1308,7 +1371,8 @@
       "stretch",
       "relaxed fit"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0WP5980DS-FR.jpg?v=1757669474"
   },
   {
     "id": "prod_lp_005",
@@ -1319,7 +1383,7 @@
     "color": "rinsed black olive",
     "price_estimate_usd": 39.99,
     "product_url": "https://www.dickies.com/en-us/products/relaxed-fit-duck-carpenter-pants-dk0du250rbv",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0DU250ROL-FR.jpg?v=1757671922",
+    "image_url": "/static/img/products/prod_lp_005.jpg",
     "description": "Lightweight carpenter pants made from garment-washed duck fabric for softness and shrinkage control. Relaxed fit with straight leg design. Extra room in seat and thigh. Classic pocket styling, utility pocket, and hammer loop. 9 oz. Duck, 100% Cotton.",
     "search_query": "dickies duck carpenter pants men black olive",
     "tags": [
@@ -1328,7 +1392,8 @@
       "cotton",
       "utility"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0DU250ROL-FR.jpg?v=1757671922"
   },
   {
     "id": "prod_lp_006",
@@ -1339,7 +1404,7 @@
     "color": "dark coffee",
     "price_estimate_usd": 64.99,
     "product_url": "https://www.carhartt.com/product/105461/relaxed-straight-ripstop-double-front-cargo-pant",
-    "image_url": "https://www.reworked.carhartt.com/cdn/shop/files/ovvqd6afrjjyttb0czel.jpg?v=1726221760&width=1445",
+    "image_url": "/static/img/products/prod_lp_006.jpg",
     "description": "Roomy fit through the seat and thigh with a straight leg. Reinforced front and back pockets, two large cargo pockets with snap closures, multiple utility pockets, and a gusseted crotch. Rugged Flex® technology for stretch. Cordura®-reinforced high-wear areas accept knee pads. 8-ounce, 59% cotton/39% polyester/2% spandex ripstop.",
     "search_query": "carhartt ripstop double front cargo pants men dark coffee",
     "tags": [
@@ -1349,7 +1414,8 @@
       "rugged flex",
       "utility"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.reworked.carhartt.com/cdn/shop/files/ovvqd6afrjjyttb0czel.jpg?v=1726221760&width=1445"
   },
   {
     "id": "prod_lp_007",
@@ -1360,7 +1426,7 @@
     "color": "dark khaki",
     "price_estimate_usd": 54.99,
     "product_url": "https://www.carhartt.com/product/B324/relaxed-straight-twill-dungaree",
-    "image_url": "https://imgcdn.carhartt.com/is/image/Carhartt/B324_DKH?fit=constrain,1&wid=798&hei=800&fmt=jpg",
+    "image_url": "/static/img/products/prod_lp_007.jpg",
     "description": "Classic Carhartt toughness with everyday wearability. Relaxed fit through the seat and thigh with a straight leg. Multiple utility pockets, hammer loop, and reinforced back pockets. Mid-rise design. 9.25-ounce, 100% cotton ringspun peached twill, pre-washed for a softer feel.",
     "search_query": "carhartt relaxed straight twill work pants dark khaki",
     "tags": [
@@ -1370,7 +1436,8 @@
       "classic",
       "utility"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://imgcdn.carhartt.com/is/image/Carhartt/B324_DKH?fit=constrain,1&wid=798&hei=800&fmt=jpg"
   },
   {
     "id": "prod_lp_008",
@@ -1381,7 +1448,7 @@
     "color": "gravel",
     "price_estimate_usd": 59.99,
     "product_url": "https://www.carhartt.com/product/102517/rugged-flex-relaxed-fit-canvas-5-pocket-work-pant",
-    "image_url": "https://i.stpost.com/carhartt-102291-rugged-flex-canvas-work-pants-factory-seconds~a~99nfw_2~1500.1.jpg",
+    "image_url": "/static/img/products/prod_lp_008.jpg",
     "description": "Work pants with Rugged Flex® stretch technology for unrestricted mobility. Mid-rise waist, roomy fit through seat and thigh, straight leg. Dedicated cell phone pocket. Versatile enough for dressing up when needed. 8-ounce, 98% cotton/2% spandex canvas.",
     "search_query": "carhartt rigby canvas pants men gravel rugged flex",
     "tags": [
@@ -1391,7 +1458,8 @@
       "stretch",
       "5-pocket"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://i.stpost.com/carhartt-102291-rugged-flex-canvas-work-pants-factory-seconds~a~99nfw_2~1500.1.jpg"
   },
   {
     "id": "prod_lp_009",
@@ -1402,7 +1470,7 @@
     "color": "shadow",
     "price_estimate_usd": 59.99,
     "product_url": "https://www.carhartt.com/product/103574/relaxed-straight-rigby-cargo-pant",
-    "image_url": "https://imgcdn.carhartt.com/is/image/Carhartt/103574_029?fit=constrain,1&wid=798&hei=800&fmt=jpg",
+    "image_url": "/static/img/products/prod_lp_009.jpg",
     "description": "Rugged Flex® stretch technology for enhanced mobility. Mid-rise fit with roomy seat and thigh, straight leg. Multiple storage: front pockets, back pockets, cargo pockets, and slide-in pockets with hidden hook-and-loop fasteners. Secure cell phone storage in right-leg cargo pocket. 8-ounce, 98% cotton/2% spandex canvas.",
     "search_query": "carhartt rigby cargo pants shadow men",
     "tags": [
@@ -1412,7 +1480,8 @@
       "rugged flex",
       "utility"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://imgcdn.carhartt.com/is/image/Carhartt/103574_029?fit=constrain,1&wid=798&hei=800&fmt=jpg"
   },
   {
     "id": "prod_lp_010",
@@ -1423,7 +1492,7 @@
     "color": "bamboo green",
     "price_estimate_usd": 59.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=4727575823028",
-    "image_url": "https://www.gap.com/webcontent/0055/768/129/cn55768129.jpg",
+    "image_url": "/static/img/products/prod_lp_010.jpg",
     "description": "Modern Straight silhouette with everyday performance and all-day comfort. Smooth stretch twill weave with special stretch waistband. Button closure, zip fly, front slant pockets, rear button-welt pockets. Approximately 98% cotton/2% lycra. Rated 4.66 out of 5 stars from 2,287 reviews.",
     "search_query": "gap modern straight khakis men bamboo green",
     "tags": [
@@ -1433,7 +1502,8 @@
       "stretch",
       "straight fit"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0055/768/129/cn55768129.jpg"
   },
   {
     "id": "prod_lp_011",
@@ -1444,7 +1514,7 @@
     "color": "brown",
     "price_estimate_usd": 59.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=4727574723032",
-    "image_url": "https://www.gap.com/webcontent/0057/432/671/cn57432671.jpg",
+    "image_url": "/static/img/products/prod_lp_011.jpg",
     "description": "Modern Straight silhouette combining everyday performance and all-day comfort. Smooth stretch twill weave with special stretch waistband. Available in Regular and Tall fits, sizes 29W-40W. Rated 4.66 out of 5 stars from 2,287 reviews.",
     "search_query": "gap modern straight khakis men brown",
     "tags": [
@@ -1454,7 +1524,8 @@
       "stretch",
       "straight fit"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0057/432/671/cn57432671.jpg"
   },
   {
     "id": "prod_lp_012",
@@ -1465,7 +1536,7 @@
     "color": "black",
     "price_estimate_usd": 79.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=881695002",
-    "image_url": "https://www.gap.com/webcontent/0060/605/196/cn60605196.jpg",
+    "image_url": "/static/img/products/prod_lp_012.jpg",
     "description": "Smooth, 10 oz. heavyweight twill khakis in a loose fit inspired by '90s styling. Made with 100% regenerative cotton. Button closure, zip fly, slant pockets, back welt pockets. Available in Regular and Tall fits. Rated 4.87 out of 5 stars.",
     "search_query": "gap 90s loose khakis heavyweight twill men black",
     "tags": [
@@ -1475,7 +1546,8 @@
       "cotton",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0060/605/196/cn60605196.jpg"
   },
   {
     "id": "prod_lp_013",
@@ -1486,7 +1558,7 @@
     "color": "cobblestone",
     "price_estimate_usd": 79.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=881702032",
-    "image_url": "https://www.gap.com/webcontent/0060/640/344/cn60640344.jpg",
+    "image_url": "/static/img/products/prod_lp_013.jpg",
     "description": "Relaxed straight fit khakis in heavyweight twill construction. Available in both regular and tall lengths, sizes 28W to 42W. Rated 4.59 out of 5 stars from 46 reviews.",
     "search_query": "gap heavyweight twill relaxed straight khakis men cobblestone",
     "tags": [
@@ -1495,7 +1567,8 @@
       "twill",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0060/640/344/cn60640344.jpg"
   },
   {
     "id": "prod_lp_014",
@@ -1506,7 +1579,7 @@
     "color": "dutch blue",
     "price_estimate_usd": 89.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=8870720123832",
-    "image_url": "https://www.gap.com/webcontent/0061/708/344/cn61708344.jpg",
+    "image_url": "/static/img/products/prod_lp_014.jpg",
     "description": "Vintage-inspired carpenter pants with characteristic double-knee reinforcement. Canvas fabric. Available in sizes 29W-38W. Rated 4.7 out of 5 stars from 20 reviews.",
     "search_query": "gap 90s loose canvas carpenter pants dutch blue double knee",
     "tags": [
@@ -1516,7 +1589,8 @@
       "loose fit",
       "double-knee"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.gap.com/webcontent/0061/708/344/cn61708344.jpg"
   },
   {
     "id": "prod_lp_015",
@@ -1527,7 +1601,7 @@
     "color": "black moss",
     "price_estimate_usd": 89.0,
     "product_url": "https://www.gap.com/browse/product.do?pid=745506012",
-    "image_url": "https://img01.ztat.net/article/spp-media-p1/6067f3b63bd24fbc938309dea0e4a396/3d05661df8264d8d8e5389a867ff19b8.jpg?imwidth=762",
+    "image_url": "/static/img/products/prod_lp_015.jpg",
     "description": "Cargo-style pants in a relaxed fit with multiple cargo pockets for utility storage. Available in waist sizes 28W-42W and multiple length options. Rated 4.57 out of 5 stars from 150 reviews.",
     "search_query": "gap relaxed utility cargo pants men black moss",
     "tags": [
@@ -1536,7 +1610,8 @@
       "relaxed fit",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://img01.ztat.net/article/spp-media-p1/6067f3b63bd24fbc938309dea0e4a396/3d05661df8264d8d8e5389a867ff19b8.jpg?imwidth=762"
   },
   {
     "id": "prod_lp_016",
@@ -1547,7 +1622,7 @@
     "color": "heritage green",
     "price_estimate_usd": 49.99,
     "product_url": "https://oldnavy.gap.com/browse/product.do?pid=492269032",
-    "image_url": "https://oldnavy.gapcanada.ca/webcontent/0056/075/232/cn56075232.jpg",
+    "image_url": "/static/img/products/prod_lp_016.jpg",
     "description": "Men's cargo pants featuring a straight fit in regular and tall lengths. Available in sizes 26W-54W. Tailored silhouette with practical cargo pocket storage. Rated 4.74 out of 5 stars from 2,823 reviews.",
     "search_query": "old navy straight tailored cargo pants men heritage green",
     "tags": [
@@ -1556,7 +1631,8 @@
       "straight fit",
       "utility"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://oldnavy.gapcanada.ca/webcontent/0056/075/232/cn56075232.jpg"
   },
   {
     "id": "prod_lp_017",
@@ -1567,7 +1643,7 @@
     "color": "navy blue",
     "price_estimate_usd": 150.0,
     "product_url": "https://bananarepublic.gap.com/browse/product.do?pid=649136012",
-    "image_url": "https://bananarepublic.gap.com/webcontent/0057/444/275/cn57444275.jpg",
+    "image_url": "/static/img/products/prod_lp_017.jpg",
     "description": "Dress pants with slim fit and wrinkle-resistant properties. Available in multiple waist sizes (30W-40W) and length options (30L, 32L, 34L). Crisp professional appearance that holds its shape throughout the day. Rated 4.7 out of 5 stars from 125 reviews.",
     "search_query": "banana republic slim wrinkle resistant dress pants navy",
     "tags": [
@@ -1577,7 +1653,8 @@
       "professional",
       "formal"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://bananarepublic.gap.com/webcontent/0057/444/275/cn57444275.jpg"
   },
   {
     "id": "prod_lp_018",
@@ -1588,7 +1665,7 @@
     "color": "beige",
     "price_estimate_usd": 49.9,
     "product_url": "https://www.uniqlo.com/us/en/products/E450251-000/00",
-    "image_url": "https://image.uniqlo.com/UQ/ST3/us/imagesgoods/450251/item/usgoods_32_450251_3x4.jpg",
+    "image_url": "/static/img/products/prod_lp_018.jpg",
     "description": "Clean, modern look with everyday versatility. Slim straight-leg silhouette with stretch fabric. Smooth surface and minimal visible stitching maintain a refined appearance. Side pockets, welted back pockets, button finishes, and concealed stitching. UNIQLO 2026 Spring/Summer Masterpiece collection.",
     "search_query": "uniqlo slim chino pants men beige",
     "tags": [
@@ -1598,7 +1675,8 @@
       "stretch",
       "smart casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://image.uniqlo.com/UQ/ST3/us/imagesgoods/450251/item/usgoods_32_450251_3x4.jpg"
   },
   {
     "id": "prod_lp_019",
@@ -1609,7 +1687,7 @@
     "color": "black",
     "price_estimate_usd": 120.0,
     "product_url": "https://www.nike.com/t/tech-mens-fleece-joggers-MOfTXHdz",
-    "image_url": "https://static.nike.com/a/images/t_default/u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/c32d736a-c823-45f7-8941-0750408d9ebb/M+NK+TCH+FLC+JGGR.png",
+    "image_url": "/static/img/products/prod_lp_019.jpg",
     "description": "Premium, low-bulk fleece joggers. Smooth-on-both-sides fleece feels warmer and softer than ever while keeping the same lightweight build. Slim through the legs and seat for a clean, polished look. Roomy through the thigh, tapered at the knee. Articulated seams, taped Tech pocket. Body: 53% cotton/47% polyester.",
     "search_query": "nike tech fleece joggers men black",
     "tags": [
@@ -1619,7 +1697,8 @@
       "casual",
       "tech fleece"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://static.nike.com/a/images/t_default/u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/c32d736a-c823-45f7-8941-0750408d9ebb/M+NK+TCH+FLC+JGGR.png"
   },
   {
     "id": "prod_lp_020",
@@ -1630,7 +1709,7 @@
     "color": "black",
     "price_estimate_usd": 55.0,
     "product_url": "https://www.adidas.com/us/essentials-fleece-loose-joggers/IY9637.html",
-    "image_url": "https://myer-media.com.au/wcsstore/MyerCatalogAssetStore/images/25/473/2389/101/3/221340160/221340160_1_720x928.webp?w=1920&q=75",
+    "image_url": "/static/img/products/prod_lp_020.jpg",
     "description": "Soft fleece build and loose shape settle you into comfort while keeping the vibe casual. Side pockets, cuffed ankles, and a drawcord elastic waist. Made with 80% Better Cotton and 20% recycled polyester. Available in multiple colors.",
     "search_query": "adidas essentials fleece loose joggers men black",
     "tags": [
@@ -1640,7 +1719,8 @@
       "loose fit",
       "sustainable"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://myer-media.com.au/wcsstore/MyerCatalogAssetStore/images/25/473/2389/101/3/221340160/221340160_1_720x928.webp?w=1920&q=75"
   },
   {
     "id": "prod_jn_001",
@@ -1651,7 +1731,7 @@
     "color": "medium wash",
     "price_estimate_usd": 69.5,
     "product_url": "https://www.levi.com/US/en_US/clothing/men/jeans/straight/501-original-fit-mens-jeans/p/005013127",
-    "image_url": "https://lsco.scene7.com/is/image/lsco/125010537-alt1-pdp-ld?fmt=jpeg&qlt=70&resMode=sharp2&fit=crop,1&op_usm=0.6,0.6,8&wid=2000&hei=2500",
+    "image_url": "/static/img/products/prod_jn_001.jpg",
     "description": "The blueprint for every pair of jeans in existence. The 501 Original features a classic straight leg and iconic styling introduced in 1873, with patented durable rivets, five-pocket styling, and a signature button fly. Medium stonewash finish that softens beautifully with wear.",
     "search_query": "levis 501 original fit jeans medium wash",
     "tags": [
@@ -1660,7 +1740,8 @@
       "heritage",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://lsco.scene7.com/is/image/lsco/125010537-alt1-pdp-ld?fmt=jpeg&qlt=70&resMode=sharp2&fit=crop,1&op_usm=0.6,0.6,8&wid=2000&hei=2500"
   },
   {
     "id": "prod_jn_002",
@@ -1671,7 +1752,7 @@
     "color": "light wash",
     "price_estimate_usd": 59.5,
     "product_url": "https://www.levi.com/US/en_US/clothing/men/jeans/slim/511TM-slim-fit-mens-jeans/p/045115859",
-    "image_url": "https://n.nordstrommedia.com/it/65e9424c-5841-4709-a51d-0954ead32add.jpeg?h=368&w=240&dpr=2",
+    "image_url": "/static/img/products/prod_jn_002.jpg",
     "description": "The 511 Slim sits below the waist and fits slim from the hip to ankle, for a fit that moves with your body. Cut close to the body — lean, but not too skinny. The perfect alternative to the skinny jean, made with a hint of stretch for all-day comfort.",
     "search_query": "levis 511 slim fit jeans light wash",
     "tags": [
@@ -1680,7 +1761,8 @@
       "stretch",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://n.nordstrommedia.com/it/65e9424c-5841-4709-a51d-0954ead32add.jpeg?h=368&w=240&dpr=2"
   },
   {
     "id": "prod_jn_003",
@@ -1691,7 +1773,7 @@
     "color": "prewashed indigo",
     "price_estimate_usd": 44.99,
     "product_url": "https://www.wrangler.com/shop/wrangler-cowboy-cut-original-fit-jean-13MWZ.html",
-    "image_url": "https://cdn11.bigcommerce.com/s-8a33z/images/stencil/1280x1280/products/440/2174/wrangler-13mwz-cowboy-cut-jeans__47594.1734880185.jpg?c=2",
+    "image_url": "/static/img/products/prod_jn_003.jpg",
     "description": "The 13MWZ has been a tried-and-true wardrobe staple for cowboys for more than 70 years and is the official ProRodeo competition jean. Features a classic neolite patch, fully felled side seams, five-pocket styling, and signature W stitching. Made from 100% heavyweight cotton denim.",
     "search_query": "wrangler cowboy cut original fit 13MWZ jeans",
     "tags": [
@@ -1700,7 +1782,8 @@
       "straight",
       "workwear"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn11.bigcommerce.com/s-8a33z/images/stencil/1280x1280/products/440/2174/wrangler-13mwz-cowboy-cut-jeans__47594.1734880185.jpg?c=2"
   },
   {
     "id": "prod_jn_004",
@@ -1711,7 +1794,7 @@
     "color": "dark stonewash",
     "price_estimate_usd": 49.99,
     "product_url": "https://www.lee.com/shop/mens-extreme-motion-regular-fit-straight-leg-jean-20160.html",
-    "image_url": "https://academy.scene7.com/is/image/academy/21335744?$pdp-mobile-gallery-ng$",
+    "image_url": "/static/img/products/prod_jn_004.jpg",
     "description": "Features an Extreme Flex Waistband that adapts to every movement, along with authentic five-pocket styling. Extreme Motion denim technology offers four-way stretch for maximum comfort and freedom of movement. Regular fit with a straight leg built for everyday wear.",
     "search_query": "lee extreme motion regular fit straight leg jean dark",
     "tags": [
@@ -1720,7 +1803,8 @@
       "straight",
       "comfort"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://academy.scene7.com/is/image/academy/21335744?$pdp-mobile-gallery-ng$"
   },
   {
     "id": "prod_jn_005",
@@ -1731,7 +1815,7 @@
     "color": "black wash",
     "price_estimate_usd": 79.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=709140002",
-    "image_url": "https://img01.ztat.net/article/spp-media-p1/827f219629c4460c88ee48a9ed23a36c/102976cdea984e5a89880e538e39b384.jpg?imwidth=762",
+    "image_url": "/static/img/products/prod_jn_005.jpg",
     "description": "Fitted through the hip and thigh with a slim leg. Made with 12.5 oz denim including 6% recycled cotton and GapFlex Medium Stretch for all-day comfort. A versatile black wash slim jean available in regular and tall fits. Rated 4.57/5 from over 2,400 reviews.",
     "search_query": "gap slim jeans men black wash",
     "tags": [
@@ -1740,7 +1824,8 @@
       "versatile",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://img01.ztat.net/article/spp-media-p1/827f219629c4460c88ee48a9ed23a36c/102976cdea984e5a89880e538e39b384.jpg?imwidth=762"
   },
   {
     "id": "prod_jn_006",
@@ -1751,7 +1836,7 @@
     "color": "rinse",
     "price_estimate_usd": 69.95,
     "product_url": "https://www.gap.com/browse/product.do?pid=834783002",
-    "image_url": "https://dynamic.zacdn.com/NJ0t5JfVCecKCOHzcE32SiaEoUs=/filters:quality(70):format(webp)/https://static-sg.zacdn.com/p/gap-2939-1253614-6.jpg",
+    "image_url": "/static/img/products/prod_jn_006.jpg",
     "description": "Classic fit slim through the hip and thigh with a straight leg. Made with 12.5 oz stretch denim for comfortable all-day wear. Clean rinse wash keeps the look versatile and modern. Available in waist sizes 28W–42W and lengths 28L–34L. Rated 4.66/5 from over 2,170 reviews.",
     "search_query": "gap straight jeans men rinse",
     "tags": [
@@ -1760,7 +1845,8 @@
       "versatile",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://dynamic.zacdn.com/NJ0t5JfVCecKCOHzcE32SiaEoUs=/filters:quality(70):format(webp)/https://static-sg.zacdn.com/p/gap-2939-1253614-6.jpg"
   },
   {
     "id": "prod_jn_007",
@@ -1771,7 +1857,7 @@
     "color": "faded blue",
     "price_estimate_usd": 59.99,
     "product_url": "https://shop.mango.com/us/en/p/men/jeans/slim/jan-slim-fit-jeans_77040595",
-    "image_url": "https://media.mango.com/is/image/punto/77040595-TC-002?wid=1024",
+    "image_url": "/static/img/products/prod_jn_007.jpg",
     "description": "Slim-fit jeans in faded blue cotton fabric. Classic five-pocket design with zip fly. The faded wash delivers a vintage, worn-in look suitable for casual and smart-casual occasions.",
     "search_query": "mango jan slim fit jeans faded blue",
     "tags": [
@@ -1780,7 +1866,8 @@
       "casual",
       "versatile"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://media.mango.com/is/image/punto/77040595-TC-002?wid=1024"
   },
   {
     "id": "prod_jn_008",
@@ -1791,7 +1878,7 @@
     "color": "stonewashed indigo",
     "price_estimate_usd": 34.99,
     "product_url": "https://www.dickies.com/en-us/products/relaxed-fit-carpenter-jeans-dk019294snb",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK019294SNB-FR.jpg?v=1769815411",
+    "image_url": "/static/img/products/prod_jn_008.jpg",
     "description": "Relaxed fit carpenter jeans in stonewashed indigo. Iconic carpenter loop, hammer loop, multiple utility pockets, and durable denim construction built for work and weekend wear. Straight leg with room through the seat and thigh for all-day comfort.",
     "search_query": "dickies relaxed fit carpenter jeans stonewash indigo",
     "tags": [
@@ -1800,7 +1887,8 @@
       "utility",
       "workwear"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK019294SNB-FR.jpg?v=1769815411"
   },
   {
     "id": "prod_jn_009",
@@ -1811,7 +1899,7 @@
     "color": "dark denim wash",
     "price_estimate_usd": 39.99,
     "product_url": "https://www.dickies.com/en-us/products/flex-slim-fit-jeans-dk0a85wxl9d",
-    "image_url": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0A85WXL9D-FR.jpg?v=1757669318",
+    "image_url": "/static/img/products/prod_jn_009.jpg",
     "description": "Slim fit jeans in cotton-blend denim with flex stretch for all-day comfort and mobility. Reinforced with double needle stitching throughout for durability. Versatile from job site to after hours. Available in black, dark, medium, and mid washes.",
     "search_query": "dickies flex slim fit jeans dark denim",
     "tags": [
@@ -1820,7 +1908,8 @@
       "stretch",
       "durable"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0692/5752/7484/files/DK0A85WXL9D-FR.jpg?v=1757669318"
   },
   {
     "id": "prod_jn_010",
@@ -1831,7 +1920,7 @@
     "color": "new ink dark indigo",
     "price_estimate_usd": 195.0,
     "product_url": "https://www.nudiejeans.com/en-US/product/grim-tim-new-ink",
-    "image_url": "https://nudie.centracdn.net/client/dynamic/images/6952_e48fbc9569-grim-tim-new-ink-2-lifestyle.jpg",
+    "image_url": "/static/img/products/prod_jn_010.jpg",
     "description": "Slim fit stretch jeans with a straight leg in an indigo-intense worn-in wash. Made from organic cotton. Warp yarns dyed intense indigo and weft yarns dyed black create a distinctive ink-like hue. Faded orange thread at seams, navy back pocket embroidery, copper trims, button fly. 99% cotton, 1% elastane.",
     "search_query": "nudie jeans grim tim new ink slim straight",
     "tags": [
@@ -1840,7 +1929,8 @@
       "premium",
       "dark wash"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://nudie.centracdn.net/client/dynamic/images/6952_e48fbc9569-grim-tim-new-ink-2-lifestyle.jpg"
   },
   {
     "id": "prod_jn_011",
@@ -1851,7 +1941,7 @@
     "color": "dry blue raw",
     "price_estimate_usd": 195.0,
     "product_url": "https://www.nudiejeans.com/en-US/product/rad-rufus-dry-heavy",
-    "image_url": "https://nudie.centracdn.net/client/dynamic/images/7901_fe4ac9085b-rad-rufus-dry-heavy-114364-44-lifestyle.jpg",
+    "image_url": "/static/img/products/prod_jn_011.jpg",
     "description": "Regular fit straight leg jeans in rigid 14.9 oz heavyweight denim from organic cotton. Pure indigo 15 oz Turkish denim with great ageing potential. Ring-spun and open-end yarns create a 90s marbling effect. Ages to a blue redcast tone with pronounced puckering texture. Button fly, copper trims.",
     "search_query": "nudie jeans rad rufus dry heavy raw denim",
     "tags": [
@@ -1860,7 +1950,8 @@
       "straight",
       "organic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://nudie.centracdn.net/client/dynamic/images/7901_fe4ac9085b-rad-rufus-dry-heavy-114364-44-lifestyle.jpg"
   },
   {
     "id": "prod_jn_012",
@@ -1871,7 +1962,7 @@
     "color": "mid-blue",
     "price_estimate_usd": 135.0,
     "product_url": "https://www.cos.com/en_usd/men/menswear/jeans/product.pillar-tapered-jeans-blue.1052587001.html",
-    "image_url": "https://cdn.endource.com/image/31353f18157b3227ddca2ff09d8a3ddb/detail/cos-pillar-tapered-jeans.jpg?optimizer=image&class=800",
+    "image_url": "/static/img/products/prod_jn_012.jpg",
     "description": "Crafted from 12oz non-stretch recycled-cotton denim with subtly contrasting topstitching. Mid-rise fit that sits just below the waist and gently tapers towards the ankles. COS's minimalist approach to quality denim — a core part of any considered wardrobe.",
     "search_query": "cos pillar tapered jeans mid blue men",
     "tags": [
@@ -1880,7 +1971,8 @@
       "premium",
       "recycled"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.endource.com/image/31353f18157b3227ddca2ff09d8a3ddb/detail/cos-pillar-tapered-jeans.jpg?optimizer=image&class=800"
   },
   {
     "id": "prod_jn_013",
@@ -1891,7 +1983,7 @@
     "color": "faded black",
     "price_estimate_usd": 270.0,
     "product_url": "https://www.apc.fr/products/new-standard-jeans-lze-cogex-m09001",
-    "image_url": "http://www.apc.fr/cdn/shop/files/COGEX-M09001LZE_00_591a4b4d-9676-4961-9e5e-a027cd0cc59e.jpg?v=1770804852&width=2048",
+    "image_url": "/static/img/products/prod_jn_013.jpg",
     "description": "Unisex straight-cut denim with a mid-rise fit in Japanese faded black cotton fabric. Five pockets, buttoned fly, and tonal stitching. A timeless wardrobe staple designed to mold to the wearer's body over time. 100% cotton. Runs small — size up recommended.",
     "search_query": "apc new standard jeans stonewashed black",
     "tags": [
@@ -1900,7 +1992,8 @@
       "unisex",
       "minimalist"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.apc.fr/cdn/shop/files/COGEX-M09001LZE_00_591a4b4d-9676-4961-9e5e-a027cd0cc59e.jpg?v=1770804852&width=2048"
   },
   {
     "id": "prod_jn_014",
@@ -1911,7 +2004,7 @@
     "color": "mid blue",
     "price_estimate_usd": 600.0,
     "product_url": "https://www.acnestudios.com/us/en/acne-studios-1996m-mid-blue-bingo/B00494-863.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwb9c3e860/images/B0/B00494-/2000x/B00494-863_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_jn_014.jpg",
     "description": "Natural indigo-blue non-stretch slubby denim with a medium-tone wash and lightly stained tint, finished for a gently dirty effect. Regular fit with mid to low waist and straight leg. Organically grown cotton, 5-pocket design, button fly, and cow leather patch.",
     "search_query": "acne studios 1996m regular fit jeans mid blue",
     "tags": [
@@ -1920,7 +2013,8 @@
       "organic",
       "designer"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwb9c3e860/images/B0/B00494-/2000x/B00494-863_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_jn_015",
@@ -1931,7 +2025,7 @@
     "color": "light blue vintage",
     "price_estimate_usd": 540.0,
     "product_url": "https://www.acnestudios.com/us/en/acne-studios-1996m-light-blue-vintage/B00512-228.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw0831050e/images/B0/B00512-/2000x/B00512-228_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_jn_015.jpg",
     "description": "Indigo denim with a light vintage wash for an authentic worn-in aesthetic. Regular fit with mid-to-low waist and straight leg. Organically grown cotton, 5-pocket design, and button fly. 100% cotton shell with cow leather patch. Available in regular and petit lengths.",
     "search_query": "acne studios 1996m light blue vintage jeans",
     "tags": [
@@ -1940,7 +2034,8 @@
       "straight",
       "designer"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw0831050e/images/B0/B00512-/2000x/B00512-228_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_jn_016",
@@ -1951,7 +2046,7 @@
     "color": "parkland medium indigo",
     "price_estimate_usd": 228.0,
     "product_url": "https://citizensofhumanity.com/products/sid-regular-straight-perform-in-parkland",
-    "image_url": "http://citizensofhumanity.com/cdn/shop/files/SID_PARKLAND_6200-1152_web.jpg?v=1718821943",
+    "image_url": "/static/img/products/prod_jn_016.jpg",
     "description": "Classic straight-fit jean with mid-rise and a fuller straight leg from top to ankle. Medium indigo wash with light whiskering. Soft stretch denim with a lightweight feel. Rise: 10.5 in, Leg Opening: 17 in. 98% Cotton, 2% Spandex. Made in USA.",
     "search_query": "citizens of humanity sid regular straight parkland",
     "tags": [
@@ -1960,7 +2055,8 @@
       "premium",
       "mid-rise"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://citizensofhumanity.com/cdn/shop/files/SID_PARKLAND_6200-1152_web.jpg?v=1718821943"
   },
   {
     "id": "prod_jn_017",
@@ -1971,7 +2067,7 @@
     "color": "bauhaus light-to-medium indigo",
     "price_estimate_usd": 238.0,
     "product_url": "https://citizensofhumanity.com/products/gage-slim-straight-archive-bauhaus",
-    "image_url": "http://citizensofhumanity.com/cdn/shop/files/6180-1715_GAGE_BAUHAUS.jpg?v=1728070614",
+    "image_url": "/static/img/products/prod_jn_017.jpg",
     "description": "Classic straight fit with a relaxed upper block and clean, tailored leg. Comfort stretch archive denim with a soft yet substantial hand. Bauhaus colorway: light-to-medium indigo wash with subtle fading and marbling for a broken-in, vintage-inspired look. Rise: 10.25 in. 99% Cotton, 1% Elastane.",
     "search_query": "citizens of humanity gage slim straight bauhaus",
     "tags": [
@@ -1980,7 +2076,8 @@
       "vintage wash",
       "premium"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://citizensofhumanity.com/cdn/shop/files/6180-1715_GAGE_BAUHAUS.jpg?v=1728070614"
   },
   {
     "id": "prod_jn_018",
@@ -1991,7 +2088,7 @@
     "color": "deep blue",
     "price_estimate_usd": 208.0,
     "product_url": "https://7forallmankind.com/products/luxe-performance-plus-slimmy-in-deep-blue-1",
-    "image_url": "https://cdn.shopify.com/s/files/1/0557/0612/4373/files/7T002A23_DBU_1.jpg?v=1769421609",
+    "image_url": "/static/img/products/prod_jn_018.jpg",
     "description": "Slim fit from hip to hem for a tailored look. Luxe Performance denim provides a soft touch, super stretch, and high recovery. Deep blue wash for a tried-and-true denim look that works in any situation.",
     "search_query": "7 for all mankind slimmy luxe performance deep blue",
     "tags": [
@@ -2000,7 +2097,8 @@
       "performance",
       "premium"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0557/0612/4373/files/7T002A23_DBU_1.jpg?v=1769421609"
   },
   {
     "id": "prod_jn_019",
@@ -2011,7 +2109,7 @@
     "color": "armonia light blue",
     "price_estimate_usd": 198.0,
     "product_url": "https://www.agjeans.com/products/tellis-modern-slim-1783andarmn",
-    "image_url": "https://cdn.shopify.com/s/files/1/0664/9036/8232/files/og-image-SU26.jpg?v=1778108576",
+    "image_url": "/static/img/products/prod_jn_019.jpg",
     "description": "Modern slim-fit with a contemporary silhouette featuring a fitted upper block and tapered leg that is slim but not too skinny. Equal parts comfort and classic denim styling. Front rise: 10 in, knee opening: 16.5 in, bottom opening: 14 in.",
     "search_query": "ag jeans tellis modern slim armonia light blue",
     "tags": [
@@ -2020,7 +2118,8 @@
       "premium",
       "stretch"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0664/9036/8232/files/og-image-SU26.jpg?v=1778108576"
   },
   {
     "id": "prod_jn_020",
@@ -2031,7 +2130,7 @@
     "color": "indigo",
     "price_estimate_usd": 198.0,
     "product_url": "https://www.ralphlauren.com/men-clothing-jeans/sullivan-slim-stretch-selvedge-jean/480839.html",
-    "image_url": "https://www.ralphlauren.global/on/demandware.static/-/Library-Sites-RalphLauren_EU_Library/default/dw93446b2c/images/social-sharing/ralph_lauren_emea_og_image.png",
+    "image_url": "/static/img/products/prod_jn_020.jpg",
     "description": "Slim-leg Sullivan with a regular rise and trim fit through the seat, thigh, and knee. Crafted from Japanese selvedge twill woven to prevent fraying at the seams. Stretch fabric for all-day comfort. A refined staple combining classic tailoring with performance.",
     "search_query": "polo ralph lauren sullivan slim selvedge jean indigo",
     "tags": [
@@ -2040,7 +2139,8 @@
       "Japanese denim",
       "premium"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.ralphlauren.global/on/demandware.static/-/Library-Sites-RalphLauren_EU_Library/default/dw93446b2c/images/social-sharing/ralph_lauren_emea_og_image.png"
   },
   {
     "id": "prod_jk_001",
@@ -2051,7 +2151,7 @@
     "color": "medium wash",
     "price_estimate_usd": 98.0,
     "product_url": "https://www.levi.com/US/en_US/clothing/men/outerwear/trucker-jacket/p/723340574",
-    "image_url": "https://lsco.scene7.com/is/image/lsco/723340723-dynamic1-pdp?fmt=jpeg&qlt=70&resMode=sharp2&fit=crop,1&op_usm=0.6,0.6,8&wid=2000&hei=2500",
+    "image_url": "/static/img/products/prod_jk_001.jpg",
     "description": "The classic Levi's Trucker Jacket with a boxy vintage silhouette. Made from 100% cotton denim that looks better over time through natural wear, fading, and aging. Distinct chest pockets with button closure, button front, and adjustable waist tabs. A heritage piece defining casual American style for decades.",
     "search_query": "levis trucker jacket medium wash men",
     "tags": [
@@ -2060,7 +2160,8 @@
       "heritage",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://lsco.scene7.com/is/image/lsco/723340723-dynamic1-pdp?fmt=jpeg&qlt=70&resMode=sharp2&fit=crop,1&op_usm=0.6,0.6,8&wid=2000&hei=2500"
   },
   {
     "id": "prod_jk_002",
@@ -2071,7 +2172,7 @@
     "color": "tobacco destroy wash",
     "price_estimate_usd": 348.0,
     "product_url": "https://www.carhartt-wip.com/en-us/products/og-detroit-jacket-tobacco-tobacco-destroy-wash-512",
-    "image_url": "https://cdn.media.amplience.net/i/carhartt_wip/I035614_1YL_4O-OF-01?%24OF%24=&fmt=auto&w=3840&qlt=default",
+    "image_url": "/static/img/products/prod_jk_002.jpg",
     "description": "Unlined heavyweight Dearborn Canvas jacket with loose fit silhouette. Two-way front zip, corduroy collar, zipped chest pocket, inside chest pocket, and two front welt pockets. Adjustable bottom band and cuffs. 100% organic cotton Dearborn canvas (12 oz), triple stitched with personalized snaps.",
     "search_query": "carhartt wip og detroit jacket tobacco destroy",
     "tags": [
@@ -2080,7 +2181,8 @@
       "chore coat",
       "heritage"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.media.amplience.net/i/carhartt_wip/I035614_1YL_4O-OF-01?%24OF%24=&fmt=auto&w=3840&qlt=default"
   },
   {
     "id": "prod_jk_003",
@@ -2091,7 +2193,7 @@
     "color": "dark beech / black",
     "price_estimate_usd": 198.0,
     "product_url": "https://us.carhartt-wip.com/products/madison-ripstop-jacket-dark-beech-black-garment-dyed-983",
-    "image_url": "https://cdn.media.amplience.net/i/carhartt_wip/A242007_20F_XX-OF-03?%24OF%24=&fmt=auto&w=3840&qlt=default",
+    "image_url": "/static/img/products/prod_jk_003.jpg",
     "description": "Midweight cotton ripstop jacket with poplin and taffeta linings. Elasticated bottom band and cuffs create a cinching effect. Front welt pockets. Garment-dyed finish provides a softer texture and complex coloring. Corduroy collar, light padding, and embroidered logo. 100% Cotton Columbia Ripstop, 6.5 oz.",
     "search_query": "carhartt wip madison ripstop jacket dark beech garment dyed",
     "tags": [
@@ -2100,7 +2202,8 @@
       "garment dyed",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.media.amplience.net/i/carhartt_wip/A242007_20F_XX-OF-03?%24OF%24=&fmt=auto&w=3840&qlt=default"
   },
   {
     "id": "prod_jk_004",
@@ -2111,7 +2214,7 @@
     "color": "collegiate navy",
     "price_estimate_usd": 100.0,
     "product_url": "https://www.columbia.com/p/mens-watertight-ii-jacket-1533891.html",
-    "image_url": "https://media.columbia.com/i/columbia/1533891_479_f_om",
+    "image_url": "/static/img/products/prod_jk_004.jpg",
     "description": "Waterproof breathable rain shell with Omni-Tech technology, complete seam sealing, and breathable mesh lining. Adjustable storm hood, drawcord-adjustable hem, zippered hand pockets, abrasion-resistant chin guard. Packs into its own pocket. 100% nylon, regular fit. Center back length: 29 inches.",
     "search_query": "columbia watertight ii rain jacket mens navy",
     "tags": [
@@ -2120,7 +2223,8 @@
       "packable",
       "outdoor"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://media.columbia.com/i/columbia/1533891_479_f_om"
   },
   {
     "id": "prod_jk_005",
@@ -2131,7 +2235,7 @@
     "color": "dark nocturnal",
     "price_estimate_usd": 70.0,
     "product_url": "https://www.columbia.com/p/mens-glennaker-lake-ii-rain-jacket-2089791.html",
-    "image_url": "https://media.columbia.com/i/columbia/2089791_257_f_om",
+    "image_url": "/static/img/products/prod_jk_005.jpg",
     "description": "Go-to light-rain layer that keeps you comfortable from trail to town. Packs into its own hand pocket for surprise showers. Omni-Shield water and stain repellent, stowable hood, zippered hand pockets. Weighs only 4.4 oz. Designed without PFAS.",
     "search_query": "columbia glennaker lake ii rain jacket mens",
     "tags": [
@@ -2140,7 +2244,8 @@
       "packable",
       "budget"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://media.columbia.com/i/columbia/2089791_257_f_om"
   },
   {
     "id": "prod_jk_006",
@@ -2151,7 +2256,7 @@
     "color": "black",
     "price_estimate_usd": 125.0,
     "product_url": "https://www.columbia.com/p/mens-ascender-softshell-jacket-1556531.html",
-    "image_url": "https://www.anacondastores.com/medias/BP90106756-black.jpg-SPOTWF-productHero?context=bWFzdGVyfGltYWdlc3wxNTc0NHxpbWFnZS9qcGVnfGltYWdlcy9oZWYvaGZjLzExMzYwODk1MzAzNzEwL0JQOTAxMDY3NTYtYmxhY2suanBnX1NQT1RXRl9wcm9kdWN0SGVyb3wxMzQwZDc5ZmQyODJjMmNmMTQwZDdkNDU2ZjVhMzVkM2NlZmNjYjJhOWI1ZWNkZTNlODczNWFhMzM3MGY5MjQ4",
+    "image_url": "/static/img/products/prod_jk_006.jpg",
     "description": "Wind-and-rain resistant softshell with soft bonded material that sheds moisture and blocks wind. Zippered pockets, chin guard, adjustable cuffs, and drawcord-adjustable hem. Omni-Shield technology. 100% polyester Contour Softshell, regular fit. Center back length: 27 inches.",
     "search_query": "columbia ascender softshell jacket mens black",
     "tags": [
@@ -2160,7 +2265,8 @@
       "outdoor",
       "versatile"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.anacondastores.com/medias/BP90106756-black.jpg-SPOTWF-productHero?context=bWFzdGVyfGltYWdlc3wxNTc0NHxpbWFnZS9qcGVnfGltYWdlcy9oZWYvaGZjLzExMzYwODk1MzAzNzEwL0JQOTAxMDY3NTYtYmxhY2suanBnX1NQT1RXRl9wcm9kdWN0SGVyb3wxMzQwZDc5ZmQyODJjMmNmMTQwZDdkNDU2ZjVhMzVkM2NlZmNjYjJhOWI1ZWNkZTNlODczNWFhMzM3MGY5MjQ4"
   },
   {
     "id": "prod_jk_007",
@@ -2171,7 +2277,7 @@
     "color": "olive",
     "price_estimate_usd": 398.0,
     "product_url": "https://www.barbour.com/us/ashby-waxed-jacket-MWX0339OL71.html",
-    "image_url": "https://media.johnlewiscontent.com/i/JohnLewis/000819488?fmt=auto&$background-off-white$",
+    "image_url": "/static/img/products/prod_jk_007.jpg",
     "description": "Constructed in Barbour's signature 6oz Sylkoil waxed cotton with a matte finish and comfortable, lived-in feel. Storm fly front with stud fastenings, cord collar with throat strap, angled handwarmer pockets and bellow pockets. Original Classic Tartan lining. Compatible with optional zip-in liners.",
     "search_query": "barbour ashby wax jacket mens olive",
     "tags": [
@@ -2180,7 +2286,8 @@
       "country",
       "classic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://media.johnlewiscontent.com/i/JohnLewis/000819488?fmt=auto&$background-off-white$"
   },
   {
     "id": "prod_jk_008",
@@ -2191,7 +2298,7 @@
     "color": "collegiate navy",
     "price_estimate_usd": 165.0,
     "product_url": "https://www.columbia.com/p/mens-powder-lite-ii-jacket-2086961.html",
-    "image_url": "https://media.columbia.com/i/columbia/2086961_379_f_om",
+    "image_url": "/static/img/products/prod_jk_008.jpg",
     "description": "Puffer jacket with Omni-Heat Reflective lining using silver dots to reflect body heat. 100% recycled Thermarator polyester insulation and Omni-Shield water and stain repellency. Active fit for mobility. Drawcord-adjustable hem, elastic cuffs, chin guard. PFAS-free. Center back length: 28 inches.",
     "search_query": "columbia powder lite ii puffer jacket mens navy",
     "tags": [
@@ -2200,7 +2307,8 @@
       "thermal",
       "outdoor"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://media.columbia.com/i/columbia/2086961_379_f_om"
   },
   {
     "id": "prod_jk_009",
@@ -2211,7 +2319,7 @@
     "color": "lilac",
     "price_estimate_usd": 800.0,
     "product_url": "https://www.acnestudios.com/us/en/rw-mn-outw000051/B90902-DQI.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwdd820ab1/images/B9/B90902-/2000x/B90902-DQI_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_jk_009.jpg",
     "description": "Lightweight nylon jacket with a papery texture and semi-shiny finish. Acne Studios 1996 logo on the back. Side-seam pockets, elasticated cuffs and hem, regular fit with below-waist silhouette. Shell: recycled nylon. Lining: recycled polyester and FSC-certified viscose.",
     "search_query": "acne studios lightweight nylon jacket logo lilac men",
     "tags": [
@@ -2220,7 +2328,8 @@
       "logo",
       "lightweight"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwdd820ab1/images/B9/B90902-/2000x/B90902-DQI_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_jk_010",
@@ -2231,7 +2340,7 @@
     "color": "black",
     "price_estimate_usd": 850.0,
     "product_url": "https://www.acnestudios.com/us/en/washed-logo-jacket-black/B90863-900.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwee53ba1c/images/B9/B90863-/2000x/B90863-900_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_jk_010.jpg",
     "description": "High collar jacket in soft cotton poplin with Acne Studios 1996 logo stamp artwork. Two-way zip closure, side seam zip pockets, elasticated cuffs and hem with mesh lining. Relaxed hip-length fit. Shell: 100% organically grown cotton. Lining: 82% recycled nylon, 18% elastane.",
     "search_query": "acne studios washed logo jacket black blouson",
     "tags": [
@@ -2240,7 +2349,8 @@
       "cotton",
       "premium"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwee53ba1c/images/B9/B90863-/2000x/B90863-900_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_jk_011",
@@ -2251,7 +2361,7 @@
     "color": "black",
     "price_estimate_usd": 80.0,
     "product_url": "https://www.adidas.com/us/adicolor-classics-sst-track-jacket/IM4545.html",
-    "image_url": "https://assets.adidas.com/images/w_600,f_auto,q_auto/fee1b0b61e594a30bfe7afc30098c0fc_9366/Adicolor_Classics_SST_Track_Jacket_Black_IM4545_01_laydown.jpg",
+    "image_url": "/static/img/products/prod_jk_011.jpg",
     "description": "Reimagined version of the iconic SST jacket worn by athletes and icons for decades. Classic three-stripe design down the sleeves, full-length zip, and Trefoil logo on the chest. Soft fabric in a relaxed fit. A streetwear staple that bridges sport and style.",
     "search_query": "adidas adicolor SST track jacket black men",
     "tags": [
@@ -2260,7 +2370,8 @@
       "streetwear",
       "three stripes"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://assets.adidas.com/images/w_600,f_auto,q_auto/fee1b0b61e594a30bfe7afc30098c0fc_9366/Adicolor_Classics_SST_Track_Jacket_Black_IM4545_01_laydown.jpg"
   },
   {
     "id": "prod_jk_012",
@@ -2271,7 +2382,7 @@
     "color": "beige",
     "price_estimate_usd": 150.0,
     "product_url": "https://www.adidas.com/us/premium-essentials-bomber-jacket/KD6568.html",
-    "image_url": "https://assets.adidas.com/images/w_940,f_auto,q_auto/7f58eea8063344908fafb96773b28dbe_9366/JD1293_21_model.jpg",
+    "image_url": "/static/img/products/prod_jk_012.jpg",
     "description": "Timeless style meets modern comfort. Trefoil badge on chest, loose fit, soft fabric, and full zipper closure with ribbed cuffs, collar, and hem for a classic bomber silhouette. An elevated take on the iconic bomber from Adidas Originals.",
     "search_query": "adidas premium essentials bomber jacket beige men",
     "tags": [
@@ -2280,7 +2391,8 @@
       "casual",
       "premium"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://assets.adidas.com/images/w_940,f_auto,q_auto/7f58eea8063344908fafb96773b28dbe_9366/JD1293_21_model.jpg"
   },
   {
     "id": "prod_jk_013",
@@ -2291,7 +2403,7 @@
     "color": "black / white",
     "price_estimate_usd": 115.0,
     "product_url": "https://www.nike.com/t/air-mens-windrunner-track-jacket-dcOnNeuS",
-    "image_url": "https://static.nike.com/a/images/t_default/u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/8885a39e-d848-4b67-b802-cd8186f3ee0c/M+NK+AIR+WR+TRK+JKT.png",
+    "image_url": "/static/img/products/prod_jk_013.jpg",
     "description": "Modern take on Nike's iconic Windrunner design. Lightweight woven fabric with a zip-up front and ribbed cuffs and hem. Classic chevron design across the chest with Nike Swoosh branding. Transitions from warm-up to everyday wear. Slim fit with zip hand pockets.",
     "search_query": "nike air windrunner track jacket mens black",
     "tags": [
@@ -2300,7 +2412,8 @@
       "windrunner",
       "sportswear"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://static.nike.com/a/images/t_default/u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/8885a39e-d848-4b67-b802-cd8186f3ee0c/M+NK+AIR+WR+TRK+JKT.png"
   },
   {
     "id": "prod_jk_014",
@@ -2311,7 +2424,7 @@
     "color": "olive",
     "price_estimate_usd": 268.0,
     "product_url": "https://www.jcrew.com/p/mens/categories/clothing/coats-and-jackets/chore-and-utility-jacket/garment-dyed-field-jacket-in-reverse-cotton-sateen/BX014",
-    "image_url": "https://www.jcrew.com/s7-img-facade/BX014_WZ4107?$crop1254$",
+    "image_url": "/static/img/products/prod_jk_014.jpg",
     "description": "Versatile field jacket in garment-dyed reverse cotton sateen with classic military aesthetic refined for everyday wear. Multiple utility pockets, wide collar for neck protection, and rugged durability for transitional weather. Rated 4.8/5 from 71 reviews.",
     "search_query": "jcrew garment dyed field jacket reverse cotton sateen olive",
     "tags": [
@@ -2320,7 +2433,8 @@
       "utility",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.jcrew.com/s7-img-facade/BX014_WZ4107?$crop1254$"
   },
   {
     "id": "prod_jk_015",
@@ -2331,7 +2445,7 @@
     "color": "navy",
     "price_estimate_usd": 165.0,
     "product_url": "https://www.ralphlauren.com/men-clothing-jackets-coats-vests/packable-twill-windbreaker/402206.html",
-    "image_url": "https://www.ralphlauren.global/on/demandware.static/-/Library-Sites-RalphLauren_EU_Library/default/dw93446b2c/images/social-sharing/ralph_lauren_emea_og_image.png",
+    "image_url": "/static/img/products/prod_jk_015.jpg",
     "description": "Packable windbreaker in durable twill fabric with a water-repellent finish for light rain protection. Polo Ralph Lauren logo embroidery, zip front, packs into its own pocket. A clean preppy silhouette that pairs easily with casual or smart-casual outfits.",
     "search_query": "polo ralph lauren packable twill windbreaker navy men",
     "tags": [
@@ -2340,7 +2454,8 @@
       "preppy",
       "lightweight"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.ralphlauren.global/on/demandware.static/-/Library-Sites-RalphLauren_EU_Library/default/dw93446b2c/images/social-sharing/ralph_lauren_emea_og_image.png"
   },
   {
     "id": "prod_jk_016",
@@ -2351,7 +2466,7 @@
     "color": "black",
     "price_estimate_usd": 80.0,
     "product_url": "https://www.uniqlo.com/us/en/products/E470067-000/00",
-    "image_url": "https://image.uniqlo.com/UQ/ST3/us/imagesgoods/470067/item/usgoods_69_470067_3x4.jpg",
+    "image_url": "/static/img/products/prod_jk_016.jpg",
     "description": "Lightweight premium down jacket with 90% down and 10% feathers at 750+ fill power. Toray NANODESIGN technology for water repellency. Anti-static lining. Packs into its own storage pouch with a single-touch buckle. 100% nylon shell. The definitive packable down jacket for travel and everyday urban use.",
     "search_query": "uniqlo ultra light down jacket mens black packable",
     "tags": [
@@ -2360,7 +2475,8 @@
       "lightweight",
       "essential"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://image.uniqlo.com/UQ/ST3/us/imagesgoods/470067/item/usgoods_69_470067_3x4.jpg"
   },
   {
     "id": "prod_jk_017",
@@ -2371,7 +2487,7 @@
     "color": "khaki",
     "price_estimate_usd": 89.99,
     "product_url": "https://shop.mango.com/us/en/p/men/jackets/bombers/bomber-jacket-with-zip_17037889",
-    "image_url": "https://cdn.endource.com/image/e4fa133e229f903d3b4ed76bf794b1bb/detail/mango-classic-bomber-jacket.jpg?optimizer=image&class=1600",
+    "image_url": "/static/img/products/prod_jk_017.jpg",
     "description": "Contemporary bomber jacket with zip closure in a relaxed fit. Ribbed cuffs, collar, and hem for a classic bomber silhouette. Multiple front pockets for utility. Bridges smart-casual and streetwear aesthetics. Easy to layer over knitwear or under heavier outerwear.",
     "search_query": "mango bomber jacket with zip mens khaki",
     "tags": [
@@ -2380,7 +2496,8 @@
       "versatile",
       "streetwear"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.endource.com/image/e4fa133e229f903d3b4ed76bf794b1bb/detail/mango-classic-bomber-jacket.jpg?optimizer=image&class=1600"
   },
   {
     "id": "prod_jk_018",
@@ -2391,7 +2508,7 @@
     "color": "dark mountain",
     "price_estimate_usd": 180.0,
     "product_url": "https://www.columbia.com/p/mens-alpine-action-ii-jacket-2125451.html",
-    "image_url": "https://columbia.scene7.com/is/image/ColumbiaSportswear2/2125451_039_f_om?wid=768&hei=806&v=1752269256",
+    "image_url": "/static/img/products/prod_jk_018.jpg",
     "description": "Waterproof-breathable ski jacket with Omni-Heat Reflective lining and Omni-Tech critically seam-sealed protection. Removable hood, adjustable powder skirt, multiple pockets (ski pass, goggles, phone), droptail design. Designed without PFAS. Regular fit. Center back length: 31 inches.",
     "search_query": "columbia alpine action ii ski jacket mens",
     "tags": [
@@ -2400,7 +2517,8 @@
       "insulated",
       "winter"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://columbia.scene7.com/is/image/ColumbiaSportswear2/2125451_039_f_om?wid=768&hei=806&v=1752269256"
   },
   {
     "id": "prod_jk_019",
@@ -2411,7 +2529,7 @@
     "color": "medium blue",
     "price_estimate_usd": 79.5,
     "product_url": "https://usa.tommy.com/en/men/clothing/jeans/stretch-slim-jean/78JA143-30U.html",
-    "image_url": "https://tommy-europe.scene7.com/is/image/TommyEurope/DM0DM09564_1A5_alternate2?$b2c_updp_m_mainImage_1920$",
+    "image_url": "/static/img/products/prod_jk_019.jpg",
     "description": "Slim fit classics cut from premium denim with added stretch for extra comfortable fit. The Bleecker Fit sits below the waist and is cut slim from hip to hem. Contains independently certified recycled cotton from used textiles and manufacturing waste. Rise: 10.75 in, inseam: 32 in.",
     "search_query": "tommy hilfiger stretch slim jean medium blue",
     "tags": [
@@ -2420,7 +2538,8 @@
       "recycled",
       "casual"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://tommy-europe.scene7.com/is/image/TommyEurope/DM0DM09564_1A5_alternate2?$b2c_updp_m_mainImage_1920$"
   },
   {
     "id": "prod_jk_020",
@@ -2431,7 +2550,7 @@
     "color": "mid blue",
     "price_estimate_usd": 99.0,
     "product_url": "https://www.arket.com/en/men/jeans/product.park-regular-straight-jeans-blue.1001870004.html",
-    "image_url": "https://media.arket.com/assets/006/bd/3d/bd3d5dc15621ebe896fe287474109987db8cb558_xl-1.jpg",
+    "image_url": "/static/img/products/prod_jk_020.jpg",
     "description": "Cut in non-stretch denim with a mid-rise waist, regular fit, and straight, slightly tapered legs from the knee down. Button fly. A modern-day wardrobe essential from ARKET designed for a more beautiful everyday life. Clean Scandinavian construction with careful attention to detail.",
     "search_query": "arket park regular straight jeans mid blue men",
     "tags": [
@@ -2440,7 +2559,8 @@
       "Scandinavian",
       "essential"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://public.assets.hmgroup.com/assets/006/bd/3d/bd3d5dc15621ebe896fe287474109987db8cb558_xl-1.jpg"
   },
   {
     "id": "prod_ct_001",
@@ -2451,7 +2571,7 @@
     "color": "brown",
     "price_estimate_usd": 586.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/weekend-max-mara-canasta-belted-trench-coat-item-34519376.aspx",
-    "image_url": "https://media.neimanmarcus.com/f_auto,q_auto:low,ar_4:5,c_fill,dpr_2.0,w_790/01/nm_4831114_100296_h",
+    "image_url": "/static/img/products/prod_ct_001.jpg",
     "description": "Classic 100% cotton trench coat featuring double-breasted button fastening, traditional collar, welt pockets, and a belted waist with long sleeves for a timeless silhouette.",
     "search_query": "women belted trench coat",
     "tags": [
@@ -2460,7 +2580,8 @@
       "cotton",
       "belted"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://media.neimanmarcus.com/f_auto,q_auto:low,ar_4:5,c_fill,dpr_2.0,w_790/01/nm_4831114_100296_h"
   },
   {
     "id": "prod_ct_002",
@@ -2471,7 +2592,7 @@
     "color": "beige",
     "price_estimate_usd": 434.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/the-frankie-shop-buttoned-belted-coat-item-33269308.aspx",
-    "image_url": "https://cdn.shopify.com/s/files/1/1527/0993/products/umi-belted-trench-coat-beige-coat-the-frankie-shop-767604_600x.jpg?v=1650534151",
+    "image_url": "/static/img/products/prod_ct_002.jpg",
     "description": "Neutral-toned coat in a cotton/polyester blend featuring button fastening, belt, front pockets, long sleeves, and epaulettes — a classic trench-inspired silhouette with tailored detailing.",
     "search_query": "beige belted coat women",
     "tags": [
@@ -2480,7 +2601,8 @@
       "tailored",
       "epaulettes"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/1527/0993/products/umi-belted-trench-coat-beige-coat-the-frankie-shop-767604_600x.jpg?v=1650534151"
   },
   {
     "id": "prod_ct_003",
@@ -2491,7 +2613,7 @@
     "color": "off-white",
     "price_estimate_usd": 339.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/barbour-debbie-showerproof-flap-pocket-button-coat-item-34962148.aspx",
-    "image_url": "https://cdn.media.amplience.net/i/frasersdev/33469004_o_a4.jpg?v=20251107134141",
+    "image_url": "/static/img/products/prod_ct_003.jpg",
     "description": "Showerproof button coat in 100% polyamide with polyester lining. Features button fastening, flap pockets, long sleeves, and tonal stitching throughout — practical functionality with classic British styling.",
     "search_query": "women showerproof button coat",
     "tags": [
@@ -2500,7 +2622,8 @@
       "flap pockets",
       "classic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.media.amplience.net/i/frasersdev/33469004_o_a4.jpg?v=20251107134141"
   },
   {
     "id": "prod_ct_004",
@@ -2511,7 +2634,7 @@
     "color": "black",
     "price_estimate_usd": 489.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/save-the-duck-hooded-coat-item-31682200.aspx",
-    "image_url": "https://www.net-a-porter.com/variants/images/1647597299243976/in/w2000_a3-4_q60.jpg",
+    "image_url": "/static/img/products/prod_ct_004.jpg",
     "description": "Sustainable puffer coat crafted from 100% recycled polyester with a zip fastening, drawstring hood, and welt pockets. Eco-conscious construction for all-weather warmth.",
     "search_query": "women hooded puffer coat recycled",
     "tags": [
@@ -2520,7 +2643,8 @@
       "recycled",
       "hooded"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.net-a-porter.com/variants/images/1647597299243976/in/w2000_a3-4_q60.jpg"
   },
   {
     "id": "prod_ct_005",
@@ -2531,7 +2655,7 @@
     "color": "black",
     "price_estimate_usd": 485.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/the-north-face-hooded-zip-coat-item-31317682.aspx",
-    "image_url": "https://assets.thenorthface.eu/images/t_img/f_auto,h_462,w_462,e_sharpen:60/dpr_2.0/v1752673432/NF0A8E741NO-HERO/Womens-Hyalite-Down-Hooded-Parka.jpg",
+    "image_url": "/static/img/products/prod_ct_005.jpg",
     "description": "Women's black parka in 100% polyester shell with recycled down and feather lining. Features a zippered front closure, attached hood, and front zip pockets — technical warmth with a sleek profile.",
     "search_query": "women north face hooded parka",
     "tags": [
@@ -2541,7 +2665,8 @@
       "hooded",
       "technical"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://assets.thenorthface.eu/images/t_img/f_auto,h_462,w_462,e_sharpen:60/dpr_2.0/v1752673432/NF0A8E741NO-HERO/Womens-Hyalite-Down-Hooded-Parka.jpg"
   },
   {
     "id": "prod_ct_006",
@@ -2552,7 +2677,7 @@
     "color": "black",
     "price_estimate_usd": 299.0,
     "product_url": "https://www.thenorthface.com/en-us/p/womens/womens-jackets-and-vests/womens-parkas-327273/womens-metropolis-parka-NF0A5GDS",
-    "image_url": "https://assets.thenorthface.eu/images/t_img/f_auto,h_462,w_462,e_sharpen:60/dpr_2.0/v1752673432/NF0A8E741NO-HERO/Womens-Hyalite-Down-Hooded-Parka.jpg",
+    "image_url": "/static/img/products/prod_ct_006.jpg",
     "description": "Slim-fit water-repellent parka with 550-fill Down insulation, keeping upper body, hips, and thighs warm. Features a DWR finish and flattering fitted silhouette for urban winter wear.",
     "search_query": "women down parka slim fit",
     "tags": [
@@ -2562,7 +2687,8 @@
       "slim fit",
       "water-repellent"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://assets.thenorthface.eu/images/t_img/f_auto,h_462,w_462,e_sharpen:60/dpr_2.0/v1752673432/NF0A8E741NO-HERO/Womens-Hyalite-Down-Hooded-Parka.jpg"
   },
   {
     "id": "prod_ct_007",
@@ -2573,7 +2699,7 @@
     "color": "navy",
     "price_estimate_usd": 349.0,
     "product_url": "https://www.patagonia.com/product/womens-down-with-it-insulated-parka/28442.html",
-    "image_url": "http://content.backcountry.com/images/items/900/PAT/PAT010H/NVBL.jpg",
+    "image_url": "/static/img/products/prod_ct_007.jpg",
     "description": "Knee-length parka with 100% recycled polyester shell and 600-fill-power 100% Recycled Down insulation, featuring a removable insulated hood. Made in a Fair Trade Certified factory.",
     "search_query": "women recycled down parka knee length",
     "tags": [
@@ -2583,7 +2709,8 @@
       "fair trade",
       "knee-length"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://content.backcountry.com/images/items/900/PAT/PAT010H/NVBL.jpg"
   },
   {
     "id": "prod_ct_008",
@@ -2594,7 +2721,7 @@
     "color": "black",
     "price_estimate_usd": 376.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/karl-lagerfeld-jeans-faux-leather-trench-coat-item-29167105.aspx",
-    "image_url": "https://is4.revolveassets.com/images/p4/n/tv/WITR-WO4_V1.jpg",
+    "image_url": "/static/img/products/prod_ct_008.jpg",
     "description": "100% polyurethane double-breasted faux-leather trench coat with belted waist, storm flap, two side welt pockets, and button fastening. Classic trench styling with a modern edge.",
     "search_query": "women faux leather trench coat",
     "tags": [
@@ -2603,7 +2730,8 @@
       "double-breasted",
       "belted"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://is4.revolveassets.com/images/p4/n/tv/WITR-WO4_V1.jpg"
   },
   {
     "id": "prod_ct_009",
@@ -2614,7 +2742,7 @@
     "color": "camel beige",
     "price_estimate_usd": 1400.0,
     "product_url": "https://www.acnestudios.com/us/en/single-breasted-wool-coat-camel-beige/B90730-DFJ.html",
-    "image_url": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwe62c2da4/images/B9/B90730-/2000x/B90730-DFJ_A.jpg?sw=1120&amp;sh=1680",
+    "image_url": "/static/img/products/prod_ct_009.jpg",
     "description": "Heavy wool blend coat in regular fit at knee length with a concealed front closure. Shell is 80% Wool/20% Nylon, featuring jet pockets with flaps and an Acne Studios Couture label with zigzag stitch detailing.",
     "search_query": "wool coat camel oversized luxury",
     "tags": [
@@ -2624,7 +2752,8 @@
       "luxury",
       "designer"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwe62c2da4/images/B9/B90730-/2000x/B90730-DFJ_A.jpg?sw=1120&amp;sh=1680"
   },
   {
     "id": "prod_ct_010",
@@ -2635,7 +2764,7 @@
     "color": "green",
     "price_estimate_usd": 587.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/the-frankie-shop-veren-bomber-jacket-item-35825507.aspx",
-    "image_url": "http://thefrankieshop.com/cdn/shop/files/PRESCOTT-FAUX-LEATHER-JACKET-MOSS-GREEN-BOYKA-0374.jpg?v=1756382014",
+    "image_url": "/static/img/products/prod_ct_010.jpg",
     "description": "Faux leather bomber in 100% polyurethane with a high neckline, concealed front zip, press-stud closures, long sleeves, two side welt pockets, elasticated hem, and silver-tone hardware.",
     "search_query": "women faux leather bomber jacket green",
     "tags": [
@@ -2645,7 +2774,8 @@
       "zip",
       "silver hardware"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://thefrankieshop.com/cdn/shop/files/PRESCOTT-FAUX-LEATHER-JACKET-MOSS-GREEN-BOYKA-0374.jpg?v=1756382014"
   },
   {
     "id": "prod_ct_011",
@@ -2656,7 +2786,7 @@
     "color": "ivory",
     "price_estimate_usd": 1490.0,
     "product_url": "https://www.nordstrom.com/s/signature-double-face-wool-cashmere-coat/8078544",
-    "image_url": "https://www.mytheresa.com/media/1094/1238/100/cf/P00993382_b1.jpg",
+    "image_url": "/static/img/products/prod_ct_011.jpg",
     "description": "Luxurious double-face wool and cashmere coat with draped lapels and hand-stitched construction — interior as soft and warm as the exterior, no sewn-in lining needed. A TOTEME signature piece.",
     "search_query": "wool cashmere coat double face luxury",
     "tags": [
@@ -2666,7 +2796,8 @@
       "luxury",
       "draped lapels"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.mytheresa.com/media/1094/1238/100/cf/P00993382_b1.jpg"
   },
   {
     "id": "prod_ct_012",
@@ -2677,7 +2808,7 @@
     "color": "black",
     "price_estimate_usd": 375.0,
     "product_url": "https://www.cos.com/en-us/women/womenswear/coatsjackets/coats/product/belted-double-faced-wool-coat-black-1097894006",
-    "image_url": "https://cdn.endource.com/image/06aa69dbd176c82e2654f77c64a063a8/detail/cos-belted-wool-coat.jpg?optimizer=image&class=800",
+    "image_url": "/static/img/products/prod_ct_012.jpg",
     "description": "Double-faced wool long coat with a structured silhouette and belted waist. Minimalist design with a clean aesthetic — premium double-faced fabric provides warmth without bulk.",
     "search_query": "wool belted long coat minimalist",
     "tags": [
@@ -2687,7 +2818,8 @@
       "minimalist",
       "long"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.endource.com/image/06aa69dbd176c82e2654f77c64a063a8/detail/cos-belted-wool-coat.jpg?optimizer=image&class=800"
   },
   {
     "id": "prod_ct_013",
@@ -2698,7 +2830,7 @@
     "color": "ecru",
     "price_estimate_usd": 590.0,
     "product_url": "https://www.apc.fr/products/mac-amy-aad-cohns-f30212",
-    "image_url": "http://www.apc.fr/cdn/shop/files/COHNS-F30212AAD_00.jpg?v=1767634251&width=2048",
+    "image_url": "/static/img/products/prod_ct_013.jpg",
     "description": "Oversized women's coat in 50% cotton/50% polyamide Italian fabric. Features a classic collar, raglan sleeves, knee-length proportions, side pockets, and hidden horn-effect button closure. 50% recycled material.",
     "search_query": "women oversized coat raglan sleeves",
     "tags": [
@@ -2708,7 +2840,8 @@
       "Italian fabric",
       "recycled"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.apc.fr/cdn/shop/files/COHNS-F30212AAD_00.jpg?v=1767634251&width=2048"
   },
   {
     "id": "prod_ct_014",
@@ -2719,7 +2852,7 @@
     "color": "camel",
     "price_estimate_usd": 199.99,
     "product_url": "https://shop.mango.com/us/en/p/women/coats/coats/double-breasted-wool-coat_17077768",
-    "image_url": "https://media.mango.com/is/image/punto/17077768-37-002?wid=1024",
+    "image_url": "/static/img/products/prod_ct_014.jpg",
     "description": "Straight-cut double-breasted wool coat with V-neck, notched lapels, long sleeves with buttoned cuffs, two front flap pockets, and a classic double-breasted fastening.",
     "search_query": "women double breasted wool coat affordable",
     "tags": [
@@ -2729,7 +2862,8 @@
       "flap pockets",
       "notched lapels"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://media.mango.com/is/image/punto/17077768-37-002?wid=1024"
   },
   {
     "id": "prod_ct_015",
@@ -2740,7 +2874,7 @@
     "color": "beige",
     "price_estimate_usd": 89.99,
     "product_url": "https://www2.hm.com/en_us/productpage.1249938001.html",
-    "image_url": "https://image.hm.com/assets/hm/a1/ee/a1ee88389e1b620f416f93d3eafee4e743cb8f4a.jpg?imwidth=2160",
+    "image_url": "/static/img/products/prod_ct_015.jpg",
     "description": "Long, loose-fit maxi coat in felted woven wool blend with notched lapels, one front button, raglan sleeves with cuff slits, a wide removable tie belt at waist, welt side pockets, and a back vent.",
     "search_query": "wool maxi coat affordable beige",
     "tags": [
@@ -2751,7 +2885,8 @@
       "raglan",
       "affordable"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://image.hm.com/assets/hm/a1/ee/a1ee88389e1b620f416f93d3eafee4e743cb8f4a.jpg?imwidth=2160"
   },
   {
     "id": "prod_ct_016",
@@ -2762,7 +2897,7 @@
     "color": "camel",
     "price_estimate_usd": 149.9,
     "product_url": "https://www.uniqlo.com/us/en/products/E450500-000/00",
-    "image_url": "https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/450500/item/goods_07_450500_3x4.jpg",
+    "image_url": "/static/img/products/prod_ct_016.jpg",
     "description": "Preshrunk double-faced 42% Nylon/37% Wool/21% Polyester long coat with a relaxed fit, adjustable belt at the waist, and an oversized collar. Premium look and feel at an affordable price.",
     "search_query": "uniqlo wool coat women affordable",
     "tags": [
@@ -2772,7 +2907,8 @@
       "double-faced",
       "affordable"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/450500/item/goods_07_450500_3x4.jpg"
   },
   {
     "id": "prod_ct_017",
@@ -2783,7 +2919,7 @@
     "color": "beige",
     "price_estimate_usd": 99.9,
     "product_url": "https://www.zara.com/us/en/long-belted-trench-coat-p04323601.html",
-    "image_url": "https://n.nordstrommedia.com/it/d0882fe1-4c96-4684-944c-38022e369fcd.jpeg?crop=pad&w=780&h=1196&dpr=2",
+    "image_url": "/static/img/products/prod_ct_017.jpg",
     "description": "Long belted trench coat with lapel collar and adjustable belt detail. A streamlined take on the iconic trench silhouette, combining classic proportions with modern simplicity.",
     "search_query": "long trench coat belted women beige",
     "tags": [
@@ -2793,7 +2929,8 @@
       "long",
       "classic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://n.nordstrommedia.com/it/d0882fe1-4c96-4684-944c-38022e369fcd.jpeg?crop=pad&w=780&h=1196&dpr=2"
   },
   {
     "id": "prod_ct_018",
@@ -2804,7 +2941,7 @@
     "color": "beige",
     "price_estimate_usd": 395.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/rains-nome-string-w-raincoat-item-31908253.aspx",
-    "image_url": "https://slimages.macysassets.com/is/image/MCY/products/8/optimized/23683868_fpx.tif?op_sharpen=1&wid=700&hei=855&fit=fit,1",
+    "image_url": "/static/img/products/prod_ct_018.jpg",
     "description": "Women's raincoat in 100% polyurethane/polyester with a drawstring waist and hood, snap button fastening, and flap pockets. Functional water-resistant outerwear in a minimalist design.",
     "search_query": "women raincoat minimalist waterproof",
     "tags": [
@@ -2814,7 +2951,8 @@
       "minimalist",
       "beige"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://slimages.macysassets.com/is/image/MCY/products/8/optimized/23683868_fpx.tif?op_sharpen=1&wid=700&hei=855&fit=fit,1"
   },
   {
     "id": "prod_ct_019",
@@ -2825,7 +2963,7 @@
     "color": "brown",
     "price_estimate_usd": 133.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/silvian-heach-double-breasted-coat-item-32598183.aspx",
-    "image_url": "https://static.lvrcdn.com/content/uploads/2025/10/diary/2-2.jpg?impolicy=bocontent",
+    "image_url": "/static/img/products/prod_ct_019.jpg",
     "description": "Structured brown 100% polyester coat with double-breasted button closure, peak lapels, functional front flap pockets, and long sleeves. A polished silhouette for transitional seasons.",
     "search_query": "women double breasted coat brown affordable",
     "tags": [
@@ -2834,7 +2972,8 @@
       "structured",
       "flap pockets"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://static.lvrcdn.com/content/uploads/2025/10/diary/2-2.jpg?impolicy=bocontent"
   },
   {
     "id": "prod_ct_020",
@@ -2845,7 +2984,7 @@
     "color": "tobacco brown",
     "price_estimate_usd": 328.0,
     "product_url": "https://www.farfetch.com/il/shopping/women/aspesi-single-breasted-coat-item-29512664.aspx",
-    "image_url": "https://aspesi.com/cdn/shop/files/S6_N_N519_7532__50226_0003.jpg?v=1770638835",
+    "image_url": "/static/img/products/prod_ct_020.jpg",
     "description": "Classic single-breasted coat in 53% cotton/47% polyester with front button fastening, two side welt pockets, notched lapels, and a straight hem. Refined Italian tailoring in a rich tobacco tone.",
     "search_query": "women single breasted coat tobacco",
     "tags": [
@@ -2855,7 +2994,8 @@
       "notched lapels",
       "welt pockets"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://aspesi.com/cdn/shop/files/S6_N_N519_7532__50226_0003.jpg?v=1770638835"
   },
   {
     "id": "prod_sw_001",
@@ -2866,7 +3006,7 @@
     "color": "brown",
     "price_estimate_usd": 144.0,
     "product_url": "https://www.camper.com/en_US/women/shoes/peu/camper-peu_path_-K201943-001",
-    "image_url": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201943-001_DF.jpg",
+    "image_url": "/static/img/products/prod_sw_001.jpg",
     "description": "Barefoot-inspired women's sneakers with Podoactiva Certified technology, removable PU footbeds, and rubber outsoles. Brown nubuck upper (95% pigskin suede, 5% polyester) for a grounded, flexible feel.",
     "search_query": "women barefoot sneakers nubuck",
     "tags": [
@@ -2876,7 +3016,8 @@
       "Podoactiva",
       "brown"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201943-001_DF.jpg"
   },
   {
     "id": "prod_sw_002",
@@ -2887,7 +3028,7 @@
     "color": "multicolor",
     "price_estimate_usd": 132.0,
     "product_url": "https://www.camper.com/en_US/women/shoes/drift/camper-drift_walk-K201886-006",
-    "image_url": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201886-006_DF.jpg",
+    "image_url": "/static/img/products/prod_sw_002.jpg",
     "description": "Lightweight street sneakers with flexible low-profile design and high-grip Vibram outsoles. Multicolor recycled polyester and calfskin nubuck uppers with OrthoLite Recycled footbeds and 100% recycled polyester lining.",
     "search_query": "women lightweight sneakers Vibram sole",
     "tags": [
@@ -2897,7 +3038,8 @@
       "multicolor",
       "street"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201886-006_DF.jpg"
   },
   {
     "id": "prod_sw_003",
@@ -2908,7 +3050,7 @@
     "color": "brown",
     "price_estimate_usd": 152.0,
     "product_url": "https://www.camper.com/en_US/women/shoes/runner/camper-runner_twentyfive-K201907-002",
-    "image_url": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201907-002_DF.jpg",
+    "image_url": "/static/img/products/prod_sw_003.jpg",
     "description": "The 25/7 sneaker designed for non-stop comfort. 100% calfskin suede upper with removable OrthoLite Recycled footbeds and rubber outsoles. Lining is 72% recycled polyester and 28% calfskin.",
     "search_query": "women suede runner sneaker comfortable",
     "tags": [
@@ -2918,7 +3060,8 @@
       "OrthoLite",
       "recycled"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201907-002_DF.jpg"
   },
   {
     "id": "prod_sw_004",
@@ -2929,7 +3072,7 @@
     "color": "red",
     "price_estimate_usd": 140.0,
     "product_url": "https://www.camper.com/en_US/women/shoes/casi_casi/camper-casi_myra-K201629-014",
-    "image_url": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201629-014_DF.jpg",
+    "image_url": "/static/img/products/prod_sw_004.jpg",
     "description": "Feminine ballet flats with a timeless slightly squared shape. 100% calfskin leather upper with OrthoLite Recycled footbeds and TPU outsoles containing 20% recycled content. Exceptional comfort from first wear.",
     "search_query": "women ballet flats leather red",
     "tags": [
@@ -2939,7 +3082,8 @@
       "OrthoLite",
       "recycled TPU"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201629-014_DF.jpg"
   },
   {
     "id": "prod_sw_005",
@@ -2950,7 +3094,7 @@
     "color": "brown",
     "price_estimate_usd": 175.0,
     "product_url": "https://www.camper.com/en_US/women/shoes/dn0/camper-donna-K201936-002",
-    "image_url": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201936-002_DF.jpg",
+    "image_url": "/static/img/products/prod_sw_005.jpg",
     "description": "Versatile everyday moccasins in 100% calfskin suede with non-removable OrthoLite Recycled footbeds and XL EXTRALIGHT EVA outsoles. 90% calfskin lining with 10% recycled polyester.",
     "search_query": "women moccasin loafer suede brown",
     "tags": [
@@ -2960,7 +3104,8 @@
       "OrthoLite",
       "EVA sole"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K201936-002_DF.jpg"
   },
   {
     "id": "prod_sw_006",
@@ -2971,7 +3116,7 @@
     "color": "brown",
     "price_estimate_usd": 108.0,
     "product_url": "https://www.camper.com/en_US/men/shoes/pix/camper-pix-K101076-006",
-    "image_url": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K101076-006_DF.jpg",
+    "image_url": "/static/img/products/prod_sw_006.jpg",
     "description": "Modeled on classically inspired typologies, these formal shoes feature removable OrthoLite Recycled footbeds, XL EXTRALIGHT EVA outsoles, and a hook-and-loop closing. Calfskin suede finished upper.",
     "search_query": "men suede dress shoe comfortable",
     "tags": [
@@ -2981,7 +3126,8 @@
       "EVA",
       "classic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K101076-006_DF.jpg"
   },
   {
     "id": "prod_sw_007",
@@ -2992,7 +3138,7 @@
     "color": "brown",
     "price_estimate_usd": 164.0,
     "product_url": "https://www.camper.com/en_US/men/shoes/don/camper-don-K101089-002",
-    "image_url": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K101089-002_DF.jpg",
+    "image_url": "/static/img/products/prod_sw_007.jpg",
     "description": "Simple yet refined casual everyday flat named after the Spanish term for 'Sir'. Brown calfskin suede upper with non-removable OrthoLite Recycled footbeds and XL EXTRALIGHT EVA outsoles.",
     "search_query": "men suede flat casual shoe refined",
     "tags": [
@@ -3002,7 +3148,8 @@
       "flat",
       "OrthoLite"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K101089-002_DF.jpg"
   },
   {
     "id": "prod_sw_008",
@@ -3013,7 +3160,7 @@
     "color": "brown",
     "price_estimate_usd": 140.0,
     "product_url": "https://www.camper.com/en_US/men/shoes/llc/camper-lluc_sandal-K101093-001",
-    "image_url": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K101093-001_DF.jpg",
+    "image_url": "/static/img/products/prod_sw_008.jpg",
     "description": "Mediterranean-inspired flat sandals offering total comfort and freedom. 100% calfskin suede upper with PU footbed and rubber outsole. Lining is 67% calfskin with 33% calfskin suede finish.",
     "search_query": "men flat sandal suede Mediterranean",
     "tags": [
@@ -3023,7 +3170,8 @@
       "flat",
       "Mediterranean"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cloud.camper.com/is/image/JGVzaG9wMDNtYmlnZ3JleSQ=/K101093-001_DF.jpg"
   },
   {
     "id": "prod_sw_009",
@@ -3034,7 +3182,7 @@
     "color": "black",
     "price_estimate_usd": 140.0,
     "product_url": "https://www.clarks.com/en-us/orinoco-3-style/26182897-p",
-    "image_url": "https://cdn.media.amplience.net/i/clarks/26182897_GW_1",
+    "image_url": "/static/img/products/prod_sw_009.jpg",
     "description": "Lace-up ankle boot with premium black leather upper and inside zip for easy entry. Features Contour Cushion molded footbed for all-day comfort and thermoplastic rubber sole for excellent grip. 40mm heel.",
     "search_query": "women leather ankle boot lace up",
     "tags": [
@@ -3045,7 +3193,8 @@
       "zip",
       "cushioned"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.media.amplience.net/i/clarks/26182897_GW_1"
   },
   {
     "id": "prod_sw_010",
@@ -3056,7 +3205,7 @@
     "color": "black",
     "price_estimate_usd": 89.99,
     "product_url": "https://www.clarks.com/en-us/emily-2-reyna/26179608-p",
-    "image_url": "https://cdn.media.amplience.net/i/clarks/26179608_GW_1",
+    "image_url": "/static/img/products/prod_sw_010.jpg",
     "description": "Pull-on ankle boot with durable black leather upper, elastic gore for easy entry, buckle fastening, and a grippy TR outsole. Features Ultimate Comfort PU foam footbed with targeted cushioning. 2.2-inch heel.",
     "search_query": "women pull on ankle boot buckle",
     "tags": [
@@ -3067,7 +3216,8 @@
       "buckle",
       "affordable"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.media.amplience.net/i/clarks/26179608_GW_1"
   },
   {
     "id": "prod_sw_011",
@@ -3078,7 +3228,7 @@
     "color": "black",
     "price_estimate_usd": 139.99,
     "product_url": "https://www.clarks.com/en-us/adalynn-hope/26184069-p",
-    "image_url": "https://cdn.media.amplience.net/i/clarks/26184069_GW_1",
+    "image_url": "/static/img/products/prod_sw_011.jpg",
     "description": "Women's knee-high boots in premium black leather with a metal side zip, elastic panels, adjustable buckles, and Ultimate Comfort foam footbed. Flexible TPR sole with TPU toplift. 30mm heel.",
     "search_query": "women knee high boot leather black",
     "tags": [
@@ -3089,7 +3239,8 @@
       "buckle",
       "cushioned"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.media.amplience.net/i/clarks/26184069_GW_1"
   },
   {
     "id": "prod_sw_012",
@@ -3100,7 +3251,7 @@
     "color": "dark sand",
     "price_estimate_usd": 130.0,
     "product_url": "https://www.clarks.com/en-us/orlene-top-wp/26182993-p",
-    "image_url": "https://cdn.media.amplience.net/i/clarks/26182993_GW_1",
+    "image_url": "/static/img/products/prod_sw_012.jpg",
     "description": "All-weather ankle boot in soft nubuck and leather with waterproof protection, inside zip, molded cushioned footbed, and lightweight flexible construction. Features rice-husk-flecked sole for visual interest and grip.",
     "search_query": "women waterproof ankle boot nubuck",
     "tags": [
@@ -3110,7 +3261,8 @@
       "sand",
       "cushioned"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.media.amplience.net/i/clarks/26182993_GW_1"
   },
   {
     "id": "prod_sw_013",
@@ -3121,7 +3273,7 @@
     "color": "black",
     "price_estimate_usd": 117.95,
     "product_url": "https://www.birkenstock.com/us/arizona-birko-flor/arizona-core-birkoflor-0-eva-u_1.html",
-    "image_url": "https://www.birkenstock.com/on/demandware.static/-/Sites-master-catalog-amer/default/dwb3d5222b/51791/51791.jpg",
+    "image_url": "/static/img/products/prod_sw_013.jpg",
     "description": "The iconic two-strap sandal since 1973. Skin-friendly, tear-resistant Birko-Flor synthetic leather upper with a contoured cork-latex footbed, adjustable straps with metal pin buckles, and lightweight EVA sole. Made in Germany.",
     "search_query": "Birkenstock Arizona sandal classic",
     "tags": [
@@ -3131,7 +3283,8 @@
       "iconic",
       "made in Germany"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.birkenstock.com/on/demandware.static/-/Sites-master-catalog-amer/default/dwb3d5222b/51791/51791.jpg"
   },
   {
     "id": "prod_sw_014",
@@ -3142,7 +3295,7 @@
     "color": "taupe",
     "price_estimate_usd": 139.95,
     "product_url": "https://www.birkenstock.com/us/arizona-suede-leather-taupe/arizona-core-suedeleather-0-eva-u_46.html",
-    "image_url": "https://www.birkenstock.com/on/demandware.static/-/Sites-master-catalog-amer/default/dw645eff56/51461/51461.jpg",
+    "image_url": "/static/img/products/prod_sw_014.jpg",
     "description": "Iconic sandal since 1973 with velvety suede upper, contoured cork-latex footbed with custom support, suede footbed lining, flexible lightweight EVA sole, and two adjustable straps with metal pin buckles. Made in Germany.",
     "search_query": "Birkenstock suede sandal taupe",
     "tags": [
@@ -3152,7 +3305,8 @@
       "cork",
       "adjustable straps"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.birkenstock.com/on/demandware.static/-/Sites-master-catalog-amer/default/dw645eff56/51461/51461.jpg"
   },
   {
     "id": "prod_sw_015",
@@ -3163,7 +3317,7 @@
     "color": "chestnut",
     "price_estimate_usd": 190.0,
     "product_url": "https://www.ugg.com/women-boots/classic-short-ii/1016223.html",
-    "image_url": "https://www.softmoc.com/items/images/1016223-CHE_XXX.jpg",
+    "image_url": "/static/img/products/prod_sw_015.jpg",
     "description": "The iconic silhouette in soft Twinface sheepskin with 17mm Grade-A Twinface sheepskin upper, fleece insole that wicks moisture, suede heel plate with UGG logo, and updated Treadlite sole for traction and durability. Pretreated to resist water and stains.",
     "search_query": "UGG Classic Short sheepskin boot women",
     "tags": [
@@ -3173,7 +3327,8 @@
       "waterproof-treated",
       "cozy"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.softmoc.com/items/images/1016223-CHE_XXX.jpg"
   },
   {
     "id": "prod_sw_016",
@@ -3184,7 +3339,7 @@
     "color": "wheat nubuck",
     "price_estimate_usd": 210.0,
     "product_url": "https://www.timberland.com/en-us/p/women/footwear-10096/womens-timberland-premium-6-inch-waterproof-boot-TB110361713",
-    "image_url": "https://assets.timberland.com/images/t_img/f_auto,h_650,w_650/e_sharpen:60/dpr_2.0/v1718951472/TB110361713-ALT4/Womens-Timberland-Premium-6Inch-Waterproof-Boot.png",
+    "image_url": "/static/img/products/prod_sw_016.jpg",
     "description": "Iconic waterproof boot in premium wheat nubuck leather with seam-sealed construction, removable anti-fatigue footbed for shock-absorbing comfort, and rubber lug outsole for flexible traction. A rugged wardrobe classic.",
     "search_query": "Timberland women wheat waterproof boot",
     "tags": [
@@ -3194,7 +3349,8 @@
       "lug sole",
       "iconic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://assets.timberland.com/images/t_img/f_auto,h_650,w_650/e_sharpen:60/dpr_2.0/v1718951472/TB110361713-ALT4/Womens-Timberland-Premium-6Inch-Waterproof-Boot.png"
   },
   {
     "id": "prod_sw_017",
@@ -3205,7 +3361,7 @@
     "color": "black",
     "price_estimate_usd": 75.0,
     "product_url": "https://us.puma.com/us/en/pd/suede-classic-xxi-sneakers/374915",
-    "image_url": "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_2000,h_2000/global/374915/12/sv01/fnd/PNA/fmt/png/Suede-Classic-XXI-Sneakers",
+    "image_url": "/static/img/products/prod_sw_017.jpg",
     "description": "Timeless full suede upper sneaker with rubber midsole and outsole, full lace closure, comfort sockliner, gold metallic foil PUMA callout, perforated PUMA Formstrip overlay, and archive woven label at tongue. Leather Working Group certified.",
     "search_query": "Puma Suede Classic sneaker black men",
     "tags": [
@@ -3215,7 +3371,8 @@
       "lace-up",
       "timeless"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_2000,h_2000/global/374915/12/sv01/fnd/PNA/fmt/png/Suede-Classic-XXI-Sneakers"
   },
   {
     "id": "prod_sw_018",
@@ -3226,7 +3383,7 @@
     "color": "black/white",
     "price_estimate_usd": 160.0,
     "product_url": "https://www.asics.com/us/en-us/gel-kayano/c/aa50101000/",
-    "image_url": "https://m.media-amazon.com/images/G/01/zappos/2024/listicles/JULY-ASICS-LISTICLES-AOE-1920x1000._FMwebp_.jpg",
+    "image_url": "/static/img/products/prod_sw_018.jpg",
     "description": "Completely redesigned stability running shoe with full-length FF Blast+ midsole, 4D Guidance System, PureGEL technology for softer landings, recycled engineered stretch knit upper, and external back heel counter for a comfortable stride.",
     "search_query": "ASICS stability running shoe women cushioned",
     "tags": [
@@ -3236,7 +3393,8 @@
       "GEL",
       "4D Guidance"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://m.media-amazon.com/images/G/01/zappos/2024/listicles/JULY-ASICS-LISTICLES-AOE-1920x1000._FMwebp_.jpg"
   },
   {
     "id": "prod_sw_019",
@@ -3247,7 +3405,7 @@
     "color": "black",
     "price_estimate_usd": 120.0,
     "product_url": "https://www.aldoshoes.com/products/verity-black/",
-    "image_url": "http://www.aldoshoes.com/cdn/shop/files/product_13621073_verity_black_001-001-043_main_sq_gy.jpg?v=1755828414",
+    "image_url": "/static/img/products/prod_sw_019.jpg",
     "description": "Streamlined ankle boot in smooth leather with a gleaming back zipper, 1.25-inch block heel, 4.25-inch shaft, and Pillow Walk dual density foam padded insoles. A versatile piece for office or casual wear.",
     "search_query": "women chelsea boot black leather block heel",
     "tags": [
@@ -3257,7 +3415,8 @@
       "block heel",
       "Pillow Walk"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.aldoshoes.com/cdn/shop/files/product_13621073_verity_black_001-001-043_main_sq_gy.jpg?v=1755828414"
   },
   {
     "id": "prod_sw_020",
@@ -3268,7 +3427,7 @@
     "color": "black",
     "price_estimate_usd": 150.0,
     "product_url": "https://www.samedelman.com/product/womens-loraine-bit-loafer-3016088",
-    "image_url": "https://n.nordstrommedia.com/it/213d98ee-9302-4b24-8c56-116e069e3b6f.jpeg?h=368&w=240&dpr=2",
+    "image_url": "/static/img/products/prod_sw_020.jpg",
     "description": "Classic bit-detail loafer combining polished styling with everyday comfort. Almond toe silhouette with signature hardware detail — a versatile flat that works equally well with denim or tailored trousers.",
     "search_query": "women bit loafer classic black leather",
     "tags": [
@@ -3278,7 +3437,8 @@
       "classic",
       "flat"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://n.nordstrommedia.com/it/213d98ee-9302-4b24-8c56-116e069e3b6f.jpeg?h=368&w=240&dpr=2"
   },
   {
     "id": "prod_ht_001",
@@ -3289,7 +3449,7 @@
     "color": "black",
     "price_estimate_usd": 55.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1321249-basic-boonie-hat-black",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1321249_BLAC_1.jpg?v=1780684697",
+    "image_url": "/static/img/products/prod_ht_001.jpg",
     "description": "Nylon boonie hat featuring Stüssy basic logo embroidery with woven eyelets, a mesh sweatband and lining, and a self-fabric strap with bead keeper. 100% nylon, unisex design available in S/M and L/XL.",
     "search_query": "stussy boonie bucket hat black",
     "tags": [
@@ -3297,7 +3457,8 @@
       "outdoor",
       "unisex"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1321249_BLAC_1.jpg?v=1780684697"
   },
   {
     "id": "prod_ht_002",
@@ -3308,7 +3469,7 @@
     "color": "black/olive",
     "price_estimate_usd": 55.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1321250-reversible-stock-bucket-hat-black-olive",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1321250_BLOL_1.jpg?v=1780350857",
+    "image_url": "/static/img/products/prod_ht_002.jpg",
     "description": "Classic fit reversible cotton twill bucket hat with unstructured silhouette. Exterior features Stüssy stock logo embroidery; interior features serif logo. Woven eyelets, two-sided wear. 100% cotton, unisex.",
     "search_query": "stussy reversible bucket hat black olive",
     "tags": [
@@ -3316,7 +3477,8 @@
       "casual",
       "reversible"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1321250_BLOL_1.jpg?v=1780350857"
   },
   {
     "id": "prod_ht_003",
@@ -3327,7 +3489,7 @@
     "color": "black",
     "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1321023-stock-bucket-hat-black",
-    "image_url": "https://uk.stussy.com/cdn/shop/files/1321023_BLAC_1.jpg?v=1760523808&width=1920",
+    "image_url": "/static/img/products/prod_ht_003.jpg",
     "description": "Classic unstructured bucket hat crafted from cotton twill with Stüssy stock logo embroidery, tonal topstitching, and woven eyelets. Cotton twill sweatband. 100% cotton, unisex, S/M and L/XL.",
     "search_query": "stussy stock bucket hat black cotton",
     "tags": [
@@ -3335,7 +3497,8 @@
       "casual",
       "classic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://uk.stussy.com/cdn/shop/files/1321023_BLAC_1.jpg?v=1760523808&width=1920"
   },
   {
     "id": "prod_ht_004",
@@ -3346,7 +3509,7 @@
     "color": "black",
     "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311107-new-era-9twenty-basic-strapback-black",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1311107_BLAC_1_7530060f-8c7f-4931-bfbc-4b0c0b0c1e1c.jpg?v=1763556413",
+    "image_url": "/static/img/products/prod_ht_004.jpg",
     "description": "New Era 9TWENTY six-panel cap in cotton twill with Stüssy basic stock logo in raised embroidery. Unstructured crown, woven eyelets, precurved brim, strapback closure with metal triglide. 100% cotton, unisex.",
     "search_query": "stussy new era 9twenty dad hat black strapback",
     "tags": [
@@ -3354,7 +3517,8 @@
       "dad hat",
       "collaboration"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311107_BLAC_1_7530060f-8c7f-4931-bfbc-4b0c0b0c1e1c.jpg?v=1763556413"
   },
   {
     "id": "prod_ht_005",
@@ -3365,7 +3529,7 @@
     "color": "black",
     "price_estimate_usd": 45.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311232-basic-stussy-cap-canvas-black",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1311232_BLAC_1.jpg?v=1771874658",
+    "image_url": "/static/img/products/prod_ht_005.jpg",
     "description": "Low-profile six-panel cap in washed cotton canvas with Stüssy basic logo embroidery. Unstructured crown, woven eyelets, precurved brim, and strapback closure with metal triglide. 100% cotton, unisex, one size.",
     "search_query": "stussy canvas dad hat black strapback",
     "tags": [
@@ -3373,7 +3537,8 @@
       "casual",
       "logo"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311232_BLAC_1.jpg?v=1771874658"
   },
   {
     "id": "prod_ht_006",
@@ -3384,7 +3549,7 @@
     "color": "black",
     "price_estimate_usd": 45.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1321262-basic-stussy-cuff-beanie-black",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1321262_BLAC_1.jpg?v=1767726450",
+    "image_url": "/static/img/products/prod_ht_006.jpg",
     "description": "Fitted cuff beanie with soft, lightweight ribbed texture and Stüssy basic stock logo embroidery at front. 100% acrylic, one size fits all, unisex.",
     "search_query": "stussy cuff beanie black acrylic",
     "tags": [
@@ -3392,7 +3557,8 @@
       "winter",
       "beanie"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1321262_BLAC_1.jpg?v=1767726450"
   },
   {
     "id": "prod_ht_007",
@@ -3403,7 +3569,7 @@
     "color": "green",
     "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311164-new-era-9twenty-washed-basic-trucker-green",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1311164_GREN_1.jpg?v=1771463867",
+    "image_url": "/static/img/products/prod_ht_007.jpg",
     "description": "Six-panel trucker cap in washed cotton twill with mesh panels and Stüssy basic logo in raised embroidery. Contrast topstitching, unstructured crown, precurved brim, strapback closure with metal slide. 100% cotton body, 100% polyester mesh.",
     "search_query": "stussy new era trucker hat green mesh",
     "tags": [
@@ -3411,7 +3577,8 @@
       "trucker",
       "summer"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311164_GREN_1.jpg?v=1771463867"
   },
   {
     "id": "prod_ht_008",
@@ -3422,7 +3589,7 @@
     "color": "navy",
     "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311217-mid-depth-tough-gear-trucker-navy",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1311217_NAVY_1.jpg?v=1778692877",
+    "image_url": "/static/img/products/prod_ht_008.jpg",
     "description": "Mid-depth trucker cap with unstructured crown and split front panel. Features Stüssy tough gear logo in raised embroidery, precurved brim, double row snapback closure, and cotton twill sweatband. 100% polyester body and mesh, unisex.",
     "search_query": "stussy trucker hat navy snapback mesh",
     "tags": [
@@ -3430,7 +3597,8 @@
       "trucker",
       "new arrival"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311217_NAVY_1.jpg?v=1778692877"
   },
   {
     "id": "prod_ht_009",
@@ -3441,7 +3609,7 @@
     "color": "black",
     "price_estimate_usd": 40.0,
     "product_url": "https://www.kangol.com/products/cotton-twill-army-cap",
-    "image_url": "http://kangol.com/cdn/shop/files/9720BC_BEIGE_8c386a15-95d6-42d4-b9e4-8d8b9666cd60.jpg?v=1771436461",
+    "image_url": "/static/img/products/prod_ht_009.jpg",
     "description": "Classic military-style cap with hidden interior pocket in the top panel, raised Kangol wordmark embroidery off-center on front, and a Kangol tab at center back. Features patented Flexfit® headband system with a 2 3/8\" peak and flat crown. Cotton blend, imported. Available S/M through XXL.",
     "search_query": "kangol army cap black flexfit cotton",
     "tags": [
@@ -3449,7 +3617,8 @@
       "military",
       "flexfit"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/9720BC_BEIGE_8c386a15-95d6-42d4-b9e4-8d8b9666cd60.jpg?v=1771436461"
   },
   {
     "id": "prod_ht_010",
@@ -3460,7 +3629,7 @@
     "color": "navy",
     "price_estimate_usd": 50.0,
     "product_url": "https://www.kangol.com/products/tropic-ventair-spacecap",
-    "image_url": "http://kangol.com/cdn/shop/files/1456BC_BEIGE.jpg?v=1755011031",
+    "image_url": "/static/img/products/prod_ht_010.jpg",
     "description": "Seamless knit baseball hat in Kangol's signature Tropic® fabric, featuring a ventair pattern that allows airflow for ultimate comfort in spring and summer. Fitted closure, round crown, unlined, 2 3/4\" peak. 65% polyester, 35% modacrylic. Available S through XXL.",
     "search_query": "kangol tropic ventair spacecap baseball navy summer",
     "tags": [
@@ -3469,7 +3638,8 @@
       "ventilated",
       "fitted"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/1456BC_BEIGE.jpg?v=1755011031"
   },
   {
     "id": "prod_ht_011",
@@ -3480,7 +3650,7 @@
     "color": "black",
     "price_estimate_usd": 60.0,
     "product_url": "https://www.kangol.com/products/tropic-spitfire",
-    "image_url": "http://kangol.com/cdn/shop/files/0289BC_HAZYINDIGO_1.jpg?v=1773312880",
+    "image_url": "/static/img/products/prod_ht_011.jpg",
     "description": "Iconic Kangol fashion cap with a distinctive round crown that implies quartered panels. Can be worn peak forward or backward to display the Kangaroo logo. 65% polyester, 35% modacrylic Tropic fabric. 2 1/4\" peak, imported. Available S through XXL.",
     "search_query": "kangol spitfire cap black tropic streetwear",
     "tags": [
@@ -3489,7 +3659,8 @@
       "logo",
       "fashion"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/0289BC_HAZYINDIGO_1.jpg?v=1773312880"
   },
   {
     "id": "prod_ht_012",
@@ -3500,7 +3671,7 @@
     "color": "dark blue",
     "price_estimate_usd": 65.0,
     "product_url": "https://www.kangol.com/products/anglobasque-beret",
-    "image_url": "http://kangol.com/cdn/shop/files/0252HT_DARK-BLUE_5971fd7f-9b6f-41ac-9d8d-134e8ec25481.jpg?v=1767882379",
+    "image_url": "/static/img/products/prod_ht_012.jpg",
     "description": "Structured beret with a 10-inch crown and stiffened woven sweatband for a close-fitting silhouette. Wool felt construction with satin lining for luxury comfort. Iconic Kangol style. 90% wool, 10% polyester, imported. Available S through XL.",
     "search_query": "kangol beret wool felt dark blue classic",
     "tags": [
@@ -3509,7 +3680,8 @@
       "wool",
       "fashion"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/0252HT_DARK-BLUE_5971fd7f-9b6f-41ac-9d8d-134e8ec25481.jpg?v=1767882379"
   },
   {
     "id": "prod_ht_013",
@@ -3520,7 +3692,7 @@
     "color": "olive",
     "price_estimate_usd": 75.0,
     "product_url": "https://www.kangol.com/products/a-w-g-bucket-k5492",
-    "image_url": "http://kangol.com/cdn/shop/files/K5492_OLIVE_1.jpg?v=1769117351",
+    "image_url": "/static/img/products/prod_ht_013.jpg",
     "description": "All Weather Gear Bucket made from lightweight water-repellent fabric in a wide brim bucket shape. Offers sun and rain protection, functional utility loops at the back, and a detachable adjustable reflective bungee chin cord. 57% nylon, 32% polyester, 11% elastane.",
     "search_query": "kangol all weather gear bucket hat olive utility",
     "tags": [
@@ -3529,7 +3701,8 @@
       "water-repellent",
       "functional"
     ],
-    "in_stock": false
+    "in_stock": false,
+    "image_url_source": "http://kangol.com/cdn/shop/files/K5492_OLIVE_1.jpg?v=1769117351"
   },
   {
     "id": "prod_ht_014",
@@ -3540,7 +3713,7 @@
     "color": "red",
     "price_estimate_usd": 38.0,
     "product_url": "https://www.kangol.com/products/2-way-text-beanie-k3793",
-    "image_url": "http://kangol.com/cdn/shop/files/K3793_BLACK.jpg?v=1755012459",
+    "image_url": "/static/img/products/prod_ht_014.jpg",
     "description": "Dual-style beanie offering two looks: wear full-length as a slouchy pull-on with colorblocked Kangol wordmark and kangaroo logo, or fold up the cuff for a classic Kangol logo look. Acrylic construction, retro-sporty aesthetic. One size.",
     "search_query": "kangol beanie red two way slouchy cuff",
     "tags": [
@@ -3549,7 +3722,8 @@
       "logo",
       "versatile"
     ],
-    "in_stock": false
+    "in_stock": false,
+    "image_url_source": "http://kangol.com/cdn/shop/files/K3793_BLACK.jpg?v=1755012459"
   },
   {
     "id": "prod_ht_015",
@@ -3560,7 +3734,7 @@
     "color": "black",
     "price_estimate_usd": 28.0,
     "product_url": "https://www.brixton.com/products/alpha-block-netplus-trucker-hat-black",
-    "image_url": "http://www.brixton.com/cdn/shop/products/nmyxuxk3irfk9caidwhe_4e5ccc3f-4d49-4a7c-9867-9d5909653ff9.jpg?crop=center&height=1200&v=1738632549&width=1200",
+    "image_url": "/static/img/products/prod_ht_015.jpg",
     "description": "Medium-profile structured 5-panel trucker hat made from recycled fishing nets (Bureo NetPlus material) combined with organic cotton. Features merrowed-edge embroidered patch, mesh back panels, and moisture-wicking inner sweatband. Adjustable snapback. 57% polyester, 43% organic cotton.",
     "search_query": "brixton trucker hat black sustainable recycled snapback",
     "tags": [
@@ -3569,7 +3743,8 @@
       "streetwear",
       "eco"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.brixton.com/cdn/shop/products/nmyxuxk3irfk9caidwhe_4e5ccc3f-4d49-4a7c-9867-9d5909653ff9.jpg?crop=center&height=1200&v=1738632549&width=1200"
   },
   {
     "id": "prod_ht_016",
@@ -3580,7 +3755,7 @@
     "color": "black",
     "price_estimate_usd": 30.0,
     "product_url": "https://www.brixton.com/products/eldon-packable-bucket-hat-black",
-    "image_url": "http://www.brixton.com/cdn/shop/files/ahdfbihdx0mbhyfaiiuu.jpg?crop=center&height=1200&v=1769441843&width=1200",
+    "image_url": "/static/img/products/prod_ht_016.jpg",
     "description": "Lightweight, travel-friendly bucket hat with chainstitch embroidery detail and moisture-wicking elastic sweatband. Engineered for everyday adventures at the beach or city. 97% cotton, 3% elastane. Packable design, S/M and L/XL.",
     "search_query": "brixton eldon packable bucket hat black travel",
     "tags": [
@@ -3589,7 +3764,8 @@
       "casual",
       "summer"
     ],
-    "in_stock": false
+    "in_stock": false,
+    "image_url_source": "http://www.brixton.com/cdn/shop/files/ahdfbihdx0mbhyfaiiuu.jpg?crop=center&height=1200&v=1769441843&width=1200"
   },
   {
     "id": "prod_ht_017",
@@ -3600,7 +3776,7 @@
     "color": "natural/black",
     "price_estimate_usd": 69.0,
     "product_url": "https://www.brixton.com/products/harmony-packable-bucket-hat-natural-black",
-    "image_url": "http://www.brixton.com/cdn/shop/files/ovxlzwnkeef9e3bvuhla.jpg?crop=center&height=1200&v=1769441844&width=1200",
+    "image_url": "/static/img/products/prod_ht_017.jpg",
     "description": "Fashion straw bucket hat in color-blocked natural and black paper straw. Packable construction with elastic sweatband and metal headwear plaque. Perfect for poolside lounging or city exploration. 100% straw, brim length 9cm/3.75\".",
     "search_query": "brixton straw bucket hat natural black packable summer",
     "tags": [
@@ -3609,7 +3785,8 @@
       "fashion",
       "packable"
     ],
-    "in_stock": false
+    "in_stock": false,
+    "image_url_source": "http://www.brixton.com/cdn/shop/files/ovxlzwnkeef9e3bvuhla.jpg?crop=center&height=1200&v=1769441844&width=1200"
   },
   {
     "id": "prod_ht_018",
@@ -3620,7 +3797,7 @@
     "color": "medium wash denim",
     "price_estimate_usd": 69.0,
     "product_url": "https://www.brixton.com/products/altered-threads-brood-baggy-snap-cap-medium-wash-denim",
-    "image_url": "http://www.brixton.com/cdn/shop/files/avr4pmuptuljog2rdgoa.jpg?crop=center&height=1200&v=1759351370&width=1200",
+    "image_url": "/static/img/products/prod_ht_018.jpg",
     "description": "1920s-inspired newsboy cap featuring ultra-soft blanket flannel combined with cotton denim. Cotton corduroy bill and custom liner. Blends vintage authenticity with modern comfort. 45% cotton, 45% polyester, 10% wool. Adjustable snapback.",
     "search_query": "brixton newsboy snap cap denim vintage 1920s",
     "tags": [
@@ -3629,7 +3806,8 @@
       "fashion",
       "newsboy"
     ],
-    "in_stock": false
+    "in_stock": false,
+    "image_url_source": "http://www.brixton.com/cdn/shop/files/avr4pmuptuljog2rdgoa.jpg?crop=center&height=1200&v=1759351370&width=1200"
   },
   {
     "id": "prod_ht_019",
@@ -3640,7 +3818,7 @@
     "color": "navy",
     "price_estimate_usd": 40.0,
     "product_url": "https://www.kangol.com/products/wool-flexfit-baseball",
-    "image_url": "http://kangol.com/cdn/shop/files/8650BC_ROYAL-BLUE_66f79fd0-962a-496e-85b7-07babea76fa1.jpg?v=1771451950",
+    "image_url": "/static/img/products/prod_ht_019.jpg",
     "description": "Classic baseball cap in wool with Flexfit® stretch technology for a comfortable, custom fit. Available in 17 colorways including Royal Blue, Taupe, Olive, Beige, Black, Brown, and Navy. Structured crown, precurved brim. Imported.",
     "search_query": "kangol wool flexfit baseball cap navy structured",
     "tags": [
@@ -3649,7 +3827,8 @@
       "wool",
       "baseball"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/8650BC_ROYAL-BLUE_66f79fd0-962a-496e-85b7-07babea76fa1.jpg?v=1771451950"
   },
   {
     "id": "prod_ht_020",
@@ -3660,7 +3839,7 @@
     "color": "navy",
     "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311170-trucker-s-crown-snapback-navy",
-    "image_url": "http://www.stussy.com/cdn/shop/files/1311170_NAVY_1_39a82386-9abf-4b68-ae73-6ec3934f519e.jpg?v=1772048613",
+    "image_url": "/static/img/products/prod_ht_020.jpg",
     "description": "Structured trucker cap featuring Stüssy's iconic S Crown logo in raised embroidery on the front panel. Adjustable snapback closure, mesh back panels for ventilation, precurved brim. Unisex, one size fits all.",
     "search_query": "stussy S crown trucker hat navy snapback mesh",
     "tags": [
@@ -3669,7 +3848,8 @@
       "trucker",
       "iconic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311170_NAVY_1_39a82386-9abf-4b68-ae73-6ec3934f519e.jpg?v=1772048613"
   },
   {
     "id": "prod_ac_001",
@@ -3680,7 +3860,7 @@
     "color": "silver/black",
     "price_estimate_usd": 219.0,
     "product_url": "https://us.danielwellington.com/products/classic-sheffield-silver-40mm",
-    "image_url": "https://jewelshop.co.za/wp-content/uploads/2021/09/Black-white-silver.png",
+    "image_url": "/static/img/products/prod_ac_001.jpg",
     "description": "Men's minimalist watch with 40mm stainless steel case, eggshell white dial, and black leather strap. Japanese quartz movement, water resistant to 3 ATM. Interchangeable 20mm leather strap with spring bar connectors. 316L stainless steel case. 2-year warranty.",
     "search_query": "daniel wellington classic sheffield silver watch men leather",
     "tags": [
@@ -3689,7 +3869,8 @@
       "menswear",
       "leather strap"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://jewelshop.co.za/wp-content/uploads/2021/09/Black-white-silver.png"
   },
   {
     "id": "prod_ac_002",
@@ -3700,7 +3881,7 @@
     "color": "rose gold/brown",
     "price_estimate_usd": 219.0,
     "product_url": "https://us.danielwellington.com/products/classic-st-mawes-rose-gold",
-    "image_url": "https://www.fields.ie/dw/image/v2/BFNQ_PRD/on/demandware.static/-/Sites-ang_master-catalog/default/dw5bc48afc/hi-res/dw00100035-daniel-wellington-classic-st-mawes-lady-rose-gold-plated-and-brown-leather-strap-watch-18-46-1-0014-img3.jpg?sw=1000&sh=1000&sm=fit",
+    "image_url": "/static/img/products/prod_ac_002.jpg",
     "description": "Slim 40mm watch from Daniel Wellington's flagship Classic Collection. PVD-plated rose gold stainless steel case, eggshell white dial, and brown leather St Mawes strap. Japanese quartz movement, 3 ATM water resistant, interchangeable strap. 6mm case thickness.",
     "search_query": "daniel wellington classic rose gold watch leather brown",
     "tags": [
@@ -3709,7 +3890,8 @@
       "classic",
       "gift"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://www.fields.ie/dw/image/v2/BFNQ_PRD/on/demandware.static/-/Sites-ang_master-catalog/default/dw5bc48afc/hi-res/dw00100035-daniel-wellington-classic-st-mawes-lady-rose-gold-plated-and-brown-leather-strap-watch-18-46-1-0014-img3.jpg?sw=1000&sh=1000&sm=fit"
   },
   {
     "id": "prod_ac_003",
@@ -3720,7 +3902,7 @@
     "color": "gold/white",
     "price_estimate_usd": 209.0,
     "product_url": "https://us.danielwellington.com/products/petite-evergold",
-    "image_url": "https://assets.digitalcontent.marksandspencer.app/images/w_2560,q_auto,f_auto/MS_03_T08_8434S_Z0_X_EC_0/Daniel-Wellington-Petite-Evergold-Gold-Watch",
+    "image_url": "/static/img/products/prod_ac_003.jpg",
     "description": "Women's 32mm watch with an eggshell white dial and gold mesh strap in PVD-plated gold stainless steel. Japanese quartz movement, 3 ATM water resistant. Interchangeable 14mm mesh strap. Elevates any outfit with a pop of gold.",
     "search_query": "daniel wellington petite evergold watch women mesh gold",
     "tags": [
@@ -3729,7 +3911,8 @@
       "mesh strap",
       "women"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://assets.digitalcontent.marksandspencer.app/images/w_2560,q_auto,f_auto/MS_03_T08_8434S_Z0_X_EC_0/Daniel-Wellington-Petite-Evergold-Gold-Watch"
   },
   {
     "id": "prod_ac_004",
@@ -3740,7 +3923,7 @@
     "color": "rose gold/linen",
     "price_estimate_usd": 209.0,
     "product_url": "https://us.danielwellington.com/products/marlon-sheffield-linen-rose-gold",
-    "image_url": "https://dynamic.zacdn.com/sxUjGBFUAaCl-zXh64nG5tgQArg=/filters:quality(70):format(webp)/https://static-sg.zacdn.com/p/daniel-wellington-2431-3060883-6.jpg",
+    "image_url": "/static/img/products/prod_ac_004.jpg",
     "description": "Vintage-inspired 32x36.3mm cushion-shaped case watch with a linen-embossed dial and rose gold PVD-plated stainless steel case. Brown leather strap, Japanese quartz movement, 3 ATM water resistance. Interchangeable 17mm strap with spring bar connectors.",
     "search_query": "daniel wellington marlon vintage cushion watch rose gold linen",
     "tags": [
@@ -3749,7 +3932,8 @@
       "cushion case",
       "unisex"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://dynamic.zacdn.com/sxUjGBFUAaCl-zXh64nG5tgQArg=/filters:quality(70):format(webp)/https://static-sg.zacdn.com/p/daniel-wellington-2431-3060883-6.jpg"
   },
   {
     "id": "prod_ac_005",
@@ -3760,7 +3944,7 @@
     "color": "black",
     "price_estimate_usd": 85.0,
     "product_url": "https://www.lespecs.com/products/lumen-black-polarized",
-    "image_url": "http://lespecs.com/cdn/shop/files/321c0f8ab6a6541d271110d11500bffa_1024x1024.jpg?v=1774489279",
+    "image_url": "/static/img/products/prod_ac_005.jpg",
     "description": "Softly sculpted cat-eye sunglasses with a subtle upward sweep through the outer corners and beveled detail. Smoke mono polarized lenses (0.65mm TAC, Category 3 UV protection). Made from ecozen t110 with 10% plant biomass. 147.4mm width, 55mm lens.",
     "search_query": "le specs lumen cat eye polarized sunglasses black women",
     "tags": [
@@ -3769,7 +3953,8 @@
       "sustainable",
       "UV protection"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://lespecs.com/cdn/shop/files/321c0f8ab6a6541d271110d11500bffa_1024x1024.jpg?v=1774489279"
   },
   {
     "id": "prod_ac_006",
@@ -3780,7 +3965,7 @@
     "color": "black",
     "price_estimate_usd": 75.0,
     "product_url": "https://www.lespecs.com/products/foundry-black",
-    "image_url": "http://lespecs.com/cdn/shop/files/d70308504732dddd1c2257813701b525_1024x1024.jpg?v=1781760585",
+    "image_url": "/static/img/products/prod_ac_006.jpg",
     "description": "Narrow modern oval silhouette sunglasses with a sleek, streamlined profile and strong directional feel. Soft beveled details and double rivet detailing on the front frame. Black frame with smokey brown mono lenses, Category 3 UV protection. 145mm width, 50mm lens. Unisex.",
     "search_query": "le specs foundry oval sunglasses black unisex streetwear",
     "tags": [
@@ -3789,7 +3974,8 @@
       "streetwear",
       "minimalist"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://lespecs.com/cdn/shop/files/d70308504732dddd1c2257813701b525_1024x1024.jpg?v=1781760585"
   },
   {
     "id": "prod_ac_007",
@@ -3800,7 +3986,7 @@
     "color": "silver/milky butter",
     "price_estimate_usd": 99.0,
     "product_url": "https://www.lespecs.com/products/mecharo-silver-milky-butter",
-    "image_url": "http://lespecs.com/cdn/shop/files/b81c999f3f272b435d6011252bd7489e_1024x1024.jpg?v=1774489139",
+    "image_url": "/static/img/products/prod_ac_007.jpg",
     "description": "Sleek oval sunglasses with clean, elongated proportions and a modern streamlined profile. Combination metal and acetate frame with fine metal temples and subtle dome rivet detailing. Smoke tint polycarbonate lenses, Category 2 UV protection. 147.5mm width. Unisex.",
     "search_query": "le specs mecharo oval metal sunglasses silver butter unisex",
     "tags": [
@@ -3809,7 +3995,8 @@
       "fashion",
       "unisex"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://lespecs.com/cdn/shop/files/b81c999f3f272b435d6011252bd7489e_1024x1024.jpg?v=1774489139"
   },
   {
     "id": "prod_ac_008",
@@ -3820,7 +4007,7 @@
     "color": "caramel",
     "price_estimate_usd": 59.99,
     "product_url": "https://www.lespecs.com/products/air-heart-caramel-lsp2002215",
-    "image_url": "https://cdn.shopify.com/s/files/1/0029/7900/4480/files/487b0785cfabcaba4670e20f696b1608.jpg?v=1727142917",
+    "image_url": "/static/img/products/prod_ac_008.jpg",
     "description": "Iconic oversized cat-eye sunglasses favored by celebrities, featuring a thick semi-translucent caramel frame with metal top bar accent and khaki mono lenses. BPA-free polymer plastic frame, shatter and scratch-resistant polycarbonate lenses with UV Category 3 protection. 147mm width.",
     "search_query": "le specs air heart cat eye caramel oversized sunglasses",
     "tags": [
@@ -3829,7 +4016,8 @@
       "celebrity",
       "fashion"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0029/7900/4480/files/487b0785cfabcaba4670e20f696b1608.jpg?v=1727142917"
   },
   {
     "id": "prod_ac_009",
@@ -3840,7 +4028,7 @@
     "color": "gold",
     "price_estimate_usd": 98.0,
     "product_url": "https://www.mejuri.com/world/en/products/tube-huggie-hoops",
-    "image_url": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/0-NewHoopStandard_TubeHoopsHuggie12mm_V_ANGLED_175_new_5cbbb646-e211-4c1e-bbfa-b25c3ca7c517.png?v=1758043829",
+    "image_url": "/static/img/products/prod_ac_009.jpg",
     "description": "Modern tube hoop earrings lightweight enough to wear effortlessly, with a clicker closure for maximum comfort and security. 18k Gold Vermeil (thick 18k solid gold plating on 94% recycled sterling silver base). 12mm outer diameter, 2mm width. Hypoallergenic.",
     "search_query": "mejuri tube huggie hoop earrings gold vermeil everyday",
     "tags": [
@@ -3849,7 +4037,8 @@
       "minimalist",
       "hypoallergenic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/0-NewHoopStandard_TubeHoopsHuggie12mm_V_ANGLED_175_new_5cbbb646-e211-4c1e-bbfa-b25c3ca7c517.png?v=1758043829"
   },
   {
     "id": "prod_ac_010",
@@ -3860,7 +4049,7 @@
     "color": "gold",
     "price_estimate_usd": 128.0,
     "product_url": "https://www.mejuri.com/world/en/products/bold-huggie-hoops",
-    "image_url": "https://n.nordstrommedia.com/it/7fcb279c-b550-43ea-9465-a58b390fbe9f.png?h=368&w=240&dpr=2",
+    "image_url": "/static/img/products/prod_ac_010.jpg",
     "description": "Bold statement hoops that elevate any outfit and boost your mood. 18k Gold Vermeil on 91% recycled sterling silver base. Thick 18K solid gold plating. 12mm outer diameter, 3.2mm width. Hypoallergenic clicker closure.",
     "search_query": "mejuri bold huggie hoop earrings gold statement",
     "tags": [
@@ -3869,7 +4058,8 @@
       "everyday",
       "hypoallergenic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://n.nordstrommedia.com/it/7fcb279c-b550-43ea-9465-a58b390fbe9f.png?h=368&w=240&dpr=2"
   },
   {
     "id": "prod_ac_011",
@@ -3880,7 +4070,7 @@
     "color": "gold",
     "price_estimate_usd": 98.0,
     "product_url": "https://www.mejuri.com/world/en/products/duo-beaded-stacker-ring",
-    "image_url": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/0-VermeilSilverStackerRings_DuoBeadedStackerRing_V_ANGLED_011_new_6555c174-cb9f-41bc-bf06-d5aad78b7e93.png?v=1758142440",
+    "image_url": "/static/img/products/prod_ac_011.jpg",
     "description": "Handcrafted stacker ring with iconic doubled beaded texture. 18k Gold Vermeil on 94% recycled sterling silver base. 2.9mm width, 1.7mm thickness. Hypoallergenic. Available in sizes 4-10. Designed for everyday wear and stacking.",
     "search_query": "mejuri beaded stacker ring gold vermeil stackable",
     "tags": [
@@ -3889,7 +4079,8 @@
       "beaded",
       "hypoallergenic"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/0-VermeilSilverStackerRings_DuoBeadedStackerRing_V_ANGLED_011_new_6555c174-cb9f-41bc-bf06-d5aad78b7e93.png?v=1758142440"
   },
   {
     "id": "prod_ac_012",
@@ -3900,7 +4091,7 @@
     "color": "gold",
     "price_estimate_usd": 168.0,
     "product_url": "https://www.mejuri.com/world/en/products/stevie-ring",
-    "image_url": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/00-Stevie2_StevieRing_SS_OffFigAngledView_PDP.png?v=1758736417",
+    "image_url": "/static/img/products/prod_ac_012.jpg",
     "description": "Chunky chain-link ring with interlocking oval links that turns up, stands out, and plays well with others. 18k Gold Vermeil on 91% recycled sterling silver. 6.50mm width. Hypoallergenic. Available sizes 4-10. Can be stacked or worn solo.",
     "search_query": "mejuri stevie chain link ring gold chunky statement",
     "tags": [
@@ -3909,7 +4100,8 @@
       "statement",
       "gold"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/00-Stevie2_StevieRing_SS_OffFigAngledView_PDP.png?v=1758736417"
   },
   {
     "id": "prod_ac_013",
@@ -3920,7 +4112,7 @@
     "color": "gold",
     "price_estimate_usd": 118.0,
     "product_url": "https://www.mejuri.com/world/en/products/bold-eternity-line-band",
-    "image_url": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/0-VermeilLES_EternityLineBand_V_OffFigAngledView_PDP.png?v=1758736411",
+    "image_url": "/static/img/products/prod_ac_013.jpg",
     "description": "Slim ring with a fluted texture that catches light from every angle for added depth and detail. 18k Gold Vermeil on 91% recycled sterling silver. 3mm width, 1.35mm thickness. Hypoallergenic. Available sizes 4-10. Designed for everyday wear.",
     "search_query": "mejuri eternity band ring gold fluted slim everyday",
     "tags": [
@@ -3929,7 +4121,8 @@
       "gold",
       "everyday"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/0-VermeilLES_EternityLineBand_V_OffFigAngledView_PDP.png?v=1758736411"
   },
   {
     "id": "prod_ac_014",
@@ -3940,7 +4133,7 @@
     "color": "gold",
     "price_estimate_usd": 52.0,
     "product_url": "https://www.missoma.com/products/short-chain-necklace-18ct-gold-plated-vermeil",
-    "image_url": "http://www.missoma.com/cdn/shop/products/short-chain-necklace-necklaces-missoma-736924.jpg?v=1674576154",
+    "image_url": "/static/img/products/prod_ac_014.jpg",
     "description": "Classic plain chain necklace in 18ct Gold Vermeil. Versatile short length, ideal as a base layer or worn solo. Water-resistant. Includes 2-year warranty and 60-day returns. Free engraving available.",
     "search_query": "missoma short chain necklace gold vermeil layering",
     "tags": [
@@ -3949,7 +4142,8 @@
       "minimalist",
       "everyday"
     ],
-    "in_stock": false
+    "in_stock": false,
+    "image_url_source": "http://www.missoma.com/cdn/shop/products/short-chain-necklace-necklaces-missoma-736924.jpg?v=1674576154"
   },
   {
     "id": "prod_ac_015",
@@ -3960,7 +4154,7 @@
     "color": "gold",
     "price_estimate_usd": 108.0,
     "product_url": "https://www.missoma.com/products/mini-paperclip-chain-necklace-18ct-gold-plated",
-    "image_url": "http://www.missoma.com/cdn/shop/files/mini-paperclip-chain-necklace-18ct-gold-plated-necklaces-missoma-648756.webp?v=1776723134",
+    "image_url": "/static/img/products/prod_ac_015.jpg",
     "description": "Delicate mini paperclip link chain necklace in 18ct Gold Plated, designed as a versatile layering piece. Water-resistant construction for everyday wear. Includes 2-year warranty, 60-day returns, and complimentary gift wrap. Free engraving available.",
     "search_query": "missoma paperclip chain necklace gold plated dainty layering",
     "tags": [
@@ -3969,7 +4163,8 @@
       "dainty",
       "gold"
     ],
-    "in_stock": false
+    "in_stock": false,
+    "image_url_source": "http://www.missoma.com/cdn/shop/files/mini-paperclip-chain-necklace-18ct-gold-plated-necklaces-missoma-648756.webp?v=1776723134"
   },
   {
     "id": "prod_ac_016",
@@ -3980,7 +4175,7 @@
     "color": "gold/clear",
     "price_estimate_usd": 83.0,
     "product_url": "https://www.missoma.com/products/classic-stone-stud-earrings-18ct-gold-plated-vermeil-cubic-zirconia",
-    "image_url": "http://www.missoma.com/cdn/shop/products/classic-stone-stud-earrings-18ct-gold-plated-vermeilcubic-zirconia-earrings-missoma-842497.jpg?v=1694056947",
+    "image_url": "/static/img/products/prod_ac_016.jpg",
     "description": "Versatile rounded stud earrings with cubic zirconia stones set in 18ct Gold Vermeil. Designed as everyday earrings that can be incorporated into layered ear stacks for a polished look. Includes 2-year warranty and 60-day returns.",
     "search_query": "missoma cubic zirconia stud earrings gold vermeil everyday",
     "tags": [
@@ -3989,7 +4184,8 @@
       "gold",
       "everyday"
     ],
-    "in_stock": false
+    "in_stock": false,
+    "image_url_source": "http://www.missoma.com/cdn/shop/products/classic-stone-stud-earrings-18ct-gold-plated-vermeilcubic-zirconia-earrings-missoma-842497.jpg?v=1694056947"
   },
   {
     "id": "prod_ac_017",
@@ -4000,7 +4196,7 @@
     "color": "mixed metal",
     "price_estimate_usd": 125.0,
     "product_url": "https://www.missoma.com/products/lucy-williams-chunky-entwine-small-hoop-earrings-mixed-metal",
-    "image_url": "http://www.missoma.com/cdn/shop/files/lucy-williams-entwine-small-hoop-earrings-mixed-metal-earrings-missoma-237490.jpg?v=1752054354",
+    "image_url": "/static/img/products/prod_ac_017.jpg",
     "description": "Everyday hoop earrings from the Lucy Williams x Missoma collaboration featuring an entwined pattern in mixed metal (18ct Gold Vermeil and Sterling Silver). 15mm diameter small size. Best seller. Includes 2-year warranty.",
     "search_query": "missoma lucy williams entwine hoop earrings mixed metal gold silver",
     "tags": [
@@ -4009,7 +4205,8 @@
       "hoops",
       "best seller"
     ],
-    "in_stock": false
+    "in_stock": false,
+    "image_url_source": "http://www.missoma.com/cdn/shop/files/lucy-williams-entwine-small-hoop-earrings-mixed-metal-earrings-missoma-237490.jpg?v=1752054354"
   },
   {
     "id": "prod_ac_018",
@@ -4020,7 +4217,7 @@
     "color": "black",
     "price_estimate_usd": 60.0,
     "product_url": "https://www.stussy.com/collections/accessories/products/canvas-crossbody-bag-black",
-    "image_url": "https://puresoles.ph/cdn/shop/files/IMG_0238.png?v=1759924217&width=1946",
+    "image_url": "/static/img/products/prod_ac_018.jpg",
     "description": "12oz cotton canvas crossbody bag with adjustable strap extending to 51 inches. Hidden snap closure, silver nickel hardware, embroidered Stüssy logo. Interior 13.5x12\" laptop sleeve and zippered drop pocket with YKK VISLON® technology. 14.5\"W x 15\"H x 5.3\"D. 100% cotton.",
     "search_query": "stussy canvas crossbody bag black laptop sleeve streetwear",
     "tags": [
@@ -4029,7 +4226,8 @@
       "laptop",
       "everyday"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://puresoles.ph/cdn/shop/files/IMG_0238.png?v=1759924217&width=1946"
   },
   {
     "id": "prod_ac_019",
@@ -4040,7 +4238,7 @@
     "color": "stone",
     "price_estimate_usd": 60.0,
     "product_url": "https://www.stussy.com/collections/accessories/products/waxed-canvas-market-tote-stone",
-    "image_url": "https://shop-jp.doverstreetmarket.com/cdn/shop/files/134278_STON_1.png?v=1763540701&width=2000",
+    "image_url": "/static/img/products/prod_ac_019.jpg",
     "description": "Oversized market tote in waxed 100% cotton canvas with webbed strap handles, large central compartment, exterior drop pocket, Stüssy basic logo embroidery at side, interior zip pockets, and double-layered base panel. 18.1\"W x 12.1\"H x 9\"D.",
     "search_query": "stussy waxed canvas tote bag stone market oversized",
     "tags": [
@@ -4049,7 +4247,8 @@
       "waxed",
       "market"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "https://shop-jp.doverstreetmarket.com/cdn/shop/files/134278_STON_1.png?v=1763540701&width=2000"
   },
   {
     "id": "prod_ac_020",
@@ -4060,7 +4259,7 @@
     "color": "black",
     "price_estimate_usd": 80.0,
     "product_url": "https://www.stussy.com/collections/accessories/products/135205-rivet-stud-belt-black",
-    "image_url": "http://www.stussy.com/cdn/shop/files/135205_BLAC_1.jpg?v=1772646498",
+    "image_url": "/static/img/products/prod_ac_020.jpg",
     "description": "Leather belt featuring a metal buckle and studded design with Stüssy-branded rivets throughout. 1-inch width. Available in S/M (40 inches) and L/XL (44 inches). 100% cow leather, imported. Unisex design.",
     "search_query": "stussy rivet stud belt black leather studded",
     "tags": [
@@ -4069,6 +4268,7 @@
       "studded",
       "streetwear"
     ],
-    "in_stock": true
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/135205_BLAC_1.jpg?v=1772646498"
   }
 ]

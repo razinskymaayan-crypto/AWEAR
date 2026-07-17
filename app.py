@@ -4794,4 +4794,18 @@ async def dm_send(payload: DMSendRequest, request: Request):
     return {"id": new_id, "created_at": created_at}
 
 
+@app.middleware("http")
+async def _no_store_app_assets(request, call_next):
+    # The iOS WebView (Capacitor) aggressively caches app.js/app.css and would silently run STALE
+    # code for a whole session even after we shipped a fix ("why isn't the simulator updating?").
+    # StaticFiles only sends etag/last-modified (revalidate-optional) — WKWebView often skips the
+    # revalidation on boot. Force no-store on the app's own JS/CSS so a fix ALWAYS loads. This is a
+    # localhost-served app (no CDN cost) so no-store is exactly right. Enforced by test_app.py.
+    resp = await call_next(request)
+    p = request.url.path
+    if p.startswith("/static/") and (p.endswith(".js") or p.endswith(".css")):
+        resp.headers["Cache-Control"] = "no-store, must-revalidate"
+    return resp
+
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
