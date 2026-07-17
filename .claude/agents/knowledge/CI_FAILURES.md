@@ -62,6 +62,7 @@ The autopilot changes `[UNRESOLVED]` → `[FIXED]` with a one-line note once han
 ```
 
 ## [UNRESOLVED — ROOT-CAUSED, PATCH READY, NEEDS FOUNDER APPLY] REPEAT-FAILURE: ayalon(ownership) — see ci-debug/jeff-rejections.txt (2026-07-13T03:10:30Z)
+> Re-checked 2026-07-17 (steve run): grep 'BASE=' on origin/main jeff-merge.yml = 0 — patch STILL NOT applied. The patch file was REGENERATED as a COMBINED v2 (BASE-anchor + GATE 3 stale-ownership fix for the new steve loop below) — same path, same apply command; verified byte-identical hunk-apply against main's current file. Not re-pinging separately; the steve-loop TG report covers it. Next agent: same check, do not re-analyze.
 > Re-checked 2026-07-16 (ayalon run): grep -c 'BASE=' on origin/main jeff-merge.yml = 0 at c82b16a — patch STILL NOT applied. Not re-pinging (3 pings stand; NEEDS_YOU line stands); reminder folded into this run's TG report. Next agent: same check, do not re-analyze.
 > Re-checked 2026-07-15 (steve run): grep -c 'BASE=' on origin/main jeff-merge.yml = 0 — patch STILL NOT applied. Also verified GATE 0 DENY for steve includes .github/ (lane cannot land it). NOT re-pinging (founder pinged 3x; NEEDS_YOU line stands). Next agent: same check, do not re-analyze.
 > Re-checked 2026-07-14 later (ayalon run): grep -c 'BASE=' on origin/main jeff-merge.yml = 0 at 1ce951a — patch STILL NOT applied. Founder already re-pinged twice today; not pinging again to avoid spam (NEEDS_YOU line stands). Next agent: same check, do not re-analyze.
@@ -77,7 +78,8 @@ nothing lands. Do NOT just retry. ROOT-CAUSE it:
   (The 2026-07-08 bcrypt loop was exactly this: pytest ran before a new dep was installed.)
 Verify the fix, then change [UNRESOLVED] -> [FIXED] with a one-line note of the root cause.
 
-## [UNRESOLVED] REPEAT-FAILURE: steve — see ci-debug/jeff-rejections.txt (2026-07-16T19:43:42Z)
+## [UNRESOLVED — ROOT-CAUSED, PATCH READY (combined), NEEDS FOUNDER APPLY] REPEAT-FAILURE: steve — see ci-debug/jeff-rejections.txt (2026-07-16T19:43:42Z)
+**ROOT-CAUSED 2026-07-17 (steve self-heal):** false-rejecting gate, not lane code. GATE 3's adversarial-reviewer prompt carries a STALE ownership map — "steve: app.py/schema.sql; oren: static/data+scripts" — but there is NO oren lane (autopilot-managers.yml matrix = mark/steve/ayalon only; line 89: "oren's data work folds into steve's backend") and the lane SoT + GATE 0 both give steve `static/data/*.json` + `scripts/*.py`. So steve's in-lane work (f39f8fb: dead product image fix + integrity scripts) was rejected 4 cycles (07-16 x3, 07-17). Fix: corrected map folded into **`notes/jeff-merge-base-anchor.patch`** (regenerated as a COMBINED patch: BASE-anchor + GATE 3 ownership map + shared-bookkeeping clause). Per OW-013 a lane run cannot land `.github/` — founder applies. Verified: yaml parse + `bash -n` on the embedded script green; python hunk-apply of the patch onto origin/main's file reproduces the fixed version byte-identically. Full analysis: `notes/jeff-merge-gate3-ownership.md`. NEXT AGENT: `git show origin/main:.github/workflows/jeff-merge.yml | grep -c 'static/data/scripts/tests'` — if >=1, flip this entry AND the ayalon entry above to [FIXED]; if 0, do NOT re-analyze (escalation stands in NEEDS_YOU.md).
 The gate-ledger shows the SAME failure **3 cycles in a row (ending now)**: `steve — see ci-debug/jeff-rejections.txt`.
 This is a STUCK LOOP — a lane keeps producing work the gate keeps rejecting the same way, so
 nothing lands. Do NOT just retry. ROOT-CAUSE it:
