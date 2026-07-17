@@ -73,7 +73,7 @@ jobs:
           NON-NEGOTIABLE (the workflow verifies this and FAILS the run otherwise): LEARNING_LOG.md must gain a "## <today's UTC date>" section EVERY run — even a quiet day gets its one-line section. A retrospective that writes nothing did not happen.
           PROMPT
           )" \
-            --model claude-fable-5 \
+            --model claude-sonnet-4-6 \
             --permission-mode acceptEdits \
             --allowedTools \
               "Edit" "Write" "Read" "Glob" "Grep" \

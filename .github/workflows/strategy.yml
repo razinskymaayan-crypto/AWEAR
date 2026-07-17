@@ -106,7 +106,7 @@ jobs:
           Truly-founder decisions (money commitments, legal structure choices, equity) go to .claude/master/FOUNDER_QUESTIONS.md "## OPEN" — decide everything else yourself, decisively (that is the department's mandate).
           PROMPT
           )" \
-            --model claude-fable-5 \
+            --model claude-sonnet-4-6 \
             --permission-mode acceptEdits \
             --allowedTools \
               "Edit" "Write" "Read" "Glob" "Grep" "Task" "WebSearch" "WebFetch" \
