@@ -8,3 +8,4 @@
 2026-07-16T14:12:56Z steve: REJECT: lane-ownership violation — steve lane modified `static/data/products.json` and `scripts/*` (both oren-owned; steve owns app.py/schema.sql only)
 2026-07-16T19:43:42Z steve: REJECT: lane ownership violation — steve lane owns app.py/schema.sql only, but this diff's substantive changes (static/data/products.json fix + scripts/data_integrity_check.py + scripts/check_image_urls.py) sit squarely in oren's territory (static/data + scripts).
 2026-07-17T03:11:23Z steve: REJECT: lane-ownership violation — steve owns app.py/schema.sql only, but every substantive change here is in oren's territory (static/data/products.json edit + new scripts/check_image_urls.py + scripts/data_integrity_check.py).
+2026-07-17T19:31:34Z mark: REJECT: mark lane modifies `.claude/master/INBOX.md`, which is explicitly "Founders + strategy agents only" per CLAUDE.md — outside mark's ownership (index.html/app.css/app.js/tokens.css/awear-tokens.json).
