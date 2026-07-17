@@ -50,3 +50,4 @@
 2026-07-16T08:28:17Z | jeff: merged -> none | REJECTED (adversarial review): steve — see ci-debug/jeff-rejections.txt
 2026-07-16T14:13:10Z | jeff: merged -> ayalon | REJECTED (adversarial review): steve — see ci-debug/jeff-rejections.txt
 2026-07-16T19:43:42Z | jeff: merged -> none | REJECTED (adversarial review): steve — see ci-debug/jeff-rejections.txt
+2026-07-17T03:11:23Z | jeff: merged -> none | REJECTED (adversarial review): steve — see ci-debug/jeff-rejections.txt
