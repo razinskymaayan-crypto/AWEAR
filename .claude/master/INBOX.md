@@ -33,6 +33,13 @@ backend (steve/sam — זו המשימה #1 שלך אחרי ה-HITL):
 7. pytest (**OW-014 חובה**): נתיב demo (בלי מפתח → mode=demo, לא קורא רשת, לא זורק) עובר. אל תבדקו live (אין מפתח ב-CI). וגם: endpoint מחזיר 200 עם תמונה חוקית, 400 על קלט ריק.
 UI (mark lane, **רק אחרי** שה-backend על main): במסך "האם זיהינו נכון?" — הציגו את התמונה שנוצרה לכל פריט (spinner בזמן יצירה), כפתור "צור מחדש", fallback לתמונת קמעונאי. check-render + screenshot.
 
+★★★ [כיוון מייסד — 2026-07-18 — תשתית ללאנץ' (TestFlight → 200 משתמשים)] ★★★
+DECISIONS #17: ארכיטקטורת פרודקשן = **FastAPI על Render + Supabase (Postgres+Auth+Storage)**. האפליקציה (Capacitor) טוענת היום מ-`localhost:8000` → חייבת backend ציבורי ב-HTTPS כדי לעבוד על אייפון אמיתי. סדר עבודה — **כל שלב shippable, לא לשבור את הקיים, pytest ירוק והרמטי (OW-014), אפס סודות בקוד (רק env placeholders + תיעוד ב-notes/ מה המייסד צריך להזין)**:
+1. **[steve/oren — חוסם TestFlight, קדימות עליונה] פריסה ל-Render:** להוסיף קונפיג פריסה (Dockerfile או render.yaml; start = `uvicorn app:app --host 0.0.0.0 --port $PORT`), לוודא שהשרת עולה עם env (ANTHROPIC_API_KEY, OPENAI_API_KEY אופציונלי). לשנות `capacitor.config.json` → `server.url: "https://REPLACE_WITH_RENDER_URL"` + הערה. תיעוד ב-notes/deploy-render.md: מה המייסד יוצר/מזין.
+2. **[steve/oren] Supabase Auth:** register/login אמיתי (Supabase JS SDK ב-SPA + אימות JWT ב-FastAPI), להחליף כל auth מקומי/מזויף. env: SUPABASE_URL, SUPABASE_ANON_KEY.
+3. **[steve] הגירת DB → Supabase Postgres:** דרך ה-choke-point היחיד `_get_db()` (app.py:1282) — psycopg, placeholders `%s`, dialect (SERIAL/RETURNING). טסטים ממשיכים על SQLite ephemeral; פרודקשן על Postgres דרך DATABASE_URL. env: DATABASE_URL.
+4. **[steve] Supabase Storage לתמונות:** תמונות מוצר + תמונות שנוצרות (/api/generate-garment) → bucket ב-Supabase במקום דיסק מקומי. env: SUPABASE_SERVICE_KEY.
+
 [UX-QA — mark — P1] ה-sheet של הפריט תוקן ל-iOS: (א) max-height שמבטיח פער עליון ≥56px כך שה-X מעל סרגל הסטטוס, (ב) גרירה-למטה-לסגור על כל ה-sheet (gated על scrollTop). **החל את אותו דפוס על כל שאר ה-bottom-sheets** שלא ייתקעו ב-iOS: mp-fsheet (filter), ms-insight-sheet, comments-sheet, diary-sheet, book-sheet, ו-modal-overlay (purchase-modal, edit-profile). לכל אחד: סגירה אמינה (X גלוי / גרירה / הקשה על רקע) בלי פקדים מחוץ למסך. אמת עם `node scripts/check-interactions.mjs` (הרחב אותו לפתוח כל overlay ולוודא שנסגר) + הערה שנבדק בסימולטור iOS (הטסט הדסקטופ לא תופס off-screen).
 
 
