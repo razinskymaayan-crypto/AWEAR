@@ -1076,3 +1076,77 @@ def test_outfit_generate_backward_compat_no_user_id(client):
     all_items = [it for o in outfits for it in o["items"]]
     real_items = [it for it in all_items if not it.get("_missing", True)]
     assert any(it["name"] == "Black Jeans" for it in real_items)
+
+
+# --------------------------------------------------------------------------- #
+# Closet management: DELETE and PATCH /api/closet/{item_id}
+# These endpoints did not exist before this change — all tests below would
+# have returned 404/405 on the old codebase (fail-before proven by absence).
+# --------------------------------------------------------------------------- #
+def _seed_closet_item(client, user_id: str, name: str = "Blue Denim Jacket", ref: str = "") -> str:
+    """Confirm one item into the closet and return its assigned id."""
+    body = {
+        "user_id": user_id,
+        "client_ref": ref,
+        "items": [{
+            "accepted": True,
+            "ai": {"name": name, "category": "outerwear", "color": "blue",
+                   "brand": "Levi's", "search_query": "denim jacket", "price_estimate_usd": 120},
+            "final": {"name": name, "category": "outerwear", "color": "blue",
+                      "brand": "Levi's", "search_query": "denim jacket", "price_estimate_usd": 120,
+                      "confidence": "high"},
+        }],
+    }
+    r = client.post("/api/closet/confirm", json=body)
+    assert r.status_code == 200
+    return r.json()["saved"][0]["id"]
+
+
+def test_closet_delete_removes_item(client):
+    item_id = _seed_closet_item(client, "user_del_1", name="Green Parka", ref="del-ref-1")
+
+    r = client.delete(f"/api/closet/{item_id}", params={"user_id": "user_del_1"})
+    assert r.status_code == 200
+    assert r.json()["deleted"] == item_id
+
+    listed = client.get("/api/closet", params={"user_id": "user_del_1"}).json()
+    assert all(it["id"] != item_id for it in listed["items"])
+
+
+def test_closet_delete_wrong_user_403(client):
+    item_id = _seed_closet_item(client, "user_del_owner", name="Red Coat", ref="del-ref-2")
+
+    r = client.delete(f"/api/closet/{item_id}", params={"user_id": "user_del_other"})
+    assert r.status_code == 403
+
+
+def test_closet_delete_missing_404(client):
+    r = client.delete("/api/closet/ci_nonexistent_xyz", params={"user_id": "user_del_404"})
+    assert r.status_code == 404
+
+
+def test_closet_patch_updates_fields(client):
+    item_id = _seed_closet_item(client, "user_patch_1", name="White Sneakers", ref="patch-ref-1")
+
+    r = client.patch(f"/api/closet/{item_id}", json={
+        "user_id": "user_patch_1",
+        "name": "Off-White Canvas Sneakers",
+        "color": "cream",
+        "source_url": "https://example.com/product/123",
+    })
+    assert r.status_code == 200
+    updated = r.json()
+    assert updated["name"] == "Off-White Canvas Sneakers"
+    assert updated["color"] == "cream"
+    assert updated["source_url"] == "https://example.com/product/123"
+    assert updated["brand"] == "Levi's"  # unchanged field preserved
+
+
+def test_closet_patch_wrong_user_403(client):
+    item_id = _seed_closet_item(client, "user_patch_owner", name="Silk Blouse", ref="patch-ref-2")
+
+    r = client.patch(f"/api/closet/{item_id}", json={
+        "user_id": "user_patch_other",
+        "name": "Attempted Rename",
+    })
+    assert r.status_code == 403

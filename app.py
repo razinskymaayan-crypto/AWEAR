@@ -3429,6 +3429,16 @@ class ClosetConfirmRequest(BaseModel):
     items: list[ClosetConfirmItem] = []
 
 
+class ClosetItemPatch(BaseModel):
+    name: Optional[str] = None
+    category: Optional[str] = None
+    color: Optional[str] = None
+    brand: Optional[str] = None
+    source_url: Optional[str] = None
+    price_estimate_usd: Optional[float] = None
+    user_id: str = ""
+
+
 def _closet_item_row_to_dict(row: sqlite3.Row) -> dict:
     """Lean public shape — no ai_original (keep the response small; that field
     is for the learning pipeline, not the client)."""
@@ -3600,6 +3610,81 @@ async def get_closet(request: Request, user_id: str = "", limit: int = 200):
 
     items = [_closet_item_row_to_dict(r) for r in rows]
     return {"items": items, "count": len(items)}
+
+
+@app.delete("/api/closet/{item_id}")
+async def delete_closet_item(item_id: str, request: Request, user_id: str = ""):
+    """Remove a single item from the caller's persisted closet.
+
+    BE-006: user_key resolved from query param or caller IP.
+    Returns 404 if item not found, 403 if item belongs to a different user_key.
+    """
+    caller_ip = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(caller_ip, "closet_delete", 30):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    user_key = (user_id or "").strip() or caller_ip
+
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT * FROM closet_items WHERE id = ?", (item_id,)
+        ).fetchone()
+
+    if row is None:
+        raise HTTPException(status_code=404, detail=f"Closet item {item_id} not found.")
+    if row["user_key"] != user_key:
+        raise HTTPException(status_code=403, detail="Not authorised to delete this item.")
+
+    with _get_db() as db:
+        db.execute("DELETE FROM closet_items WHERE id = ?", (item_id,))
+        db.commit()
+
+    return {"deleted": item_id}
+
+
+@app.patch("/api/closet/{item_id}")
+async def patch_closet_item(item_id: str, body: ClosetItemPatch, request: Request):
+    """Update editable fields on a single closet item.
+
+    BE-006: user_key resolved from body.user_id or caller IP.
+    Returns 404 if item not found, 403 if item belongs to a different user_key,
+    400 if no patchable fields are provided.
+    """
+    caller_ip = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(caller_ip, "closet_patch", 30):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 30 requests/minute.")
+
+    user_key = (body.user_id or "").strip() or caller_ip
+
+    with _get_db() as db:
+        row = db.execute(
+            "SELECT * FROM closet_items WHERE id = ?", (item_id,)
+        ).fetchone()
+
+    if row is None:
+        raise HTTPException(status_code=404, detail=f"Closet item {item_id} not found.")
+    if row["user_key"] != user_key:
+        raise HTTPException(status_code=403, detail="Not authorised to edit this item.")
+
+    # Build SET clause from non-None patchable fields only.
+    _PATCHABLE = ("name", "category", "color", "brand", "source_url", "price_estimate_usd")
+    updates = {f: getattr(body, f) for f in _PATCHABLE if getattr(body, f) is not None}
+    if not updates:
+        raise HTTPException(status_code=400, detail="No fields provided to update.")
+
+    set_clause = ", ".join(f"{col} = ?" for col in updates)
+    values = list(updates.values()) + [item_id]
+
+    with _get_db() as db:
+        db.execute(
+            f"UPDATE closet_items SET {set_clause} WHERE id = ?", values
+        )
+        db.commit()
+        updated_row = db.execute(
+            "SELECT * FROM closet_items WHERE id = ?", (item_id,)
+        ).fetchone()
+
+    return _closet_item_row_to_dict(updated_row)
 
 
 # ---------------------------------------------------------------------------
