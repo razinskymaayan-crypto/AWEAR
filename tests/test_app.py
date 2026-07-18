@@ -1215,3 +1215,97 @@ def test_generate_garment_bad_item_json_graceful(client):
     assert r.status_code == 200
     body = r.json()
     assert body["mode"] in ("live", "demo")
+
+
+# ---------------------------------------------------------------------------
+# Supabase JWT auth tests
+# ---------------------------------------------------------------------------
+
+def _make_supabase_jwt(secret: str, sub: str = "uuid-abc-123", role: str = "authenticated", expired: bool = False) -> str:
+    """Mint a test Supabase-style JWT signed with HS256."""
+    import time
+    import jwt as pyjwt
+    now = int(time.time())
+    payload = {
+        "sub": sub,
+        "role": role,
+        "exp": now - 10 if expired else now + 3600,
+        "iat": now - 1,
+    }
+    return pyjwt.encode(payload, secret, algorithm="HS256")
+
+
+def test_supabase_jwt_no_secret(client):
+    """With no SUPABASE_JWT_SECRET, JWT lookup returns None and session tokens still work."""
+    import app as app_module
+    original = app_module.SUPABASE_JWT_SECRET
+    try:
+        app_module.SUPABASE_JWT_SECRET = ""
+        # A session token still works
+        with app_module._get_db() as db:
+            db.execute("INSERT OR IGNORE INTO users (id, username, email, password_hash, display_name, created_at) VALUES (?,?,?,?,?,?)",
+                       ("u_jwt_test", "jwtuser", "jwt@test.com", "x", "jwtuser", 0))
+            db.execute("INSERT INTO sessions (token, user_id, created_at) VALUES (?,?,?)",
+                       ("localtoken123", "u_jwt_test", 0))
+        resp = client.get("/api/auth/me/u_jwt_test", headers={"Authorization": "Bearer localtoken123"})
+        assert resp.status_code == 200
+    finally:
+        app_module.SUPABASE_JWT_SECRET = original
+
+
+def test_supabase_jwt_valid(client):
+    """Valid Supabase JWT → user_id is the JWT sub."""
+    import app as app_module
+    secret = "test-secret-for-unit-tests"
+    token = _make_supabase_jwt(secret, sub="supabase-uuid-456")
+    original = app_module.SUPABASE_JWT_SECRET
+    try:
+        app_module.SUPABASE_JWT_SECRET = secret
+        # Create a user with the Supabase sub as their id so /api/auth/me returns 200
+        with app_module._get_db() as db:
+            db.execute("INSERT OR IGNORE INTO users (id, username, email, password_hash, display_name, created_at) VALUES (?,?,?,?,?,?)",
+                       ("supabase-uuid-456", "sbuser", "sb@test.com", "x", "sbuser", 0))
+        resp = client.get("/api/auth/me/supabase-uuid-456", headers={"Authorization": f"Bearer {token}"})
+        assert resp.status_code == 200
+    finally:
+        app_module.SUPABASE_JWT_SECRET = original
+
+
+def test_supabase_jwt_invalid(client):
+    """Tampered/invalid Supabase JWT → 401."""
+    import app as app_module
+    original = app_module.SUPABASE_JWT_SECRET
+    try:
+        app_module.SUPABASE_JWT_SECRET = "test-secret-for-unit-tests"
+        resp = client.get("/api/auth/me/anyone", headers={"Authorization": "Bearer not.a.jwt.token"})
+        assert resp.status_code == 401
+    finally:
+        app_module.SUPABASE_JWT_SECRET = original
+
+
+def test_supabase_jwt_expired(client):
+    """Expired Supabase JWT → 401."""
+    import app as app_module
+    secret = "test-secret-for-unit-tests"
+    token = _make_supabase_jwt(secret, expired=True)
+    original = app_module.SUPABASE_JWT_SECRET
+    try:
+        app_module.SUPABASE_JWT_SECRET = secret
+        resp = client.get("/api/auth/me/anyone", headers={"Authorization": f"Bearer {token}"})
+        assert resp.status_code == 401
+    finally:
+        app_module.SUPABASE_JWT_SECRET = original
+
+
+def test_supabase_jwt_anon_role(client):
+    """JWT with role=anon → 401 (only 'authenticated' allowed)."""
+    import app as app_module
+    secret = "test-secret-for-unit-tests"
+    token = _make_supabase_jwt(secret, sub="anon-user", role="anon")
+    original = app_module.SUPABASE_JWT_SECRET
+    try:
+        app_module.SUPABASE_JWT_SECRET = secret
+        resp = client.get("/api/auth/me/anon-user", headers={"Authorization": f"Bearer {token}"})
+        assert resp.status_code == 401
+    finally:
+        app_module.SUPABASE_JWT_SECRET = original

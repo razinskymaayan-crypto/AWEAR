@@ -38,6 +38,12 @@ logger = logging.getLogger(__name__)
 
 import anthropic
 import bcrypt
+
+try:
+    import jwt as _pyjwt_module
+except ImportError:  # pragma: no cover
+    _pyjwt_module = None
+
 from dotenv import load_dotenv
 from fastapi import Body, FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, RedirectResponse, Response
@@ -140,6 +146,8 @@ MAX_EDGE = 1024  # downscale long edge to control cost + latency
 
 OPENAI_IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-1")
 _last_gen: dict = {"mode": None, "reason": None}
+
+SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET", "")
 
 # ~25s request timeout so a hung/slow call raises anthropic.APITimeoutError instead of
 # spinning forever — the broad except in /api/analyze then yields the demo fallback,
@@ -742,6 +750,7 @@ async def scan_health(request: Request, probe: int = 0):
         # pattern so the founder can tell whether image generation is live or
         # falling back to demo, and why.
         "generation": {"last_mode": _last_gen["mode"], "last_reason": _last_gen["reason"]},
+        "supabase_auth": {"configured": bool(SUPABASE_JWT_SECRET)},
     }
 
     if not probe:
@@ -2591,6 +2600,27 @@ def _issue_token(db: sqlite3.Connection, user_id: str) -> str:
     return token
 
 
+def _supabase_jwt_user(token: str) -> Optional[str]:
+    """Validate a Supabase Auth JWT and return the user's sub (UUID).
+
+    Returns None if SUPABASE_JWT_SECRET is not configured, the token is
+    invalid/expired, the role is not 'authenticated', or PyJWT is missing.
+    Never raises — callers treat None as "not a Supabase token".
+    """
+    if not SUPABASE_JWT_SECRET or _pyjwt_module is None:
+        return None
+    try:
+        payload = _pyjwt_module.decode(
+            token, SUPABASE_JWT_SECRET, algorithms=["HS256"]
+        )
+        if payload.get("role") != "authenticated":
+            return None
+        sub = payload.get("sub", "")
+        return sub if sub else None
+    except Exception:
+        return None
+
+
 def _session_user(request: Request) -> Optional[str]:
     """Resolve the calling user_id from the Authorization: Bearer <token> header.
 
@@ -2604,6 +2634,13 @@ def _session_user(request: Request) -> Optional[str]:
     token = parts[1].strip()
     if not token:
         return None
+
+    # Try Supabase Auth JWT first (only when the secret is configured).
+    uid = _supabase_jwt_user(token)
+    if uid:
+        return uid
+
+    # Fall back to local opaque session token.
     with _get_db() as db:
         row = db.execute(
             "SELECT user_id FROM sessions WHERE token=?",
