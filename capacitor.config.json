@@ -3,7 +3,6 @@
   "appName": "AWEAR",
   "webDir": "static",
   "server": {
-    "url": "http://localhost:8000",
-    "cleartext": true
+    "url": "https://awear-x4o2.onrender.com"
   }
 }
