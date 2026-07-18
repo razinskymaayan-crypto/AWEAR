@@ -12,10 +12,10 @@
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
 ## Steve lane — last run (2026-07-18)
-- **Task**: generate_garment_image pipeline (INBOX 2026-07-18 founder task, part B of closet AI core)
-- **Commit**: a049e14 on auto/steve
-- **Done**: `_generate_garment_image_sync` + `POST /api/generate-garment` + `_last_gen` scan-health + 5 pytests + openai>=2.41
-- **Remaining**: UI half (mark lane) — confirm screen shows generated image, "Regenerate" button
+- **Task**: Supabase JWT verification — INBOX launch infrastructure step 2 (backend half)
+- **Commit**: 2d3e84c on auto/steve
+- **Done**: `_supabase_jwt_user()` helper (HS256 verify, role=authenticated gate, sub as user_id); `_session_user()` tries JWT first → falls back to session tokens; `SUPABASE_JWT_SECRET` env var; scan-health reports `supabase_auth.configured`; PyJWT>=2.8 in requirements.txt; 5 new pytests (77 total)
+- **Remaining**: SPA side (mark lane) — Supabase JS SDK login, call `/api/auth/supabase-sync` on first login; DB migration to Postgres (step 3); Supabase Storage (step 4)
 - **CI_FAILURES note**: combined patch (BASE-anchor + GATE 3 stale-ownership fix) still NOT applied on main. Escalation stands in NEEDS_YOU.md. Do NOT re-analyze.
 
 ## Phase status
