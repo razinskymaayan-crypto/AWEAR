@@ -1,0 +1,33 @@
+# Render deploy blueprint for the AWEAR FastAPI backend.
+# Render auto-detects this file when you connect the repo ("Blueprint" deploy) and
+# sets everything up for you. See notes/deploy-render.md for the click-by-click guide.
+#
+# NOTE: interim SQLite (no persistent disk yet) — demo data re-seeds from static/data/*.json
+# on every deploy; user-created rows reset until the Supabase Postgres migration (DECISIONS #17)
+# lands. That's fine for first TestFlight testing.
+services:
+  - type: web
+    name: awear
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/scan-health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      # Secrets — set these in the Render dashboard (sync:false = Render won't read them
+      # from this file; you type them in the UI so they never live in git):
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY          # optional — enables LIVE garment image generation
+        sync: false
+      # Supabase (fill in once the project exists — see notes/deploy-render.md):
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
