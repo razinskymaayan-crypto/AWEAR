@@ -1079,22 +1079,21 @@
     const file=fileInput.files[0]; if(!file) return;
     closetBody.innerHTML='<div class="loading"><div class="spinner"></div><p>AI is identifying your items…</p></div>';
     const photoP=readDataURL(file), fd=new FormData(); fd.append('photo',file);
+    const uid=getOrCreateUserId();
     const ctrl=new AbortController(), timer=setTimeout(()=>ctrl.abort(),30000);
     try {
-      const res=await fetch('/api/analyze',{method:'POST',body:fd,signal:ctrl.signal});
+      const res=await fetch('/api/analyze?user_id='+encodeURIComponent(uid),{method:'POST',body:fd,signal:ctrl.signal});
       if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'Error '+res.status);}
-      const data=await res.json(); data.photo=await photoP; addScan(data);
+      const data=await res.json(); data.photo=await photoP; showScanConfirm(data,uid);
     } catch(_err) {
-      // Backend unreachable, timeout, or error — fall back to client-side demo data
-      // so the scan always succeeds during a live demo. (A6 demo reliability)
-      const pick = _SCAN_DEMO_OUTFITS[Math.floor(_SCAN_DEMO_OUTFITS.length * 0.9999 * Math.random())];
-      const demo = JSON.parse(JSON.stringify(pick));
-      const ts = Date.now();
-      demo.items.forEach((it, i) => { if (!it.id) it.id = 'demo_' + ts + '_' + i; });
-      demo.look_total_usd = demo.items.reduce((s, it) => s + (it.price_estimate_usd || 0), 0);
-      demo.photo = await photoP;
-      demo.mode = 'demo';
-      addScan(demo);
+      const pick=_SCAN_DEMO_OUTFITS[Math.floor(_SCAN_DEMO_OUTFITS.length*0.9999*Math.random())];
+      const demo=JSON.parse(JSON.stringify(pick));
+      const ts=Date.now();
+      demo.items.forEach((it,i)=>{if(!it.id)it.id='demo_'+ts+'_'+i;});
+      demo.look_total_usd=demo.items.reduce((s,it)=>s+(it.price_estimate_usd||0),0);
+      demo.photo=await photoP;
+      demo.mode='demo';
+      showScanConfirm(demo,uid);
     } finally { clearTimeout(timer); }
     fileInput.value='';
   });
@@ -1357,6 +1356,13 @@
     }
   }
 
+  function getOrCreateUserId(){
+    const KEY='awear_uid';
+    let uid=localStorage.getItem(KEY);
+    if(!uid){uid=([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));localStorage.setItem(KEY,uid);}
+    return uid;
+  }
+
   function wardrobeTagSet(){
     const set=new Set();
     loadWardrobe().forEach(it=>{(it.style_tags||[]).forEach(t=>set.add(String(t).toLowerCase()));if(it.category)set.add(String(it.category).toLowerCase());});
@@ -1372,6 +1378,80 @@
       tags:(scan.items||[]).reduce((acc,it)=>{(it.style_tags||[]).forEach(t=>acc.push(t));if(it.category)acc.push(it.category);return acc;},[])};
     const feed=loadFeedPosts();feed.unshift(post);saveFeedPosts(feed);
     showToast('Look shared to the feed');showView('feed');
+  }
+
+  // ---- Scan Confirm Sheet ----
+  let _scData=null,_scUid=null,_scItems=[];
+  function showScanConfirm(data,uid){
+    _scData=data; _scUid=uid;
+    _scItems=(data.items||[]).map(it=>({ai:{...it},final:{name:it.name,category:it.category||'',color:it.color||'',brand:it.brand_vibe||'',price:it.price_estimate_usd||0,source_url:''},accepted:true,editing:false}));
+    _renderScConfirm();
+    const ov=document.getElementById('sc-overlay'),sh=document.getElementById('sc-sheet');
+    ov.setAttribute('aria-hidden','false'); sh.setAttribute('aria-hidden','false');
+    ov.classList.add('show'); sh.classList.add('show');
+    showView('closet');
+  }
+  function closeScanConfirm(){
+    const ov=document.getElementById('sc-overlay'),sh=document.getElementById('sc-sheet');
+    ov.setAttribute('aria-hidden','true'); sh.setAttribute('aria-hidden','true');
+    ov.classList.remove('show'); sh.classList.remove('show');
+  }
+  function _renderScConfirm(){
+    const hdr=document.getElementById('sc-header-el'),body=document.getElementById('sc-body'),ftr=document.getElementById('sc-footer-el');
+    if(!hdr||!body||!ftr) return;
+    const isDemo=_scData&&_scData.mode==='demo';
+    const cnt=_scItems.filter(i=>i.accepted).length;
+    hdr.innerHTML=`<div class="sc-header"><div class="sc-header-title">${icon('check',18)} Did we get it right?</div><div class="sc-header-sub">${_scItems.length} item${_scItems.length!==1?'s':''} found${isDemo?' (demo)':''}</div><button class="sc-close" onclick="closeScanConfirm()" aria-label="Close">${icon('x',16)}</button></div>`;
+    body.innerHTML=_scItems.map((si,idx)=>{
+      const it=si.final, isLow=si.ai.confidence==='low';
+      return `<div class="sc-card${si.accepted?'':' sc-rejected'}" id="sc-card-${idx}">
+        ${isLow?`<div class="sc-low-badge">${icon('alertTriangle',12)} Low confidence — please refine</div>`:''}
+        <div class="sc-card-name">${esc(it.name)}</div>
+        <div class="sc-card-meta">${esc(it.category)}${it.brand?' · '+esc(it.brand):''}${it.price?' · $'+it.price:''}</div>
+        <div class="sc-card-actions">
+          <button class="sc-btn sc-accept${si.accepted?' active':''}" onclick="scSetAccepted(${idx},true)">${icon('check',14)}</button>
+          <button class="sc-btn sc-edit${si.editing?' active':''}" onclick="scToggleEdit(${idx})">${icon('edit',14)}</button>
+          <button class="sc-btn sc-reject${!si.accepted?' active':''}" onclick="scSetAccepted(${idx},false)">${icon('x',14)}</button>
+        </div>
+        ${si.editing?`<div class="sc-edit-form">
+          <input class="sc-field" value="${attr(it.name)}" placeholder="Name" oninput="scUpdateField(${idx},'name',this.value)">
+          <input class="sc-field" value="${attr(it.category)}" placeholder="Category" oninput="scUpdateField(${idx},'category',this.value)">
+          <input class="sc-field" value="${attr(it.brand)}" placeholder="Brand" oninput="scUpdateField(${idx},'brand',this.value)">
+          <input class="sc-field" type="number" value="${attr(''+it.price)}" placeholder="Price USD" oninput="scUpdateField(${idx},'price',+this.value)">
+          <input class="sc-field" value="${attr(it.source_url)}" placeholder="Source link (optional)" oninput="scUpdateField(${idx},'source_url',this.value)">
+        </div>`:''}
+      </div>`;
+    }).join('');
+    ftr.innerHTML=`<div class="sc-footer"><button class="sc-cta" id="sc-confirm-btn" onclick="scConfirm()"${cnt===0?' disabled':''}>${icon('plus',16)} Add ${cnt} item${cnt!==1?'s':''} to Closet</button></div>`;
+  }
+  function scSetAccepted(idx,val){_scItems[idx].accepted=val;if(!val)_scItems[idx].editing=false;_renderScConfirm();}
+  function scToggleEdit(idx){_scItems[idx].editing=!_scItems[idx].editing;if(_scItems[idx].editing)_scItems[idx].accepted=true;_renderScConfirm();}
+  function scUpdateField(idx,field,val){
+    _scItems[idx].final[field]=val;
+    const card=document.getElementById('sc-card-'+idx);
+    if(!card) return;
+    const nm=card.querySelector('.sc-card-name'),mt=card.querySelector('.sc-card-meta');
+    if(nm&&field==='name') nm.textContent=val;
+    if(mt){const f=_scItems[idx].final;mt.textContent=(f.category||'')+(f.brand?' · '+f.brand:'')+(f.price?' · $'+f.price:'');}
+  }
+  async function scConfirm(){
+    const btn=document.getElementById('sc-confirm-btn');
+    if(btn){btn.disabled=true;btn.innerHTML=icon('check',16)+' Adding…';}
+    const clientRef='scan_'+Date.now()+'_'+Math.floor(Math.random()*1e6);
+    const accepted=_scItems.filter(i=>i.accepted), rejected=_scItems.filter(i=>!i.accepted);
+    const payload={user_id:_scUid,client_ref:clientRef,items:[
+      ...accepted.map(si=>({accepted:true,ai:si.ai,final:{...si.final,name:si.final.name||si.ai.name,category:si.final.category||si.ai.category}})),
+      ...rejected.map(si=>({accepted:false,ai:si.ai,final:si.ai}))
+    ]};
+    try{ await fetch('/api/closet/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }catch(_){}
+    const acceptedItems=accepted.map(si=>({...si.ai,name:si.final.name||si.ai.name,category:si.final.category||si.ai.category,brand_vibe:si.final.brand||si.ai.brand_vibe,price_estimate_usd:si.final.price||si.ai.price_estimate_usd,source_url:si.final.source_url||null}));
+    const meta={overall_style:_scData.overall_style,occasion:_scData.occasion,trend_score:_scData.trend_score,summary:_scData.summary,stylist_tip:_scData.stylist_tip,look_total_usd:_scData.look_total_usd,mode:_scData.mode||'live'};
+    saveWardrobe(acceptedItems.concat(loadWardrobe()));
+    saveMeta(meta); saveLastScan({photo:_scData.photo||null,items:acceptedItems,meta});
+    if(acceptedItems.length) logAdminEvent('scan','Confirmed '+acceptedItems.length+' items — '+(acceptedItems[0]?.name||''));
+    closeScanConfirm(); renderCloset();
+    const base=acceptedItems.length+' item'+(acceptedItems.length!==1?'s':'')+' added to your closet';
+    showToast(_scData.mode==='demo'?base+' (demo)':base);
   }
 
   // ---- Feed ----

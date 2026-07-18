@@ -330,6 +330,15 @@
     <div class="sheet-footer" id="sheet-footer"></div>
   </div>
 
+  <!-- Scan Confirm bottom sheet -->
+  <div class="mp-fsheet-overlay" id="sc-overlay" aria-hidden="true" onclick="closeScanConfirm()"></div>
+  <div class="mp-fsheet" id="sc-sheet" role="dialog" aria-modal="true" aria-label="Review your items" aria-hidden="true">
+    <div class="mp-fsheet-handle" aria-hidden="true"></div>
+    <div id="sc-header-el"></div>
+    <div class="mp-fsheet-scroll" id="sc-body"></div>
+    <div id="sc-footer-el"></div>
+  </div>
+
   <!-- Reusable global create chooser (drop into any header header via openCreateMenu()) -->
   <div id="create-overlay" class="create-overlay" role="dialog" aria-modal="true" aria-label="Create" aria-hidden="true" onclick="if(event.target===this)closeCreateMenu()">
     <div class="create-sheet">
