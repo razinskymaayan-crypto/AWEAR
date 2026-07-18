@@ -12,6 +12,13 @@ Authority to change a line here: Carmel/Razi (or Mark/Ayalon with a cited metric
 ---
 
 ## Product priority & roadmap
+> ★★★ **FOUNDER UPDATE 2026-07-18 (Maayan) — supersedes "investor demo" framing where they conflict:**
+> - **Target = a full initial app LAUNCH in ~1 month (~2026-08-18), first cohort ~200 users** — not just a demo. Bar is now **launch-ready** (robust real flows), not only a happy demo path. Founder is also documenting the journey publicly on Instagram in ENGLISH (build-in-public).
+> - **Differentiator = ALL-IN-ONE at a high aesthetic bar:** buy clothes + earn money (creator credits) + post socially + sell second-hand + a personal AI stylist specific to the user's OWN wardrobe. No competitor unifies all of this — protect this breadth.
+> - **Focus #1 for agents = the core tech:** photo → identify each garment → **generate a clean catalog image** → lands in closet (shoppable: brand + search_query + buy_options). See INBOX ★★★ part A (identify, done) + part B (generate image).
+> - **Investor "wow" = buy-a-look in-app + creator credit** (the economic loop) — must genuinely work end-to-end (payout may stay simulated — see OPEN below).
+> - **OPEN (founder call):** real money+payout vs simulated/affiliate at launch. Default = simulated/affiliate facade (real payments need a provider + merchant-of-record + legal; hard in a month) — consistent with the "real payment fulfilment deferred" line below.
+
 - 🧭 **North star = The Loop works for real** (SCAN→MATCH→LOOKS→BUY→EARN). The single most valuable
   work is moving a loop stage from SEEDED to REAL. (MASTER_PLAN)
 - 🧭 **Priority order:** CI-fix · answered founder directive · INBOX · advance-the-loop · bug/infra ·
