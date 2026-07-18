@@ -1150,3 +1150,68 @@ def test_closet_patch_wrong_user_403(client):
         "name": "Attempted Rename",
     })
     assert r.status_code == 403
+
+
+# ── generate-garment endpoint ──────────────────────────────────────────────
+
+def test_generate_garment_demo_path_no_key(client):
+    """Without OPENAI_API_KEY, endpoint returns mode='demo', no network call, no crash."""
+    import io
+    from PIL import Image as _Image
+    img = _Image.new("RGB", (10, 10), color="blue")
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG")
+    files = {"photo": ("shirt.jpg", buf.getvalue(), "image/jpeg")}
+    r = client.post("/api/generate-garment", files=files)
+    assert r.status_code == 200
+    body = r.json()
+    assert body["mode"] == "demo"
+    assert body["image_url"] is None
+    assert "reason" in body
+
+
+def test_generate_garment_empty_file_400(client):
+    """Empty upload returns 400."""
+    r = client.post("/api/generate-garment", files={"photo": ("empty.jpg", b"", "image/jpeg")})
+    assert r.status_code == 400
+
+
+def test_generate_garment_scan_health_exposes_generation(client):
+    """scan-health includes a 'generation' block with last_mode and last_reason."""
+    r = client.get("/api/scan-health")
+    assert r.status_code == 200
+    body = r.json()
+    assert "generation" in body
+    assert "last_mode" in body["generation"]
+    assert "last_reason" in body["generation"]
+
+
+def test_generate_garment_with_item_json(client):
+    """item_json is parsed and used (endpoint accepts it without crashing)."""
+    import io, json
+    from PIL import Image as _Image
+    img = _Image.new("RGB", (10, 10), color="green")
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG")
+    item = {"name": "denim jacket", "category": "outerwear", "color": "blue", "brand": "Zara"}
+    r = client.post("/api/generate-garment",
+                    files={"photo": ("jacket.jpg", buf.getvalue(), "image/jpeg")},
+                    data={"item_json": json.dumps(item)})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["mode"] in ("live", "demo")
+
+
+def test_generate_garment_bad_item_json_graceful(client):
+    """Bad item_json (not valid JSON) falls back to empty item gracefully."""
+    import io
+    from PIL import Image as _Image
+    img = _Image.new("RGB", (10, 10), color="red")
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG")
+    r = client.post("/api/generate-garment",
+                    files={"photo": ("shirt.jpg", buf.getvalue(), "image/jpeg")},
+                    data={"item_json": "not-valid-json{}"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["mode"] in ("live", "demo")

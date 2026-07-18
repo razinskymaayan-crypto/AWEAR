@@ -138,6 +138,9 @@ if not _api_key:
 MODEL = "claude-opus-4-8"
 MAX_EDGE = 1024  # downscale long edge to control cost + latency
 
+OPENAI_IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-1")
+_last_gen: dict = {"mode": None, "reason": None}
+
 # ~25s request timeout so a hung/slow call raises anthropic.APITimeoutError instead of
 # spinning forever — the broad except in /api/analyze then yields the demo fallback,
 # keeping a live pitch from hanging.
@@ -735,6 +738,10 @@ async def scan_health(request: Request, probe: int = 0):
         # startup hook below) — proves the MODEL constant is a real, callable
         # model id rather than a hardcoded string nobody has verified.
         "startup_smoke": dict(_startup_smoke),
+        # Last outcome of POST /api/generate-garment — mirrors the _last_scan
+        # pattern so the founder can tell whether image generation is live or
+        # falling back to demo, and why.
+        "generation": {"last_mode": _last_gen["mode"], "last_reason": _last_gen["reason"]},
     }
 
     if not probe:
@@ -2911,6 +2918,105 @@ async def get_weather(request: Request, lat: float, lon: float):
     _weather_cache[cache_key] = (now, data)
     logger.info("weather cache miss: %s — fetched and cached", cache_key)
     return data
+
+
+# ---------------------------------------------------------------------------
+# POST /api/generate-garment — generate a clean ecommerce catalog image via
+# OpenAI Images Edit API. Demo-first: without OPENAI_API_KEY returns mode='demo'.
+# ---------------------------------------------------------------------------
+
+def _generate_garment_image_sync(image_bytes: bytes, item: dict) -> dict:
+    """Generate a clean ecommerce-catalog PNG for one garment via OpenAI Images Edit.
+
+    Call via asyncio.to_thread() — never call directly inside async (iron rule).
+    NEVER raises: all failures return mode='demo' + bounded reason string.
+    """
+    try:
+        openai_key = os.getenv("OPENAI_API_KEY")
+        if not openai_key:
+            return {"mode": "demo", "image_url": None, "reason": "no_openai_key"}
+
+        import openai  # optional dep — only imported if key is configured
+
+        oi_client = openai.OpenAI(api_key=openai_key)
+
+        img = Image.open(io.BytesIO(image_bytes))
+        img = img.convert("RGBA")
+        img.thumbnail((1024, 1024))
+        png_buf = io.BytesIO()
+        img.save(png_buf, format="PNG")
+        png_buf.seek(0)
+
+        name = item.get("name", "garment")
+        category = item.get("category", "clothing")
+        color = item.get("color", "")
+        brand = item.get("brand") or ""
+        prompt = (
+            f"Reconstruct ONLY the complete {name} ({category}) as a clean, front-facing ecommerce "
+            f"catalog product photograph on a transparent background. Remove any person/body/mannequin/"
+            f"hanger. Preserve the garment's exact color {color}, material, texture, silhouette, neckline, "
+            f"sleeves, fastenings, pattern and distinctive details ({brand}). Preserve any legible existing "
+            f"logo exactly; invent nothing. Center straight-on, fully in frame, even padding, soft product "
+            f"lighting, no shadows or props. Produce exactly one garment."
+        )
+
+        response = oi_client.images.edit(
+            model=OPENAI_IMAGE_MODEL,
+            image=("photo.png", png_buf, "image/png"),
+            prompt=prompt,
+            size="1024x1024",
+            background="transparent",
+            output_format="png",
+        )
+
+        img_data = response.data[0]
+        if getattr(img_data, "b64_json", None):
+            png_bytes = base64.standard_b64decode(img_data.b64_json)
+        elif getattr(img_data, "url", None):
+            with urllib.request.urlopen(img_data.url, timeout=30) as r:
+                png_bytes = r.read()
+        else:
+            return {"mode": "demo", "image_url": None, "reason": "empty_response"}
+
+        out_dir = Path("static/img/generated")
+        out_dir.mkdir(parents=True, exist_ok=True)
+        fname = "gen_" + uuid.uuid4().hex[:12] + ".png"
+        (out_dir / fname).write_bytes(png_bytes)
+        return {"mode": "live", "image_url": f"/static/img/generated/{fname}", "reason": None}
+
+    except Exception as e:  # noqa: BLE001
+        logger.error("generate_garment_image failed: %s", e, exc_info=True)
+        return {"mode": "demo", "image_url": None, "reason": "api_error"}
+
+
+@app.post("/api/generate-garment")
+async def generate_garment(request: Request, photo: UploadFile, item_json: str = "", user_id: str = ""):
+    """Generate a clean catalog-quality PNG for one garment.
+
+    Delegates to _generate_garment_image_sync via asyncio.to_thread (iron rule:
+    no HTTP inside async). Demo-first: without OPENAI_API_KEY returns mode='demo'.
+    """
+    ip = (request.client.host if request.client else None) or "anon"
+    user_key = (user_id or "").strip() or ip
+    if not check_rate_limit(user_key, "generate-garment", limit=3):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 3 requests/minute.")
+
+    raw = await photo.read()
+    if not raw:
+        raise HTTPException(status_code=400, detail="Empty file")
+
+    item: dict = {}
+    if item_json:
+        try:
+            item = json.loads(item_json)
+        except Exception:
+            pass  # bad JSON -> empty item (graceful)
+
+    result = await asyncio.to_thread(_generate_garment_image_sync, raw, item)
+    _last_gen["mode"] = result["mode"]
+    _last_gen["reason"] = result.get("reason")
+    logger.info("generate-garment: user=%s mode=%s reason=%s", user_key, result["mode"], result.get("reason"))
+    return result
 
 
 # ---------------------------------------------------------------------------

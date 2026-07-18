@@ -8,3 +8,4 @@ pillow>=10.0
 google-api-python-client>=2.100
 google-auth-httplib2>=0.2
 google-auth-oauthlib>=1.1
+openai>=2.41
