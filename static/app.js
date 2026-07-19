@@ -3802,7 +3802,7 @@
 
   // ---- Creator Wallet ----
   function renderWallet() {
-    const el = document.getElementById('wl-wrap');
+    const el = document.getElementById('wallet-inner');
     if (!el) return;
 
     const SEED_FLAG = 'awear_wallet_seeded';
