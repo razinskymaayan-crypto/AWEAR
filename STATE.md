@@ -35,21 +35,20 @@
 | 10 — Autonomy dry run | ⬜ |
 | Final — deliverables | ⬜ |
 
-## ⏸️ PAUSED BY FOUNDER (2026-07-05)
-Carmel instructed: stop, push everything to GitHub, wait. **Resume only when Carmel or her partner says to continue.**
-Everything through Phase 8 is committed and pushed; P4 reviews done and findings fixed for all completed phases.
+## 🔴 ACTIVE (2026-07-19, Maayan + main session) — supersedes the paused Foundation-Audit state above
+Two parallel tracks; lanes are RUNNING (not paused), cadence every 2h, model claude-sonnet-4-6.
 
-## What's next (when resumed)
-1. **Phase 7 — verification harness**: pytest suite for app.py critical paths (<30s), ruff config, `scripts/verify.sh` (tests+lint+guards+render; referenced by CLAUDE.md — still a sanctioned dangling ref), `evals/` for the 3 gate agents (gabbana/steve-review/jeff-merge; mine ci-debug/jeff-rejections + knowledge incidents for scenarios), `/run-evals` skill, `/review` fresh-context diff skill, wire into jeff-merge.yml.
-2. **Phase 9 — code quality + hygiene** (parallel worktree subagents): conservative app.py module extraction, section markers in index.html (NO modularization), scripts/ dedupe + headers, `git rm --cached data/awear.db` (NEEDS_DECISION #2 default), delete 23 stale merged feat/* branches, worktree prune, archive .claude/agents/logs/, fix schema.sql "PostgreSQL" comment, delete whoami.yml.
-3. **Phase 10 — autonomy dry run**: M-tier task (candidate: comments persistence to SQLite — `_comments_store` in-memory dict, BE-005 violation), executed with the new machinery only; then crash-simulation resume test from this file alone.
-4. **Final deliverable**: AUDIT_REPORT before/after + template-extraction guide; present NEEDS_DECISION.md to founders.
+**Track 1 — LAUNCH INFRA (target: full launch ~2026-08-18, first cohort ~200 users):**
+- Backend LIVE on Render: `https://awear-x4o2.onrender.com` (Capacitor `server.url` points here; app runs on a real iPhone + uploaded to TestFlight as `com.awear.fashion` under Segev Olpak's paid Apple acct; Carmel invited, pending his email accept).
+- Supabase project created; SUPABASE_* + DATABASE_URL set in Render. Agent epic (INBOX ★★★): Auth → Postgres (steve wired `_get_db()` choke-point) → Storage. DECISIONS #17.
+- Image-gen (`/api/generate-garment`, OpenAI, demo-first) built — LIVE call fails (needs OpenAI org-verify + billing); decided match-first + cache for scale; free alt = bg-removal (route B), deferred.
+
+**Track 2 — HARDEN THE AUTONOMY ENGINE (founder: perfect by 2026-07-20 eve, then re-test):**
+Full-pipeline audit done. Fixes shipped by MAIN SESSION (lanes can't touch `.github/`): P0 base-anchor OW-013 (fc6b321 — THE 'nothing lands' bug), ownership-map alignment (05cfba4), P1 rejection-feedback + P2 INBOX/shared + P4 self-heal routing (92b353c). Cadence 6h→2h. Lanes redirected to infra-hardening ONLY (no features) until the re-test.
+- REMAINING: verify the next cycle lands work (gate-ledger); phantom-lane cleanup; GATE 3 determinism; evaluate GitHub-native CODEOWNERS + Merge Queue (strategic simplification).
 
 ## Open questions
-See NEEDS_DECISION.md — 5 items, defaults applied, none blocking.
-
-## Open questions
-See NEEDS_DECISION.md — 5 items, all with best-guess defaults applied; none blocking.
+See NEEDS_DECISION.md — defaults applied, none blocking. Live founder decisions: OpenAI billing (for live image-gen) · which Apple acct for the real launch (Segev's vs own).
 
 ## Test commands (preserve across compaction)
 - Server: `venv312/bin/uvicorn app:app --reload --port 8000`
