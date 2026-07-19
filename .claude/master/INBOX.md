@@ -11,13 +11,30 @@
 
 הקשר־על: יעד = דמו מלוטש. החזון המלא ב-docs/PRODUCT_VISION.md — קראו אותו לפני עבודה. עבדו לפי הסדר, משימה אחת לכל ריצה, מקצה לקצה, עם VALUE GATE אמיתי. אל תעשו סקרים/מחקר כל עוד יש כאן משימות.
 
-★★★★★ [כיוון מייסד — 2026-07-19 — עד מחר בערב (2026-07-20 ~20:00): רק הקשחת תשתית, אפס פיצ'רים] ★★★★★
-מיקוד יחיד לכל ה-lanes עד הבדיקה החוזרת מחר בערב: **להפוך את התשתית למושלמת ואמינה.** מותרות אלף איטרציות/בדיקות עד שזה עובד fix. **אין פיצ'רים חדשים.** לפי lane:
+★★★★★ [כיוון מייסד — 2026-07-19 — עד מחר בערב (2026-07-20 ~20:00)] ★★★★★
+מיקוד לכל ה-lanes: **(א) הקשחת אמינות** + **(ב) ליטוש UX וחווית-משתמש: תיקון באגים ושדרוג העיצוב/הנראות של פיצ'רים *קיימים*.** אין פיצ'רים חדשים — משדרגים את מה שכבר יש. מותרות אלף איטרציות עד שזה מושלם.
+**השראת עיצוב (עדכון מייסד — מרחיב את DS-015): Depop · Instagram · Pinterest · ASOS.** שמרו על הקווים המנחים הקיימים — design tokens (var(--token, real-fallback)), icon()/SVG לא emoji, אנגלית. כל שדרוג עיצובי עובר gabbana 8+ ו-pre-commit self-review.
+לפי lane:
 - **steve/oren/sam:** לסיים את אפוס הלאנץ' (Supabase Auth → Postgres → Storage), כל endpoint עם pytest הרמטי, data-integrity gates, אמינות (fallbacks, אין קריאות שנשברות). לוודא שהאפליקציה החיה על Render לא נשברת בכל merge.
 - **mark/dolce/valentino:** אמינות UI — לתקן כל DS-004/רגרסיה שהשער דוחה (אל תחזרו על אותה טעות!), לוודא check-render + interactions ירוקים. אין מסכים חדשים.
 - **ayalon:** לתעד + לוודא DoD, לא לפתוח scope חדש.
 - **כולם:** אם השער דחה אתכם — קִראו את `ci-debug/jeff-rejections.txt` ואל תחזרו על אותה דחייה. תיקון = בדיקת-רגרסיה באותו PR (OW-014).
 - **מנוע ה-CI/workflows (`.github/`) — לא בטיפולכם.** המייסד/הסשן הראשי מקשיח אותו (אתם חסומים משם ממילא).
+
+**BACKLOG הקשחה ללילה (2026-07-19→20) — מספיק עבודה שאף lane לא יבזבז מחזור על idle. משימה אחת לריצה, in-lane בלבד, pre-commit self-review חובה:**
+_steve/oren/sam (backend/data/scripts):_
+1. כיסוי טסטים: grep endpoints ב-app.py מול tests/ — לכל endpoint בלי pytest הרמטי, הוסף אחד (contract + edge + fallback).
+2. חוסן: לכל נתיב שתלוי בשירות חיצוני (anthropic/openai/רשת) — לוודא try→demo/fallback, שאף פעם לא זורק למשתמש. הרחב scan-health לכסות.
+3. data-integrity: כל id-reference בין static/data/*.json ל-app.py פותר (orphan check פרוגרמטי + curl verify).
+4. להמשיך את אפוס Supabase (Auth→Storage) — כל שלב עם טסט הרמטי, לא לשבור SQLite המקומי.
+_mark/dolce/valentino (UI):_
+1. לתקן את ה-DS-004 ב-static/app.css: fallbacks שגויים (#14110F→#e8526a, #3D3833→#c4855a) במקומות שהביקורת סימנה (.sc-cta, .sc-field:focus, sc-header icon) — **רק app.css, self-review לפני commit.**
+2. דפוס סגירת-sheet (safe-area + drag-dismiss) לכל שאר ה-bottom-sheets שלא ייתקעו ב-iOS.
+3. sweep DS: grep app.css/index.html ל-DS-004/008/009 שנותרו, לתקן אחד לריצה.
+4. לוודא check-render + scripts/check-interactions.mjs ירוקים.
+_ayalon:_
+1. אימות DoD על "## הושלם" — שכל פריט באמת נבדק (grep/curl), עדכן doc אם לא.
+2. אין scope חדש — תיעוד + עקביות בלבד.
 
 ★★★ [כיוון מייסד חדש — 2026-07-11 — עדיפות עליונה על הכל] ★★★
 המיקוד מעכשיו הוא הליבה הטכנולוגית: **מנגנון זיהוי המוצר.** כשמשתמש מעלה פוסט או מצלם תמונה — ה-AI חייב לזהות כל פריט לבוש בצורה אמינה ולהוסיף אותו לארון. זה ה-wow וה-moat של האפליקציה. (backend/steve — זו המשימה #1 שלך, לפני כל שאר ה-backlog):

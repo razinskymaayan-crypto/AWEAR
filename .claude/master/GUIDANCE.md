@@ -31,8 +31,9 @@ Authority to change a line here: Carmel/Razi (or Mark/Ayalon with a cited metric
   fallback over a real-but-fragile call.
 
 ## Design taste (boundaries)
-- 🎨 **Benchmark = Instagram · Pinterest · Zara.** NOT TikTok (too loud), Depop (too grungy),
-  Linear/Farfetch (too cold). (DS-015)
+- 🎨 **Benchmark = Instagram · Pinterest · Depop · ASOS · Zara** (founder update 2026-07-19 — Depop + ASOS
+  ADDED, supersedes the DS-015 Depop/ASOS exclusion; draw shoppable-social + fashion-commerce cues from them).
+  Still NOT TikTok (too loud) or Linear/Farfetch (too cold). Keep the existing token/icon guidelines.
 - 🎨 **Premium but friendly, never cold.** "The image is the star — the UI is the stage." Editorial
   confidence, accessible luxury — anyone can belong.
 - 🎨 **The Buy CTA stays present and prominent** — do not quiet/demote it (reverted before, hurt
