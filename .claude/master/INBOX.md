@@ -27,11 +27,13 @@ _steve/oren/sam (backend/data/scripts):_
 2. חוסן: לכל נתיב שתלוי בשירות חיצוני (anthropic/openai/רשת) — לוודא try→demo/fallback, שאף פעם לא זורק למשתמש. הרחב scan-health לכסות.
 3. data-integrity: כל id-reference בין static/data/*.json ל-app.py פותר (orphan check פרוגרמטי + curl verify).
 4. להמשיך את אפוס Supabase (Auth→Storage) — כל שלב עם טסט הרמטי, לא לשבור SQLite המקומי.
-_mark/dolce/valentino (UI):_
-1. לתקן את ה-DS-004 ב-static/app.css: fallbacks שגויים (#14110F→#e8526a, #3D3833→#c4855a) במקומות שהביקורת סימנה (.sc-cta, .sc-field:focus, sc-header icon) — **רק app.css, self-review לפני commit.**
-2. דפוס סגירת-sheet (safe-area + drag-dismiss) לכל שאר ה-bottom-sheets שלא ייתקעו ב-iOS.
-3. sweep DS: grep app.css/index.html ל-DS-004/008/009 שנותרו, לתקן אחד לריצה.
-4. לוודא check-render + scripts/check-interactions.mjs ירוקים.
+_mark/dolce/valentino (UI) — **עדיפות עליונה: מסע-ציד באגי-UX (כיוון מייסד).** תבדקו ותבינו לבד, אחד לריצה:_
+1. **טקסט/כיתוב שמתלבש אחד על השני** (overlap/z-index/מיקום/truncation חסר) — סרקו מסכים, תקנו.
+2. **חלונות/sheets/modals שנתקעים** — הרחיבו והריצו `scripts/check-interactions.mjs`: כל overlay חייב להיפתח **וגם להיסגר** (X + גרירה + הקשה על רקע). safe-area + drag-dismiss לכל bottom-sheet.
+3. **כפתורים שחור-על-שחור / ניגודיות נמוכה** — grep fallbacks שגויים (#14110F→#e8526a, #3D3833→#c4855a; .sc-cta, .sc-field:focus, sc-header icon) + בדיקת WCAG + screenshot. **רק app.css, self-review.**
+4. **כפתורים מתים** (לייק, שמירה, שיתוף וכו') שלא עושים כלום — click-test אמיתי (הרחיבו check-interactions ללחוץ ולוודא שקורה משהו), חווטו את השבורים.
+5. **כל באג-UX אחר שאתם מוצאים** בסקירת מסך עם gabbana — תקנו. sweep DS-004/008/009 שנותרו.
+כל תיקון: in-lane (app.css/index.html בלבד), pre-commit self-review, check-render + interactions ירוקים.
 _ayalon:_
 1. אימות DoD על "## הושלם" — שכל פריט באמת נבדק (grep/curl), עדכן doc אם לא.
 2. אין scope חדש — תיעוד + עקביות בלבד.
