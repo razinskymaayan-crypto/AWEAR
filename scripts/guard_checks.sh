@@ -40,6 +40,13 @@ if grep -q '\.fca-icon\b' "$CSS" "$JS" "$F" 2>/dev/null; then
   note "reference to non-existent class '.fca-icon' (canonical is '.fca-ico') — repeat of OW-008"
 fi
 
+# DS-004 regression (mark repeat-failure 2026-07-18): sc-* dark-surface modal must use dark-theme
+# accent fallbacks (#e8526a / #c4855a), not the light :root override (#14110F / #3D3833).
+# Wrong fallback = near-black gradient CTA + invisible focus ring when tokens.css fails to load.
+if grep -E '\.sc-(cta|field|header)' "$CSS" 2>/dev/null | grep -qE 'var\(--accent2?,#(14110F|3D3833)\)'; then
+  note "DS-004 regression: sc-* dark modal has light-theme accent fallback (#14110F/#3D3833) — use var(--accent,#e8526a) / var(--accent2,#c4855a)"
+fi
+
 # ---- KNOWLEDGE-INDEX SYNC (the learning loop only compounds if new codes are discoverable) ----
 # Every learning code defined in a domain file MUST have a row in INDEX.md.
 # (This is the gate that would have caught DS-016/DS-017/BE-IDEMPOTENT going un-indexed.)
