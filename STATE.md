@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-19)
-- **Task**: UX-QA P1 — all stuck bottom-sheets now closeable (INBOX task)
-- **Done**: X-close button + drag-to-dismiss on mp-fsheet + ms-insight-sheet; X-close button on comments-sheet, diary-sheet, journal-sheet, edit-profile modal; backdrop tap on purchase-modal. Shared `_addSheetDragDismiss()` helper (buy-sheet pattern). Commit f084233.
-- **Remaining**: P2 token reconciliation (--muted AA on white, --success light drift). check-interactions.mjs extension requested via steve.md (needs steve lane — scripts/*.mjs).
-- **Rejection fix**: Previous rejection (OW-001, wl-wrap→wishlist-wrap) was already on main via de41fbc; no code to fix, confirmed no JS callers of old ID.
+## Mark lane — last run (2026-07-19, run 2)
+- **Task**: DS-004 fix — 187 stale var(--muted,#8a8498) fallbacks → #9e99ad in app.css(142)+app.js(45)
+- **Done**: Mass-replaced stale --muted fallback (old dark value) with current SoT value #9e99ad. P2 token reconciliation fully closed. Commit 1e41dde.
+- **Remaining**: check-interactions.mjs extension (requested via steve.md — scripts/*.mjs is steve's lane). INBOX UX bug-hunt items (overlap, dead buttons) for next run.
+- **Prior run**: UX-QA P1 — all stuck bottom-sheets closeable (f084233). Rejection fix for OW-001 (wl-wrap) confirmed already on main.
 
 ## Steve lane — last run (2026-07-19)
 - **Task**: DATABASE_URL → Postgres migration (INBOX launch infra step 3)
