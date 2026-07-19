@@ -66,3 +66,4 @@
 2026-07-19T02:55:00Z | jeff: merged -> mark
 2026-07-19T08:40:33Z | jeff: merged -> steve
 2026-07-19T13:26:04Z | jeff: merged -> ayalon
+2026-07-19T18:10:47Z | jeff: merged -> none | REJECTED (adversarial review): mark — see ci-debug/jeff-rejections.txt
