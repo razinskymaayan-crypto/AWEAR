@@ -1297,6 +1297,65 @@ def test_supabase_jwt_expired(client):
         app_module.SUPABASE_JWT_SECRET = original
 
 
+# ---------------------------------------------------------------------------
+# DATABASE_URL / Postgres path detection tests (OW-014 — regression for step 3)
+# ---------------------------------------------------------------------------
+
+def test_get_db_uses_sqlite_without_database_url():
+    """Without DATABASE_URL, _get_db() returns a _CompatDB wrapping SQLite (dialect='sqlite')."""
+    import app as app_module
+    assert app_module.DATABASE_URL == "", "DATABASE_URL must be empty in CI/test env"
+    db = app_module._get_db()
+    assert db._dialect == "sqlite"
+    db._conn.close()
+
+
+def test_compat_db_sqlite_execute_and_fetch():
+    """_CompatDB sqlite path: execute() returns a cursor with fetchone()/fetchall()."""
+    import app as app_module
+    import pathlib
+    import tempfile
+    tmp = pathlib.Path(tempfile.mktemp(suffix=".db"))
+    import sqlite3 as _sqlite3
+    raw = _sqlite3.connect(str(tmp))
+    raw.row_factory = _sqlite3.Row
+    db = app_module._CompatDB(raw, "sqlite")
+    with db:
+        db.execute("CREATE TABLE t (id INTEGER PRIMARY KEY, v TEXT)")
+        db.execute("INSERT INTO t (v) VALUES (?)", ("hello",))
+        row = db.execute("SELECT v FROM t").fetchone()
+    assert row["v"] == "hello"
+    tmp.unlink(missing_ok=True)
+
+
+def test_database_url_postgres_dialect_selected(monkeypatch):
+    """When DATABASE_URL is set, _get_db() selects the postgres dialect
+    (connection attempt will fail without a real server — we test the branch taken)."""
+    import app as app_module
+
+    class _FakeConn:
+        def cursor(self, **_kw):
+            return self
+        def close(self):
+            pass
+        def commit(self):
+            pass
+        def rollback(self):
+            pass
+
+    class _FakePsycopg2:
+        @staticmethod
+        def connect(dsn):
+            return _FakeConn()
+
+    monkeypatch.setattr(app_module, "DATABASE_URL", "postgresql://localhost/awear_test")
+    import sys
+    monkeypatch.setitem(sys.modules, "psycopg2", _FakePsycopg2())
+    db = app_module._get_db()
+    assert db._dialect == "postgres"
+    db._conn.close()
+
+
 def test_supabase_jwt_anon_role(client):
     """JWT with role=anon → 401 (only 'authenticated' allowed)."""
     import app as app_module

@@ -11,12 +11,12 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Steve lane — last run (2026-07-18)
-- **Task**: Supabase JWT verification — INBOX launch infrastructure step 2 (backend half)
-- **Commit**: 2d3e84c on auto/steve
-- **Done**: `_supabase_jwt_user()` helper (HS256 verify, role=authenticated gate, sub as user_id); `_session_user()` tries JWT first → falls back to session tokens; `SUPABASE_JWT_SECRET` env var; scan-health reports `supabase_auth.configured`; PyJWT>=2.8 in requirements.txt; 5 new pytests (77 total)
-- **Remaining**: SPA side (mark lane) — Supabase JS SDK login, call `/api/auth/supabase-sync` on first login; DB migration to Postgres (step 3); Supabase Storage (step 4)
+## Steve lane — last run (2026-07-19)
+- **Task**: DATABASE_URL → Postgres migration (INBOX launch infra step 3)
+- **Done**: `_CompatDB` + `_PgCursorProxy` classes in app.py; `_get_db()` returns `_CompatDB` (dialect='sqlite' or 'postgres'); `?`→`%s` translation; `RealDictCursor` for dict-like rows; `SELECT lastval()` for lastrowid; `init_db()` skips when DATABASE_URL set; `psycopg2-binary>=2.9` in requirements.txt; `notes/schema_postgres.sql` for Supabase manual setup; 3 new pytests (80 total)
+- **Remaining**: Launch infra step 4 (Supabase Storage for images); SPA side Supabase Auth (mark lane)
 - **CI_FAILURES note**: combined patch (BASE-anchor + GATE 3 stale-ownership fix) still NOT applied on main. Escalation stands in NEEDS_YOU.md. Do NOT re-analyze.
+- **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
 ## Phase status
 | Phase | Status |

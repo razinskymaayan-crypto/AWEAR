@@ -29,6 +29,7 @@ import asyncio
 import urllib.error
 import urllib.parse
 import urllib.request
+import re
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -148,6 +149,7 @@ OPENAI_IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-1")
 _last_gen: dict = {"mode": None, "reason": None}
 
 SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET", "")
+DATABASE_URL = os.getenv("DATABASE_URL", "")  # Postgres/Supabase on Render; empty = SQLite
 
 # ~25s request timeout so a hung/slow call raises anthropic.APITimeoutError instead of
 # spinning forever — the broad except in /api/analyze then yields the demo fallback,
@@ -1289,21 +1291,137 @@ POSTS_PATH = Path("static/data/posts.json")
 PROFILES_PATH = Path("static/data/profiles.json")
 
 # ---------------------------------------------------------------------------
-# SQLite — persistent storage for social data (likes, etc.)
+# Database — SQLite (dev/test) or Postgres via DATABASE_URL (Render + Supabase)
 # ---------------------------------------------------------------------------
 
 DB_PATH = Path("data/awear.db")
 
 
-def _get_db() -> sqlite3.Connection:
-    """Open a connection to the SQLite DB. row_factory enables dict-like row access."""
+class _PgCursorProxy:
+    """Wraps a psycopg2 RealDictCursor to look like a sqlite3.Cursor.
+
+    Each proxy owns its cursor (never shared), so successive execute() calls inside
+    one _CompatDB block don't overwrite each other's result state.
+    """
+
+    __slots__ = ("_cur", "_conn")
+
+    def __init__(self, cur, conn):
+        self._cur = cur
+        self._conn = conn
+
+    def fetchone(self):
+        return self._cur.fetchone()
+
+    def fetchall(self):
+        return self._cur.fetchall()
+
+    @property
+    def lastrowid(self):
+        # SERIAL columns: SELECT lastval() returns the last value generated
+        # by any sequence in this session — safe because we call it immediately
+        # after the INSERT and before any other SERIAL insert.
+        try:
+            with self._conn.cursor() as c:
+                c.execute("SELECT lastval()")
+                row = c.fetchone()
+                return row[0] if row else None
+        except Exception:  # noqa: BLE001
+            return None
+
+    @property
+    def description(self):
+        return self._cur.description
+
+    @property
+    def rowcount(self):
+        return self._cur.rowcount
+
+
+class _CompatDB:
+    """Unified connection wrapper: SQLite (dev/test) or psycopg2 (Postgres/Supabase).
+
+    Translates ?-style placeholders to %s when wrapping psycopg2. Both dialects
+    expose dict-like row access (row["column"]). Use as a context manager:
+    commits on clean exit, rolls back on exception, always closes.
+    """
+
+    _QMARK_RE = re.compile(r"\?")
+
+    def __init__(self, conn, dialect: str):
+        self._conn = conn
+        self._dialect = dialect  # 'sqlite' | 'postgres'
+        self._pg_cursors: list = []
+
+    def execute(self, sql: str, params=()):
+        if self._dialect == "sqlite":
+            return self._conn.execute(sql, params)
+        sql_pg = self._QMARK_RE.sub("%s", sql)
+        from psycopg2.extras import RealDictCursor  # lazy — only when DATABASE_URL set
+        cur = self._conn.cursor(cursor_factory=RealDictCursor)
+        self._pg_cursors.append(cur)
+        cur.execute(sql_pg, params if params else None)
+        return _PgCursorProxy(cur, self._conn)
+
+    def commit(self):
+        self._conn.commit()
+
+    def rollback(self):
+        self._conn.rollback()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        if exc_type is None:
+            try:
+                self._conn.commit()
+            except Exception:  # noqa: BLE001
+                pass
+        else:
+            try:
+                self._conn.rollback()
+            except Exception:  # noqa: BLE001
+                pass
+        for c in self._pg_cursors:
+            try:
+                if not c.closed:
+                    c.close()
+            except Exception:  # noqa: BLE001
+                pass
+        try:
+            self._conn.close()
+        except Exception:  # noqa: BLE001
+            pass
+        return False
+
+
+def _get_db() -> "_CompatDB":
+    """Open a DB connection: SQLite (dev/test) or Postgres (production via DATABASE_URL).
+
+    When DATABASE_URL is set (Render + Supabase), uses psycopg2 — the schema must already
+    exist (apply notes/schema_postgres.sql via the Supabase dashboard once, then set
+    DATABASE_URL on Render). Without DATABASE_URL, uses a local SQLite file at DB_PATH.
+    Always call as `with _get_db() as db: ...` — commits on clean exit.
+    """
+    if DATABASE_URL:
+        import psycopg2  # optional; installed via psycopg2-binary in requirements.txt
+        conn = psycopg2.connect(DATABASE_URL)
+        return _CompatDB(conn, "postgres")
     conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row
-    return conn
+    return _CompatDB(conn, "sqlite")
 
 
 def init_db() -> None:
-    """Create tables if they don't exist yet. Safe to call on every startup."""
+    """Create tables if they don't exist yet. Safe to call on every startup.
+
+    Skipped when DATABASE_URL is set — Postgres schema is managed externally via
+    notes/schema_postgres.sql applied once through the Supabase SQL editor.
+    """
+    if DATABASE_URL:
+        logger.info("DATABASE_URL set — schema managed externally (notes/schema_postgres.sql)")
+        return
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     with _get_db() as conn:
         conn.execute("""

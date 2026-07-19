@@ -10,3 +10,4 @@ google-auth-httplib2>=0.2
 google-auth-oauthlib>=1.1
 openai>=2.41
 PyJWT>=2.8
+psycopg2-binary>=2.9
