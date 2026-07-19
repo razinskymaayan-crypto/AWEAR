@@ -51,6 +51,12 @@ jobs:
             git rev-parse --verify "origin/auto/$m" >/dev/null 2>&1 || continue
             ahead=$(git rev-list --count "main..origin/auto/$m" 2>/dev/null || echo 0)
             [ "${ahead:-0}" -eq 0 ] && continue
+            # OW-013 base-anchor: capture HEAD BEFORE this lane's merge. All gate diffs +
+            # every rollback below anchor to "$BASE" (this lane's pre-merge state), NOT
+            # origin/main — otherwise, in this serial loop, a lane is blamed for the files of
+            # a lane that merged earlier this cycle, and reset --hard origin/main wipes that
+            # earlier lane's already-approved merge. This was THE "nothing lands" master bug.
+            BASE=$(git rev-parse HEAD)
             if git merge --no-ff -m "jeff: merge auto/$m" "origin/auto/$m"; then
               # GATE 0 — deterministic lane ownership (OW-006: a rule without a mechanism is a
               # recommendation; until now disjoint ownership was enforced only by the persona
@@ -67,9 +73,9 @@ jobs:
                 *)      DENY='' ;;   # engine: general-purpose, any file — judged on substance in GATE 3
               esac
               if [ -n "$DENY" ]; then
-                VIOL=$(git diff --name-only origin/main...HEAD | grep -vE "$SHARED" | grep -E "$DENY" | head -5 || true)
+                VIOL=$(git diff --name-only "$BASE"...HEAD | grep -vE "$SHARED" | grep -E "$DENY" | head -5 || true)
                 if [ -n "$VIOL" ]; then
-                  git reset --hard origin/main
+                  git reset --hard "$BASE"
                   rejected="$rejected $m(ownership)"
                   mkdir -p ci-debug
                   echo "$(date -u +%FT%TZ) $m: REJECT: out-of-lane files: $(echo "$VIOL" | tr '\n' ' ')" >> ci-debug/jeff-rejections.txt
@@ -78,37 +84,37 @@ jobs:
               fi
               # GATE 1 — build: the app must still render.
               if ! npm run check-render; then
-                git reset --hard origin/main; reverted="$reverted $m"; continue
+                git reset --hard "$BASE"; reverted="$reverted $m"; continue
               fi
               # GATE 1.5 — backend tests: when app.py / schema.sql / tests / requirements changed,
               # the pytest suite (money paths, validation, idempotency, auth, rate-limit) MUST pass.
-              if git diff --name-only origin/main...HEAD -- app.py schema.sql tests/ requirements.txt | grep -q .; then
+              if git diff --name-only "$BASE"...HEAD -- app.py schema.sql tests/ requirements.txt | grep -q .; then
                 # Re-install deps AFTER the merge: a lane may have ADDED a dependency (e.g. bcrypt).
                 # The top-level Install step ran on pre-merge requirements.txt, so a new dep would be
                 # missing and pytest would fail on import — reverting good work. (Fixes the steve/bcrypt
                 # revert loop seen in the gate-ledger 2026-07-07/08.)
                 pip install -q -r requirements.txt >/dev/null 2>&1 || true
                 if ! python3 -m pytest -q; then
-                  git reset --hard origin/main; reverted="$reverted $m(pytest)"; continue
+                  git reset --hard "$BASE"; reverted="$reverted $m(pytest)"; continue
                 fi
               fi
               # GATE 2 — locked invariants: SURFACE_SPECS guard (hex/emoji/wording/notch rules).
               if ! bash scripts/guard_checks.sh; then
-                git reset --hard origin/main; reverted="$reverted $m(guard)"; continue
+                git reset --hard "$BASE"; reverted="$reverted $m(guard)"; continue
               fi
               # GATE 3 — adversarial PERSONA review: agents review agents' work before
               # it can reach main. The reviewer embodies the right critic per file:
               # Gabbana (design critic) for UI files, Steve (CTO) for backend/scripts.
               # Docs-only lanes (scout/gabbana/ayalon/strategy) skip it — nothing executable to break.
-              CODE_TOUCHED=$(git diff --name-only origin/main...HEAD -- app.py schema.sql static/index.html static/app.css static/app.js static/tokens.css awear-tokens.json static/data/ scripts/ .github/workflows/ | head -1)
+              CODE_TOUCHED=$(git diff --name-only "$BASE"...HEAD -- app.py schema.sql static/index.html static/app.css static/app.js static/tokens.css awear-tokens.json static/data/ scripts/ .github/workflows/ | head -1)
               if [ -n "$CODE_TOUCHED" ] && [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
-                git diff origin/main...HEAD -- . ':!package-lock.json' ':!*.png' > /tmp/merge_diff.txt || true
+                git diff "$BASE"...HEAD -- . ':!package-lock.json' ':!*.png' > /tmp/merge_diff.txt || true
                 head -c 80000 /tmp/merge_diff.txt > /tmp/merge_diff_capped.txt
                 VERDICT=$(cat /tmp/merge_diff_capped.txt | claude -p "You are AWEAR's ADVERSARIAL merge reviewer. Piped input = a merge diff from lane '$m'. Review each file with the right persona: for static/index.html, static/app.css, static/app.js, static/tokens.css, awear-tokens.json — you are GABBANA, the senior design critic (bar: Instagram/Pinterest/Zara): visual regressions, Iron Rules DS-004 (hardcoded hex without var()), DS-008 (emoji in UI chrome), DS-009 (font-size on image containers), broken layout/z-index. For app.py, schema.sql, static/data/, scripts/, .github/workflows/ — you are STEVE, the CTO: real bugs, broken data references (ids that don't exist), BE-005 (in-memory user data instead of SQLite), BE-006 (user_key pattern), SQL injection, secrets in code, a workflow change that could break the pipeline. Also REJECT for: a change OUTSIDE the lane's file ownership (mark: index.html/app.css/app.js/tokens.css/awear-tokens.json; steve: app.py/schema.sql/static/data/scripts/tests (oren+sam are steve's ICs, so data+scripts are IN steve's lane); ayalon/scout/gabbana/strategy: docs only; engine: ANY file — it is the general engine, judge it on substance only), or oscillation (re-changing something activity_log marks done). Style nitpicks are NOT grounds for rejection. Reply with EXACTLY one first line: 'APPROVE' or 'REJECT: <one-line reason>'." \
                   --model claude-sonnet-4-6 --output-format text 2>/dev/null | head -5 || echo "APPROVE")
                 echo "adversarial verdict for $m: $VERDICT"
                 if echo "$VERDICT" | grep -q "^REJECT"; then
-                  git reset --hard origin/main
+                  git reset --hard "$BASE"
                   rejected="$rejected $m"
                   REASON=$(echo "$VERDICT" | head -1)
                   mkdir -p ci-debug; echo "$(date -u +%FT%TZ) $m: $REASON" >> ci-debug/jeff-rejections.txt

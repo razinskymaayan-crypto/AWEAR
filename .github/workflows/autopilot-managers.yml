@@ -14,7 +14,7 @@ on:
         description: 'Run a single lane (mark|steve|ayalon) or "all"'
         default: 'all'
   schedule:
-    - cron: '0 */6 * * *'    # every 6h -> 4 cycles/day x 3 lanes = ~12 meaningful runs/day.
+    - cron: '0 */2 * * *'    # every 2h (founder 2026-07-19: harden-the-engine sprint, high iteration) -> 12 cycles/day x 3 lanes.
                              # Cadence IS the budget cap: paces the founder's Max quota evenly across the month.
                              # (Was */30 with 6 lanes = ~288 runs/day -> burned a Max weekly in ~a day.)
   push:
