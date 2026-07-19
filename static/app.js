@@ -418,7 +418,7 @@
            ${icon('bag',18)} Buy
            <span class="sheet-buy-price">$${esc(it.price_estimate_usd)}</span>
          </button>`
-      : `<div style="text-align:center;color:var(--muted,#8a8498);font-size:var(--t-small,13px);padding:10px 0">Price not available for this item</div>`;
+      : `<div style="text-align:center;color:var(--muted,#9e99ad);font-size:var(--t-small,13px);padding:10px 0">Price not available for this item</div>`;
 
     showSheet();
     applyBuyRoute(it);   // hybrid buy routing via /api/resolve-product
@@ -436,16 +436,16 @@
       const r = await res.json();
       if(r.status==='exact'){
         sheetBody.insertAdjacentHTML('beforeend',
-          `<div style="display:flex;align-items:center;gap:6px;justify-content:center;color:var(--muted,#8a8498);font-size:12px;margin-top:-8px">${icon('check',13)} Sourced from ${esc(r.retailer||'partner store')}${r.checkout==='in_app'?' · in-app':''}</div>`);
+          `<div style="display:flex;align-items:center;gap:6px;justify-content:center;color:var(--muted,#9e99ad);font-size:12px;margin-top:-8px">${icon('check',13)} Sourced from ${esc(r.retailer||'partner store')}${r.checkout==='in_app'?' · in-app':''}</div>`);
       } else if(r.status==='similar' && (r.alternatives||[]).length){
         // In-app "shop similar": each alternative re-opens the AWEAR sheet for that
         // piece (data-buy-alt) — never an outbound redirect. Buy stays in-app.
         const alts=r.alternatives.slice(0,3);
         sheetBody.insertAdjacentHTML('beforeend',
-          `<div style="margin-top:4px"><div style="font-weight:800;font-size:13px;margin-bottom:8px">Not sold new — shop similar</div><div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none">${alts.map(a=>`<button type="button" class="buy-alt-card" data-buy-alt="${attr(JSON.stringify({name:a.brand,brand_vibe:a.brand,category:it.category||'',price_estimate_usd:a.price_usd,image_url:a.image_url,search_query:a.brand}))}" style="flex:0 0 100px;text-align:left;background:none;border:none;padding:0;cursor:pointer;font-family:inherit"><div style="aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--surface,#f3f1ec)"><img src="${attr(a.image_url)}" loading="lazy" data-cat="${attr(it.category||'')}" style="width:100%;height:100%;object-fit:cover" onerror="this.onerror=null;imgFallback(this)"></div><div style="font-size:11px;font-weight:700;color:var(--fg,#f0ecf5);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.brand)}</div><div style="font-size:11px;color:var(--muted,#8a8498)">$${esc(a.price_usd)}</div></button>`).join('')}</div></div>`);
-        sheetFooter.innerHTML = `<div style="text-align:center;color:var(--muted,#8a8498);font-size:13px;padding:8px 0">Pick a similar piece above — or keep it in your closet</div>`;
+          `<div style="margin-top:4px"><div style="font-weight:800;font-size:13px;margin-bottom:8px">Not sold new — shop similar</div><div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none">${alts.map(a=>`<button type="button" class="buy-alt-card" data-buy-alt="${attr(JSON.stringify({name:a.brand,brand_vibe:a.brand,category:it.category||'',price_estimate_usd:a.price_usd,image_url:a.image_url,search_query:a.brand}))}" style="flex:0 0 100px;text-align:left;background:none;border:none;padding:0;cursor:pointer;font-family:inherit"><div style="aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--surface,#f3f1ec)"><img src="${attr(a.image_url)}" loading="lazy" data-cat="${attr(it.category||'')}" style="width:100%;height:100%;object-fit:cover" onerror="this.onerror=null;imgFallback(this)"></div><div style="font-size:11px;font-weight:700;color:var(--fg,#f0ecf5);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.brand)}</div><div style="font-size:11px;color:var(--muted,#9e99ad)">$${esc(a.price_usd)}</div></button>`).join('')}</div></div>`);
+        sheetFooter.innerHTML = `<div style="text-align:center;color:var(--muted,#9e99ad);font-size:13px;padding:8px 0">Pick a similar piece above — or keep it in your closet</div>`;
       } else if(r.status==='archive'){
-        sheetFooter.innerHTML = `<div style="text-align:center;color:var(--muted,#8a8498);font-size:13px;padding:10px 0;line-height:1.5">${esc(r.message||'Not sold new anymore — style it from your closet or list it for resale.')}</div>`;
+        sheetFooter.innerHTML = `<div style="text-align:center;color:var(--muted,#9e99ad);font-size:13px;padding:10px 0;line-height:1.5">${esc(r.message||'Not sold new anymore — style it from your closet or list it for resale.')}</div>`;
       }
     }catch(e){ /* keep default sheet */ }
   }
@@ -738,7 +738,7 @@
            ${icon('bag',18)} Buy This Look
            <span class="sheet-buy-price">$${esc(totalPrice)}</span>
          </button>`
-      : `<div style="text-align:center;color:var(--muted,#8a8498);font-size:var(--t-small,13px);padding:8px 0">Explore items above</div>`;
+      : `<div style="text-align:center;color:var(--muted,#9e99ad);font-size:var(--t-small,13px);padding:8px 0">Explore items above</div>`;
 
     showSheet();
   }
@@ -1708,7 +1708,7 @@
             <div class="fca-ico">${icon('bag',24)}</div>
             <span>$${esc(String(lookTot))}</span>
           </button>`:''}
-          <button class="fca-btn" data-action="report" data-id="${attr(post.id||'')}" aria-label="Report" style="color:var(--muted,#8a8498)">
+          <button class="fca-btn" data-action="report" data-id="${attr(post.id||'')}" aria-label="Report" style="color:var(--muted,#9e99ad)">
             <div class="fca-ico">${icon('flag',20)}</div>
           </button>
         </div>
@@ -2671,7 +2671,7 @@
     const isSummer = season.name === 'Summer';
     const SR_FILLS = isSummer
       ? ['var(--summer-blue,#34b3e0)','var(--summer-1,#f5c84b)','var(--summer-blue2,#1f8fc4)','var(--summer-2,#e89a2c)','var(--summer-blue,#34b3e0)','var(--summer-1,#f5c84b)']
-      : ['var(--accent,#e8526a)','var(--accent2,#c4855a)','var(--accent3,#7a6af0)','var(--success,#52c97a)','var(--warning,#e8a84a)','var(--muted,#8a8498)'];
+      : ['var(--accent,#e8526a)','var(--accent2,#c4855a)','var(--accent3,#7a6af0)','var(--success,#52c97a)','var(--warning,#e8a84a)','var(--muted,#9e99ad)'];
 
     const brandBuckets={};
     items.forEach(i=>{const b=(i.brand||'').trim();if(b)brandBuckets[b]=(brandBuckets[b]||0)+1;});
@@ -3515,11 +3515,11 @@
           ${icon('sparkle',32)}
         </div>
         <div style="font-size:var(--t-title,20px);font-weight:900;letter-spacing:-.3px">Your style: ${esc(p.label)}</div>
-        <div style="font-size:var(--t-body,14px);color:var(--muted,#8a8498);line-height:1.6;max-width:280px">${esc(p.desc)}</div>
+        <div style="font-size:var(--t-body,14px);color:var(--muted,#9e99ad);line-height:1.6;max-width:280px">${esc(p.desc)}</div>
         <button data-action="sw-done" style="margin-top:4px;padding:14px 28px;background:linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a));border:0;border-radius:var(--r-pill,999px);font-family:inherit;font-size:var(--t-body,14px);font-weight:900;color:#fff;cursor:pointer;min-height:44px;display:inline-flex;align-items:center;gap:8px">
           ${icon('sparkle',16)} See my personalized looks
         </button>
-        <button data-action="sw-close" style="font-size:var(--t-caption,12px);font-weight:700;color:var(--muted,#8a8498);background:0;border:0;cursor:pointer;padding:12px;font-family:inherit">Maybe later</button>
+        <button data-action="sw-close" style="font-size:var(--t-caption,12px);font-weight:700;color:var(--muted,#9e99ad);background:0;border:0;cursor:pointer;padding:12px;font-family:inherit">Maybe later</button>
       </div>`;
     ov.onclick = e => {
       const act = e.target.closest('[data-action]')?.dataset.action;
@@ -3539,7 +3539,7 @@
         <div class="sw-cta-icon">${trained ? icon('heartFill',18) : icon('sparkle',18)}</div>
         <div class="sw-cta-text">
           <div style="font-size:var(--t-body,14px);font-weight:900;line-height:1.2">${trained ? esc(p.label) : 'Train your taste'}</div>
-          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:2px">${trained ? 'Personalized · retrain anytime' : 'Swipe 8 looks → AI learns your style'}</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad);margin-top:2px">${trained ? 'Personalized · retrain anytime' : 'Swipe 8 looks → AI learns your style'}</div>
         </div>
         <button class="sw-cta-btn" data-action="sw-start" aria-label="${trained ? 'Retrain taste' : 'Start taste training'}">${trained ? icon('refresh',16) : icon('arrowRight',16)}</button>
       </div>`;
@@ -4559,7 +4559,7 @@
         emptyHtml = `<div class="mp-empty">
           ${icon('heart', 40)}
           <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">No pre-loved items yet</div>
-          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">Be the first to sell from your closet!</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad)">Be the first to sell from your closet!</div>
           <button class="mp-empty-cta" onclick="mpTab='sell';renderMarketplace()">Start Selling</button>
         </div>`;
       } else {
@@ -4605,7 +4605,7 @@
           const btnLabel = 'Buy';
           // Condition grade for resale
           const grade = item.condGrade || '';
-          const gradeColor = gradeColors[grade] || 'var(--muted,#8a8498)';
+          const gradeColor = gradeColors[grade] || 'var(--muted,#9e99ad)';
           const gradeLabel = gradeLabels[grade] || '';
           // Seller rating stars
           const ratingStr = item.seller_rating ? `${item.seller_rating.toFixed(1)} · ${item.seller_sales} sales` : '';
@@ -4726,7 +4726,7 @@
         const radiusEmpty = `<div class="mp-empty">
           ${icon('mapPin', 36)}
           <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">Nothing within ${mpRadius} km</div>
-          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">No pre-loved listings near ${esc(here)} yet — widen the radius to see more.</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad)">No pre-loved listings near ${esc(here)} yet — widen the radius to see more.</div>
           <button class="mp-empty-cta" data-action="mp-radius" data-radius="any">Show any distance</button>
         </div>`;
         return `${selectionHtml}${nearHtml}${radiusEmpty}`;
@@ -4761,10 +4761,10 @@
       const empty = mpCommunityScope==='following'
         ? `<div class="mp-empty">${icon('heart',36)}
             <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">You're not following any stores yet</div>
-            <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">Switch to Discover to find sellers whose taste matches yours</div></div>`
+            <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad)">Switch to Discover to find sellers whose taste matches yours</div></div>`
         : `<div class="mp-empty">${icon('sparkle',36)}
             <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">You already follow everyone here</div>
-            <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">Nice taste — check Following to shop their listings</div></div>`;
+            <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad)">Nice taste — check Following to shop their listings</div></div>`;
       return `${selectionHtml}${scopeHtml}${empty}`;
     }
     const cardsHtml = ordered.map(sd => storePageCard(sd)).join('');
@@ -4817,7 +4817,7 @@
         <div class="mp-empty">
           ${icon('tag',36)}
           <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">No items listed yet</div>
-          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498)">Follow to get notified when ${esc(u.name.split(' ')[0])} lists something</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad)">Follow to get notified when ${esc(u.name.split(' ')[0])} lists something</div>
         </div>`}`;
   }
 
@@ -4856,7 +4856,7 @@
 
     const storeName = store ? store.name : (item.seller || '');
     const origStrike = (item.orig && item.orig > item.price)
-      ? ` <span style="font-size:var(--t-small,13px);color:var(--muted,#8a8498);text-decoration:line-through">$${esc(item.orig)}</span>` : '';
+      ? ` <span style="font-size:var(--t-small,13px);color:var(--muted,#9e99ad);text-decoration:line-through">$${esc(item.orig)}</span>` : '';
 
     sheetBody.innerHTML = `
       <div class="sheet-hero">
@@ -5077,7 +5077,7 @@
       return `<div class="ms-empty" style="padding:32px 24px">
         <div class="ms-empty-icon">${icon('barChart',28)}</div>
         <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">No store activity yet</div>
-        <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:5px">List an item to start seeing insights</div>
+        <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad);margin-top:5px">List an item to start seeing insights</div>
       </div>`;
     }
     // ----- shared demo metrics (consistent with rest of file) -----
@@ -5614,11 +5614,11 @@
         <div class="ms-empty">
           <div class="ms-empty-icon">${icon('storefront',28)}</div>
           <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">Your store is ready</div>
-          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:5px">List your first item and start earning</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad);margin-top:5px">List your first item and start earning</div>
         </div>
       ` : `
         <div class="ms-section-hd">
-          <div class="ms-section-title">Active Listings <span style="color:var(--muted,#8a8498);font-weight:600">${msActiveCount ? `${shown.length} of ${mine.length}` : mine.length}</span></div>
+          <div class="ms-section-title">Active Listings <span style="color:var(--muted,#9e99ad);font-weight:600">${msActiveCount ? `${shown.length} of ${mine.length}` : mine.length}</span></div>
           ${msActiveCount
             ? `<button class="ms-clear-filters" id="ms-clear-filters">Show all</button>`
             : `<div class="ms-section-sub">Visible in marketplace</div>`}
@@ -5640,7 +5640,7 @@
         ` : `
         <div class="ms-empty" style="padding:24px 20px 8px">
           <div style="font-size:var(--t-small,13px);font-weight:800;color:var(--fg,#f0ecf5)">No items match these filters</div>
-          <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:5px">Adjust Filter &amp; sort or clear it</div>
+          <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad);margin-top:5px">Adjust Filter &amp; sort or clear it</div>
         </div>
         `}
       `}
@@ -5656,7 +5656,7 @@
               <div class="ms-suggest-img">${productImage(item)}</div>
               <div style="flex:1;min-width:0">
                 <div style="font-size:var(--t-small,13px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(item.name||'Item')}</div>
-                <div style="font-size:var(--t-micro,11px);color:var(--muted,#8a8498);margin-top:2px">Suggested: $${Math.round((item.price_estimate_usd||120)*0.5)}</div>
+                <div style="font-size:var(--t-micro,11px);color:var(--muted,#9e99ad);margin-top:2px">Suggested: $${Math.round((item.price_estimate_usd||120)*0.5)}</div>
               </div>
               <div class="ms-suggest-sell">+ Sell</div>
             </div>`).join('')}
@@ -5682,9 +5682,9 @@
     card.innerHTML = `
       <div style="padding:18px 20px 6px;display:flex;align-items:center;justify-content:space-between">
         <span style="font-size:var(--t-lead,17px);font-weight:900;display:flex;align-items:center;gap:8px">${icon('tag',18)} List in My Store</span>
-        <button style="background:none;border:none;color:var(--muted,#8a8498);cursor:pointer;padding:4px;display:flex" onclick="document.getElementById('purchase-modal').classList.remove('show')">${icon('x',18)}</button>
+        <button style="background:none;border:none;color:var(--muted,#9e99ad);cursor:pointer;padding:4px;display:flex" onclick="document.getElementById('purchase-modal').classList.remove('show')">${icon('x',18)}</button>
       </div>
-      <div style="padding:0 20px 14px;font-size:var(--t-small,13px);color:var(--muted,#8a8498)">
+      <div style="padding:0 20px 14px;font-size:var(--t-small,13px);color:var(--muted,#9e99ad)">
         ${items.length} item${items.length!==1?'s':''} barely worn — sell all and earn <strong style="color:var(--success,#52c97a)">~$${totalEarn}</strong>
       </div>
       <div style="border-top:1px solid var(--line,#2e2836)">
@@ -5694,7 +5694,7 @@
             <div style="width:52px;height:52px;border-radius:var(--r-sm,10px);overflow:hidden;flex-shrink:0;background:var(--card,#1e1a22)">${productImage(it)}</div>
             <div style="flex:1;min-width:0">
               <div style="font-size:var(--t-body,14px);font-weight:700;color:var(--fg,#f0ecf5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(it.name)}</div>
-              <div style="font-size:var(--t-caption,12px);color:var(--muted,#8a8498);margin-top:2px">${earn>0?`~$${earn} · 50% of retail`:'Ready to list'}</div>
+              <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad);margin-top:2px">${earn>0?`~$${earn} · 50% of retail`:'Ready to list'}</div>
             </div>
             <button class="dz-list-btn" data-dz-idx="${i}" style="min-height:44px;padding:0 16px;background:var(--accent,#e8526a);border:none;border-radius:var(--r-pill,999px);font-family:inherit;font-size:var(--t-caption,12px);font-weight:800;color:#fff;cursor:pointer;flex-shrink:0;white-space:nowrap">List</button>
           </div>`;
@@ -5884,7 +5884,7 @@
       <div class="book-sheet">
         <div class="book-title" style="display:flex;align-items:center;gap:8px">${icon('flag',20)} ${esc(label)}</div>
         <button class="book-submit" id="um-report" style="background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);color:var(--fg,#f0ecf5)">${icon('flag',16)} Report user</button>
-        <button class="book-cancel" id="um-block" style="color:var(--muted,#8a8498);font-size:var(--t-small,13px)">Block user</button>
+        <button class="book-cancel" id="um-block" style="color:var(--muted,#9e99ad);font-size:var(--t-small,13px)">Block user</button>
         <button class="book-cancel" id="um-cancel">Cancel</button>
       </div>`;
     document.body.appendChild(overlay);
@@ -8403,7 +8403,7 @@
         <div class="up-empty" style="padding-top:60px">
           ${icon('user',40)}
           <div>You've blocked this user</div>
-          <button class="up-follow-btn" style="background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#8a8498)" id="up-unblock-btn">Unblock</button>
+          <button class="up-follow-btn" style="background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#9e99ad)" id="up-unblock-btn">Unblock</button>
         </div>`;
       document.getElementById('up-back-btn')?.addEventListener('click', () => showView(_prevViewForProfile));
       document.getElementById('up-unblock-btn')?.addEventListener('click', () => confirmBlockUser(u.id, u.name, () => renderUserProfile()));
@@ -8480,12 +8480,12 @@
     };
 
     const allTags = [...new Set(userPosts.flatMap(p => p.tags||[]))].slice(0,4);
-    const tagPillsHTML = allTags.map(t => `<span style="display:inline-flex;align-items:center;padding:3px 9px;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);border-radius:var(--r-pill,999px);font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#8a8498)">${esc(t)}</span>`).join('');
+    const tagPillsHTML = allTags.map(t => `<span style="display:inline-flex;align-items:center;padding:3px 9px;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);border-radius:var(--r-pill,999px);font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#9e99ad)">${esc(t)}</span>`).join('');
 
     el.innerHTML = `
       <div class="up-back-bar" style="display:flex;align-items:center;justify-content:space-between">
         <button class="up-back-btn" id="up-back-btn" aria-label="Back">${icon('arrowRight',16)} Back</button>
-        <button id="up-more-btn" aria-label="More options" style="width:40px;height:40px;border-radius:50%;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted,#8a8498);min-height:40px;flex-shrink:0">${icon('more',18)}</button>
+        <button id="up-more-btn" aria-label="More options" style="width:40px;height:40px;border-radius:50%;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted,#9e99ad);min-height:40px;flex-shrink:0">${icon('more',18)}</button>
       </div>
       <div class="up-hero">
         ${u.avatar
@@ -8526,8 +8526,8 @@
                 <div class="up-thumb-likes">${icon('heart',9)} ${fmtN(p.likes||0)}</div>
               </button>`).join('')}
           </div>${gridLooks.length < 4 ? `
-          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:32px 16px;margin-top:16px;background:var(--surface,#161318);border:1px solid var(--line,#2e2836);border-radius:var(--r-md,14px);color:var(--muted,#8a8498)">
-            <span style="color:var(--muted,#8a8498)">${icon('camera',24)}</span>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:32px 16px;margin-top:16px;background:var(--surface,#161318);border:1px solid var(--line,#2e2836);border-radius:var(--r-md,14px);color:var(--muted,#9e99ad)">
+            <span style="color:var(--muted,#9e99ad)">${icon('camera',24)}</span>
             <div style="font-size:var(--t-small,13px);font-weight:700">More looks coming</div>
           </div>` : ''}` : `<div class="up-empty">${icon('image',36)}<div>No posts yet</div></div>`;
         contentEl.querySelectorAll('[data-post-idx]').forEach(card => {
@@ -8545,30 +8545,30 @@
                 </div>
               </div>
               <div style="position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;background:${attr(p.grad||'var(--surface,#161318)')}">
-                ${p.img ? `<img src="${attr(p.img)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">` : `<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted,#8a8498)">${icon('image',48)}</div>`}
+                ${p.img ? `<img src="${attr(p.img)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">` : `<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted,#9e99ad)">${icon('image',48)}</div>`}
               </div>
               <div style="padding:10px 16px 8px">
                 <div style="font-size:var(--t-small,13px);line-height:1.5;margin-bottom:8px">
                   <span style="font-weight:900;margin-right:5px">${esc(u.handle)}</span><span style="color:var(--fg,#f0ecf5)">${esc(p.caption||'')}</span>
                 </div>
                 ${lookItems.length ? `
-                <div style="font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#8a8498);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Items in this look</div>
+                <div style="font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#9e99ad);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Items in this look</div>
                 <div style="display:flex;flex-direction:column;gap:8px">
                   ${lookItems.map(it => `<div style="display:flex;align-items:center;gap:10px;background:var(--card,#1e1a22);border-radius:var(--r-sm,10px);padding:9px 12px;border:1px solid var(--line,#2e2836)">
-                    <span style="color:var(--muted,#8a8498)">${icon(catIcon(it.category),18)}</span>
+                    <span style="color:var(--muted,#9e99ad)">${icon(catIcon(it.category),18)}</span>
                     <div style="flex:1;min-width:0">
                       <div style="font-size:var(--t-small,13px);font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(it.name)}</div>
-                      <div style="font-size:var(--t-micro,11px);color:var(--muted,#8a8498);text-transform:capitalize">${esc(it.category||'')}</div>
+                      <div style="font-size:var(--t-micro,11px);color:var(--muted,#9e99ad);text-transform:capitalize">${esc(it.category||'')}</div>
                     </div>
                     ${it.price_estimate_usd?`<span style="font-size:var(--t-small,13px);font-weight:900;color:var(--accent2,#c4855a);flex-shrink:0">$${esc(String(it.price_estimate_usd))}</span>`:''}
                   </div>`).join('')}
                 </div>` : `
-                <div style="display:flex;align-items:center;gap:10px;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);border-radius:var(--r-sm,10px);padding:11px 12px;color:var(--muted,#8a8498)">
+                <div style="display:flex;align-items:center;gap:10px;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);border-radius:var(--r-sm,10px);padding:11px 12px;color:var(--muted,#9e99ad)">
                   <span style="color:var(--accent2,#c4855a)">${icon('shoppingBag',18)}</span>
                   <div style="font-size:var(--t-small,13px);font-weight:700">Shop this look — coming soon</div>
                 </div>`}
               </div>`;
-            sheetFooter.innerHTML = `<button class="sheet-buy" style="background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#8a8498)" onclick="closeSheet()">Close</button>`;
+            sheetFooter.innerHTML = `<button class="sheet-buy" style="background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#9e99ad)" onclick="closeSheet()">Close</button>`;
             showSheet();
           });
         });
@@ -8671,16 +8671,16 @@
 
     sheetBody.innerHTML = `
       <div style="text-align:center;padding:18px 18px 4px">
-        <div style="width:140px;height:140px;border-radius:var(--r-lg,20px);overflow:hidden;margin:0 auto 14px;border:1px solid var(--line,#2e2836);background:var(--bg,#0e0c0f);display:flex;align-items:center;justify-content:center;color:var(--muted,#8a8498)">
+        <div style="width:140px;height:140px;border-radius:var(--r-lg,20px);overflow:hidden;margin:0 auto 14px;border:1px solid var(--line,#2e2836);background:var(--bg,#0e0c0f);display:flex;align-items:center;justify-content:center;color:var(--muted,#9e99ad)">
           ${productImage({name:item.name, search_query:item.q||item.search_query||item.name, category:item.category}, 'up-sheet-pi')}
         </div>
         <div style="font-size:var(--t-title,20px);font-weight:900">${esc(item.name)}</div>
-        <div style="font-size:var(--t-small,13px);color:var(--muted,#8a8498);font-weight:700;margin-top:4px;text-transform:capitalize">${esc(item.category||'')} · ${esc(userName||'')}</div>
+        <div style="font-size:var(--t-small,13px);color:var(--muted,#9e99ad);font-weight:700;margin-top:4px;text-transform:capitalize">${esc(item.category||'')} · ${esc(userName||'')}</div>
       </div>
       <div style="padding:4px 18px 16px">
         ${hasWardrobe ? `
         <div style="background:var(--card,#1e1a22);border-radius:var(--r-md,14px);padding:14px 16px;border:1px solid var(--line,#2e2836)">
-          <div style="font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#8a8498);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Compatibility with your wardrobe</div>
+          <div style="font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#9e99ad);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Compatibility with your wardrobe</div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
             <span style="font-size:var(--t-body,14px);font-weight:800;color:${cColor}">${cLabel}</span>
             <span style="font-size:var(--t-h1,24px);font-weight:900;color:${cColor}">${displayPct}%</span>
@@ -8688,15 +8688,15 @@
           <div style="height:6px;background:var(--bg,#0e0c0f);border-radius:var(--r-pill,999px);overflow:hidden">
             <div style="height:100%;width:${displayPct}%;background:${cColor};border-radius:var(--r-pill,999px)"></div>
           </div>
-          ${compat?.matches?.length ? `<div style="margin-top:10px;font-size:var(--t-micro,11px);color:var(--muted,#8a8498);font-weight:700">Pairs with: ${compat.matches.map(m=>`<span style="color:var(--fg,#f0ecf5)">${esc(m)}</span>`).join(', ')}</div>` : ''}
+          ${compat?.matches?.length ? `<div style="margin-top:10px;font-size:var(--t-micro,11px);color:var(--muted,#9e99ad);font-weight:700">Pairs with: ${compat.matches.map(m=>`<span style="color:var(--fg,#f0ecf5)">${esc(m)}</span>`).join(', ')}</div>` : ''}
         </div>` : `
-        <div style="background:var(--card,#1e1a22);border-radius:var(--r-md,14px);padding:14px 16px;border:1px solid var(--line,#2e2836);text-align:center;color:var(--muted,#8a8498);font-size:var(--t-small,13px);font-weight:700">
+        <div style="background:var(--card,#1e1a22);border-radius:var(--r-md,14px);padding:14px 16px;border:1px solid var(--line,#2e2836);text-align:center;color:var(--muted,#9e99ad);font-size:var(--t-small,13px);font-weight:700">
           ${icon('sparkle',16)} Add items to your wardrobe to see how this fits
         </div>`}
-        ${item.price_estimate_usd ? `<div style="margin-top:12px;text-align:center;font-size:var(--t-small,13px);color:var(--muted,#8a8498)">Est. value <strong style="color:var(--accent2,#c4855a)">$${esc(String(item.price_estimate_usd))}</strong></div>` : ''}
+        ${item.price_estimate_usd ? `<div style="margin-top:12px;text-align:center;font-size:var(--t-small,13px);color:var(--muted,#9e99ad)">Est. value <strong style="color:var(--accent2,#c4855a)">$${esc(String(item.price_estimate_usd))}</strong></div>` : ''}
       </div>`;
     sheetFooter.innerHTML = `<div style="display:flex;gap:10px;width:100%">
-      <button class="sheet-buy" onclick="closeSheet()" style="flex:1;background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#8a8498)">Close</button>
+      <button class="sheet-buy" onclick="closeSheet()" style="flex:1;background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#9e99ad)">Close</button>
       ${item.price_estimate_usd ? `<button class="sheet-buy" onclick="showToast('Added to wishlist');closeSheet()" style="flex:2;background:linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a));border:0;color:var(--text,#fbfbfd)">${icon('bookmark',14)} Wishlist</button>` : ''}
     </div>`;
     showSheet();
