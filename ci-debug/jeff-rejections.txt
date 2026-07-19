@@ -13,3 +13,4 @@
 2026-07-18T08:03:04Z mark: REJECT: DS-004 — `var(--accent,#14110F)` used in `.sc-cta` gradient, `.sc-field:focus` border, and sc-header icon; correct fallback is `#e8526a` (the actual `--accent` token value) — wrong fallback renders the CTA button as a near-black gradient and the focus ring invisible if CSS vars fail to load. Similarly `var(--accent2,#3D3833)` should be `var(--accent2,#c4855a)`.
 2026-07-18T11:48:28Z steve: REJECT: out-of-lane files: static/app.css static/app.js 
 2026-07-19T18:10:46Z mark: REJECT: `scripts/guard_checks.sh` is outside mark's lane ownership (mark: index.html/app.css/app.js/tokens.css/awear-tokens.json); scripts/ belongs to steve's lane.
+2026-07-19T18:32:28Z mark: REJECT: OW-001 — ID rename `wl-wrap`→`wishlist-wrap` shows only the HTML change; any `getElementById('wl-wrap')` or `querySelector('#wl-wrap')` JS callers break silently; diff must include caller updates or a grep audit confirming zero ID-based references before merge.
