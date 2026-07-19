@@ -384,7 +384,8 @@
   .comments-sheet.open { transform: translateY(0); }
   .comments-sheet-handle { width: 36px; height: 4px; background: var(--line); border-radius: 2px;
     margin: 0 auto 14px; }
-  .comments-sheet-title { font-size: var(--t-body); font-weight: 800; margin-bottom: 12px; }
+  .cs-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .comments-sheet-title { font-size: var(--t-body); font-weight: 800; margin-bottom: 0; }
   .fc-comment-item { background: var(--surface, #161318); border-radius: 10px;
     padding: 8px 12px; margin-bottom: 8px;
     display: flex; align-items: flex-start; gap: 10px; }
@@ -607,6 +608,8 @@
     border-radius: 24px 24px 0 0; border-top: 1px solid var(--line);
     padding: 20px 22px 32px; width: 100%; animation: slideUp .28s cubic-bezier(.32,.72,0,1); }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+  .edit-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .edit-modal-head h3 { font-size: var(--t-lead,17px); font-weight: 900; flex: 1; text-align: center; margin: 0; padding-left: 44px; }
   .edit-modal h3 { font-size: var(--t-lead,17px); font-weight: 900; margin-bottom: 18px; text-align: center; }
   .edit-field { margin-bottom: 14px; }
   .edit-field label { display: block; font-size: var(--t-caption); font-weight: 700; color: var(--muted); margin-bottom: 5px; }
@@ -1843,6 +1846,9 @@
   .mp-fsheet-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 20px 16px; flex-shrink: 0; }
   .mp-fsheet-title { font-size: var(--t-h3,15px); font-weight: 900; }
   .mp-fsheet-reset { font-size: var(--t-caption,12px); font-weight: 800; color: var(--accent,#e8526a); background: none; border: none; cursor: pointer; font-family: inherit; min-height: 44px; padding: 0 4px; }
+  .mp-fsheet-head-right { display: flex; align-items: center; gap: 0; }
+  .mp-fsheet-x { background: none; border: none; cursor: pointer; padding: 0; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--muted,#8a8498); flex-shrink: 0; }
+  .mp-fsheet-x:hover { color: var(--fg,#f0ecf5); }
   /* Store Insight sheet */
   .ms-in-sec { padding: 0 20px; }
   .ms-in-sec-title { font-size: var(--t-micro,11px); font-weight: 800; letter-spacing: .4px; text-transform: uppercase; color: var(--muted,#8a8498); margin: 14px 0 9px; }
@@ -2492,6 +2498,7 @@
   .diary-sheet { background: var(--surface,#161318); border-radius: var(--r-xl,28px) var(--r-xl,28px) 0 0; width: 100%; max-height: 80vh; display: flex; flex-direction: column; transform: translateY(40px); transition: transform .22s; }
   .diary-overlay.show .diary-sheet { transform: translateY(0); }
   .diary-handle { width: 36px; height: 4px; background: var(--line,#2e2836); border-radius: 2px; margin: 12px auto 0; flex-shrink: 0; }
+  .diary-head-row { display: flex; align-items: center; justify-content: space-between; padding-right: 8px; }
   .diary-title { padding: 14px 20px 4px; font-size: var(--t-lead,17px); font-weight: 900; display: flex; align-items: center; gap: 8px; }
   .diary-sub { padding: 0 20px 12px; font-size: var(--t-caption,12px); color: var(--muted,#8a8498); font-weight: 600; line-height: 1.5; }
   .diary-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 8px 16px; overflow-y: auto; flex: 1; }

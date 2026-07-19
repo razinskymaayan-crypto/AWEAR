@@ -72,7 +72,10 @@
         <div class="mp-fsheet-handle" aria-hidden="true"></div>
         <div class="mp-fsheet-head">
           <span class="mp-fsheet-title">Filter &amp; Sort</span>
-          <button class="mp-fsheet-reset" id="mp-fsheet-reset">Reset all</button>
+          <span class="mp-fsheet-head-right">
+            <button class="mp-fsheet-reset" id="mp-fsheet-reset">Reset all</button>
+            <button class="mp-fsheet-x" id="mp-fsheet-close" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+          </span>
         </div>
         <div class="mp-fsheet-scroll" id="mp-fsheet-scroll"></div>
         <button class="mp-fsheet-apply" id="mp-fsheet-apply">Show Results</button>
@@ -83,7 +86,7 @@
         <div class="mp-fsheet-handle" aria-hidden="true"></div>
         <div class="mp-fsheet-head">
           <span class="mp-fsheet-title">Store insight</span>
-          <button class="mp-fsheet-reset" id="ms-insight-close">Done</button>
+          <button class="mp-fsheet-x" id="ms-insight-close" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
         </div>
         <div class="mp-fsheet-scroll" id="ms-insight-scroll"></div>
       </div>
@@ -291,7 +294,10 @@
   <!-- Edit Profile Modal -->
   <div id="edit-profile-overlay" class="edit-modal-overlay">
     <div class="edit-modal">
-      <h3>Edit Profile</h3>
+      <div class="edit-modal-head">
+        <h3>Edit Profile</h3>
+        <button class="mp-fsheet-x" id="edit-profile-close" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      </div>
       <div class="edit-photo-row">
         <div class="edit-photo-circle"><div class="edit-photo-inner" id="edit-photo-preview"></div></div>
         <button class="edit-photo-btn" id="edit-photo-btn">Change profile photo</button>

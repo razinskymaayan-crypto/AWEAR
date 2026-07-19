@@ -67,6 +67,8 @@
   const modal      = document.getElementById('purchase-modal');
   const modalCard  = document.getElementById('modal-card');
   const mainEl     = document.getElementById('main');
+  // Backdrop tap closes the purchase modal (no X button — keep existing inner close buttons)
+  if (modal) modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
 
   // ---- header section name map: view-id -> founder-facing label shown next to "awear" ----
   // declared before showView() (~line 2733) so the router can read it TDZ-safe.
@@ -2093,7 +2095,10 @@
     overlay.innerHTML =
       '<div class="diary-sheet">' +
         '<div class="diary-handle"></div>' +
-        '<div class="diary-title">' + icon('calendar', 18) + ' What did you wear today?</div>' +
+        '<div class="diary-head-row">' +
+          '<div class="diary-title">' + icon('calendar', 18) + ' What did you wear today?</div>' +
+          '<button class="mp-fsheet-x diary-x-close" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>' +
+        '</div>' +
         '<div class="diary-sub">Tap the items you wore. Abigail learns your style with every entry.</div>' +
         '<div class="diary-grid" id="diary-grid">' + itemsHtml + '</div>' +
         '<div class="diary-extra">' +
@@ -2112,6 +2117,7 @@
 
     document.body.appendChild(overlay);
     requestAnimationFrame(function(){ overlay.classList.add('show'); });
+    overlay.querySelector('.diary-x-close')?.addEventListener('click', function(){ closeDiaryModal(overlay); });
 
     var grid = overlay.querySelector('#diary-grid');
     var submitBtn = overlay.querySelector('#diary-submit');
@@ -3320,7 +3326,10 @@
     overlay.innerHTML =
       '<div class="diary-sheet journal-sheet">' +
         '<div class="diary-handle"></div>' +
-        '<div class="diary-title">' + icon('book',18) + ' Your style journal</div>' +
+        '<div class="diary-head-row">' +
+          '<div class="diary-title">' + icon('book',18) + ' Your style journal</div>' +
+          '<button class="mp-fsheet-x diary-x-close" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>' +
+        '</div>' +
         '<div class="diary-sub">Private by default. Every check-in trains Abigail on your taste.</div>' +
         '<div class="journal-tools">' +
           '<label class="journal-remind"><span class="jr-label">' + icon('bell',15) + ' Daily reminder</span>' +
@@ -3331,6 +3340,7 @@
     document.body.appendChild(overlay);
     requestAnimationFrame(function(){ overlay.classList.add('show'); });
     overlay.addEventListener('click', function(e){ if (e.target === overlay) closeDiaryModal(overlay); });
+    overlay.querySelector('.diary-x-close')?.addEventListener('click', function(){ closeDiaryModal(overlay); });
 
     const timeEl = overlay.querySelector('#journal-remind-time');
     timeEl.addEventListener('change', function(){
@@ -5314,6 +5324,8 @@
     if (!overlay._bound) {
       overlay.addEventListener('click', closeStoreInsight);
       document.getElementById('ms-insight-close')?.addEventListener('click', closeStoreInsight);
+      const scroll = document.getElementById('ms-insight-scroll');
+      _addSheetDragDismiss(sheet, scroll, closeStoreInsight);
       overlay._bound = true;
     }
   }
@@ -5323,6 +5335,42 @@
     const sheet = document.getElementById('ms-insight-sheet');
     if (overlay) { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
     if (sheet) sheet.classList.remove('show');
+  }
+
+  // Shared pull-to-dismiss for bottom sheets — copy of buy-sheet pattern (see buy-sheet block).
+  // sheetEl: the sliding panel; scrollEl: the inner scroller (null if none); closeFn: called on dismiss.
+  function _addSheetDragDismiss(sheetEl, scrollEl, closeFn) {
+    let sy = null, dragging = false;
+    const start = (y, target) => {
+      if (target && target.closest && target.closest('button,a,input,select,textarea')) { sy = null; return; }
+      if (scrollEl && scrollEl.scrollTop > 0) { sy = null; return; }
+      sy = y; dragging = false;
+    };
+    const move = (y, ev) => {
+      if (sy === null) return;
+      const dy = y - sy;
+      if (dy > 4 && (!scrollEl || scrollEl.scrollTop <= 0)) {
+        dragging = true;
+        sheetEl.style.transition = 'none';
+        sheetEl.style.transform = `translateY(${Math.max(0, dy)}px)`;
+        if (ev && ev.cancelable) { try { ev.preventDefault(); } catch (_) {} }
+      }
+    };
+    const end = (y) => {
+      if (sy === null) return;
+      const dy = (y || 0) - sy; sy = null;
+      sheetEl.style.transition = '';
+      sheetEl.style.transform = '';
+      if (dragging && dy > 90) closeFn();
+      dragging = false;
+    };
+    sheetEl.addEventListener('pointerdown',   e => start(e.clientY, e.target));
+    sheetEl.addEventListener('pointermove',   e => move(e.clientY, e), { passive: false });
+    sheetEl.addEventListener('pointerup',     e => end(e.clientY));
+    sheetEl.addEventListener('pointercancel', () => end(null));
+    sheetEl.addEventListener('touchstart', e => start(e.touches[0].clientY, e.target), { passive: true });
+    sheetEl.addEventListener('touchmove',  e => move(e.touches[0].clientY, e),          { passive: false });
+    sheetEl.addEventListener('touchend',   e => end((e.changedTouches[0] || {}).clientY));
   }
 
   function openMPFilterSheet() {
@@ -5444,9 +5492,14 @@
     const overlay = document.getElementById('mp-fsheet-overlay');
     const applyBtn = document.getElementById('mp-fsheet-apply');
     const resetBtn = document.getElementById('mp-fsheet-reset');
-    if (overlay) overlay.addEventListener('click', closeMPFilterSheet);
+    const closeBtn = document.getElementById('mp-fsheet-close');
+    const sheet    = document.getElementById('mp-fsheet');
+    const scroll   = document.getElementById('mp-fsheet-scroll');
+    if (overlay)  overlay.addEventListener('click', closeMPFilterSheet);
     if (applyBtn) applyBtn.addEventListener('click', applyMPFilters);
     if (resetBtn) resetBtn.addEventListener('click', resetMPFilters);
+    if (closeBtn) closeBtn.addEventListener('click', closeMPFilterSheet);
+    if (sheet)    _addSheetDragDismiss(sheet, scroll, closeMPFilterSheet);
   }
 
   async function runMPAssist() {
@@ -6903,6 +6956,7 @@
     b.classList.toggle('sel', b.dataset.langOpt === LOCALE));
 
   document.getElementById('edit-cancel-btn').addEventListener('click',()=>editOverlay.classList.remove('show'));
+  document.getElementById('edit-profile-close')?.addEventListener('click',()=>editOverlay.classList.remove('show'));
   editOverlay.addEventListener('click',e=>{ if(e.target===editOverlay) editOverlay.classList.remove('show'); });
 
   document.getElementById('edit-photo-btn').addEventListener('click',()=>document.getElementById('edit-photo-input').click());
@@ -7189,13 +7243,17 @@
     sheet.className = 'comments-sheet';
     sheet.innerHTML = `
       <div class="comments-sheet-handle"></div>
-      <div class="comments-sheet-title">Comments</div>
+      <div class="cs-title-row">
+        <div class="comments-sheet-title">Comments</div>
+        <button class="mp-fsheet-x cs-close-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      </div>
       <div class="cs-list"></div>
       <div class="fc-comment-input-row">
         <input class="fc-comment-input" placeholder="Add a comment..." maxlength="500" />
         <button class="fc-comment-send">Send</button>
       </div>`;
     document.body.appendChild(sheet);
+    sheet.querySelector('.cs-close-btn').addEventListener('click', closeCommentsSheet);
 
     sheet.querySelector('.fc-comment-send').addEventListener('click', async () => {
       const input = sheet.querySelector('.fc-comment-input');
