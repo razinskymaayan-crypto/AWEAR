@@ -6649,6 +6649,15 @@
 
     renderExGrid();
 
+    // tap any editorial card → run its name as a search query
+    document.getElementById('ex-grid').addEventListener('click', e => {
+      const card = e.target.closest('.ex-card[data-q]');
+      if (!card) return;
+      const q = card.dataset.q;
+      document.getElementById('ex-input').value = q;
+      runExSearch(q);
+    });
+
     // search input
     const inp = document.getElementById('ex-input');
     inp.addEventListener('input', () => {
@@ -6670,7 +6679,7 @@
       if (!cards.length) cards = EX_CARDS;
     }
     document.getElementById('ex-grid').innerHTML = cards.map(c =>
-      `<div class="ex-card">
+      `<div class="ex-card" data-q="${attr(c.name)}">
          <div class="ex-card-bg">${productImage({name:c.name, search_query:c.name+' '+(c.sub||'')})}</div>
          <div class="ex-card-info">
            <div class="ex-card-name">${esc(c.name)}</div>
