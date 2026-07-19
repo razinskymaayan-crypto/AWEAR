@@ -44,6 +44,8 @@ Swipe the **Feed** once so they see a real, full-screen, scrollable fashion feed
 **While the AI spinner runs ("AI is identifying your items…"), say:**
 > "She photographs an outfit. Our AI identifies every garment — top, bottoms, shoes — and turns each one into a *clean catalog image*, not a blurry phone photo."
 
+> 💡 *Enhanced version when garment-image generation ships (backend `/api/generate-garment`): replace with — "She photographs an outfit. Our AI identifies every garment — then* creates *a professional studio product photo from her casual shot. Not a stock image found online — her actual item, photographed for the catalog. The closet looks like a fashion store."*
+
 **When the items appear, say:**
 > "That's the magic: the closet builds itself — with her in the loop. The AI does the first pass, and the product is built so she confirms and corrects what it found — and every correction is saved as training signal we own. Every scan compounds into a labeled dataset of her *real* wardrobe — data nobody can scrape or buy. That's our moat. A competitor starting today starts from zero knowledge of her."
 

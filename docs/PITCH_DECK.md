@@ -31,7 +31,7 @@
 **Punchline:** *צילום תלבושת → AI מזהה כל פריט → אישור בטאפ אחד (המשתמשת תמיד בשליטה) → הארון הדיגיטלי הופך לפיד חי שאפשר לקנות ממנו.*
 
 חמש שכבות בסינרגיה, כולן עובדות באב-טיפוס:
-1. **Closet = Profile** — מדפי קטגוריה, כל פריט = clean catalog image שה-AI מצא.
+1. **Closet = Profile** — מדפי קטגוריה, כל פריט = **clean catalog image שה-AI יצר מהצילום האמיתי שלה** — לא תמונת קמעונאי אקראית, לא placeholder שבור. (Phase 1 היום: תמונת קמעונאי דרך `search_query`; Phase 2 בפיתוח: OpenAI `gpt-image-1` מייצר תמונת סטודיו מהצילום — ה-garment אחרי הסרת הגוף, רקע שקוף, תאורת מוצר.)
 2. **Shop-the-Look** — קנייה in-app, המשתמשת לא עוזבת את האפליקציה.
 3. **Resale Marketplace** — ה-AI מציע מה למכור (50% מהמחיר המקורי) לפי usage נמוך.
 4. **AI Stylist** — "מה ללבוש" לפי event + עונה, stats, streaks.
@@ -159,6 +159,7 @@
 | תלות במותגים | affiliate-first — אפס תלות באישור מותג להתחלה |
 | כסף ממשפחה | עסקה מקצועית עם נייר ועו"ד |
 | עלות AI בסקייל | מודל זול לזיהוי ראשוני + caching; human-in-the-loop — אישור המשתמשת מפחית תלות ב-AI מושלם ויקר, והתיקונים נשמרים כ-training signal |
+| תחרות מממומנת: **Whering** גייסה $7M מ-eBay Ventures + Google AI Futures (יולי 2026, 10M משתמשים קיימים) | נרטיב שונה לחלוטין: Whering = wardrobe tracking בלבד; AWEAR = scan→closet→social→buy→earn loop. ה-correction-ledger שלנו = labeled wardrobe data proprietary per user, שאי אפשר לשחזר. **יתרון בלתי-צפוי:** Whering מוכיחה את גודל השוק בדיוק כשאנחנו נכנסות אליו — עם מנוע מסחר שהם לא בונים. לנקוב בה פרואקטיבית בפגישה (לא להיפגע ממנה). |
 
 ---
 
@@ -167,6 +168,7 @@
 - **מה הושלם:** טיוטת skeleton מלאה, 8 slides + appendix, מבוססת מקורות נעולים בלבד.
 - **עדכון 2026-07-12:** הנחיית המייסדים מ-2026-07-11 (מנוע זיהוי הפריטים + human-in-the-loop כ-wow וכ-moat) משוקפת ב-Slides 2, 3, 8 וב-appendix. מסך האישור "צדקנו?" עדיין בפיתוח — לא להציג כ-shipped.
 - **עדכון 2026-07-14:** מספרי ה-unit economics תוקנו למודל הכן לפי `.claude/master/strategy/05-unit-economics.md` (Tobi) — default מיושם בהיעדר מענה על FOUNDER_QUESTIONS מ-2026-07-06; ממתין לאישור/דריסה של Carmel.
+- **עדכון 2026-07-19:** (1) הנחיית מייסדות 2026-07-18 על יצירת תמונת קטלוג נקייה (OpenAI `gpt-image-1` מהצילום האמיתי) — משוקפת ב-Slide 2 Layer 1 כ-Phase 2 בפיתוח; לא לשנות ל-"shipped" עד שה-backend עלה. (2) תחרות: Whering/$7M (eBay Ventures + Google AI Futures, יולי 2026) נוסף ל-Appendix Risks עם מיטיגציה — להזכיר פרואקטיבית בפגישה. (3) NEEDS_DECISION #7 (4 עריכות Slide 3 מניתוח Bernard/riddle-06) — ממתין לאישור Carmel; **Slide 3 לא נגעה** (oscillation guard).
 - **מה נשאר (אנושי):** (1) המרה ל-PDF/Keynote בעיצוב AWEAR · (2) screenshots אמיתיים ל-Slides 2,8 · (3) sign-off CMO + Jeff (owners) · (4) dry-run ×2 לפי C2.
 - **תלות:** A6 (demo reliability, 0 broken images) לפני הצגה חיה ב-Slide 8.
 
