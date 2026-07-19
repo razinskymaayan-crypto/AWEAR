@@ -181,7 +181,13 @@ jobs:
           - Scope: ONLY files your lane OWNS. No edits outside your lane. UI language English only.
           - A blocker only the founder can resolve -> add a line to NEEDS_YOU.md and pick a different task.
 
-          VERIFY (before commit): node --check on extracted JS AND "npm run check-render" both exit 0. For any visual change, pass the gabbana subagent design review at 8+ (fix and re-gate). Screenshot demo-critical screens (node scripts/shot.mjs <view> /tmp/shot.png).
+          PRE-COMMIT SELF-REVIEW — you MUST pass the merge gate on the FIRST try (a rejection = a wasted cycle; nothing lands). Before committing, run the SAME checks jeff's gate will run and fix any hit:
+          1. IN-LANE ONLY: `git diff --name-only` — every path is a file YOUR lane owns (see YOUR LANE above). A single out-of-lane file = instant rejection. If your fix needs another lane's file, request it in their assignment file instead.
+          2. RENAME SAFETY (OW-001): if you renamed ANY id/class/field/function, grep the OLD name across app.py + static/index.html + static/app.js + mobile/ and update EVERY caller — or don't rename. A rename that shows only the definition change is auto-rejected.
+          3. DS-004: every `var(--token, FALLBACK)` fallback must be the token's REAL value (grep your diff for dark relics like `#14110F`/`#3D3833` used as --accent/--accent2 fallbacks — those should be `#e8526a`/`#c4855a`). No bare hex outside var().
+          4. DS-008 (no emoji in UI chrome — use icon()/SVG) · DS-009 (no font-size on image containers).
+          5. `node --check` on extracted JS AND `npm run check-render` both exit 0. For a visual change, pass the gabbana subagent at 8+ and screenshot (node scripts/shot.mjs <view> /tmp/shot.png).
+          Only commit once ALL of the above pass. If you cannot make them pass, revert and stop — do not commit work that will be rejected.
 
           REPORT (after commit, helper bash scripts/tg.sh) — SIGN AS YOURSELF: prefix every message with "${{ matrix.manager }}: ". For a UI change send the screenshot: bash scripts/tg.sh photo /tmp/shot.png "${{ matrix.manager }}: <what changed, 2 sentences>". Else: bash scripts/tg.sh text "${{ matrix.manager }}: <one-line update>".
 
