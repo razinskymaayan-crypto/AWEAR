@@ -89,7 +89,8 @@ nothing lands. Do NOT just retry. ROOT-CAUSE it:
   (The 2026-07-08 bcrypt loop was exactly this: pytest ran before a new dep was installed.)
 Verify the fix, then change [UNRESOLVED] -> [FIXED] with a one-line note of the root cause.
 
-## [UNRESOLVED] REPEAT-FAILURE: mark — see ci-debug/jeff-rejections.txt (2026-07-18T08:04:07Z)
+## [FIXED] REPEAT-FAILURE: mark — see ci-debug/jeff-rejections.txt (2026-07-18T08:04:07Z)
+**FIXED 2026-07-19 (main session, full-pipeline audit):** two root causes, both engine bugs the lanes could not land themselves — (1) the OW-013 base-anchor was never applied, so serial merges false-rejected lanes on each other's files and `reset --hard origin/main` wiped approved merges (commit fc6b321 anchors every gate diff+rollback to `$BASE`); (2) the rejection-feedback prompt never fired through branch churn, so mark repeated the identical DS-004 fallback mistake — replaced with a deterministic 48h check raised to first priority (commit 92b353c). Also aligned the 3 conflicting ownership maps + freed shared-bookkeeping in GATE 3.
 The gate-ledger shows the SAME failure **3 cycles in a row (ending now)**: `mark — see ci-debug/jeff-rejections.txt`.
 This is a STUCK LOOP — a lane keeps producing work the gate keeps rejecting the same way, so
 nothing lands. Do NOT just retry. ROOT-CAUSE it:
