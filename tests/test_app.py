@@ -1429,3 +1429,155 @@ def test_scan_health_includes_supabase_storage(client):
     assert "supabase_storage" in body, "supabase_storage key missing from scan-health"
     assert "configured" in body["supabase_storage"]
     assert body["supabase_storage"]["configured"] is False  # no key in CI env
+
+
+# ---------------------------------------------------------------------------
+# Stories — POST/GET/DELETE contract, TTL filter, ownership guard
+# ---------------------------------------------------------------------------
+
+def test_story_create_and_list(client):
+    r = client.post("/api/stories", json={"image_url": "https://cdn.test/shot.jpg", "caption": "My look"})
+    assert r.status_code == 200
+    created = r.json()
+    assert created["image_url"] == "https://cdn.test/shot.jpg"
+    assert created["caption"] == "My look"
+    assert "id" in created and "created_at" in created
+
+    r2 = client.get("/api/stories")
+    assert r2.status_code == 200
+    body = r2.json()
+    assert body["total"] >= 1
+    ids = [s["id"] for s in body["items"]]
+    assert created["id"] in ids
+
+
+def test_story_list_excludes_expired(client):
+    import datetime as _dt
+    expired_ts = (_dt.datetime.utcnow() - _dt.timedelta(hours=25)).isoformat()
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        conn.execute(
+            "INSERT INTO stories (user_key, image_url, caption, created_at) VALUES (?,?,?,?)",
+            ("testclient", "https://cdn.test/old.jpg", "old story", expired_ts),
+        )
+        conn.commit()
+        old_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+    finally:
+        conn.close()
+
+    r = client.get("/api/stories")
+    assert r.status_code == 200
+    ids = [s["id"] for s in r.json()["items"]]
+    assert old_id not in ids, "Expired story should not appear in GET /api/stories"
+
+
+def test_story_delete_by_owner_removes_it(client):
+    r = client.post("/api/stories", json={"image_url": "https://cdn.test/del.jpg"})
+    assert r.status_code == 200
+    story_id = r.json()["id"]
+
+    rd = client.delete(f"/api/stories/{story_id}")
+    assert rd.status_code == 200
+    assert rd.json()["deleted"] is True
+    assert rd.json()["id"] == story_id
+
+    r2 = client.get("/api/stories")
+    ids = [s["id"] for s in r2.json()["items"]]
+    assert story_id not in ids
+
+
+def test_story_delete_wrong_owner_403(client):
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        conn.execute(
+            "INSERT INTO stories (user_key, image_url, caption, created_at) VALUES (?,?,?,?)",
+            ("other_user", "https://cdn.test/other.jpg", "", appmod.datetime.datetime.utcnow().isoformat()),
+        )
+        conn.commit()
+        other_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+    finally:
+        conn.close()
+
+    r = client.delete(f"/api/stories/{other_id}")
+    assert r.status_code == 403
+
+
+def test_story_delete_missing_404(client):
+    r = client.delete("/api/stories/999999")
+    assert r.status_code == 404
+
+
+def test_story_create_no_image_url_400(client):
+    r = client.post("/api/stories", json={"image_url": "", "caption": "no url"})
+    assert r.status_code == 400
+
+
+# ---------------------------------------------------------------------------
+# Wishlist — toggle/get/status contract, idempotency, user isolation
+# ---------------------------------------------------------------------------
+
+def _wl_body(item_id, item_type="marketplace", item_data=None):
+    return {"item_id": item_id, "item_type": item_type, "item_data": item_data or {}}
+
+
+def test_wishlist_toggle_save_then_unsave(client):
+    r1 = client.post("/api/wishlist/toggle", json=_wl_body("wl-item-1"))
+    assert r1.status_code == 200
+    assert r1.json()["saved"] is True
+    assert r1.json()["count"] >= 1
+
+    r2 = client.post("/api/wishlist/toggle", json=_wl_body("wl-item-1"))
+    assert r2.status_code == 200
+    assert r2.json()["saved"] is False
+    count_after = r2.json()["count"]
+    assert count_after == r1.json()["count"] - 1
+
+
+def test_wishlist_list_returns_saved_items(client):
+    client.post("/api/wishlist/toggle", json=_wl_body("wl-list-a", item_data={"price": 50}))
+    client.post("/api/wishlist/toggle", json=_wl_body("wl-list-b", item_data={"price": 80}))
+
+    r = client.get("/api/wishlist")
+    assert r.status_code == 200
+    body = r.json()
+    saved_ids = [it["item_id"] for it in body["items"]]
+    assert "wl-list-a" in saved_ids
+    assert "wl-list-b" in saved_ids
+    assert body["total"] >= 2
+
+
+def test_wishlist_toggle_empty_item_id_400(client):
+    r = client.post("/api/wishlist/toggle", json=_wl_body(""))
+    assert r.status_code == 400
+
+
+def test_wishlist_status_reflects_saved_items(client):
+    client.post("/api/wishlist/toggle", json=_wl_body("wl-status-x"))
+
+    r = client.get("/api/wishlist/status", params={"item_ids": "wl-status-x,wl-status-y"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["saved"]["wl-status-x"] is True
+    assert body["saved"]["wl-status-y"] is False
+    assert body["counts"]["wl-status-x"] >= 1
+    assert body["counts"].get("wl-status-y", 0) == 0
+
+
+def test_wishlist_user_isolation(client):
+    client.post("/api/wishlist/toggle", json=_wl_body("wl-mine"))
+
+    conn = sqlite3.connect(str(appmod.DB_PATH))
+    try:
+        conn.execute(
+            "INSERT OR IGNORE INTO wishlist (user_key, item_id, item_type, item_data) VALUES (?,?,?,?)",
+            ("other_user_key", "wl-theirs", "marketplace", "{}"),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    r = client.get("/api/wishlist")
+    assert r.status_code == 200
+    item_ids = [it["item_id"] for it in r.json()["items"]]
+    assert "wl-mine" in item_ids
+    assert "wl-theirs" not in item_ids
