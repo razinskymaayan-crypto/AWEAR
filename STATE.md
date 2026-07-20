@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-19, run 3)
-- **Task**: UX dead-button fix — Explore editorial grid cards were unclickable (cursor:pointer but no handler)
-- **Done**: Added `data-q` attr to each card in `renderExGrid()` template + delegated click listener in `initExplore()`. Tapping any editorial card now populates ex-input and runs `runExSearch()`. Commit d3923fe. check-render + node --check clean.
-- **Remaining**: INBOX UX bug-hunt: text overlap/truncation (fc-caption no line-clamp, fc-hdr-user overflows, fc-tags unlimited pills, up-vibe no max-height) + more dead buttons (Explore grid done; rewards locked perk buttons still silent).
-- **Prior runs**: DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233), OW-001 wl-wrap fix confirmed on main.
+## Mark lane — last run (2026-07-20, run 4)
+- **Task**: Feed card text overflow/truncation — 4 CSS fixes (fc-caption, fc-tags, fc-hdr-user, up-vibe). Commit 91bac9f. check-render green.
+- **Also**: P2 token reconciliation confirmed done (--muted AA + --success light reconciled 2026-07-14); assignment marked [x].
+- **Remaining**: INBOX UX bug-hunt: dead buttons (rewards locked perk buttons still silent).
+- **Prior runs**: Explore dead-button fix (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233).
 
 ## Steve lane — last run (2026-07-19)
 - **Task**: DATABASE_URL → Postgres migration (INBOX launch infra step 3)
