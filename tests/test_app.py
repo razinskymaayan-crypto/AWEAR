@@ -1010,6 +1010,19 @@ def test_app_js_css_are_no_store(client):
         assert "no-store" in cc, f"{asset} must be no-store, got: {cc!r}"
 
 
+def test_index_html_is_no_store(client):
+    """The HTML shell must be no-STORE, not merely no-cache.
+
+    Regression: with 'no-cache' the installed Capacitor app kept serving its stored
+    copy of index.html across launches (and therefore stale ?v= stamps), so shipped
+    fixes were invisible on the phone while mobile Safari showed them fine.
+    """
+    r = client.get("/")
+    assert r.status_code == 200
+    cc = r.headers.get("cache-control", "")
+    assert "no-store" in cc, f"index.html must be no-store, got: {cc!r}"
+
+
 def test_non_app_static_stays_cacheable(client):
     # only the app shell is no-store; data/images should NOT be forced no-store
     r = client.get("/static/data/products.json")

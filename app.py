@@ -866,10 +866,16 @@ async def index():
             p = Path("static") / asset
             v = int(p.stat().st_mtime) if p.exists() else 0
             html = html.replace(f"/static/{asset}", f"/static/{asset}?v={v}")
+        # no-STORE (not merely no-cache): the installed Capacitor app was still running
+        # yesterday's HTML while mobile Safari — which has no app-level WebView cache —
+        # served the fixes correctly. "no-cache" permits storing a copy and revalidating;
+        # WKWebView kept using its stored copy (and therefore the stale ?v= stamps) across
+        # launches. no-store forbids keeping it at all, so every launch re-fetches.
         return Response(content=html, media_type="text/html",
-                        headers={"Cache-Control": "no-cache"})
+                        headers={"Cache-Control": "no-store, must-revalidate",
+                                 "Pragma": "no-cache", "Expires": "0"})
     except Exception:
-        return FileResponse("static/index.html")
+        return FileResponse("static/index.html", headers={"Cache-Control": "no-store"})
 
 
 # ---------------------------------------------------------------------------
