@@ -149,6 +149,8 @@ OPENAI_IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-1")
 _last_gen: dict = {"mode": None, "reason": None}
 
 SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET", "")
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")          # e.g. https://xxxx.supabase.co
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")  # service_role key for Storage
 DATABASE_URL = os.getenv("DATABASE_URL", "")  # Postgres/Supabase on Render; empty = SQLite
 
 # ~25s request timeout so a hung/slow call raises anthropic.APITimeoutError instead of
@@ -753,6 +755,7 @@ async def scan_health(request: Request, probe: int = 0):
         # falling back to demo, and why.
         "generation": {"last_mode": _last_gen["mode"], "last_reason": _last_gen["reason"]},
         "supabase_auth": {"configured": bool(SUPABASE_JWT_SECRET)},
+        "supabase_storage": {"configured": bool(SUPABASE_URL and SUPABASE_SERVICE_KEY)},
     }
 
     if not probe:
@@ -3076,6 +3079,43 @@ async def get_weather(request: Request, lat: float, lon: float):
 
 
 # ---------------------------------------------------------------------------
+# Supabase Storage helper — upload PNG to bucket and return public URL.
+# Used by _generate_garment_image_sync for persistent image storage on Render.
+# ---------------------------------------------------------------------------
+
+def _supabase_storage_upload(png_bytes: bytes, fname: str) -> Optional[str]:
+    """Upload PNG bytes to Supabase Storage bucket 'generated'.
+
+    Returns the public URL on success, None when unconfigured or on any error.
+    Never raises — all failures are logged and return None, so the caller can
+    fall back to local disk gracefully.
+    """
+    if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
+        return None
+    try:
+        bucket = "generated"
+        upload_url = f"{SUPABASE_URL.rstrip('/')}/storage/v1/object/{bucket}/{fname}"
+        req = urllib.request.Request(
+            upload_url,
+            data=png_bytes,
+            headers={
+                "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
+                "Content-Type": "image/png",
+                "x-upsert": "true",
+            },
+            method="PUT",
+        )
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            if resp.status in (200, 201):
+                return f"{SUPABASE_URL.rstrip('/')}/storage/v1/object/public/{bucket}/{fname}"
+        logger.warning("supabase_storage_upload unexpected status for %s", fname)
+        return None
+    except Exception as e:  # noqa: BLE001
+        logger.error("supabase_storage_upload failed for %s: %s", fname, e)
+        return None
+
+
+# ---------------------------------------------------------------------------
 # POST /api/generate-garment — generate a clean ecommerce catalog image via
 # OpenAI Images Edit API. Demo-first: without OPENAI_API_KEY returns mode='demo'.
 # ---------------------------------------------------------------------------
@@ -3137,7 +3177,10 @@ def _generate_garment_image_sync(image_bytes: bytes, item: dict) -> dict:
         out_dir.mkdir(parents=True, exist_ok=True)
         fname = "gen_" + uuid.uuid4().hex[:12] + ".png"
         (out_dir / fname).write_bytes(png_bytes)
-        return {"mode": "live", "image_url": f"/static/img/generated/{fname}", "reason": None}
+        supabase_image_url = _supabase_storage_upload(png_bytes, fname)
+        image_url = supabase_image_url or f"/static/img/generated/{fname}"
+        storage = "supabase" if supabase_image_url else "local"
+        return {"mode": "live", "image_url": image_url, "reason": None, "storage": storage}
 
     except Exception as e:  # noqa: BLE001
         logger.error("generate_garment_image failed: %s", e, exc_info=True)

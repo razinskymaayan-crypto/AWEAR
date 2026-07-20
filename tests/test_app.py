@@ -1368,3 +1368,64 @@ def test_supabase_jwt_anon_role(client):
         assert resp.status_code == 401
     finally:
         app_module.SUPABASE_JWT_SECRET = original
+
+
+# ---------------------------------------------------------------------------
+# Supabase Storage tests (step 4 of launch-infra epic)
+# ---------------------------------------------------------------------------
+
+def test_supabase_storage_upload_no_keys_returns_none(monkeypatch):
+    """_supabase_storage_upload returns None immediately when keys are absent (no network)."""
+    import app as app_module
+    monkeypatch.setattr(app_module, "SUPABASE_URL", "")
+    monkeypatch.setattr(app_module, "SUPABASE_SERVICE_KEY", "")
+    result = app_module._supabase_storage_upload(b"fake-png", "test.png")
+    assert result is None
+
+
+def test_supabase_storage_upload_success(monkeypatch):
+    """_supabase_storage_upload returns a public URL when the PUT succeeds (mocked urllib)."""
+    import app as app_module
+    import io
+
+    class _FakeResponse:
+        status = 200
+        def __enter__(self): return self
+        def __exit__(self, *_): pass
+        def read(self): return b'{"Key":"generated/test.png"}'
+
+    monkeypatch.setattr(app_module, "SUPABASE_URL", "https://fake.supabase.co")
+    monkeypatch.setattr(app_module, "SUPABASE_SERVICE_KEY", "fake-service-key")
+    monkeypatch.setattr(app_module.urllib.request, "urlopen", lambda req, timeout=30: _FakeResponse())
+
+    result = app_module._supabase_storage_upload(b"\x89PNG\r\n", "shirt.png")
+    assert result == "https://fake.supabase.co/storage/v1/object/public/generated/shirt.png"
+
+
+def test_supabase_storage_upload_network_error_returns_none(monkeypatch):
+    """_supabase_storage_upload returns None on any network error (never raises)."""
+    import app as app_module
+
+    def _boom(*_args, **_kwargs):
+        raise OSError("connection refused")
+
+    monkeypatch.setattr(app_module, "SUPABASE_URL", "https://fake.supabase.co")
+    monkeypatch.setattr(app_module, "SUPABASE_SERVICE_KEY", "fake-service-key")
+    monkeypatch.setattr(app_module.urllib.request, "urlopen", _boom)
+
+    result = app_module._supabase_storage_upload(b"data", "shirt.png")
+    assert result is None
+
+
+def test_scan_health_includes_supabase_storage(client):
+    """scan-health response includes a 'supabase_storage' block with 'configured' key.
+
+    This is a FAIL-BEFORE / PASS-AFTER test (OW-014): the key did not exist before
+    Supabase Storage was wired into the scan-health endpoint.
+    """
+    r = client.get("/api/scan-health")
+    assert r.status_code == 200
+    body = r.json()
+    assert "supabase_storage" in body, "supabase_storage key missing from scan-health"
+    assert "configured" in body["supabase_storage"]
+    assert body["supabase_storage"]["configured"] is False  # no key in CI env
