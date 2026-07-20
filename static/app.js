@@ -3808,6 +3808,12 @@
         renderRewards();
       });
     });
+    el.querySelectorAll('.rw-perk-btn.locked').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const need = Number(btn.dataset.pts) - loadRewards().points;
+        showToast(`${need.toLocaleString()} more points needed`);
+      });
+    });
   }
 
   // ---- Creator Wallet ----
