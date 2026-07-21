@@ -85,3 +85,4 @@
 2026-07-21T13:55:43Z | jeff: merged -> ayalon | REVERTED (broke build/guard): steve(pytest)
 2026-07-21T15:52:30Z | jeff: merged -> ayalon | REVERTED (broke build/guard): steve(pytest)
 2026-07-21T17:30:12Z | jeff: merged -> ayalon | CONFLICT (needs reconciliation): steve
+2026-07-21T19:40:36Z | jeff: merged -> mark | CONFLICT (needs reconciliation): steve
