@@ -11,11 +11,10 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-20, run 5)
-- **Task**: Fixed silent locked perk buttons in Rewards screen — added click handler toast "N more points needed". Commit pending.
-- **Also**: P2 token reconciliation checkbox corrected to [x] in mark.md (done 2026-07-14, missed last run).
-- **Remaining**: INBOX UX bug-hunt items 1–3 (text overlap scan, stuck sheets, contrast grep).
-- **Prior runs**: Text overflow fixes (91bac9f), dead-button explore fix (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233).
+## Mark lane — last run (2026-07-21, run 6)
+- **Task**: Shopping grid card consistency — 2-line clamp on `.sf-card-name`, brand/store dedup fix, `.sf-compat` nowrap. Commit a7756c9. Gabbana 8.5/10 PASS.
+- **Remaining**: INBOX UX bug-hunt items 1 (other screens), 2 (stuck sheets), 3 (contrast grep).
+- **Prior runs**: Locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233).
 
 ## Steve lane — last run (2026-07-19)
 - **Task**: DATABASE_URL → Postgres migration (INBOX launch infra step 3)
