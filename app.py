@@ -2084,6 +2084,26 @@ async def get_post(post_id: str):
 # User stats endpoint
 # ---------------------------------------------------------------------------
 
+
+def _follower_count(value) -> int:
+    """followers/following may be a COUNT (int) or a LIST of ids — accept both.
+
+    static/data/profiles.json stores them as plain integers (e.g. 4320), but the
+    profile-stats and follow endpoints called len() on them, so every real profile
+    raised `TypeError: object of type 'int' has no len()` -> HTTP 500. That broke the
+    Follow button and the follower counters live. Surfaced by the follow tests steve
+    added on auto/steve (which then got reverted 4 cycles for "failing" — they were
+    right, the app was wrong).
+    """
+    if isinstance(value, bool):
+        return 0
+    if isinstance(value, int):
+        return value
+    if isinstance(value, (list, tuple, set)):
+        return len(value)
+    return 0
+
+
 @app.get("/api/users/{user_id}/stats")
 async def get_user_stats(user_id: str):
     """Compute lightweight stats for a user profile.
@@ -2105,8 +2125,8 @@ async def get_user_stats(user_id: str):
     post_count = len(user_posts)
 
     # --- followers / following (v1: static from JSON) ---
-    followers = len(profile.get("followers", []))
-    following = len(profile.get("following", []))
+    followers = _follower_count(profile.get("followers"))
+    following = _follower_count(profile.get("following"))
 
     # --- total_likes via SQLite ---
     post_ids = [p["id"] for p in user_posts]
@@ -2167,7 +2187,7 @@ async def toggle_follow(user_id: str, request: Request):
             "SELECT COUNT(*) FROM follows WHERE followed_user_id=?", (user_id,)
         ).fetchone()[0]
 
-    base_followers = len(target.get("followers", []))
+    base_followers = _follower_count(target.get("followers"))
     return {
         "user_id": user_id,
         "following": following,
