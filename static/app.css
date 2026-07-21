@@ -1271,9 +1271,9 @@
   .pc-featured-card:active { transform: scale(.97); }
   .pc-feat-cover { height: 160px; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, var(--card), var(--bg)); }
   .pc-feat-info { padding: 10px 12px 12px; }
-  .pc-feat-name { font-size: var(--t-small); font-weight: 900; }
-  .pc-feat-handle { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 2px; }
-  .pc-feat-items { font-size: var(--t-micro); color: var(--accent2); font-weight: 800; margin-top: 4px; }
+  .pc-feat-name { font-size: var(--t-small); font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pc-feat-handle { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pc-feat-items { font-size: var(--t-micro); color: var(--accent2); font-weight: 800; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pc-section-label { font-size: var(--t-micro); font-weight: 800; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; padding: 4px 18px 10px; }
   .pc-list { display: flex; flex-direction: column; gap: 10px; padding: 0 18px; }
   .pc-row { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 16px; padding: 12px 14px; cursor: pointer; transition: all .18s; border: 1px solid var(--line); }
@@ -1633,10 +1633,10 @@
   @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
   .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 20px; }
   .mp-item-info { padding: 10px 12px 12px; }
-  .mp-item-name { font-size: var(--t-small); font-weight: 800; line-height: 1.2; }
+  .mp-item-name { font-size: var(--t-small); font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .mp-item-price { font-size: var(--t-h3,15px); font-weight: 900; color: var(--accent); margin-top: 5px; }
-  .mp-item-seller { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 3px; }
-  .mp-item-compat { font-size: var(--t-micro); color: var(--accent2); font-weight: 800; margin-top: 3px; }
+  .mp-item-seller { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mp-item-compat { font-size: var(--t-micro); color: var(--accent2); font-weight: 800; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .mp-sell-form { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
   .mp-form-label { font-size: var(--t-caption); font-weight: 800; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 4px; }
   .mp-form-input { width: 100%; background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 14px; font-family: inherit; font-size: var(--t-body); color: var(--text); outline: none; direction: rtl; transition: border .18s; }
@@ -1648,25 +1648,25 @@
   .mp-segment { display: flex; gap: 4px; background: var(--card,#1e1a22); border-radius: var(--r-pill,999px); margin: 0 16px 12px; padding: 4px; }
   .mp-seg-btn { flex: 1; padding: 11px 6px; text-align: center; font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#9e99ad); border-radius: var(--r-pill,999px); cursor: pointer; transition: all .2s; font-family: inherit; background: none; border: none; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
   .mp-seg-btn.active-all { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); }
-  .mp-seg-btn.active-new { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
+  .mp-seg-btn.active-new { background: var(--accent3,#7a6af0); color: var(--card,#fff); }
   .mp-seg-btn.active-preloved { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
   .mp-seg-btn.active-sell { background: var(--accent,#e8526a); color: var(--bg,#0e0c0f); }
-  .mp-seg-btn.active-shop { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
+  .mp-seg-btn.active-shop { background: var(--accent3,#7a6af0); color: var(--card,#fff); }
   .mp-seg-btn.active-community { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
 
   /* ---- Marketplace Card — World Differentiation ---- */
   .mp-item.retail { border-color: color-mix(in srgb, var(--accent3,#7a6af0) 30%, var(--line,#2e2836)); }
   .mp-item.resale { border-color: color-mix(in srgb, var(--accent2,#c4855a) 30%, var(--line,#2e2836)); }
-  .mp-item-brand { font-size: var(--t-micro,11px); font-weight: 900; color: var(--accent3,#7a6af0); margin-top: 3px; letter-spacing: .4px; text-transform: uppercase; }
-  .mp-item-seller { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 700; margin-top: 3px; }
-  .mp-item-preloved-label { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 800; margin-top: 2px; letter-spacing: .2px; }
-  .mp-buy-btn.retail-btn { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
+  .mp-item-brand { font-size: var(--t-micro,11px); font-weight: 900; color: var(--accent3,#7a6af0); margin-top: 3px; letter-spacing: .4px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mp-item-seller { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 700; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mp-item-preloved-label { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 800; margin-top: 2px; letter-spacing: .2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mp-buy-btn.retail-btn { background: var(--accent3,#7a6af0); color: var(--card,#fff); }
   .mp-buy-btn.resale-btn { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); }
 
   /* ---- Marketplace Card — New Items ---- */
   .mp-item-shop-btn { display: block; width: 100%; margin-top: 8px; padding: 7px 0; background: var(--accent3); border: none; border-radius: var(--r-pill); font-family: inherit; font-size: var(--t-caption); font-weight: 900; color: #fff; cursor: pointer; transition: transform .15s; }
   .mp-item-shop-btn:active { transform: scale(.96); }
-  .mp-item-brand { font-size: var(--t-micro); font-weight: 800; color: var(--accent3); margin-top: 3px; letter-spacing: .3px; text-transform: uppercase; }
+  .mp-item-brand { font-size: var(--t-micro); font-weight: 800; color: var(--accent3); margin-top: 3px; letter-spacing: .3px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* ---- Marketplace Badge — Secondhand ---- */
   .mp-item-badge.secondhand { background: var(--accent2); color: #fff; opacity: .9; }
@@ -1680,7 +1680,7 @@
   .mp-cond-chip { flex-shrink: 0; padding: 0 16px; height: 36px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--line,#2e2836); background: var(--card,#1e1a22); color: var(--muted,#9e99ad); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 36px; display: inline-flex; align-items: center; gap: 5px; box-sizing: border-box; }
   .mp-cond-chip.active { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); border-color: var(--fg,#f0ecf5); }
   .mp-closet-chip { border-color: var(--accent3,#7a6af0); color: var(--accent3,#7a6af0); }
-  .mp-closet-chip.active { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); border-color: var(--accent3,#7a6af0); }
+  .mp-closet-chip.active { background: var(--accent3,#7a6af0); color: var(--card,#fff); border-color: var(--accent3,#7a6af0); }
   /* ---- Marketplace Empty States ---- */
   .mp-empty { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 48px 20px; color: var(--muted,#9e99ad); text-align: center; font-size: var(--t-body,14px); }
   .mp-empty-cta { margin-top: 4px; padding: 10px 24px; background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-small,13px); font-weight: 700; cursor: pointer; min-height: 44px; transition: opacity .15s; }
