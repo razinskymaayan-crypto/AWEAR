@@ -8106,7 +8106,7 @@
           </div>
           <div class="sf-card-body">
             <div class="sf-card-name">${esc(it.name)}</div>
-            <div class="sf-card-brand">${esc(it.brand)} · ${esc(it.store)}</div>
+            <div class="sf-card-brand">${esc(it.brand)}${it.store && it.store !== it.brand ? ' · ' + esc(it.store) : ''}</div>
             <div class="sf-price-row">
               <div class="sf-price">$${it.price}</div>
               ${disc ? `<div class="sf-orig">$${it.orig}</div><div class="sf-discount">-${disc}%</div>` : ''}
