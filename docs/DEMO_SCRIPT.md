@@ -37,19 +37,25 @@ Swipe the **Feed** once so they see a real, full-screen, scrollable fashion feed
 
 ---
 
-## 2. Scan a garment → closet fills itself (0:30 → 1:20) — **WOW #1**
+## 2. Scan a garment → "Did we get it right?" → closet fills itself (0:30 → 1:30) — **WOW #1**
 
 **Tap:** the **+ Create** button → **"Scan a garment"**. Pick the saved outfit photo (or snap one live).
 
 **While the AI spinner runs ("AI is identifying your items…"), say:**
-> "She photographs an outfit. Our AI identifies every garment — top, bottoms, shoes — and turns each one into a *clean catalog image*, not a blurry phone photo."
-
-> 💡 *Enhanced version when garment-image generation ships (backend `/api/generate-garment`): replace with — "She photographs an outfit. Our AI identifies every garment — then* creates *a professional studio product photo from her casual shot. Not a stock image found online — her actual item, photographed for the catalog. The closet looks like a fashion store."*
-
-**When the items appear, say:**
-> "That's the magic: the closet builds itself — with her in the loop. The AI does the first pass, and the product is built so she confirms and corrects what it found — and every correction is saved as training signal we own. Every scan compounds into a labeled dataset of her *real* wardrobe — data nobody can scrape or buy. That's our moat. A competitor starting today starts from zero knowledge of her."
+> "She photographs an outfit. Our AI identifies every garment — top, bottoms, shoes."
 
 > 💡 *This step has a built-in offline fallback — scan always returns a real, clean result even with no signal. You will never see an error here.*
+
+**When the "Did we get it right?" confirm sheet slides up (it appears automatically after the scan):**
+
+This is the live HITL screen. It shows each detected item as a card with a checkmark (✓ accepted) you can tap to reject, and an "Edit" toggle to correct the name, category, brand, or price inline.
+
+**Say while pointing at the item cards:**
+> "The AI does the first pass — and then she reviews every item before it goes anywhere. Tap to reject a wrong guess. Tap 'Edit' to correct the name. Every correction is automatically saved as a training signal we own. Her closet gets smarter with every scan. A competitor starting today starts from *zero knowledge of her* — that's our moat."
+
+**Tap "Add X items to Closet" (the CTA at the bottom of the sheet).** Items land in the closet immediately; a toast confirms "X items added to your closet."
+
+> 💡 *Enhanced future version (backend endpoint `/api/generate-garment` exists; awaiting frontend wiring): each confirmed item could show a clean studio-quality photo generated from the scan — not a stock image, the actual garment extracted from her photo. For the current demo, items use catalog images via `search_query`. Mention this if you want to preview the roadmap.*
 > 💡 *The same Create menu also has "Daily check-in" — mention in passing: "she logs what she wore every day, Duolingo-style streak — that's the retention engine and the data engine in one."*
 
 ---
@@ -136,15 +142,15 @@ Point at the live activity timeline (real recent commits) and the team grid.
 | Beat | Screen | End by |
 |------|--------|--------|
 | 1. Hook | Feed (+ real-user stories) | 0:30 |
-| 2. Scan → closet | Create → Scan a garment | 1:20 |
-| 3. Today's Look | AI tab hero | 2:00 |
-| 4. Shoppable feed | Feed (For You · Following) | 2:30 |
+| 2. Scan → "Did we get it right?" → closet | Create → Scan → HITL confirm sheet | 1:30 |
+| 3. Today's Look | AI tab hero | 2:05 |
+| 4. Shoppable feed | Feed (For You · Following) | 2:35 |
 | 5. **THE WOW — item sheet** | match % · stylist picks · where it sells | 3:25 |
 | 6. Buy → closet | Checkout → Profile | 3:55 |
 | 7. Wallet | Creator Wallet | 4:25 |
 | 8. Built by agents | Agent Team | 5:00 |
 
-**If you're running long:** cut beat 4 short (one sentence) and protect beat 5 — the item sheet is the demo. Never rush the match-ring reveal.
+**If you're running long:** cut beat 4 short (one sentence) and protect beat 5 — the item sheet is the demo. Never rush the match-ring reveal. For beat 2 in a tight run, do the scan, say the moat line once, then confirm immediately — don't belabour the item cards.
 
 ---
 
@@ -162,7 +168,7 @@ Point at the live activity timeline (real recent commits) and the team grid.
 
 | Beat | The point an investor should take away |
 |------|----------------------------------------|
-| Scan | Human-in-the-loop flywheel: every scan — and every user correction — adds proprietary labeled wardrobe data that compounds per user |
+| Scan + HITL confirm | Human-in-the-loop flywheel: the "Did we get it right?" screen is live — every correction adds proprietary labeled wardrobe data that compounds per user. This is the moat on-screen, not just narrated. |
 | Today's Look | Zero-effort daily value — the retention engine, already live |
 | Shoppable feed | Distribution = real people's looks, built into the product |
 | **Item sheet (THE WOW)** | **The category bet: social ↔ closet ↔ commerce fused on one screen — nobody else can render "87% match to *your* closet"** |
@@ -172,4 +178,4 @@ Point at the live activity timeline (real recent commits) and the team grid.
 
 ---
 
-*C2 — owner: CMO + Ayalon. Status: synced to the shipped app 2026-07-11 (WOW item sheet added as the centerpiece beat; feed tabs, scan entry, and Today's Look corrected to match production). Do a timed dry-run twice before the meeting and lock the wording you're comfortable with. Source of truth for the flow: this file + [MASTER_PLAN.md](../.claude/master/MASTER_PLAN.md) §Track C + [PRODUCT_VISION.md](PRODUCT_VISION.md) §ה-WOW.*
+*C2 — owner: CMO + Ayalon. Status: re-verified 2026-07-21 (10/11 DoD items confirmed live; HITL confirm screen verified shipped in `f4fe9a1` and added as explicit beat-2 step; garment-image generation backend exists but frontend not yet wired — noted as optional future upgrade). Do a timed dry-run twice before the meeting and lock the wording you're comfortable with. Source of truth for the flow: this file + [MASTER_PLAN.md](../.claude/master/MASTER_PLAN.md) §Track C + [PRODUCT_VISION.md](PRODUCT_VISION.md) §ה-WOW.*

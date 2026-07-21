@@ -12,7 +12,7 @@
 | 2 | Core-screens editorial pass (Feed/Item/Profile) | ✅ VERIFIED | — |
 | 3 | Public profile → real users (Tamar/Carmel/Maayan) | ✅ VERIFIED | — |
 | 4 | Stories row → real users | ✅ VERIFIED | — |
-| 5 | Real Claude-Vision scan e2e | ⚠️ PARTIAL | UI HITL confirm screen not shipped; live API test needs human step |
+| 5 | Real Claude-Vision scan e2e | ✅ VERIFIED (corrected 2026-07-21) | HITL UI shipped in commit f4fe9a1; live API test needs human step |
 | 6 | WOW item screen (closet match + stylist looks + Where it sells) | ✅ VERIFIED | — |
 | 7 | Store Insight redesign | ✅ VERIFIED | — |
 | 8 | Store screenshot + feature guide (TG) | ℹ️ DOC-ONLY | No code change — TG message delivered, cannot re-verify |
@@ -20,7 +20,7 @@
 | 10 | Nav tab order: feed → store → AI → DM → profile | ✅ VERIFIED | — |
 | 11 | Analytics survey (wardrobe statistics) | ✅ VERIFIED | — |
 
-**9 of 11 fully verified. 1 partial (action required). 1 documentation-only.**
+**10 of 11 fully verified. 1 documentation-only.** *(Item 5 corrected 2026-07-21 — HITL UI was shipped in commit f4fe9a1; original audit searched pre-split index.html and missed it in app.js.)*
 
 ---
 
@@ -48,18 +48,22 @@
 - **Gate:** Gabbana 8.5 PASS; screenshot verified; commit confirmed on main
 - **Evidence:** `grep -c "renderStories" static/app.js` → 8
 
-### 5. Real Claude-Vision scan e2e ⚠️ PARTIAL
+### 5. Real Claude-Vision scan e2e ✅ VERIFIED (corrected 2026-07-21)
 - **Backend (DONE):**
   - `app.py:706` — scan outcome recorder
   - `app.py:719` — `GET /api/scan-health` with `?probe=1` liveness check
   - `app.py:495–517` — `_corrections_context()` learning loop (scan→corrections→closet→re-injection)
   - 2 closet endpoints: `POST /api/closet/confirm` + `GET /api/closet` (`grep "@app.*closet" app.py` → 2 matches)
   - `scan_corrections` learning ledger and re-injection into LIVE Claude call
-- **UI (NOT SHIPPED):**
-  - "Did we get it right?" HITL confirm screen not wired in `static/app.js` (no `closet/confirm` call in JS)
-  - NEEDS_YOU (2026-07-15): "prioritize the 'Did we get it right?' confirm screen going live before the meeting — the moat demo depends on it"
-- **Live test gap:** Final live API smoke test requires human with `ANTHROPIC_API_KEY` (`python3 scripts/scan_smoke.py`)
-- **Action needed:** Mark lane wires the HITL confirm screen (INBOX founder direction item 3, backend handoff in `notes/scan-closet-hitl-backend.md`). Human runs `scan_smoke.py` on keyed box to confirm LIVE mode.
+- **UI (SHIPPED — corrected):**
+  - `static/app.js:1387–1454` — full "Did we get it right?" HITL confirm sheet (`showScanConfirm`, `_renderScConfirm`, `scSetAccepted`, `scToggleEdit`, `scConfirm`)
+  - `static/index.html:340–341` — overlay `#sc-overlay` + bottom sheet `#sc-sheet` (role=dialog)
+  - Called on both live path (`app.js:1089`) and demo-fallback path (`app.js:1098`)
+  - Per-item accept/reject + inline name/category/brand/price edit fields; submit calls `POST /api/closet/confirm`
+  - **Commit:** `f4fe9a1 feat(mark/self-heal): scan-confirm UI — review items before closet save`
+  - **Audit error root-cause:** original audit grepped `static/index.html` for the JS call — missed it because the SPA was split on 2026-07-05 (all JS now lives in `static/app.js`).
+- **Live test gap (still open):** Final live API smoke test requires human with `ANTHROPIC_API_KEY` (`python3 scripts/scan_smoke.py`)
+- **Action still needed:** Human runs `scan_smoke.py` on keyed box to confirm LIVE Claude Vision mode.
 
 ### 6. WOW item screen ✅
 - **Code:**
@@ -112,7 +116,7 @@
 
 | Priority | Lane | Action |
 |----------|------|--------|
-| P0 (blocks moat demo) | mark / valentino | Wire "Did we get it right?" HITL confirm screen → `POST /api/closet/confirm`; pass `?user_id=` on scan. Handoff spec: `notes/scan-closet-hitl-backend.md` |
+| ✅ DONE | mark | "Did we get it right?" HITL confirm screen — shipped (commit f4fe9a1). Per-item accept/reject + edit, calls `POST /api/closet/confirm`. |
 | P0 (founder-gated) | human (Carmel) | Run `python3 scripts/scan_smoke.py` on box with `ANTHROPIC_API_KEY` set to confirm LIVE Claude Vision mode |
 
 ---
