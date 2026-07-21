@@ -99,3 +99,13 @@ nothing lands. Do NOT just retry. ROOT-CAUSE it:
   a timeout)? Fix it in .github/workflows/ — a false-rejecting gate is as harmful as bad code.
   (The 2026-07-08 bcrypt loop was exactly this: pytest ran before a new dep was installed.)
 Verify the fix, then change [UNRESOLVED] -> [FIXED] with a one-line note of the root cause.
+
+## [UNRESOLVED] REPEAT-FAILURE: steve(pytest) (2026-07-21T13:55:43Z)
+The gate-ledger shows the SAME failure **3 cycles in a row (ending now)**: `steve(pytest)`.
+This is a STUCK LOOP — a lane keeps producing work the gate keeps rejecting the same way, so
+nothing lands. Do NOT just retry. ROOT-CAUSE it:
+- Is the lane's CODE genuinely wrong? Reproduce locally, fix it in the lane.
+- OR is the GATE/WORKFLOW wrong (flaky check, deps installed before the merge, a bad command,
+  a timeout)? Fix it in .github/workflows/ — a false-rejecting gate is as harmful as bad code.
+  (The 2026-07-08 bcrypt loop was exactly this: pytest ran before a new dep was installed.)
+Verify the fix, then change [UNRESOLVED] -> [FIXED] with a one-line note of the root cause.
