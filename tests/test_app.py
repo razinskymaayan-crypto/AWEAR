@@ -1369,6 +1369,231 @@ def test_database_url_postgres_dialect_selected(monkeypatch):
     db._conn.close()
 
 
+# --------------------------------------------------------------------------- #
+# Follow / unfollow — social graph
+# --------------------------------------------------------------------------- #
+
+_FOLLOW_TARGET = "user_001"  # guaranteed to exist in static/data/profiles.json
+
+
+def test_follow_toggle_follow_then_unfollow(client):
+    r1 = client.post(f"/api/users/{_FOLLOW_TARGET}/follow")
+    assert r1.status_code == 200
+    d1 = r1.json()
+    assert d1["following"] is True
+    assert d1["user_id"] == _FOLLOW_TARGET
+    assert isinstance(d1["followers"], int)
+
+    r2 = client.post(f"/api/users/{_FOLLOW_TARGET}/follow")
+    assert r2.status_code == 200
+    assert r2.json()["following"] is False
+
+
+def test_follow_unknown_user_404(client):
+    r = client.post("/api/users/does_not_exist_xyz/follow")
+    assert r.status_code == 404
+
+
+def test_follow_status_reflects_current_state(client):
+    # Ensure clean state: unfollow if currently followed
+    status = client.get(f"/api/users/{_FOLLOW_TARGET}/follow-status")
+    assert status.status_code == 200
+    currently = status.json()["following"]
+    if currently:
+        client.post(f"/api/users/{_FOLLOW_TARGET}/follow")  # unfollow
+
+    # Not following → follow → status True
+    client.post(f"/api/users/{_FOLLOW_TARGET}/follow")
+    r = client.get(f"/api/users/{_FOLLOW_TARGET}/follow-status")
+    assert r.status_code == 200
+    assert r.json()["following"] is True
+    # Cleanup
+    client.post(f"/api/users/{_FOLLOW_TARGET}/follow")
+
+
+# --------------------------------------------------------------------------- #
+# Daily log — style journal + streak tracking
+# --------------------------------------------------------------------------- #
+
+def test_daily_log_post_returns_log_and_streak(client):
+    r = client.post("/api/daily-log", json={"date": "2026-01-10", "items": ["jeans"], "note": "cozy day"})
+    assert r.status_code == 200
+    d = r.json()
+    assert "log" in d and "streak" in d
+    assert d["log"]["date"] == "2026-01-10"
+    assert "jeans" in d["log"]["items"]
+    assert d["log"]["note"] == "cozy day"
+
+
+def test_daily_log_get_returns_posted_entry(client):
+    client.post("/api/daily-log", json={"date": "2026-02-15", "items": ["dress"]})
+    r = client.get("/api/daily-log")
+    assert r.status_code == 200
+    d = r.json()
+    assert "items" in d and "total" in d
+    dates = [e["date"] for e in d["items"]]
+    assert "2026-02-15" in dates
+
+
+def test_daily_log_streak_empty_state_returns_zeros(client):
+    r = client.get("/api/daily-log/streak")
+    assert r.status_code == 200
+    d = r.json()
+    assert "current_streak" in d and "best_streak" in d
+
+
+def test_daily_log_upsert_same_date_updates_not_duplicates(client):
+    client.post("/api/daily-log", json={"date": "2026-03-01", "note": "v1"})
+    client.post("/api/daily-log", json={"date": "2026-03-01", "note": "v2"})
+    r = client.get("/api/daily-log")
+    entries = [e for e in r.json()["items"] if e["date"] == "2026-03-01"]
+    assert len(entries) == 1
+    assert entries[0]["note"] == "v2"
+
+
+def test_daily_log_bad_date_returns_400(client):
+    r = client.post("/api/daily-log", json={"date": "not-a-date"})
+    assert r.status_code == 400
+
+
+def test_daily_log_note_too_long_returns_400(client):
+    r = client.post("/api/daily-log", json={"date": "2026-04-01", "note": "x" * 2001})
+    assert r.status_code == 400
+
+
+# --------------------------------------------------------------------------- #
+# Wishlist — save/unsave marketplace items
+# --------------------------------------------------------------------------- #
+
+def test_wishlist_toggle_add_then_remove(client):
+    r1 = client.post("/api/wishlist/toggle", json={"item_id": "item_wl_01", "item_type": "marketplace"})
+    assert r1.status_code == 200
+    assert r1.json()["saved"] is True
+    assert r1.json()["count"] >= 1
+
+    r2 = client.post("/api/wishlist/toggle", json={"item_id": "item_wl_01"})
+    assert r2.status_code == 200
+    assert r2.json()["saved"] is False
+
+
+def test_wishlist_empty_item_id_returns_400(client):
+    r = client.post("/api/wishlist/toggle", json={"item_id": "  ", "item_type": "marketplace"})
+    assert r.status_code == 400
+
+
+def test_wishlist_get_shows_saved_items(client):
+    client.post("/api/wishlist/toggle", json={"item_id": "item_wl_02", "item_data": {"name": "Test Jacket"}})
+    r = client.get("/api/wishlist")
+    assert r.status_code == 200
+    d = r.json()
+    assert "items" in d and "total" in d
+    ids = [i["item_id"] for i in d["items"]]
+    assert "item_wl_02" in ids
+
+
+def test_wishlist_status_returns_saved_and_count_maps(client):
+    client.post("/api/wishlist/toggle", json={"item_id": "item_status_A"})
+    # item_status_B not saved
+    r = client.get("/api/wishlist/status?item_ids=item_status_A,item_status_B")
+    assert r.status_code == 200
+    d = r.json()
+    assert d["saved"]["item_status_A"] is True
+    assert d["saved"]["item_status_B"] is False
+    assert d["counts"]["item_status_A"] >= 1
+    assert d["counts"]["item_status_B"] == 0
+    # cleanup
+    client.post("/api/wishlist/toggle", json={"item_id": "item_status_A"})
+
+
+def test_wishlist_status_empty_param_returns_empty_dicts(client):
+    r = client.get("/api/wishlist/status")
+    assert r.status_code == 200
+    assert r.json() == {"saved": {}, "counts": {}}
+
+
+# --------------------------------------------------------------------------- #
+# Bookings — stylist session booking
+# --------------------------------------------------------------------------- #
+
+_BOOKING_BODY = {
+    "stylist_id": "stylist_01",
+    "stylist_name": "Abigail",
+    "session_type": "wardrobe_audit",
+    "slot_label": "Mon 10:00",
+}
+
+
+def test_bookings_create_returns_confirmed(client):
+    r = client.post("/api/bookings", json=_BOOKING_BODY)
+    assert r.status_code == 200
+    d = r.json()
+    assert d["status"] == "confirmed"
+    assert isinstance(d["booking_id"], int)
+
+
+def test_bookings_list_includes_created_booking(client):
+    client.post("/api/bookings", json=_BOOKING_BODY)
+    r = client.get("/api/bookings")
+    assert r.status_code == 200
+    d = r.json()
+    assert "bookings" in d
+    assert any(b["stylist_id"] == "stylist_01" for b in d["bookings"])
+
+
+def test_bookings_cancel_soft_deletes_sets_cancelled(client):
+    cr = client.post("/api/bookings", json=_BOOKING_BODY)
+    booking_id = cr.json()["booking_id"]
+    dr = client.delete(f"/api/bookings/{booking_id}")
+    assert dr.status_code == 200
+    assert dr.json()["status"] == "cancelled"
+
+
+def test_bookings_cancel_missing_returns_404(client):
+    r = client.delete("/api/bookings/999999")
+    assert r.status_code == 404
+
+
+def test_bookings_create_missing_field_returns_400(client):
+    r = client.post("/api/bookings", json={
+        "stylist_id": "",
+        "stylist_name": "Abigail",
+        "session_type": "wardrobe_audit",
+        "slot_label": "Mon 10:00",
+    })
+    assert r.status_code == 400
+
+
+# --------------------------------------------------------------------------- #
+# Challenges — gamification completions
+# --------------------------------------------------------------------------- #
+
+def test_challenge_known_id_earns_correct_points(client):
+    r = client.post("/api/challenge/complete", json={"challenge_id": "scan"})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["points_earned"] == 20  # CHALLENGE_POINTS["scan"]
+    assert d["total_points"] >= 20
+
+
+def test_challenge_unknown_id_earns_default_points(client):
+    r = client.post("/api/challenge/complete", json={"challenge_id": "totally_unknown_xyz"})
+    assert r.status_code == 200
+    assert r.json()["points_earned"] == 10  # CHALLENGE_POINTS_DEFAULT
+
+
+def test_challenge_empty_id_returns_400(client):
+    r = client.post("/api/challenge/complete", json={"challenge_id": "  "})
+    assert r.status_code == 400
+
+
+def test_challenge_cumulative_points_accumulate(client):
+    r1 = client.post("/api/challenge/complete", json={"challenge_id": "diary", "user_key": "test_acc_user"})
+    total1 = r1.json()["total_points"]
+    r2 = client.post("/api/challenge/complete", json={"challenge_id": "diary", "user_key": "test_acc_user"})
+    total2 = r2.json()["total_points"]
+    assert total2 == total1 + 10  # diary = 10 pts
+
+
 def test_supabase_jwt_anon_role(client):
     """JWT with role=anon → 401 (only 'authenticated' allowed)."""
     import app as app_module
@@ -1442,6 +1667,71 @@ def test_scan_health_includes_supabase_storage(client):
     assert "supabase_storage" in body, "supabase_storage key missing from scan-health"
     assert "configured" in body["supabase_storage"]
     assert body["supabase_storage"]["configured"] is False  # no key in CI env
+
+
+def test_scan_health_includes_ai_features(client):
+    """scan-health exposes an 'ai_features' block covering outfit/stylist/marketplace.
+
+    FAIL-BEFORE / PASS-AFTER (OW-014): the key did not exist before INBOX backlog #2
+    wired last-outcome tracking into the three AI endpoints.
+    """
+    r = client.get("/api/scan-health")
+    assert r.status_code == 200
+    body = r.json()
+    assert "ai_features" in body, "ai_features key missing from scan-health"
+    for feature in ("outfit", "stylist", "marketplace"):
+        assert feature in body["ai_features"], f"{feature} missing from ai_features"
+        block = body["ai_features"][feature]
+        assert "last_mode" in block, f"last_mode missing from ai_features.{feature}"
+        assert "last_reason" in block, f"last_reason missing from ai_features.{feature}"
+
+
+def test_scan_health_includes_data_integrity(client):
+    """GET /api/scan-health must include a data_integrity block with status."""
+    r = client.get("/api/scan-health")
+    assert r.status_code == 200
+    di = r.json().get("data_integrity")
+    assert di is not None, "data_integrity block missing from scan-health"
+    assert "status" in di
+    assert "products" in di
+    assert "posts" in di
+    assert "profiles" in di
+    assert "orphan_tags" in di
+    assert "invalid_user_ids" in di
+
+
+def test_data_integrity_clean_on_demo_data(client):
+    """Demo data must be internally consistent (no orphan tags or invalid user_ids)."""
+    r = client.get("/api/scan-health")
+    assert r.status_code == 200
+    di = r.json()["data_integrity"]
+    assert di["orphan_tags"] == 0, f"Orphan product tags found: {di['orphan_tags']}"
+    assert di["invalid_user_ids"] == 0, f"Invalid user_ids in posts: {di['invalid_user_ids']}"
+    assert di["status"] == "ok"
+
+
+def test_outfit_generate_sets_last_outfit_mode(client):
+    """After calling /api/outfit/generate, _last_outfit['mode'] is 'demo' (no API key in CI).
+
+    FAIL-BEFORE: _last_outfit did not exist. PASS-AFTER: mode is set on every call.
+    """
+    import app as appmod
+    appmod._last_outfit["mode"] = None  # reset sentinel
+    client.post("/api/outfit/generate", json={"occasion": "casual", "wardrobe": []})
+    # No API key in CI — Claude call throws → demo fallback → mode = "demo"
+    assert appmod._last_outfit["mode"] == "demo"
+
+
+def test_stylist_chat_sets_last_stylist_mode(client):
+    """After calling /api/stylist/chat, _last_stylist['mode'] is 'demo' (no API key in CI).
+
+    FAIL-BEFORE: _last_stylist did not exist. PASS-AFTER: mode is set on every call.
+    """
+    import app as appmod
+    appmod._last_stylist["mode"] = None  # reset sentinel
+    client.post("/api/stylist/chat", json={"question": "What should I wear today?"})
+    # No API key in CI — Claude call throws → demo fallback → mode = "demo"
+    assert appmod._last_stylist["mode"] == "demo"
 
 
 # ---------------------------------------------------------------------------
@@ -1594,3 +1884,97 @@ def test_wishlist_user_isolation(client):
     item_ids = [it["item_id"] for it in r.json()["items"]]
     assert "wl-mine" in item_ids
     assert "wl-theirs" not in item_ids
+
+
+# ---------------------------------------------------------------------------
+# Data integrity CLI — scripts/data_integrity.py regression gate
+# ---------------------------------------------------------------------------
+
+_VALID_PRODUCT = {
+    "id": "p1", "name": "Test Shirt", "brand": "TestBrand", "category": "top",
+    "subcategory": "shirt", "color": "white", "image_url": "/static/img/p1.jpg",
+    "search_query": "white test shirt", "price_estimate_usd": 29.99,
+    "in_stock": True, "tags": ["casual"], "description": "A test shirt.",
+    "product_url": "https://example.com/p1",
+}
+_VALID_PROFILE = {
+    "id": "u1", "username": "testuser", "display_name": "Test User",
+    "avatar_url": "/static/img/avatar.jpg", "bio": "bio",
+    "followers": 10, "following": 5, "posts_count": 1, "verified": False, "location": "Tel Aviv",
+}
+_VALID_POST = {
+    "id": "post_t1", "user_id": "u1", "image_url": "/static/img/post.jpg",
+    "caption": "A test post", "likes": 0, "comments": 0,
+    "items_tagged": ["p1"], "created_at": "2026-07-22T10:00:00Z",
+}
+
+
+def _write_data_dir(tmpdir, products=None, posts=None, profiles=None):
+    import json as _json
+    import pathlib
+    d = pathlib.Path(tmpdir)
+    (d / "products.json").write_text(_json.dumps(products or [_VALID_PRODUCT]))
+    (d / "posts.json").write_text(_json.dumps(posts or [_VALID_POST]))
+    (d / "profiles.json").write_text(_json.dumps(profiles or [_VALID_PROFILE]))
+    return str(d)
+
+
+def test_data_integrity_cli_exits_clean(tmp_path):
+    """scripts/data_integrity.py exits 0 on the real demo data.
+
+    FAIL-BEFORE: script did not exist (BE-TAG-INTEGRITY incident — orphan tags
+    went undetected). PASS-AFTER: script exists and all demo data is clean.
+    """
+    import subprocess
+    import sys
+    result = subprocess.run(
+        [sys.executable, "scripts/data_integrity.py"],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, (
+        "data_integrity.py reported errors on demo data:\n" + result.stdout + result.stderr
+    )
+
+
+def test_data_integrity_cli_detects_orphan_tag(tmp_path):
+    """scripts/data_integrity.py exits 1 when items_tagged references a missing product id.
+
+    FAIL-BEFORE: no check existed — orphan tags silently broke feed item-pills.
+    PASS-AFTER: exit 1 on orphan, error message names the bad id.
+    """
+    import subprocess
+    import sys
+    post_with_orphan = {**_VALID_POST, "items_tagged": ["nonexistent_prod_id"]}
+    data_dir = _write_data_dir(tmp_path, posts=[post_with_orphan])
+    result = subprocess.run(
+        [sys.executable, "scripts/data_integrity.py", "--data-dir", data_dir],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 1, "Expected exit 1 for orphan tag but got 0"
+    assert "nonexistent_prod_id" in result.stdout, (
+        "Error output should name the orphan id; got:\n" + result.stdout
+    )
+
+
+def test_data_integrity_cli_detects_invalid_user_id(tmp_path):
+    """scripts/data_integrity.py exits 1 when a post's user_id is not in profiles.json.
+
+    FAIL-BEFORE: no check existed — broken user_id references surfaced as blank
+    avatar / missing author in the feed.
+    PASS-AFTER: exit 1 on bad user_id, error message names the post.
+    """
+    import subprocess
+    import sys
+    post_with_bad_user = {**_VALID_POST, "user_id": "nonexistent_user_99"}
+    data_dir = _write_data_dir(tmp_path, posts=[post_with_bad_user])
+    result = subprocess.run(
+        [sys.executable, "scripts/data_integrity.py", "--data-dir", data_dir],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 1, "Expected exit 1 for invalid user_id but got 0"
+    assert "nonexistent_user_99" in result.stdout, (
+        "Error output should name the bad user_id; got:\n" + result.stdout
+    )

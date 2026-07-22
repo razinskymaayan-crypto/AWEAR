@@ -147,6 +147,17 @@ MAX_EDGE = 1024  # downscale long edge to control cost + latency
 
 OPENAI_IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-1")
 _last_gen: dict = {"mode": None, "reason": None}
+_last_outfit: dict = {"mode": None, "reason": None}      # tracks last /api/outfit/generate
+_last_stylist: dict = {"mode": None, "reason": None}     # tracks last /api/stylist/chat
+_last_marketplace: dict = {"mode": None, "reason": None} # tracks last /api/marketplace/assist
+_data_integrity: dict = {
+    "products": 0,
+    "posts": 0,
+    "profiles": 0,
+    "orphan_tags": 0,
+    "invalid_user_ids": 0,
+    "status": "not_loaded",
+}
 
 SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET", "")
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")          # e.g. https://xxxx.supabase.co
@@ -756,6 +767,13 @@ async def scan_health(request: Request, probe: int = 0):
         "generation": {"last_mode": _last_gen["mode"], "last_reason": _last_gen["reason"]},
         "supabase_auth": {"configured": bool(SUPABASE_JWT_SECRET)},
         "supabase_storage": {"configured": bool(SUPABASE_URL and SUPABASE_SERVICE_KEY)},
+        # Live/demo mode tracking for the three remaining AI features.
+        "ai_features": {
+            "outfit":      {"last_mode": _last_outfit["mode"],      "last_reason": _last_outfit["reason"]},
+            "stylist":     {"last_mode": _last_stylist["mode"],     "last_reason": _last_stylist["reason"]},
+            "marketplace": {"last_mode": _last_marketplace["mode"], "last_reason": _last_marketplace["reason"]},
+        },
+        "data_integrity": dict(_data_integrity),
     }
 
     if not probe:
@@ -1121,10 +1139,16 @@ async def generate_outfit(request: Request, data: OutfitRequest):
         # Guard junk/empty model replies: if no usable outfits, fall back so the
         # screen is never empty (missing key, not a list, or empty list).
         if not isinstance(result, dict) or not isinstance(result.get("outfits"), list) or not result["outfits"]:
+            _last_outfit["mode"] = "demo"
+            _last_outfit["reason"] = "empty_response"
             return _fallback_outfits(wardrobe, data.occasion)
+        _last_outfit["mode"] = "live"
+        _last_outfit["reason"] = None
         return result
     except Exception as e:
         print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
+        _last_outfit["mode"] = "demo"
+        _last_outfit["reason"] = "exception"
         return _fallback_outfits(wardrobe, data.occasion)
 
 
@@ -1201,11 +1225,15 @@ async def stylist_chat(request: Request, data: StylistMessage):
                 "content": f"Wardrobe info: {data.wardrobe_context}\n\nQuestion: {data.question}",
             }],
         )
+        _last_stylist["mode"] = "live"
+        _last_stylist["reason"] = None
         return {"answer": response.content[0].text, "ok": True}
     except Exception as e:
         print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         # Demo reliability (A6): signal unavailability so the client falls through
         # to its local stylist replies instead of rendering a broken message.
+        _last_stylist["mode"] = "demo"
+        _last_stylist["reason"] = "exception"
         return {"ok": False}
 
 
@@ -1782,6 +1810,32 @@ _posts_cache: list = []
 _profiles_cache: list = []
 
 
+def _check_data_integrity_snapshot(products: list, posts: list, profiles: list) -> dict:
+    """Fast in-memory cross-reference check; no disk I/O (uses the already-loaded caches)."""
+    product_ids = {p.get("id") for p in products}
+    profile_ids = {p.get("id") for p in profiles}
+    orphan_tags = sum(
+        1 for post in posts
+        for tag in (post.get("items_tagged") or [])
+        if isinstance(tag, str) and tag not in product_ids
+    )
+    invalid_user_ids = sum(
+        1 for post in posts
+        if post.get("user_id") not in profile_ids
+    )
+    status = "ok" if orphan_tags == 0 and invalid_user_ids == 0 else (
+        f"warnings: {orphan_tags} orphan_tags, {invalid_user_ids} invalid_user_ids"
+    )
+    return {
+        "products": len(products),
+        "posts": len(posts),
+        "profiles": len(profiles),
+        "orphan_tags": orphan_tags,
+        "invalid_user_ids": invalid_user_ids,
+        "status": status,
+    }
+
+
 @app.on_event("startup")
 async def load_data_files():
     """Load JSON fixtures into memory once so every request is O(n) filter, not disk I/O.
@@ -1801,6 +1855,11 @@ async def load_data_files():
             "Data loaded: %d products, %d posts, %d profiles",
             len(_products_cache), len(_posts_cache), len(_profiles_cache),
         )
+        global _data_integrity
+        _data_integrity = _check_data_integrity_snapshot(
+            _products_cache, _posts_cache, _profiles_cache
+        )
+        logger.info("Data integrity: %s", _data_integrity["status"])
     except Exception as e:
         # Log the error but don't crash — the endpoints will return empty lists
         # and the main analyze/scan flow continues to work.
@@ -2091,9 +2150,7 @@ def _follower_count(value) -> int:
     static/data/profiles.json stores them as plain integers (e.g. 4320), but the
     profile-stats and follow endpoints called len() on them, so every real profile
     raised `TypeError: object of type 'int' has no len()` -> HTTP 500. That broke the
-    Follow button and the follower counters live. Surfaced by the follow tests steve
-    added on auto/steve (which then got reverted 4 cycles for "failing" — they were
-    right, the app was wrong).
+    Follow button and the follower counters live.
     """
     if isinstance(value, bool):
         return 0
@@ -3039,12 +3096,16 @@ async def marketplace_assist(request: Request, body: dict = Body(...)):
             "marketplace_assist: query=%r user=%s items_in=%d matches=%d",
             query, user_key, len(items), len(matches),
         )
+        _last_marketplace["mode"] = "live"
+        _last_marketplace["reason"] = None
         return {
             "matches": matches,
             "message": parsed.get("message", f"Found {len(matches)} matching items."),
         }
     except Exception as e:
         logger.warning("marketplace_assist Claude error (%s) — using demo fallback", e)
+        _last_marketplace["mode"] = "demo"
+        _last_marketplace["reason"] = "exception"
         return _demo_fallback()
 
 
