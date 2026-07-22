@@ -1,31 +1,16 @@
 {
-  "defects": [
-    {
-      "kind": "stuck_overlay",
-      "lane": "mark",
-      "where": "openSellForm  \u2192  #purchase-modal",
-      "detail": "",
-      "score": 78.0
-    },
-    {
-      "kind": "stuck_overlay",
-      "lane": "mark",
-      "where": "openDeadZoneListSheet  \u2192  #mp-fsheet-overlay,ms-insight-overlay",
-      "detail": "",
-      "score": 78.0
-    }
-  ],
+  "defects": [],
   "coverage": {
-    "backend_routes_ok": 39,
+    "backend_routes_ok": 53,
     "backend_routes_total": 66,
-    "backend_pct": 59,
-    "ui_ran": true,
+    "backend_pct": 80,
+    "ui_ran": false,
     "backend_uncovered": 3
   },
   "counts": {
     "crash": 0,
     "dead_control": 0,
-    "stuck_overlay": 2,
+    "stuck_overlay": 0,
     "js_error": 0,
     "contrast": 0,
     "overlap": 0,

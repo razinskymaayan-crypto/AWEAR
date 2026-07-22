@@ -22,56 +22,12 @@
       "status": 422
     },
     {
-      "route": "POST /api/outfit/generate",
-      "status": 422
-    },
-    {
-      "route": "POST /api/stylist/chat",
-      "status": 422
-    },
-    {
-      "route": "GET /api/search",
-      "status": 422
-    },
-    {
-      "route": "POST /api/posts/{post_id}/comments",
-      "status": 400
-    },
-    {
-      "route": "POST /api/daily-log",
-      "status": 400
-    },
-    {
-      "route": "POST /api/auth/register",
-      "status": 400
-    },
-    {
-      "route": "POST /api/marketplace/assist",
-      "status": 400
-    },
-    {
-      "route": "GET /api/weather",
-      "status": 422
-    },
-    {
       "route": "POST /api/generate-garment",
       "status": 422
     },
     {
       "route": "GET /api/analytics/wardrobe",
       "status": 400
-    },
-    {
-      "route": "POST /api/challenge/complete",
-      "status": 422
-    },
-    {
-      "route": "POST /api/bookings",
-      "status": 422
-    },
-    {
-      "route": "POST /api/wishlist/toggle",
-      "status": 422
     },
     {
       "route": "POST /api/closet/confirm",
@@ -84,18 +40,6 @@
     {
       "route": "PATCH /api/closet/{item_id}",
       "status": 404
-    },
-    {
-      "route": "POST /api/analytics/wear",
-      "status": 422
-    },
-    {
-      "route": "POST /api/stories",
-      "status": 422
-    },
-    {
-      "route": "POST /api/dm/send",
-      "status": 422
     }
   ],
   "uncovered": [
@@ -103,6 +47,6 @@
     "GET /api/analytics/wrapped/{year} (unknown path param)",
     "DELETE /api/stories/{story_id} (unknown path param)"
   ],
-  "ok": 39,
+  "ok": 53,
   "total": 66
 }

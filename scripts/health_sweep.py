@@ -55,10 +55,35 @@ PARAM_VALUES = {
     "id": "1",
 }
 
-# Minimal valid bodies for POST/PATCH routes that need one.
+# Minimal VALID bodies per route so the sweep exercises the real code path (a 2xx), not the
+# input-validation guard (a 4xx). Each mirrors the endpoint's Pydantic model / required fields.
+# Raising these raises REAL coverage — the % of routes whose logic we actually ran.
 BODIES = {
     "/api/orders": {"product_name": "Linen blazer", "product_id": "p_test", "amount_usd": 10.0},
     "/api/moderate": {"text": "nice fit"},
+    "/api/daily-log": {"date": "2026-07-22", "note": "test", "items": []},
+    "/api/auth/register": {"username": "sweepuser", "email": "sweep@test.co", "password": "abc123"},
+    "/api/wishlist/toggle": {"item_id": "prod_ss_001", "item_type": "marketplace"},
+    "/api/bookings": {"stylist_id": "styl_1", "stylist_name": "Test", "session_type": "video", "slot_label": "Mon 3pm"},
+    "/api/challenge/complete": {"challenge_id": "daily_scan"},
+    "/api/stylist/chat": {"question": "what should I wear today?"},
+    "/api/outfit/generate": {"occasion": "coffee date", "wardrobe": [], "style_vibes": ["minimal"]},
+    "/api/marketplace/assist": {"query": "vintage denim jacket"},
+    "/api/closet/confirm": {"user_id": "user_001", "items": []},
+    "/api/challenge/complete/": {"challenge_id": "daily_scan"},
+    "/api/posts/{post_id}/comments": {"text": "great look"},
+    "/api/dm/send": {"to_user_id": "user_002", "text": "hi"},
+    "/api/agent/summary": {"period": "week"},
+    "/api/analytics/wear": {"item_id": "prod_ss_001"},
+    "/api/stories": {"user_id": "user_001", "image_url": "/static/img/products/prod_ss_001.jpg"},
+}
+
+# Query-string params for GET routes that require them (else a 400/422 that isn't a bug).
+QUERY = {
+    "/api/search": {"q": "denim"},
+    "/api/weather": {"lat": "32.08", "lon": "34.78"},
+    "/api/product-image": {"q": "denim jacket"},
+    "/api/analytics/wardrobe": {"user_id": "user_001"},
 }
 
 SKIP = {"/openapi.json", "/docs", "/redoc", "/docs/oauth2-redirect"}
@@ -99,6 +124,8 @@ def main() -> int:
                     kwargs = {}
                     if method in {"POST", "PATCH"}:
                         kwargs["json"] = BODIES.get(path, {})
+                    if path in QUERY:
+                        kwargs["params"] = QUERY[path]
                     resp = client.request(method, concrete, timeout=30, **kwargs)
                     code = resp.status_code
                 except Exception as exc:  # a raised exception IS a crash
