@@ -168,10 +168,11 @@ jobs:
 
           PICK YOUR TASK — strict priority, stop at the first that applies:
           0. SELF-HEAL (top priority): read .claude/agents/knowledge/CI_FAILURES.md. If it has an [UNRESOLVED] entry naming YOUR lane's OWN code (e.g. "${{ matrix.manager }}(pytest)" from a file your lane owns) — root-cause + fix it in your lane (reproduce, fix, add a regression test per OW-014), that is your ONLY task this run; then change [UNRESOLVED] -> [FIXED] with a one-line note. **BUT if the [UNRESOLVED] points at a GATE/WORKFLOW (`.github/`) — you physically CANNOT land that fix: GATE 0 denies `.github/` for lanes, and a running workflow always uses main's copy. Only the founder / main session fixes the engine. Do NOT edit `.github/`, do NOT re-verify it, do NOT burn this run on it.** If that gate issue isn't already in NEEDS_YOU.md, add ONE escalation line there, then skip straight to your real queue below.
-          1. YOUR DIRECT QUEUE: .claude/agents/assignments/${{ matrix.manager }}.md — founder tasks routed to you from Telegram (@${{ matrix.manager }} ...) AND any IC you manage (.claude/agents/assignments/<ic>.md). Do the first unchecked one; check it off when done.
-          2. INBOX (.claude/master/INBOX.md "## משימות חדשות") items that fall in YOUR lane. Interpret the Hebrew generously.
-          3. Highest unfinished MASTER_PLAN / PRODUCT_VISION item in your lane.
-          4. ADVANCE THE DEMO (nothing above): ship the single highest-leverage improvement to the WOW flow in YOUR lane — a real feature, a fixed bug, or a visibly better screen. Prefer shipping working UI/backend over writing documents. Market research and user surveys are DEFERRED until the demo is investor-ready (they burn tokens with zero demo value) — the ONLY exception is the ayalon lane, whose job IS the business plan / pitch / strategy docs. State the concrete user-facing value in ONE line before you build; if you cannot, you have no task — stop this run rather than invent busywork.
+          1. MEASURED PRODUCT DEFECTS (this is the real work — before any wishlist): run `python3 scripts/defect_scan.py` (needs the server; the workflow already started it — else `venv312/bin/uvicorn app:app --port 8000 &` first). It writes ci-debug/DEFECTS.md — a queue RANKED by severity×centrality, each line tagged **[lane]**. Pick the HIGHEST-scored OPEN defect tagged **[${{ matrix.manager }}]** and fix THAT. A `crash` (5xx) or `stuck_overlay` outranks everything in the INBOX — a live-broken product beats a nice-to-have. After fixing, re-run defect_scan.py and confirm your defect is gone (that IS your regression proof, OW-014). If the scanner itself is wrong (false positive/negative, like it once flagged a working sheet), FIX THE SCANNER — a lying detector is worse than none (OW-015). If DEFECTS.md has no open item for your lane, go on:
+          2. YOUR DIRECT QUEUE: .claude/agents/assignments/${{ matrix.manager }}.md — founder tasks routed to you from Telegram (@${{ matrix.manager }} ...) AND any IC you manage (.claude/agents/assignments/<ic>.md). Do the first unchecked one; check it off when done.
+          3. INBOX (.claude/master/INBOX.md "## משימות חדשות") — founder DIRECTION (vision/priorities), not the bug list. Items that fall in YOUR lane. Interpret the Hebrew generously.
+          4. Highest unfinished MASTER_PLAN / PRODUCT_VISION item in your lane.
+          5. ADVANCE THE DEMO (nothing above): ship the single highest-leverage improvement to the WOW flow in YOUR lane — a real feature, a fixed bug, or a visibly better screen. Prefer shipping working UI/backend over writing documents. Market research and user surveys are DEFERRED until the demo is investor-ready (they burn tokens with zero demo value) — the ONLY exception is the ayalon lane, whose job IS the business plan / pitch / strategy docs. State the concrete user-facing value in ONE line before you build; if you cannot, you have no task — stop this run rather than invent busywork.
 
           STRICT DELEGATION: route domain craft to your ICs via the Task tool (you coordinate + glue + verify + commit; you do not do IC craft yourself). Map for your lane is in OW.md / the autopilot prompt. Record real IC attribution.
 
@@ -206,7 +207,8 @@ jobs:
               "Bash(git add:*)" "Bash(git commit:*)" "Bash(git status:*)" \
               "Bash(git log:*)" "Bash(git diff:*)" "Bash(git revert:*)" "Bash(git checkout:*)" \
               "Bash(npm install:*)" "Bash(npm run:*)" "Bash(npx playwright:*)" \
-              "Bash(node:*)" "Bash(python3:*)" "Bash(awk:*)" \
+              "Bash(node:*)" "Bash(python3:*)" "Bash(awk:*)" "Bash(curl:*)" \
+              "Bash(venv312/bin/uvicorn:*)" "Bash(uvicorn:*)" \
               "Bash(pip install:*)" "Bash(pip3 install:*)" \
               "Bash(bash scripts/tg.sh:*)" "Bash(node scripts/shot.mjs:*)" "Bash(python3 scripts/chart.py:*)" \
               "Bash(sqlite3:*)" \
