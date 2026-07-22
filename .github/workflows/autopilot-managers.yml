@@ -227,9 +227,10 @@ jobs:
             if grep -qiE "revoked|401|Failed to authenticate|invalid.*token|token.*(expired|invalid)|OAuth" /tmp/claude_out.txt; then
               echo "::warning::CLAUDE_CODE_OAUTH_TOKEN revoked — pausing + alerting founder (no code failure)."
               if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
-                curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                ALERT="AWEAR agents PAUSED - the OAuth token was revoked (happens whenever you /login or refresh your Max account; the shared token dies with it). The code is fine. To resume: run  claude setup-token  (full path ~/.local/bin/claude), paste it into the GitHub secret CLAUDE_CODE_OAUTH_TOKEN, then delete the .agents_paused file. All engine work is ready and waiting."
+              curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                   --data-urlencode chat_id="${TELEGRAM_CHAT_ID}" \
-                  --data-urlencode text="🔑 AWEAR agents PAUSED — the OAuth token was revoked (this happens whenever you /login or refresh your Max account; the shared token dies with it). Nothing is broken in the code. To resume: run  ~/.local/bin/claude setup-token  → paste into GitHub secret CLAUDE_CODE_OAUTH_TOKEN → then delete the .agents_paused file (or ask Claude to). All engine work is ready and waiting." >/dev/null 2>&1 || true
+                  --data-urlencode "text=${ALERT}" >/dev/null 2>&1 || true
               fi
               # self-pause so the remaining lanes/cycles don't each 401 and email
               if [ -n "$GH_PAT" ] || [ -n "$GITHUB_TOKEN" ]; then
