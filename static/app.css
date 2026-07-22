@@ -1418,7 +1418,7 @@
   .styl-btn.secondary { background:var(--card);border:1.5px solid var(--line);color:var(--text); }
   /* booking modal */
   .book-overlay { position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:flex-end; }
-  .book-sheet { background:var(--bg);border-radius:28px 28px 0 0;padding:24px 20px 40px;width:100%;max-width:430px;margin:0 auto; }
+  .book-sheet { background:var(--bg);border-radius:28px 28px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));width:100%;max-width:430px;margin:0 auto;max-height:88vh;overflow-y:auto; }
   .book-title { font-size: var(--t-h2,18px);font-weight:900;margin-bottom:16px; }
   .book-field { margin-bottom:12px; }
   .book-label { font-size:var(--t-micro);font-weight:800;color:var(--muted);margin-bottom:5px; }

@@ -2118,6 +2118,7 @@
     document.body.appendChild(overlay);
     requestAnimationFrame(function(){ overlay.classList.add('show'); });
     overlay.querySelector('.diary-x-close')?.addEventListener('click', function(){ closeDiaryModal(overlay); });
+    _addSheetDragDismiss(overlay.querySelector('.diary-sheet'), null, function(){ closeDiaryModal(overlay); });
 
     var grid = overlay.querySelector('#diary-grid');
     var submitBtn = overlay.querySelector('#diary-submit');
@@ -3341,6 +3342,7 @@
     requestAnimationFrame(function(){ overlay.classList.add('show'); });
     overlay.addEventListener('click', function(e){ if (e.target === overlay) closeDiaryModal(overlay); });
     overlay.querySelector('.diary-x-close')?.addEventListener('click', function(){ closeDiaryModal(overlay); });
+    _addSheetDragDismiss(overlay.querySelector('.diary-sheet'), null, function(){ closeDiaryModal(overlay); });
 
     const timeEl = overlay.querySelector('#journal-remind-time');
     timeEl.addEventListener('change', function(){
@@ -7269,6 +7271,7 @@
       </div>`;
     document.body.appendChild(sheet);
     sheet.querySelector('.cs-close-btn').addEventListener('click', closeCommentsSheet);
+    _addSheetDragDismiss(sheet, sheet, closeCommentsSheet);
 
     sheet.querySelector('.fc-comment-send').addEventListener('click', async () => {
       const input = sheet.querySelector('.fc-comment-input');
@@ -7974,6 +7977,7 @@
       </div>`;
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+    _addSheetDragDismiss(overlay.querySelector('.book-sheet'), null, () => overlay.remove());
   }
 
   // Open the booking overlay pre-set to a given session type (video/chat/home) —
