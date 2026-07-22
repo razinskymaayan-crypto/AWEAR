@@ -57,7 +57,29 @@ jobs:
             # a lane that merged earlier this cycle, and reset --hard origin/main wipes that
             # earlier lane's already-approved merge. This was THE "nothing lands" master bug.
             BASE=$(git rev-parse HEAD)
-            if git merge --no-ff -m "jeff: merge auto/$m" "origin/auto/$m"; then
+            # Change C — AUTO-RESCUE stale lanes. A lane branch that fell behind main almost
+            # always conflicts ONLY on append-only bookkeeping (activity_log/STATE/CI_FAILURES/
+            # contributions), never on real code. Left alone it rots in CONFLICT for cycles
+            # (steve stuck 8x on 2026-07-21/22). Before giving up, attempt the merge; if it
+            # conflicts, try to auto-resolve by taking the branch's side for the KNOWN-noisy
+            # bookkeeping files only, and abort ONLY if a real (code) conflict remains.
+            if ! git merge --no-ff -m "jeff: merge auto/$m" "origin/auto/$m"; then
+              NOISE='.claude/agents/activity_log.md STATE.md .claude/agents/knowledge/CI_FAILURES.md NEEDS_YOU.md'
+              UNMERGED=$(git diff --name-only --diff-filter=U)
+              REAL=$(echo "$UNMERGED" | grep -vE '\.claude/agents/(activity_log|contributions/)|^STATE\.md$|CI_FAILURES\.md|NEEDS_YOU\.md|ci-debug/' || true)
+              if [ -z "$REAL" ] && [ -n "$UNMERGED" ]; then
+                for f in $UNMERGED; do git checkout --theirs -- "$f" 2>/dev/null && git add "$f"; done
+                if git commit --no-edit >/dev/null 2>&1; then
+                  echo "auto-rescued $m: bookkeeping-only conflict resolved (branch side kept)"
+                else
+                  git merge --abort || true; conflicted="$conflicted $m"; continue
+                fi
+              else
+                git merge --abort || true; conflicted="$conflicted $m"
+                echo "$m: REAL code conflict in: $(echo "$REAL" | tr '\n' ' ')"; continue
+              fi
+            fi
+            if true; then
               # GATE 0 — deterministic lane ownership (OW-006: a rule without a mechanism is a
               # recommendation; until now disjoint ownership was enforced only by the persona
               # prompt in GATE 3). Instant + token-free, so it runs FIRST. Blocks only files
