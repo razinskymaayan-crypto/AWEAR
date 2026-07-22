@@ -220,6 +220,25 @@ jobs:
               echo "::notice::Claude account/session limit reached — skipping ${{ matrix.manager }} this cycle (no work lost; retries next cycle)."
               exit 0   # graceful skip: NOT a failure -> no failure email
             fi
+            # REVOKED TOKEN — the recurring one (a /login on the founder's Max account invalidates
+            # this shared OAuth token). It is NOT a code failure and must not spam failure emails;
+            # it needs the founder to refresh ONE secret. Detect it, send ONE clear Telegram alert
+            # with the exact fix, self-pause so the other lanes stop 401-ing all cycle, exit 0.
+            if grep -qiE "revoked|401|Failed to authenticate|invalid.*token|token.*(expired|invalid)|OAuth" /tmp/claude_out.txt; then
+              echo "::warning::CLAUDE_CODE_OAUTH_TOKEN revoked — pausing + alerting founder (no code failure)."
+              if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
+                curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                  --data-urlencode chat_id="${TELEGRAM_CHAT_ID}" \
+                  --data-urlencode text="🔑 AWEAR agents PAUSED — the OAuth token was revoked (this happens whenever you /login or refresh your Max account; the shared token dies with it). Nothing is broken in the code. To resume: run  ~/.local/bin/claude setup-token  → paste into GitHub secret CLAUDE_CODE_OAUTH_TOKEN → then delete the .agents_paused file (or ask Claude to). All engine work is ready and waiting." >/dev/null 2>&1 || true
+              fi
+              # self-pause so the remaining lanes/cycles don't each 401 and email
+              if [ -n "$GH_PAT" ] || [ -n "$GITHUB_TOKEN" ]; then
+                printf 'PAUSED (auto) %s — OAuth token revoked (401). Refresh CLAUDE_CODE_OAUTH_TOKEN then delete this file.\n' "$(date -u +%FT%TZ)" > .agents_paused
+                git add .agents_paused 2>/dev/null && git -c user.name=jeff -c user.email=jeff@awear.local commit -m "chore(auto-pause): OAuth token revoked — alerted founder [skip ci]" >/dev/null 2>&1 || true
+                git push origin HEAD:main >/dev/null 2>&1 || true
+              fi
+              exit 0   # handled: alerted + paused, NOT a failure email
+            fi
             echo "::error::claude exited $CODE for a non-quota reason"; exit "$CODE"
           fi
 
