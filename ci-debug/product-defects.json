@@ -1,0 +1,203 @@
+{
+  "defects": [
+    {
+      "kind": "stuck_overlay",
+      "lane": "mark",
+      "where": "openSheetSingle  \u2192  #buy-sheet,sheet-body",
+      "detail": "",
+      "score": 78.0
+    },
+    {
+      "kind": "stuck_overlay",
+      "lane": "mark",
+      "where": "openDeadZoneListSheet  \u2192  #mp-fsheet-overlay,mp-fsheet,mp-fsheet-scroll,ms-insight-overlay,ms-insight-sheet",
+      "detail": "",
+      "score": 78.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/analyze",
+      "detail": "HTTP 422",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/outfit/generate",
+      "detail": "HTTP 422",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/stylist/chat",
+      "detail": "HTTP 422",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/posts/{post_id}/comments",
+      "detail": "HTTP 400",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/wishlist/toggle",
+      "detail": "HTTP 422",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/closet/confirm",
+      "detail": "HTTP 400",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "DELETE /api/closet/{item_id}",
+      "detail": "HTTP 404",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "PATCH /api/closet/{item_id}",
+      "detail": "HTTP 404",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/stories",
+      "detail": "HTTP 422",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/dm/send",
+      "detail": "HTTP 422",
+      "score": 30.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "GET /api/product-image",
+      "detail": "HTTP 404",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/agent/summary",
+      "detail": "HTTP 422",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/agent/schedule",
+      "detail": "HTTP 422",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/agent/meeting",
+      "detail": "HTTP 422",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "GET /api/search",
+      "detail": "HTTP 422",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/daily-log",
+      "detail": "HTTP 400",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/auth/register",
+      "detail": "HTTP 400",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/marketplace/assist",
+      "detail": "HTTP 400",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "GET /api/weather",
+      "detail": "HTTP 422",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/generate-garment",
+      "detail": "HTTP 422",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "GET /api/analytics/wardrobe",
+      "detail": "HTTP 400",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/challenge/complete",
+      "detail": "HTTP 422",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/bookings",
+      "detail": "HTTP 422",
+      "score": 20.0
+    },
+    {
+      "kind": "contract_4xx",
+      "lane": "steve",
+      "where": "POST /api/analytics/wear",
+      "detail": "HTTP 422",
+      "score": 20.0
+    }
+  ],
+  "coverage": {
+    "backend_routes_ok": 39,
+    "backend_routes_total": 66,
+    "backend_pct": 59,
+    "ui_ran": true,
+    "backend_uncovered": 3
+  },
+  "counts": {
+    "crash": 0,
+    "dead_control": 0,
+    "stuck_overlay": 2,
+    "js_error": 0,
+    "contrast": 0,
+    "overlap": 0,
+    "contract_4xx": 24,
+    "coverage_gap": 0
+  }
+}
