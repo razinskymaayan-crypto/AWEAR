@@ -1386,8 +1386,9 @@
   let _scData=null,_scUid=null,_scItems=[];
   function showScanConfirm(data,uid){
     _scData=data; _scUid=uid;
-    _scItems=(data.items||[]).map(it=>({ai:{...it},final:{name:it.name,category:it.category||'',color:it.color||'',brand:it.brand_vibe||'',price:it.price_estimate_usd||0,source_url:''},accepted:true,editing:false}));
+    _scItems=(data.items||[]).map(it=>({ai:{...it},final:{name:it.name,category:it.category||'',color:it.color||'',brand:it.brand_vibe||'',price:it.price_estimate_usd||0,source_url:''},accepted:true,editing:false,genImage:'pending'}));
     _renderScConfirm();
+    _startGenerating(data);
     const ov=document.getElementById('sc-overlay'),sh=document.getElementById('sc-sheet');
     ov.setAttribute('aria-hidden','false'); sh.setAttribute('aria-hidden','false');
     ov.classList.add('show'); sh.classList.add('show');
@@ -1398,6 +1399,53 @@
     ov.setAttribute('aria-hidden','true'); sh.setAttribute('aria-hidden','true');
     ov.classList.remove('show'); sh.classList.remove('show');
   }
+  function _scImgEl(si,idx){
+    if(si.genImage==='pending'){
+      return `<div class="sc-img-area" id="sc-img-${idx}"><div class="sc-img-pending"><div class="sc-spinner"></div><span>Generating…</span></div></div>`;
+    }
+    const src=si.genImage||si.ai.image_url;
+    if(!src) return `<div class="sc-img-area sc-img-empty" id="sc-img-${idx}"></div>`;
+    const regenBtn=_scData&&_scData.photo?`<button class="sc-regen-btn" onclick="scRegenerate(${idx})">${icon('refresh',11)} ${si.genImage?'Regenerate':'Generate'}</button>`:'';
+    return `<div class="sc-img-area${si.genImage?'':' sc-img-retail-area'}" id="sc-img-${idx}"><img class="sc-gen-img" src="${attr(src)}" alt="" onerror="var a=this.closest('.sc-img-area');a.innerHTML='';a.classList.add('sc-img-empty')"><div class="sc-img-footer">${regenBtn}</div></div>`;
+  }
+  async function _startGenerating(data){
+    if(!data.photo){_scItems.forEach(si=>{si.genImage=null;});_renderScConfirm();return;}
+    let blob=null;
+    try{const r=await fetch(data.photo);blob=await r.blob();}catch(_){}
+    if(!blob){_scItems.forEach(si=>{si.genImage=null;});_renderScConfirm();return;}
+    await Promise.all(_scItems.map(async(si,idx)=>{
+      try{
+        const fd=new FormData();
+        fd.append('photo',blob,'photo.jpg');
+        fd.append('item_json',JSON.stringify({name:si.ai.name,category:si.ai.category||'',color:si.ai.color||'',brand:si.ai.brand_vibe||''}));
+        if(_scUid) fd.append('user_id',_scUid);
+        const res=await fetch('/api/generate-garment',{method:'POST',body:fd});
+        const d=res.ok?await res.json():{image_url:null,mode:'demo'};
+        si.genImage=d.image_url||null;
+      }catch(_){si.genImage=null;}
+      const area=document.getElementById('sc-img-'+idx);
+      if(area) area.outerHTML=_scImgEl(si,idx);
+    }));
+  }
+  async function scRegenerate(idx){
+    const si=_scItems[idx];
+    if(!si||!_scData||!_scData.photo) return;
+    si.genImage='pending';
+    const area=document.getElementById('sc-img-'+idx);
+    if(area) area.outerHTML=_scImgEl(si,idx);
+    try{
+      const r=await fetch(_scData.photo);const blob=await r.blob();
+      const fd=new FormData();
+      fd.append('photo',blob,'photo.jpg');
+      fd.append('item_json',JSON.stringify({name:si.ai.name,category:si.ai.category||'',color:si.ai.color||'',brand:si.ai.brand_vibe||''}));
+      if(_scUid) fd.append('user_id',_scUid);
+      const res=await fetch('/api/generate-garment',{method:'POST',body:fd});
+      const d=res.ok?await res.json():{image_url:null,mode:'demo'};
+      si.genImage=d.image_url||null;
+    }catch(_){si.genImage=null;}
+    const area2=document.getElementById('sc-img-'+idx);
+    if(area2) area2.outerHTML=_scImgEl(si,idx);
+  }
   function _renderScConfirm(){
     const hdr=document.getElementById('sc-header-el'),body=document.getElementById('sc-body'),ftr=document.getElementById('sc-footer-el');
     if(!hdr||!body||!ftr) return;
@@ -1407,6 +1455,7 @@
     body.innerHTML=_scItems.map((si,idx)=>{
       const it=si.final, isLow=si.ai.confidence==='low';
       return `<div class="sc-card${si.accepted?'':' sc-rejected'}" id="sc-card-${idx}">
+        ${_scImgEl(si,idx)}
         ${isLow?`<div class="sc-low-badge">${icon('alertTriangle',12)} Low confidence — please refine</div>`:''}
         <div class="sc-card-name">${esc(it.name)}</div>
         <div class="sc-card-meta">${esc(it.category)}${it.brand?' · '+esc(it.brand):''}${it.price?' · $'+it.price:''}</div>

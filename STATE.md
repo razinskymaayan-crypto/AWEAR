@@ -11,10 +11,10 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-22, run 11)
-- **Task**: INBOX UX bug-hunt item 1 (missing truncation) — added 2-line clamp to `.up-post-caption` and `.up-item-name`, single-line ellipsis to `.up-store-name` in app.css. Profile item/post grid cards now have consistent heights; long names/captions don't push beyond card boundaries. check-render green.
-- **Next**: INBOX UX bug-hunt item 2 — overlays/sheets/modals that get stuck (check-interactions already passes; may need extended scan); OR item 3 — black-on-black / low contrast on `.sc-cta, .sc-field:focus` (grep confirms correct fallbacks already; may be false-positive — verify with screenshot).
-- **Prior runs**: Stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233), DS-004 mp-item-shop-btn (025a509).
+## Mark lane — last run (2026-07-22, run 12)
+- **Task**: INBOX ★★★ generate-garment UI (closet scan confirm sheet). Added per-item image generation to the "Did we get it right?" confirm screen: pending spinner → generated catalog image OR retailer fallback (80% opacity) → onerror collapses area. Regenerate button (44px touch target) per item. Gabbana 8/10 PASS.
+- **Next**: UX bug-hunt items 2/3 confirmed done (check-interactions passes, fallbacks correct). Item 4 (dead buttons) — feed like/save/share/comment all wired. Next: item 5 (other UX bugs via gabbana sweep on any screen) OR INBOX ★★★★★ other items.
+- **Prior runs**: Text overflow cards (run 11), Stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233), DS-004 mp-item-shop-btn (025a509).
 
 ## Steve lane — last run (2026-07-19)
 - **Task**: DATABASE_URL → Postgres migration (INBOX launch infra step 3)
