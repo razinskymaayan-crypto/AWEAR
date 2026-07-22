@@ -82,8 +82,11 @@ def run_ui() -> dict:
                              capture_output=True, text=True, timeout=240, check=False)
     except Exception as e:  # noqa: BLE001
         return {"error": str(e)}
-    # ux-audit prints human text; parse the sections we need.
-    text = out.stdout
+    text = out.stdout + out.stderr
+    # A DID-NOT-RUN must never look like "clean". If the audit couldn't reach the server or
+    # never printed its report header, treat it as NOT RUN (loud), not as zero defects (OW-015).
+    if "server unreachable" in text or "UX AUDIT" not in text:
+        return {"error": "ux-audit did not run (server unreachable or crashed) — UI NOT scanned"}
     res = {"stuck": [], "contrast": [], "overlap": [], "raw_ok": "interactions OK" in text}
     section = None
     for line in text.splitlines():
@@ -105,11 +108,12 @@ def build_defects(backend: dict, ui: dict) -> list[dict]:
         defects.append({"kind": "crash", "lane": "steve", "where": route,
                         "detail": str(c.get("detail", ""))[:160],
                         "score": SEVERITY["crash"] * _centrality_route(route)})
-    for s in backend.get("suspicious", []):
-        route = s.get("route", "?")
-        defects.append({"kind": "contract_4xx", "lane": "steve", "where": route,
-                        "detail": f"HTTP {s.get('status')}",
-                        "score": SEVERITY["contract_4xx"] * _centrality_route(route)})
+    # NOTE: 4xx responses are DELIBERATELY NOT added as defects. The sweep sends empty/stub
+    # bodies, so a 400/422 is almost always the endpoint CORRECTLY rejecting bad input — not a
+    # bug. Treating them as top-priority work sent agents chasing ghosts (OW-015: a tool that
+    # cries "defect" on working code is worse than no tool). They are surfaced separately in
+    # DEFECTS.md as a "coverage to improve" note (give the sweep real bodies), never as tasks.
+    # Only genuine crashes (5xx/exception) and stuck UI are real, actionable defects.
     # UI defects
     for st in ui.get("stuck", []):
         defects.append({"kind": "stuck_overlay", "lane": "mark", "where": st, "detail": "",
@@ -151,12 +155,23 @@ def main() -> int:
              f"UI scan {'ran' if coverage['ui_ran'] else 'DID NOT RUN'}.",
              "> A lane picks the highest-scored OPEN defect in its column BEFORE the INBOX.",
              ""]
+    if not coverage["ui_ran"]:
+        lines.append("⚠️ **UI SCAN DID NOT RUN** — the stuck-overlay/contrast/overlap checks were "
+                     f"SKIPPED (reason: {ui.get('error') or ui.get('skipped')}). This is NOT 'clean' — "
+                     "the whole UI surface is UNVERIFIED this run. Fix the scan before trusting the list.")
     if not defects:
         lines.append("✓ No product defects found by the current scan (note the coverage line above — "
                      "absence of a finding is not proof; raise coverage).")
     for i, d in enumerate(defects[:40], 1):
         lines.append(f"{i}. **[{d['lane']}]** `{d['kind']}` (score {round(d['score'])}) — "
                      f"{d['where']}{('  ·  ' + d['detail']) if d['detail'] else ''}")
+    # 4xx = coverage-to-improve, NOT tasks (stub bodies → correct rejections). Listed so we
+    # know which endpoints the sweep can't yet exercise for real, never as agent work.
+    susp = backend.get("suspicious", [])
+    if susp:
+        lines += ["", "---", f"### Coverage to improve ({len(susp)} routes returned 4xx to stub bodies — NOT bugs, NOT tasks)",
+                  "Give the sweep a valid body for these in scripts/health_sweep.py BODIES to raise real coverage:"]
+        lines += [f"- {s.get('route')} → {s.get('status')}" for s in susp[:25]]
     pathlib.Path("ci-debug/DEFECTS.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     print("\n".join(lines[:6]))

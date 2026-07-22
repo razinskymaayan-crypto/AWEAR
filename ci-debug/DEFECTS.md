@@ -5,27 +5,31 @@
 
 1. **[mark]** `stuck_overlay` (score 78) — openSellForm  →  #purchase-modal
 2. **[mark]** `stuck_overlay` (score 78) — openDeadZoneListSheet  →  #mp-fsheet-overlay,ms-insight-overlay
-3. **[steve]** `contract_4xx` (score 30) — POST /api/analyze  ·  HTTP 422
-4. **[steve]** `contract_4xx` (score 30) — POST /api/outfit/generate  ·  HTTP 422
-5. **[steve]** `contract_4xx` (score 30) — POST /api/stylist/chat  ·  HTTP 422
-6. **[steve]** `contract_4xx` (score 30) — POST /api/posts/{post_id}/comments  ·  HTTP 400
-7. **[steve]** `contract_4xx` (score 30) — POST /api/wishlist/toggle  ·  HTTP 422
-8. **[steve]** `contract_4xx` (score 30) — POST /api/closet/confirm  ·  HTTP 400
-9. **[steve]** `contract_4xx` (score 30) — DELETE /api/closet/{item_id}  ·  HTTP 404
-10. **[steve]** `contract_4xx` (score 30) — PATCH /api/closet/{item_id}  ·  HTTP 404
-11. **[steve]** `contract_4xx` (score 30) — POST /api/stories  ·  HTTP 422
-12. **[steve]** `contract_4xx` (score 30) — POST /api/dm/send  ·  HTTP 422
-13. **[steve]** `contract_4xx` (score 20) — GET /api/product-image  ·  HTTP 404
-14. **[steve]** `contract_4xx` (score 20) — POST /api/agent/summary  ·  HTTP 422
-15. **[steve]** `contract_4xx` (score 20) — POST /api/agent/schedule  ·  HTTP 422
-16. **[steve]** `contract_4xx` (score 20) — POST /api/agent/meeting  ·  HTTP 422
-17. **[steve]** `contract_4xx` (score 20) — GET /api/search  ·  HTTP 422
-18. **[steve]** `contract_4xx` (score 20) — POST /api/daily-log  ·  HTTP 400
-19. **[steve]** `contract_4xx` (score 20) — POST /api/auth/register  ·  HTTP 400
-20. **[steve]** `contract_4xx` (score 20) — POST /api/marketplace/assist  ·  HTTP 400
-21. **[steve]** `contract_4xx` (score 20) — GET /api/weather  ·  HTTP 422
-22. **[steve]** `contract_4xx` (score 20) — POST /api/generate-garment  ·  HTTP 422
-23. **[steve]** `contract_4xx` (score 20) — GET /api/analytics/wardrobe  ·  HTTP 400
-24. **[steve]** `contract_4xx` (score 20) — POST /api/challenge/complete  ·  HTTP 422
-25. **[steve]** `contract_4xx` (score 20) — POST /api/bookings  ·  HTTP 422
-26. **[steve]** `contract_4xx` (score 20) — POST /api/analytics/wear  ·  HTTP 422
+
+---
+### Coverage to improve (24 routes returned 4xx to stub bodies — NOT bugs, NOT tasks)
+Give the sweep a valid body for these in scripts/health_sweep.py BODIES to raise real coverage:
+- POST /api/analyze → 422
+- GET /api/product-image → 404
+- POST /api/agent/summary → 422
+- POST /api/agent/schedule → 422
+- POST /api/agent/meeting → 422
+- POST /api/outfit/generate → 422
+- POST /api/stylist/chat → 422
+- GET /api/search → 422
+- POST /api/posts/{post_id}/comments → 400
+- POST /api/daily-log → 400
+- POST /api/auth/register → 400
+- POST /api/marketplace/assist → 400
+- GET /api/weather → 422
+- POST /api/generate-garment → 422
+- GET /api/analytics/wardrobe → 400
+- POST /api/challenge/complete → 422
+- POST /api/bookings → 422
+- POST /api/wishlist/toggle → 422
+- POST /api/closet/confirm → 400
+- DELETE /api/closet/{item_id} → 404
+- PATCH /api/closet/{item_id} → 404
+- POST /api/analytics/wear → 422
+- POST /api/stories → 422
+- POST /api/dm/send → 422
