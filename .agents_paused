@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-auto-paused by circuit breaker: 3 consecutive failed autopilot-managers cycles (2026-07-22T17:18:56Z UTC).
-Delete this file (or Telegram /resume) to re-enable the lanes.
-=======
-revoked-token 2026-07-22 — paused by main session until CLAUDE_CODE_OAUTH_TOKEN is refreshed (Max acct). Delete this file to resume.
->>>>>>> baf1ed1 (chore(pause): pause lanes — OAuth token revoked (401), stop failure emails until token refreshed)
+PAUSED 2026-07-22 (main session) — OAuth token revoked (401).
+Stop failure emails until CLAUDE_CODE_OAUTH_TOKEN is refreshed from the Max account:
+  ~/.local/bin/claude setup-token  → paste into GitHub secret CLAUDE_CODE_OAUTH_TOKEN.
+Delete this file to resume. All engine-redesign work (defect queue, bug-aware gate, auto-rescue) is ready and waiting.
