@@ -11,10 +11,10 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-22, run 10)
-- **Task**: DS-004 P1 fix — `.mp-item-shop-btn { color: var(--on-accent, #fff) }` (was bare `#fff`). Also verified P2 token reconciliation complete in code (--muted #6F6A63 + --success #1a7a4a both AA-audited 2026-07-14 in tokens.css + app.css light mode). Checked off mark.md P2 item.
-- **Next**: INBOX UX bug-hunt item 1 — text/caption overlap on non-mp/collections screens (delegate to dolce for feed/profile/closet screens).
-- **Prior runs**: Stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233).
+## Mark lane — last run (2026-07-22, run 11)
+- **Task**: INBOX UX bug-hunt item 1 (missing truncation) — added 2-line clamp to `.up-post-caption` and `.up-item-name`, single-line ellipsis to `.up-store-name` in app.css. Profile item/post grid cards now have consistent heights; long names/captions don't push beyond card boundaries. check-render green.
+- **Next**: INBOX UX bug-hunt item 2 — overlays/sheets/modals that get stuck (check-interactions already passes; may need extended scan); OR item 3 — black-on-black / low contrast on `.sc-cta, .sc-field:focus` (grep confirms correct fallbacks already; may be false-positive — verify with screenshot).
+- **Prior runs**: Stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233), DS-004 mp-item-shop-btn (025a509).
 
 ## Steve lane — last run (2026-07-19)
 - **Task**: DATABASE_URL → Postgres migration (INBOX launch infra step 3)
