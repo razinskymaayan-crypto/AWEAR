@@ -117,7 +117,52 @@ jobs:
                 # revert loop seen in the gate-ledger 2026-07-07/08.)
                 pip install -q -r requirements.txt >/dev/null 2>&1 || true
                 if ! python3 -m pytest -q; then
-                  git reset --hard "$BASE"; reverted="$reverted $m(pytest)"; continue
+                  # Change B — distinguish "your code broke a test" from "your NEW test found a
+                  # REAL pre-existing bug". A revert on the latter is how steve's follow-500 tests
+                  # got killed 4x while the app was genuinely broken. Which tests fail now?
+                  FAILED=$(python3 -m pytest -q --no-header 2>/dev/null | grep -oE '^[^ ]+::[A-Za-z0-9_]+' | grep -i FAIL 2>/dev/null || \
+                           python3 -m pytest -q 2>/dev/null | grep -oE 'FAILED [^ ]+' | sed 's/FAILED //' | head -20)
+                  # Are the failing tests NEW in this diff (added by the lane)?  If a failing test
+                  # did NOT exist on $BASE, it is the lane's own new test — check whether it ALSO
+                  # fails on $BASE's code (=> it exposed a pre-existing bug, DON'T revert).
+                  git stash -q 2>/dev/null || true
+                  NEW_TESTS=$(git diff "$BASE"...HEAD -- tests/ | grep -E '^\+def test_' | sed 's/^+def //;s/(.*//' || true)
+                  git stash pop -q 2>/dev/null || true
+                  EXPOSED=""
+                  if [ -n "$NEW_TESTS" ]; then
+                    # run ONLY the lane's new tests against $BASE's code (worktree, no state change)
+                    git worktree add -q --detach /tmp/base-wt "$BASE" 2>/dev/null || true
+                    # bring the NEW test file in so the tests exist against old code
+                    git show HEAD:tests/test_app.py > /tmp/base-wt/tests/test_app.py 2>/dev/null || true
+                    for t in $NEW_TESTS; do
+                      if ! ( cd /tmp/base-wt && python3 -m pytest -q "tests/test_app.py::$t" >/dev/null 2>&1 ); then
+                        EXPOSED="$EXPOSED $t"   # fails on OLD code too => pre-existing bug
+                      fi
+                    done
+                    git worktree remove --force /tmp/base-wt 2>/dev/null || true
+                  fi
+                  # Are ALL the failing tests explained by exposed pre-existing bugs? If NEW tests
+                  # fail but they ALSO fail on $BASE, the lane didn't regress anything — it revealed
+                  # a real bug. In that case DON'T revert; keep the branch OUT of main this cycle
+                  # (so the suite on main stays green) but file the bug + the tests as a top-priority
+                  # defect so the owning lane fixes the CODE next cycle and the tests then land.
+                  # We do NOT auto-edit test files here (too risky in the live gate) — we escalate.
+                  if [ -n "$EXPOSED" ]; then
+                    git reset --hard "$BASE"   # keep main green; the branch stays on origin/auto/$m
+                    reverted="$reverted $m(exposed-bug)"
+                    # write the defect AFTER the reset so it survives onto the pushed main
+                    mkdir -p ci-debug
+                    echo "$(date -u +%FT%TZ) $m: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression):$EXPOSED" >> ci-debug/jeff-rejections.txt
+                    { echo ""; echo "## [OPEN] PRODUCT BUG — exposed by $m's own new tests ($(date -u +%FT%TZ))"; \
+                      echo "These tests fail on BOTH the branch AND \$BASE, so they found a REAL pre-existing bug:$EXPOSED"; \
+                      echo "OWNER: $m lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land."; \
+                      echo "Top-priority defect — before INBOX work."; } >> .claude/agents/knowledge/CI_FAILURES.md
+                    git add ci-debug/jeff-rejections.txt .claude/agents/knowledge/CI_FAILURES.md 2>/dev/null
+                    git commit -m "jeff: file pre-existing bug exposed by $m's tests [skip ci]" >/dev/null 2>&1 || true
+                    continue
+                  else
+                    git reset --hard "$BASE"; reverted="$reverted $m(pytest)"; continue
+                  fi
                 fi
               fi
               # GATE 2 — locked invariants: SURFACE_SPECS guard (hex/emoji/wording/notch rules).
