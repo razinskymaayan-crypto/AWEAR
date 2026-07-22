@@ -100,3 +100,4 @@
 2026-07-22T18:41:05Z | jeff: merged -> mark
 2026-07-22T18:57:37Z | jeff: merged -> mark
 2026-07-22T19:28:38Z | jeff: merged -> mark
+2026-07-22T19:49:14Z | jeff: merged -> none | CONFLICT (needs reconciliation): steve
