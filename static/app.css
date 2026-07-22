@@ -1664,7 +1664,7 @@
   .mp-buy-btn.resale-btn { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); }
 
   /* ---- Marketplace Card — New Items ---- */
-  .mp-item-shop-btn { display: block; width: 100%; margin-top: 8px; padding: 7px 0; background: var(--accent3); border: none; border-radius: var(--r-pill); font-family: inherit; font-size: var(--t-caption); font-weight: 900; color: #fff; cursor: pointer; transition: transform .15s; }
+  .mp-item-shop-btn { display: block; width: 100%; margin-top: 8px; padding: 7px 0; background: var(--accent3); border: none; border-radius: var(--r-pill); font-family: inherit; font-size: var(--t-caption); font-weight: 900; color: var(--on-accent, #fff); cursor: pointer; transition: transform .15s; }
   .mp-item-shop-btn:active { transform: scale(.96); }
   .mp-item-brand { font-size: var(--t-micro); font-weight: 800; color: var(--accent3); margin-top: 3px; letter-spacing: .3px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
