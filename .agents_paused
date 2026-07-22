@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 auto-paused by circuit breaker: 3 consecutive failed autopilot-managers cycles (2026-07-22T17:18:56Z UTC).
 Delete this file (or Telegram /resume) to re-enable the lanes.
+=======
+revoked-token 2026-07-22 — paused by main session until CLAUDE_CODE_OAUTH_TOKEN is refreshed (Max acct). Delete this file to resume.
+>>>>>>> baf1ed1 (chore(pause): pause lanes — OAuth token revoked (401), stop failure emails until token refreshed)
