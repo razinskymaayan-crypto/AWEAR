@@ -3,8 +3,8 @@
 > Coverage (OW-015): backend 39/66 routes exercised (59%), 3 uncovered; UI scan ran.
 > A lane picks the highest-scored OPEN defect in its column BEFORE the INBOX.
 
-1. **[mark]** `stuck_overlay` (score 78) — openSheetSingle  →  #buy-sheet,sheet-body
-2. **[mark]** `stuck_overlay` (score 78) — openDeadZoneListSheet  →  #mp-fsheet-overlay,mp-fsheet,mp-fsheet-scroll,ms-insight-overlay,ms-insight-sheet
+1. **[mark]** `stuck_overlay` (score 78) — openSellForm  →  #purchase-modal
+2. **[mark]** `stuck_overlay` (score 78) — openDeadZoneListSheet  →  #mp-fsheet-overlay,ms-insight-overlay
 3. **[steve]** `contract_4xx` (score 30) — POST /api/analyze  ·  HTTP 422
 4. **[steve]** `contract_4xx` (score 30) — POST /api/outfit/generate  ·  HTTP 422
 5. **[steve]** `contract_4xx` (score 30) — POST /api/stylist/chat  ·  HTTP 422

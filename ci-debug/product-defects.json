@@ -3,14 +3,14 @@
     {
       "kind": "stuck_overlay",
       "lane": "mark",
-      "where": "openSheetSingle  \u2192  #buy-sheet,sheet-body",
+      "where": "openSellForm  \u2192  #purchase-modal",
       "detail": "",
       "score": 78.0
     },
     {
       "kind": "stuck_overlay",
       "lane": "mark",
-      "where": "openDeadZoneListSheet  \u2192  #mp-fsheet-overlay,mp-fsheet,mp-fsheet-scroll,ms-insight-overlay,ms-insight-sheet",
+      "where": "openDeadZoneListSheet  \u2192  #mp-fsheet-overlay,ms-insight-overlay",
       "detail": "",
       "score": 78.0
     },

@@ -63,17 +63,32 @@ await page.waitForTimeout(1500);
 // ---------- helpers injected into the page ----------
 const HELPERS = () => {
   window.__ux = {
-    // an overlay is "showing" if it is on screen and covers meaningful area
+    // An overlay is "showing" only if it is BOTH marked open (class/attr) AND actually
+    // on-screen. AWEAR sheets are display:flex permanently and slide in via a `.show`/`.open`
+    // class + transform, so geometric visibility alone reports a CLOSED sheet as open (it sits
+    // off-screen via transform but still has size). We require the open-state signal first —
+    // matching how the app itself decides, and how a real user perceives it.
+    isOpen(el) {
+      const cls = el.classList;
+      const opened = cls.contains('show') || cls.contains('open') || el.getAttribute('aria-hidden') === 'false';
+      if (cls.contains('show') === false && cls.contains('open') === false
+          && el.getAttribute('aria-hidden') !== 'false') {
+        // no explicit open marker → fall back to geometry, but require it be within the viewport
+        const cs = getComputedStyle(el); const r = el.getBoundingClientRect();
+        const inView = r.top >= -5 && r.bottom <= innerHeight + 5 && r.width > 60 && r.height > 60;
+        return inView && cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.05;
+      }
+      if (!opened) return false;
+      // marked open — confirm it's really rendered (not display:none / opacity 0)
+      const cs = getComputedStyle(el);
+      return cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.05;
+    },
     visibleOverlays() {
       const out = [];
       document.querySelectorAll('[id]').forEach((el) => {
         const id = el.id || '';
         if (!/sheet|overlay|modal|drawer|popup|viewer/i.test(id)) return;
-        const cs = getComputedStyle(el);
-        const r = el.getBoundingClientRect();
-        const onScreen = r.width > 60 && r.height > 60 && r.bottom > 0 && r.top < innerHeight;
-        const shown = cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.05;
-        if (onScreen && shown) out.push(id);
+        if (this.isOpen(el)) out.push(id);
       });
       return out;
     },
