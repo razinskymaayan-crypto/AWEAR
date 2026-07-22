@@ -147,6 +147,23 @@ jobs:
         if: steps.gate.outputs.skip != 'true'
         run: npm install -g @anthropic-ai/claude-code
 
+      # Deterministic PRODUCT-DEFECT scan — runs BEFORE the agent so the ranked queue
+      # (ci-debug/DEFECTS.md) is ready, fast, and not dependent on the agent driving a
+      # browser (which hung a run for 29min when chromium wasn't installed). We install
+      # deps + chromium here once, bounded by a hard timeout so it can never wedge a cycle.
+      - name: Scan product defects
+        if: steps.gate.outputs.skip != 'true'
+        timeout-minutes: 6
+        continue-on-error: true   # a scan hiccup must never block the agent's real work
+        run: |
+          python3 -m pip install -q -r requirements.txt >/dev/null 2>&1 || true
+          npm install >/dev/null 2>&1 || true
+          npx playwright install chromium >/dev/null 2>&1 || true
+          ( python3 -m uvicorn app:app --port 8000 >/tmp/scan_server.log 2>&1 & )
+          for i in $(seq 1 20); do curl -sf http://localhost:8000/ >/dev/null 2>&1 && break; sleep 1; done
+          python3 scripts/defect_scan.py || true   # writes ci-debug/DEFECTS.md + product-defects.json
+          echo "--- top defects this cycle ---"; head -20 ci-debug/DEFECTS.md 2>/dev/null || true
+
       - name: Run manager
         if: steps.gate.outputs.skip != 'true'
         env:
@@ -168,7 +185,7 @@ jobs:
 
           PICK YOUR TASK — strict priority, stop at the first that applies:
           0. SELF-HEAL (top priority): read .claude/agents/knowledge/CI_FAILURES.md. If it has an [UNRESOLVED] entry naming YOUR lane's OWN code (e.g. "${{ matrix.manager }}(pytest)" from a file your lane owns) — root-cause + fix it in your lane (reproduce, fix, add a regression test per OW-014), that is your ONLY task this run; then change [UNRESOLVED] -> [FIXED] with a one-line note. **BUT if the [UNRESOLVED] points at a GATE/WORKFLOW (`.github/`) — you physically CANNOT land that fix: GATE 0 denies `.github/` for lanes, and a running workflow always uses main's copy. Only the founder / main session fixes the engine. Do NOT edit `.github/`, do NOT re-verify it, do NOT burn this run on it.** If that gate issue isn't already in NEEDS_YOU.md, add ONE escalation line there, then skip straight to your real queue below.
-          1. MEASURED PRODUCT DEFECTS (this is the real work — before any wishlist): run `python3 scripts/defect_scan.py` (needs the server; the workflow already started it — else `venv312/bin/uvicorn app:app --port 8000 &` first). It writes ci-debug/DEFECTS.md — a queue RANKED by severity×centrality, each line tagged **[lane]**. Pick the HIGHEST-scored OPEN defect tagged **[${{ matrix.manager }}]** and fix THAT. A `crash` (5xx) or `stuck_overlay` outranks everything in the INBOX — a live-broken product beats a nice-to-have. After fixing, re-run defect_scan.py and confirm your defect is gone (that IS your regression proof, OW-014). If the scanner itself is wrong (false positive/negative, like it once flagged a working sheet), FIX THE SCANNER — a lying detector is worse than none (OW-015). If DEFECTS.md has no open item for your lane, go on:
+          1. MEASURED PRODUCT DEFECTS (this is the real work — before any wishlist): READ ci-debug/DEFECTS.md — a queue already generated THIS cycle by the "Scan product defects" step, RANKED by severity×centrality, each line tagged **[lane]**. Pick the HIGHEST-scored OPEN defect tagged **[${{ matrix.manager }}]** and fix THAT. A `crash` (5xx) or `stuck_overlay` outranks everything in the INBOX — a live-broken product beats a nice-to-have. To VERIFY your fix, re-run ONLY the relevant scanner (`SKIP_UI=1 python3 scripts/defect_scan.py` for backend — 4s; `node scripts/ux-audit.mjs` for UI — needs the server) and confirm your defect is gone (that IS your regression proof, OW-014). Do NOT run the full defect_scan yourself (it drives a browser and is slow) — the DEFECTS.md list is already there. If the scanner itself is wrong (false positive/negative, like it once flagged a working sheet), FIX THE SCANNER — a lying detector is worse than none (OW-015). If DEFECTS.md has no open item for your lane, go on:
           2. YOUR DIRECT QUEUE: .claude/agents/assignments/${{ matrix.manager }}.md — founder tasks routed to you from Telegram (@${{ matrix.manager }} ...) AND any IC you manage (.claude/agents/assignments/<ic>.md). Do the first unchecked one; check it off when done.
           3. INBOX (.claude/master/INBOX.md "## משימות חדשות") — founder DIRECTION (vision/priorities), not the bug list. Items that fall in YOUR lane. Interpret the Hebrew generously.
           4. Highest unfinished MASTER_PLAN / PRODUCT_VISION item in your lane.
