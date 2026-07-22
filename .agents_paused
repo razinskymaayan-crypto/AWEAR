@@ -1,4 +1,0 @@
-PAUSED 2026-07-22 (main session) — OAuth token revoked (401).
-Stop failure emails until CLAUDE_CODE_OAUTH_TOKEN is refreshed from the Max account:
-  ~/.local/bin/claude setup-token  → paste into GitHub secret CLAUDE_CODE_OAUTH_TOKEN.
-Delete this file to resume. All engine-redesign work (defect queue, bug-aware gate, auto-rescue) is ready and waiting.
