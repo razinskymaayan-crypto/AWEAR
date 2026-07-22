@@ -5740,7 +5740,10 @@
     const prefillCat = prefill ? (prefill.category || 'other') : 'other';
 
     card.innerHTML = `
-      <div style="padding:18px 20px 6px;font-size: var(--t-lead,17px);font-weight:900;display:flex;align-items:center;gap:8px">${icon('tag',18)} Sell an item</div>
+      <div style="padding:18px 20px 6px;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:var(--t-lead,17px);font-weight:900;display:flex;align-items:center;gap:8px">${icon('tag',18)} Sell an item</span>
+        <button style="background:none;border:none;color:var(--muted,#9e99ad);cursor:pointer;padding:4px;display:flex" aria-label="Close" onclick="document.getElementById('purchase-modal').classList.remove('show')">${icon('x',18)}</button>
+      </div>
       <div class="mp-sell-form">
         ${prefill ? `<div style="display:flex;align-items:center;gap:10px;background:rgba(139,92,246,.1);border-radius:12px;padding:10px 14px;margin-bottom:4px">
           <div style="color:var(--accent2)">${icon(catIcon(prefillCat), 28)}</div>
