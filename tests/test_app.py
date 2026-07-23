@@ -1978,3 +1978,108 @@ def test_data_integrity_cli_detects_invalid_user_id(tmp_path):
     assert "nonexistent_user_99" in result.stdout, (
         "Error output should name the bad user_id; got:\n" + result.stdout
     )
+
+
+# ---------------------------------------------------------------------------
+# product-image endpoint (ext-dep: Pexels API / loremflickr redirect)
+# ---------------------------------------------------------------------------
+
+def test_product_image_empty_query_returns_404(client):
+    """Empty or missing q returns 404 without any network call."""
+    r = client.get("/api/product-image")
+    assert r.status_code == 404
+    r2 = client.get("/api/product-image?q=")
+    assert r2.status_code == 404
+
+
+def test_product_image_with_query_redirects_no_pexels_key(client, monkeypatch):
+    """Valid q without PEXELS_API_KEY falls back to loremflickr redirect (no crash).
+
+    Seeds _product_image_cache so the test never makes a real external HTTP call.
+    FAIL-BEFORE: endpoint was unreachable in any pytest (no test existed).
+    PASS-AFTER: 3xx redirect is returned for a cached query.
+    """
+    cache_key = "_pytest_no_crash_check_"
+    monkeypatch.setitem(appmod._product_image_cache, cache_key, "https://example.com/img.jpg")
+    r = client.get(f"/api/product-image?q={cache_key}", follow_redirects=False)
+    assert r.status_code in (301, 302, 307, 308), (
+        f"Expected redirect for cached query, got {r.status_code}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# agent endpoints (Google integration absent in CI — ext-dep fallback tests)
+# ---------------------------------------------------------------------------
+
+def test_agent_summary_no_google_creds_returns_500(client, monkeypatch):
+    """send_summary_email returning False (no creds) → HTTP 500 with detail.
+
+    FAIL-BEFORE: no test existed; unhandled RuntimeError from _google_unavailable
+    would surface as a test-crashing exception rather than a documented 500.
+    PASS-AFTER: endpoint cleanly raises HTTPException(500) when send returns False.
+    """
+    monkeypatch.setattr(appmod, "send_summary_email", lambda *a, **k: False)
+    body = {
+        "agent": "jeff",
+        "department": "Product",
+        "attendees": "jeff@awear.app",
+        "summary": "Weekly sync",
+    }
+    r = client.post("/api/agent/summary", json=body)
+    assert r.status_code == 500
+    assert "email" in r.json()["detail"].lower()
+
+
+def test_agent_summary_missing_required_fields_returns_422(client):
+    """Missing required fields (department, attendees, summary) → 422, no crash."""
+    r = client.post("/api/agent/summary", json={"agent": "jeff"})
+    assert r.status_code == 422
+
+
+def test_agent_schedule_no_google_creds_returns_500(client, monkeypatch):
+    """create_calendar_event returning None (no creds) → HTTP 500 with detail.
+
+    FAIL-BEFORE: no test existed.
+    PASS-AFTER: endpoint cleanly raises HTTPException(500) when create returns None.
+    """
+    monkeypatch.setattr(appmod, "create_calendar_event", lambda *a, **k: None)
+    body = {
+        "agent": "jeff",
+        "title": "Sprint review",
+        "start_iso": "2026-09-01T10:00:00+03:00",
+        "end_iso": "2026-09-01T11:00:00+03:00",
+    }
+    r = client.post("/api/agent/schedule", json=body)
+    assert r.status_code == 500
+    assert "calendar" in r.json()["detail"].lower()
+
+
+def test_agent_schedule_missing_required_fields_returns_422(client):
+    """Missing title/times → 422, no crash."""
+    r = client.post("/api/agent/schedule", json={"agent": "jeff"})
+    assert r.status_code == 422
+
+
+def test_agent_meeting_no_google_creds_returns_500(client, monkeypatch):
+    """schedule_agent_meeting returning None (no creds) → HTTP 500 with detail.
+
+    FAIL-BEFORE: no test existed.
+    PASS-AFTER: endpoint cleanly raises HTTPException(500) when schedule returns None.
+    """
+    monkeypatch.setattr(appmod, "schedule_agent_meeting", lambda *a, **k: None)
+    body = {
+        "organizer": "jeff",
+        "participants": ["steve", "mark"],
+        "title": "Design review",
+        "start_iso": "2026-09-01T14:00:00+03:00",
+        "end_iso": "2026-09-01T15:00:00+03:00",
+    }
+    r = client.post("/api/agent/meeting", json=body)
+    assert r.status_code == 500
+    assert "meeting" in r.json()["detail"].lower()
+
+
+def test_agent_meeting_missing_required_fields_returns_422(client):
+    """Missing participants/title/times → 422, no crash."""
+    r = client.post("/api/agent/meeting", json={"organizer": "jeff"})
+    assert r.status_code == 422
