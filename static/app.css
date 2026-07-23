@@ -110,10 +110,10 @@
   .ig-id { flex: 1; min-width: 0; }
   .ig-name { font-weight: 900; font-size: var(--t-lead,19px); letter-spacing: -.3px; }
   .ig-handle { color: var(--muted); font-size: var(--t-small); font-weight: 600; margin-top: 3px; }
-  .ig-edit { margin-top: 10px; display: inline-block; font-size: var(--t-micro,11px); font-weight: 800; color: var(--text);
-    background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 6px 14px;
+  .ig-edit { margin-top: 10px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; font-size: var(--t-micro,11px); font-weight: 800; color: var(--text);
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 0 14px;
     cursor: pointer; transition: background .15s; }
-  .ig-edit:active { background: var(--card-hover, #262030); }
+  .ig-edit:active { background: var(--card-hover, #F3F1EC); }
   .ig-stats { display: flex; justify-content: space-around; text-align: center; padding: 6px 0 14px;
     border-bottom: 1px solid var(--line); margin-bottom: 14px; }
   .ig-stats > div { display: flex; flex-direction: column; gap: 3px; flex: 1; }
@@ -217,10 +217,10 @@
   .feed-filters { display: flex; gap: 8px; padding: 8px 16px; overflow-x: auto; scrollbar-width: none;
     flex-shrink: 0; background: transparent; z-index: 5; }
   .feed-filters::-webkit-scrollbar { display: none; }
-  .ff { flex-shrink: 0; border: 1px solid var(--line,#2e2836); background: transparent; color: var(--muted,#9e99ad);
-    font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; padding: 6px 14px; border-radius: 20px;
-    cursor: pointer; transition: all .15s; }
-  .ff.active { background: transparent; border-color: var(--fg,#f0ecf5); color: var(--fg,#f0ecf5); font-weight: 700; }
+  .ff { flex-shrink: 0; border: 1px solid var(--line,#E9E5DF); background: transparent; color: var(--muted,#6F6A63);
+    font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; padding: 0 14px; border-radius: 20px;
+    cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; min-height: 44px; }
+  .ff.active { background: transparent; border-color: var(--text,#14110F); color: var(--text,#14110F); font-weight: 900; }
 
   .feed-scroll { flex: 1; overflow-y: auto; scrollbar-width: none; }
   .feed-scroll::-webkit-scrollbar { display: none; }
@@ -2593,7 +2593,7 @@
   .season-entry-left { display: flex; flex-direction: column; gap: var(--space-1,4px); }
   .season-entry-row { display: flex; align-items: center; gap: var(--space-2,8px); }
   .season-entry-icon { color: var(--muted); display: inline-flex; }
-  .season-entry-title { font-size: var(--t-small,13px); font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+  .season-entry-title { font-size: var(--t-small,13px); font-weight: 700; color: var(--text,#14110F); letter-spacing: -.2px; }
   .season-entry-sub { display: none; }
   .season-entry-arrow { color: var(--muted); flex-shrink: 0; }
 
