@@ -108,3 +108,4 @@
 2026-07-23T10:35:43Z | jeff: merged -> none | REJECTED (adversarial review): mark — see ci-debug/jeff-rejections.txt | CONFLICT (needs reconciliation): steve
 2026-07-23T14:09:07Z | jeff: merged -> ayalon | REJECTED (adversarial review): mark — see ci-debug/jeff-rejections.txt | CONFLICT (needs reconciliation): steve
 2026-07-23T16:05:53Z | jeff: merged -> mark ayalon | CONFLICT (needs reconciliation): steve
+2026-07-23T17:49:49Z | jeff: merged -> ayalon | CONFLICT (needs reconciliation): steve
