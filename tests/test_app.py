@@ -2083,3 +2083,27 @@ def test_agent_meeting_missing_required_fields_returns_422(client):
     """Missing participants/title/times → 422, no crash."""
     r = client.post("/api/agent/meeting", json={"organizer": "jeff"})
     assert r.status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Render deployment readiness — database mode in scan-health
+# ---------------------------------------------------------------------------
+
+def test_scan_health_includes_database_mode(client):
+    """GET /api/scan-health must include a 'database' block exposing DB mode.
+
+    FAIL-BEFORE: 'database' key absent from scan-health response.
+    PASS-AFTER: block present with 'mode' (sqlite/postgres) and 'configured' bool.
+    Critical for Render deployment: operators must see whether DATABASE_URL is wired.
+    """
+    r = client.get("/api/scan-health")
+    assert r.status_code == 200
+    body = r.json()
+    assert "database" in body, "database block missing from scan-health — add it for Render diagnostics"
+    db = body["database"]
+    assert "mode" in db, "database.mode missing"
+    assert db["mode"] in ("sqlite", "postgres"), f"unexpected database.mode: {db['mode']}"
+    assert "configured" in db, "database.configured missing"
+    # In CI (no DATABASE_URL) we expect sqlite mode
+    assert db["mode"] == "sqlite", "CI must run in sqlite mode (DATABASE_URL not set)"
+    assert db["configured"] is False, "CI must report database not configured (no DATABASE_URL)"

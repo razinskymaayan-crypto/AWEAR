@@ -767,6 +767,7 @@ async def scan_health(request: Request, probe: int = 0):
         "generation": {"last_mode": _last_gen["mode"], "last_reason": _last_gen["reason"]},
         "supabase_auth": {"configured": bool(SUPABASE_JWT_SECRET)},
         "supabase_storage": {"configured": bool(SUPABASE_URL and SUPABASE_SERVICE_KEY)},
+        "database": {"mode": "postgres" if DATABASE_URL else "sqlite", "configured": bool(DATABASE_URL)},
         # Live/demo mode tracking for the three remaining AI features.
         "ai_features": {
             "outfit":      {"last_mode": _last_outfit["mode"],      "last_reason": _last_outfit["reason"]},

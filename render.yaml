@@ -22,12 +22,16 @@ services:
         sync: false
       - key: OPENAI_API_KEY          # optional — enables LIVE garment image generation
         sync: false
+      - key: OPENAI_IMAGE_MODEL      # optional — override the default gpt-image-1
+        value: gpt-image-1
+      - key: PEXELS_API_KEY          # optional — higher-quality product images
+        sync: false
       # Supabase (fill in once the project exists — see notes/deploy-render.md):
       - key: SUPABASE_URL
         sync: false
-      - key: SUPABASE_ANON_KEY
+      - key: SUPABASE_SERVICE_KEY    # service_role key for Storage bucket uploads
         sync: false
-      - key: SUPABASE_SERVICE_KEY
+      - key: SUPABASE_JWT_SECRET     # JWT secret for verifying Supabase Auth tokens
         sync: false
-      - key: DATABASE_URL
+      - key: DATABASE_URL            # Postgres conn string — leave empty for SQLite dev mode
         sync: false
