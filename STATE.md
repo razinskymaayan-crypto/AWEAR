@@ -11,9 +11,9 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-23, run 13)
-- **Task**: Gabbana sweep — touch-target fixes on feed + profile. Raised `.ig-edit` ("Edit profile") and `.ff` (filter chips) to `min-height:44px` via `inline-flex`. Fixed 3 stale dark-mode DS-004 fallbacks (`#262030`→`#F3F1EC`, `#f0ecf5`→`#14110F`). `.season-entry-title` `--muted`→`--text` for CTA legibility. Commit e13a1b8. check-render ✓.
-- **Next**: Continue gabbana sweep on other screens (explore/marketplace/AI stylist) OR pick next INBOX ★★★★★ item. P2 token-reconciliation assignment confirmed done (was fixed 2026-07-14, just not marked).
+## Mark lane — last run (2026-07-23, run 14)
+- **Task**: DS-004 rejection fix — corrected all light-mode hex values used as `var()` fallbacks in app.css (33 instances across --line, --card-hover, --text, --muted, --surface, --fg, --accent2, --card, --bg tokens). Fallbacks now match awear-tokens.json dark-mode canonical values. check-render ✓.
+- **Next**: Continue gabbana sweep on other screens (explore/marketplace/AI stylist) OR pick next INBOX ★★★★★ item.
 - **Prior runs**: generate-garment UI (run 12), text overflow cards (run 11), stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233), DS-004 mp-item-shop-btn (025a509).
 
 ## Steve lane — last run (2026-07-19)
