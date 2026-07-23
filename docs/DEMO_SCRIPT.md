@@ -109,6 +109,8 @@ Point below the hero: **Chat with Abigail** ("Ask your stylist") and **Style Swi
 
 > "And here's the loop closing: she bought it, and it's *already* in her closet — clean catalog image and all. Scan, style, shop, own. That's the core loop."
 
+> 💡 *Closet image note (for informed demos): the item in the closet shows a retailer catalog photo (via `search_query`), not the AI-generated image from beat 2. Those are different sources — the AI-generated image is currently shown only in the "Did we get it right?" confirm screen (pipeline gap; P1 task for mark+sam). If an investor asks: "Is that the AI-generated image?" → say: "The AI generates a studio-clean version of the photo during the review step — next release that image persists to the closet. Today the closet gets a clean retailer catalog photo. Same visual quality, and closing that loop is literally the next thing on the board." Then move on.*
+
 ---
 
 ## 7. Creator earns — the Wallet (3:55 → 4:25) — **WOW #4**
@@ -178,4 +180,4 @@ Point at the live activity timeline (real recent commits) and the team grid.
 
 ---
 
-*C2 — owner: CMO + Ayalon. Status: re-verified 2026-07-23 (11/12 DoD items confirmed live; generate-garment UI shipped `9975080` — scan confirm sheet now shows AI-generated catalog images per item with fallback; closet persistence pipeline gap documented in DOD_AUDIT.md item #12). Do a timed dry-run twice before the meeting and lock the wording you're comfortable with. Source of truth for the flow: this file + [MASTER_PLAN.md](../.claude/master/MASTER_PLAN.md) §Track C + [PRODUCT_VISION.md](PRODUCT_VISION.md) §ה-WOW.*
+*C2 — owner: CMO + Ayalon. Status: re-verified 2026-07-23 (11/12 DoD items confirmed live; generate-garment UI shipped `9975080` — scan confirm sheet shows AI-generated catalog images per item with fallback; closet persistence pipeline gap documented in DOD_AUDIT.md item #12; beat-6 recovery note added for the AI-image-in-closet question). Do a timed dry-run twice before the meeting and lock the wording you're comfortable with. Source of truth for the flow: this file + [MASTER_PLAN.md](../.claude/master/MASTER_PLAN.md) §Track C + [PRODUCT_VISION.md](PRODUCT_VISION.md) §ה-WOW.*
