@@ -31,7 +31,7 @@
 **Punchline:** *צילום תלבושת → AI מזהה כל פריט → אישור בטאפ אחד (המשתמשת תמיד בשליטה) → הארון הדיגיטלי הופך לפיד חי שאפשר לקנות ממנו.*
 
 חמש שכבות בסינרגיה, כולן עובדות באב-טיפוס:
-1. **Closet = Profile** — מדפי קטגוריה, כל פריט = **clean catalog image שה-AI יצר מהצילום האמיתי שלה** — לא תמונת קמעונאי אקראית, לא placeholder שבור. (Phase 1 היום: תמונת קמעונאי דרך `search_query`; Phase 2 בפיתוח: OpenAI `gpt-image-1` מייצר תמונת סטודיו מהצילום — ה-garment אחרי הסרת הגוף, רקע שקוף, תאורת מוצר.)
+1. **Closet = Profile** — מדפי קטגוריה, כל פריט = **clean catalog image שה-AI יצר מהצילום האמיתי שלה** — לא תמונת קמעונאי אקראית, לא placeholder שבור. (Phase 1 היום: תמונת קמעונאי דרך `search_query` בארון; Phase 2 ✅ **shipped** `9975080`: OpenAI `gpt-image-1` מייצר תמונת סטודיו מהצילום — ה-garment אחרי הסרת הגוף, רקע שקוף, תאורת מוצר — **גלויה במסך "האם זיהינו נכון?"**; שמירה לארון = שלב הבא.)
 2. **Shop-the-Look** — קנייה in-app, המשתמשת לא עוזבת את האפליקציה.
 3. **Resale Marketplace** — ה-AI מציע מה למכור (50% מהמחיר המקורי) לפי usage נמוך.
 4. **AI Stylist** — "מה ללבוש" לפי event + עונה, stats, streaks.
@@ -170,6 +170,7 @@
 - **עדכון 2026-07-14:** מספרי ה-unit economics תוקנו למודל הכן לפי `.claude/master/strategy/05-unit-economics.md` (Tobi) — default מיושם בהיעדר מענה על FOUNDER_QUESTIONS מ-2026-07-06; ממתין לאישור/דריסה של Carmel.
 - **עדכון 2026-07-19:** (1) הנחיית מייסדות 2026-07-18 על יצירת תמונת קטלוג נקייה (OpenAI `gpt-image-1` מהצילום האמיתי) — משוקפת ב-Slide 2 Layer 1 כ-Phase 2 בפיתוח; לא לשנות ל-"shipped" עד שה-backend עלה. (2) תחרות: Whering/$7M (eBay Ventures + Google AI Futures, יולי 2026) נוסף ל-Appendix Risks עם מיטיגציה — להזכיר פרואקטיבית בפגישה. (3) NEEDS_DECISION #7 (4 עריכות Slide 3 מניתוח Bernard/riddle-06) — ממתין לאישור Carmel; **Slide 3 לא נגעה** (oscillation guard).
 - **עדכון 2026-07-21:** Slide 8 תוקן — מסך "Did we get it right?" ✅ **shipped** (commit `f4fe9a1` by mark lane); אינו "בפיתוח" עוד. הביקורת ב-DoD Audit 2026-07-21 גילתה שביקורת מקורית חיפשה בקובץ הלא נכון (pre-split index.html) — ה-JS כולו עבר ל-static/app.js ב-2026-07-05. 10/11 פריטי ה-DoD מאומתים עכשיו.
+- **עדכון 2026-07-23:** generate-garment UI ✅ **shipped** (commit `9975080` by mark lane) — כל פריט במסך "האם זיהינו נכון?" מציג עכשיו תמונת קטלוג נקייה שנוצרה ב-OpenAI `gpt-image-1` (spinner → תמונה → fallback קמעונאי 80% opacity). Slide 2 Layer 1 תוקן: Phase 2 = shipped בזרימת האישור; שלב הבא = שמירת URL לארון (pipeline gap). DoD Audit #12 נוסף (11/12 מאומתים).
 - **מה נשאר (אנושי):** (1) המרה ל-PDF/Keynote בעיצוב AWEAR · (2) screenshots אמיתיים ל-Slides 2,8 · (3) sign-off CMO + Jeff (owners) · (4) dry-run ×2 לפי C2.
 - **תלות:** A6 (demo reliability, 0 broken images) לפני הצגה חיה ב-Slide 8.
 

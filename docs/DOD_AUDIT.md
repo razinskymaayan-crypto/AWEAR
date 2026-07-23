@@ -1,5 +1,5 @@
 # Definition-of-Done Audit — INBOX "## הושלם" items
-**Audited:** 2026-07-21 by ayalon lane  
+**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 added) by ayalon lane  
 **Method:** grep / git-log / code-presence checks  
 **Purpose:** Confirm each "done" item has verifiable evidence before investor demo
 
@@ -19,8 +19,9 @@
 | 9 | Weather feature removed from Home | ✅ VERIFIED | — |
 | 10 | Nav tab order: feed → store → AI → DM → profile | ✅ VERIFIED | — |
 | 11 | Analytics survey (wardrobe statistics) | ✅ VERIFIED | — |
+| 12 | Generate-garment: AI catalog image in scan confirm sheet | ✅ VERIFIED (2026-07-23) | UI shipped `9975080`; pipeline gap: generated URL not persisted to closet_items after confirm |
 
-**10 of 11 fully verified. 1 documentation-only.** *(Item 5 corrected 2026-07-21 — HITL UI was shipped in commit f4fe9a1; original audit searched pre-split index.html and missed it in app.js.)*
+**11 of 12 fully verified. 1 documentation-only. 1 verified with known pipeline gap.** *(Item 5 corrected 2026-07-21 — HITL UI was shipped in commit f4fe9a1; original audit searched pre-split index.html and missed it in app.js. Item 12 added 2026-07-23 — garment-image UI shipped in commit 9975080.)*
 
 ---
 
@@ -110,6 +111,14 @@
 - **Gate:** Gabbana 8.5; charts + doc sent to Telegram
 - **Evidence:** `grep -n "healthScore\|rewear\|utilization" static/app.js` → confirmed real computation
 
+### 12. Generate-garment: AI catalog image in scan confirm sheet ✅ (2026-07-23)
+- **Commit:** `9975080 feat(ux): add image generation display to scan confirm sheet`
+- **Backend:** `app.py:3277` — `POST /api/generate-garment` endpoint; `app.py:3210` — `_generate_garment_image_sync` helper (runs off event-loop via `asyncio.to_thread`); `app.py:149` — `_last_gen` diagnostics; `app.py:767` — exposed in `GET /api/scan-health`
+- **UI:** `static/app.js:1389` — `genImage:'pending'` initial state per item; `app.js:1403–1409` — spinner → generated image → retailer fallback at 80% opacity; `app.js:1408` — 44px "Regenerate" button per item; `app.js:1412–1445` — `scGenerate()` + `scRegenerate()` calling `/api/generate-garment`
+- **Gate:** Gabbana 8/10 PASS (mark lane run 12)
+- **Evidence:** `grep -n "generate-garment\|sc-spinner\|sc-gen-img\|scRegenerate" static/app.js` → confirmed
+- **Pipeline gap (open):** `scConfirm()` at `app.js:1493–1496` does NOT include `genImage` URL in the POST payload to `/api/closet/confirm` — generated image is shown during review but not persisted to `closet_items`. Closet view still shows catalog images via `search_query` (Phase 1 behavior). This is a remaining step for the mark/sam lane.
+
 ---
 
 ## Action items for other lanes
@@ -117,7 +126,9 @@
 | Priority | Lane | Action |
 |----------|------|--------|
 | ✅ DONE | mark | "Did we get it right?" HITL confirm screen — shipped (commit f4fe9a1). Per-item accept/reject + edit, calls `POST /api/closet/confirm`. |
+| ✅ DONE | mark | Generate-garment image display in scan confirm sheet — shipped (commit 9975080). Per-item spinner → AI image → retailer fallback → regenerate button. |
 | P0 (founder-gated) | human (Carmel) | Run `python3 scripts/scan_smoke.py` on box with `ANTHROPIC_API_KEY` set to confirm LIVE Claude Vision mode |
+| P1 (pipeline gap) | mark + sam | Pass `genImage` URL from `scConfirm()` to `POST /api/closet/confirm`, store as `image` in `closet_items` — closes the "clean catalog image in closet" promise (Pitch Deck Slide 2 Layer 1) |
 
 ---
 

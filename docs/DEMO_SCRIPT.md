@@ -55,7 +55,7 @@ This is the live HITL screen. It shows each detected item as a card with a check
 
 **Tap "Add X items to Closet" (the CTA at the bottom of the sheet).** Items land in the closet immediately; a toast confirms "X items added to your closet."
 
-> 💡 *Enhanced future version (backend endpoint `/api/generate-garment` exists; awaiting frontend wiring): each confirmed item could show a clean studio-quality photo generated from the scan — not a stock image, the actual garment extracted from her photo. For the current demo, items use catalog images via `search_query`. Mention this if you want to preview the roadmap.*
+> 💡 *Each item in the confirm sheet now shows a clean AI-generated catalog photo via `POST /api/generate-garment` — ✅ **shipped** in commit `9975080` (2026-07-22, mark lane). Spinner → OpenAI `gpt-image-1` studio image → retailer-image fallback at 80% opacity → 44px "Regenerate" button per item. **For the demo:** the generated images appear live in this confirm sheet. The closet view still uses `search_query` catalog images (pipeline persistence gap: generated URL is not yet carried through to closet_items after confirm — that is the next step). If generation stalls on venue Wi-Fi, the retailer image shows automatically — the demo never breaks.*
 > 💡 *The same Create menu also has "Daily check-in" — mention in passing: "she logs what she wore every day, Duolingo-style streak — that's the retention engine and the data engine in one."*
 
 ---
@@ -178,4 +178,4 @@ Point at the live activity timeline (real recent commits) and the team grid.
 
 ---
 
-*C2 — owner: CMO + Ayalon. Status: re-verified 2026-07-21 (10/11 DoD items confirmed live; HITL confirm screen verified shipped in `f4fe9a1` and added as explicit beat-2 step; garment-image generation backend exists but frontend not yet wired — noted as optional future upgrade). Do a timed dry-run twice before the meeting and lock the wording you're comfortable with. Source of truth for the flow: this file + [MASTER_PLAN.md](../.claude/master/MASTER_PLAN.md) §Track C + [PRODUCT_VISION.md](PRODUCT_VISION.md) §ה-WOW.*
+*C2 — owner: CMO + Ayalon. Status: re-verified 2026-07-23 (11/12 DoD items confirmed live; generate-garment UI shipped `9975080` — scan confirm sheet now shows AI-generated catalog images per item with fallback; closet persistence pipeline gap documented in DOD_AUDIT.md item #12). Do a timed dry-run twice before the meeting and lock the wording you're comfortable with. Source of truth for the flow: this file + [MASTER_PLAN.md](../.claude/master/MASTER_PLAN.md) §Track C + [PRODUCT_VISION.md](PRODUCT_VISION.md) §ה-WOW.*
