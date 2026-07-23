@@ -103,3 +103,4 @@
 2026-07-22T19:49:14Z | jeff: merged -> none | CONFLICT (needs reconciliation): steve
 2026-07-22T21:23:36Z | jeff: merged -> mark | CONFLICT (needs reconciliation): steve
 2026-07-22T23:27:18Z | jeff: merged -> mark | CONFLICT (needs reconciliation): steve
+2026-07-23T03:01:06Z | jeff: merged -> none | REJECTED (adversarial review): mark — see ci-debug/jeff-rejections.txt | CONFLICT (needs reconciliation): steve

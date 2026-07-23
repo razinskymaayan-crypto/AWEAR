@@ -14,3 +14,4 @@
 2026-07-18T11:48:28Z steve: REJECT: out-of-lane files: static/app.css static/app.js 
 2026-07-19T18:10:46Z mark: REJECT: `scripts/guard_checks.sh` is outside mark's lane ownership (mark: index.html/app.css/app.js/tokens.css/awear-tokens.json); scripts/ belongs to steve's lane.
 2026-07-19T18:32:28Z mark: REJECT: OW-001 — ID rename `wl-wrap`→`wishlist-wrap` shows only the HTML change; any `getElementById('wl-wrap')` or `querySelector('#wl-wrap')` JS callers break silently; diff must include caller updates or a grep audit confirming zero ID-based references before merge.
+2026-07-23T03:01:06Z mark: REJECT: DS-004 — fallbacks swapped to wrong-palette values: `--card-hover` is `#262030` (fallback changed to `#F3F1EC`), `--text` is `#fbfbfd` (fallback set to `#14110F`), `--line` is `#2e2836` (fallback set to `#E9E5DF`); wrong fallbacks cause invisible text / light fill on dark background when variables fail to resolve.
