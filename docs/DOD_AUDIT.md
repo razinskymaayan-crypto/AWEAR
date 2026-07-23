@@ -1,5 +1,5 @@
 # Definition-of-Done Audit — INBOX "## הושלם" items
-**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 added) by ayalon lane  
+**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) by ayalon lane  
 **Method:** grep / git-log / code-presence checks  
 **Purpose:** Confirm each "done" item has verifiable evidence before investor demo
 
@@ -129,6 +129,22 @@
 | ✅ DONE | mark | Generate-garment image display in scan confirm sheet — shipped (commit 9975080). Per-item spinner → AI image → retailer fallback → regenerate button. |
 | P0 (founder-gated) | human (Carmel) | Run `python3 scripts/scan_smoke.py` on box with `ANTHROPIC_API_KEY` set to confirm LIVE Claude Vision mode |
 | P1 (pipeline gap) | mark + sam | Pass `genImage` URL from `scConfirm()` to `POST /api/closet/confirm`, store as `image` in `closet_items` — closes the "clean catalog image in closet" promise (Pitch Deck Slide 2 Layer 1) |
+
+---
+
+## UX Bug-Hunt Progress — ★★★★★ directive (2026-07-19→)
+
+Mark lane shipped 4 of 5 items from the founder's UX bug-hunt backlog. Verified 2026-07-23 by ayalon lane.
+
+| # | Item | Status | Commit(s) | Evidence |
+|---|------|--------|-----------|----------|
+| BH-1 | Text/caption overflow on profile grid | ✅ VERIFIED | `8782260` | `.up-item-name` / `.up-post-caption` 2-line clamp; `.up-store-name` ellipsis in app.css |
+| BH-2 | Stuck overlays (sell form X + mp-fsheet opacity) | ✅ VERIFIED | `b24f770` `d322506` | X button in openSellForm; `.mp-fsheet-overlay` opacity:0→1; geometry fallback fixed |
+| BH-3 | Low contrast / DS-004 (marketplace + muted fallbacks) | ✅ VERIFIED | `5e39d16` `025a509` `1e41dde` | `.mp-item-shop-btn color: var(--on-accent, #fff)` correct; 187 stale `--muted` fallbacks updated; no relic #14110F in var() fallbacks |
+| BH-4 | Dead buttons — feed like/save/comment/share | ✅ VERIFIED | (wired in prior runs) | `app.js:1879` handler covers `like/save/comment`; `app.js:1740` all 4 buttons have `data-action`; like → heartFill state toggle confirmed |
+| BH-5 | Other UX bugs (gabbana sweep) | 🔄 IN PROGRESS | — | Mark lane next task — no commit yet |
+
+*This section augments the formal INBOX הושלם audit above; these items are sub-tasks of the ★★★★★ directive, not separate הושלם entries.*
 
 ---
 
