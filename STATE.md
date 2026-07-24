@@ -11,10 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-24, run 16)
-- **Task**: Gabbana sweep — Explore/Marketplace/AI Stylist P0 UX fixes. commit 50449e4. check-render + interactions ✓.
-- **Done**: Touch targets 44px on .ev-chip/.mp-cond-chip/.mp-filter-btn/.mp-sell-btn/.styl-btn; DS-009 removed font-size from .ex-card-bg/.ex-result-emoji; .mp-item-badge font-size tokenized; .styl-tag rgba→color-mix(var(--accent3)); Explore trending chip inline rgba→color-mix tokens; removed direction:rtl from .ex-search input.
-- **Next**: Gabbana re-audit these screens (should score 8+); OR pick next INBOX item (Stylist screen avatar pattern, dead buttons in other screens).
+## Mark lane — last run (2026-07-24, run 17)
+- **Task**: UX-QA P1 — edit-profile drag-dismiss + DS-004 var(--warning) fallback. commit 1a771bb. check-render ✓.
+- **Done**: `_addSheetDragDismiss` wired to `.edit-modal` (swipe-down close); `var(--warning,#e8a84a)` fallback added to Stylist card rating icon.
+- **Next**: Gabbana re-audit Stylist/Explore/Marketplace (should score 8+); OR wire match score into feed item tap handler (steve's GET /api/products/{id}/match is ready).
+- **Prior runs**: Gabbana UX fixes Explore/Marketplace/Stylist (run 16, 50449e4), DS-004 rejection fix (run 15, 237df96), generate-garment UI (run 12), text overflow cards (run 11), stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f).
 - **Prior runs**: DS-004 rejection fix (run 15, 237df96), generate-garment UI (run 12), text overflow cards (run 11), stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233).
 
 ## Steve lane — last run (2026-07-24, run 17)
