@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-24, run 18)
-- **Task**: Wire backend match score into feed item detail sheet. commit pending. check-render ✓.
-- **Done**: `_matchBandRender()` extracted from `matchBandHTML()`; `openSheetItem()` fires `GET /api/products/{id}/match` after sheet open and updates match band with server score (progressive enhancement — local score shows first, server score replaces on success). DS-004 rejection lesson applied: all var() fallbacks use dark-token values.
-- **Next**: Gabbana re-audit Stylist/Explore/Marketplace (should score 8+). P2 token reconciliation appears done (tokens.css has AA-audited --muted #6F6A63 + reconciled --success #1a7a4a) — check off in assignments.
-- **Prior runs**: run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4); run 15 — DS-004 fix (237df96); run 12 — generate-garment UI; run 11 — text overflow; b24f770 — overlays; e1562d8 — drag-dismiss sheets; da5502f — marketplace contrast.
+## Mark lane — last run (2026-07-24, run 19)
+- **Task**: Marketplace WCAG AA contrast fixes. commit 203f37d.
+- **Done**: 18 CSS fixes in app.css — `var(--card)` used as text color on colored (accent3/accent2) backgrounds in dark mode produced near-invisible text. Fixed all: segment pills active-new/active-shop/active-sell, retail buy btn, closet chip, empty CTA, item shop btn (also added min-height:44px), item brand label, secondhand badge, assist-btn (bare #fff → var(--bg)), full fallback sweep on assist block + compat-btn. Removed duplicate `.mp-item-brand` rule. Gabbana 8/10. check-render ✓.
+- **Next**: Explore/Stylist screens Gabbana re-audit (run 18 next was Marketplace — now done; continue with other two). Also: check off P2 token reconciliation in assignments.md (already verified done).
+- **Prior runs**: run 18 — match score wiring (9d04a4f+251e38e); run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4); run 15 — DS-004 fix (237df96); run 12 — generate-garment UI.
 
 ## Steve lane — last run (2026-07-24, run 17)
 - **Task**: WOW feature — wardrobe match score. commit 9cc466c.
