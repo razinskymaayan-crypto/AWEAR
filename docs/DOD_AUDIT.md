@@ -1,5 +1,5 @@
 # Definition-of-Done Audit — INBOX "## הושלם" items
-**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) by ayalon lane  
+**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) by ayalon lane  
 **Method:** grep / git-log / code-presence checks  
 **Purpose:** Confirm each "done" item has verifiable evidence before investor demo
 
@@ -21,7 +21,9 @@
 | 11 | Analytics survey (wardrobe statistics) | ✅ VERIFIED | — |
 | 12 | Generate-garment: AI catalog image in scan confirm sheet | ✅ VERIFIED (2026-07-23) | UI shipped `9975080`; pipeline gap: generated URL not persisted to closet_items after confirm |
 
-**11 of 12 fully verified. 1 documentation-only. 1 verified with known pipeline gap.** *(Item 5 corrected 2026-07-21 — HITL UI was shipped in commit f4fe9a1; original audit searched pre-split index.html and missed it in app.js. Item 12 added 2026-07-23 — garment-image UI shipped in commit 9975080.)*
+| 13 | Wardrobe match score — `GET /api/products/{id}/match` | ⚠️ BACKEND ONLY | SPA wiring pending (mark lane) |
+
+**11 of 13 fully verified. 1 documentation-only. 1 verified with known pipeline gap. 1 backend-only (SPA pending).** *(Item 5 corrected 2026-07-21 — HITL UI was shipped in commit f4fe9a1; original audit searched pre-split index.html and missed it in app.js. Item 12 added 2026-07-23 — garment-image UI shipped in commit 9975080. Item 13 added 2026-07-24 — backend shipped commit 9cc466c; SPA uses local calcCompatScore, not yet calling the endpoint.)*
 
 ---
 
@@ -111,6 +113,13 @@
 - **Gate:** Gabbana 8.5; charts + doc sent to Telegram
 - **Evidence:** `grep -n "healthScore\|rewear\|utilization" static/app.js` → confirmed real computation
 
+### 13. Wardrobe match score — `GET /api/products/{id}/match` ⚠️ BACKEND ONLY (2026-07-24)
+- **Commit:** `9cc466c feat(backend): wardrobe match score — GET /api/products/{id}/match`
+- **Backend:** `app.py:1934` — endpoint live; returns `match_pct` (0–95), `reason`, `matching_items` from server-side `closet_items`; BE-006 `user_key`, rate-limited 30/min; 4 hermetic pytests (141/141 passing)
+- **SPA gap:** `static/app.js:583` — `matchBandHTML()` uses `calcCompatScore()` against localStorage wardrobe, NOT the new endpoint. Feed item tap handler does not yet call `/api/products/{id}/match`.
+- **Evidence:** `grep -n "match_pct\|products.*match" app.py` → app.py:1934, 1991, 2004 confirmed; `grep -n "\/api\/products\/" static/app.js` → 0 matches (not yet called from SPA)
+- **Action needed:** mark lane: call `GET /api/products/{it.id}/match?user_id={uid}` in the item-tap handler and feed result into `matchBandHTML()` — replaces the client-side estimate with server-side score.
+
 ### 12. Generate-garment: AI catalog image in scan confirm sheet ✅ (2026-07-23)
 - **Commit:** `9975080 feat(ux): add image generation display to scan confirm sheet`
 - **Backend:** `app.py:3277` — `POST /api/generate-garment` endpoint; `app.py:3210` — `_generate_garment_image_sync` helper (runs off event-loop via `asyncio.to_thread`); `app.py:149` — `_last_gen` diagnostics; `app.py:767` — exposed in `GET /api/scan-health`
@@ -129,12 +138,13 @@
 | ✅ DONE | mark | Generate-garment image display in scan confirm sheet — shipped (commit 9975080). Per-item spinner → AI image → retailer fallback → regenerate button. |
 | P0 (founder-gated) | human (Carmel) | Run `python3 scripts/scan_smoke.py` on box with `ANTHROPIC_API_KEY` set to confirm LIVE Claude Vision mode |
 | P1 (pipeline gap) | mark + sam | Pass `genImage` URL from `scConfirm()` to `POST /api/closet/confirm`, store as `image` in `closet_items` — closes the "clean catalog image in closet" promise (Pitch Deck Slide 2 Layer 1) |
+| P1 (SPA gap) | mark | Wire `GET /api/products/{id}/match?user_id={uid}` into the feed item-tap handler; replace `calcCompatScore()` result with server-side `match_pct` + `reason` + `matching_items` in `matchBandHTML()` — makes match band show server-side closet data |
 
 ---
 
 ## UX Bug-Hunt Progress — ★★★★★ directive (2026-07-19→)
 
-Mark lane shipped 4 of 5 items from the founder's UX bug-hunt backlog. Verified 2026-07-23 by ayalon lane.
+Mark lane shipped 5 of 5 items from the founder's UX bug-hunt backlog. BH-5 verified 2026-07-24 by ayalon lane (commit 50449e4).
 
 | # | Item | Status | Commit(s) | Evidence |
 |---|------|--------|-----------|----------|
@@ -142,7 +152,7 @@ Mark lane shipped 4 of 5 items from the founder's UX bug-hunt backlog. Verified 
 | BH-2 | Stuck overlays (sell form X + mp-fsheet opacity) | ✅ VERIFIED | `b24f770` `d322506` | X button in openSellForm; `.mp-fsheet-overlay` opacity:0→1; geometry fallback fixed |
 | BH-3 | Low contrast / DS-004 (marketplace + muted fallbacks) | ✅ VERIFIED | `5e39d16` `025a509` `1e41dde` | `.mp-item-shop-btn color: var(--on-accent, #fff)` correct; 187 stale `--muted` fallbacks updated; no relic #14110F in var() fallbacks |
 | BH-4 | Dead buttons — feed like/save/comment/share | ✅ VERIFIED | (wired in prior runs) | `app.js:1879` handler covers `like/save/comment`; `app.js:1740` all 4 buttons have `data-action`; like → heartFill state toggle confirmed |
-| BH-5 | Other UX bugs (gabbana sweep) | 🔄 IN PROGRESS | — | Mark lane next task — no commit yet |
+| BH-5 | Gabbana sweep — Explore/Marketplace/AI Stylist | ✅ VERIFIED | `50449e4` | Touch targets 44px (.ev-chip/.mp-cond-chip/.mp-filter-btn/.mp-sell-btn/.styl-btn); DS-009 cleared (.ex-card-bg/.ex-result-emoji have no font-size); .mp-item-badge font-size tokenized; .styl-tag rgba→color-mix(var(--accent3)); direction:rtl removed from .ex-search input |
 
 *This section augments the formal INBOX הושלם audit above; these items are sub-tasks of the ★★★★★ directive, not separate הושלם entries.*
 
