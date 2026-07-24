@@ -6700,7 +6700,7 @@
     document.getElementById('ex-trending').querySelectorAll('.ex-trend-chip').forEach(btn =>
       btn.addEventListener('click', () => {
         document.getElementById('ex-trending').querySelectorAll('.ex-trend-chip').forEach(b=>b.style.background='');
-        btn.style.background='linear-gradient(135deg,rgba(255,61,119,.2),rgba(123,92,255,.2))';
+        btn.style.background='linear-gradient(135deg,color-mix(in srgb,var(--accent,#e8526a) 20%,transparent),color-mix(in srgb,var(--accent3,#7a6af0) 20%,transparent))';
         btn.style.borderColor='var(--accent)';
         document.getElementById('ex-input').value = btn.dataset.q;
         runExSearch(btn.dataset.q, btn.dataset.tag);
