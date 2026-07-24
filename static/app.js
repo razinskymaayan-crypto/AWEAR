@@ -7027,6 +7027,7 @@
   document.getElementById('edit-cancel-btn').addEventListener('click',()=>editOverlay.classList.remove('show'));
   document.getElementById('edit-profile-close')?.addEventListener('click',()=>editOverlay.classList.remove('show'));
   editOverlay.addEventListener('click',e=>{ if(e.target===editOverlay) editOverlay.classList.remove('show'); });
+  _addSheetDragDismiss(editOverlay.querySelector('.edit-modal'), null, () => editOverlay.classList.remove('show'));
 
   document.getElementById('edit-photo-btn').addEventListener('click',()=>document.getElementById('edit-photo-input').click());
   document.getElementById('edit-photo-input').addEventListener('change',e=>{
@@ -7991,7 +7992,7 @@
               <div class="styl-info">
                 <div class="styl-name">${esc(s.name)}</div>
                 <div class="styl-spec">${esc(s.spec)}</div>
-                <div class="styl-price" style="display:flex;align-items:center;gap:3px">${esc(s.price)} · <span style="color:var(--warning)">${icon('diamond',12)}</span> ${esc(s.rating)} · ${s.sessions} sessions</div>
+                <div class="styl-price" style="display:flex;align-items:center;gap:3px">${esc(s.price)} · <span style="color:var(--warning,#e8a84a)">${icon('diamond',12)}</span> ${esc(s.rating)} · ${s.sessions} sessions</div>
               </div>
               <div class="styl-avail ${s.avail?'open':'busy'}">${s.avail?'Available':'Busy'}</div>
             </div>
