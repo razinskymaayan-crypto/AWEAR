@@ -2177,3 +2177,398 @@ def test_product_match_response_shape(client):
     assert "reason" in body
     assert "matching_items" in body
     assert isinstance(body["matching_items"], list)
+
+
+# ---------------------------------------------------------------------------
+# Search — cross-entity (products/posts/profiles)
+# FAIL-BEFORE: no test existed. PASS-AFTER: contract + edge + validation proven.
+# ---------------------------------------------------------------------------
+
+def test_search_returns_results_for_known_term(client):
+    r = client.get("/api/search", params={"q": "top"})
+    assert r.status_code == 200
+    body = r.json()
+    assert "query" in body
+    assert "items" in body
+    assert "total" in body
+    assert isinstance(body["items"], list)
+    assert body["query"] == "top"
+
+
+def test_search_known_product_brand_found(client):
+    r = client.get("/api/search", params={"q": "zara"})
+    assert r.status_code == 200
+    body = r.json()
+    entity_types = {it["entity_type"] for it in body["items"]}
+    assert "product" in entity_types
+
+
+def test_search_no_results_for_gibberish(client):
+    r = client.get("/api/search", params={"q": "xyzqwvmno_never_matches_9999"})
+    assert r.status_code == 200
+    assert r.json()["total"] == 0
+    assert r.json()["items"] == []
+
+
+def test_search_short_query_400(client):
+    r = client.get("/api/search", params={"q": "x"})
+    assert r.status_code == 400
+
+
+def test_search_missing_query_400(client):
+    r = client.get("/api/search")
+    assert r.status_code in (400, 422)
+
+
+# ---------------------------------------------------------------------------
+# Profile detail — GET /api/profiles/{user_id}
+# FAIL-BEFORE: no test existed. PASS-AFTER: 200 + 404 proven.
+# ---------------------------------------------------------------------------
+
+_PROFILE_USER_ID = "user_001"  # guaranteed in static/data/profiles.json
+
+
+def test_get_profile_known_user_returns_profile(client):
+    r = client.get(f"/api/profiles/{_PROFILE_USER_ID}")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["id"] == _PROFILE_USER_ID
+    assert "username" in body or "display_name" in body
+
+
+def test_get_profile_unknown_user_404(client):
+    r = client.get("/api/profiles/user_does_not_exist_xyz_999")
+    assert r.status_code == 404
+
+
+# ---------------------------------------------------------------------------
+# Post detail — GET /api/posts/{post_id}
+# FAIL-BEFORE: no test existed. PASS-AFTER: 200 with DB likes + 404 proven.
+# ---------------------------------------------------------------------------
+
+_POST_ID = "post_001"  # guaranteed in static/data/posts.json
+
+
+def test_get_post_known_id_returns_post(client):
+    r = client.get(f"/api/posts/{_POST_ID}")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["id"] == _POST_ID
+    assert "likes" in body
+    assert isinstance(body["likes"], int)
+
+
+def test_get_post_like_count_reflects_db(client):
+    # Like then fetch — likes in GET /api/posts/{id} come from SQLite, not JSON.
+    client.post(f"/api/posts/{_POST_ID}/like")
+    r = client.get(f"/api/posts/{_POST_ID}")
+    assert r.status_code == 200
+    assert r.json()["likes"] >= 1
+    # cleanup
+    client.post(f"/api/posts/{_POST_ID}/like")
+
+
+def test_get_post_unknown_id_404(client):
+    r = client.get("/api/posts/post_xyz_does_not_exist_999")
+    assert r.status_code == 404
+
+
+# ---------------------------------------------------------------------------
+# User stats — GET /api/users/{user_id}/stats
+# FAIL-BEFORE: no test existed. PASS-AFTER: shape + 404 proven.
+# ---------------------------------------------------------------------------
+
+def test_user_stats_known_user_returns_shape(client):
+    r = client.get(f"/api/users/{_PROFILE_USER_ID}/stats")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["user_id"] == _PROFILE_USER_ID
+    assert "post_count" in body
+    assert "followers" in body
+    assert "following" in body
+    assert "total_likes" in body
+    assert isinstance(body["post_count"], int)
+    assert isinstance(body["followers"], int)
+    assert isinstance(body["following"], int)
+    assert isinstance(body["total_likes"], int)
+
+
+def test_user_stats_unknown_user_404(client):
+    r = client.get("/api/users/user_does_not_exist_xyz_999/stats")
+    assert r.status_code == 404
+
+
+def test_user_stats_total_likes_includes_db_likes(client):
+    # Like a post owned by user_001 then query their stats — total_likes must include it.
+    client.post(f"/api/posts/{_POST_ID}/like")
+    r = client.get(f"/api/users/{_PROFILE_USER_ID}/stats")
+    assert r.status_code == 200
+    assert r.json()["total_likes"] >= 1
+    # cleanup
+    client.post(f"/api/posts/{_POST_ID}/like")
+
+
+# ---------------------------------------------------------------------------
+# Save / unsave post — POST /api/posts/{post_id}/save
+# GET /api/users/{user_id}/saves
+# FAIL-BEFORE: no test existed. PASS-AFTER: toggle + list proven.
+# ---------------------------------------------------------------------------
+
+def test_save_toggle_add_then_remove(client):
+    r1 = client.post(f"/api/posts/{_POST_ID}/save")
+    assert r1.status_code == 200
+    assert r1.json()["saved"] is True
+
+    r2 = client.post(f"/api/posts/{_POST_ID}/save")
+    assert r2.status_code == 200
+    assert r2.json()["saved"] is False
+
+
+def test_save_unknown_post_404(client):
+    r = client.post("/api/posts/post_xyz_does_not_exist_999/save")
+    assert r.status_code == 404
+
+
+def test_saves_list_shows_saved_post(client):
+    client.post(f"/api/posts/{_POST_ID}/save")  # ensure saved
+    r = client.get(f"/api/users/{_PROFILE_USER_ID}/saves")
+    assert r.status_code == 200
+    body = r.json()
+    assert "items" in body
+    assert "total" in body
+    assert isinstance(body["items"], list)
+    # cleanup
+    client.post(f"/api/posts/{_POST_ID}/save")
+
+
+# ---------------------------------------------------------------------------
+# Declutter — POST /api/declutter
+# FAIL-BEFORE: no test existed. PASS-AFTER: empty/all-worn/all-unworn cases proven.
+# ---------------------------------------------------------------------------
+
+def test_declutter_all_worn_returns_empty_suggestions(client):
+    body = {"wardrobe": [
+        {"name": "Jeans", "category": "bottoms", "wear_count": 5, "price_estimate_usd": 80},
+    ]}
+    r = client.post("/api/declutter", json=body)
+    assert r.status_code == 200
+    assert r.json()["suggestions"] == []
+
+
+def test_declutter_empty_wardrobe_returns_empty_suggestions(client):
+    r = client.post("/api/declutter", json={"wardrobe": []})
+    assert r.status_code == 200
+    assert r.json()["suggestions"] == []
+
+
+def test_declutter_unworn_items_returns_suggestions_demo(client):
+    # No API key in CI — falls to the demo fallback path.
+    body = {"wardrobe": [
+        {"name": "Silk Blouse", "category": "top", "wear_count": 0, "price_estimate_usd": 120},
+        {"name": "Linen Trousers", "category": "bottoms", "wear_count": 0, "price_estimate_usd": 90},
+    ]}
+    r = client.post("/api/declutter", json=body)
+    assert r.status_code == 200
+    d = r.json()
+    assert "suggestions" in d
+    assert len(d["suggestions"]) >= 1
+    first = d["suggestions"][0]
+    assert "name" in first
+    assert "action" in first
+    assert first["action"] in ("sell", "donate", "recycle")
+    assert "price_suggestion" in first
+
+
+# ---------------------------------------------------------------------------
+# Analytics — wear event logging
+# POST /api/analytics/wear
+# FAIL-BEFORE: no test existed. PASS-AFTER: log + accumulate + validation proven.
+# ---------------------------------------------------------------------------
+
+def test_analytics_wear_logs_event_and_returns_total(client):
+    appmod._rate_store.clear()
+    r = client.post("/api/analytics/wear", json={"item_id": "wear_test_item_1", "item_name": "White Tee", "style_tags": ["minimal"]})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["logged"] is True
+    assert isinstance(body["total_wears"], int)
+    assert body["total_wears"] >= 1
+
+
+def test_analytics_wear_accumulates_across_calls(client):
+    appmod._rate_store.clear()
+    r1 = client.post("/api/analytics/wear", json={"item_id": "wear_acc_item2", "item_name": "Coat"})
+    assert r1.status_code == 200
+    t1 = r1.json()["total_wears"]
+    appmod._rate_store.clear()
+    r2 = client.post("/api/analytics/wear", json={"item_id": "wear_acc_item2", "item_name": "Coat"})
+    assert r2.status_code == 200
+    # Second call total must be > first (another wear event was logged for same IP key)
+    assert r2.json()["total_wears"] > t1
+
+
+def test_analytics_wear_empty_item_id_400(client):
+    r = client.post("/api/analytics/wear", json={"item_id": "   ", "item_name": "x"})
+    assert r.status_code == 400
+
+
+# ---------------------------------------------------------------------------
+# Analytics summary — GET /api/analytics/summary
+# FAIL-BEFORE: no test existed. PASS-AFTER: demo fallback + real-data path proven.
+# ---------------------------------------------------------------------------
+
+def test_analytics_summary_fresh_user_returns_demo_shape(client):
+    # Fresh IP-keyed user with no wear history → demo values
+    r = client.get("/api/analytics/summary")
+    assert r.status_code == 200
+    body = r.json()
+    assert "total_items" in body or "utilization_rate" in body
+    assert "rewear_score" in body
+    assert "style_archetype" in body
+    assert isinstance(body["style_archetype"], str)
+
+
+def test_analytics_summary_after_wear_events_reflects_real_data(client):
+    # Seed two wear events for a distinct user key, then assert summary is non-demo.
+    appmod._rate_store.clear()
+    client.post("/api/analytics/wear", json={"item_id": "sum_item_a", "item_name": "Blazer", "style_tags": ["minimal"]})
+    appmod._rate_store.clear()
+    client.post("/api/analytics/wear", json={"item_id": "sum_item_b", "item_name": "Jeans"})
+    appmod._rate_store.clear()
+    r = client.get("/api/analytics/summary")
+    assert r.status_code == 200
+    body = r.json()
+    # Seeded data → total_items is a real computed value, not None
+    assert body["total_items"] is not None
+    assert isinstance(body["total_items"], int)
+
+
+# ---------------------------------------------------------------------------
+# Analytics wardrobe — GET /api/analytics/wardrobe (base64 wardrobe param)
+# FAIL-BEFORE: no test existed. PASS-AFTER: missing param 400 + empty wardrobe + valid proven.
+# ---------------------------------------------------------------------------
+
+import base64 as _b64
+import json as _json
+
+
+def test_analytics_wardrobe_missing_param_400(client):
+    r = client.get("/api/analytics/wardrobe")
+    assert r.status_code == 400
+
+
+def test_analytics_wardrobe_invalid_base64_400(client):
+    r = client.get("/api/analytics/wardrobe", params={"wardrobe": "!!not-base64!!"})
+    assert r.status_code == 400
+
+
+def test_analytics_wardrobe_invalid_range_400(client):
+    w_b64 = _b64.b64encode(_json.dumps([]).encode()).decode()
+    r = client.get("/api/analytics/wardrobe", params={"wardrobe": w_b64, "range": "yearly"})
+    assert r.status_code == 400
+
+
+def test_analytics_wardrobe_empty_array_returns_zero_stats(client):
+    w_b64 = _b64.b64encode(_json.dumps([]).encode()).decode()
+    r = client.get("/api/analytics/wardrobe", params={"wardrobe": w_b64})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["utilization_rate"] == 0
+    assert body["avg_cpw"] == 0.0
+    assert body["color_distribution"] == []
+    assert body["category_distribution"] == []
+
+
+def test_analytics_wardrobe_with_items_returns_distributions(client):
+    items = [
+        {"name": "Tee", "category": "top", "color": "white", "wear_count": 3,
+         "last_worn": "2026-07-01", "price_estimate_usd": 30},
+        {"name": "Jeans", "category": "bottoms", "color": "blue", "wear_count": 0,
+         "price_estimate_usd": 80},
+    ]
+    w_b64 = _b64.b64encode(_json.dumps(items).encode()).decode()
+    r = client.get("/api/analytics/wardrobe", params={"wardrobe": w_b64})
+    assert r.status_code == 200
+    body = r.json()
+    assert len(body["color_distribution"]) >= 1
+    assert len(body["category_distribution"]) >= 1
+    total_items = sum(e["count"] for e in body["color_distribution"])
+    assert total_items == 2
+
+
+# ---------------------------------------------------------------------------
+# Analytics wrapped — GET /api/analytics/wrapped/{year}
+# FAIL-BEFORE: no test existed. PASS-AFTER: invalid year 400 + valid year demo + seasons proven.
+# ---------------------------------------------------------------------------
+
+def test_analytics_wrapped_invalid_year_400(client):
+    r = client.get("/api/analytics/wrapped/1999")
+    assert r.status_code == 400
+
+
+def test_analytics_wrapped_valid_year_returns_shape(client):
+    r = client.get("/api/analytics/wrapped/2026")
+    assert r.status_code == 200
+    body = r.json()
+    assert "year" in body
+    assert body["year"] == 2026
+    assert "total_outfits" in body
+    assert "seasons" in body
+
+
+def test_analytics_wrapped_summer_season_param(client):
+    r = client.get("/api/analytics/wrapped/2026", params={"season": "summer"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["season"] == "summer"
+    assert body["year"] == 2026
+    assert "total_outfits" in body
+
+
+def test_analytics_wrapped_invalid_season_400(client):
+    r = client.get("/api/analytics/wrapped/2026", params={"season": "spring"})
+    assert r.status_code == 400
+
+
+# ---------------------------------------------------------------------------
+# Analytics season/current — GET /api/analytics/season/current
+# FAIL-BEFORE: no test existed. PASS-AFTER: shape proven.
+# ---------------------------------------------------------------------------
+
+def test_analytics_season_current_returns_shape(client):
+    r = client.get("/api/analytics/season/current")
+    assert r.status_code == 200
+    body = r.json()
+    assert "season" in body
+    assert body["season"] in ("summer", "winter")
+    assert "year" in body
+    assert "display_name" in body
+    assert "start_date" in body
+    assert "end_date" in body
+    assert "days_elapsed" in body
+    assert "days_remaining" in body
+    assert "summary" in body
+    assert isinstance(body["days_elapsed"], int)
+    assert isinstance(body["days_remaining"], int)
+
+
+# ---------------------------------------------------------------------------
+# Analytics seasons/archive — GET /api/analytics/seasons/archive
+# FAIL-BEFORE: no test existed. PASS-AFTER: shape proven.
+# ---------------------------------------------------------------------------
+
+def test_analytics_seasons_archive_returns_shape(client):
+    r = client.get("/api/analytics/seasons/archive")
+    assert r.status_code == 200
+    body = r.json()
+    assert "seasons" in body
+    seasons = body["seasons"]
+    assert isinstance(seasons, list)
+    assert len(seasons) >= 1
+    first = seasons[0]
+    assert "season" in first
+    assert first["season"] in ("summer", "winter")
+    assert "year" in first
+    assert "display_name" in first
+    assert "outfit_count" in first
+    assert isinstance(first["outfit_count"], int)
