@@ -96,6 +96,8 @@ Point below the hero: **Chat with Abigail** ("Ask your stylist") and **Style Swi
 **Say the thesis line:**
 > "Social → her closet → checkout, on one screen. Instagram shows her the look. Zara sells her the item. *Nobody* connects them through what she already owns. That's AWEAR."
 
+> 💡 *Match score note (for informed demos): the "87% match" band is currently computed client-side from localStorage (calcCompatScore). The server-side endpoint `GET /api/products/{id}/match` was shipped 2026-07-24 (commit `9cc466c`) and returns a more accurate score from the persisted closet_items on the server; SPA wiring is P1 for the mark lane. If an investor asks "how does the match score work?" → say: "Our algorithm cross-references every item on screen against what she owns in her closet — right now that runs locally for speed, and we've already shipped the server-side version that uses her full scan history. Next release wires those together." Then move on.*
+
 ---
 
 ## 6. Buy in-app → it lands in the closet (3:25 → 3:55) — **WOW #3**
