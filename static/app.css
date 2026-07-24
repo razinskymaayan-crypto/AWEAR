@@ -1648,28 +1648,27 @@
   .mp-segment { display: flex; gap: 4px; background: var(--card,#1e1a22); border-radius: var(--r-pill,999px); margin: 0 16px 12px; padding: 4px; }
   .mp-seg-btn { flex: 1; padding: 11px 6px; text-align: center; font-size: var(--t-caption,12px); font-weight: 800; color: var(--muted,#9e99ad); border-radius: var(--r-pill,999px); cursor: pointer; transition: all .2s; font-family: inherit; background: none; border: none; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
   .mp-seg-btn.active-all { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); }
-  .mp-seg-btn.active-new { background: var(--accent3,#7a6af0); color: var(--card,#fff); }
+  .mp-seg-btn.active-new { background: var(--accent3,#7a6af0); color: var(--bg,#0e0c0f); }
   .mp-seg-btn.active-preloved { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
   .mp-seg-btn.active-sell { background: var(--accent,#e8526a); color: var(--bg,#0e0c0f); }
-  .mp-seg-btn.active-shop { background: var(--accent3,#7a6af0); color: var(--card,#fff); }
+  .mp-seg-btn.active-shop { background: var(--accent3,#7a6af0); color: var(--bg,#0e0c0f); }
   .mp-seg-btn.active-community { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); }
 
   /* ---- Marketplace Card — World Differentiation ---- */
   .mp-item.retail { border-color: color-mix(in srgb, var(--accent3,#7a6af0) 30%, var(--line,#2e2836)); }
   .mp-item.resale { border-color: color-mix(in srgb, var(--accent2,#c4855a) 30%, var(--line,#2e2836)); }
-  .mp-item-brand { font-size: var(--t-micro,11px); font-weight: 900; color: var(--accent3,#7a6af0); margin-top: 3px; letter-spacing: .4px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mp-item-brand { font-size: var(--t-micro,11px); font-weight: 900; color: var(--fg,#f0ecf5); margin-top: 3px; letter-spacing: .4px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .mp-item-seller { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 700; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .mp-item-preloved-label { font-size: var(--t-micro,11px); color: var(--accent2,#c4855a); font-weight: 800; margin-top: 2px; letter-spacing: .2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .mp-buy-btn.retail-btn { background: var(--accent3,#7a6af0); color: var(--card,#fff); }
+  .mp-buy-btn.retail-btn { background: var(--accent3,#7a6af0); color: var(--bg,#0e0c0f); }
   .mp-buy-btn.resale-btn { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); }
 
   /* ---- Marketplace Card — New Items ---- */
-  .mp-item-shop-btn { display: block; width: 100%; margin-top: 8px; padding: 7px 0; background: var(--accent3); border: none; border-radius: var(--r-pill); font-family: inherit; font-size: var(--t-caption); font-weight: 900; color: var(--on-accent, #fff); cursor: pointer; transition: transform .15s; }
+  .mp-item-shop-btn { display: block; width: 100%; margin-top: 8px; padding: 7px 0; min-height: 44px; background: var(--accent3,#7a6af0); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 900; color: var(--bg,#0e0c0f); cursor: pointer; transition: transform .15s; }
   .mp-item-shop-btn:active { transform: scale(.96); }
-  .mp-item-brand { font-size: var(--t-micro); font-weight: 800; color: var(--accent3); margin-top: 3px; letter-spacing: .3px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* ---- Marketplace Badge — Secondhand ---- */
-  .mp-item-badge.secondhand { background: var(--accent2); color: #fff; opacity: .9; }
+  .mp-item-badge.secondhand { background: var(--accent2,#c4855a); color: var(--bg,#0e0c0f); opacity: .9; }
 
   /* ---- Marketplace Sell — Hidden state ---- */
   .mp-sell-hidden { display: none !important; }
@@ -1679,11 +1678,11 @@
   .mp-cond-row::-webkit-scrollbar { display: none; }
   .mp-cond-chip { flex-shrink: 0; padding: 0 16px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--line,#2e2836); background: var(--card,#1e1a22); color: var(--muted,#9e99ad); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 44px; display: inline-flex; align-items: center; gap: 5px; box-sizing: border-box; }
   .mp-cond-chip.active { background: var(--fg,#f0ecf5); color: var(--bg,#0e0c0f); border-color: var(--fg,#f0ecf5); }
-  .mp-closet-chip { border-color: var(--accent3,#7a6af0); color: var(--accent3,#7a6af0); }
-  .mp-closet-chip.active { background: var(--accent3,#7a6af0); color: var(--card,#fff); border-color: var(--accent3,#7a6af0); }
+  .mp-closet-chip { border-color: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
+  .mp-closet-chip.active { background: var(--accent3,#7a6af0); color: var(--bg,#0e0c0f); border-color: var(--accent3,#7a6af0); }
   /* ---- Marketplace Empty States ---- */
   .mp-empty { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 48px 20px; color: var(--muted,#9e99ad); text-align: center; font-size: var(--t-body,14px); }
-  .mp-empty-cta { margin-top: 4px; padding: 10px 24px; background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-small,13px); font-weight: 700; cursor: pointer; min-height: 44px; transition: opacity .15s; }
+  .mp-empty-cta { margin-top: 4px; padding: 10px 24px; background: var(--accent3,#7a6af0); color: var(--bg,#0e0c0f); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-small,13px); font-weight: 700; cursor: pointer; min-height: 44px; transition: opacity .15s; }
   .mp-empty-cta:active { opacity: .8; }
 
   /* ---- Marketplace Condition Badges ---- */
@@ -1696,18 +1695,18 @@
 
   /* ---- Marketplace Filter Assistant ---- */
   .mp-assist-bar { padding: 0 16px 12px; }
-  .mp-assist-input-row { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1.5px solid var(--line); border-radius: var(--r-pill); padding: 10px 14px; transition: border .18s; }
-  .mp-assist-input-row:focus-within { border-color: var(--accent3); }
-  .mp-assist-input { flex: 1; background: none; border: none; outline: none; font-family: inherit; font-size: var(--t-small); color: var(--text); }
-  .mp-assist-input::placeholder { color: var(--muted); }
-  .mp-assist-btn { background: var(--accent3); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; flex-shrink: 0; transition: transform .15s; }
+  .mp-assist-input-row { display: flex; align-items: center; gap: 8px; background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: 10px 14px; transition: border .18s; }
+  .mp-assist-input-row:focus-within { border-color: var(--accent3,#7a6af0); }
+  .mp-assist-input { flex: 1; background: none; border: none; outline: none; font-family: inherit; font-size: var(--t-small,13px); color: var(--text,#fbfbfd); }
+  .mp-assist-input::placeholder { color: var(--muted,#9e99ad); }
+  .mp-assist-btn { background: var(--accent3,#7a6af0); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--bg,#0e0c0f); cursor: pointer; flex-shrink: 0; transition: transform .15s; }
   .mp-assist-btn:active { transform: scale(.92); }
-  .mp-assist-clear { background: none; border: none; color: var(--muted); font-size: var(--t-body); cursor: pointer; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
-  .mp-assist-msg { font-size: var(--t-caption); color: var(--accent3); font-weight: 700; margin-top: 8px; padding: 0 4px; }
+  .mp-assist-clear { background: none; border: none; color: var(--muted,#9e99ad); font-size: var(--t-body,14px); cursor: pointer; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .mp-assist-msg { font-size: var(--t-caption,12px); color: var(--accent3,#7a6af0); font-weight: 700; margin-top: 8px; padding: 0 4px; }
 
   /* ---- Marketplace Compat Badge ---- */
-  .mp-compat-btn { cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: color-mix(in srgb, var(--accent2) 12%, transparent); border-radius: var(--r-pill); transition: background .15s; }
-  .mp-compat-btn:hover { background: color-mix(in srgb, var(--accent2) 22%, transparent); }
+  .mp-compat-btn { cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: color-mix(in srgb, var(--accent2,#c4855a) 12%, transparent); border-radius: var(--r-pill,999px); transition: background .15s; }
+  .mp-compat-btn:hover { background: color-mix(in srgb, var(--accent2,#c4855a) 22%, transparent); }
   .mp-compat-btn:active { opacity: .7; }
 
   /* ---- Marketplace Compat Pill (P0-C) — top of card, prominent ---- */
