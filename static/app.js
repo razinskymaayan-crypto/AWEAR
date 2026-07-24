@@ -580,34 +580,14 @@
 
   // Hero match band: prominent "% match to your closet" directly under the item image.
   // Uses calcCompatScore() {pct, matches:[closetItemNames]} — tier colors the NUMBER + chip borders only.
-  function matchBandHTML(it, wardrobe){
-    // Empty closet → inviting state, NOT 0%. Same band footprint.
-    if(!wardrobe.length){
-      return `<div class="match-band match-band-empty">
-        <span class="match-band-icon">${icon('hanger',22)}</span>
-        <div class="match-band-empty-copy">
-          <div class="match-band-empty-title">Add clothes to see your match</div>
-          <div class="match-band-label">We compare every piece to what you already own</div>
-        </div>
-        <button class="match-band-cta" onclick="closeSheet();showView('closet')">Build your closet</button>
-      </div>`;
-    }
-    const {pct, matches} = calcCompatScore(it, wardrobe);
+  // Core renderer — takes pre-computed values so it can be called from both the local
+  // client-side score path and the server API path.
+  function _matchBandRender(pct, reason, matchNames){
     const tier = pct>=80 ? 'high' : pct>=60 ? 'mid' : 'low';
     const tierColor = pct>=80 ? 'var(--success,#52c97a)' : pct>=60 ? 'var(--accent2,#c4855a)' : 'var(--accent,#e8526a)';
-    // Plain-English reason
-    let reason;
-    if(matches.length>0){
-      if(matches.length===1) reason = `Pairs with your ${esc(matches[0])}.`;
-      else if(matches.length===2) reason = `Pairs with your ${esc(matches[0])} and ${esc(matches[1])}.`;
-      else reason = `Pairs with ${matches.length} pieces you already own.`;
-    } else {
-      reason = 'A fresh direction for your closet.';
-    }
-    const chips = matches.slice(0,3)
+    const chips = matchNames.slice(0,3)
       .map(m=>`<span class="match-chip" style="border-color:${tierColor}">${esc(m)}</span>`)
       .join('');
-    // Progress ring: r=34 → circumference ≈ 213.6. animateMatchBand() fills it on open.
     const R = 34, LEN = +(2 * Math.PI * R).toFixed(2);
     return `<div class="match-band match-band-${tier}">
       <div class="match-band-ring">
@@ -622,9 +602,33 @@
         <div class="match-band-num" data-target="${pct}" style="color:${tierColor}">0<span class="match-band-pct">%</span></div>
       </div>
       <div class="match-band-label">match to your closet</div>
-      <div class="match-band-reason">${reason}</div>
+      <div class="match-band-reason">${esc(reason)}</div>
       ${chips?`<div class="match-band-chips">${chips}</div>`:''}
     </div>`;
+  }
+
+  function matchBandHTML(it, wardrobe){
+    // Empty closet → inviting state, NOT 0%. Same band footprint.
+    if(!wardrobe.length){
+      return `<div class="match-band match-band-empty">
+        <span class="match-band-icon">${icon('hanger',22)}</span>
+        <div class="match-band-empty-copy">
+          <div class="match-band-empty-title">Add clothes to see your match</div>
+          <div class="match-band-label">We compare every piece to what you already own</div>
+        </div>
+        <button class="match-band-cta" onclick="closeSheet();showView('closet')">Build your closet</button>
+      </div>`;
+    }
+    const {pct, matches} = calcCompatScore(it, wardrobe);
+    let reason;
+    if(matches.length>0){
+      if(matches.length===1) reason = `Pairs with your ${matches[0]}.`;
+      else if(matches.length===2) reason = `Pairs with your ${matches[0]} and ${matches[1]}.`;
+      else reason = `Pairs with ${matches.length} pieces you already own.`;
+    } else {
+      reason = 'A fresh direction for your closet.';
+    }
+    return _matchBandRender(pct, reason, matches);
   }
 
   // full item detail sheet: real photo -> match% -> closet combos (AI stylist) -> buy
@@ -690,6 +694,25 @@
       : `<div style="text-align:center;color:var(--muted);font-size:var(--t-small);padding:10px 0">Price not available for this item yet</div>`;
 
     showSheet();
+
+    // Upgrade match band with server-side score once the sheet is visible.
+    // Local calcCompatScore shows immediately; the server result (category complementarity
+    // + real closet data) replaces it on success — silent fallback on network error.
+    if(it.id){
+      const uid = getOrCreateUserId();
+      fetch(`/api/products/${encodeURIComponent(it.id)}/match?user_id=${encodeURIComponent(uid)}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if(!data || !buySheet.classList.contains('show')) return;
+          const band = buySheet.querySelector('.match-band');
+          if(!band || band.classList.contains('match-band-empty')) return;
+          const matchNames = (data.matching_items||[]).map(m=>m.name||'').filter(Boolean);
+          const newHTML = _matchBandRender(data.match_pct||0, data.reason||'', matchNames);
+          band.outerHTML = newHTML;
+          animateMatchBand();
+        })
+        .catch(()=>{});
+    }
   }
   // A buy is preloved (P2P second-hand, 8% AWEAR commission) when the item is a
   // community/resale listing — flagged by isNew===false, a seller handle, or a

@@ -11,12 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-24, run 17)
-- **Task**: UX-QA P1 — edit-profile drag-dismiss + DS-004 var(--warning) fallback. commit 1a771bb. check-render ✓.
-- **Done**: `_addSheetDragDismiss` wired to `.edit-modal` (swipe-down close); `var(--warning,#e8a84a)` fallback added to Stylist card rating icon.
-- **Next**: Gabbana re-audit Stylist/Explore/Marketplace (should score 8+); OR wire match score into feed item tap handler (steve's GET /api/products/{id}/match is ready).
-- **Prior runs**: Gabbana UX fixes Explore/Marketplace/Stylist (run 16, 50449e4), DS-004 rejection fix (run 15, 237df96), generate-garment UI (run 12), text overflow cards (run 11), stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f).
-- **Prior runs**: DS-004 rejection fix (run 15, 237df96), generate-garment UI (run 12), text overflow cards (run 11), stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233).
+## Mark lane — last run (2026-07-24, run 18)
+- **Task**: Wire backend match score into feed item detail sheet. commit pending. check-render ✓.
+- **Done**: `_matchBandRender()` extracted from `matchBandHTML()`; `openSheetItem()` fires `GET /api/products/{id}/match` after sheet open and updates match band with server score (progressive enhancement — local score shows first, server score replaces on success). DS-004 rejection lesson applied: all var() fallbacks use dark-token values.
+- **Next**: Gabbana re-audit Stylist/Explore/Marketplace (should score 8+). P2 token reconciliation appears done (tokens.css has AA-audited --muted #6F6A63 + reconciled --success #1a7a4a) — check off in assignments.
+- **Prior runs**: run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4); run 15 — DS-004 fix (237df96); run 12 — generate-garment UI; run 11 — text overflow; b24f770 — overlays; e1562d8 — drag-dismiss sheets; da5502f — marketplace contrast.
 
 ## Steve lane — last run (2026-07-24, run 17)
 - **Task**: WOW feature — wardrobe match score. commit 9cc466c.
