@@ -17,11 +17,11 @@
 - **Next**: Gabbana re-audit these screens (should score 8+); OR pick next INBOX item (Stylist screen avatar pattern, dead buttons in other screens).
 - **Prior runs**: DS-004 rejection fix (run 15, 237df96), generate-garment UI (run 12), text overflow cards (run 11), stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233).
 
-## Steve lane — last run (2026-07-19)
-- **Task**: DATABASE_URL → Postgres migration (INBOX launch infra step 3)
-- **Done**: `_CompatDB` + `_PgCursorProxy` classes in app.py; `_get_db()` returns `_CompatDB` (dialect='sqlite' or 'postgres'); `?`→`%s` translation; `RealDictCursor` for dict-like rows; `SELECT lastval()` for lastrowid; `init_db()` skips when DATABASE_URL set; `psycopg2-binary>=2.9` in requirements.txt; `notes/schema_postgres.sql` for Supabase manual setup; 3 new pytests (80 total)
-- **Remaining**: Launch infra step 4 (Supabase Storage for images); SPA side Supabase Auth (mark lane)
-- **CI_FAILURES note**: combined patch (BASE-anchor + GATE 3 stale-ownership fix) still NOT applied on main. Escalation stands in NEEDS_YOU.md. Do NOT re-analyze.
+## Steve lane — last run (2026-07-24, run 17)
+- **Task**: WOW feature — wardrobe match score. commit 9cc466c.
+- **Done**: `GET /api/products/{product_id}/match` — returns `match_pct` (0-95), `reason`, `matching_items` from user's SQLite closet. Deterministic (no AI call), BE-006 user_key, rate-limited 30/min. 4 hermetic pytests; 141/141 passing. Self-heal: verified steve(pytest) UNRESOLVED is fixed on main (60f159e); cannot write .claude/agents/knowledge/CI_FAILURES.md (permissions denied, outside lane).
+- **All INBOX launch infra steps done**: Render (60f159e), Supabase Auth (9667fd0), Postgres _CompatDB (8c8b41), Storage (565f18d).
+- **Next**: SPA side needs to wire the match score into the feed item tap handler (mark lane). Backend ready: `GET /api/products/{id}/match?user_id={uid}`.
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
 ## Phase status
