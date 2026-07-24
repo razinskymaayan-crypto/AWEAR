@@ -2107,3 +2107,73 @@ def test_scan_health_includes_database_mode(client):
     # In CI (no DATABASE_URL) we expect sqlite mode
     assert db["mode"] == "sqlite", "CI must run in sqlite mode (DATABASE_URL not set)"
     assert db["configured"] is False, "CI must report database not configured (no DATABASE_URL)"
+
+
+# ---------------------------------------------------------------------------
+# Wardrobe match score — GET /api/products/{product_id}/match
+# The WOW feature: "85% matches your wardrobe" shown on tagged feed items.
+# FAIL-BEFORE: endpoint didn't exist (404/405). PASS-AFTER: 200 with match_pct.
+# ---------------------------------------------------------------------------
+
+_MATCH_PRODUCT_ID = "prod_jk_001"  # in static/data/products.json (category=outerwear)
+
+
+def test_product_match_unknown_product_returns_404(client):
+    r = client.get("/api/products/nonexistent_xyz_abc/match")
+    assert r.status_code == 404
+
+
+def test_product_match_empty_closet_returns_base_score(client):
+    r = client.get(f"/api/products/{_MATCH_PRODUCT_ID}/match",
+                   params={"user_id": "user_match_empty_closet_xyz"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["product_id"] == _MATCH_PRODUCT_ID
+    assert isinstance(body["match_pct"], int)
+    assert 55 <= body["match_pct"] <= 95   # base 55, no complementary items yet
+    assert body["match_pct"] == 55         # empty closet → exactly base
+    assert isinstance(body["reason"], str) and len(body["reason"]) > 0
+    assert body["matching_items"] == []
+
+
+def test_product_match_rich_closet_raises_score(client):
+    # Seed complementary items: prod_jk_001 is outerwear → complements top, bottoms, shoes
+    uid = "user_match_rich_xyz"
+    for name, cat, ref in [
+        ("White Tee", "top", "match-ref-top"),
+        ("Black Jeans", "bottoms", "match-ref-btm"),
+        ("White Sneakers", "shoes", "match-ref-shoe"),
+    ]:
+        body = {
+            "user_id": uid, "client_ref": ref,
+            "items": [{
+                "accepted": True,
+                "ai": {"name": name, "category": cat, "color": "white",
+                       "brand": "Zara", "search_query": name, "price_estimate_usd": 50},
+                "final": {"name": name, "category": cat, "color": "white",
+                          "brand": "Zara", "search_query": name, "price_estimate_usd": 50,
+                          "confidence": "high"},
+            }],
+        }
+        appmod._rate_store.clear()
+        resp = client.post("/api/closet/confirm", json=body)
+        assert resp.status_code == 200
+
+    r = client.get(f"/api/products/{_MATCH_PRODUCT_ID}/match", params={"user_id": uid})
+    assert r.status_code == 200
+    body = r.json()
+    # 3 complementary cats × 8 = +24 → 55 + 24 = 79; +5 richness if ≥5 items (not here → 79)
+    assert body["match_pct"] >= 75
+    assert len(body["matching_items"]) >= 1
+    assert any(it["category"] in ("top", "bottoms", "shoes") for it in body["matching_items"])
+
+
+def test_product_match_response_shape(client):
+    r = client.get(f"/api/products/{_MATCH_PRODUCT_ID}/match")
+    assert r.status_code == 200
+    body = r.json()
+    assert "product_id" in body
+    assert "match_pct" in body
+    assert "reason" in body
+    assert "matching_items" in body
+    assert isinstance(body["matching_items"], list)

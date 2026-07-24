@@ -1931,6 +1931,82 @@ async def get_products(
     }
 
 
+@app.get("/api/products/{product_id}/match")
+async def product_wardrobe_match(product_id: str, request: Request, user_id: Optional[str] = None):
+    """Return a wardrobe compatibility score for a catalog product vs. the user's closet.
+
+    The WOW number — "85% matches your wardrobe" — shown when a user taps a tagged
+    item in the feed. Computed from category complementarity + closet richness; never
+    makes an AI call (instant, offline, deterministic).
+
+    Returns:
+        product_id: str
+        match_pct: int  — 0-95, wardrobe compatibility score
+        reason: str     — one-sentence human-readable explanation
+        matching_items: list[{name, category, color}] — closet items that pair well
+    """
+    ip = request.client.host if request.client else "unknown"
+    if not check_rate_limit(ip, "products-match", limit=30):
+        raise HTTPException(status_code=429, detail="Too many requests.")
+
+    product = next((p for p in _products_cache if p.get("id") == product_id), None)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    user_key = (user_id or "").strip() or ip
+    try:
+        with _get_db() as db:
+            rows = db.execute(
+                "SELECT name, category, color FROM closet_items WHERE user_key = ? LIMIT 100",
+                (user_key,),
+            ).fetchall()
+    except Exception:
+        rows = []
+
+    closet = [{"name": r["name"], "category": r["category"], "color": r["color"]} for r in rows]
+
+    # Complementarity matrix: what categories pair well with the product's category.
+    _COMPLEMENTS: dict[str, list[str]] = {
+        "top":       ["bottoms", "shoes", "outerwear", "accessory"],
+        "bottoms":   ["top", "shoes", "accessory"],
+        "shoes":     ["top", "bottoms"],
+        "outerwear": ["top", "bottoms", "shoes"],
+        "accessory": ["top", "bottoms"],
+        "hat":       ["top"],
+    }
+    prod_cat = (product.get("category") or "").lower()
+    complements = set(_COMPLEMENTS.get(prod_cat, []))
+    closet_cats = {(it.get("category") or "").lower() for it in closet}
+
+    matched_cats = complements & closet_cats
+    matching_items = [it for it in closet if (it.get("category") or "").lower() in matched_cats][:6]
+
+    # Score: base 55 + 8 per complementary category present (max 4 × 8 = 32) + richness bonus
+    score = 55 + min(len(matched_cats), 4) * 8
+    if len(closet) >= 5:
+        score += 5
+    if len(closet) >= 10:
+        score += 3
+
+    match_pct = min(score, 95)
+
+    if match_pct >= 85:
+        reason = f"Excellent match — pairs well with {len(matching_items)} items you own."
+    elif match_pct >= 75:
+        reason = f"Great match — works with your existing {', '.join(sorted(matched_cats)[:2])}." if matched_cats else "Great match for your wardrobe."
+    elif match_pct >= 65:
+        reason = "Good foundation to build on."
+    else:
+        reason = "Start here to expand your wardrobe."
+
+    return {
+        "product_id": product_id,
+        "match_pct": match_pct,
+        "reason": reason,
+        "matching_items": matching_items,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Buy routing — the SINGLE place the app asks "how do I buy this item?".
 # Returns the route behind the one-tap Buy button: source + checkout path +
