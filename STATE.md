@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-23, run 15)
-- **Task**: DS-004 rejection fix (run 15) — corrected 19 wrong var() fallbacks in app.css: --text #f0ecf5→#fbfbfd (11 instances), --card #fbfbfd/#e9e9f0→#1e1a22 (6 instances), --card-hover #f4f4f8→#262030 (shimmer), --muted #b8b8c4→#9e99ad, --warning #f59e0b→#e8a84a, --bg #000→#0e0c0f. commit 237df96. check-render ✓.
-- **Pattern to avoid**: Previous runs kept introducing WRONG fallbacks. The correct approach: use awear-tokens.json SoT values. --text=#fbfbfd, --card=#1e1a22, --card-hover=#262030, --muted=#9e99ad, --fg=#f0ecf5, --line=#2e2836, --bg=#0e0c0f.
-- **Next**: Continue gabbana sweep on other screens (explore/marketplace/AI stylist) OR pick next INBOX ★★★★★ item.
-- **Prior runs**: generate-garment UI (run 12), text overflow cards (run 11), stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233), DS-004 mp-item-shop-btn (025a509).
+## Mark lane — last run (2026-07-24, run 16)
+- **Task**: Gabbana sweep — Explore/Marketplace/AI Stylist P0 UX fixes. commit 50449e4. check-render + interactions ✓.
+- **Done**: Touch targets 44px on .ev-chip/.mp-cond-chip/.mp-filter-btn/.mp-sell-btn/.styl-btn; DS-009 removed font-size from .ex-card-bg/.ex-result-emoji; .mp-item-badge font-size tokenized; .styl-tag rgba→color-mix(var(--accent3)); Explore trending chip inline rgba→color-mix tokens; removed direction:rtl from .ex-search input.
+- **Next**: Gabbana re-audit these screens (should score 8+); OR pick next INBOX item (Stylist screen avatar pattern, dead buttons in other screens).
+- **Prior runs**: DS-004 rejection fix (run 15, 237df96), generate-garment UI (run 12), text overflow cards (run 11), stuck overlays (b24f770), drag-dismiss bottom-sheets (e1562d8), marketplace contrast + truncation (da5502f), locked perk click handler (b243552), text overflow fixes (91bac9f), dead-button explore (d3923fe), DS-004 fix (1e41dde), UX-QA P1 bottom-sheets (f084233).
 
 ## Steve lane — last run (2026-07-19)
 - **Task**: DATABASE_URL → Postgres migration (INBOX launch infra step 3)
