@@ -2600,3 +2600,339 @@ def test_analytics_seasons_archive_returns_shape(client):
     assert "display_name" in first
     assert "outfit_count" in first
     assert isinstance(first["outfit_count"], int)
+
+
+# ---------------------------------------------------------------------------
+# /api/admin/reload-products — hot-reload products cache
+# ---------------------------------------------------------------------------
+
+def test_admin_reload_products_returns_ok_and_count(client):
+    """POST /api/admin/reload-products must return status='ok' and a non-negative count.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: contract proven.
+    """
+    r = client.post("/api/admin/reload-products")
+    assert r.status_code == 200
+    body = r.json()
+    assert body.get("status") == "ok"
+    assert isinstance(body.get("count"), int)
+    assert body["count"] >= 0
+
+
+def test_admin_reload_products_is_idempotent(client):
+    """Calling reload-products twice returns the same count both times.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: idempotency confirmed.
+    """
+    r1 = client.post("/api/admin/reload-products")
+    r2 = client.post("/api/admin/reload-products")
+    assert r1.status_code == 200
+    assert r2.status_code == 200
+    assert r1.json()["count"] == r2.json()["count"]
+
+
+# ---------------------------------------------------------------------------
+# /api/marketplace/assist — AI marketplace filter (demo mode in CI)
+# ---------------------------------------------------------------------------
+
+def test_marketplace_assist_missing_query_returns_400(client):
+    """POST /api/marketplace/assist with no query field must return 400.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: validation enforced.
+    """
+    r = client.post("/api/marketplace/assist", json={})
+    assert r.status_code == 400
+    assert "query" in r.json().get("detail", "").lower()
+
+
+def test_marketplace_assist_blank_query_returns_400(client):
+    """POST /api/marketplace/assist with blank query string must return 400.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: blank string rejected.
+    """
+    r = client.post("/api/marketplace/assist", json={"query": "   "})
+    assert r.status_code == 400
+
+
+def test_marketplace_assist_demo_returns_matches_shape(client):
+    """POST /api/marketplace/assist in demo mode returns matches list and message.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: response shape proven.
+    """
+    r = client.post("/api/marketplace/assist", json={"query": "something casual", "items": []})
+    assert r.status_code == 200
+    body = r.json()
+    assert "matches" in body
+    assert "message" in body
+    assert isinstance(body["matches"], list)
+    assert isinstance(body["message"], str)
+
+
+def test_marketplace_assist_date_keyword_matches_categories(client):
+    """'date' keyword in query must trigger dress/top/outerwear category matching.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: keyword-category mapping proven.
+    """
+    items = [
+        {"id": "p1", "category": "dress", "name": "Floral Dress"},
+        {"id": "p2", "category": "jeans", "name": "Straight Jeans"},
+        {"id": "p3", "category": "top", "name": "Silk Top"},
+    ]
+    r = client.post("/api/marketplace/assist", json={"query": "date night outfit", "items": items})
+    assert r.status_code == 200
+    body = r.json()
+    assert body.get("demo") is True
+    matched_ids = {m["id"] for m in body["matches"]}
+    # dress and top match; jeans should not (not in date categories)
+    assert "p1" in matched_ids
+    assert "p3" in matched_ids
+    assert "p2" not in matched_ids
+
+
+def test_marketplace_assist_demo_flag_present_in_ci(client):
+    """In CI (no AI key) the response must include demo=True.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: demo flag confirmed.
+    """
+    r = client.post("/api/marketplace/assist", json={"query": "party look"})
+    assert r.status_code == 200
+    assert r.json().get("demo") is True
+
+
+# ---------------------------------------------------------------------------
+# /api/weather — server-side proxy with 30-minute cache
+# ---------------------------------------------------------------------------
+
+def test_weather_missing_params_returns_422(client):
+    """GET /api/weather without lat/lon must return 422 (FastAPI validation).
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: FastAPI param validation confirmed.
+    """
+    r = client.get("/api/weather")
+    assert r.status_code == 422
+
+
+def test_weather_urlerror_returns_502(client, monkeypatch):
+    """URLError from _fetch_weather_sync must surface as 502 with 'weather' in detail.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: error handling proven.
+    """
+    import urllib.error
+
+    appmod._weather_cache.pop("48.85,2.35", None)
+
+    def _fail(lat, lon):
+        raise urllib.error.URLError("simulated network error")
+
+    monkeypatch.setattr(appmod, "_fetch_weather_sync", _fail)
+    r = client.get("/api/weather?lat=48.85&lon=2.35")
+    assert r.status_code == 502
+    assert "weather" in r.json().get("detail", "").lower()
+
+
+def test_weather_cache_hit_skips_second_fetch(client, monkeypatch):
+    """Second request with same coords must NOT call _fetch_weather_sync again.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: cache short-circuit proven.
+    """
+    appmod._weather_cache.pop("48.85,2.35", None)
+
+    fetch_count = {"n": 0}
+    fake_payload = {"current_weather": {"temperature": 20, "weathercode": 0}}
+
+    def _fake_fetch(lat, lon):
+        fetch_count["n"] += 1
+        return fake_payload
+
+    monkeypatch.setattr(appmod, "_fetch_weather_sync", _fake_fetch)
+
+    r1 = client.get("/api/weather?lat=48.85&lon=2.35")
+    assert r1.status_code == 200
+
+    r2 = client.get("/api/weather?lat=48.85&lon=2.35")
+    assert r2.status_code == 200
+
+    assert fetch_count["n"] == 1, f"expected 1 fetch, got {fetch_count['n']}"
+
+
+# ---------------------------------------------------------------------------
+# /api/dm/conversations — list DM threads for the current user
+# ---------------------------------------------------------------------------
+
+def test_dm_conversations_returns_shape(client):
+    """GET /api/dm/conversations must return conversations list with required fields.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: response shape proven.
+    """
+    r = client.get("/api/dm/conversations")
+    assert r.status_code == 200
+    body = r.json()
+    assert "conversations" in body
+    convos = body["conversations"]
+    assert isinstance(convos, list)
+    assert len(convos) >= 1
+    first = convos[0]
+    assert "user_id" in first
+    assert "name" in first
+    assert "handle" in first
+    assert "last_message" in first
+    assert "unread" in first
+
+
+def test_dm_conversations_seeded_automatically(client):
+    """Fresh user gets seed conversations; list must be non-empty.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: auto-seed confirmed.
+    """
+    r = client.get("/api/dm/conversations")
+    assert r.status_code == 200
+    assert len(r.json()["conversations"]) >= 1
+
+
+def test_dm_conversations_unread_is_non_negative_int(client):
+    """Each conversation's unread field must be a non-negative integer.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: unread field type proven.
+    """
+    r = client.get("/api/dm/conversations")
+    assert r.status_code == 200
+    for convo in r.json()["conversations"]:
+        assert isinstance(convo["unread"], int)
+        assert convo["unread"] >= 0
+
+
+# ---------------------------------------------------------------------------
+# /api/dm/thread/{user_id} — read one DM thread
+# ---------------------------------------------------------------------------
+
+def test_dm_thread_returns_peer_and_messages(client):
+    """GET /api/dm/thread/{user_id} must return peer dict and messages list.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: response shape proven.
+    """
+    r = client.get("/api/dm/thread/user_011")
+    assert r.status_code == 200
+    body = r.json()
+    assert "peer" in body
+    assert "messages" in body
+    peer = body["peer"]
+    assert peer.get("user_id") == "user_011"
+    assert "name" in peer
+    assert "handle" in peer
+
+
+def test_dm_thread_messages_have_required_fields(client):
+    """Messages in DM thread must have id, from, text, created_at fields.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: message schema proven.
+    """
+    r = client.get("/api/dm/thread/user_011")
+    assert r.status_code == 200
+    messages = r.json()["messages"]
+    assert isinstance(messages, list)
+    assert len(messages) >= 1
+    for msg in messages:
+        assert "id" in msg
+        assert "from" in msg
+        assert msg["from"] in ("me", "them")
+        assert "text" in msg
+        assert "created_at" in msg
+
+
+def test_dm_thread_marks_inbound_messages_read(client):
+    """Viewing a thread must mark inbound messages as read (unread drops to 0).
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: read-marking confirmed.
+    """
+    # Ensure conversations are seeded
+    convos_r = client.get("/api/dm/conversations")
+    assert convos_r.status_code == 200
+    convos = convos_r.json()["conversations"]
+
+    # Find user_011 thread — it has inbound messages after last outbound (seeded unread)
+    target = next((c for c in convos if c["user_id"] == "user_011"), None)
+    if target is None:
+        return  # seed not present; skip
+
+    # Only assert read-clearing if there was actually unread content before
+    had_unread = target["unread"] > 0
+
+    thread_r = client.get("/api/dm/thread/user_011")
+    assert thread_r.status_code == 200
+
+    if had_unread:
+        convos_after = client.get("/api/dm/conversations").json()["conversations"]
+        after_target = next((c for c in convos_after if c["user_id"] == "user_011"), None)
+        assert after_target is not None
+        assert after_target["unread"] == 0
+
+
+# ---------------------------------------------------------------------------
+# /api/dm/send — send a DM to a peer
+# ---------------------------------------------------------------------------
+
+def test_dm_send_blank_to_user_id_returns_400(client):
+    """POST /api/dm/send with blank to_user_id must return 400.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: validation enforced.
+    """
+    r = client.post("/api/dm/send", json={"to_user_id": "", "text": "hello"})
+    assert r.status_code == 400
+    assert "to_user_id" in r.json().get("detail", "").lower()
+
+
+def test_dm_send_blank_text_returns_400(client):
+    """POST /api/dm/send with blank text must return 400.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: validation enforced.
+    """
+    r = client.post("/api/dm/send", json={"to_user_id": "user_001", "text": ""})
+    assert r.status_code == 400
+    assert "text" in r.json().get("detail", "").lower()
+
+
+def test_dm_send_text_too_long_returns_400(client):
+    """POST /api/dm/send with text > 2000 chars must return 400.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: length limit enforced.
+    """
+    r = client.post("/api/dm/send", json={"to_user_id": "user_001", "text": "x" * 2001})
+    assert r.status_code == 400
+    assert "long" in r.json().get("detail", "").lower()
+
+
+def test_dm_send_unknown_recipient_returns_404(client):
+    """POST /api/dm/send to a non-existent user_id must return 404.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: recipient validation proven.
+    """
+    r = client.post("/api/dm/send", json={"to_user_id": "totally_fake_xyz_user", "text": "hi"})
+    assert r.status_code == 404
+
+
+def test_dm_send_success_returns_id_and_created_at(client):
+    """POST /api/dm/send to a valid peer must return id (int) and created_at.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: success path proven.
+    """
+    r = client.post("/api/dm/send", json={"to_user_id": "user_001", "text": "hey, new message!"})
+    assert r.status_code == 200
+    body = r.json()
+    assert isinstance(body.get("id"), int)
+    assert isinstance(body.get("created_at"), str)
+    assert len(body["created_at"]) > 0
+
+
+def test_dm_send_message_appears_in_thread(client):
+    """A sent message must appear in the subsequent thread view.
+
+    FAIL-BEFORE: no test existed. PASS-AFTER: write-read consistency proven.
+    """
+    unique_text = "integration-test-unique-msg-9f3a2b"
+    send_r = client.post("/api/dm/send", json={"to_user_id": "user_003", "text": unique_text})
+    assert send_r.status_code == 200
+
+    thread_r = client.get("/api/dm/thread/user_003")
+    assert thread_r.status_code == 200
+    texts = [m["text"] for m in thread_r.json()["messages"]]
+    assert unique_text in texts
