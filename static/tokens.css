@@ -179,7 +179,7 @@
     --shadow-glow:   0 0 20px   color-mix(in srgb, #E84A5F 30%, transparent);
 
     /* Data viz — match chart track to new line token */
-    --progress-track: var(--line, #E9E5DF);
+    --progress-track: var(--line, #2e2836);
   }
 }
 
