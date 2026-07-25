@@ -656,7 +656,7 @@
 
   /* ---- Bottom Sheet ---- */
   .sheet-overlay {
-    position: absolute; inset: 0;
+    position: fixed; inset: 0;   /* fixed, not absolute: immune to the page's scroll offset */
     background: rgba(0,0,0,0);
     z-index: 50;
     pointer-events: none;
@@ -669,7 +669,13 @@
   }
 
   .sheet {
-    position: absolute; bottom: 0; left: 0; right: 0;
+    /* FIXED, not absolute. As absolute it was positioned inside .phone and moved WITH the
+       page's scroll offset: opening the item sheet while the feed was scrolled put the top
+       (grab strip + X) above the viewport and the Buy footer mid-screen with dead space below
+       — the "stuck / broken item window" the founder hit for weeks (top:-191, bottom:589 at
+       scroll 255). Fixed anchors it to the actual viewport, so bottom:0 is always the true
+       screen bottom regardless of scroll. */
+    position: fixed; bottom: 0; left: 0; right: 0;
     background: var(--card);
     border-radius: 24px 24px 0 0;
     border-top: 1px solid var(--line);
