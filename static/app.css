@@ -457,8 +457,11 @@
     font-weight: 800; cursor: pointer; color: #fff; font-family: inherit; font-size: var(--t-body);
     background: linear-gradient(135deg, var(--accent), var(--accent2)); }
 
-  .toast { position: absolute; left: 50%; bottom: 92px; background: rgba(23,23,31,.96);
-    border: 1px solid var(--line); color: var(--text); font-size: var(--t-small); font-weight: 700;
+  .toast { position: fixed; left: 50%; bottom: 92px; background: rgba(23,23,31,.96);
+    /* The toast background is ALWAYS dark (theme-independent), so the text must be a fixed
+       LIGHT colour — not var(--text), which is near-black in light mode → black-on-black,
+       unreadable (the "Removed from saved" toast the founder couldn't read). */
+    border: 1px solid rgba(255,255,255,.14); color: var(--on-accent, #f4f2f7); font-size: var(--t-small); font-weight: 700;
     padding: 11px 18px; border-radius: 22px; z-index: 70; box-shadow: 0 8px 24px rgba(0,0,0,.45);
     opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(12px);
     transition: opacity .25s, transform .25s; }
