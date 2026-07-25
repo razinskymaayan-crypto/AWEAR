@@ -2085,6 +2085,31 @@ def test_agent_meeting_missing_required_fields_returns_422(client):
     assert r.status_code == 422
 
 
+def test_agent_summary_no_google_stub_returns_helpful_500(client):
+    """_google_unavailable stub (no monkeypatch) must return None, not raise RuntimeError.
+
+    FAIL-BEFORE: stub raised RuntimeError → FastAPI returned generic 500 "Internal Server Error";
+                 the helpful "check GMAIL_APP_PASSWORD" detail was swallowed.
+    PASS-AFTER:  stub returns None → endpoint raises HTTPException(500) with detail containing
+                 'email', so operators know exactly what to configure.
+
+    In CI, google_services is absent so send_summary_email IS _google_unavailable; this test
+    exercises the real stub path without monkeypatching.
+    """
+    # appmod = `import app as appmod` from module top — _google_unavailable is the CI stub
+    result = appmod._google_unavailable()
+    assert result is None, "_google_unavailable must return None, not raise RuntimeError"
+
+    # Verify the endpoint produces a helpful detail (not a generic crash message).
+    body = {"agent": "jeff", "department": "Product", "attendees": "jeff@awear.app", "summary": "sync"}
+    r = client.post("/api/agent/summary", json=body)
+    assert r.status_code == 500
+    detail = r.json().get("detail", "")
+    assert "email" in detail.lower(), (
+        f"Expected 'email' in detail for helpful error message, got: {detail!r}"
+    )
+
+
 # ---------------------------------------------------------------------------
 # Render deployment readiness — database mode in scan-health
 # ---------------------------------------------------------------------------

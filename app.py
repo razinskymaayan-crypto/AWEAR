@@ -124,7 +124,7 @@ try:
     from google_services import create_calendar_event, schedule_agent_meeting, send_summary_email
 except Exception:  # noqa: BLE001 — missing google libs/creds shouldn't break the app
     def _google_unavailable(*_a, **_k):
-        raise RuntimeError("Google integration not configured on this machine")
+        return None  # caller checks for None/falsy → raises HTTPException with a helpful detail
     create_calendar_event = schedule_agent_meeting = send_summary_email = _google_unavailable
 
 load_dotenv()  # loads ANTHROPIC_API_KEY from .env
