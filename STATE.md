@@ -11,12 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-25, run 20)
-- **Task**: Touch target sweep — raised 4 sub-44px interactive elements to WCAG 2.5.5 minimum. commit 8a40900.
-- **Done**: `.notif-btn` 36→44, `.pc-more-btn` 30→44, `.mp-preloved-btn` min-h 36→44, `.cr-cta` min-h 40→44. Driven by Gabbana audit of Explore/Stylist screens. check-render ✓, screenshots clean (home/explore/stylists).
-- **Next**: Gabbana found image placeholders blank on Explore featured-looks cards (expected — no real image data). Other false positives from Gabbana (fallback values) confirmed correct per jeff gate. Continue: outfit generator screen (outfits view) Gabbana review + any further touch-target sweeps.
-- **Prior runs**: run 19 — marketplace contrast (203f37d); run 18 — match score wiring (9d04a4f+251e38e); run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4); run 15 — DS-004 fix (237df96).
-- **Prior runs**: run 18 — match score wiring (9d04a4f+251e38e); run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4); run 15 — DS-004 fix (237df96); run 12 — generate-garment UI.
+## Mark lane — last run (2026-07-25, run 21)
+- **Task**: DS-004 rejection fix — corrected `--progress-track` fallback in light-mode block from `#E9E5DF` (light-mode approximation) to `#2e2836` (dark token). commit 3218ee4.
+- **Done**: `static/tokens.css:182` — last remaining DS-004 violation from 2026-07-23 rejection. `b39cd81` had only fixed `--muted`; this fixes `--line` fallback. check-render ✓, no bad fallbacks remain.
+- **Next**: Outfit generator screen (outfits view) Gabbana review + any further touch-target sweeps.
+- **Prior runs**: run 20 — touch targets (8a40900); run 19 — marketplace contrast (203f37d); run 18 — match score wiring (9d04a4f+251e38e); run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4).
 
 ## Steve lane — last run (2026-07-25, run 19)
 - **Task**: Test coverage — hermetic tests for 6 zero-coverage endpoint groups. commit 8bb816d.
