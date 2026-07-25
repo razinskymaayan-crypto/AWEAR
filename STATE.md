@@ -18,11 +18,11 @@
 - **Prior runs**: run 19 — marketplace contrast (203f37d); run 18 — match score wiring (9d04a4f+251e38e); run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4); run 15 — DS-004 fix (237df96).
 - **Prior runs**: run 18 — match score wiring (9d04a4f+251e38e); run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4); run 15 — DS-004 fix (237df96); run 12 — generate-garment UI.
 
-## Steve lane — last run (2026-07-24, run 18)
-- **Task**: Test coverage — hermetic tests for 10 previously untested endpoints. commit e7afea6.
-- **Done**: 35 new pytests in tests/test_app.py covering: /api/search, /api/profiles/{id}, /api/posts/{id}, /api/users/{id}/stats, /api/posts/{id}/save, /api/users/{id}/saves, /api/declutter, /api/analytics/wear, /api/analytics/summary, /api/analytics/wardrobe, /api/analytics/wrapped/{year}, /api/analytics/season/current, /api/analytics/seasons/archive. Total test count: 141 → 176. Contract + edge + error paths, all hermetic.
+## Steve lane — last run (2026-07-25, run 19)
+- **Task**: Test coverage — hermetic tests for 6 zero-coverage endpoint groups. commit 8bb816d.
+- **Done**: 20 new pytests in tests/test_app.py covering: /api/admin/reload-products (2), /api/marketplace/assist (5), /api/weather (3), /api/dm/conversations (3), /api/dm/thread/{id} (3), /api/dm/send (4). All endpoints now have contract + edge + error-path coverage. Backend coverage: 67/67 routes with hermetic tests.
 - **All INBOX launch infra steps done**: Render (60f159e), Supabase Auth (9667fd0), Postgres _CompatDB (8c8b41), Storage (565f18d).
-- **Next**: Remaining uncovered endpoints (admin/reload-products, marketplace/assist, weather — lower priority). OR: pick INBOX backlog item #2 (resilience: external-call fallback audited for all AI paths). Backend match score ready for mark lane: `GET /api/products/{id}/match?user_id={uid}`.
+- **Next**: Resilience audit — all paths dependent on external services (Anthropic/OpenAI/weather) verified to have try→demo/fallback (never throw to user). OR: advance to Supabase epic next step per INBOX.
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
 ## Phase status
