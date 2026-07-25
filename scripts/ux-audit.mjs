@@ -157,14 +157,49 @@ const HELPERS = () => {
       }
       return hits.slice(0, 25);
     },
+    // Is an OPEN overlay geometrically SANE on screen? Catches the 2-week bug the
+    // stuck-check missed: a sheet whose top (with its close control) is pushed off-screen
+    // and whose body leaves dead space — it "opens and closes" fine but looks broken.
+    overlayGeometry(id) {
+      // Skip inner scroll/body parts (they legitimately don't reach the screen edges).
+      if (/(body|scroll|grab|handle|footer|card|hero)$/i.test(id)) return { ok: true, skip: true };
+      const el = document.getElementById(id);
+      if (!el) return { ok: true };
+      const r = el.getBoundingClientRect();
+      if (r.width < 80 || r.height < 80) return { ok: true, skip: true };  // not actually shown
+      const vh = innerHeight, vw = innerWidth;
+      const cs = getComputedStyle(el);
+      const problems = [];
+      // DETERMINISTIC root-cause signal (reliable, no fragile scroll repro): a full-viewport or
+      // bottom-anchored overlay positioned `absolute` inherits the page's scroll offset and WILL
+      // render off-screen once scrolled — it must be `fixed`. This is the actual class of the
+      // 2-week item-sheet bug, and it catches every instance regardless of current scroll.
+      const anchored = cs.inset === '0px' || cs.bottom === '0px' || parseFloat(cs.bottom) === 0;
+      if (cs.position === 'absolute' && anchored) {
+        problems.push('position:absolute (should be fixed) — will break when the page is scrolled');
+      }
+      // Plus the live symptom if it happens to be visible now: a close control off-screen.
+      const close = el.querySelector('[id*="close" i],[class*="close" i],[aria-label*="close" i]');
+      if (close) {
+        const c = close.getBoundingClientRect();
+        if (c.width > 0 && (c.top < 0 || c.bottom > vh + 1 || c.left < 0 || c.right > vw + 1)) {
+          problems.push(`close control off-screen (top ${Math.round(c.top)})`);
+        }
+      }
+      return { ok: problems.length === 0, problems };
+    },
   };
 };
 
-// ---------- 1) STUCK OVERLAYS ----------
-const stuck = [], opened = [], unopenable = [];
+// ---------- 1) STUCK / BROKEN OVERLAYS ----------
+const stuck = [], broken = [], opened = [], unopenable = [];
 for (const [fn, args] of OPENERS) {
   try {
     await page.evaluate(HELPERS);
+    // SCROLL THE PAGE FIRST — this is the exact condition that hid the 2-week item-sheet bug:
+    // an absolute-positioned sheet rendered correctly at scrollTop 0 but broke once scrolled.
+    // Test the realistic case, not the convenient one (OW-015).
+    await page.evaluate(() => { try { (document.querySelector('.phone main') || document.scrollingElement || document.body).scrollTop = 400; window.scrollTo(0, 400); } catch (_) {} });
     const before = await page.evaluate(() => window.__ux.visibleOverlays());
     const ran = await page.evaluate(([f, a]) => {
       try { if (typeof window[f] !== 'function') return 'missing'; eval(`window.${f}${a}`); return 'ok'; }
@@ -176,6 +211,13 @@ for (const [fn, args] of OPENERS) {
     const appeared = after.filter((id) => !before.includes(id));
     if (!appeared.length) { unopenable.push(`${fn} (no overlay appeared)`); continue; }
     opened.push(fn);
+
+    // GEOMETRY CHECK — is the open overlay actually SANE on screen (X visible, no dead space)?
+    // This is what would have caught the sheet bug the "can it close" check missed.
+    for (const id of appeared) {
+      const g = await page.evaluate((i) => window.__ux.overlayGeometry(i), id);
+      if (!g.ok) broken.push({ fn, id, problems: g.problems.join('; ') });
+    }
 
     // try to close: X button inside, then backdrop click, then Escape
     let closedBy = null;
@@ -221,6 +263,10 @@ for (const view of SCREENS) {
     await page.waitForTimeout(900);
     await page.evaluate((v) => { try { window.showView && showView(v); } catch (_) {} }, view);
     await page.waitForTimeout(900);
+    // Trigger a toast so its contrast IS scanned — transient UI is invisible at rest, which is
+    // exactly why the black-on-black "Removed from saved" toast went unscanned for weeks.
+    await page.evaluate(() => { try { window.showToast && showToast('Removed from saved'); } catch (_) {} });
+    await page.waitForTimeout(150);
     await page.evaluate(HELPERS);
     const c = await page.evaluate(() => window.__ux.contrastIssues());
     const o = await page.evaluate(() => window.__ux.overlapIssues());
@@ -237,6 +283,10 @@ line('\n════════ AWEAR UX AUDIT ════════');
 line(`\n① STUCK OVERLAYS  (opened but NOTHING closed them — X, backdrop, Escape all failed)`);
 if (!stuck.length) line('   ✓ none — every overlay that opened could be closed');
 stuck.forEach((s) => line(`   ✗ ${s.fn}  →  #${s.overlay}`));
+
+line(`\n①b BROKEN LAYOUT  (opened SCROLLED — close control off-screen / dead space; the item-sheet class)`);
+if (!broken.length) line('   ✓ none — every overlay renders sane when the page is scrolled');
+broken.forEach((b) => line(`   ✗ ${b.fn}  →  #${b.id}  (${b.problems})`));
 
 line(`\n② LOW CONTRAST  (WCAG AA fail — white-on-white / black-on-black class)`);
 if (!contrast.length) line('   ✓ none found on the scanned screens');
