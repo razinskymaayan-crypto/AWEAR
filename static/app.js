@@ -7399,7 +7399,7 @@
           newItem.remove();
           _updateCommentCountBtn(postId);
           if (!csList.querySelector('.fc-comment-item')) {
-            csList.innerHTML = `<div style="color:var(--muted,#6F6A63);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
+            csList.innerHTML = `<div style="color:var(--muted,#9e99ad);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
           }
           showToast("Comment couldn't be posted");
           logAdminEvent('comment_rejected', postId + ': "' + text.slice(0,40) + '" — rejected by server moderation (400)');
@@ -7507,7 +7507,7 @@
     const localComments = getPostComments(postId);
     list.innerHTML = localComments.length
       ? localComments.map(c => _commentItemHTML(c, creatorHandle)).join('')
-      : `<div style="color:var(--muted,#6F6A63);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
+      : `<div style="color:var(--muted,#9e99ad);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
     sheet.classList.add('open');
 
     // Async API fetch — MERGES server comments ABOVE the local/seeded view.
