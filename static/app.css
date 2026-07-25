@@ -32,7 +32,7 @@
   header { padding: max(18px, env(safe-area-inset-top)) 20px 12px; display: flex; align-items: center; justify-content: space-between;
     position: relative; z-index: 5; flex-shrink: 0; }
   .logo { display: flex; align-items: baseline; gap: 6px; color: var(--text,#fbfbfd); }
-  .notif-btn { position: relative; width: 36px; height: 36px; border-radius: 50%; background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text, #fbfbfd); flex-shrink: 0; }
+  .notif-btn { position: relative; width: 44px; height: 44px; border-radius: 50%; background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text, #fbfbfd); flex-shrink: 0; }
   .notif-btn:active { opacity: .7; }
   .notif-badge { position: absolute; top: -2px; right: -2px; min-width: 16px; height: 16px; border-radius: 8px; background: var(--accent, #e8526a); color: #fff; font-size: 10px; font-weight: 900; display: none; align-items: center; justify-content: center; padding: 0 3px; line-height: 1; border: 1.5px solid var(--bg, #0e0c0f); }
   #notif-panel { position: absolute; top: 66px; right: 14px; width: 280px; background: var(--card, #1e1a22); border-radius: 12px; padding: 12px; z-index: 200; display: none; max-height: 400px; overflow-y: auto; border: 1px solid var(--line, #2e2836); box-shadow: 0 8px 32px rgba(0,0,0,.4); }
@@ -1285,7 +1285,7 @@
   .pc-tag { font-size: var(--t-micro); color: var(--accent2); font-weight: 800; margin-top: 4px; }
   .pc-follow-btn { padding: 7px 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; border-radius: 20px; font-family: inherit; font-size: var(--t-caption); font-weight: 800; color: #fff; cursor: pointer; flex-shrink: 0; transition: all .18s; }
   .pc-follow-btn.following { background: var(--card); color: var(--muted); border: 1.5px solid var(--line); }
-  .pc-more-btn { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; border-radius: 50%; color: var(--muted); cursor: pointer; margin-right: 2px; }
+  .pc-more-btn { width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; border-radius: 50%; color: var(--muted); cursor: pointer; margin-right: 2px; }
   .pc-more-btn:active { background: var(--card); }
   .pc-row-blocked .pc-name { color: var(--muted); }
   .pc-blocked-list:empty { display: none; }
@@ -1761,7 +1761,7 @@
 
   /* ---- Marketplace Pre-loved Toggle (P1-D) ---- */
   .mp-preloved-toggle { display: flex; align-items: center; gap: 8px; padding: 0 16px 10px; }
-  .mp-preloved-btn { flex-shrink: 0; padding: 8px 16px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--accent3,#7a6af0); background: none; color: var(--accent3,#7a6af0); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 36px; display: inline-flex; align-items: center; gap: 6px; }
+  .mp-preloved-btn { flex-shrink: 0; padding: 8px 16px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 800; border: 1.5px solid var(--accent3,#7a6af0); background: none; color: var(--accent3,#7a6af0); cursor: pointer; font-family: inherit; transition: all .18s; min-height: 44px; display: inline-flex; align-items: center; gap: 6px; }
   .mp-preloved-btn.active { background: var(--accent3,#7a6af0); color: var(--fg,#f0ecf5); }
 
   /* ---- Marketplace Filter Button + Active Chips Bar ---- */
@@ -2582,7 +2582,7 @@
   .checkin-reminder.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
   .cr-ico { flex-shrink: 0; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm,10px); background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); color: #fff; }
   .cr-txt { flex: 1; min-width: 0; font-size: var(--t-small,13px); font-weight: 600; color: var(--fg,#f0ecf5); line-height: 1.35; }
-  .cr-cta { flex-shrink: 0; min-height: 40px; padding: 8px 14px; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; color: #fff; cursor: pointer; }
+  .cr-cta { flex-shrink: 0; min-height: 44px; padding: 8px 14px; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: none; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 800; color: #fff; cursor: pointer; }
   .cr-x { flex-shrink: 0; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--muted,#9e99ad); cursor: pointer; border-radius: var(--r-sm,10px); }
   .cr-x:active { background: var(--card-hover,#262030); }
 
