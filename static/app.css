@@ -443,7 +443,7 @@
   .feed-empty p { font-size: var(--t-body, 14px); font-weight: 600; }
 
   /* ---- modal ---- */
-  .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: none;
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none;
     align-items: center; justify-content: center; padding: 28px; z-index: 60; backdrop-filter: blur(4px); }
   .modal-overlay.show { display: flex; }
   .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px;
@@ -602,7 +602,7 @@
   .story-viewer-tap.next { right: 0; }
 
   /* ---- Edit profile modal ---- */
-  .edit-modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.75);
+  .edit-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75);
     z-index: 80; display: none; align-items: flex-end; justify-content: center; }
   .edit-modal-overlay.show { display: flex; }
   .edit-modal { background: var(--card);
@@ -1611,9 +1611,9 @@
   .app-create-btn:active { transform: scale(.92); background: var(--card-hover,#262030); }
   .app-create-btn svg { display: block; }
   /* Reusable global create chooser (drop-in for any header) */
-  .create-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); z-index: 70; pointer-events: none; transition: background .25s ease; }
+  .create-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 70; pointer-events: none; transition: background .25s ease; }
   .create-overlay.show { background: rgba(0,0,0,.62); pointer-events: auto; backdrop-filter: blur(3px); }
-  .create-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card,#1e1a22); border-radius: var(--r-xl,28px) var(--r-xl,28px) 0 0; border-top: 1px solid var(--line,#2e2836); padding: 8px 16px calc(env(safe-area-inset-bottom, 0px) + 16px); z-index: 71; transform: translateY(110%); visibility: hidden; transition: transform .3s cubic-bezier(.32,.72,0,1), visibility 0s linear .3s; box-shadow: 0 -8px 32px rgba(20,17,15,.28); }
+  .create-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card,#1e1a22); border-radius: var(--r-xl,28px) var(--r-xl,28px) 0 0; border-top: 1px solid var(--line,#2e2836); padding: 8px 16px calc(env(safe-area-inset-bottom, 0px) + 16px); z-index: 71; transform: translateY(110%); visibility: hidden; transition: transform .3s cubic-bezier(.32,.72,0,1), visibility 0s linear .3s; box-shadow: 0 -8px 32px rgba(20,17,15,.28); }
   .create-overlay.show .create-sheet { transform: translateY(0); visibility: visible; transition: transform .3s cubic-bezier(.32,.72,0,1), visibility 0s; }
   .create-sheet-handle { width: 38px; height: 4px; border-radius: var(--r-pill,999px); background: var(--line,#2e2836); margin: 8px auto 14px; }
   .create-sheet-title { font-size: var(--t-small,13px); font-weight: 800; color: var(--muted,#9e99ad); text-transform: uppercase; letter-spacing: .6px; margin: 0 4px 10px; }
@@ -1842,9 +1842,9 @@
   .mp-sp-cover-meta { flex: 1; min-width: 0; }
 
   /* ---- Marketplace Filter Sheet ---- */
-  .mp-fsheet-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); opacity: 0; z-index: 60; pointer-events: none; transition: background .25s ease, opacity .25s ease; }
+  .mp-fsheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0); opacity: 0; z-index: 60; pointer-events: none; transition: background .25s ease, opacity .25s ease; }
   .mp-fsheet-overlay.show { background: rgba(0,0,0,.62); opacity: 1; pointer-events: auto; backdrop-filter: blur(3px); }
-  .mp-fsheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--surface,#161318); border-radius: 24px 24px 0 0; border-top: 1px solid var(--line,#2e2836); padding: 0 0 calc(env(safe-area-inset-bottom,0px) + 8px); z-index: 61; transform: translateY(110%); opacity: 0; transition: transform .3s cubic-bezier(.32,.72,0,1), opacity .3s cubic-bezier(.32,.72,0,1); max-height: 88%; display: flex; flex-direction: column; }
+  .mp-fsheet { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface,#161318); border-radius: 24px 24px 0 0; border-top: 1px solid var(--line,#2e2836); padding: 0 0 calc(env(safe-area-inset-bottom,0px) + 8px); z-index: 61; transform: translateY(110%); opacity: 0; transition: transform .3s cubic-bezier(.32,.72,0,1), opacity .3s cubic-bezier(.32,.72,0,1); max-height: 88%; display: flex; flex-direction: column; }
   .mp-fsheet.show { transform: translateY(0); opacity: 1; }
   .mp-fsheet-handle { width: 36px; height: 4px; background: var(--line,#2e2836); border-radius: 2px; margin: 12px auto 4px; flex-shrink: 0; }
   .mp-fsheet-scroll { overflow-y: auto; flex: 1; padding: 8px 0 16px; scrollbar-width: none; }
