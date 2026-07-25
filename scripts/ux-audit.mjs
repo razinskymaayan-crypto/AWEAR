@@ -107,27 +107,60 @@ const HELPERS = () => {
       }
       return getComputedStyle(document.body).backgroundColor || 'rgb(255,255,255)';
     },
-    // low-contrast visible text (WCAG AA 4.5:1 for normal text).
-    // rootSel: when given, scan ONLY inside that element (e.g. the one overlay that just opened) —
-    // so a finding is correctly attributed and we never flag a DIFFERENT, closed overlay's text.
-    contrastIssues(rootSel) {
+    // Is the element ACTUALLY rendered — walking the ancestor chain, not just its own box?
+    // A closed bottom-sheet sets opacity:0 / translateY on the SHEET container; the leaf text still
+    // computes opacity:1, so a leaf-only check flags a hidden sheet's buttons (false positive). And
+    // scanning ONLY the opened overlay's subtree misses the SHEET (it's a sibling of the backdrop, not
+    // a child) — a false negative that hid the real "Show Results" bug. So: scan the whole doc, but
+    // gate on true render-visibility up the tree.
+    renderVisible(el) {
+      let n = el;
+      while (n && n.nodeType === 1) {
+        const s = getComputedStyle(n);
+        if (s.display === 'none' || s.visibility === 'hidden' || +s.opacity < 0.15) return false;
+        if (n.getAttribute && n.getAttribute('aria-hidden') === 'true') return false;
+        n = n.parentElement;
+      }
+      const r = el.getBoundingClientRect();
+      if (r.width < 4 || r.height < 4) return false;
+      if (r.bottom < 0 || r.top > innerHeight || r.right < 0 || r.left > innerWidth) return false;  // off-screen (translated-away sheets)
+      return true;
+    },
+    // low-contrast visible text (WCAG AA 4.5:1 for normal text). Scans the whole document (so open
+    // sheets, which are siblings of their backdrop, are covered) and relies on renderVisible() to
+    // exclude any closed/hidden overlay.
+    contrastIssues() {
       const bad = [];
-      const root = rootSel ? document.getElementById(rootSel) || document.querySelector(rootSel) : document;
-      if (!root) return bad;
-      root.querySelectorAll('*').forEach((el) => {
+      document.querySelectorAll('body *').forEach((el) => {
         if (el.children.length) return;                       // leaf text only
         const t = (el.textContent || '').trim();
         if (!t || t.length < 2) return;
+        if (!this.renderVisible(el)) return;
         const cs = getComputedStyle(el);
-        const r = el.getBoundingClientRect();
-        if (r.width < 4 || r.height < 4 || cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity < 0.15) return;
-        if (r.bottom < 0 || r.top > innerHeight) return;
-        const l1 = this.lum(cs.color), l2 = this.lum(this.bgOf(el));
-        if (l1 == null || l2 == null) return;
-        const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+        const bi = cs.backgroundImage || '';
+        const grad = bi.includes('gradient') ? (bi.match(/rgba?\([^)]*\)|#[0-9a-fA-F]{3,8}/g) || []) : [];
+        const clipText = (cs.webkitBackgroundClip || cs.backgroundClip) === 'text';
+        // TEXT color candidates: normally cs.color; but for background-clip:text (gradient text, color
+        // is intentionally transparent) the visible ink IS the gradient stops — use those, not "transparent".
+        const textCands = clipText && grad.length ? grad : [cs.color];
+        // BG candidates: solid ancestor color; PLUS the element's own gradient stops when it is NOT
+        // clip-text (a real gradient FILL, e.g. the "Show Results" dark button) — backgroundColor is
+        // transparent for gradients, so without this a dark gradient button reads as the light parent
+        // surface and the black-on-black slips through. For clip-text, the gradient is the ink not the bg.
+        const bgCands = clipText ? [this.bgOf(el.parentElement || el)] : [this.bgOf(el), ...grad];
+        let ratio = 21, bgHit = bgCands[0], fgHit = cs.color;
+        for (const tc of textCands) {
+          const l1 = this.lum(tc); if (l1 == null) continue;
+          for (const cand of bgCands) {
+            const l2 = this.lum(cand); if (l2 == null) continue;
+            const rr = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+            if (rr < ratio) { ratio = rr; bgHit = cand; fgHit = tc; }
+          }
+        }
+        if (ratio === 21) return;   // no resolvable color pair
         const big = parseFloat(cs.fontSize) >= 24 || (parseFloat(cs.fontSize) >= 18.66 && +cs.fontWeight >= 700);
         if (ratio < (big ? 3 : 4.5)) {
-          bad.push({ text: t.slice(0, 40), ratio: +ratio.toFixed(2), color: cs.color, bg: this.bgOf(el),
+          bad.push({ text: t.slice(0, 40), ratio: +ratio.toFixed(2), color: fgHit, bg: bgHit,
                      sel: el.tagName.toLowerCase() + (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).slice(0,2).join('.') : '') });
         }
       });
@@ -226,10 +259,10 @@ for (const [fn, args] of OPENERS) {
     // CONTRAST INSIDE THE OPEN OVERLAY — the gap that let the black-on-black "Show Results" and
     // toast through: contrast was only scanned on the main screens, never inside sheets/modals
     // (they're hidden at rest). Now every open overlay's own text/buttons are checked (OW-015).
-    for (const id of appeared) {
-      const oc = await page.evaluate((i) => window.__ux.contrastIssues(i), id);
-      oc.forEach((x) => { if (!contrastInOverlay.some((y) => y.text === x.text && y.overlay === id)) contrastInOverlay.push({ overlay: id, ...x }); });
-    }
+    // Scan the whole doc while this overlay is open (the sheet is a sibling of its backdrop, so a
+    // subtree scan would miss it); renderVisible() excludes any still-closed overlay. Dedup by text+sel.
+    const oc = await page.evaluate(() => window.__ux.contrastIssues());
+    oc.forEach((x) => { if (!contrastInOverlay.some((y) => y.text === x.text && y.sel === x.sel)) contrastInOverlay.push({ overlay: fn, ...x }); });
 
     // try to close: X button inside, then backdrop click, then Escape
     let closedBy = null;
