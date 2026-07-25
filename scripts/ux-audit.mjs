@@ -107,10 +107,14 @@ const HELPERS = () => {
       }
       return getComputedStyle(document.body).backgroundColor || 'rgb(255,255,255)';
     },
-    // low-contrast visible text (WCAG AA 4.5:1 for normal text)
-    contrastIssues() {
+    // low-contrast visible text (WCAG AA 4.5:1 for normal text).
+    // rootSel: when given, scan ONLY inside that element (e.g. the one overlay that just opened) —
+    // so a finding is correctly attributed and we never flag a DIFFERENT, closed overlay's text.
+    contrastIssues(rootSel) {
       const bad = [];
-      document.querySelectorAll('body *').forEach((el) => {
+      const root = rootSel ? document.getElementById(rootSel) || document.querySelector(rootSel) : document;
+      if (!root) return bad;
+      root.querySelectorAll('*').forEach((el) => {
         if (el.children.length) return;                       // leaf text only
         const t = (el.textContent || '').trim();
         if (!t || t.length < 2) return;
@@ -192,7 +196,7 @@ const HELPERS = () => {
 };
 
 // ---------- 1) STUCK / BROKEN OVERLAYS ----------
-const stuck = [], broken = [], opened = [], unopenable = [];
+const stuck = [], broken = [], opened = [], unopenable = [], contrastInOverlay = [];
 for (const [fn, args] of OPENERS) {
   try {
     await page.evaluate(HELPERS);
@@ -217,6 +221,14 @@ for (const [fn, args] of OPENERS) {
     for (const id of appeared) {
       const g = await page.evaluate((i) => window.__ux.overlayGeometry(i), id);
       if (!g.ok) broken.push({ fn, id, problems: g.problems.join('; ') });
+    }
+
+    // CONTRAST INSIDE THE OPEN OVERLAY — the gap that let the black-on-black "Show Results" and
+    // toast through: contrast was only scanned on the main screens, never inside sheets/modals
+    // (they're hidden at rest). Now every open overlay's own text/buttons are checked (OW-015).
+    for (const id of appeared) {
+      const oc = await page.evaluate((i) => window.__ux.contrastIssues(i), id);
+      oc.forEach((x) => { if (!contrastInOverlay.some((y) => y.text === x.text && y.overlay === id)) contrastInOverlay.push({ overlay: id, ...x }); });
     }
 
     // try to close: X button inside, then backdrop click, then Escape
@@ -287,6 +299,10 @@ stuck.forEach((s) => line(`   ✗ ${s.fn}  →  #${s.overlay}`));
 line(`\n①b BROKEN LAYOUT  (opened SCROLLED — close control off-screen / dead space; the item-sheet class)`);
 if (!broken.length) line('   ✓ none — every overlay renders sane when the page is scrolled');
 broken.forEach((b) => line(`   ✗ ${b.fn}  →  #${b.id}  (${b.problems})`));
+
+line(`\n②b LOW CONTRAST INSIDE OVERLAYS  (black-on-black in sheets/modals — the "Show Results" class)`);
+if (!contrastInOverlay.length) line('   ✓ none — every open overlay\'s text/buttons pass AA');
+contrastInOverlay.slice(0, 20).forEach((c) => line(`   ✗ [${c.overlay}] "${c.text}" ${c.ratio}:1  ${c.color} on ${c.bg}`));
 
 line(`\n② LOW CONTRAST  (WCAG AA fail — white-on-white / black-on-black class)`);
 if (!contrast.length) line('   ✓ none found on the scanned screens');

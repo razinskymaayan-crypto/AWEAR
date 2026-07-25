@@ -36,6 +36,7 @@ SEVERITY = {           # higher = worse
     "crash": 100,      # 5xx / exception on a route
     "dead_control": 70,  # clickable element that does nothing
     "stuck_overlay": 60,  # opens but cannot be closed
+    "broken_layout": 58,  # overlay renders off-screen when scrolled (the item-sheet class)
     "js_error": 55,    # console/page error on a screen
     "contrast": 40,    # WCAG AA fail (black-on-black / white-on-white)
     "overlap": 35,     # text physically covering text
@@ -87,10 +88,13 @@ def run_ui() -> dict:
     # never printed its report header, treat it as NOT RUN (loud), not as zero defects (OW-015).
     if "server unreachable" in text or "UX AUDIT" not in text:
         return {"error": "ux-audit did not run (server unreachable or crashed) — UI NOT scanned"}
-    res = {"stuck": [], "contrast": [], "overlap": [], "raw_ok": "interactions OK" in text}
+    res = {"stuck": [], "broken": [], "contrast": [], "overlap": [], "raw_ok": "interactions OK" in text}
     section = None
     for line in text.splitlines():
         s = line.strip()
+        # Order matters: the "b" variants are more specific — match them BEFORE the base ① / ②.
+        if s.startswith("①b BROKEN"): section = "broken"; continue
+        if s.startswith("②b LOW CONTRAST"): section = "contrast"; continue   # in-overlay contrast → same class
         if s.startswith("① STUCK"): section = "stuck"; continue
         if s.startswith("② LOW CONTRAST"): section = "contrast"; continue
         if s.startswith("③ OVERLAP"): section = "overlap"; continue
@@ -118,6 +122,10 @@ def build_defects(backend: dict, ui: dict) -> list[dict]:
     for st in ui.get("stuck", []):
         defects.append({"kind": "stuck_overlay", "lane": "mark", "where": st, "detail": "",
                         "score": SEVERITY["stuck_overlay"] * 1.3})
+    # broken layout (overlay renders off-screen when scrolled — the 2-week item-sheet class)
+    for b in ui.get("broken", []):
+        defects.append({"kind": "broken_layout", "lane": "mark", "where": b[:80], "detail": "",
+                        "score": SEVERITY.get("broken_layout", SEVERITY["stuck_overlay"]) * 1.3})
     for c in ui.get("contrast", []):
         defects.append({"kind": "contrast", "lane": "mark", "where": c[:80], "detail": "",
                         "score": SEVERITY["contrast"] * 1.2})
