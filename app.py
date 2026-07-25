@@ -925,11 +925,21 @@ class CalendarEvent(BaseModel):
 @app.post("/api/agent/summary")
 async def agent_summary(data: MeetingSummary):
     """Send meeting summary email to company inbox."""
-    ok = send_summary_email(
-        agent=data.agent,
-        department=data.department,
-        summary=data.dict(),
-    )
+    try:
+        ok = send_summary_email(
+            agent=data.agent,
+            department=data.department,
+            summary=data.dict(),
+        )
+    except RuntimeError:
+        # No Google/GMAIL creds on this box (dev/CI): send_summary_email is the
+        # _google_unavailable stub that raises. Return a HELPFUL 503 with the fix,
+        # not a raw 500 stacktrace. (Bug exposed by steve's agent-summary tests —
+        # was an uncaught RuntimeError -> ugly 500.)
+        raise HTTPException(
+            status_code=503,
+            detail="Email not configured — set GMAIL_APP_PASSWORD in .env to enable agent summaries.",
+        )
     if not ok:
         raise HTTPException(status_code=500, detail="Failed to send email — check GMAIL_APP_PASSWORD in .env")
     return {"status": "sent"}
