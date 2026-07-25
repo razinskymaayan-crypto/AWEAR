@@ -1,5 +1,5 @@
 # Definition-of-Done Audit — INBOX "## הושלם" items
-**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) by ayalon lane  
+**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) by ayalon lane  
 **Method:** grep / git-log / code-presence checks  
 **Purpose:** Confirm each "done" item has verifiable evidence before investor demo
 
@@ -33,7 +33,7 @@
 - **Commit:** `84d3251 feat(ai-stylist): "Today's Look" daily contextual hero on the AI tab`
 - **Code:** `static/app.js:2279` (shared occasion engine); `static/app.js:3190` ("Today's Look" daily hero function)
 - **Gate:** Gabbana 9/10 PASS; post-fix confirmation survey `90b63d8`; check-render OK
-- **Evidence:** `grep -n "Today.*Look" static/app.js` → 5 matches
+- **Evidence:** `grep -n "Today.*Look\|renderDailyLook" static/app.js` → 7 matches; function at `app.js:3266`
 
 ### 2. Core-screens editorial pass (Feed, item sheet, profile) ✅
 - **Commits:** `ac7f725` (Feed survey), `b88c5fc` (item-sheet survey), `9ccefd1` (Profile survey), `f68b70e` (ledger)
@@ -49,14 +49,14 @@
 - **Commit:** `0fe5377 feat(stories): real 24h ephemeral outfit stories wired to /api/stories + full-screen viewer`
 - **Code:** `static/app.js` — `renderStories` appears 8 times
 - **Gate:** Gabbana 8.5 PASS; screenshot verified; commit confirmed on main
-- **Evidence:** `grep -c "renderStories" static/app.js` → 8
+- **Evidence:** `grep -c "renderStories" static/app.js` → 4 (refactored from 8; function at `app.js:7639`)
 
 ### 5. Real Claude-Vision scan e2e ✅ VERIFIED (corrected 2026-07-21)
 - **Backend (DONE):**
   - `app.py:706` — scan outcome recorder
   - `app.py:719` — `GET /api/scan-health` with `?probe=1` liveness check
   - `app.py:495–517` — `_corrections_context()` learning loop (scan→corrections→closet→re-injection)
-  - 2 closet endpoints: `POST /api/closet/confirm` + `GET /api/closet` (`grep "@app.*closet" app.py` → 2 matches)
+  - 4 closet endpoints: `POST /api/closet/confirm`, `GET /api/closet`, `DELETE /api/closet/{item_id}`, `PATCH /api/closet/{item_id}` (`grep "@app.*closet" app.py` → 4 matches)
   - `scan_corrections` learning ledger and re-injection into LIVE Claude call
 - **UI (SHIPPED — corrected):**
   - `static/app.js:1387–1454` — full "Did we get it right?" HITL confirm sheet (`showScanConfirm`, `_renderScConfirm`, `scSetAccepted`, `scToggleEdit`, `scConfirm`)
