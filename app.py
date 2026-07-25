@@ -120,11 +120,14 @@ CHALLENGE_POINTS_DEFAULT = 10  # fallback for unknown challenge IDs
 
 # Google integrations are optional — if the deps/creds aren't installed, the core
 # demo must still run. Degrade to no-ops instead of crashing the whole server.
+# Always define the stub at module level so tests can reference appmod._google_unavailable
+# regardless of whether google_services is installed in the current environment.
+def _google_unavailable(*_a, **_k):
+    return None  # caller checks for None/falsy → raises HTTPException with a helpful detail
+
 try:
     from google_services import create_calendar_event, schedule_agent_meeting, send_summary_email
 except Exception:  # noqa: BLE001 — missing google libs/creds shouldn't break the app
-    def _google_unavailable(*_a, **_k):
-        return None  # caller checks for None/falsy → raises HTTPException with a helpful detail
     create_calendar_event = schedule_agent_meeting = send_summary_email = _google_unavailable
 
 load_dotenv()  # loads ANTHROPIC_API_KEY from .env

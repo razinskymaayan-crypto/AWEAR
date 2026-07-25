@@ -538,6 +538,9 @@ def test_notification_emitted_via_like_and_read_all_persists(client):
     assert db_row is not None
     assert db_row[0] == 1  # stored as INTEGER 0/1 in SQLite; API layer bools it
 
+    # Cleanup: unlike so later tests that like this post see a clean slate.
+    client.post(f"/api/posts/{post['id']}/like")
+
 
 def test_emit_notification_skips_silently_on_empty_user_id(client):
     # Direct call to the helper — must not raise and must not create a row
