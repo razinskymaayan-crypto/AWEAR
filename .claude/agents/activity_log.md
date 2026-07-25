@@ -97,3 +97,5 @@
 | 2026-07-21 | ayalon | auto/ayalon / docs/DOD_AUDIT.md + DEMO_SCRIPT.md + PITCH_DECK.md | done | Corrected HITL DoD audit miss (false-negative: JS in app.js not index.html); 10/11 DoD items now VERIFIED; updated demo script beat-2 to show confirm screen as explicit step; pitch deck Slide 8 updated from in-dev to shipped. |
 
 | 2026-07-22 | mark | auto/mark / static/app.js + static/app.css | done | Generate-garment UI: per-item image display in scan confirm sheet — spinner pending, generated catalog image via /api/generate-garment, retailer fallback 80% opacity, onerror collapse, regenerate button 44px. Gabbana 8/10 PASS. |
+
+| 2026-07-25 | ayalon | auto/ayalon / docs/DOD_AUDIT.md | done | DoD grep-evidence refresh — full verification sweep of all 13 items; corrected stale counts for items 1 (renderDailyLook), 4 (renderStories), 5 (closet endpoints). All features confirmed present. |
