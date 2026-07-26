@@ -6200,7 +6200,7 @@
   }
 
   function showDeclutterResults(suggestions) {
-    if (!suggestions.length) { showToast('Your closet is clean — nothing to declutter'); return; }
+    if (!suggestions || !suggestions.length) { showToast('Your closet is clean — nothing to declutter'); return; }
     const modal = document.getElementById('purchase-modal');
     const card  = document.getElementById('modal-card');
     card.innerHTML = `
@@ -8188,7 +8188,7 @@
       const badgeCls = it._badgeCls || (it.badge==='New'?'new':'');
       const itTags = it.style_tags.map(t=>t.toLowerCase());
       const matchCount = itTags.filter(t=>wardTags.has(t)).length;
-      const compatTxt = wardrobe.length ? `${Math.round((matchCount/Math.max(itTags.length,1))*100)}% matches your closet` : '';
+      const compatTxt = wardrobe.length ? `${Math.round((matchCount/Math.max(itTags.length,1))*100)}% closet match` : '';
       return `
         <div class="sf-card" onclick="openShopItem('${attr(it.id)}')">
           <div class="sf-card-img">

@@ -1450,10 +1450,10 @@
   .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,var(--card),var(--bg)); position:relative; }
   .sf-badge { position:absolute; top:8px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:900; padding:3px 8px; border-radius:10px; }
   .sf-badge.deal { background:var(--danger); }
-  .sf-badge.new { background:var(--success); color:#000; }
+  .sf-badge.new { background:rgba(255,255,255,0.92); color:var(--bg,#0e0c0f); }
   .sf-badge.missing { background:var(--warning, #e8a84a); color:var(--bg, #0e0c0f); }
   .sf-card-body { padding:10px 12px 12px; }
-  .sf-card-name { font-size:var(--t-small); font-weight:800; line-height:1.3; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; min-height:calc(2 * 1.3em); }
+  .sf-card-name { font-size:var(--t-small); font-weight:600; line-height:1.3; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; min-height:calc(2 * 1.3em); }
   .sf-card-brand { font-size:var(--t-micro); color:var(--muted); font-weight:600; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .sf-price-row { display:flex; align-items:center; gap:6px; margin-top:6px; }
   .sf-price { font-size:var(--t-body); font-weight:900; color:var(--accent); }
