@@ -380,8 +380,8 @@
 
   /* Comments sheet — rendered OUTSIDE card, as bottom sheet */
   .comments-sheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-    background: var(--card); border-radius: 22px 22px 0 0; padding: 16px 16px 24px;
-    transform: translateY(100%); transition: transform 320ms ease; max-height: 60%; overflow-y: auto; }
+    background: var(--card); border-radius: 22px 22px 0 0; padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%); transition: transform 320ms ease; max-height: calc(100% - max(env(safe-area-inset-top, 0px), 56px) - 8px); overflow-y: auto; }
   .comments-sheet.open { transform: translateY(0); }
   .comments-sheet-handle { width: 36px; height: 4px; background: var(--line); border-radius: 2px;
     margin: 0 auto 14px; }
@@ -610,7 +610,7 @@
   .edit-modal-overlay.show { display: flex; }
   .edit-modal { background: var(--card);
     border-radius: 24px 24px 0 0; border-top: 1px solid var(--line);
-    padding: 20px 22px 32px; width: 100%; animation: slideUp .28s cubic-bezier(.32,.72,0,1); }
+    padding: 20px 22px calc(32px + env(safe-area-inset-bottom, 0px)); width: 100%; max-height: calc(100% - max(env(safe-area-inset-top, 0px), 56px) - 8px); overflow-y: auto; animation: slideUp .28s cubic-bezier(.32,.72,0,1); }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
   .edit-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
   .edit-modal-head h3 { font-size: var(--t-lead,17px); font-weight: 900; flex: 1; text-align: center; margin: 0; padding-left: 44px; }
@@ -1426,7 +1426,7 @@
   .styl-btn.secondary { background:var(--card);border:1.5px solid var(--line);color:var(--text); }
   /* booking modal */
   .book-overlay { position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:flex-end; }
-  .book-sheet { background:var(--bg);border-radius:28px 28px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));width:100%;max-width:430px;margin:0 auto;max-height:88vh;overflow-y:auto; }
+  .book-sheet { background:var(--bg);border-radius:28px 28px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));width:100%;max-width:430px;margin:0 auto;max-height:calc(100% - max(env(safe-area-inset-top, 0px), 56px) - 8px);overflow-y:auto; }
   .book-title { font-size: var(--t-h2,18px);font-weight:900;margin-bottom:16px; }
   .book-field { margin-bottom:12px; }
   .book-label { font-size:var(--t-micro);font-weight:800;color:var(--muted);margin-bottom:5px; }
@@ -1846,7 +1846,7 @@
   /* ---- Marketplace Filter Sheet ---- */
   .mp-fsheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0); opacity: 0; z-index: 60; pointer-events: none; transition: background .25s ease, opacity .25s ease; }
   .mp-fsheet-overlay.show { background: rgba(0,0,0,.62); opacity: 1; pointer-events: auto; backdrop-filter: blur(3px); }
-  .mp-fsheet { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface,#161318); border-radius: 24px 24px 0 0; border-top: 1px solid var(--line,#2e2836); padding: 0 0 calc(env(safe-area-inset-bottom,0px) + 8px); z-index: 61; transform: translateY(110%); opacity: 0; transition: transform .3s cubic-bezier(.32,.72,0,1), opacity .3s cubic-bezier(.32,.72,0,1); max-height: 88%; display: flex; flex-direction: column; }
+  .mp-fsheet { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface,#161318); border-radius: 24px 24px 0 0; border-top: 1px solid var(--line,#2e2836); padding: 0 0 calc(env(safe-area-inset-bottom,0px) + 8px); z-index: 61; transform: translateY(110%); opacity: 0; transition: transform .3s cubic-bezier(.32,.72,0,1), opacity .3s cubic-bezier(.32,.72,0,1); max-height: calc(100% - max(env(safe-area-inset-top, 0px), 56px) - 8px); display: flex; flex-direction: column; }
   .mp-fsheet.show { transform: translateY(0); opacity: 1; }
   .mp-fsheet-handle { width: 36px; height: 4px; background: var(--line,#2e2836); border-radius: 2px; margin: 12px auto 4px; flex-shrink: 0; }
   .mp-fsheet-scroll { overflow-y: auto; flex: 1; padding: 8px 0 16px; scrollbar-width: none; }
@@ -2503,7 +2503,7 @@
   /* ---- Diary modal ---- */
   .diary-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 400; display: flex; align-items: flex-end; opacity: 0; transition: opacity .22s; pointer-events: none; }
   .diary-overlay.show { opacity: 1; pointer-events: auto; }
-  .diary-sheet { background: var(--surface,#161318); border-radius: var(--r-xl,28px) var(--r-xl,28px) 0 0; width: 100%; max-height: 80vh; display: flex; flex-direction: column; transform: translateY(40px); transition: transform .22s; }
+  .diary-sheet { background: var(--surface,#161318); border-radius: var(--r-xl,28px) var(--r-xl,28px) 0 0; width: 100%; max-height: calc(100% - max(env(safe-area-inset-top, 0px), 56px) - 8px); display: flex; flex-direction: column; transform: translateY(40px); transition: transform .22s; }
   .diary-overlay.show .diary-sheet { transform: translateY(0); }
   .diary-handle { width: 36px; height: 4px; background: var(--line,#2e2836); border-radius: 2px; margin: 12px auto 0; flex-shrink: 0; }
   .diary-head-row { display: flex; align-items: center; justify-content: space-between; padding-right: 8px; }
