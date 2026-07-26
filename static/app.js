@@ -1226,7 +1226,7 @@
   function looksGridHTML(){
     const feed=loadFeedPosts();
     if(!feed.length) return `<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('image',44)}</div>You haven't shared any looks yet.<br/>Snap an outfit and share it to the feed<br/>so it shows up here on your profile.</div>`;
-    return `<div class="looks-grid">${feed.map(p=>`<div class="look-cell" data-goto-feed="1">
+    return `<div class="looks-grid">${feed.map((p,i)=>`<div class="look-cell" data-look-idx="${i}" role="button" tabindex="0" aria-label="${attr(p.caption||'My look')}">
       ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
       <div class="lc-meta">${esc(p.item_count||0)} items${p.look_total_usd?' · $'+esc(p.look_total_usd):''}</div>
     </div>`).join('')}</div>`;}
@@ -1360,7 +1360,13 @@
     document.getElementById('season-entry-card')?.addEventListener('click',()=>showView('season-recap'));
     closetBody.querySelectorAll('[data-seg]').forEach(b=>b.addEventListener('click',()=>{profileTab=b.dataset.seg;renderCloset();}));
     closetBody.querySelectorAll('[data-rm]').forEach(btn=>btn.addEventListener('click',()=>removeListing(Number(btn.dataset.rm))));
-    closetBody.querySelectorAll('[data-goto-feed]').forEach(cell=>cell.addEventListener('click',()=>showView('feed')));
+    // Clicking one of YOUR OWN looks opens that specific look — it used to jump to the generic feed
+    // (wrong destination: you tap a post and lose your place). Open the look sheet instead.
+    closetBody.querySelectorAll('[data-look-idx]').forEach(cell=>cell.addEventListener('click',()=>{
+      const p=loadFeedPosts()[Number(cell.dataset.lookIdx)];
+      if(!p) return;
+      openSheetLook(p.caption||'My look', p.items||[], p.look_total_usd||0, 0, 'you');
+    }));
     closetBody.querySelectorAll('[data-ss-sell]').forEach(btn=>btn.addEventListener('click',()=>{
       const it=loadWardrobe().find(i=>i.name===btn.dataset.ssSell);
       if(it) openSellForm(it);
