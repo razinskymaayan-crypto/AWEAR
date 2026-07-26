@@ -2039,11 +2039,11 @@ def test_agent_summary_missing_required_fields_returns_422(client):
     assert r.status_code == 422
 
 
-def test_agent_schedule_no_google_creds_returns_500(client, monkeypatch):
-    """create_calendar_event returning None (no creds) → HTTP 500 with detail.
+def test_agent_schedule_no_google_creds_returns_503(client, monkeypatch):
+    """create_calendar_event returning None (no creds) → HTTP 503 with detail.
 
-    FAIL-BEFORE: no test existed.
-    PASS-AFTER: endpoint cleanly raises HTTPException(500) when create returns None.
+    FAIL-BEFORE: returned 500 (wrong status for a service-unavailable condition).
+    PASS-AFTER: endpoint raises HTTPException(503) with "calendar" in detail.
     """
     monkeypatch.setattr(appmod, "create_calendar_event", lambda *a, **k: None)
     body = {
@@ -2053,7 +2053,27 @@ def test_agent_schedule_no_google_creds_returns_500(client, monkeypatch):
         "end_iso": "2026-09-01T11:00:00+03:00",
     }
     r = client.post("/api/agent/schedule", json=body)
-    assert r.status_code == 500
+    assert r.status_code == 503
+    assert "calendar" in r.json()["detail"].lower()
+
+
+def test_agent_schedule_raises_exception_returns_503(client, monkeypatch):
+    """create_calendar_event raising any exception (e.g. network error) → HTTP 503.
+
+    FAIL-BEFORE: no try/except → unhandled exception → generic 500 Internal Server Error.
+    PASS-AFTER: broad except block catches the raise → clean 503 with "calendar" in detail.
+    """
+    def _calendar_raise(*a, **k):
+        raise OSError("network failure")
+    monkeypatch.setattr(appmod, "create_calendar_event", _calendar_raise)
+    body = {
+        "agent": "jeff",
+        "title": "Sprint review",
+        "start_iso": "2026-09-01T10:00:00+03:00",
+        "end_iso": "2026-09-01T11:00:00+03:00",
+    }
+    r = client.post("/api/agent/schedule", json=body)
+    assert r.status_code == 503
     assert "calendar" in r.json()["detail"].lower()
 
 
@@ -2063,11 +2083,11 @@ def test_agent_schedule_missing_required_fields_returns_422(client):
     assert r.status_code == 422
 
 
-def test_agent_meeting_no_google_creds_returns_500(client, monkeypatch):
-    """schedule_agent_meeting returning None (no creds) → HTTP 500 with detail.
+def test_agent_meeting_no_google_creds_returns_503(client, monkeypatch):
+    """schedule_agent_meeting returning None (no creds) → HTTP 503 with detail.
 
-    FAIL-BEFORE: no test existed.
-    PASS-AFTER: endpoint cleanly raises HTTPException(500) when schedule returns None.
+    FAIL-BEFORE: returned 500 (wrong status for a service-unavailable condition).
+    PASS-AFTER: endpoint raises HTTPException(503) with "meeting" in detail.
     """
     monkeypatch.setattr(appmod, "schedule_agent_meeting", lambda *a, **k: None)
     body = {
@@ -2078,7 +2098,28 @@ def test_agent_meeting_no_google_creds_returns_500(client, monkeypatch):
         "end_iso": "2026-09-01T15:00:00+03:00",
     }
     r = client.post("/api/agent/meeting", json=body)
-    assert r.status_code == 500
+    assert r.status_code == 503
+    assert "meeting" in r.json()["detail"].lower()
+
+
+def test_agent_meeting_raises_exception_returns_503(client, monkeypatch):
+    """schedule_agent_meeting raising any exception (e.g. network error) → HTTP 503.
+
+    FAIL-BEFORE: no try/except → unhandled exception → generic 500 Internal Server Error.
+    PASS-AFTER: broad except block catches the raise → clean 503 with "meeting" in detail.
+    """
+    def _meeting_raise(*a, **k):
+        raise ConnectionError("api down")
+    monkeypatch.setattr(appmod, "schedule_agent_meeting", _meeting_raise)
+    body = {
+        "organizer": "jeff",
+        "participants": ["steve", "mark"],
+        "title": "Design review",
+        "start_iso": "2026-09-01T14:00:00+03:00",
+        "end_iso": "2026-09-01T15:00:00+03:00",
+    }
+    r = client.post("/api/agent/meeting", json=body)
+    assert r.status_code == 503
     assert "meeting" in r.json()["detail"].lower()
 
 
@@ -2086,6 +2127,22 @@ def test_agent_meeting_missing_required_fields_returns_422(client):
     """Missing participants/title/times → 422, no crash."""
     r = client.post("/api/agent/meeting", json={"organizer": "jeff"})
     assert r.status_code == 422
+
+
+def test_agent_summary_raises_exception_returns_503(client, monkeypatch):
+    """send_summary_email raising any exception (e.g. SMTP error) → HTTP 503.
+
+    FAIL-BEFORE: only RuntimeError was caught; other exceptions (ConnectionError,
+                 auth failures) propagated as generic 500 Internal Server Error.
+    PASS-AFTER: broad except block catches any raise → clean 503 with "email" in detail.
+    """
+    def _email_raise(*a, **k):
+        raise ConnectionError("smtp down")
+    monkeypatch.setattr(appmod, "send_summary_email", _email_raise)
+    body = {"agent": "jeff", "department": "Product", "attendees": "jeff@awear.app", "summary": "sync"}
+    r = client.post("/api/agent/summary", json=body)
+    assert r.status_code == 503
+    assert "email" in r.json()["detail"].lower()
 
 
 def test_agent_summary_no_google_stub_returns_helpful_500(client):
@@ -2135,6 +2192,21 @@ def test_scan_health_includes_database_mode(client):
     # In CI (no DATABASE_URL) we expect sqlite mode
     assert db["mode"] == "sqlite", "CI must run in sqlite mode (DATABASE_URL not set)"
     assert db["configured"] is False, "CI must report database not configured (no DATABASE_URL)"
+
+
+def test_scan_health_includes_agent_services(client):
+    """GET /api/scan-health must include 'agent_services.google_available'.
+
+    FAIL-BEFORE: agent_services block absent.
+    PASS-AFTER: block present; in CI (no google_services) google_available=False.
+    """
+    r = client.get("/api/scan-health")
+    assert r.status_code == 200
+    body = r.json()
+    assert "agent_services" in body, "agent_services missing from scan-health"
+    assert "google_available" in body["agent_services"], "google_available missing"
+    # CI has no google_services installed → stub in use → not available
+    assert body["agent_services"]["google_available"] is False
 
 
 # ---------------------------------------------------------------------------

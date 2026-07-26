@@ -778,6 +778,9 @@ async def scan_health(request: Request, probe: int = 0):
             "marketplace": {"last_mode": _last_marketplace["mode"], "last_reason": _last_marketplace["reason"]},
         },
         "data_integrity": dict(_data_integrity),
+        "agent_services": {
+            "google_available": (send_summary_email is not _google_unavailable),
+        },
     }
 
     if not probe:
@@ -934,11 +937,7 @@ async def agent_summary(data: MeetingSummary):
             department=data.department,
             summary=data.dict(),
         )
-    except RuntimeError:
-        # No Google/GMAIL creds on this box (dev/CI): send_summary_email is the
-        # _google_unavailable stub that raises. Return a HELPFUL 503 with the fix,
-        # not a raw 500 stacktrace. (Bug exposed by steve's agent-summary tests —
-        # was an uncaught RuntimeError -> ugly 500.)
+    except Exception:  # noqa: BLE001 — any send failure (stub/SMTP/auth/network) → 503
         raise HTTPException(
             status_code=503,
             detail="Email not configured — set GMAIL_APP_PASSWORD in .env to enable agent summaries.",
@@ -951,16 +950,22 @@ async def agent_summary(data: MeetingSummary):
 @app.post("/api/agent/schedule")
 async def agent_schedule(data: CalendarEvent):
     """Create a Google Calendar event on behalf of an agent."""
-    url = create_calendar_event(
-        agent=data.agent,
-        title=data.title,
-        start_iso=data.start_iso,
-        end_iso=data.end_iso,
-        description=data.description,
-        attendees=data.attendees or None,
-    )
+    try:
+        url = create_calendar_event(
+            agent=data.agent,
+            title=data.title,
+            start_iso=data.start_iso,
+            end_iso=data.end_iso,
+            description=data.description,
+            attendees=data.attendees or None,
+        )
+    except Exception:  # noqa: BLE001 — auth/network/API failure → 503
+        raise HTTPException(
+            status_code=503,
+            detail="Calendar service error — check google_token.json and Google API credentials.",
+        )
     if not url:
-        raise HTTPException(status_code=500, detail="Failed to create calendar event — check google_token.json")
+        raise HTTPException(status_code=503, detail="Calendar service unavailable — check google_token.json")
     return {"status": "created", "event_url": url}
 
 
@@ -976,16 +981,22 @@ class AgentMeeting(BaseModel):
 @app.post("/api/agent/meeting")
 async def agent_meeting(data: AgentMeeting):
     """Schedule a meeting between agents — organizer invites participants."""
-    url = schedule_agent_meeting(
-        organizer=data.organizer,
-        participants=data.participants,
-        title=data.title,
-        start_iso=data.start_iso,
-        end_iso=data.end_iso,
-        description=data.description,
-    )
+    try:
+        url = schedule_agent_meeting(
+            organizer=data.organizer,
+            participants=data.participants,
+            title=data.title,
+            start_iso=data.start_iso,
+            end_iso=data.end_iso,
+            description=data.description,
+        )
+    except Exception:  # noqa: BLE001 — auth/network/API failure → 503
+        raise HTTPException(
+            status_code=503,
+            detail="Meeting service error — check google_token.json and Google API credentials.",
+        )
     if not url:
-        raise HTTPException(status_code=500, detail="Failed to create meeting — check google_token.json")
+        raise HTTPException(status_code=503, detail="Meeting service unavailable — check google_token.json")
     return {"status": "created", "event_url": url}
 
 
