@@ -133,3 +133,13 @@ Top-priority defect — before INBOX work.
 These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_agent_schedule_no_google_creds_returns_503 test_agent_schedule_raises_exception_returns_503 test_agent_meeting_no_google_creds_returns_503 test_agent_meeting_raises_exception_returns_503 test_agent_summary_raises_exception_returns_503 test_scan_health_includes_agent_services
 OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
 Top-priority defect — before INBOX work.
+
+## [UNRESOLVED] REPEAT-FAILURE: steve(exposed-bug) (2026-07-26T13:28:52Z)
+The gate-ledger shows the SAME failure **3 cycles in a row (ending now)**: `steve(exposed-bug)`.
+This is a STUCK LOOP — a lane keeps producing work the gate keeps rejecting the same way, so
+nothing lands. Do NOT just retry. ROOT-CAUSE it:
+- Is the lane's CODE genuinely wrong? Reproduce locally, fix it in the lane.
+- OR is the GATE/WORKFLOW wrong (flaky check, deps installed before the merge, a bad command,
+  a timeout)? Fix it in .github/workflows/ — a false-rejecting gate is as harmful as bad code.
+  (The 2026-07-08 bcrypt loop was exactly this: pytest ran before a new dep was installed.)
+Verify the fix, then change [UNRESOLVED] -> [FIXED] with a one-line note of the root cause.
