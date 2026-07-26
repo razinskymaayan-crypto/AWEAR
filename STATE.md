@@ -11,11 +11,13 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-26, run 23)
-- **Task**: Bottom-sheet close-gesture completeness. commit 8a73939.
-- **Done**: (1) diary-overlay (showDiaryModal) was missing backdrop-tap to close — added overlay click handler, matching the journal/mp-fsheet/ms-insight/book/edit-profile pattern. (2) sc-sheet (scan-confirm HITL) opened without _addSheetDragDismiss — added drag-dismiss, bound once via _dragBound guard. check-render ✓. node --check ✓.
-- **Status checks done**: dead buttons = 0 (9e7ad93 detector); DS-004 fallbacks correct; all interactions pass check-interactions.mjs. Scan-confirm HITL UI fully built (showScanConfirm, /api/closet/confirm wired, user_id on /api/analyze).
-- **Next**: Text-overlap / truncation sweep on feed/profile screens (INBOX ★★★★★ item 1). OR: any new DEFECTS.md entries for [mark].
+## Mark lane — last run (2026-07-26, run 24)
+- **Task**: Shopping screen UX polish — text truncation sweep + badge fixes. commit 002c75f.
+- **Done**: (1) "X% matches your closet" → "X% closet match" — no more mid-word truncation in 2-col cards. (2) "New" badge: green (--success) → white translucent pill with --bg text — readable on any image bg. (3) "Complete Your Closet" → "Complete Look" — fits in 390px without scrolling. (4) .sf-card-name font-weight 800→600 — editorial per VISUAL_VISION. (5) showDeclutterResults(undefined) crash guard added. Gabbana 8/10 pass. check-render ✓. node --check ✓. UX audit: showDeclutterResults no longer crashes.
+- **Status checks done**: DEFECTS.md — no open [mark] items. Assignments — all checked off. UX audit — 0 stuck overlays, 0 dead buttons. Gabbana 8/10.
+- **Next**: Other INBOX ★★★★★ items (sheets/modals close-gestures sweep, dead buttons audit) — continue UX sweep per founder direction. OR: any new DEFECTS.md entries for [mark].
+- **Note (data issue, not my lane)**: Ralph Lauren product cards (prod_ss_020, prod_ls_020) in products.json use brand OG images (1200×630 landscape banner) instead of product photos. Fixing requires updating static/data/products.json — request to data/content lane.
+- **Prior runs**: run 23 — bottom-sheet close-gestures (8a73939); run 22 — outfit generator Gabbana; run 21 — DS-004 --progress-track; run 20 — touch targets.
 - **Prior runs**: run 22 — outfit generator Gabbana (a6ab1fa/committed); run 21 — DS-004 --progress-track (3218ee4); run 20 — touch targets (8a40900); dead-button detector (9e7ad93, scripts/ — out-of-lane by prior session).
 
 ## Steve lane — last run (2026-07-25, run 19)
