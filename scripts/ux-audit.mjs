@@ -56,7 +56,20 @@ const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 const pageErrors = [];
 page.on('pageerror', (e) => pageErrors.push(String(e)));
-await page.addInitScript(() => { try { localStorage.setItem('awear_onboarded', '1'); } catch (_) {} });
+await page.addInitScript(() => {
+  try {
+    localStorage.setItem('awear_onboarded', '1');
+    // Seed a few of the user's own shared looks so the closet/profile actually renders its look
+    // tiles — otherwise a fresh scan has an EMPTY feed and never exercises content tiles (the exact
+    // surface where the founder's "tap a post → wrong screen" bug lived).
+    if (!localStorage.getItem('awear_feed')) {
+      const mk = (n, cap, price) => ({ ts: n, id: 'mine_' + n, photo: null, caption: cap, item_count: 2,
+        look_total_usd: price, items: [{ category: 'top', name: 'Tee', price_estimate_usd: price / 2 },
+        { category: 'bottoms', name: 'Jeans', price_estimate_usd: price / 2 }], tags: ['minimal'] });
+      localStorage.setItem('awear_feed', JSON.stringify([mk(1, 'My look', 120), mk(2, 'Evening', 200), mk(3, 'Casual', 80)]));
+    }
+  } catch (_) {}
+});
 await page.goto(BASE, { waitUntil: 'networkidle' }).catch(() => {});
 await page.waitForTimeout(1500);
 
@@ -194,6 +207,47 @@ const HELPERS = () => {
       }
       return hits.slice(0, 25);
     },
+    // A signature of the CURRENT app state. Two clicks that leave this identical means the second
+    // click produced NO observable change — the fingerprint of a dead button. Rich enough (view +
+    // open overlays + full-DOM length + scroll + any toast) that real toggles/class-flips register.
+    stateSig() {
+      const view = (document.querySelector('.view.active') || {}).id || '';
+      const ov = this.visibleOverlays().sort().join(',');
+      const toast = [...document.querySelectorAll('[class*="toast" i]')]
+        .filter((e) => this.renderVisible(e)).map((e) => (e.textContent || '').trim()).join('|');
+      return [view, ov, document.documentElement.outerHTML.length, window.scrollY | 0, toast].join('||');
+    },
+    // Actionable, visible elements in the ACTIVE view (excludes the bottom nav bar — its tabs are
+    // meant to navigate). Tags each with data-ux-click so the harness can click it deterministically.
+    clickables() {
+      // CLEAR stale tags first. Without this, tags from earlier views persist and
+      // document.querySelector('[data-ux-click="i"]') resolves to the FIRST match in DOM order — an
+      // element in an earlier view (closet/analytics), not the active one. That silently clicked the
+      // wrong element and made EVERY control look like it navigated to analytics/closet (a systematic
+      // lie the reproducibility gate could not catch because it was deterministic). OW-015.
+      document.querySelectorAll('[data-ux-click]').forEach((e) => e.removeAttribute('data-ux-click'));
+      const view = document.querySelector('.view.active') || document.body;
+      // NB: [data-seg] tab toggles are excluded — they only swap in-view content (never dead, never
+      // navigate) so they add no findings, and clicking one mutates persistent tab state (profileTab),
+      // hiding the look tiles from later lands. Skipping them keeps content tiles reachable.
+      const sel = 'button,[role="button"],a[href],[onclick],[data-goto-feed],[data-open-profile],[data-look-idx],[data-post-idx],.look-cell';
+      const out = [];
+      view.querySelectorAll(sel).forEach((el) => {
+        const tag = el.tagName.toLowerCase();
+        if (['input', 'textarea', 'select'].includes(tag)) return;
+        if (el.closest('nav')) return;                          // bottom tab bar — expected to navigate
+        if (el.closest('[aria-hidden="true"]')) return;
+        // Skip an ALREADY-selected toggle/filter — re-clicking it is a legitimate no-op, not a dead
+        // button. Flagging it is a false positive (OW-015). e.g. the explore "All" chip starts active.
+        if (/\b(active|on|selected)\b/.test(el.className || '') || el.getAttribute('aria-selected') === 'true' || el.getAttribute('aria-pressed') === 'true') return;
+        if (!this.renderVisible(el)) return;
+        const idx = out.length;
+        el.setAttribute('data-ux-click', idx);
+        const label = ((el.getAttribute('aria-label') || el.textContent || el.className || tag) + '').trim().replace(/\s+/g, ' ').slice(0, 44);
+        out.push({ idx, label, cls: (typeof el.className === 'string' ? (el.className.split(/\s+/)[0] || tag) : tag) });
+      });
+      return out;
+    },
     // Is an OPEN overlay geometrically SANE on screen? Catches the 2-week bug the
     // stuck-check missed: a sheet whose top (with its close control) is pushed off-screen
     // and whose body leaves dead space — it "opens and closes" fine but looks broken.
@@ -320,6 +374,83 @@ for (const view of SCREENS) {
   } catch (_) {}
 }
 
+// ---------- 3/3) DEAD BUTTONS + NAVIGATION MAP ----------
+// The founder's class: buttons that do nothing, or that navigate to the WRONG place (e.g. a profile
+// look-cell that jumped to the generic feed). We click every in-content control and watch the state
+// signature: no change at all = dead; a view change = recorded in the nav map for review. Conservative
+// by design (OW-015) — a "dead-ish" flag means "verify", not "certainly broken".
+const deadButtons = [], navMap = [], wrongNav = [];
+const NAV_VIEWS = ['home', 'closet', 'feed', 'marketplace', 'explore', 'wishlist', 'analytics'];
+// Land on `view` RELIABLY, then confirm .view.active is really it. An unverified reset was the bug:
+// showView races the async renders, so a click got measured on the WRONG screen and mislabeled
+// (every chip "→ analytics"). We poll, and the loop below discards any click not taken on `view`.
+const landOn = async (view) => {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await page.keyboard.press('Escape').catch(() => {});
+    if (attempt === 1) { await page.goto(BASE, { waitUntil: 'domcontentloaded' }).catch(() => {}); await page.waitForTimeout(600); }
+    await page.evaluate((v) => { try { window.showView && showView(v); } catch (_) {} }, view);
+    for (let t = 0; t < 12; t++) {
+      const cur = await page.evaluate(() => (document.querySelector('.view.active') || {}).id || '');
+      // The class flips SYNCHRONOUSLY but renderXxx() fills the view asynchronously — returning the
+      // instant .view.active matches gives an EMPTY view (clickables=0). Let the content settle first.
+      if (cur === view) {
+        await page.waitForTimeout(400);
+        // Give empty text inputs a value so a submit control ("+ Add" with an empty field) actually
+        // acts instead of correctly no-op-ing — otherwise it looks dead when it is merely unfed (OW-015).
+        await page.evaluate(() => {
+          document.querySelectorAll('.view.active input[type="text"],.view.active input[type="search"],.view.active input:not([type])').forEach((inp) => {
+            if (!inp.value) { inp.value = 'audit'; inp.dispatchEvent(new Event('input', { bubbles: true })); }
+          });
+        }).catch(() => {});
+        await page.evaluate(HELPERS);
+        return true;
+      }
+      await page.waitForTimeout(120);
+    }
+  }
+  return false;
+};
+// One click trial: land on the view, click the i-th clickable, return the OUTCOME
+// ('dead' | a destination view id | null if unusable). Matching by label (not just index) guards
+// against async re-render reordering the list between trials.
+const trial = async (view, i, expectLabel) => {
+  if (!(await landOn(view))) return null;
+  const items = await page.evaluate(() => window.__ux.clickables());
+  if (i >= items.length || items[i].label !== expectLabel) return null;   // list drifted — discard
+  const before = await page.evaluate(() => window.__ux.stateSig());
+  if (before.split('||')[0] !== view) return null;
+  const ok = await page.evaluate((idx) => { const el = document.querySelector(`[data-ux-click="${idx}"]`); if (!el) return false; el.click(); return true; }, i);
+  if (!ok) return null;
+  await page.waitForTimeout(460);
+  const after = await page.evaluate(() => window.__ux.stateSig());
+  if (before === after) return 'dead';
+  const vA = after.split('||')[0];
+  return vA !== view ? vA : 'acted';                            // navigated elsewhere | acted in place
+};
+for (const view of NAV_VIEWS) {
+  try {
+    if (!(await landOn(view))) continue;
+    const base = await page.evaluate(() => window.__ux.clickables());
+    const N = Math.min(base.length, 12);
+    for (let i = 0; i < N; i++) {
+      const label = base[i].label, cls = base[i].cls;
+      // REPRODUCIBILITY GATE (OW-015): run the click twice; keep the finding ONLY if both trials
+      // AGREE. A timing/async race gives different answers → discarded. A real dead/mis-nav is stable.
+      const a = await trial(view, i, label);
+      if (a !== 'dead' && (!a || a === 'acted')) continue;      // only dead or a real nav is worth a 2nd trial
+      const b = await trial(view, i, label);
+      if (a !== b) continue;                                    // not reproducible → not trusted
+      if (a === 'dead') { deadButtons.push({ view, label, cls }); continue; }
+      navMap.push({ view, label, to: a });                     // a === some other view id, twice
+      // SUSPICIOUS: a specific content item (look/post/product tile) that navigates to a generic
+      // LIST view instead of opening ITS OWN detail — the exact archetype we fixed (look-cell → feed).
+      if (/look|post|item|product|tile|thumb|cell|card/i.test(cls) && ['feed', 'closet', 'marketplace', 'explore'].includes(a)) {
+        wrongNav.push({ view, label, to: a, cls });
+      }
+    }
+  } catch (_) { /* view not reachable — skip */ }
+}
+
 await browser.close();
 
 // ---------- REPORT ----------
@@ -346,11 +477,23 @@ line(`\n③ OVERLAPPING TEXT  (labels physically covering each other)`);
 if (!overlap.length) line('   ✓ none found on the scanned screens');
 overlap.slice(0, 20).forEach((o) => line(`   ✗ [${o.view}] "${o.a}"  ⟷  "${o.b}"  (${o.overlap}px)`));
 
-line(`\n④ COULD NOT OPEN (needs a real trigger/args — verify by hand)`);
+line(`\n④ DEAD-ish BUTTONS  (clicked, produced NO observable change — verify each)`);
+if (!deadButtons.length) line('   ✓ none — every in-content control did something');
+deadButtons.slice(0, 25).forEach((d) => line(`   ✗ [${d.view}] "${d.label}"  (.${d.cls})`));
+
+line(`\n④w WRONG DESTINATION  (a specific item that jumps to a LIST view instead of opening its detail — the look-cell→feed class)`);
+if (!wrongNav.length) line('   ✓ none — no content tile navigates to a generic list view');
+wrongNav.slice(0, 20).forEach((n) => line(`   ✗ [${n.view}] "${n.label}" (.${n.cls})  →  ${n.to}  (should open its own detail)`));
+
+line(`\n④m NAVIGATION MAP  (what each control navigated to — reference; scan for anything unexpected)`);
+if (!navMap.length) line('   (no navigations recorded)');
+navMap.slice(0, 40).forEach((n) => line(`   [${n.view}] "${n.label}"  →  ${n.to}`));
+
+line(`\n⑤ COULD NOT OPEN (needs a real trigger/args — verify by hand)`);
 unopenable.forEach((u) => line(`   • ${u}`));
 
-if (pageErrors.length) { line('\n⑤ PAGE ERRORS'); pageErrors.slice(0, 5).forEach((e) => line('   ! ' + e)); }
+if (pageErrors.length) { line('\n⑥ PAGE ERRORS'); pageErrors.slice(0, 5).forEach((e) => line('   ! ' + e)); }
 
-const total = stuck.length + contrast.length + overlap.length;
-line(`\n──────── ${opened.length} overlays driven · ${total} issues found ────────\n`);
+const total = stuck.length + contrast.length + overlap.length + deadButtons.length + wrongNav.length;
+line(`\n──────── ${opened.length} overlays driven · ${deadButtons.length} dead-ish · ${wrongNav.length} wrong-dest · ${navMap.length} navs mapped · ${total} issues ────────\n`);
 process.exit(0);   // reporting tool: never fail the pipeline, the LIST is the product
