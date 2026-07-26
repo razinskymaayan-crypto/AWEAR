@@ -102,7 +102,8 @@ nothing lands. Do NOT just retry. ROOT-CAUSE it:
   (The 2026-07-08 bcrypt loop was exactly this: pytest ran before a new dep was installed.)
 Verify the fix, then change [UNRESOLVED] -> [FIXED] with a one-line note of the root cause.
 
-## [UNRESOLVED] REPEAT-FAILURE: steve(pytest) (2026-07-21T13:55:43Z)
+## [FIXED 2026-07-26 steve self-heal] REPEAT-FAILURE: steve(pytest) (2026-07-21T13:55:43Z)
+> **Root cause + fix:** `_google_unavailable()` raised RuntimeError instead of returning None → `test_agent_summary_no_google_stub_returns_helpful_500` failed on branch AND $BASE. Main session fixed the underlying code in commits 3db5bb9 + a6c691f (`_google_unavailable` now returns None; `agent_summary` endpoint has try/except RuntimeError for belt-and-suspenders). Test already in tests/test_app.py, now passes. Do NOT re-analyze.
 The gate-ledger shows the SAME failure **3 cycles in a row (ending now)**: `steve(pytest)`.
 This is a STUCK LOOP — a lane keeps producing work the gate keeps rejecting the same way, so
 nothing lands. Do NOT just retry. ROOT-CAUSE it:
