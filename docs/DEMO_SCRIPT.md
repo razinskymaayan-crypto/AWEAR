@@ -111,6 +111,8 @@ Point below the hero: **Chat with Abigail** ("Ask your stylist") and **Style Swi
 
 > "And here's the loop closing: she bought it, and it's *already* in her closet — clean catalog image and all. Scan, style, shop, own. That's the core loop."
 
+> 💡 *Nav fix shipped 2026-07-26 (`ca649fa`): tapping any look-post tile on the Profile grid now opens that specific look's detail sheet directly — previously it dumped to the generic feed (regression). For the demo: after showing the closet shelf, you can tap one of her look posts to open the full look-detail sheet right from the profile — reinforces "the wardrobe is the profile" in a single tap. No longer a dead end.*
+
 > 💡 *Closet image note (for informed demos): the item in the closet shows a retailer catalog photo (via `search_query`), not the AI-generated image from beat 2. Those are different sources — the AI-generated image is currently shown only in the "Did we get it right?" confirm screen (pipeline gap; P1 task for mark+sam). If an investor asks: "Is that the AI-generated image?" → say: "The AI generates a studio-clean version of the photo during the review step — next release that image persists to the closet. Today the closet gets a clean retailer catalog photo. Same visual quality, and closing that loop is literally the next thing on the board." Then move on.*
 
 ---
@@ -182,4 +184,4 @@ Point at the live activity timeline (real recent commits) and the team grid.
 
 ---
 
-*C2 — owner: CMO + Ayalon. Status: re-verified 2026-07-25 (13 DoD items total: 12 fully verified, 1 doc-only — full breakdown in DOD_AUDIT.md. Match score SPA wiring ✅ shipped `251e38e` — beat-5 note updated; match score now fully live (client instant-show + server upgrade). Closet persistence pipeline gap documented in DOD_AUDIT.md item #12.). Do a timed dry-run twice before the meeting and lock the wording you're comfortable with. Source of truth for the flow: this file + [MASTER_PLAN.md](../.claude/master/MASTER_PLAN.md) §Track C + [PRODUCT_VISION.md](PRODUCT_VISION.md) §ה-WOW.*
+*C2 — owner: CMO + Ayalon. Status: re-verified 2026-07-26 (13 DoD items total: 12 fully verified, 1 doc-only — full breakdown in DOD_AUDIT.md. Nav fix `ca649fa` landed 2026-07-26 — profile look-tiles now open the correct look sheet; beat-6 tip updated. Match score SPA wiring ✅ shipped `251e38e` — beat-5 note updated; match score now fully live (client instant-show + server upgrade). Closet persistence pipeline gap documented in DOD_AUDIT.md item #12.). Do a timed dry-run twice before the meeting and lock the wording you're comfortable with. Source of truth for the flow: this file + [MASTER_PLAN.md](../.claude/master/MASTER_PLAN.md) §Track C + [PRODUCT_VISION.md](PRODUCT_VISION.md) §ה-WOW.*
