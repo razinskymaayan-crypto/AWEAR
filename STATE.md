@@ -11,10 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-25, run 21)
-- **Task**: DS-004 rejection fix — corrected `--progress-track` fallback in light-mode block from `#E9E5DF` (light-mode approximation) to `#2e2836` (dark token). commit 3218ee4.
-- **Done**: `static/tokens.css:182` — last remaining DS-004 violation from 2026-07-23 rejection. `b39cd81` had only fixed `--muted`; this fixes `--line` fallback. check-render ✓, no bad fallbacks remain.
-- **Next**: Outfit generator screen (outfits view) Gabbana review + any further touch-target sweeps.
+## Mark lane — last run (2026-07-26, run 22)
+- **Task**: Outfit generator (outfits view) Gabbana audit + fixes. commit a6ab1fa.
+- **Done**: Gabbana code-only review (5/10 → fixed). P0: removed opacity:.7 contrast failure on og-empty-sub; replaced bare-hex rgba(123,92,255,.1) chip:active with color-mix token. P1: added DS-004 fallbacks to 14 og-* rules (og-chip, og-go, og-input, og-outfit-card/header/num/name/score, og-empty/sub/text). P2: text-align:start RTL fix, gap token, border-radius tokens, removed dead .og-loading-spinner CSS. check-render ✓.
+- **Next**: UX backlog — check-interactions expansion (blocked: scripts/ is steve's lane; request routed to steve assignment). Next mark task: dead-button sweep on feed/closet/profile screens.
+- **Prior runs**: run 21 — DS-004 --progress-track (3218ee4); run 20 — touch targets (8a40900); run 19 — marketplace contrast (203f37d); run 18 — match score wiring (9d04a4f+251e38e).
 - **Prior runs**: run 20 — touch targets (8a40900); run 19 — marketplace contrast (203f37d); run 18 — match score wiring (9d04a4f+251e38e); run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4).
 
 ## Steve lane — last run (2026-07-25, run 19)
