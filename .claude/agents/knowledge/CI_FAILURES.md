@@ -153,3 +153,8 @@ Top-priority defect — before INBOX work.
 These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_agent_schedule_no_google_creds_returns_503 test_agent_schedule_raises_exception_returns_503 test_agent_meeting_no_google_creds_returns_503 test_agent_meeting_raises_exception_returns_503 test_agent_summary_raises_exception_returns_503 test_scan_health_includes_agent_services
 OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
 Top-priority defect — before INBOX work.
+
+## [OPEN] PRODUCT BUG — exposed by steve's own new tests (2026-07-26T19:22:27Z)
+These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_agent_schedule_no_google_creds_returns_503 test_agent_schedule_raises_exception_returns_503 test_agent_meeting_no_google_creds_returns_503 test_agent_meeting_raises_exception_returns_503 test_agent_summary_raises_exception_returns_503 test_scan_health_includes_agent_services
+OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
+Top-priority defect — before INBOX work.
