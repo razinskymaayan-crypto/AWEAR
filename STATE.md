@@ -11,12 +11,12 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-26, run 22)
-- **Task**: Outfit generator (outfits view) Gabbana audit + fixes. commit a6ab1fa.
-- **Done**: Gabbana code-only review (5/10 → fixed). P0: removed opacity:.7 contrast failure on og-empty-sub; replaced bare-hex rgba(123,92,255,.1) chip:active with color-mix token. P1: added DS-004 fallbacks to 14 og-* rules (og-chip, og-go, og-input, og-outfit-card/header/num/name/score, og-empty/sub/text). P2: text-align:start RTL fix, gap token, border-radius tokens, removed dead .og-loading-spinner CSS. check-render ✓.
-- **Next**: UX backlog — check-interactions expansion (blocked: scripts/ is steve's lane; request routed to steve assignment). Next mark task: dead-button sweep on feed/closet/profile screens.
-- **Prior runs**: run 21 — DS-004 --progress-track (3218ee4); run 20 — touch targets (8a40900); run 19 — marketplace contrast (203f37d); run 18 — match score wiring (9d04a4f+251e38e).
-- **Prior runs**: run 20 — touch targets (8a40900); run 19 — marketplace contrast (203f37d); run 18 — match score wiring (9d04a4f+251e38e); run 17 — edit-profile drag-dismiss (1a771bb); run 16 — Gabbana UX fixes (50449e4).
+## Mark lane — last run (2026-07-26, run 23)
+- **Task**: Bottom-sheet close-gesture completeness. commit 8a73939.
+- **Done**: (1) diary-overlay (showDiaryModal) was missing backdrop-tap to close — added overlay click handler, matching the journal/mp-fsheet/ms-insight/book/edit-profile pattern. (2) sc-sheet (scan-confirm HITL) opened without _addSheetDragDismiss — added drag-dismiss, bound once via _dragBound guard. check-render ✓. node --check ✓.
+- **Status checks done**: dead buttons = 0 (9e7ad93 detector); DS-004 fallbacks correct; all interactions pass check-interactions.mjs. Scan-confirm HITL UI fully built (showScanConfirm, /api/closet/confirm wired, user_id on /api/analyze).
+- **Next**: Text-overlap / truncation sweep on feed/profile screens (INBOX ★★★★★ item 1). OR: any new DEFECTS.md entries for [mark].
+- **Prior runs**: run 22 — outfit generator Gabbana (a6ab1fa/committed); run 21 — DS-004 --progress-track (3218ee4); run 20 — touch targets (8a40900); dead-button detector (9e7ad93, scripts/ — out-of-lane by prior session).
 
 ## Steve lane — last run (2026-07-25, run 19)
 - **Task**: Test coverage — hermetic tests for 6 zero-coverage endpoint groups. commit 8bb816d.
