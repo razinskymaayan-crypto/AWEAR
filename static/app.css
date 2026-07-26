@@ -1161,11 +1161,11 @@
   .og-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
   .og-header { padding: 16px 18px 10px; }
   .og-title { font-size: var(--t-title,20px); font-weight: 700; letter-spacing: -.4px; }
-  .og-sub { font-size: var(--t-caption); color: var(--muted); font-weight: 500; margin-top: 4px; }
+  .og-sub { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); font-weight: 500; margin-top: 4px; }
   .og-input-row { display: flex; gap: 8px; padding: 0 18px 12px; }
-  .og-input { flex: 1; background: var(--card); border: 1.5px solid var(--line); border-radius: 18px; padding: 13px 16px; font-family: inherit; font-size: var(--t-body); color: var(--text); outline: none; transition: border .18s; }
-  .og-input:focus { border-color: var(--accent2); }
-  .og-go { padding: 13px 18px; min-height: 44px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 0; border-radius: 18px; color: #fff; font-family: inherit; font-size: var(--t-body); font-weight: 900; cursor: pointer; transition: transform .15s; white-space: nowrap; }
+  .og-input { flex: 1; background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); border-radius: 18px; padding: 13px 16px; font-family: inherit; font-size: var(--t-body,14px); color: var(--text,#fbfbfd); outline: none; transition: border .18s; }
+  .og-input:focus { border-color: var(--accent2,#c4855a); }
+  .og-go { padding: 13px 18px; min-height: 44px; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: 0; border-radius: var(--r-lg,20px); color: #fff; font-family: inherit; font-size: var(--t-body,14px); font-weight: 900; cursor: pointer; transition: transform .15s; white-space: nowrap; }
   .og-go:active { transform: scale(.96); }
   .og-scenarios { display: flex; gap: 8px; padding: 0 18px 16px; overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
   .og-scenarios::-webkit-scrollbar { display: none; }
@@ -1188,20 +1188,20 @@
 
   /* Secondary entry points (quiet — must not compete with the hero) */
   .og-entries { display: flex; gap: var(--space-2, 8px); padding: 0 18px var(--space-4, 16px); }
-  .og-entry { flex: 1; display: flex; align-items: center; gap: 9px; min-height: 56px; padding: 10px 12px; background: transparent; border: 1px solid var(--line, #2e2836); border-radius: var(--r-md, 14px); color: var(--fg, #f0ecf5); font-family: inherit; cursor: pointer; text-align: left; transition: background .15s, transform .12s; }
+  .og-entry { flex: 1; display: flex; align-items: center; gap: 9px; min-height: 56px; padding: 10px 12px; background: transparent; border: 1px solid var(--line, #2e2836); border-radius: var(--r-md, 14px); color: var(--fg, #f0ecf5); font-family: inherit; cursor: pointer; text-align: start; transition: background .15s, transform .12s; }
   .og-entry:active { transform: scale(.98); background: var(--card, #1e1a22); }
   .og-entry-ico { width: 32px; height: 32px; min-width: 32px; border-radius: 50%; background: var(--surface, #161318); border: 1px solid var(--line, #2e2836); display: flex; align-items: center; justify-content: center; color: var(--accent2, #c4855a); flex-shrink: 0; }
   .og-entry-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
   .og-entry-title { font-size: var(--t-small, 13px); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .og-entry-sub { font-size: var(--t-micro, 11px); font-weight: 500; color: var(--muted, #9e99ad); }
-  .og-chip { flex-shrink: 0; padding: 8px 14px; min-height: 44px; background: var(--card); border: 1.5px solid var(--line); border-radius: 20px; font-size: var(--t-caption); font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; transition: all .18s; display: flex; align-items: center; gap: 5px; }
-  .og-chip:active { border-color: var(--accent2); background: rgba(123,92,255,.1); }
-  .og-result-section { padding: 0 18px; display: flex; flex-direction: column; gap: 14px; }
-  .og-outfit-card { background: var(--card); border-radius: 20px; border: 1px solid var(--line); overflow: hidden; }
-  .og-outfit-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px; border-bottom: 1px solid var(--line); }
-  .og-outfit-num { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: var(--t-small); font-weight: 900; color: #fff; flex-shrink: 0; }
-  .og-outfit-name { font-size: var(--t-body); font-weight: 900; flex: 1; }
-  .og-outfit-score { font-size: var(--t-caption); font-weight: 800; color: var(--accent2); }
+  .og-chip { flex-shrink: 0; padding: 8px 14px; min-height: 44px; background: var(--card,#1e1a22); border: 1.5px solid var(--line,#2e2836); border-radius: var(--r-lg,20px); font-size: var(--t-caption,12px); font-weight: 800; color: var(--text,#fbfbfd); cursor: pointer; font-family: inherit; transition: all .18s; display: flex; align-items: center; gap: 5px; }
+  .og-chip:active { border-color: var(--accent2,#c4855a); background: color-mix(in srgb, var(--accent3,#7a6af0) 10%, transparent); }
+  .og-result-section { padding: 0 18px; display: flex; flex-direction: column; gap: var(--space-4,16px); }
+  .og-outfit-card { background: var(--card,#1e1a22); border-radius: var(--r-lg,20px); border: 1px solid var(--line,#2e2836); overflow: hidden; }
+  .og-outfit-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px; border-bottom: 1px solid var(--line,#2e2836); }
+  .og-outfit-num { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); display: flex; align-items: center; justify-content: center; font-size: var(--t-small,13px); font-weight: 900; color: #fff; flex-shrink: 0; }
+  .og-outfit-name { font-size: var(--t-body,14px); font-weight: 900; flex: 1; }
+  .og-outfit-score { font-size: var(--t-caption,12px); font-weight: 800; color: var(--accent2,#c4855a); }
   /* Build Look — flat-lay collage (replaces the 4-up grid). Per-cell shop/owned badges. */
   .og-flatlay-wrap { padding: 12px 14px 6px; }
   .og-flatlay-wrap .flatlay { background: var(--surface,#161318); }
@@ -1223,12 +1223,11 @@
   .og-wear-btn { margin: 12px 14px 16px; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 14px; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); border: 0; border-radius: var(--r-lg,20px); font-family: inherit; font-size: var(--t-body,14px); font-weight: 900; color: var(--bg,#0e0c0f); cursor: pointer; width: calc(100% - 28px); transition: transform .12s, opacity .12s; }
   .og-wear-btn:active { transform: scale(.97); opacity: .9; }
   .og-loading { text-align: center; padding: 40px 20px; }
-  .og-loading-spinner { font-size: var(--t-display,32px); animation: spin 1s linear infinite; display: inline-block; }
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  .og-empty { text-align: center; padding: 50px 20px; color: var(--muted); }
-  .og-empty-icon { font-size: var(--t-display,40px); margin-bottom: 12px; }
-  .og-empty-text { font-size: var(--t-body); font-weight: 700; }
-  .og-empty-sub { font-size: var(--t-caption); margin-top: 6px; font-weight: 500; opacity: .7; }
+  .og-empty { text-align: center; padding: 50px 20px; color: var(--muted,#9e99ad); }
+  .og-empty-icon { margin-bottom: 12px; }
+  .og-empty-text { font-size: var(--t-body,14px); font-weight: 700; }
+  .og-empty-sub { font-size: var(--t-caption,12px); margin-top: 6px; font-weight: 500; }
 
   /* ---- Style Swipe / Taste Training (L4-d) ---- */
   .sw-overlay { position:fixed; inset:0; z-index:200; background:var(--bg,#0e0c0f); display:flex; flex-direction:column; overflow:hidden; }
