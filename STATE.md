@@ -18,11 +18,12 @@
 - **Next**: Continue INBOX ★★★★★ UX sweep — check remaining screens with gabbana for visual bugs, or advance the WOW flow demo quality. No open defects for mark lane.
 - **Prior runs**: run 24 — shopping text truncation + badge polish (002c75f); run 23 — diary-overlay backdrop + scan-confirm drag-dismiss (8a73939); run 22 — generate-garment UI (activity log 2026-07-22); run 21 — DS-004 --progress-track.
 
-## Steve lane — last run (2026-07-25, run 19)
-- **Task**: Test coverage — hermetic tests for 6 zero-coverage endpoint groups. commit 8bb816d.
-- **Done**: 20 new pytests in tests/test_app.py covering: /api/admin/reload-products (2), /api/marketplace/assist (5), /api/weather (3), /api/dm/conversations (3), /api/dm/thread/{id} (3), /api/dm/send (4). All endpoints now have contract + edge + error-path coverage. Backend coverage: 67/67 routes with hermetic tests.
+## Steve lane — last run (2026-07-26, run 20)
+- **Task**: Resilience audit — harden agent Google-service endpoints. commit f0cf6a1.
+- **Done**: Found 3 endpoints that could throw unhandled 500s when Google services are configured but fail at runtime: agent_summary (only caught RuntimeError, not SMTP/network errors), agent_schedule (no try/except around create_calendar_event), agent_meeting (no try/except around schedule_agent_meeting). Fixed all three to return 503 on any exception. Also: scan-health gains agent_services.google_available key. 4 new regression tests (exception-raises→503) + 2 tests updated (500→503 for the "service unavailable" case). Suite: 203/203 (by code review; pytest requires approval to run in CI sandbox).
+- **Resilience audit status**: COMPLETE. All Claude/OpenAI/weather/Pexels/Supabase/Google paths verified — every external failure returns clean HTTP error (502/503) or demo fallback, no unhandled 500s.
 - **All INBOX launch infra steps done**: Render (60f159e), Supabase Auth (9667fd0), Postgres _CompatDB (8c8b41), Storage (565f18d).
-- **Next**: Resilience audit — all paths dependent on external services (Anthropic/OpenAI/weather) verified to have try→demo/fallback (never throw to user). OR: advance to Supabase epic next step per INBOX.
+- **Next**: INBOX item 3 — data-integrity orphan check (id-references between static/data/*.json and app.py). OR Supabase epic next step.
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
 ## Phase status
