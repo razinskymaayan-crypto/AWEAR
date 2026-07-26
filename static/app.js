@@ -1421,6 +1421,10 @@
     const ov=document.getElementById('sc-overlay'),sh=document.getElementById('sc-sheet');
     ov.setAttribute('aria-hidden','false'); sh.setAttribute('aria-hidden','false');
     ov.classList.add('show'); sh.classList.add('show');
+    if (!sh._dragBound) {
+      _addSheetDragDismiss(sh, document.getElementById('sc-body'), closeScanConfirm);
+      sh._dragBound = true;
+    }
     showView('closet');
   }
   function closeScanConfirm(){
@@ -2195,6 +2199,7 @@
 
     document.body.appendChild(overlay);
     requestAnimationFrame(function(){ overlay.classList.add('show'); });
+    overlay.addEventListener('click', function(e){ if (e.target === overlay) closeDiaryModal(overlay); });
     overlay.querySelector('.diary-x-close')?.addEventListener('click', function(){ closeDiaryModal(overlay); });
     _addSheetDragDismiss(overlay.querySelector('.diary-sheet'), null, function(){ closeDiaryModal(overlay); });
 
