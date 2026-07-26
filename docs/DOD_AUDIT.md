@@ -1,5 +1,5 @@
 # Definition-of-Done Audit — INBOX "## הושלם" items
-**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) by ayalon lane  
+**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) + 2026-07-26 (BH-9 outfit generator + nav fix verified) by ayalon lane  
 **Method:** grep / git-log / code-presence checks  
 **Purpose:** Confirm each "done" item has verifiable evidence before investor demo
 
@@ -156,6 +156,8 @@ Mark lane shipped 8 of 8 items from the founder's UX bug-hunt backlog. BH-5 veri
 | BH-6 | Marketplace WCAG AA contrast (--accent3/--accent2 elements) | ✅ VERIFIED | `203f37d` | `.mp-preloved-btn`, `.mp-filter-count`, `.mp-fsheet-chip.active`, `.mp-fsheet-apply`, `.mp-empty-filters-clear` all corrected to `var(--on-accent, #fff)` text on accent backgrounds |
 | BH-7 | Touch targets WCAG 2.5.5 — 4 sub-44px elements | ✅ VERIFIED | `8a40900` | `.notif-btn` 36→44px, `.pc-more-btn` 30→44px, `.mp-preloved-btn` min-h 36→44px, `.cr-cta` min-h 40→44px; grep confirmed in app.css |
 | BH-8 | Light-theme black-on-black (13 elements) + UX audit detector | ✅ VERIFIED | `8825ce6` `871eedb` | 13 elements got `color: var(--on-accent, #fff)` on gradient/accent backgrounds; deterministic light-theme contrast detector added to continuous UX audit queue |
+| BH-9 | Outfit generator DS-004 audit (Gabbana: 5/10 → all P0+P1+P2 fixed) | ✅ VERIFIED | `a6ab1fa` | P0: removed opacity:.7 on og-empty-sub (WCAG AA fail); replaced bare-hex `rgba(123,92,255,.1)` with `color-mix(in srgb, var(--accent3,#7a6af0) 10%, transparent)`. P1: DS-004 fallbacks added to 14 og-* rules. P2: text-align:start RTL, gap/border-radius tokens, removed dead .og-loading-spinner CSS. grep confirms: `var(--accent,#e8526a)`, `var(--accent2,#c4855a)`, `var(--accent3,#7a6af0)` fallbacks correct in app.css:1168–1230 |
+| NAV-FIX | Tapping own look opens that look, not generic feed | ✅ VERIFIED | `ca649fa` | `app.js:1365–1368`: `[data-look-idx]` cells on closet/profile now call `openSheetLook()` with the specific post's data. Prior behavior was `data-goto-feed` → `showView("feed")` which lost context. Noted in DEMO_SCRIPT.md beat 6. |
 
 *This section augments the formal INBOX הושלם audit above; these items are sub-tasks of the ★★★★★ directive, not separate הושלם entries.*
 
