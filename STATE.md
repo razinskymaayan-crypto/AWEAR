@@ -11,12 +11,12 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-27, run 25)
-- **Task**: DS-004 sweep — fix all wrong --success fallbacks in app.css. commit 0651046.
-- **Done**: 14 occurrences of #1a7a4a and #34d399 (light-mode success values) replaced with #52c97a (canonical dark-mode token value). Affected: adm-grade-card, adm-grade-letter, adm-grade-label, adm-grade-sub, styl-avail.open, cmp-verdict, sus-score-card, sus-score-num, sus-score-label, sus-score-grade, earn big-num, listing live dot, modal-card earn-line. Same class as 2026-07-23 gate rejection. check-render ✓.
-- **Status checks done**: DEFECTS.md — no open [mark] items. Assignments — all checked off. Dead buttons verified (feed like/save/share/comment wired). Close gestures verified (all sheets have drag-dismiss). No DS-008/009 violations found.
-- **Next**: Continue INBOX ★★★★★ UX sweep — check remaining screens with gabbana for visual bugs, or advance the WOW flow demo quality. No open defects for mark lane.
-- **Prior runs**: run 24 — shopping text truncation + badge polish (002c75f); run 23 — diary-overlay backdrop + scan-confirm drag-dismiss (8a73939); run 22 — generate-garment UI (activity log 2026-07-22); run 21 — DS-004 --progress-track.
+## Mark lane — last run (2026-07-27, run 26)
+- **Task**: Gabbana UX sweep — Feed + Profile/Closet screens. commit a865b07.
+- **Done**: Fixed 7 issues from gabbana audit (Feed 7.5→8/10, Profile/Closet 6→8/10): (1) nav button min-height 44px touch target, (2) nav button :active feedback, (3) nav bg DS-004 fix (color-mix var(--bg)), (4) bio .ig-nameblock truncation with ellipsis, (5) .season-entry-icon warm yellow (--warning), (6) .seg button min-height 44px (Looks/Closet toggle), (7) looks-grid-cta "Add a look" CTA when <9 posts. check-render ✓.
+- **Deferred (OW-011 — do NOT revisit)**: story ring weight (F1), feed tab underline thickness (F2) — gabbana scored 8/10 without them.
+- **Next**: Continue INBOX ★★★★★ UX sweep — pick another screen pair to gabbana-audit, or pick the scan-closet HITL confirm screen UI (notes/scan-closet-hitl-backend.md HANDOFF).
+- **Prior runs**: run 25 — DS-004 --success fallbacks sweep (0651046); run 24 — shopping text truncation + badge polish (002c75f); run 23 — diary-overlay backdrop + scan-confirm drag-dismiss (8a73939); run 22 — generate-garment UI.
 
 ## Steve lane — last run (2026-07-27, run 22)
 - **Task**: Self-heal — mark [UNRESOLVED] REPEAT-FAILURE: steve(exposed-bug) as [FIXED] in CI_FAILURES.md.
