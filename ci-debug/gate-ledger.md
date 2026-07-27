@@ -141,3 +141,4 @@
 2026-07-26T19:22:29Z | jeff: merged -> mark | REVERTED (broke build/guard): steve(exposed-bug)
 2026-07-26T21:12:59Z | jeff: merged -> mark | REVERTED (broke build/guard): steve(exposed-bug)
 2026-07-26T23:23:17Z | jeff: merged -> mark | REVERTED (broke build/guard): steve(exposed-bug)
+2026-07-27T03:08:29Z | jeff: merged -> mark | REVERTED (broke build/guard): steve(exposed-bug)
