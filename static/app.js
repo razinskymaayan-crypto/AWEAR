@@ -1226,10 +1226,11 @@
   function looksGridHTML(){
     const feed=loadFeedPosts();
     if(!feed.length) return `<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('image',44)}</div>You haven't shared any looks yet.<br/>Snap an outfit and share it to the feed<br/>so it shows up here on your profile.</div>`;
+    const cta = feed.length < 9 ? `<div class="looks-grid-cta"><span style="color:var(--muted,#9e99ad);font-size:var(--t-small,13px);font-weight:600;line-height:1.6">Share your next look and build your style story</span><button class="looks-grid-cta-btn" onclick="document.getElementById('file-input').click()">Add a look</button></div>` : '';
     return `<div class="looks-grid">${feed.map((p,i)=>`<div class="look-cell" data-look-idx="${i}" role="button" tabindex="0" aria-label="${attr(p.caption||'My look')}">
       ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
       <div class="lc-meta">${esc(p.item_count||0)} items${p.look_total_usd?' · $'+esc(p.look_total_usd):''}</div>
-    </div>`).join('')}</div>`;}
+    </div>`).join('')}</div>${cta}`;}
 
   function forSaleHTML(){
     const wardrobe = loadWardrobe();
