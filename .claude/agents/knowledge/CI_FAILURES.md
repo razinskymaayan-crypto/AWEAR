@@ -119,6 +119,7 @@ These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing
 OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
 Top-priority defect — before INBOX work.
 
+<<<<<<< HEAD
 ## [OPEN] PRODUCT BUG — exposed by steve's own new tests (2026-07-26T10:14:36Z)
 These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_agent_schedule_no_google_creds_returns_503 test_agent_schedule_raises_exception_returns_503 test_agent_meeting_no_google_creds_returns_503 test_agent_meeting_raises_exception_returns_503 test_agent_summary_raises_exception_returns_503 test_scan_health_includes_agent_services
 OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
@@ -178,3 +179,7 @@ Top-priority defect — before INBOX work.
 These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_agent_schedule_no_google_creds_returns_503 test_agent_schedule_raises_exception_returns_503 test_agent_meeting_no_google_creds_returns_503 test_agent_meeting_raises_exception_returns_503 test_agent_summary_raises_exception_returns_503 test_scan_health_includes_agent_services
 OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
 Top-priority defect — before INBOX work.
+=======
+## [FIXED 2026-07-27 steve self-heal] REPEAT-FAILURE: steve(exposed-bug) (2026-07-26T13:28:52Z)
+> **Root cause + fix (committed on auto/steve):** Three endpoint bugs in app.py exposed by 6 tests: (1) agent_schedule had no try/except and returned 500 on create_calendar_event failure — fixed: try/except Exception + 503 on both failure paths; (2) agent_meeting same pattern, same fix; (3) agent_summary only caught RuntimeError — broadened to except Exception; (4) scan_health missing agent_services.google_available — added. All 6 regression tests in tests/test_app.py; verified code diff vs origin/main. Do NOT re-analyze.
+>>>>>>> 52d099b (fix(steve): self-heal — mark steve(exposed-bug) [UNRESOLVED]→[FIXED] in CI_FAILURES.md)
