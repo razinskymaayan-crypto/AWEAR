@@ -11,14 +11,12 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-26, run 24)
-- **Task**: Shopping screen UX polish — text truncation sweep + badge fixes. commit 002c75f.
-- **Done**: (1) "X% matches your closet" → "X% closet match" — no more mid-word truncation in 2-col cards. (2) "New" badge: green (--success) → white translucent pill with --bg text — readable on any image bg. (3) "Complete Your Closet" → "Complete Look" — fits in 390px without scrolling. (4) .sf-card-name font-weight 800→600 — editorial per VISUAL_VISION. (5) showDeclutterResults(undefined) crash guard added. Gabbana 8/10 pass. check-render ✓. node --check ✓. UX audit: showDeclutterResults no longer crashes.
-- **Status checks done**: DEFECTS.md — no open [mark] items. Assignments — all checked off. UX audit — 0 stuck overlays, 0 dead buttons. Gabbana 8/10.
-- **Next**: Other INBOX ★★★★★ items (sheets/modals close-gestures sweep, dead buttons audit) — continue UX sweep per founder direction. OR: any new DEFECTS.md entries for [mark].
-- **Note (data issue, not my lane)**: Ralph Lauren product cards (prod_ss_020, prod_ls_020) in products.json use brand OG images (1200×630 landscape banner) instead of product photos. Fixing requires updating static/data/products.json — request to data/content lane.
-- **Prior runs**: run 23 — bottom-sheet close-gestures (8a73939); run 22 — outfit generator Gabbana; run 21 — DS-004 --progress-track; run 20 — touch targets.
-- **Prior runs**: run 22 — outfit generator Gabbana (a6ab1fa/committed); run 21 — DS-004 --progress-track (3218ee4); run 20 — touch targets (8a40900); dead-button detector (9e7ad93, scripts/ — out-of-lane by prior session).
+## Mark lane — last run (2026-07-27, run 25)
+- **Task**: DS-004 sweep — fix all wrong --success fallbacks in app.css. commit 0651046.
+- **Done**: 14 occurrences of #1a7a4a and #34d399 (light-mode success values) replaced with #52c97a (canonical dark-mode token value). Affected: adm-grade-card, adm-grade-letter, adm-grade-label, adm-grade-sub, styl-avail.open, cmp-verdict, sus-score-card, sus-score-num, sus-score-label, sus-score-grade, earn big-num, listing live dot, modal-card earn-line. Same class as 2026-07-23 gate rejection. check-render ✓.
+- **Status checks done**: DEFECTS.md — no open [mark] items. Assignments — all checked off. Dead buttons verified (feed like/save/share/comment wired). Close gestures verified (all sheets have drag-dismiss). No DS-008/009 violations found.
+- **Next**: Continue INBOX ★★★★★ UX sweep — check remaining screens with gabbana for visual bugs, or advance the WOW flow demo quality. No open defects for mark lane.
+- **Prior runs**: run 24 — shopping text truncation + badge polish (002c75f); run 23 — diary-overlay backdrop + scan-confirm drag-dismiss (8a73939); run 22 — generate-garment UI (activity log 2026-07-22); run 21 — DS-004 --progress-track.
 
 ## Steve lane — last run (2026-07-25, run 19)
 - **Task**: Test coverage — hermetic tests for 6 zero-coverage endpoint groups. commit 8bb816d.
