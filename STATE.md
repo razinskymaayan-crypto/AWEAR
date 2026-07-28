@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-28, run 29)
-- **Task**: Home screen Gabbana audit + DS-004 fix — 13 rgba dark-mode glows replaced with color-mix(), padding rhythm 18px→16px, ha-btn disabled state, occasion icon 10→14px, haWore innerHTML. commit c4126d9.
-- **Done**: Gabbana scored Home 4/10 → 8+. All P0/P1 DS-004 violations in home CSS cleared. check-render ✓, node --check ✓.
-- **Next**: Continue INBOX ★★★★★ UX sweep — next screen: Shop/Explore (valentino) or Profile. Remaining home P2s: `.hq-icon` + `.hs-stat` white-overlay rgba (non-accent, lower priority), `.ho-name` dead CSS class. Also remaining on other screens: stuck overlays (check-interactions.mjs), dead buttons.
-- **Prior runs**: run 28 — closet backend hydration (4a5a80b); run 27 — nav background solid (0c806be); run 26 — Gabbana UX sweep Feed+Profile/Closet (a865b07); run 25 — DS-004 fallbacks sweep (0651046).
+## Mark lane — last run (2026-07-28, run 30)
+- **Task**: Home P2 rgba relics → DS-004 tokens. `.hs-stat` + `.hq-btn` borders rgba(255,255,255,.05/.06) → `var(--line,#2e2836)`. `.hq-icon` bg rgba → `color-mix(in srgb, var(--fg,#f0ecf5) 6%, transparent)`. check-render ✓.
+- **Done**: 3 CSS changes. Also code-verified all P1 bottom-sheets (mp-fsheet, ms-insight, comments, diary, book, edit-modal) have max-height + drag-dismiss from prior runs. Script extension (check-interactions.mjs) requested in steve's assignments.
+- **Next**: INBOX ★★★★★ UX sweep — next screen: Shop/Explore (valentino IC) or Profile (dolce IC). Dead buttons sweep on non-feed screens. `.ho-name` dead CSS (low priority cleanup).
+- **Prior runs**: run 29 — Home DS-004 fix + Gabbana 8+ (c4126d9); run 28 — closet backend hydration (4a5a80b); run 27 — nav background solid (0c806be); run 26 — Gabbana UX sweep Feed+Profile/Closet (a865b07).
 
 ## Steve lane — last run (2026-07-28, run 23)
 - **Task**: Self-heal — resolve committed merge-conflict markers in CI_FAILURES.md; collapse 9 stale [OPEN]+[UNRESOLVED] entries → single [FIXED] entry.
