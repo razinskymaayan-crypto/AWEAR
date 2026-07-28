@@ -2477,7 +2477,7 @@
               ${o.bottom ? `<div class="ho-swatch">${productImage(o.bottom, 'ho-top-img ho-swatch-img')}</div>` : ''}
             </div>
             <div class="ho-info">
-              <div class="ho-occasion-badge">${icon(o.occ.icon,10)} ${esc(o.occ.label)}</div>
+              <div class="ho-occasion-badge">${icon(o.occ.icon,14)} ${esc(o.occ.label)}</div>
               <div class="ho-sub">${esc(names)}</div>
               <div class="ho-tip">${esc(o.occ.tip)}</div>
             </div>
@@ -2585,7 +2585,7 @@
         const todayChallenge = DAILY[new Date().getDay() % DAILY.length];
         return `
         <div class="home-sec-label">${t('home.challenge_section')}</div>
-        <div style="margin:0 16px 16px;background:linear-gradient(135deg,rgba(123,92,255,.12),rgba(255,61,119,.08));border:1px solid rgba(123,92,255,.2);border-radius:16px;padding:16px;">
+        <div style="margin:0 16px 16px;background:linear-gradient(135deg,color-mix(in srgb, var(--accent3,#7a6af0) 12%, transparent),color-mix(in srgb, var(--accent,#e8526a) 8%, transparent));border:1px solid color-mix(in srgb, var(--accent3,#7a6af0) 20%, transparent);border-radius:16px;padding:16px;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="color:var(--accent2)">${icon(todayChallenge.icon, 28)}</div>
             <div style="flex:1">
@@ -2648,7 +2648,7 @@
           });
           localStorage.setItem('awear_wardrobe', JSON.stringify(wardrobe2));
           showToast('Logged! Look saved');
-          haWore.textContent = 'Saved';
+          haWore.innerHTML = icon('check',16) + ' Saved';
           haWore.disabled = true;
         }
       });
