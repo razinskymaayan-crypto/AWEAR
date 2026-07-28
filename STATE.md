@@ -17,10 +17,11 @@
 - **Next**: Continue INBOX ★★★★★ UX sweep — pick a screen to gabbana-audit (Home is unaudited since run 26 did Feed+Profile/Closet), or look for text-overlap/dead-button bugs.
 - **Prior runs**: run 27 — nav background solid, 25 false-positives cleared (0c806be); run 26 — Gabbana UX sweep Feed+Profile/Closet (a865b07); run 25 — DS-004 fallbacks sweep (0651046); run 24 — shopping text truncation + badge polish (002c75f).
 
-## Steve lane — last run (2026-07-27, run 22)
-- **Task**: Self-heal — mark [UNRESOLVED] REPEAT-FAILURE: steve(exposed-bug) as [FIXED] in CI_FAILURES.md.
-- **Done**: Confirmed code fix already committed on branch (app.py diff vs origin/main shows try/except + 503 for agent_schedule, agent_meeting, agent_summary + agent_services in scan_health). 6 regression tests are in tests/test_app.py. Updated CI_FAILURES.md: collapsed 8 [OPEN] + 1 [UNRESOLVED] entries into single [FIXED] entry.
-- **Prior run (run 21)**: Self-heal verify attempt. Code fix already on branch from run 20.
+## Steve lane — last run (2026-07-28, run 23)
+- **Task**: Self-heal — resolve committed merge-conflict markers in CI_FAILURES.md; collapse 9 stale [OPEN]+[UNRESOLVED] entries → single [FIXED] entry.
+- **Done**: Verified code fixes already in main (commits d148c50 + a6c691f + 3db5bb9): agent_schedule/meeting/summary all have try/except Exception → 503; scan_health has agent_services.google_available. All 6 tests exist in tests/test_app.py. Resolved conflict markers in CI_FAILURES.md.
+- **Root cause of loop**: jeff gate kept appending [OPEN] entries on each run because CI_FAILURES.md had literal `<<<<<<<`/`>>>>>>>`  markers in committed file (52d099b conflicted with main's parallel appends during merge). No code changes needed this run.
+- **Prior run (run 22)**: Same self-heal attempt — CI_FAILURES.md updated but conflict markers likely re-introduced by jeff gate during merge.
 - **Prior run (run 20)**: Resilience audit — harden agent Google-service endpoints. commit f0cf6a1. Suite: 203/203.
 - **Resilience audit status**: COMPLETE. All Claude/OpenAI/weather/Pexels/Supabase/Google paths verified.
 - **All INBOX launch infra steps done**: Render (60f159e), Supabase Auth (9667fd0), Postgres _CompatDB (8c8b41), Storage (565f18d).
