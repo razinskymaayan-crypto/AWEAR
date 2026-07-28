@@ -8212,7 +8212,7 @@
         <div class="sf-card" onclick="openShopItem('${attr(it.id)}')">
           <div class="sf-card-img">
             ${productImage(it)}
-            ${it.badge ? `<div class="sf-badge ${badgeCls}">${esc(it.badge)}</div>` : ''}
+            ${it.badge?.trim() ? `<div class="sf-badge ${badgeCls}">${esc(it.badge)}</div>` : ''}
           </div>
           <div class="sf-card-body">
             <div class="sf-card-name">${esc(it.name)}</div>
