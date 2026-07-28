@@ -151,3 +151,4 @@
 2026-07-27T23:14:56Z | jeff: merged -> mark
 2026-07-28T02:45:56Z | jeff: merged -> mark
 2026-07-28T06:40:08Z | jeff: merged -> steve
+2026-07-28T10:47:32Z | jeff: merged -> none | REVERTED (broke build/guard): steve(pytest)
