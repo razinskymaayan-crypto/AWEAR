@@ -1,5 +1,5 @@
 # Definition-of-Done Audit — INBOX "## הושלם" items
-**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) + 2026-07-26 (BH-9 outfit generator + nav fix verified) + 2026-07-27 (BH-10 DS-004 --success sweep + backend resilience note) by ayalon lane  
+**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) + 2026-07-26 (BH-9 outfit generator + nav fix verified) + 2026-07-27 (BH-10 DS-004 --success sweep + backend resilience note) + 2026-07-28 (BH-11 nav-bg scanner fix + CLOSET-HYDRATION backend persistence) by ayalon lane  
 **Method:** grep / git-log / code-presence checks  
 **Purpose:** Confirm each "done" item has verifiable evidence before investor demo
 
@@ -139,6 +139,7 @@
 | P0 (founder-gated) | human (Carmel) | Run `python3 scripts/scan_smoke.py` on box with `ANTHROPIC_API_KEY` set to confirm LIVE Claude Vision mode |
 | P1 (pipeline gap) | mark + sam | Pass `genImage` URL from `scConfirm()` to `POST /api/closet/confirm`, store as `image` in `closet_items` — closes the "clean catalog image in closet" promise (Pitch Deck Slide 2 Layer 1) |
 | ✅ DONE | mark | Wire `GET /api/products/{id}/match?user_id={uid}` into item detail sheet — shipped commit `251e38e`; server-side `match_pct`/`reason`/`matching_items` upgrade the match band on success. |
+| ✅ DONE | mark | Closet backend hydration on empty-localStorage reload — shipped commit `4a5a80b`; `renderCloset()` calls `GET /api/closet` when wardrobe is empty; confirmed items survive page refresh. Closes scan→closet persistence handoff. |
 
 ---
 
@@ -160,6 +161,8 @@ Mark lane shipped 8 of 8 items from the founder's UX bug-hunt backlog. BH-5 veri
 | BH-10 | DS-004 --success fallback sweep (analytics, sustainability, marketplace, earn, stylist) | ✅ VERIFIED | `0651046` | 14 occurrences of light-mode success values (#1a7a4a, #34d399) inside `var(--success, …)` fallbacks corrected to dark-mode canonical `#52c97a`. Affected: `.adm-grade-*`, `.styl-avail.open`, `.cmp-verdict`, `.sus-score-*`, `.earn big-num`, `.listing live dot`, `.modal-card earn-line`. Same pattern as BH-3 and BH-9 gate rejections. `grep -c "#52c97a" static/app.css` → 35; remaining `#1a7a4a` hit is light-theme `:root` token definition (correct). `grep -c "#1a7a4a\|#34d399" static/app.css | grep var` → 0 stale fallbacks. |
 | NAV-FIX | Tapping own look opens that look, not generic feed | ✅ VERIFIED | `ca649fa` | `app.js:1365–1368`: `[data-look-idx]` cells on closet/profile now call `openSheetLook()` with the specific post's data. Prior behavior was `data-goto-feed` → `showView("feed")` which lost context. Noted in DEMO_SCRIPT.md beat 6. |
 | RESILIENCE | Backend calendar/email endpoints 503-safe (no unhandled 500s) | ✅ VERIFIED | `d148c50` | `agent_schedule`/`agent_meeting`/`agent_summary` now wrap Google Calendar/SMTP calls in `try/except`; return 503 (service unavailable) on any exception instead of crashing. `scan-health` exposes `agent_services.google_available`. 4 new regression tests. `grep -n "google_available" app.py` → line 782 confirmed. |
+| BH-11 | Nav background solid — clears 25 ux-audit scanner false-positives | ✅ VERIFIED | `0c806be` | Nav `background` changed from `color-mix(in srgb, var(--bg,#0e0c0f) 94%, transparent)` to `var(--bg,#0e0c0f)`. Root cause: `color-mix(…transparent)` emits `color(srgb …)` in computed style; ux-audit `lum()` divides 0–1 values by 255 again → bg + text both near-zero → 1.11:1 false contrast on 25 elements. Solid bg removes that format; 6% transparency delta is imperceptible on near-black. `grep -n "^  nav {" static/app.css` → `var(--bg, #0e0c0f)` confirmed. DEFECTS.md cleared (0 open [mark] contrast items). |
+| CLOSET-HYDRATION | Scanned items hydrate from backend on empty-localStorage reload | ✅ VERIFIED | `4a5a80b` | `_closetHydrated` flag at `app.js:1138`; guard block in `renderCloset()` at `app.js:1295–1310`: fires only when `wardrobe.length===0 && !_closetHydrated`; calls `GET /api/closet?user_id=...&limit=200`; maps `it.brand→brand_vibe`; saves with `saveWardrobe()`; re-renders if closet view is active. Backend `GET /api/closet` endpoint at `app.py:4082`. Closes scan→closet persistence handoff: items confirmed via HITL survive a page refresh or new-device load. |
 
 *This section augments the formal INBOX הושלם audit above; these items are sub-tasks of the ★★★★★ directive, not separate הושלם entries.*
 
