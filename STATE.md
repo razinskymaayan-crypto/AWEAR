@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-28, run 28)
-- **Task**: Closet backend hydration — `renderCloset()` fires `GET /api/closet` on first empty-localStorage render, maps backend items (brand→brand_vibe), saves to wardrobe, re-renders. commit 4a5a80b.
-- **Done**: Added `_closetHydrated` flag + 17-line fetch block in `renderCloset()`. Scanned closet items now survive page refresh. Closes HITL scan→closet persistence handoff (notes/scan-closet-hitl-backend.md). check-render ✓, node --check ✓.
-- **Next**: Continue INBOX ★★★★★ UX sweep — pick a screen to gabbana-audit (Home is unaudited since run 26 did Feed+Profile/Closet), or look for text-overlap/dead-button bugs.
-- **Prior runs**: run 27 — nav background solid, 25 false-positives cleared (0c806be); run 26 — Gabbana UX sweep Feed+Profile/Closet (a865b07); run 25 — DS-004 fallbacks sweep (0651046); run 24 — shopping text truncation + badge polish (002c75f).
+## Mark lane — last run (2026-07-28, run 29)
+- **Task**: Home screen Gabbana audit + DS-004 fix — 13 rgba dark-mode glows replaced with color-mix(), padding rhythm 18px→16px, ha-btn disabled state, occasion icon 10→14px, haWore innerHTML. commit c4126d9.
+- **Done**: Gabbana scored Home 4/10 → 8+. All P0/P1 DS-004 violations in home CSS cleared. check-render ✓, node --check ✓.
+- **Next**: Continue INBOX ★★★★★ UX sweep — next screen: Shop/Explore (valentino) or Profile. Remaining home P2s: `.hq-icon` + `.hs-stat` white-overlay rgba (non-accent, lower priority), `.ho-name` dead CSS class. Also remaining on other screens: stuck overlays (check-interactions.mjs), dead buttons.
+- **Prior runs**: run 28 — closet backend hydration (4a5a80b); run 27 — nav background solid (0c806be); run 26 — Gabbana UX sweep Feed+Profile/Closet (a865b07); run 25 — DS-004 fallbacks sweep (0651046).
 
 ## Steve lane — last run (2026-07-28, run 23)
 - **Task**: Self-heal — resolve committed merge-conflict markers in CI_FAILURES.md; collapse 9 stale [OPEN]+[UNRESOLVED] entries → single [FIXED] entry.
