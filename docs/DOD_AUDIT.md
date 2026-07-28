@@ -1,5 +1,5 @@
 # Definition-of-Done Audit — INBOX "## הושלם" items
-**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) + 2026-07-26 (BH-9 outfit generator + nav fix verified) + 2026-07-27 (BH-10 DS-004 --success sweep + backend resilience note) + 2026-07-28 (BH-11 nav-bg scanner fix + CLOSET-HYDRATION backend persistence) by ayalon lane  
+**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) + 2026-07-26 (BH-9 outfit generator + nav fix verified) + 2026-07-27 (BH-10 DS-004 --success sweep + backend resilience note) + 2026-07-28 run-28 (BH-11 nav-bg scanner fix + CLOSET-HYDRATION backend persistence) + 2026-07-28 run-29 (resolve-product buy_route contract + product-match-404 hermetic coverage — 71bb0f2) by ayalon lane  
 **Method:** grep / git-log / code-presence checks  
 **Purpose:** Confirm each "done" item has verifiable evidence before investor demo
 
@@ -74,8 +74,11 @@
   - `static/app.js:357` — `storeRowHTML()` retailer row builder
   - `static/app.js:378–381` — `buy_options` resolution (API → fallback)
   - `static/app.js:643–658` — "Where it sells" block (retail rows + Depop resale row)
+- **Backend contract:** `app.py:2079` — `GET /api/resolve-product`; hermetic tests (commit `71bb0f2`):
+  - `test_resolve_exact_match_returns_buy_route_fields` — status=exact + full buy_route fields
+  - `test_resolve_similar_path_has_alternatives` — status=similar + alternatives list (each with buy_route fields)
 - **Gate:** Gabbana 8.5 PASS; check-render green; sheet screenshot verified; commit `44f5919`
-- **Evidence:** `grep -c "storeRowHTML\|Where.*sells\|buy_options" static/app.js` → multiple matches
+- **Evidence:** `grep -c "storeRowHTML\|Where.*sells\|buy_options" static/app.js` → multiple matches; `grep -c "test_resolve_" tests/test_app.py` → 3 (contract tests confirmed)
 
 ### 7. Store Insight redesign ✅
 - **Code:**
@@ -118,7 +121,7 @@
 - **SPA wiring commit:** `251e38e feat(ux): wire backend match score into item detail sheet`
 - **Backend:** `app.py:1934` — endpoint live; returns `match_pct` (0–95), `reason`, `matching_items` from server-side `closet_items`; BE-006 `user_key`, rate-limited 30/min; 4 hermetic pytests (141/141 passing)
 - **SPA wiring:** `static/app.js:699–714` — item detail sheet fetches `/api/products/{id}/match?user_id=` after opening, upgrades match band HTML with server-side `match_pct` + `reason` + `matching_items` on success; silent fallback on network error; local `calcCompatScore()` still shows immediately as optimistic placeholder
-- **Evidence:** `grep -n "\/api\/products.*match" static/app.js` → line 703 confirmed; `grep -n "match_pct" static/app.js` → lines 710, 3758 confirmed
+- **Evidence:** `grep -n "\/api\/products.*match" static/app.js` → line 703 confirmed; `grep -n "match_pct" static/app.js` → lines 710, 3758 confirmed; `test_product_match_unknown_product_id_returns_404` (commit `71bb0f2`) — 404 branch now hermetically tested (noted as "FAIL-BEFORE: no test verified the 404 branch")
 
 ### 12. Generate-garment: AI catalog image in scan confirm sheet ✅ (2026-07-23)
 - **Commit:** `9975080 feat(ux): add image generation display to scan confirm sheet`
