@@ -149,6 +149,54 @@ def test_resolve_always_has_status(client):
     assert r.json()["status"] in ("exact", "similar", "archive")
 
 
+def test_resolve_exact_match_returns_buy_route_fields(client):
+    """GET /api/resolve-product with a strong category+keyword match returns status=exact
+    and the full _buy_route contract fields.
+
+    FAIL-BEFORE: no test verified the exact path or field contract.
+    PASS-AFTER: exact path proven; all buy_route fields present and typed.
+    """
+    r = client.get("/api/resolve-product", params={"q": "carhartt k87", "category": "top"})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["status"] == "exact", f"expected exact, got {d['status']}"
+    for field in ("id", "name", "brand", "price_usd", "image_url", "retailer", "source", "checkout", "buy_url"):
+        assert field in d, f"missing field: {field}"
+    assert d["source"] == "affiliate"
+    assert d["checkout"] == "redirect"
+    assert isinstance(d["price_usd"], (int, float))
+    assert d["id"].startswith("prod_")
+
+
+def test_resolve_similar_path_has_alternatives(client):
+    """GET /api/resolve-product with a partial match (no category) returns status=similar
+    and a non-empty alternatives list, each containing buy_route fields.
+
+    FAIL-BEFORE: no test exercised the similar path.
+    PASS-AFTER: similar path proven; alternatives list typed.
+    """
+    r = client.get("/api/resolve-product", params={"q": "carhartt k87"})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["status"] in ("exact", "similar")
+    if d["status"] == "similar":
+        assert isinstance(d["alternatives"], list)
+        assert len(d["alternatives"]) >= 1
+        alt = d["alternatives"][0]
+        for field in ("id", "name", "brand", "source", "checkout", "buy_url"):
+            assert field in alt, f"alternative missing field: {field}"
+
+
+def test_product_match_unknown_product_id_returns_404(client):
+    """GET /api/products/{id}/match with a non-existent product id must return 404.
+
+    FAIL-BEFORE: no test verified the 404 branch.
+    PASS-AFTER: unknown-product guard proven.
+    """
+    r = client.get("/api/products/nonexistent_product_xyz_999/match")
+    assert r.status_code == 404
+
+
 # --------------------------------------------------------------------------- #
 # Auth
 # --------------------------------------------------------------------------- #
