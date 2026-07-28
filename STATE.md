@@ -11,12 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-27, run 27)
-- **Task**: Fix nav background to clear 25 scanner false-positive contrast defects. commit 0c806be.
-- **Done**: Changed `nav` background from `color-mix(in srgb, var(--bg) 94%, transparent)` → `var(--bg, #0e0c0f)`. Root cause: `ux-audit.mjs lum()` divides `color(srgb…)` format values by 255 → both near-black text AND the misread bg compute as near-zero luminance → false 1.11:1. Fix removes `color(srgb…)` format from computed nav bg. Visual delta: imperceptible (6% transparency on #0e0c0f). check-render ✓.
-- **Scanner bug filed**: added to steve's assignments — `ux-audit.mjs:lum()` needs to handle `color(srgb …)` format.
-- **Next**: Continue INBOX ★★★★★ UX sweep — pick another screen pair to gabbana-audit, or pick the scan-closet HITL confirm screen UI (notes/scan-closet-hitl-backend.md HANDOFF).
-- **Prior runs**: run 26 — Gabbana UX sweep Feed+Profile/Closet (a865b07); run 25 — DS-004 --success fallbacks sweep (0651046); run 24 — shopping text truncation + badge polish (002c75f); run 23 — diary-overlay backdrop + scan-confirm drag-dismiss (8a73939).
+## Mark lane — last run (2026-07-28, run 28)
+- **Task**: Closet backend hydration — `renderCloset()` fires `GET /api/closet` on first empty-localStorage render, maps backend items (brand→brand_vibe), saves to wardrobe, re-renders. commit 4a5a80b.
+- **Done**: Added `_closetHydrated` flag + 17-line fetch block in `renderCloset()`. Scanned closet items now survive page refresh. Closes HITL scan→closet persistence handoff (notes/scan-closet-hitl-backend.md). check-render ✓, node --check ✓.
+- **Next**: Continue INBOX ★★★★★ UX sweep — pick a screen to gabbana-audit (Home is unaudited since run 26 did Feed+Profile/Closet), or look for text-overlap/dead-button bugs.
+- **Prior runs**: run 27 — nav background solid, 25 false-positives cleared (0c806be); run 26 — Gabbana UX sweep Feed+Profile/Closet (a865b07); run 25 — DS-004 fallbacks sweep (0651046); run 24 — shopping text truncation + badge polish (002c75f).
 
 ## Steve lane — last run (2026-07-27, run 22)
 - **Task**: Self-heal — mark [UNRESOLVED] REPEAT-FAILURE: steve(exposed-bug) as [FIXED] in CI_FAILURES.md.
