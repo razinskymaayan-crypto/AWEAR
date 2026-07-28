@@ -1135,6 +1135,7 @@
   const saveProfile=v=>ls.save(PROFILE_KEY,v);
   const loadWardrobe=()=>ls.load(WARDROBE_KEY)||[];
   const saveWardrobe=v=>ls.save(WARDROBE_KEY,v);
+  let _closetHydrated=false; // true after first backend hydration attempt this session
   const loadMeta=()=>ls.load(META_KEY)||{};
   const saveMeta=v=>ls.save(META_KEY,v);
   const loadShelf=()=>ls.load(SHELF_KEY)||[];
@@ -1290,6 +1291,23 @@
 
   function renderCloset(){
     const wardrobe=loadWardrobe(),meta=loadMeta(),feed=loadFeedPosts();
+    // Hydrate from backend on first empty-closet render so items survive a page refresh
+    if(!wardrobe.length&&!_closetHydrated){
+      _closetHydrated=true;
+      const uid=getOrCreateUserId();
+      fetch('/api/closet?user_id='+encodeURIComponent(uid)+'&limit=200')
+        .then(r=>r.ok?r.json():null).catch(()=>null)
+        .then(data=>{
+          if(!data||!data.items||!data.items.length)return;
+          saveWardrobe(data.items.map(it=>({
+            name:it.name,category:it.category,color:it.color||'',
+            brand_vibe:it.brand||'',price_estimate_usd:it.price_estimate_usd||0,
+            search_query:it.search_query||'',image_url:it.image_url||null,
+            source_url:it.source_url||null,confidence:it.confidence||'high',
+          })));
+          if(document.getElementById('closet')?.classList.contains('active'))renderCloset();
+        });
+    }
     const closetValue=wardrobe.reduce((s,it)=>s+(Number(it.price_estimate_usd)||0),0);
     let body;
     if(profileTab==='looks') body=looksGridHTML();
