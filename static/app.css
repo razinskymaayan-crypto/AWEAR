@@ -1445,7 +1445,7 @@
   .sf-wrap { display:flex; flex-direction:column; height:100%; overflow:hidden; }
   .sf-header { padding:18px 18px 0; flex-shrink:0; }
   .sf-title { font-size: var(--t-h1,24px); font-weight:900; letter-spacing:-.5px; }
-  .sf-sub { font-size:var(--t-caption,12px); color:var(--muted,#8a8498); font-weight:600; margin-top:3px; }
+  .sf-sub { font-size:var(--t-caption,12px); color:var(--muted,#9e99ad); font-weight:700; margin-top:3px; }
   .sf-tabs { display:flex; gap:8px; padding:14px 18px 10px; overflow-x:auto; scrollbar-width:none; flex-shrink:0; }
   .sf-tabs::-webkit-scrollbar { display:none; }
   .sf-tab { padding:7px 16px; border-radius:20px; border:1.5px solid var(--line,#2e2836); font-size:var(--t-caption,12px); font-weight:800; color:var(--muted,#8a8498); background:transparent; font-family:inherit; cursor:pointer; white-space:nowrap; transition:all .18s; min-height:44px; display:inline-flex; align-items:center; }
@@ -1460,7 +1460,7 @@
   .sf-badge.missing { background:var(--warning,#e8a84a); color:var(--bg,#0e0c0f); }
   .sf-card-body { padding:10px 12px 12px; }
   .sf-card-name { font-size:var(--t-small,13px); font-weight:700; line-height:1.3; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; min-height:calc(2 * 1.3em); }
-  .sf-card-brand { font-size:var(--t-micro,11px); color:var(--muted,#6B6560); font-weight:500; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sf-card-brand { font-size:var(--t-micro,11px); color:var(--muted,#9e99ad); font-weight:500; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .sf-price-row { display:flex; align-items:center; gap:6px; margin-top:6px; }
   .sf-price { font-size:var(--t-body,14px); font-weight:900; color:var(--accent,#e8526a); }
   .sf-orig { font-size:var(--t-micro,11px); color:var(--muted,#8a8498); text-decoration:line-through; }
