@@ -17,11 +17,11 @@
 - **Next**: INBOX item 2 — stuck overlays sweep (check-interactions.mjs + close-path verification). Or item 3 — low-contrast buttons audit.
 - **Prior runs**: run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94); run 32 — Profile UX sweep (be16bac).
 
-## Steve lane — last run (2026-07-29, run 24)
-- **Task**: INBOX item 3 — data-integrity orphan check (id-references between static/data/*.json and app.py).
-- **Done**: (1) Wired `python3 scripts/data_integrity.py` as a blocking gate in `scripts/guard_checks.sh` — orphan tags and invalid user_id refs now fail at commit time. (2) Added 2 pytests: `test_dm_seed_peer_ids_all_resolve_to_profiles` (all 8 _DM_SEED peer_ids verified against profiles.json) and `test_app_hardcoded_follow_target_in_profiles`. All 8 DM seed IDs verified clean. Commit: 9b637bb.
+## Steve lane — last run (2026-07-29, run 25)
+- **Task**: INBOX item 1 — test coverage sweep for list endpoints.
+- **Done**: Added 6 hermetic pytests (contract + pagination + filter) for /api/categories, /api/posts (list), /api/profiles (list) — previously only covered by a 2-line smoke test. IC: sam. Commit: 17e7f4b.
 - **All INBOX launch infra steps done**: Render (60f159e), Supabase Auth (9667fd0), Postgres _CompatDB (8c8b41), Storage (565f18d).
-- **Next**: INBOX item 4 — continue Supabase epic (next step: Supabase Storage for generated images). OR endpoint test coverage sweep (INBOX: "grep endpoints vs tests/").
+- **Next**: INBOX item 2 — resilience sweep: every external-dep path must have try→demo/fallback and scan-health coverage. Start with weather (open-meteo) tracking in scan-health.
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
 ## Phase status
