@@ -17,15 +17,11 @@
 - **Next**: INBOX item 2 — stuck overlays sweep (check-interactions.mjs + close-path verification). Or item 3 — low-contrast buttons audit.
 - **Prior runs**: run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94); run 32 — Profile UX sweep (be16bac).
 
-## Steve lane — last run (2026-07-28, run 23)
-- **Task**: Self-heal — resolve committed merge-conflict markers in CI_FAILURES.md; collapse 9 stale [OPEN]+[UNRESOLVED] entries → single [FIXED] entry.
-- **Done**: Verified code fixes already in main (commits d148c50 + a6c691f + 3db5bb9): agent_schedule/meeting/summary all have try/except Exception → 503; scan_health has agent_services.google_available. All 6 tests exist in tests/test_app.py. Resolved conflict markers in CI_FAILURES.md.
-- **Root cause of loop**: jeff gate kept appending [OPEN] entries on each run because CI_FAILURES.md had literal `<<<<<<<`/`>>>>>>>`  markers in committed file (52d099b conflicted with main's parallel appends during merge). No code changes needed this run.
-- **Prior run (run 22)**: Same self-heal attempt — CI_FAILURES.md updated but conflict markers likely re-introduced by jeff gate during merge.
-- **Prior run (run 20)**: Resilience audit — harden agent Google-service endpoints. commit f0cf6a1. Suite: 203/203.
-- **Resilience audit status**: COMPLETE. All Claude/OpenAI/weather/Pexels/Supabase/Google paths verified.
+## Steve lane — last run (2026-07-29, run 24)
+- **Task**: INBOX item 3 — data-integrity orphan check (id-references between static/data/*.json and app.py).
+- **Done**: (1) Wired `python3 scripts/data_integrity.py` as a blocking gate in `scripts/guard_checks.sh` — orphan tags and invalid user_id refs now fail at commit time. (2) Added 2 pytests: `test_dm_seed_peer_ids_all_resolve_to_profiles` (all 8 _DM_SEED peer_ids verified against profiles.json) and `test_app_hardcoded_follow_target_in_profiles`. All 8 DM seed IDs verified clean. Commit: 9b637bb.
 - **All INBOX launch infra steps done**: Render (60f159e), Supabase Auth (9667fd0), Postgres _CompatDB (8c8b41), Storage (565f18d).
-- **Next**: INBOX item 3 — data-integrity orphan check (id-references between static/data/*.json and app.py). OR Supabase epic next step.
+- **Next**: INBOX item 4 — continue Supabase epic (next step: Supabase Storage for generated images). OR endpoint test coverage sweep (INBOX: "grep endpoints vs tests/").
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
 ## Phase status
