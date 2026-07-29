@@ -1453,7 +1453,7 @@
   .sf-grid { flex:1; overflow-y:auto; padding:0 18px 80px; display:grid; grid-template-columns:1fr 1fr; gap:12px; align-content:start; }
   .sf-card { background:var(--card,#1e1a22); border-radius:18px; overflow:hidden; border:1px solid var(--line,#2e2836); cursor:pointer; transition:transform .15s; }
   .sf-card:active { transform:scale(.97); }
-  .sf-card-img { height:140px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,var(--card,#1e1a22),var(--bg,#0e0c0f)); position:relative; }
+  .sf-card-img { height:180px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,var(--card,#1e1a22),var(--bg,#0e0c0f)); position:relative; }
   .sf-badge { position:absolute; top:8px; right:8px; background:var(--accent,#e8526a); color:#fff; font-size:var(--t-micro,11px); font-weight:900; padding:3px 8px; border-radius:10px; }
   .sf-badge.deal { background:var(--danger,#e05252); }
   .sf-badge.new { background:rgba(255,255,255,0.92); color:var(--bg,#0e0c0f); }
