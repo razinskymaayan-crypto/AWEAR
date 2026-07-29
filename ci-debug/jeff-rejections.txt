@@ -32,3 +32,4 @@
 2026-07-29T10:50:30Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_profiles_list_contract
 2026-07-29T14:16:41Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_profiles_list_contract
 2026-07-29T17:26:00Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_profiles_list_contract
+2026-07-29T19:27:56Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_profiles_list_contract
