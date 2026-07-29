@@ -11,6 +11,7 @@
   --accent2:       #c4855a;
   --accent3:       #7a6af0;
   --on-accent:     #fff;       /* text/icon color on the accent→accent2 brand gradient — white is correct in BOTH dark and light modes (light accent is near-black #14110F→#3D3833) */
+  --on-media:      #ffffff;   /* text/icon on photo/video overlays — always white regardless of theme */
   --bg:            #0e0c0f;
   --surface:       #161318;
   --card:          #1e1a22;
