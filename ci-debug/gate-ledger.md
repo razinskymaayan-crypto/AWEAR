@@ -164,3 +164,4 @@
 2026-07-29T17:26:07Z | jeff: merged -> ayalon | REVERTED (broke build/guard): steve(exposed-bug)
 2026-07-29T19:27:59Z | jeff: merged -> mark | REVERTED (broke build/guard): steve(exposed-bug)
 2026-07-29T21:08:50Z | jeff: merged -> mark | REVERTED (broke build/guard): steve(exposed-bug)
+2026-07-29T23:28:30Z | jeff: merged -> mark | REVERTED (broke build/guard): steve(exposed-bug)
