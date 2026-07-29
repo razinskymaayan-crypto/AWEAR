@@ -2031,6 +2031,42 @@ def test_data_integrity_cli_detects_invalid_user_id(tmp_path):
     )
 
 
+def test_dm_seed_peer_ids_all_resolve_to_profiles():
+    """Every peer_id in app._DM_SEED must exist in profiles.json.
+
+    FAIL-BEFORE: no check — a deleted/renamed profile silently breaks the DM
+    list (empty names/avatars during the investor demo).
+    PASS-AFTER: all DM peers resolve to a named profile entry.
+    """
+    import json
+    import pathlib
+    profiles = json.loads(pathlib.Path("static/data/profiles.json").read_text())
+    profile_ids = {p.get("id") for p in profiles}
+    missing = [pid for pid, _ in appmod._DM_SEED if pid not in profile_ids]
+    assert not missing, (
+        f"DM seed peer_ids not in profiles.json: {missing} — "
+        "update _DM_SEED in app.py or add the missing profiles"
+    )
+
+
+def test_app_hardcoded_follow_target_in_profiles():
+    """_FOLLOW_TARGET test constant must resolve to a real profile.
+
+    FAIL-BEFORE: no cross-ref check — a stale constant would cause follow-test
+    false passes (acting on a non-existent user silently returns 200).
+    PASS-AFTER: the sentinel user_id is verified to exist in profiles.json.
+    """
+    import json
+    import pathlib
+    profiles = json.loads(pathlib.Path("static/data/profiles.json").read_text())
+    profile_ids = {p.get("id") for p in profiles}
+    # _FOLLOW_TARGET is defined at module level in this test file
+    assert _FOLLOW_TARGET in profile_ids, (
+        f"_FOLLOW_TARGET '{_FOLLOW_TARGET}' not in profiles.json — "
+        "update _FOLLOW_TARGET or add the missing profile"
+    )
+
+
 # ---------------------------------------------------------------------------
 # product-image endpoint (ext-dep: Pexels API / loremflickr redirect)
 # ---------------------------------------------------------------------------

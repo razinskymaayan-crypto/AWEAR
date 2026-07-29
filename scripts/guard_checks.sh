@@ -73,6 +73,19 @@ if [ -f "app.py" ]; then
   fi
 fi
 
+# ---- DATA INTEGRITY (static/data/*.json — blocking gate) ----
+# Run data_integrity.py against the live data files. Exit 1 = orphan tags,
+# missing product ids, broken user_id refs — all block the commit (OW-014/OW-016).
+# Warnings (fragment drift, unreferenced products) are printed but do not block.
+if [ -f "scripts/data_integrity.py" ]; then
+  DI_OUT=$(python3 scripts/data_integrity.py 2>&1)
+  DI_EXIT=$?
+  if [ "$DI_EXIT" -ne 0 ]; then
+    note "data integrity FAILED — run 'python3 scripts/data_integrity.py' for detail:"
+    printf '%s\n' "$DI_OUT" | grep -E '^FAIL' | head -5 | sed 's/^/      /'
+  fi
+fi
+
 # ---- DIFF GATES (only on lines this commit adds) ----
 # Prefer the staged diff; if nothing is staged (e.g. CI verifying AFTER the agent committed),
 # fall back to everything this run added on top of origin/main — so the gate still bites post-commit.
