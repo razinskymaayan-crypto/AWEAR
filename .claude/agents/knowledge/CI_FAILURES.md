@@ -121,3 +121,8 @@ Top-priority defect — before INBOX work.
 
 ## [FIXED 2026-07-28 steve self-heal] REPEAT-FAILURE: steve(exposed-bug) (2026-07-26T13:28:52Z)
 > **Root cause + fix:** Three endpoint bugs fixed in commits d148c50 + a6c691f + 3db5bb9 (already in main): (1) agent_schedule had no try/except -> added except Exception -> 503; (2) agent_meeting same fix; (3) agent_summary broadened from RuntimeError to except Exception; (4) scan_health was missing agent_services.google_available -- added. All 6 tests in tests/test_app.py pass on current main. Gate kept appending [OPEN] entries because CI_FAILURES.md itself had committed merge-conflict markers. Resolved 2026-07-28 by removing conflict markers and stale [OPEN]/[UNRESOLVED] entries. Do NOT re-analyze.
+
+## [OPEN] PRODUCT BUG — exposed by steve's own new tests (2026-07-29T10:50:30Z)
+These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_profiles_list_contract
+OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
+Top-priority defect — before INBOX work.
