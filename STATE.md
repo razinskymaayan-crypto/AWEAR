@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-28, run 31)
-- **Task**: Shop screen UX pass — DS-004 token fallbacks on all .sf-* rules + P0 UX fixes.
-- **Done**: 15 DS-004 violations fixed (.sf-* classes — all missing fallbacks). P0-A: .sf-tab min-height:44px + inline-flex (was ~28px). P0-B: .sf-card-brand fallback #6B6560 + weight:500 (WCAG AA 5.17:1). P1-B: .sf-card-name weight:700 (hierarchy). P1: badge guard it.badge?.trim() (ghost pill fix). Gabbana 8.2/10 PASS. Commit: 63c4c8a.
-- **Next**: INBOX ★★★★★ UX sweep — Profile screen (dolce IC). Dead buttons sweep on non-feed screens. .sf-sub subtitle contrast (P2, pre-existing, ~3.16:1 on light bg) and .sf-price dark fallback (#e8526a → should be token-reviewed) are backlog items.
-- **Prior runs**: run 30 — Home rgba relics DS-004 (76f6a86); run 29 — Home DS-004 + Gabbana 8+ (c4126d9); run 28 — closet backend hydration (4a5a80b).
+## Mark lane — last run (2026-07-29, run 32)
+- **Task**: Profile screen UX sweep — 8 CSS fixes on closet/profile screen.
+- **Done**: Off-scale font sizes tokenized (4 fixes). Bio truncation fixed (max-width:124px removed, 2-line clamp). .season-entry-sub unhidden (CTA visible). .looks-grid gap 5px → token. ig-headstats b font 15px→18px. ig-name 14px→17px. shop-look radius 15px → token. Look card overlay scrim strengthened + --on-media token added. Gabbana 8.5/10 PASS. Commit: be16bac.
+- **Next**: Dead buttons sweep on non-feed screens (Home/Explore/Onboarding). .sf-sub subtitle contrast (P2 backlog). Feed/Home further polish.
+- **Prior runs**: run 31 — Shop DS-004 + UX fixes (63c4c8a); run 30 — Home rgba relics (76f6a86); run 29 — Home DS-004 + Gabbana 8+ (c4126d9).
 
 ## Steve lane — last run (2026-07-28, run 23)
 - **Task**: Self-heal — resolve committed merge-conflict markers in CI_FAILURES.md; collapse 9 stale [OPEN]+[UNRESOLVED] entries → single [FIXED] entry.
