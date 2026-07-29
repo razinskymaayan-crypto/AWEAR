@@ -11,12 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-29, run 33)
-- **Task**: Dead buttons sweep — fix 2 no-op buttons (INBOX founder priority 4).
-- **Done**: (1) "Wear one this week" in analytics Dead Zone card (app.js:3182) — was toast-only, now navigates to closet after toast. (2) "Wishlist" in item detail sheet (app.js:8825) — was toast-only stub, now calls addToWishlistFromSeed(name) which persists to localStorage + renders wishlist. check-render PASS, node --check PASS.
-- **Next**: .sf-sub subtitle contrast (P2 backlog). Feed/Home further polish. Bottom-sheet iOS fixes verified complete (all sheets already have max-height+drag-dismiss).
-- **Prior runs**: run 32 — Profile screen UX sweep (be16bac); run 31 — Shop DS-004 + UX fixes (63c4c8a); run 30 — Home rgba relics (76f6a86).
-- **Prior runs**: run 31 — Shop DS-004 + UX fixes (63c4c8a); run 30 — Home rgba relics (76f6a86); run 29 — Home DS-004 + Gabbana 8+ (c4126d9).
+## Mark lane — last run (2026-07-29, run 34)
+- **Task**: Shopping Feed DS-004 fix — `.sf-sub` and `.sf-card-brand` wrong muted fallbacks + readability.
+- **Done**: (1) `.sf-sub`: fallback `#8a8498` → `#9e99ad` (correct dark token, consistent with 155+ uses); font-weight 600→700 for better 12px readability. (2) `.sf-card-brand`: stale fallback `#6B6560` → `#9e99ad` (DS-004). check-render PASS, commit a004b35.
+- **Next**: INBOX backlog item 1 — text overlapping sweep (z-index/truncation). Or check-interactions.mjs run for stuck overlays (item 2). Bottom-sheet iOS fixes previously verified complete.
+- **Prior runs**: run 33 — Dead buttons (eb7dc94); run 32 — Profile UX sweep (be16bac); run 31 — Shop DS-004 (63c4c8a).
 
 ## Steve lane — last run (2026-07-28, run 23)
 - **Task**: Self-heal — resolve committed merge-conflict markers in CI_FAILURES.md; collapse 9 stale [OPEN]+[UNRESOLVED] entries → single [FIXED] entry.
