@@ -1,5 +1,5 @@
 # Definition-of-Done Audit — INBOX "## הושלם" items
-**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) + 2026-07-26 (BH-9 outfit generator + nav fix verified) + 2026-07-27 (BH-10 DS-004 --success sweep + backend resilience note) + 2026-07-28 run-28 (BH-11 nav-bg scanner fix + CLOSET-HYDRATION backend persistence) + 2026-07-28 run-29 (resolve-product buy_route contract + product-match-404 hermetic coverage — 71bb0f2) + 2026-07-29 (BH-12 profile/closet UX sweep — mark run 32, commit be16bac) by ayalon lane  
+**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) + 2026-07-26 (BH-9 outfit generator + nav fix verified) + 2026-07-27 (BH-10 DS-004 --success sweep + backend resilience note) + 2026-07-28 run-28 (BH-11 nav-bg scanner fix + CLOSET-HYDRATION backend persistence) + 2026-07-28 run-29 (resolve-product buy_route contract + product-match-404 hermetic coverage — 71bb0f2) + 2026-07-29 (BH-12 profile/closet UX sweep — mark run 32, commit be16bac) + 2026-07-29 run-33 (line-number accuracy sweep — items 1/5/6/12/13 refreshed) by ayalon lane  
 **Method:** grep / git-log / code-presence checks  
 **Purpose:** Confirm each "done" item has verifiable evidence before investor demo
 
@@ -31,9 +31,9 @@
 
 ### 1. AI Stylist "Today's Look" ✅
 - **Commit:** `84d3251 feat(ai-stylist): "Today's Look" daily contextual hero on the AI tab`
-- **Code:** `static/app.js:2279` (shared occasion engine); `static/app.js:3190` ("Today's Look" daily hero function)
+- **Code:** `static/app.js:2382` (shared occasion engine); `static/app.js:3296` ("Today's Look" daily hero function)
 - **Gate:** Gabbana 9/10 PASS; post-fix confirmation survey `90b63d8`; check-render OK
-- **Evidence:** `grep -n "Today.*Look\|renderDailyLook" static/app.js` → 7 matches; function at `app.js:3266`
+- **Evidence:** `grep -n "Today.*Look\|renderDailyLook" static/app.js` → 5 matches; function at `app.js:3296`
 
 ### 2. Core-screens editorial pass (Feed, item sheet, profile) ✅
 - **Commits:** `ac7f725` (Feed survey), `b88c5fc` (item-sheet survey), `9ccefd1` (Profile survey), `f68b70e` (ledger)
@@ -53,9 +53,9 @@
 
 ### 5. Real Claude-Vision scan e2e ✅ VERIFIED (corrected 2026-07-21)
 - **Backend (DONE):**
-  - `app.py:706` — scan outcome recorder
-  - `app.py:719` — `GET /api/scan-health` with `?probe=1` liveness check
-  - `app.py:495–517` — `_corrections_context()` learning loop (scan→corrections→closet→re-injection)
+  - `app.py:720` — scan outcome recorder
+  - `app.py:733` — `GET /api/scan-health` with `?probe=1` liveness check
+  - `app.py:520` — `_corrections_context()` learning loop (scan→corrections→closet→re-injection)
   - 4 closet endpoints: `POST /api/closet/confirm`, `GET /api/closet`, `DELETE /api/closet/{item_id}`, `PATCH /api/closet/{item_id}` (`grep "@app.*closet" app.py` → 4 matches)
   - `scan_corrections` learning ledger and re-injection into LIVE Claude call
 - **UI (SHIPPED — corrected):**
@@ -73,7 +73,7 @@
   - `static/app.js:314` — brand wordmark SVGs for "Where it sells" rows
   - `static/app.js:357` — `storeRowHTML()` retailer row builder
   - `static/app.js:378–381` — `buy_options` resolution (API → fallback)
-  - `static/app.js:643–658` — "Where it sells" block (retail rows + Depop resale row)
+  - `static/app.js:647–665` — "Where it sells" block (retail rows + Depop resale row)
 - **Backend contract:** `app.py:2079` — `GET /api/resolve-product`; hermetic tests (commit `71bb0f2`):
   - `test_resolve_exact_match_returns_buy_route_fields` — status=exact + full buy_route fields
   - `test_resolve_similar_path_has_alternatives` — status=similar + alternatives list (each with buy_route fields)
@@ -119,14 +119,14 @@
 ### 13. Wardrobe match score — `GET /api/products/{id}/match` ✅ VERIFIED (2026-07-25)
 - **Backend commit:** `9cc466c feat(backend): wardrobe match score — GET /api/products/{id}/match`
 - **SPA wiring commit:** `251e38e feat(ux): wire backend match score into item detail sheet`
-- **Backend:** `app.py:1934` — endpoint live; returns `match_pct` (0–95), `reason`, `matching_items` from server-side `closet_items`; BE-006 `user_key`, rate-limited 30/min; 4 hermetic pytests (141/141 passing)
-- **SPA wiring:** `static/app.js:699–714` — item detail sheet fetches `/api/products/{id}/match?user_id=` after opening, upgrades match band HTML with server-side `match_pct` + `reason` + `matching_items` on success; silent fallback on network error; local `calcCompatScore()` still shows immediately as optimistic placeholder
-- **Evidence:** `grep -n "\/api\/products.*match" static/app.js` → line 703 confirmed; `grep -n "match_pct" static/app.js` → lines 710, 3758 confirmed; `test_product_match_unknown_product_id_returns_404` (commit `71bb0f2`) — 404 branch now hermetically tested (noted as "FAIL-BEFORE: no test verified the 404 branch")
+- **Backend:** `app.py:1958` — endpoint live; returns `match_pct` (0–95), `reason`, `matching_items` from server-side `closet_items`; BE-006 `user_key`, rate-limited 30/min; 4 hermetic pytests (141/141 passing)
+- **SPA wiring:** `static/app.js:700–718` — item detail sheet fetches `/api/products/{id}/match?user_id=` after opening, upgrades match band HTML with server-side `match_pct` + `reason` + `matching_items` on success; silent fallback on network error; local `calcCompatScore()` still shows immediately as optimistic placeholder
+- **Evidence:** `grep -n "\/api\/products.*match" static/app.js` → line 703 confirmed; `grep -n "match_pct" static/app.js` → lines 710, 3788 confirmed; `test_product_match_unknown_product_id_returns_404` (commit `71bb0f2`) — 404 branch now hermetically tested (noted as "FAIL-BEFORE: no test verified the 404 branch")
 
 ### 12. Generate-garment: AI catalog image in scan confirm sheet ✅ (2026-07-23)
 - **Commit:** `9975080 feat(ux): add image generation display to scan confirm sheet`
-- **Backend:** `app.py:3277` — `POST /api/generate-garment` endpoint; `app.py:3210` — `_generate_garment_image_sync` helper (runs off event-loop via `asyncio.to_thread`); `app.py:149` — `_last_gen` diagnostics; `app.py:767` — exposed in `GET /api/scan-health`
-- **UI:** `static/app.js:1389` — `genImage:'pending'` initial state per item; `app.js:1403–1409` — spinner → generated image → retailer fallback at 80% opacity; `app.js:1408` — 44px "Regenerate" button per item; `app.js:1412–1445` — `scGenerate()` + `scRegenerate()` calling `/api/generate-garment`
+- **Backend:** `app.py:3378` — `POST /api/generate-garment` endpoint; `app.py:3311` — `_generate_garment_image_sync` helper (runs off event-loop via `asyncio.to_thread`); `app.py:152` — `_last_gen` diagnostics; `app.py:770` — exposed in `GET /api/scan-health`
+- **UI:** `static/app.js:1437` — `genImage:'pending'` initial state per item; `app.js:1454–1461` — `_scImgEl()` spinner → generated image → retailer fallback; `app.js:1460` — 44px "Regenerate" button per item; `app.js:1463–1500` — `_startGenerating()` + `scRegenerate()` calling `/api/generate-garment`
 - **Gate:** Gabbana 8/10 PASS (mark lane run 12)
 - **Evidence:** `grep -n "generate-garment\|sc-spinner\|sc-gen-img\|scRegenerate" static/app.js` → confirmed
 - **Pipeline gap (open):** `scConfirm()` at `app.js:1493–1496` does NOT include `genImage` URL in the POST payload to `/api/closet/confirm` — generated image is shown during review but not persisted to `closet_items`. Closet view still shows catalog images via `search_query` (Phase 1 behavior). This is a remaining step for the mark/sam lane.
