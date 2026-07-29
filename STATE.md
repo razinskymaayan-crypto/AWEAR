@@ -11,10 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-29, run 32)
-- **Task**: Profile screen UX sweep — 8 CSS fixes on closet/profile screen.
-- **Done**: Off-scale font sizes tokenized (4 fixes). Bio truncation fixed (max-width:124px removed, 2-line clamp). .season-entry-sub unhidden (CTA visible). .looks-grid gap 5px → token. ig-headstats b font 15px→18px. ig-name 14px→17px. shop-look radius 15px → token. Look card overlay scrim strengthened + --on-media token added. Gabbana 8.5/10 PASS. Commit: be16bac.
-- **Next**: Dead buttons sweep on non-feed screens (Home/Explore/Onboarding). .sf-sub subtitle contrast (P2 backlog). Feed/Home further polish.
+## Mark lane — last run (2026-07-29, run 33)
+- **Task**: Dead buttons sweep — fix 2 no-op buttons (INBOX founder priority 4).
+- **Done**: (1) "Wear one this week" in analytics Dead Zone card (app.js:3182) — was toast-only, now navigates to closet after toast. (2) "Wishlist" in item detail sheet (app.js:8825) — was toast-only stub, now calls addToWishlistFromSeed(name) which persists to localStorage + renders wishlist. check-render PASS, node --check PASS.
+- **Next**: .sf-sub subtitle contrast (P2 backlog). Feed/Home further polish. Bottom-sheet iOS fixes verified complete (all sheets already have max-height+drag-dismiss).
+- **Prior runs**: run 32 — Profile screen UX sweep (be16bac); run 31 — Shop DS-004 + UX fixes (63c4c8a); run 30 — Home rgba relics (76f6a86).
 - **Prior runs**: run 31 — Shop DS-004 + UX fixes (63c4c8a); run 30 — Home rgba relics (76f6a86); run 29 — Home DS-004 + Gabbana 8+ (c4126d9).
 
 ## Steve lane — last run (2026-07-28, run 23)

@@ -3179,7 +3179,7 @@
         <div class="an-alert-title">${icon('alert',16)} ${deadCount} item${deadCount!==1?'s':''} ${deadCopy}</div>
         <div class="an-alert-sub">~$${deadValue} tied up · sell and earn <strong style="color:var(--success,#52c97a);font-weight:800">~$${Math.round(deadValue*0.5)}</strong></div>
         <div class="an-alert-actions">
-          <button class="an-alert-btn primary" onclick="showToast('Challenge accepted — pick one this week!')">Wear one this week</button>
+          <button class="an-alert-btn primary" onclick="showToast('Challenge accepted!');showView('closet')">Wear one this week</button>
           <button class="an-alert-btn" onclick="openDeadZoneListSheet()">List in My Store</button>
         </div>
       </div>
@@ -8822,7 +8822,7 @@
       </div>`;
     sheetFooter.innerHTML = `<div style="display:flex;gap:10px;width:100%">
       <button class="sheet-buy" onclick="closeSheet()" style="flex:1;background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#9e99ad)">Close</button>
-      ${item.price_estimate_usd ? `<button class="sheet-buy" onclick="showToast('Added to wishlist');closeSheet()" style="flex:2;background:linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a));border:0;color:var(--text,#fbfbfd)">${icon('bookmark',14)} Wishlist</button>` : ''}
+      ${item.price_estimate_usd ? `<button class="sheet-buy" onclick="addToWishlistFromSeed('${attr(item.name)}');closeSheet()" style="flex:2;background:linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a));border:0;color:var(--text,#fbfbfd)">${icon('bookmark',14)} Wishlist</button>` : ''}
     </div>`;
     showSheet();
   }
