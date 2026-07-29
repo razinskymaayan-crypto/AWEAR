@@ -3092,3 +3092,150 @@ def test_dm_send_message_appears_in_thread(client):
     assert thread_r.status_code == 200
     texts = [m["text"] for m in thread_r.json()["messages"]]
     assert unique_text in texts
+
+
+# ---------------------------------------------------------------------------
+# Hermetic contract + pagination tests — /api/categories, /api/posts, /api/profiles
+# ---------------------------------------------------------------------------
+
+def test_categories_contract(client):
+    """GET /api/categories returns well-formed envelope with non-empty item list.
+
+    FAIL-BEFORE: only covered by the 2-line smoke test.
+    PASS-AFTER: response shape {items:[{name:str, count:int>0}], total:int} verified;
+    total == len(items) proven; cache is non-empty in CI.
+    """
+    r = client.get("/api/categories")
+    assert r.status_code == 200
+    d = r.json()
+
+    # Envelope shape
+    assert isinstance(d, dict), "response must be a dict"
+    assert "items" in d, "response must have 'items' key"
+    assert "total" in d, "response must have 'total' key"
+
+    items = d["items"]
+    total = d["total"]
+
+    assert isinstance(items, list), "'items' must be a list"
+    assert isinstance(total, int), "'total' must be an int"
+    assert len(items) > 0, "categories list must be non-empty in CI (products cache loaded)"
+    assert total == len(items), "total must equal len(items)"
+
+    # Item shape
+    for item in items:
+        assert isinstance(item.get("name"), str), f"item 'name' must be str: {item}"
+        assert isinstance(item.get("count"), int), f"item 'count' must be int: {item}"
+        assert item["count"] > 0, f"item 'count' must be > 0: {item}"
+
+
+def test_posts_list_contract(client):
+    """GET /api/posts returns well-formed paginated envelope with required item fields.
+
+    FAIL-BEFORE: only covered by the 2-line smoke test.
+    PASS-AFTER: response shape {items:list, total:int, limit:int, offset:int} verified;
+    each item has 'id' and 'user_id' fields.
+    """
+    r = client.get("/api/posts")
+    assert r.status_code == 200
+    d = r.json()
+
+    # Envelope shape
+    assert isinstance(d, dict), "response must be a dict"
+    for key in ("items", "total", "limit", "offset"):
+        assert key in d, f"response must have '{key}' key"
+
+    assert isinstance(d["items"], list), "'items' must be a list"
+    assert isinstance(d["total"], int), "'total' must be an int"
+    assert isinstance(d["limit"], int), "'limit' must be an int"
+    assert isinstance(d["offset"], int), "'offset' must be an int"
+
+    # Item shape — every returned item must have id and user_id
+    for item in d["items"]:
+        assert "id" in item, f"post item must have 'id': {item}"
+        assert "user_id" in item, f"post item must have 'user_id': {item}"
+
+
+def test_posts_list_pagination(client):
+    """GET /api/posts?limit=2&offset=0 honours pagination params.
+
+    FAIL-BEFORE: only covered by the 2-line smoke test.
+    PASS-AFTER: at most 2 items returned; limit and offset echo correctly.
+    """
+    r = client.get("/api/posts?limit=2&offset=0")
+    assert r.status_code == 200
+    d = r.json()
+
+    assert d["limit"] == 2, f"limit must echo 2, got {d['limit']}"
+    assert d["offset"] == 0, f"offset must echo 0, got {d['offset']}"
+    assert len(d["items"]) <= 2, f"items must be at most 2, got {len(d['items'])}"
+
+
+def test_posts_list_user_id_filter(client):
+    """GET /api/posts?user_id=<id> returns only posts for that user.
+
+    FAIL-BEFORE: only covered by the 2-line smoke test.
+    PASS-AFTER: every returned item's user_id matches the filter value;
+    using real first-post user_id so test is hermetic against the seeded cache.
+    """
+    # Discover a real user_id from the unfiltered list
+    base_r = client.get("/api/posts")
+    assert base_r.status_code == 200
+    base_items = base_r.json()["items"]
+    assert len(base_items) > 0, "posts cache must be non-empty in CI"
+
+    target_user_id = base_items[0]["user_id"]
+
+    # Apply the filter
+    r = client.get(f"/api/posts?user_id={target_user_id}")
+    assert r.status_code == 200
+    d = r.json()
+
+    assert isinstance(d["items"], list)
+    assert len(d["items"]) > 0, f"filter for user_id={target_user_id} returned no items"
+    for item in d["items"]:
+        assert item["user_id"] == target_user_id, (
+            f"filtered result has wrong user_id: expected {target_user_id}, got {item['user_id']}"
+        )
+
+
+def test_profiles_list_contract(client):
+    """GET /api/profiles returns well-formed paginated envelope with required item fields.
+
+    FAIL-BEFORE: only covered by the 2-line smoke test.
+    PASS-AFTER: response shape {items:list, total:int, limit:int, offset:int} verified;
+    each item has 'id' and 'name' fields.
+    """
+    r = client.get("/api/profiles")
+    assert r.status_code == 200
+    d = r.json()
+
+    # Envelope shape
+    assert isinstance(d, dict), "response must be a dict"
+    for key in ("items", "total", "limit", "offset"):
+        assert key in d, f"response must have '{key}' key"
+
+    assert isinstance(d["items"], list), "'items' must be a list"
+    assert isinstance(d["total"], int), "'total' must be an int"
+    assert isinstance(d["limit"], int), "'limit' must be an int"
+    assert isinstance(d["offset"], int), "'offset' must be an int"
+
+    # Item shape — every returned item must have id and name
+    for item in d["items"]:
+        assert "id" in item, f"profile item must have 'id': {item}"
+        assert "name" in item, f"profile item must have 'name': {item}"
+
+
+def test_profiles_list_pagination(client):
+    """GET /api/profiles?limit=1&offset=0 honours pagination params.
+
+    FAIL-BEFORE: only covered by the 2-line smoke test.
+    PASS-AFTER: at most 1 item returned; limit and offset echo correctly.
+    """
+    r = client.get("/api/profiles?limit=1&offset=0")
+    assert r.status_code == 200
+    d = r.json()
+
+    assert d["limit"] == 1, f"limit must echo 1, got {d['limit']}"
+    assert d["offset"] == 0, f"offset must echo 0, got {d['offset']}"
+    assert len(d["items"]) <= 1, f"items must be at most 1, got {len(d['items'])}"
