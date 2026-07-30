@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-29, run 34)
-- **Task**: Shopping Feed DS-004 fix — `.sf-sub` and `.sf-card-brand` wrong muted fallbacks + readability.
-- **Done**: (1) `.sf-sub`: fallback `#8a8498` → `#9e99ad` (correct dark token, consistent with 155+ uses); font-weight 600→700 for better 12px readability. (2) `.sf-card-brand`: stale fallback `#6B6560` → `#9e99ad` (DS-004). check-render PASS, commit a004b35.
-- **Next**: INBOX backlog item 1 — text overlapping sweep (z-index/truncation). Or check-interactions.mjs run for stuck overlays (item 2). Bottom-sheet iOS fixes previously verified complete.
-- **Prior runs**: run 33 — Dead buttons (eb7dc94); run 32 — Profile UX sweep (be16bac); run 31 — Shop DS-004 (63c4c8a).
+## Mark lane — last run (2026-07-30, run 35)
+- **Task**: INBOX item 1 — text truncation sweep (overflow/truncation in outfit/wishlist/home cards).
+- **Done**: 3 CSS fixes in app.css: `.og-outfit-name` min-width+ellipsis (AI outfit names), `.wl-item-name` ellipsis in wishlist row, `.ho-name` -webkit-line-clamp:2 in 132px home outfit cards. check-render PASS, commit 5728519.
+- **Next**: INBOX item 2 — stuck overlays sweep (check-interactions.mjs + close-path verification). Or item 3 — low-contrast buttons audit.
+- **Prior runs**: run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94); run 32 — Profile UX sweep (be16bac).
 
 ## Steve lane — last run (2026-07-28, run 23)
 - **Task**: Self-heal — resolve committed merge-conflict markers in CI_FAILURES.md; collapse 9 stale [OPEN]+[UNRESOLVED] entries → single [FIXED] entry.
