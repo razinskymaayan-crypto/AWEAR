@@ -17,11 +17,11 @@
 - **Next**: INBOX item 2 — stuck overlays sweep (check-interactions.mjs + close-path verification). Or item 3 — low-contrast buttons audit.
 - **Prior runs**: run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94); run 32 — Profile UX sweep (be16bac).
 
-## Steve lane — last run (2026-07-29, run 25)
-- **Task**: INBOX item 1 — test coverage sweep for list endpoints.
-- **Done**: Added 6 hermetic pytests (contract + pagination + filter) for /api/categories, /api/posts (list), /api/profiles (list) — previously only covered by a 2-line smoke test. IC: sam. Commit: 17e7f4b.
+## Steve lane — last run (2026-07-30, run 26)
+- **Task**: Rejection fix — test_profiles_list_contract pre-existing bug (7 consecutive rejection cycles).
+- **Done**: /api/profiles GET now injects `name` field (display_name||username||id) per API contract. One-line change in app.py (line ~2144). Both profile contract+pagination tests pass. Commit: dd2aac6.
 - **All INBOX launch infra steps done**: Render (60f159e), Supabase Auth (9667fd0), Postgres _CompatDB (8c8b41), Storage (565f18d).
-- **Next**: INBOX item 2 — resilience sweep: every external-dep path must have try→demo/fallback and scan-health coverage. Start with weather (open-meteo) tracking in scan-health.
+- **Next**: INBOX item 2 — resilience sweep: every external-dep path must have try→demo/fallback and scan-health coverage.
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
 ## Phase status
