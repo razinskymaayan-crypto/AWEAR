@@ -1206,7 +1206,7 @@
   .og-outfit-card { background: var(--card,#1e1a22); border-radius: var(--r-lg,20px); border: 1px solid var(--line,#2e2836); overflow: hidden; }
   .og-outfit-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px; border-bottom: 1px solid var(--line,#2e2836); }
   .og-outfit-num { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a)); display: flex; align-items: center; justify-content: center; font-size: var(--t-small,13px); font-weight: 900; color: #fff; flex-shrink: 0; }
-  .og-outfit-name { font-size: var(--t-body,14px); font-weight: 900; flex: 1; }
+  .og-outfit-name { font-size: var(--t-body,14px); font-weight: 900; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .og-outfit-score { font-size: var(--t-caption,12px); font-weight: 800; color: var(--accent2,#c4855a); }
   /* Build Look — flat-lay collage (replaces the 4-up grid). Per-cell shop/owned badges. */
   .og-flatlay-wrap { padding: 12px 14px 6px; }
@@ -1981,7 +1981,7 @@
   .wl-item:active { transform: scale(.98); }
   .wl-item-ico { font-size: var(--t-display,28px); width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg,var(--card),var(--bg)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .wl-item-info { flex: 1; min-width: 0; }
-  .wl-item-name { font-size: var(--t-body); font-weight: 800; }
+  .wl-item-name { font-size: var(--t-body); font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .wl-item-price { font-size: var(--t-caption); color: var(--muted); font-weight: 600; margin-top: 3px; }
   .wl-item-compat { font-size: var(--t-micro); font-weight: 800; color: var(--accent2); margin-top: 3px; }
   .wl-item-del { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,61,119,.1); border: 0; color: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; font-size: var(--t-h3,16px); transition: all .18s; }
@@ -2084,6 +2084,10 @@
     font-size: var(--t-small, 13px);
     font-weight: 800;
     line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
   .ho-sub {
     font-size: var(--t-micro, 11px);
