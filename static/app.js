@@ -1799,7 +1799,7 @@
             <div class="fca-ico">${icon('messageCircle',26)}</div>
             ${(()=>{const cc=getPostComments(post.id||'').length;return cc?`<span class="fca-count">${esc(String(cc))}</span>`:'';})()}
           </button>
-          <button class="fca-btn" data-action="share">
+          <button class="fca-btn" data-action="share" data-id="${attr(post.id||'')}">
             <div class="fca-ico">${icon('share',24)}</div>
           </button>
           <div class="fca-spacer"></div>
@@ -1953,7 +1953,7 @@
       if(cnt)cnt.textContent=on?'Saved':'Save';
       showToast(on?'Saved to your wishlist':'Removed from saved');
     }
-    if(type==='share')showToast('Link copied');
+    if(type==='share'){const post=feedPostById(id);shareStyleCard('Check out this look on AWEAR',post?(post.caption||('@'+post.user+' on AWEAR')):'Check out AWEAR');}
     if(type==='comment'){
       e.stopPropagation();
       openCommentsSheet(id);

@@ -11,12 +11,12 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-30, run 37)
-- **Task**: INBOX item 3 — low-contrast buttons audit (WCAG check).
-- **Done**: Audited sc-cta/sc-field/sc-header — all correctly tokenized. Found `.avatar-fallback` black-on-black bug: `color:var(--text,#fbfbfd)` = near-black initials on near-black gradient in light editorial theme. Fixed to `color:var(--on-accent,#fff)` (consistent with .dm-head-avatar.avatar-fallback pattern). Also added `color:var(--on-accent,#fff)` to `.pc-avatar` and DS-004 gradient fallbacks (#e8526a,#c4855a). Gabbana 8/10 PASS. check-render PASS. Commit dc70e2d.
-- **Next**: INBOX item 4 — dead buttons audit (click-test verify like/save/share do something).
-- **Prior runs**: run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35).
-- **Prior runs**: run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94).
+## Mark lane — last run (2026-07-30, run 38)
+- **Task**: INBOX item 4 — dead buttons audit (click-test verify like/save/share do something).
+- **Done**: Audited all feed card action buttons. Like/save/comment/report were all properly wired. Found 1 dead button: feed card **share** button showed toast "Link copied" but never touched the clipboard (also missing `data-id`). Fixed: added `data-id` to share button in feedCardHTML; handler now calls `shareStyleCard()` (Web Share API on iOS → clipboard fallback on desktop → toast). check-render PASS. node --check PASS.
+- **Requested** (out-of-lane): `scripts/check-interactions.mjs` needs button click-tests for like/save/share added (steve lane owns scripts/). Steve should add testFeedBtn tests for those 3 buttons.
+- **Next**: INBOX item 5 — remaining UX bugs (stuck overlays on iOS, bottom-sheet safe-area sweep).
+- **Prior runs**: run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94).
 
 ## Steve lane — last run (2026-07-30, run 27)
 - **Task**: Self-heal — test_scan_health_includes_agent_services pre-existing bug (8 consecutive gate rejections labeled as test_profiles_list_contract).
