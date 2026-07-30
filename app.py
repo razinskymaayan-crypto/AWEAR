@@ -2142,8 +2142,13 @@ async def get_profiles(limit: int = 20, offset: int = 0):
     """Return paginated profiles."""
     profiles = _profiles_cache
     total = len(profiles)
+    page = profiles[offset: offset + limit]
+    items = [
+        {**p, "name": p.get("display_name") or p.get("username") or p.get("id", "")}
+        for p in page
+    ]
     return {
-        "items": profiles[offset: offset + limit],
+        "items": items,
         "total": total,
         "limit": limit,
         "offset": offset,
