@@ -779,7 +779,16 @@ async def scan_health(request: Request, probe: int = 0):
         },
         "data_integrity": dict(_data_integrity),
         "agent_services": {
-            "google_available": (send_summary_email is not _google_unavailable),
+            # True only when the module imported AND credentials exist (token file or app-password).
+            # Import alone isn't enough — google_services.py is in the repo so the import always
+            # succeeds, but without creds the calls return None/False at runtime.
+            "google_available": (
+                send_summary_email is not _google_unavailable
+                and (
+                    bool(os.getenv("GMAIL_APP_PASSWORD"))
+                    or os.path.exists("google_token.json")
+                )
+            ),
         },
     }
 

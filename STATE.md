@@ -17,9 +17,10 @@
 - **Next**: INBOX item 2 — stuck overlays sweep (check-interactions.mjs + close-path verification). Or item 3 — low-contrast buttons audit.
 - **Prior runs**: run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94); run 32 — Profile UX sweep (be16bac).
 
-## Steve lane — last run (2026-07-30, run 26)
-- **Task**: Rejection fix — test_profiles_list_contract pre-existing bug (7 consecutive rejection cycles).
-- **Done**: /api/profiles GET now injects `name` field (display_name||username||id) per API contract. One-line change in app.py (line ~2144). Both profile contract+pagination tests pass. Commit: dd2aac6.
+## Steve lane — last run (2026-07-30, run 27)
+- **Task**: Self-heal — test_scan_health_includes_agent_services pre-existing bug (8 consecutive gate rejections labeled as test_profiles_list_contract).
+- **Done**: Fixed `google_available` in /api/scan-health. Was `send_summary_email is not _google_unavailable` — always True because google_services.py is in the repo. Now checks import success AND (GMAIL_APP_PASSWORD or google_token.json). All 213 tests pass.
+- **Root cause note**: The gate's $BASE check flagged ALL new tests that fail on $BASE — including test_profiles_list_contract (which PASSED on merged code). The real failing test was test_scan_health_includes_agent_services.
 - **All INBOX launch infra steps done**: Render (60f159e), Supabase Auth (9667fd0), Postgres _CompatDB (8c8b41), Storage (565f18d).
 - **Next**: INBOX item 2 — resilience sweep: every external-dep path must have try→demo/fallback and scan-health coverage.
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
