@@ -156,3 +156,8 @@ Top-priority defect — before INBOX work.
 These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_profiles_list_contract
 OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
 Top-priority defect — before INBOX work.
+
+## [OPEN] PRODUCT BUG — exposed by steve's own new tests (2026-07-30T06:46:23Z)
+These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_profiles_list_contract
+OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
+Top-priority defect — before INBOX work.
