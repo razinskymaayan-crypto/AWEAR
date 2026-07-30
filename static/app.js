@@ -7358,10 +7358,16 @@
 
   // Global comments bottom sheet — single instance, reused per post
   let _commentsSheet = null;
+  let _commentsBackdrop = null;
   let _commentsPostId = null;
 
   function ensureCommentsSheet() {
     if (_commentsSheet) return _commentsSheet;
+    const backdrop = document.createElement('div');
+    backdrop.className = 'cs-backdrop';
+    backdrop.addEventListener('click', closeCommentsSheet);
+    document.body.appendChild(backdrop);
+    _commentsBackdrop = backdrop;
     const sheet = document.createElement('div');
     sheet.className = 'comments-sheet';
     sheet.innerHTML = `
@@ -7539,6 +7545,8 @@
       ? localComments.map(c => _commentItemHTML(c, creatorHandle)).join('')
       : `<div style="color:var(--muted,#9e99ad);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
     sheet.classList.add('open');
+    if (_commentsBackdrop) _commentsBackdrop.classList.add('show');
+    document.body.classList.add('sheet-open');
 
     // Async API fetch — MERGES server comments ABOVE the local/seeded view.
     // Trap: in the demo the backend store is EMPTY, so a naive "replace with
@@ -7566,6 +7574,8 @@
 
   function closeCommentsSheet() {
     if (_commentsSheet) _commentsSheet.classList.remove('open');
+    if (_commentsBackdrop) _commentsBackdrop.classList.remove('show');
+    document.body.classList.remove('sheet-open');
     _commentsPostId = null;
   }
 
