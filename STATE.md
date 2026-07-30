@@ -11,10 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-30, run 36)
-- **Task**: INBOX item 2 — stuck overlays sweep (close-path verification + fixes).
-- **Done**: (1) comments-sheet: added `.cs-backdrop` (z-index 49, rgba(0,0,0,.62)) wired to closeCommentsSheet on click — proper backdrop tap close path on iOS; body.sheet-open added on open/removed on close (prevents feed scroll behind sheet); DS-004 var(--card,#1e1a22) fallback added. (2) purchase-modal: padding-top changed to max(28px, env(safe-area-inset-top,0px)) — card no longer hides behind iOS notch. check-render PASS, node --check PASS, commit 03f5e2e.
-- **Next**: INBOX item 3 — low-contrast buttons audit (.sc-cta, .sc-field:focus — WCAG check).
+## Mark lane — last run (2026-07-30, run 37)
+- **Task**: INBOX item 3 — low-contrast buttons audit (WCAG check).
+- **Done**: Audited sc-cta/sc-field/sc-header — all correctly tokenized. Found `.avatar-fallback` black-on-black bug: `color:var(--text,#fbfbfd)` = near-black initials on near-black gradient in light editorial theme. Fixed to `color:var(--on-accent,#fff)` (consistent with .dm-head-avatar.avatar-fallback pattern). Also added `color:var(--on-accent,#fff)` to `.pc-avatar` and DS-004 gradient fallbacks (#e8526a,#c4855a). Gabbana 8/10 PASS. check-render PASS. Commit dc70e2d.
+- **Next**: INBOX item 4 — dead buttons audit (click-test verify like/save/share do something).
+- **Prior runs**: run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35).
 - **Prior runs**: run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94).
 
 ## Steve lane — last run (2026-07-30, run 27)
