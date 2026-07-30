@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-30, run 35)
-- **Task**: INBOX item 1 — text truncation sweep (overflow/truncation in outfit/wishlist/home cards).
-- **Done**: 3 CSS fixes in app.css: `.og-outfit-name` min-width+ellipsis (AI outfit names), `.wl-item-name` ellipsis in wishlist row, `.ho-name` -webkit-line-clamp:2 in 132px home outfit cards. check-render PASS, commit 5728519.
-- **Next**: INBOX item 2 — stuck overlays sweep (check-interactions.mjs + close-path verification). Or item 3 — low-contrast buttons audit.
-- **Prior runs**: run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94); run 32 — Profile UX sweep (be16bac).
+## Mark lane — last run (2026-07-30, run 36)
+- **Task**: INBOX item 2 — stuck overlays sweep (close-path verification + fixes).
+- **Done**: (1) comments-sheet: added `.cs-backdrop` (z-index 49, rgba(0,0,0,.62)) wired to closeCommentsSheet on click — proper backdrop tap close path on iOS; body.sheet-open added on open/removed on close (prevents feed scroll behind sheet); DS-004 var(--card,#1e1a22) fallback added. (2) purchase-modal: padding-top changed to max(28px, env(safe-area-inset-top,0px)) — card no longer hides behind iOS notch. check-render PASS, node --check PASS, commit 03f5e2e.
+- **Next**: INBOX item 3 — low-contrast buttons audit (.sc-cta, .sc-field:focus — WCAG check).
+- **Prior runs**: run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94).
 
 ## Steve lane — last run (2026-07-30, run 27)
 - **Task**: Self-heal — test_scan_health_includes_agent_services pre-existing bug (8 consecutive gate rejections labeled as test_profiles_list_contract).
