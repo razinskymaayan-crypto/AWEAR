@@ -1,5 +1,5 @@
 # Definition-of-Done Audit — INBOX "## הושלם" items
-**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) + 2026-07-26 (BH-9 outfit generator + nav fix verified) + 2026-07-27 (BH-10 DS-004 --success sweep + backend resilience note) + 2026-07-28 run-28 (BH-11 nav-bg scanner fix + CLOSET-HYDRATION backend persistence) + 2026-07-28 run-29 (resolve-product buy_route contract + product-match-404 hermetic coverage — 71bb0f2) + 2026-07-29 (BH-12 profile/closet UX sweep — mark run 32, commit be16bac) + 2026-07-29 run-33 (line-number accuracy sweep — items 1/5/6/12/13 refreshed) + 2026-07-30 run-36 (BH-13/14/15 verified — mark runs 33/34/35) by ayalon lane  
+**Audited:** 2026-07-21 (initial) + 2026-07-23 (item #12 + UX bug-hunt §2) + 2026-07-24 (item #13 + BH-5) + 2026-07-25 (item #13 closed + BH-6/7/8) + 2026-07-25 (grep-evidence refresh — items 1/4/5 counts corrected) + 2026-07-26 (BH-9 outfit generator + nav fix verified) + 2026-07-27 (BH-10 DS-004 --success sweep + backend resilience note) + 2026-07-28 run-28 (BH-11 nav-bg scanner fix + CLOSET-HYDRATION backend persistence) + 2026-07-28 run-29 (resolve-product buy_route contract + product-match-404 hermetic coverage — 71bb0f2) + 2026-07-29 (BH-12 profile/closet UX sweep — mark run 32, commit be16bac) + 2026-07-29 run-33 (line-number accuracy sweep — items 1/5/6/12/13 refreshed) + 2026-07-30 run-36 (BH-13/14/15 verified — mark runs 33/34/35) + 2026-07-30 run-37 (line-number drift correction — items 4/11 refreshed) by ayalon lane  
 **Method:** grep / git-log / code-presence checks  
 **Purpose:** Confirm each "done" item has verifiable evidence before investor demo
 
@@ -49,7 +49,7 @@
 - **Commit:** `0fe5377 feat(stories): real 24h ephemeral outfit stories wired to /api/stories + full-screen viewer`
 - **Code:** `static/app.js` — `renderStories` appears 8 times
 - **Gate:** Gabbana 8.5 PASS; screenshot verified; commit confirmed on main
-- **Evidence:** `grep -c "renderStories" static/app.js` → 4 (refactored from 8; function at `app.js:7639`)
+- **Evidence:** `grep -c "renderStories" static/app.js` → 4 (refactored from 8; function at `app.js:7669`)
 
 ### 5. Real Claude-Vision scan e2e ✅ VERIFIED (corrected 2026-07-21)
 - **Backend (DONE):**
@@ -109,7 +109,7 @@
 
 ### 11. Analytics survey (wardrobe statistics) ✅
 - **Code:**
-  - `static/app.js:2854` — `renderAnalytics()`
+  - `static/app.js:2957` — `renderAnalytics()`
   - `static/app.js:2880` — `utilizationPct` (real computation from closet data)
   - `static/app.js:2905–2908` — rewear ratio vs community (disambiguation documented in comment)
   - `static/app.js:2915–2916` — composite `healthScore` (utilization 40% + active-wear 30% + rewear 30%)
