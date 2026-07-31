@@ -112,8 +112,8 @@
   .ig-id { flex: 1; min-width: 0; }
   .ig-name { font-weight: 900; font-size: var(--t-lead,17px); letter-spacing: -.3px; }
   .ig-handle { color: var(--muted); font-size: var(--t-small); font-weight: 600; margin-top: 3px; }
-  .ig-edit { margin-top: 10px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; font-size: var(--t-micro,11px); font-weight: 800; color: var(--text);
-    background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 0 14px;
+  .ig-edit { margin-top: 10px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; font-size: var(--t-micro,11px); font-weight: 800; color: var(--text,#fbfbfd);
+    background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: 10px; padding: 0 14px;
     cursor: pointer; transition: background .15s; }
   .ig-edit:active { background: var(--card-hover, #262030); }
   .ig-stats { display: flex; justify-content: space-around; text-align: center; padding: 6px 0 14px;
@@ -132,14 +132,14 @@
   .ig-nameblock .ig-name-bio { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); margin-top: 4px; line-height: 1.4; text-align: center; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .ig-bio { font-size: var(--t-small); color: var(--muted); line-height: 1.55; padding: 0 2px 16px; }
   .ig-bio b { color: var(--text); font-weight: 800; }
-  .seg { display: flex; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
-    margin: 0 0 18px; background: var(--card); padding: 4px; gap: 4px; }
+  .seg { display: flex; border: 1px solid var(--line,#2e2836); border-radius: 14px; overflow: hidden;
+    margin: 0 0 18px; background: var(--card,#1e1a22); padding: 4px; gap: 4px; }
   .seg button { flex: 1; padding: 10px 4px; background: none; border: 0; cursor: pointer;
-    font-family: inherit; color: var(--muted); font-size: var(--t-caption,12px); font-weight: 800; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .18s, color .18s;
-    min-height: 44px; }
-  .seg button.on { background: var(--text); color: var(--bg);
-    box-shadow: 0 2px 8px rgba(20,17,15,.18); }
+    font-family: inherit; color: var(--fg,#f0ecf5); font-size: var(--t-caption,12px); font-weight: 800; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .18s, color .18s, opacity .18s;
+    min-height: 44px; opacity: .55; }
+  .seg button.on { background: var(--text,#fbfbfd); color: var(--bg,#0e0c0f);
+    box-shadow: 0 2px 8px rgba(20,17,15,.18); opacity: 1; }
   .shelf { margin-bottom: 22px; }
   .shelf-title { display: flex; align-items: center; gap: 7px; font-weight: 900; font-size: var(--t-h3,15px); letter-spacing: -.2px; margin: 0 2px 12px; }
   .shelf-title svg { color: var(--accent2); flex-shrink: 0; }

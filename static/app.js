@@ -1335,7 +1335,7 @@
         :`<span class="ava-ico">${icon('user',38)}</span>`);
     // Avatar-row counts: Followers · Following · Looks · Items
     const followingCount=Object.values(followState).filter(Boolean).length;
-    const followersCount=1240+feed.length*53+wardrobe.length*17;
+    const _uid=getOrCreateUserId();let _uh=0;for(let _i=0;_i<_uid.length;_i++)_uh=(_uh*31+_uid.charCodeAt(_i))>>>0;const followersCount=800+(_uh%1400);
     const season=getActiveSeason();
     closetBody.innerHTML=`
       <div class="ig-head">
