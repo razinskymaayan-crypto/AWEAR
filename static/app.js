@@ -6234,7 +6234,7 @@
         ${suggestions.map(s => `
           <div style="background:var(--card);border-radius:14px;padding:12px 14px;border:1px solid var(--line)">
             <div style="font-size:var(--t-body);font-weight:800;margin-bottom:4px">${esc(s.name)}</div>
-            <div style="font-size:var(--t-micro);color:var(--muted,#8e8e9c);font-weight:600;margin-bottom:6px">${esc(s.reason)}</div>
+            <div style="font-size:var(--t-micro);color:var(--muted,#8a8498);font-weight:600;margin-bottom:6px">${esc(s.reason)}</div>
             <div style="display:flex;gap:8px">
               <span style="padding:4px 10px;background:var(--success-surface);border-radius:20px;font-size:var(--t-micro);font-weight:800;color:var(--success)">${esc(s.action)} • $${s.price_suggestion||0}</span>
             </div>
