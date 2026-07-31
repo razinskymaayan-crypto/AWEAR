@@ -17,6 +17,11 @@
 - **Next**: INBOX item 5 remaining — DS-004/008/009 sweep with gabbana audit.
 - **Prior runs**: run 38 — dead buttons (share wired) 6b4fd5a; run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35).
 
+## Ayalon lane — last run (2026-07-31, run 41)
+- **Task**: DoD audit — sync DEMO_SCRIPT.md status footer with BH-16/17/18/19 + RESILIENCE-2.
+- **Done**: Updated `docs/DEMO_SCRIPT.md` status footer from 2026-07-30→2026-07-31; added 2026-07-31 ships paragraph (items 7-11: BH-16/17/18/19 + RESILIENCE-2); BH count updated to 19 / lanes 22–39. commit 63b1d0e. check-render PASS.
+- **Next**: DoD audit — continue verifying newly completed work as mark/steve lanes ship.
+
 ## Steve lane — last run (2026-07-31, run 29)
 - **Task**: INBOX item 2 resilience — agent_summary returning 500 (not 503) when Google absent.
 - **Done**: Fixed `if not ok` branch in agent_summary: `status_code=500` → `status_code=503`. Updated 2 tests. API now consistent: all Google-absent agent endpoints (summary/schedule/meeting) return 503. commit 39efe7f.
