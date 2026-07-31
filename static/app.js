@@ -1996,6 +1996,11 @@
     if(ic) ic.innerHTML = icon('calendar', 22);
     ov.classList.add('show');
     ov.setAttribute('aria-hidden','false');
+    if(!ov._dragBound) {
+        const sh = ov.querySelector('.create-sheet');
+        if(sh) _addSheetDragDismiss(sh, null, closeCreateMenu);
+        ov._dragBound = true;
+    }
   }
   function closeCreateMenu(){
     const ov = document.getElementById('create-overlay');
