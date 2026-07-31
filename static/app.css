@@ -110,7 +110,7 @@
   .ig-ava .ava-ico { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center;
     justify-content: center; color: var(--accent); }
   .ig-id { flex: 1; min-width: 0; }
-  .ig-name { font-weight: 900; font-size: var(--t-lead,19px); letter-spacing: -.3px; }
+  .ig-name { font-weight: 900; font-size: var(--t-lead,17px); letter-spacing: -.3px; }
   .ig-handle { color: var(--muted); font-size: var(--t-small); font-weight: 600; margin-top: 3px; }
   .ig-edit { margin-top: 10px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; font-size: var(--t-micro,11px); font-weight: 800; color: var(--text);
     background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 0 14px;
@@ -859,7 +859,7 @@
   .match-band-cta:hover, .match-band-cta:active { background: var(--card-hover, #262030);
     border-color: var(--accent2, #c4855a); }
 
-  .item-name { font-weight: 700; font-size: var(--t-lead,19px); letter-spacing: -.3px; line-height: 1.2; }
+  .item-name { font-weight: 700; font-size: var(--t-lead,17px); letter-spacing: -.3px; line-height: 1.2; }
   .item-meta { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 18px; }
   .item-price { font-family: "Poppins", sans-serif; font-size: var(--t-h1,22px); font-weight: 700;
     color: var(--fg, #f0ecf5); }
@@ -1092,7 +1092,7 @@
   .onb-scrim { position: absolute; inset: 0;
     background: linear-gradient(to bottom, rgba(10,10,14,.55) 0%, rgba(10,10,14,.1) 32%, rgba(10,10,14,.6) 64%, rgba(10,10,14,.97) 100%); }
   .onb-top { position: relative; z-index: 2; padding: 18px 20px 0; display: flex; align-items: center; justify-content: space-between; }
-  .onb-logo { font-family: "Poppins", sans-serif; font-weight: 800; font-size: var(--t-lead,19px); letter-spacing: -.3px; color: #fff; }
+  .onb-logo { font-family: "Poppins", sans-serif; font-weight: 800; font-size: var(--t-lead,17px); letter-spacing: -.3px; color: #fff; }
   .onb-content-bottom { position: relative; z-index: 2; margin-top: auto; padding: 0 28px 116px; text-align: start; }
   .onb-kicker { color: rgba(255,255,255,.62); font-size: var(--t-micro); font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 10px; }
   .onb-title { font-size: var(--t-h1,26px); font-weight: 900; letter-spacing: -.5px; line-height: 1.25; margin-bottom: 10px; color: #fff; }
@@ -1121,7 +1121,7 @@
     box-shadow: 0 0 0 1px var(--accent); }
   .quiz-opt .qo-emoji { display: flex; align-items: center; justify-content: center; height: 36px; margin-bottom: 8px; color: var(--accent2); }
   .quiz-opt.sel .qo-emoji { color: var(--accent); }
-  .quiz-opt .qo-text { font-family: "Poppins", sans-serif; font-size: var(--t-lead,19px); font-weight: 800; letter-spacing: -.2px; }
+  .quiz-opt .qo-text { font-family: "Poppins", sans-serif; font-size: var(--t-lead,17px); font-weight: 800; letter-spacing: -.2px; }
   .quiz-opt .qo-label { font-size: var(--t-small); font-weight: 800; color: var(--text); }
   .quiz-opt .qo-sub { font-size: var(--t-micro); color: var(--muted); margin-top: 3px; font-weight: 600; }
 
@@ -1451,7 +1451,7 @@
   .sf-sub { font-size:var(--t-caption,12px); color:var(--muted,#9e99ad); font-weight:700; margin-top:3px; }
   .sf-tabs { display:flex; gap:8px; padding:14px 18px 10px; overflow-x:auto; scrollbar-width:none; flex-shrink:0; -webkit-mask-image:linear-gradient(to right, black calc(100% - 36px), transparent); mask-image:linear-gradient(to right, black calc(100% - 36px), transparent); }
   .sf-tabs::-webkit-scrollbar { display:none; }
-  .sf-tab { padding:7px 16px; border-radius:20px; border:1.5px solid var(--line,#2e2836); font-size:var(--t-caption,12px); font-weight:800; color:var(--muted,#8a8498); background:transparent; font-family:inherit; cursor:pointer; white-space:nowrap; transition:all .18s; min-height:44px; display:inline-flex; align-items:center; }
+  .sf-tab { padding:7px 16px; border-radius:20px; border:1.5px solid var(--line,#2e2836); font-size:var(--t-caption,12px); font-weight:800; color:var(--muted,#9e99ad); background:transparent; font-family:inherit; cursor:pointer; white-space:nowrap; transition:all .18s; min-height:44px; display:inline-flex; align-items:center; }
   .sf-tab.active { background:var(--accent,#e8526a); border-color:var(--accent,#e8526a); color:#fff; }
   .sf-grid { flex:1; overflow-y:auto; padding:0 18px 80px; display:grid; grid-template-columns:1fr 1fr; gap:12px; align-content:start; }
   .sf-card { background:var(--card,#1e1a22); border-radius:18px; overflow:hidden; border:1px solid var(--line,#2e2836); cursor:pointer; transition:transform .15s; }
@@ -1466,10 +1466,10 @@
   .sf-card-brand { font-size:var(--t-micro,11px); color:var(--muted,#9e99ad); font-weight:500; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .sf-price-row { display:flex; align-items:center; gap:6px; margin-top:6px; }
   .sf-price { font-size:var(--t-body,14px); font-weight:900; color:var(--accent,#e8526a); }
-  .sf-orig { font-size:var(--t-micro,11px); color:var(--muted,#8a8498); text-decoration:line-through; }
+  .sf-orig { font-size:var(--t-micro,11px); color:var(--muted,#9e99ad); text-decoration:line-through; }
   .sf-discount { font-size:var(--t-micro,11px); font-weight:900; color:var(--success,#52c97a); }
   .sf-compat { font-size:var(--t-micro,11px); font-weight:700; color:var(--accent2,#c4855a); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .sf-empty { grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--muted,#8a8498); font-size:var(--t-small,13px); font-weight:700; }
+  .sf-empty { grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--muted,#9e99ad); font-size:var(--t-small,13px); font-weight:700; }
 
   /* ---- Compare Before Buy ---- */
   .cmp-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }
@@ -2617,7 +2617,7 @@
   .season-entry-row { display: flex; align-items: center; gap: var(--space-2,8px); }
   .season-entry-icon { color: var(--warning, #e8a84a); display: inline-flex; }
   .season-entry-title { font-size: var(--t-small,13px); font-weight: 700; color: var(--text,#fbfbfd); letter-spacing: -.2px; }
-  .season-entry-sub { font-size: var(--t-micro, 11px); color: var(--muted, #8a8498); font-weight: 600; margin-top: 2px; }
+  .season-entry-sub { font-size: var(--t-micro, 11px); color: var(--muted, #9e99ad); font-weight: 600; margin-top: 2px; }
   .season-entry-arrow { color: var(--muted); flex-shrink: 0; }
 
   /* ---- Season Recap full screen ---- */
