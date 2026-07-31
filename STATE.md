@@ -17,11 +17,11 @@
 - **Next**: INBOX item 5 remaining — DS-004/008/009 sweep with gabbana audit.
 - **Prior runs**: run 38 — dead buttons (share wired) 6b4fd5a; run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35).
 
-## Steve lane — last run (2026-07-31, run 28)
-- **Task**: Self-heal — 8 stale [OPEN] entries in CI_FAILURES.md for test_profiles_list_contract.
-- **Done**: Investigated — commit f051da1 (test contract+pagination for /api/profiles etc.) is already in origin/main; endpoint passes all shape/field assertions via TestClient simulation. Cleared 8 stale [OPEN] entries by replacing with a single [FIXED 2026-07-31] block. No app code change needed.
-- **Next**: INBOX item 2 — resilience sweep: every external-dep path must have try→demo/fallback and scan-health coverage.
-- **Prior runs**: run 27 — fixed scan-health google_available check; runs 20-26 — launch infra (Render, Supabase, Postgres, Storage).
+## Steve lane — last run (2026-07-31, run 29)
+- **Task**: INBOX item 2 resilience — agent_summary returning 500 (not 503) when Google absent.
+- **Done**: Fixed `if not ok` branch in agent_summary: `status_code=500` → `status_code=503`. Updated 2 tests. API now consistent: all Google-absent agent endpoints (summary/schedule/meeting) return 503. commit 39efe7f.
+- **Next**: INBOX item 2 continued — scan remaining ext-dep paths for any remaining 500s; or INBOX item 3 (data-integrity cross-ref app.py↔json).
+- **Prior runs**: run 28 — self-heal stale CI_FAILURES entries; run 27 — fixed scan-health google_available check; runs 20-26 — launch infra (Render, Supabase, Postgres, Storage).
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
 ## Phase status
