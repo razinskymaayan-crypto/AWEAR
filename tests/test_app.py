@@ -2098,12 +2098,12 @@ def test_product_image_with_query_redirects_no_pexels_key(client, monkeypatch):
 # agent endpoints (Google integration absent in CI — ext-dep fallback tests)
 # ---------------------------------------------------------------------------
 
-def test_agent_summary_no_google_creds_returns_500(client, monkeypatch):
-    """send_summary_email returning False (no creds) → HTTP 500 with detail.
+def test_agent_summary_no_google_creds_returns_503(client, monkeypatch):
+    """send_summary_email returning False (no creds) → HTTP 503 with detail.
 
-    FAIL-BEFORE: no test existed; unhandled RuntimeError from _google_unavailable
-    would surface as a test-crashing exception rather than a documented 500.
-    PASS-AFTER: endpoint cleanly raises HTTPException(500) when send returns False.
+    FAIL-BEFORE: returned 500 (wrong status for a service-unavailable condition).
+    PASS-AFTER: endpoint raises HTTPException(503) with "email" in detail —
+    consistent with agent_schedule (returns 503 when Google Calendar is absent).
     """
     monkeypatch.setattr(appmod, "send_summary_email", lambda *a, **k: False)
     body = {
@@ -2113,7 +2113,7 @@ def test_agent_summary_no_google_creds_returns_500(client, monkeypatch):
         "summary": "Weekly sync",
     }
     r = client.post("/api/agent/summary", json=body)
-    assert r.status_code == 500
+    assert r.status_code == 503
     assert "email" in r.json()["detail"].lower()
 
 
@@ -2229,13 +2229,13 @@ def test_agent_summary_raises_exception_returns_503(client, monkeypatch):
     assert "email" in r.json()["detail"].lower()
 
 
-def test_agent_summary_no_google_stub_returns_helpful_500(client):
+def test_agent_summary_no_google_stub_returns_helpful_503(client):
     """_google_unavailable stub (no monkeypatch) must return None, not raise RuntimeError.
 
-    FAIL-BEFORE: stub raised RuntimeError → FastAPI returned generic 500 "Internal Server Error";
-                 the helpful "check GMAIL_APP_PASSWORD" detail was swallowed.
-    PASS-AFTER:  stub returns None → endpoint raises HTTPException(500) with detail containing
-                 'email', so operators know exactly what to configure.
+    FAIL-BEFORE: stub returned None → endpoint raised HTTPException(500); 500 is wrong
+                 for a service-not-configured condition — should be 503 like agent_schedule.
+    PASS-AFTER:  stub returns None → endpoint raises HTTPException(503) with detail containing
+                 'email', consistent with the other Google-absent agent endpoints.
 
     In CI, google_services is absent so send_summary_email IS _google_unavailable; this test
     exercises the real stub path without monkeypatching.
@@ -2247,7 +2247,7 @@ def test_agent_summary_no_google_stub_returns_helpful_500(client):
     # Verify the endpoint produces a helpful detail (not a generic crash message).
     body = {"agent": "jeff", "department": "Product", "attendees": "jeff@awear.app", "summary": "sync"}
     r = client.post("/api/agent/summary", json=body)
-    assert r.status_code == 500
+    assert r.status_code == 503
     detail = r.json().get("detail", "")
     assert "email" in detail.lower(), (
         f"Expected 'email' in detail for helpful error message, got: {detail!r}"

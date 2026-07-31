@@ -952,7 +952,7 @@ async def agent_summary(data: MeetingSummary):
             detail="Email not configured — set GMAIL_APP_PASSWORD in .env to enable agent summaries.",
         )
     if not ok:
-        raise HTTPException(status_code=500, detail="Failed to send email — check GMAIL_APP_PASSWORD in .env")
+        raise HTTPException(status_code=503, detail="Email service unavailable — check GMAIL_APP_PASSWORD in .env")
     return {"status": "sent"}
 
 
