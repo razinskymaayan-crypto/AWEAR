@@ -11,11 +11,12 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-31, run 40)
-- **Task**: DS-004/DS-009 token fallback sweep.
-- **Done**: Fixed 3 violations: (1) `var(--on-accent,#f4f2f7)→#fff` in toast (app.css:473); (2) `var(--muted,#8e8e9c)→#8a8498` in JS inline style (app.js:6237); (3) `.cmp-slot-img font-size: var(--t-display,48px)` removed — DS-009 ghost (container uses productImage()). commit fedd45a. check-render PASS.
-- **Next**: Continue INBOX UX backlog — next unchecked INBOX UX item or MASTER_PLAN item in lane.
-- **Prior runs**: run 39 — iOS sheets drag/safe-area fa40522; run 38 — dead buttons (share wired) 6b4fd5a; run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519).
+## Mark lane — last run (2026-07-31, run 41)
+- **Task**: DS-004 fallback sweep — gabbana audit found wrong token fallbacks on closet screen.
+- **Done**: Fixed 5 violations: (1-4) `var(--t-lead,19px)→17px` in 4 CSS classes (.ig-name, .item-name, .onb-logo, .quiz-opt .qo-text); (5) `var(--muted,#8a8498)→#9e99ad` in 4 CSS + 1 JS (matching awear-tokens.json SoT). commit fc2b585. check-render PASS.
+- **NOTE**: design-tokens.md says --muted:#8a8498 but awear-tokens.json + tokens.css both say #9e99ad — documentation drift, needs reconciliation by founder/jeff.
+- **Next**: Continue gabbana-driven UX polish (closet screen still 5.5/10; remaining items: fake follower formula, edit-profile button contrast, segment tab contrast).
+- **Prior runs**: run 40 — DS-004/DS-009 fedd45a; run 39 — iOS sheets drag/safe-area fa40522; run 38 — dead buttons (share wired) 6b4fd5a; run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e).
 
 ## Ayalon lane — last run (2026-07-31, run 41)
 - **Task**: DoD audit — sync DEMO_SCRIPT.md status footer with BH-16/17/18/19 + RESILIENCE-2.
