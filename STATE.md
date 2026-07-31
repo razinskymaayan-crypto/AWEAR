@@ -11,12 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-30, run 38)
-- **Task**: INBOX item 4 — dead buttons audit (click-test verify like/save/share do something).
-- **Done**: Audited all feed card action buttons. Like/save/comment/report were all properly wired. Found 1 dead button: feed card **share** button showed toast "Link copied" but never touched the clipboard (also missing `data-id`). Fixed: added `data-id` to share button in feedCardHTML; handler now calls `shareStyleCard()` (Web Share API on iOS → clipboard fallback on desktop → toast). check-render PASS. node --check PASS.
-- **Requested** (out-of-lane): `scripts/check-interactions.mjs` needs button click-tests for like/save/share added (steve lane owns scripts/). Steve should add testFeedBtn tests for those 3 buttons.
-- **Next**: INBOX item 5 — remaining UX bugs (stuck overlays on iOS, bottom-sheet safe-area sweep).
-- **Prior runs**: run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35); run 33 — Dead buttons (eb7dc94).
+## Mark lane — last run (2026-07-31, run 39)
+- **Task**: INBOX item 5 — stuck overlays on iOS, bottom-sheet safe-area sweep.
+- **Done**: (1) `openCreateMenu`: added `_addSheetDragDismiss` on first open (`_dragBound` guard) — create-sheet now swipes down to dismiss like every other bottom sheet. (2) `.diary-footer`: bottom padding was `12px 16px`; changed to `12px 16px calc(12px + env(safe-area-inset-bottom, 0px))` — submit button no longer hidden behind iPhone X+ home indicator. Audit confirmed all other sheets already had drag-dismiss + safe-area. commit fa40522. check-render PASS. node --check PASS.
+- **Next**: INBOX item 5 remaining — DS-004/008/009 sweep with gabbana audit.
+- **Prior runs**: run 38 — dead buttons (share wired) 6b4fd5a; run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35).
 
 ## Steve lane — last run (2026-07-30, run 27)
 - **Task**: Self-heal — test_scan_health_includes_agent_services pre-existing bug (8 consecutive gate rejections labeled as test_profiles_list_contract).
