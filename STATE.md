@@ -17,12 +17,11 @@
 - **Next**: INBOX item 5 remaining — DS-004/008/009 sweep with gabbana audit.
 - **Prior runs**: run 38 — dead buttons (share wired) 6b4fd5a; run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35).
 
-## Steve lane — last run (2026-07-30, run 27)
-- **Task**: Self-heal — test_scan_health_includes_agent_services pre-existing bug (8 consecutive gate rejections labeled as test_profiles_list_contract).
-- **Done**: Fixed `google_available` in /api/scan-health. Was `send_summary_email is not _google_unavailable` — always True because google_services.py is in the repo. Now checks import success AND (GMAIL_APP_PASSWORD or google_token.json). All 213 tests pass.
-- **Root cause note**: The gate's $BASE check flagged ALL new tests that fail on $BASE — including test_profiles_list_contract (which PASSED on merged code). The real failing test was test_scan_health_includes_agent_services.
-- **All INBOX launch infra steps done**: Render (60f159e), Supabase Auth (9667fd0), Postgres _CompatDB (8c8b41), Storage (565f18d).
+## Steve lane — last run (2026-07-31, run 28)
+- **Task**: Self-heal — 8 stale [OPEN] entries in CI_FAILURES.md for test_profiles_list_contract.
+- **Done**: Investigated — commit f051da1 (test contract+pagination for /api/profiles etc.) is already in origin/main; endpoint passes all shape/field assertions via TestClient simulation. Cleared 8 stale [OPEN] entries by replacing with a single [FIXED 2026-07-31] block. No app code change needed.
 - **Next**: INBOX item 2 — resilience sweep: every external-dep path must have try→demo/fallback and scan-health coverage.
+- **Prior runs**: run 27 — fixed scan-health google_available check; runs 20-26 — launch infra (Render, Supabase, Postgres, Storage).
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
 ## Phase status
@@ -48,17 +47,3 @@ Two parallel tracks; lanes are RUNNING (not paused), cadence every 2h, model cla
 **Track 1 — LAUNCH INFRA (target: full launch ~2026-08-18, first cohort ~200 users):**
 - Backend LIVE on Render: `https://awear-x4o2.onrender.com` (Capacitor `server.url` points here; app runs on a real iPhone + uploaded to TestFlight as `com.awear.fashion` under Segev Olpak's paid Apple acct; Carmel invited, pending his email accept).
 - Supabase project created; SUPABASE_* + DATABASE_URL set in Render. Agent epic (INBOX ★★★): Auth → Postgres (steve wired `_get_db()` choke-point) → Storage. DECISIONS #17.
-- Image-gen (`/api/generate-garment`, OpenAI, demo-first) built — LIVE call fails (needs OpenAI org-verify + billing); decided match-first + cache for scale; free alt = bg-removal (route B), deferred.
-
-**Track 2 — HARDEN THE AUTONOMY ENGINE (founder: perfect by 2026-07-20 eve, then re-test):**
-Full-pipeline audit done. Fixes shipped by MAIN SESSION (lanes can't touch `.github/`): P0 base-anchor OW-013 (fc6b321 — THE 'nothing lands' bug), ownership-map alignment (05cfba4), P1 rejection-feedback + P2 INBOX/shared + P4 self-heal routing (92b353c). Cadence 6h→2h. Lanes redirected to infra-hardening ONLY (no features) until the re-test.
-- REMAINING: verify the next cycle lands work (gate-ledger); phantom-lane cleanup; GATE 3 determinism; evaluate GitHub-native CODEOWNERS + Merge Queue (strategic simplification).
-
-## Open questions
-See NEEDS_DECISION.md — defaults applied, none blocking. Live founder decisions: OpenAI billing (for live image-gen) · which Apple acct for the real launch (Segev's vs own).
-
-## Test commands (preserve across compaction)
-- Server: `venv312/bin/uvicorn app:app --reload --port 8000`
-- Render check: `npm run check-render`
-- Guards: `bash scripts/guard_checks.sh`
-- Tests/lint: pytest + ruff arrive in Phase 7
