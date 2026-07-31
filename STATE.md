@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-31, run 39)
-- **Task**: INBOX item 5 — stuck overlays on iOS, bottom-sheet safe-area sweep.
-- **Done**: (1) `openCreateMenu`: added `_addSheetDragDismiss` on first open (`_dragBound` guard) — create-sheet now swipes down to dismiss like every other bottom sheet. (2) `.diary-footer`: bottom padding was `12px 16px`; changed to `12px 16px calc(12px + env(safe-area-inset-bottom, 0px))` — submit button no longer hidden behind iPhone X+ home indicator. Audit confirmed all other sheets already had drag-dismiss + safe-area. commit fa40522. check-render PASS. node --check PASS.
-- **Next**: INBOX item 5 remaining — DS-004/008/009 sweep with gabbana audit.
-- **Prior runs**: run 38 — dead buttons (share wired) 6b4fd5a; run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519); run 34 — DS-004 sf-sub/sf-card-brand fallbacks (a004b35).
+## Mark lane — last run (2026-07-31, run 40)
+- **Task**: DS-004/DS-009 token fallback sweep.
+- **Done**: Fixed 3 violations: (1) `var(--on-accent,#f4f2f7)→#fff` in toast (app.css:473); (2) `var(--muted,#8e8e9c)→#8a8498` in JS inline style (app.js:6237); (3) `.cmp-slot-img font-size: var(--t-display,48px)` removed — DS-009 ghost (container uses productImage()). commit fedd45a. check-render PASS.
+- **Next**: Continue INBOX UX backlog — next unchecked INBOX UX item or MASTER_PLAN item in lane.
+- **Prior runs**: run 39 — iOS sheets drag/safe-area fa40522; run 38 — dead buttons (share wired) 6b4fd5a; run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e); run 35 — Text truncation sweep (5728519).
 
 ## Ayalon lane — last run (2026-07-31, run 41)
 - **Task**: DoD audit — sync DEMO_SCRIPT.md status footer with BH-16/17/18/19 + RESILIENCE-2.
