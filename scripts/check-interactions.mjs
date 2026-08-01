@@ -40,25 +40,25 @@ await page.waitForTimeout(1200);
 const results = [];
 
 // Each case: open an overlay via a JS call, then assert the X/close actually dismisses it.
-async function testOverlay(name, sheetId, closeSel, openFn) {
+// sheetSel: plain ID string ('my-id') → getElementById; starts with '.' or '#' → querySelector.
+// Checks both .show (most sheets) and .open (comments-sheet) for open state.
+async function testOverlay(name, sheetSel, closeSel, openFn) {
   try {
     await page.evaluate(openFn);
     // wait for the open animation to settle (a real user taps the X where they SEE it, on a
     // still sheet — not a moving target). Then tap it like a user.
     await page.waitForTimeout(650);
-    // Sheets are hidden by removing the `show` class (a .sheet is always display:flex, moved
-    // off-screen via transform), so `show` — not display — is the real open/closed signal.
-    const isOpen = (id) => {
-      const el = document.getElementById(id);
+    const isOpen = (sel) => {
+      const el = /^[.#[]/.test(sel) ? document.querySelector(sel) : document.getElementById(sel);
       if (!el) return false;
-      if (el.classList.contains('show')) return true;
+      if (el.classList.contains('show') || el.classList.contains('open')) return true;
       const cs = getComputedStyle(el);
       return cs.display !== 'none' && cs.visibility !== 'hidden' && el.getAttribute('aria-hidden') === 'false';
     };
-    const opened = await page.evaluate(isOpen, sheetId);
+    const opened = await page.evaluate(isOpen, sheetSel);
     await page.click(closeSel, { timeout: 2500 });
     await page.waitForTimeout(500);
-    const stillOpen = await page.evaluate(isOpen, sheetId);
+    const stillOpen = await page.evaluate(isOpen, sheetSel);
     const bodyLocked = await page.evaluate(() => document.body.classList.contains('sheet-open'));
     results.push({ name, opened, closed: !stillOpen, unlocked: !bodyLocked });
   } catch (e) {
@@ -75,6 +75,36 @@ await testOverlay('buy-sheet (item)', 'buy-sheet', '#sheet-close', () => {
 // 2) The global Create menu
 await testOverlay('create menu', 'create-overlay', '#create-overlay', () => {
   window.openCreateMenu && openCreateMenu();
+});
+
+// 3) Marketplace filter sheet
+// The sheet lives inside #marketplace .view which is display:none when inactive.
+// position:fixed children are still hidden under a display:none parent, so
+// we must navigate to the marketplace view first.
+await page.evaluate(() => { window.showView && showView('marketplace'); });
+await page.waitForTimeout(400);
+await testOverlay('filter sheet (mp-fsheet)', 'mp-fsheet', '#mp-fsheet-close', () => {
+  window.openMPFilterSheet && openMPFilterSheet();
+});
+
+// 4) Store insight sheet (also inside #marketplace)
+await testOverlay('store insight sheet', 'ms-insight-sheet', '#ms-insight-close', () => {
+  window.openStoreInsight && openStoreInsight();
+});
+
+// 5) Comments sheet (dynamically appended; uses .open class, not .show)
+await testOverlay('comments sheet', '.comments-sheet', '.cs-close-btn', () => {
+  window.openCommentsSheet && openCommentsSheet('post_001');
+});
+
+// 6) Edit profile overlay
+await testOverlay('edit-profile overlay', 'edit-profile-overlay', '#edit-profile-close', () => {
+  window.openEditProfile && openEditProfile();
+});
+
+// 7) Sell-form (purchase-modal) — close via aria-label="Close" X button in header
+await testOverlay('sell-form (purchase-modal)', 'purchase-modal', '#purchase-modal [aria-label="Close"]', () => {
+  window.openSellForm && openSellForm();
 });
 
 await browser.close();
