@@ -2708,6 +2708,29 @@ def test_declutter_unworn_items_returns_suggestions_demo(client):
     assert "price_suggestion" in first
 
 
+def test_declutter_demo_path_sets_last_mode(client):
+    """After a /api/declutter call (CI = no API key → demo fallback),
+    _last_declutter.mode must be 'demo' and scan-health must expose it.
+
+    FAIL-BEFORE: _last_declutter did not exist; scan-health ai_features had no 'declutter' key.
+    PASS-AFTER: demo path sets mode='demo'; scan-health exposes ai_features.declutter.
+    """
+    body = {"wardrobe": [
+        {"name": "Denim Jacket", "category": "outerwear", "wear_count": 0, "price_estimate_usd": 80},
+    ]}
+    client.post("/api/declutter", json=body)
+    r = client.get("/api/scan-health")
+    assert r.status_code == 200
+    health = r.json()
+    assert "ai_features" in health, "ai_features missing from scan-health"
+    assert "declutter" in health["ai_features"], "declutter missing from ai_features"
+    dc = health["ai_features"]["declutter"]
+    assert "last_mode" in dc, "last_mode missing from ai_features.declutter"
+    assert "last_reason" in dc, "last_reason missing from ai_features.declutter"
+    # In CI (no ANTHROPIC_API_KEY) the Claude call raises → demo mode
+    assert dc["last_mode"] == "demo", f"expected demo, got {dc['last_mode']}"
+
+
 # ---------------------------------------------------------------------------
 # Analytics — wear event logging
 # POST /api/analytics/wear

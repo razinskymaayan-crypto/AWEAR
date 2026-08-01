@@ -153,6 +153,7 @@ _last_gen: dict = {"mode": None, "reason": None}
 _last_outfit: dict = {"mode": None, "reason": None}      # tracks last /api/outfit/generate
 _last_stylist: dict = {"mode": None, "reason": None}     # tracks last /api/stylist/chat
 _last_marketplace: dict = {"mode": None, "reason": None} # tracks last /api/marketplace/assist
+_last_declutter: dict = {"mode": None, "reason": None}   # tracks last /api/declutter
 _data_integrity: dict = {
     "products": 0,
     "posts": 0,
@@ -776,6 +777,7 @@ async def scan_health(request: Request, probe: int = 0):
             "outfit":      {"last_mode": _last_outfit["mode"],      "last_reason": _last_outfit["reason"]},
             "stylist":     {"last_mode": _last_stylist["mode"],     "last_reason": _last_stylist["reason"]},
             "marketplace": {"last_mode": _last_marketplace["mode"], "last_reason": _last_marketplace["reason"]},
+            "declutter":   {"last_mode": _last_declutter["mode"],   "last_reason": _last_declutter["reason"]},
         },
         "data_integrity": dict(_data_integrity),
         "agent_services": {
@@ -1218,9 +1220,14 @@ async def smart_declutter(data: DeclutterRequest):
         text = response.content[0].text.strip()
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:]).rstrip("`").strip()
-        return json.loads(text)
+        result = json.loads(text)
+        _last_declutter["mode"] = "live"
+        _last_declutter["reason"] = None
+        return result
     except Exception as e:
-        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
+        logger.warning("declutter Claude error (%s) — using demo fallback", e)
+        _last_declutter["mode"] = "demo"
+        _last_declutter["reason"] = "exception"
         return {"suggestions": [
             {"name": it.get("name","?"), "action": "sell",
              "reason": "never worn",
