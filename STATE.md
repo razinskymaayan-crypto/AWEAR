@@ -17,9 +17,9 @@
 - **Next**: Continue INBOX ★★★★★ UX quality items — text overlap check, remaining bottom-sheet iOS safe-area sweep (mp-fsheet, ms-insight-sheet, diary-sheet, book-sheet).
 - **Prior runs**: run 41 — DS-004 fallback sweep fc2b585; run 40 — DS-004/DS-009 fedd45a; run 39 — iOS sheets drag/safe-area fa40522; run 38 — dead buttons (share wired) 6b4fd5a.
 
-## Ayalon lane — last run (2026-07-31, run 41)
-- **Task**: DoD audit — sync DEMO_SCRIPT.md status footer with BH-16/17/18/19 + RESILIENCE-2.
-- **Done**: Updated `docs/DEMO_SCRIPT.md` status footer from 2026-07-30→2026-07-31; added 2026-07-31 ships paragraph (items 7-11: BH-16/17/18/19 + RESILIENCE-2); BH count updated to 19 / lanes 22–39. commit 63b1d0e. check-render PASS.
+## Ayalon lane — last run (2026-08-01, run 42)
+- **Task**: DoD audit — verify BH-20 (mark run 42, commit 14f53db: closet/profile UX polish Gabbana 6.5→8.0).
+- **Done**: Grep-verified 7 CSS changes in app.css (ig-edit border/font, seg button opacity fog, season-entry-card, ig-headstats). Updated DOD_AUDIT.md (BH-20 row + header + count 20+) and DEMO_SCRIPT.md (date 2026-07-31→2026-08-01 + 2026-08-01 ships paragraph). commit 58caca7. check-render PASS.
 - **Next**: DoD audit — continue verifying newly completed work as mark/steve lanes ship.
 
 ## Steve lane — last run (2026-07-31, run 29)
