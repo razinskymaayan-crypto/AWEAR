@@ -41,7 +41,7 @@
   .notif-item:last-child { border-bottom: none; }
   .notif-item.unread { background: rgba(232,82,106,.06); border-radius: 8px; padding: 8px; margin: 0 -4px; }
   .notif-type { flex-shrink: 0; color: var(--accent, #e8526a); font-size: var(--t-body, 14px); }
-  .notif-text { flex: 1; font-size: var(--t-small, 13px); color: var(--text, #fbfbfd); font-weight: 600; }
+  .notif-text { flex: 1; min-width: 0; font-size: var(--t-small, 13px); color: var(--text, #fbfbfd); font-weight: 600; }
   .notif-time { font-size: var(--t-micro, 11px); color: var(--muted, #9e99ad); white-space: nowrap; }
   .notif-empty { color: var(--muted, #9e99ad); text-align: center; padding: 16px; font-size: var(--t-small, 13px); }
 
@@ -125,7 +125,7 @@
   .ig-headstats { position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); display: flex; justify-content: space-around; text-align: center; gap: 4px; }
   .ig-headstats > div { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
   .ig-headstats b { font-size: var(--t-h2, 18px); font-weight: 900; font-family: "Poppins", sans-serif; }
-  .ig-headstats span { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); font-weight: 700; white-space: nowrap; }
+  .ig-headstats span { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); font-weight: 700; white-space: nowrap; display: block; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   .ig-avacol .ig-nameblock { text-align: center; }
   .ig-avacol .ig-name { font-size: var(--t-lead, 17px); font-weight: 900; letter-spacing: -.3px; line-height: 1.2; }
   .ig-avacol .ig-edit { margin-top: 0; min-width: 160px; }
@@ -208,7 +208,7 @@
   .listing .ic { width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0; font-size: var(--t-h1,24px);
     display: flex; align-items: center; justify-content: center; background: var(--surface); }
   .listing .info { flex: 1; min-width: 0; }
-  .listing .info .nm { font-weight: 800; font-size: var(--t-small,13px); line-height: 1.25; }
+  .listing .info .nm { font-weight: 800; font-size: var(--t-small,13px); line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .listing .info .sub { color: var(--muted); font-size: var(--t-micro); margin-top: 3px; }
   .listing .ask { text-align: end; flex-shrink: 0; }
   .listing .ask .p { font-weight: 900; font-size: 14px; }
@@ -1006,7 +1006,7 @@
   .fc-item:active { transform: scale(.95); background: rgba(255,255,255,.24); }
   .fc-item-ic { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
     background: rgba(255,255,255,.16); display: flex; align-items: center; justify-content: center; }
-  .fc-item-name { font-size: var(--t-caption,12px); font-weight: 800; white-space: nowrap; letter-spacing: -.2px; }
+  .fc-item-name { font-size: var(--t-caption,12px); font-weight: 800; white-space: nowrap; letter-spacing: -.2px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
   .fc-item-price { font-family: "Poppins", sans-serif; font-size: var(--t-caption,12px); font-weight: 800;
     color: rgba(255,255,255,.7); white-space: nowrap; }
   .sheet-buy .sheet-buy-price {
@@ -2582,7 +2582,7 @@
   .jr-label { display: inline-flex; align-items: center; gap: 7px; font-size: var(--t-small,13px); font-weight: 700; color: var(--fg,#f0ecf5); }
   .jr-label svg { color: var(--accent2,#c4855a); }
   .jr-input { background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-sm,10px); padding: 8px 10px; min-height: 40px; font-family: inherit; font-size: var(--t-small,13px); color: var(--fg,#f0ecf5); color-scheme: dark; }
-  .journal-list { overflow-y: auto; flex: 1; padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .journal-list { overflow-y: auto; flex: 1; padding: 4px 16px calc(16px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 10px; }
   .journal-loading { padding: 24px; text-align: center; color: var(--muted,#9e99ad); font-size: var(--t-small,13px); font-weight: 600; }
   .journal-empty { text-align: center; padding: 36px 20px; color: var(--muted,#9e99ad); font-size: var(--t-small,13px); font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .journal-empty .je-sub { font-weight: 500; }
