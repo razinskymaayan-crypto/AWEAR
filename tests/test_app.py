@@ -1906,6 +1906,30 @@ def test_stylist_chat_sets_last_stylist_mode(client):
     assert appmod._last_stylist["mode"] == "demo"
 
 
+def test_stylist_chat_contract_demo_mode(client):
+    """POST /api/stylist/chat returns 200 with {"ok": bool} — never a raw 500.
+
+    FAIL-BEFORE: no shape check; a raised exception would 500 the demo.
+    PASS-AFTER: demo fallback path returns {"ok": False} with status 200.
+    """
+    r = client.post("/api/stylist/chat", json={"question": "What jacket goes with jeans?"})
+    assert r.status_code == 200, f"Expected 200 in demo mode, got {r.status_code}"
+    body = r.json()
+    assert "ok" in body, f"Response must have 'ok' key, got: {body}"
+    # In CI there's no API key, so Claude throws → ok=False; answer is absent
+    assert isinstance(body["ok"], bool)
+
+
+def test_stylist_chat_missing_question_returns_422(client):
+    """POST /api/stylist/chat with no 'question' field returns 422 validation error.
+
+    FAIL-BEFORE: no regression guard on required-field enforcement.
+    PASS-AFTER: FastAPI Pydantic validation rejects the malformed payload.
+    """
+    r = client.post("/api/stylist/chat", json={"wardrobe_context": "blue jeans"})
+    assert r.status_code == 422, f"Expected 422 for missing question, got {r.status_code}"
+
+
 # ---------------------------------------------------------------------------
 # Stories — POST/GET/DELETE contract, TTL filter, ownership guard
 # ---------------------------------------------------------------------------
