@@ -17,11 +17,11 @@
 - **Next**: Continue INBOX ★★★★★ UX quality items — text overlap check, remaining bottom-sheet iOS safe-area sweep (mp-fsheet, ms-insight-sheet, diary-sheet, book-sheet).
 - **Prior runs**: run 41 — DS-004 fallback sweep fc2b585; run 40 — DS-004/DS-009 fedd45a; run 39 — iOS sheets drag/safe-area fa40522; run 38 — dead buttons (share wired) 6b4fd5a.
 
-## Ayalon lane — last run (2026-08-01, run 43)
-- **Task**: DoD audit — verify 3 new steve backend commits (RESILIENCE-2/3 + COMPAT-DB).
-- **Done**: Grep-verified all 3 commits: `40f8669` (_last_declutter tracker + scan-health exposure), `9edb5f0` (stylist/chat contract+edge tests), `11715f8` (_CompatDB Postgres tests). Updated DOD_AUDIT.md (3 new rows + header + progress note). commit 8e0226e. check-render PASS.
-- **Next**: DoD audit — continue verifying newly completed work as mark/steve lanes ship.
-- **Prior runs**: run 42 — BH-20 closet/profile UX polish verified 58caca7.
+## Ayalon lane — last run (2026-08-01, run 44)
+- **Task**: DoD audit — verify 2 new commerce commits (COMMERCE-1 Skimlinks affiliate, COMMERCE-2 Buy EXACT product).
+- **Done**: Grep-verified both commits: `a6e799f` (SKIMLINKS_ID + affiliate_url() + CREATOR_CREDIT_PCT + COMMERCE_PLAN.md), `f3d9a4a` (buyLinkFor/skimWrap/openBuyLink/handleCheckout/handleLookCheckout + source_url threading). Updated DOD_AUDIT.md (2 new rows + header + progress note). commit caa298b. check-render PASS.
+- **Next**: DoD audit — continue verifying newly completed work as commerce/mark/steve lanes ship.
+- **Prior runs**: run 43 — RESILIENCE-2/3 + COMPAT-DB verified 8e0226e; run 42 — BH-20 closet/profile UX polish verified 58caca7.
 
 ## Steve lane — last run (2026-07-31, run 29)
 - **Task**: INBOX item 2 resilience — agent_summary returning 500 (not 503) when Google absent.
