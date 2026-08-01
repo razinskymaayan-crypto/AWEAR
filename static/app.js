@@ -875,10 +875,36 @@
     requestAnimationFrame(step);
   }
 
+  // ---- Real affiliate buy: open the EXACT product in a browser; the user pays with their own
+  // Apple Pay / saved card (that human step is what keeps the affiliate commission valid). ----
+  const SKIMLINKS_ID = '307075X1795350';   // public Skimlinks publisher id — safe client-side
+  function skimWrap(url, xcust){
+    if(!url) return '';
+    if(url.indexOf('skimresources.com')!==-1) return url;         // already wrapped by the backend
+    let link='https://go.skimresources.com/?id='+SKIMLINKS_ID+'&url='+encodeURIComponent(url);
+    if(xcust) link+='&xcust='+encodeURIComponent(xcust);          // xcust = poster attribution -> tokens
+    return link;
+  }
+  function buyLinkFor(it, xcust){
+    if(it && it.source_url) return skimWrap(it.source_url, xcust);          // poster-tagged EXACT product
+    if(it && it.buy_options && it.buy_options[0] && it.buy_options[0].url)  // backend-wrapped option
+      { const u=it.buy_options[0].url; return xcust && u.indexOf('xcust=')===-1 ? u+'&xcust='+encodeURIComponent(xcust) : u; }
+    const q=encodeURIComponent((it && (it.search_query||it.name))||'');
+    return skimWrap('https://www.google.com/search?tbm=shop&q='+q, xcust); // last-resort search
+  }
+  function openBuyLink(url){
+    if(!url) return;
+    try{ if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser){
+      window.Capacitor.Plugins.Browser.open({url}); return; } }catch(e){}
+    window.open(url, '_blank', 'noopener');                       // web / Safari: in-app-ish new tab
+  }
+
   // ---- In-App Checkout ----
   function handleCheckout() {
     if (!_checkoutCtx || !_checkoutCtx.it) return;
     const {it, influencerUser} = _checkoutCtx;
+    // REAL buy: open the exact product via the affiliate link (xcust carries the poster for tokens).
+    openBuyLink(buyLinkFor(it, influencerUser || ''));
     sheetFooter.innerHTML = `<div class="checkout-processing"><div class="co-spin"></div><div class="co-label">Placing your order…</div></div>`;
     // In-app order via POST /api/orders. kind=preloved (8% AWEAR commission, P2P) vs
     // retail (dropshipping/affiliate facade). client_ref makes double-taps idempotent.
@@ -925,6 +951,10 @@
   function handleLookCheckout() {
     if (!_checkoutCtx || !_checkoutCtx.items) return;
     const {items, influencerUser, totalPrice} = _checkoutCtx;
+    // REAL buy: open the highest-value item's exact product page (a look = several retailers, so we
+    // lead with the priciest piece; per-item Buy covers the rest). xcust carries the poster for tokens.
+    const lead = (items||[]).slice().sort((a,b)=>(Number(b.price_estimate_usd||b.price||0))-(Number(a.price_estimate_usd||a.price||0)))[0];
+    if(lead) openBuyLink(buyLinkFor(lead, influencerUser || ''));
     sheetFooter.innerHTML = `<div class="checkout-processing"><div class="co-spin"></div><div class="co-label">Placing your order…</div></div>`;
     // In-app order — the whole look as a single retail order. client_ref (item count +
     // total in a 4s window) makes double-taps idempotent server-side.
@@ -1424,7 +1454,7 @@
     const post={ts:Date.now(),id:'mine_'+Date.now(),photo:scan.photo||null,
       caption:meta.overall_style||'My look',occasion:meta.occasion||'',
       item_count:(scan.items||[]).length,look_total_usd:meta.look_total_usd||0,
-      items:(scan.items||[]).map(it=>({category:it.category,name:it.name,price_estimate_usd:it.price_estimate_usd,buy_options:it.buy_options||[],search_query:it.search_query})),
+      items:(scan.items||[]).map(it=>({category:it.category,name:it.name,price_estimate_usd:it.price_estimate_usd,buy_options:it.buy_options||[],search_query:it.search_query,source_url:it.source_url||null})),
       tags:(scan.items||[]).reduce((acc,it)=>{(it.style_tags||[]).forEach(t=>acc.push(t));if(it.category)acc.push(it.category);return acc;},[])};
     const feed=loadFeedPosts();feed.unshift(post);saveFeedPosts(feed);
     showToast('Look shared to the feed');showView('feed');
