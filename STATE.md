@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-01, run 42)
-- **Task**: Closet/profile screen UX polish — Gabbana fresh audit (6.5/10) → fix all P0/P1 findings → 8.0/10 PASS.
-- **Done**: commit 14f53db. (1) ig-edit border: invisible 1px --line → 1.5px color-mix(text 20%, transparent) — visible in both themes; (2) ig-edit font-size: 11px→13px; (3) span→button[type=button] for accessibility; (4) ig-avacol .ig-edit min-width:160px; (5) seg button: opacity:.55 fog removed → explicit color:var(--muted,#9e99ad); (6) season-entry-card: transparent→var(--card) with DS-004 fallback; (7) ig-headstats span: font-size 11px→12px + DS-004 fallbacks. check-render PASS.
-- **Next**: Continue INBOX ★★★★★ UX quality items — text overlap check, remaining bottom-sheet iOS safe-area sweep (mp-fsheet, ms-insight-sheet, diary-sheet, book-sheet).
-- **Prior runs**: run 41 — DS-004 fallback sweep fc2b585; run 40 — DS-004/DS-009 fedd45a; run 39 — iOS sheets drag/safe-area fa40522; run 38 — dead buttons (share wired) 6b4fd5a.
+## Mark lane — last run (2026-08-01, run 43)
+- **Task**: Text truncation + journal iOS safe-area gaps — gabbana audit found 5 structural CSS gaps.
+- **Done**: commit 8c05be3. (1) notif-text: min-width:0 added — timestamp can't be pushed off-screen; (2) ig-headstats span: display:block+overflow:hidden+ellipsis+max-width:100% — stat labels defensive-truncate; (3) listing .nm: nowrap+overflow:hidden+ellipsis — long For Sale names truncate instead of wrapping; (4) fc-item-name: max-width:140px+ellipsis — tagged-item pills capped; (5) journal-list: padding-bottom += env(safe-area-inset-bottom,0px) — last journal entry no longer hidden under iPhone home indicator. check-render PASS.
+- **Next**: Continue INBOX ★★★★★ UX quality items — remaining truncation/overlap sweep (heart-burst sizing inversion DS-009 P2; more screens); or next INBOX item.
+- **Prior runs**: run 42 — closet/profile UX polish 14f53db; run 41 — DS-004 fallback sweep fc2b585; run 40 — DS-004/DS-009 fedd45a; run 39 — iOS sheets drag/safe-area fa40522.
 
 ## Ayalon lane — last run (2026-08-01, run 44)
 - **Task**: DoD audit — verify 2 new commerce commits (COMMERCE-1 Skimlinks affiliate, COMMERCE-2 Buy EXACT product).
