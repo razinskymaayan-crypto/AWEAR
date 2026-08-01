@@ -3,6 +3,7 @@
 > **CANONICAL SOURCE** — הוסף כאן בלבד. Archive → `activity_log_archive.md`. Worktree copies = read-only snapshots, לא לכתיבה.
 > פורמט: `| YYYY-MM-DD | agent | branch/file | status | short description |`
 
+| 2026-08-01 | sam | auto/steve / app.py + tests/test_app.py | done | Hardening: /api/declutter tracks live/demo mode in _last_declutter; exposed under ai_features.declutter in GET /api/scan-health. Two regression tests added. commit 40f8669. |
 | 2026-07-31 | steve | auto/steve / .claude/agents/knowledge/CI_FAILURES.md + STATE.md | done | Self-heal run 28: cleared 8 stale [OPEN] entries (test_profiles_list_contract) — commit f051da1 already in origin/main, test passes via TestClient simulation. No app code change. |
 | 2026-07-31 | mark | auto/mark / static/app.css + static/app.js | done | DS-004 fallback sweep (gabbana audit): var(--t-lead,19px) to 17px in 4 CSS classes; var(--muted,#8a8498) to #9e99ad in 4 CSS + 1 JS. commit fc2b585 check-render PASS. |
 | 2026-07-28 | steve | auto/steve / .claude/agents/knowledge/CI_FAILURES.md + STATE.md | done | Self-heal run 23: resolved committed git merge-conflict markers in CI_FAILURES.md -- collapsed 9 stale [OPEN]+[UNRESOLVED] entries into [FIXED 2026-07-28]; code fixes (d148c50+a6c691f+3db5bb9) already on main, 6 tests pass. |
