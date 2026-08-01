@@ -325,7 +325,10 @@ SYSTEM_PROMPT = (
 # across the whole app monetizes — no Zara/ASOS approval required to launch.
 # ---------------------------------------------------------------------------
 
-AFFILIATE_TAG = "awear"  # replace with the real network publisher id once signed
+# Skimlinks publisher id (from the account's JS snippet). PUBLIC by design — it ships in client-side
+# JS on every page — so it is safe in source. The Skimlinks *API key* (for reading conversion reports
+# to credit posters) is SECRET and belongs in .env / GitHub Secrets, never here.
+SKIMLINKS_ID = "307075X1795350"
 
 # Resale / commission economics — canonicalized per Ayalon's product decision
 # (agents/ayalon_product_decisions_2026-06-18.md, decision #3). These were previously
@@ -392,16 +395,24 @@ RETAILERS = [
 ]
 
 
-def affiliate_url(url: str) -> str:
-    """Single monetization hook. Swap raw link -> affiliate network deep-link here."""
-    sep = "&" if "?" in url else "?"
-    return f"{url}{sep}aff={AFFILIATE_TAG}"
+def affiliate_url(url: str, xcust: str = "") -> str:
+    """Single monetization hook: wrap a real merchant URL in a Skimlinks deep-link so a referred
+    purchase pays AWEAR a commission. `xcust` is our SubID (e.g. "poster_id:post_id") — Skimlinks
+    echoes it back in the conversion report, which is how we attribute a sale to the poster who then
+    earns tokens (CREATOR_CREDIT_PCT). NOTE: Skimlinks monetizes MERCHANT links, not search-engine
+    pages — the real earnings come from per-product URLs added via poster-side tagging; the search
+    fallbacks below are wrapped for correctness but earn little."""
+    enc = urllib.parse.quote(url, safe="")
+    link = f"https://go.skimresources.com/?id={SKIMLINKS_ID}&url={enc}"
+    if xcust:
+        link += f"&xcust={urllib.parse.quote(xcust, safe='')}"
+    return link
 
 
-def build_buy_options(query: str) -> list[dict]:
+def build_buy_options(query: str, xcust: str = "") -> list[dict]:
     q = urllib.parse.quote(query)
     return [
-        {"retailer": name, "scope": scope, "url": affiliate_url(tmpl.format(q=q))}
+        {"retailer": name, "scope": scope, "url": affiliate_url(tmpl.format(q=q), xcust)}
         for name, tmpl, scope in RETAILERS
     ]
 
