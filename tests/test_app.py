@@ -1420,6 +1420,127 @@ def test_database_url_postgres_dialect_selected(monkeypatch):
     db._conn.close()
 
 
+def test_compat_db_postgres_qmark_to_percent_s_translation():
+    """_CompatDB.execute() replaces ? placeholders with %s for psycopg2.
+
+    FAIL-BEFORE: no test existed — a regex change or refactor could silently
+    break all Postgres queries.  PASS-AFTER: translation verified via mock cursor.
+    """
+    import app as app_module
+
+    captured = {}
+
+    class _FakeCursor:
+        closed = False
+        description = None
+        rowcount = 0
+
+        def execute(self, sql, params=None):
+            captured["sql"] = sql
+            captured["params"] = params
+
+        def fetchone(self):
+            return None
+
+        def fetchall(self):
+            return []
+
+        def close(self):
+            pass
+
+    class _FakeConn:
+        def cursor(self, cursor_factory=None):
+            return _FakeCursor()
+
+        def commit(self):
+            pass
+
+        def rollback(self):
+            pass
+
+        def close(self):
+            pass
+
+    import sys
+    from types import ModuleType
+
+    # Inject a fake psycopg2.extras module so the lazy import inside execute() resolves.
+    fake_psycopg2 = ModuleType("psycopg2")
+    fake_extras = ModuleType("psycopg2.extras")
+    fake_extras.RealDictCursor = object  # sentinel — just needs to exist
+    fake_psycopg2.extras = fake_extras
+    sys.modules.setdefault("psycopg2", fake_psycopg2)
+    sys.modules.setdefault("psycopg2.extras", fake_extras)
+
+    conn = _FakeConn()
+    db = app_module._CompatDB(conn, "postgres")
+    db.execute(
+        "SELECT * FROM closet_items WHERE user_key = ? AND client_ref = ?",
+        ("u_test", "ref_123"),
+    )
+
+    assert "?" not in captured["sql"], "? placeholders must be replaced before reaching psycopg2"
+    assert captured["sql"].count("%s") == 2, "both ? placeholders must become %s"
+    assert captured["params"] == ("u_test", "ref_123"), "params must be passed through unchanged"
+
+
+def test_compat_db_postgres_no_params_passes_none():
+    """_CompatDB.execute() passes None (not an empty tuple) for param-less queries.
+
+    psycopg2 rejects an empty tuple as params but accepts None.
+    FAIL-BEFORE: no test existed.  PASS-AFTER: None-for-no-params proven.
+    """
+    import app as app_module
+    import sys
+    from types import ModuleType
+
+    captured = {}
+
+    class _FakeCursor:
+        closed = False
+        description = None
+        rowcount = 0
+
+        def execute(self, sql, params=None):
+            captured["sql"] = sql
+            captured["params"] = params
+
+        def fetchone(self):
+            return None
+
+        def fetchall(self):
+            return []
+
+        def close(self):
+            pass
+
+    class _FakeConn:
+        def cursor(self, cursor_factory=None):
+            return _FakeCursor()
+
+        def commit(self):
+            pass
+
+        def rollback(self):
+            pass
+
+        def close(self):
+            pass
+
+    fake_psycopg2 = ModuleType("psycopg2")
+    fake_extras = ModuleType("psycopg2.extras")
+    fake_extras.RealDictCursor = object
+    fake_psycopg2.extras = fake_extras
+    sys.modules.setdefault("psycopg2", fake_psycopg2)
+    sys.modules.setdefault("psycopg2.extras", fake_extras)
+
+    conn = _FakeConn()
+    db = app_module._CompatDB(conn, "postgres")
+    db.execute("SELECT 1")  # no params
+
+    assert captured["params"] is None, "_CompatDB must pass None (not empty tuple) for param-less queries"
+
+
 # --------------------------------------------------------------------------- #
 # Follow / unfollow — social graph
 # --------------------------------------------------------------------------- #
