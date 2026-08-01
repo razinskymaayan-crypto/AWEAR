@@ -11,12 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-07-31, run 41)
-- **Task**: DS-004 fallback sweep — gabbana audit found wrong token fallbacks on closet screen.
-- **Done**: Fixed 5 violations: (1-4) `var(--t-lead,19px)→17px` in 4 CSS classes (.ig-name, .item-name, .onb-logo, .quiz-opt .qo-text); (5) `var(--muted,#8a8498)→#9e99ad` in 4 CSS + 1 JS (matching awear-tokens.json SoT). commit fc2b585. check-render PASS.
-- **NOTE**: design-tokens.md says --muted:#8a8498 but awear-tokens.json + tokens.css both say #9e99ad — documentation drift, needs reconciliation by founder/jeff.
-- **Next**: Continue gabbana-driven UX polish (closet screen still 5.5/10; remaining items: fake follower formula, edit-profile button contrast, segment tab contrast).
-- **Prior runs**: run 40 — DS-004/DS-009 fedd45a; run 39 — iOS sheets drag/safe-area fa40522; run 38 — dead buttons (share wired) 6b4fd5a; run 37 — avatar contrast dc70e2d; run 36 — comments-sheet + purchase-modal (03f5e2e).
+## Mark lane — last run (2026-08-01, run 42)
+- **Task**: Closet/profile screen UX polish — Gabbana fresh audit (6.5/10) → fix all P0/P1 findings → 8.0/10 PASS.
+- **Done**: commit 14f53db. (1) ig-edit border: invisible 1px --line → 1.5px color-mix(text 20%, transparent) — visible in both themes; (2) ig-edit font-size: 11px→13px; (3) span→button[type=button] for accessibility; (4) ig-avacol .ig-edit min-width:160px; (5) seg button: opacity:.55 fog removed → explicit color:var(--muted,#9e99ad); (6) season-entry-card: transparent→var(--card) with DS-004 fallback; (7) ig-headstats span: font-size 11px→12px + DS-004 fallbacks. check-render PASS.
+- **Next**: Continue INBOX ★★★★★ UX quality items — text overlap check, remaining bottom-sheet iOS safe-area sweep (mp-fsheet, ms-insight-sheet, diary-sheet, book-sheet).
+- **Prior runs**: run 41 — DS-004 fallback sweep fc2b585; run 40 — DS-004/DS-009 fedd45a; run 39 — iOS sheets drag/safe-area fa40522; run 38 — dead buttons (share wired) 6b4fd5a.
 
 ## Ayalon lane — last run (2026-07-31, run 41)
 - **Task**: DoD audit — sync DEMO_SCRIPT.md status footer with BH-16/17/18/19 + RESILIENCE-2.
