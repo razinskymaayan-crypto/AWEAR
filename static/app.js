@@ -1345,7 +1345,7 @@
             <div class="ig-name">${esc(prof.name||'My Style')}</div>
             ${prof.bio?`<div class="ig-name-bio">${esc(prof.bio)}</div>`:''}
           </div>
-          <span class="ig-edit" id="edit-profile-btn">Edit profile</span>
+          <button class="ig-edit" id="edit-profile-btn" type="button">Edit profile</button>
         </div>
         <div class="ig-headmain">
           <div class="ig-headstats">

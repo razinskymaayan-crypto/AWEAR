@@ -112,8 +112,8 @@
   .ig-id { flex: 1; min-width: 0; }
   .ig-name { font-weight: 900; font-size: var(--t-lead,17px); letter-spacing: -.3px; }
   .ig-handle { color: var(--muted); font-size: var(--t-small); font-weight: 600; margin-top: 3px; }
-  .ig-edit { margin-top: 10px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; font-size: var(--t-micro,11px); font-weight: 800; color: var(--text,#fbfbfd);
-    background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: 10px; padding: 0 14px;
+  .ig-edit { margin-top: 10px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; font-size: var(--t-small,13px); font-weight: 800; color: var(--text,#fbfbfd);
+    background: var(--card,#1e1a22); border: 1.5px solid color-mix(in srgb, var(--text,#fbfbfd) 20%, transparent); border-radius: 10px; padding: 0 14px;
     cursor: pointer; transition: background .15s; }
   .ig-edit:active { background: var(--card-hover, #262030); }
   .ig-stats { display: flex; justify-content: space-around; text-align: center; padding: 6px 0 14px;
@@ -125,21 +125,21 @@
   .ig-headstats { position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); display: flex; justify-content: space-around; text-align: center; gap: 4px; }
   .ig-headstats > div { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
   .ig-headstats b { font-size: var(--t-h2, 18px); font-weight: 900; font-family: "Poppins", sans-serif; }
-  .ig-headstats span { font-size: var(--t-micro,11px); color: var(--muted); font-weight: 700; white-space: nowrap; }
+  .ig-headstats span { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); font-weight: 700; white-space: nowrap; }
   .ig-avacol .ig-nameblock { text-align: center; }
   .ig-avacol .ig-name { font-size: var(--t-lead, 17px); font-weight: 900; letter-spacing: -.3px; line-height: 1.2; }
-  .ig-avacol .ig-edit { margin-top: 0; }
+  .ig-avacol .ig-edit { margin-top: 0; min-width: 160px; }
   .ig-nameblock .ig-name-bio { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); margin-top: 4px; line-height: 1.4; text-align: center; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .ig-bio { font-size: var(--t-small); color: var(--muted); line-height: 1.55; padding: 0 2px 16px; }
   .ig-bio b { color: var(--text); font-weight: 800; }
   .seg { display: flex; border: 1px solid var(--line,#2e2836); border-radius: 14px; overflow: hidden;
     margin: 0 0 18px; background: var(--card,#1e1a22); padding: 4px; gap: 4px; }
   .seg button { flex: 1; padding: 10px 4px; background: none; border: 0; cursor: pointer;
-    font-family: inherit; color: var(--fg,#f0ecf5); font-size: var(--t-caption,12px); font-weight: 800; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .18s, color .18s, opacity .18s;
-    min-height: 44px; opacity: .55; }
+    font-family: inherit; color: var(--muted,#9e99ad); font-size: var(--t-caption,12px); font-weight: 800; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .18s, color .18s;
+    min-height: 44px; }
   .seg button.on { background: var(--text,#fbfbfd); color: var(--bg,#0e0c0f);
-    box-shadow: 0 2px 8px rgba(20,17,15,.18); opacity: 1; }
+    box-shadow: 0 2px 8px rgba(20,17,15,.18); }
   .shelf { margin-bottom: 22px; }
   .shelf-title { display: flex; align-items: center; gap: 7px; font-weight: 900; font-size: var(--t-h3,15px); letter-spacing: -.2px; margin: 0 2px 12px; }
   .shelf-title svg { color: var(--accent2); flex-shrink: 0; }
@@ -2611,14 +2611,14 @@
   .cr-x:active { background: var(--card-hover,#262030); }
 
   /* ---- Season Entry Card (profile) ---- */
-  .season-entry-card { background: transparent; border: 1px solid var(--line); border-radius: var(--r-pill,999px); padding: var(--space-2,8px) var(--space-3,12px); margin: 0 16px 12px; cursor: pointer; min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2,8px); transition: background .15s, border-color .15s; }
+  .season-entry-card { background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: var(--space-2,8px) var(--space-3,12px); margin: 0 16px 12px; cursor: pointer; min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2,8px); transition: background .15s, border-color .15s; }
   .season-entry-card:active { background: var(--card-hover); }
   .season-entry-left { display: flex; flex-direction: column; gap: var(--space-1,4px); }
   .season-entry-row { display: flex; align-items: center; gap: var(--space-2,8px); }
   .season-entry-icon { color: var(--warning, #e8a84a); display: inline-flex; }
   .season-entry-title { font-size: var(--t-small,13px); font-weight: 700; color: var(--text,#fbfbfd); letter-spacing: -.2px; }
   .season-entry-sub { font-size: var(--t-micro, 11px); color: var(--muted, #9e99ad); font-weight: 600; margin-top: 2px; }
-  .season-entry-arrow { color: var(--muted); flex-shrink: 0; }
+  .season-entry-arrow { color: var(--muted,#9e99ad); flex-shrink: 0; }
 
   /* ---- Season Recap full screen ---- */
   #season-recap { overflow-y: auto; background: var(--bg,#0e0c0f); }
