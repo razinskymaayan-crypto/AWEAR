@@ -23,11 +23,11 @@
 - **Next**: DoD audit — continue verifying newly completed work as commerce/mark/steve lanes ship.
 - **Prior runs**: run 43 — RESILIENCE-2/3 + COMPAT-DB verified 8e0226e; run 42 — BH-20 closet/profile UX polish verified 58caca7.
 
-## Steve lane — last run (2026-08-02, run 30)
-- **Task**: INBOX item 1 (test coverage) — affiliate_url/build_buy_options (Skimlinks monetization, commit a6e799f) had zero test coverage.
-- **Done**: 7 hermetic contract tests added to tests/test_app.py: URL wrapping, xcust SubID encoding (%3A), no-xcust omission, retailer count, required fields (retailer/scope/url), Skimlinks wrapping for all retailers, xcust propagation to all URLs. commit 91be81f.
-- **Next**: INBOX item 2 continued — scan remaining ext-dep paths for resilience gaps; or INBOX item 3 (data-integrity cross-ref app.py↔json); or Supabase Auth frontend wiring (mark's lane).
-- **Prior runs**: run 29 — agent_summary 500→503; run 28 — self-heal stale CI_FAILURES; run 27 — scan-health google_available; runs 20-26 — launch infra (Render, Supabase, Postgres, Storage).
+## Steve lane — last run (2026-08-02, run 31)
+- **Task**: INBOX resilience item — /api/weather raised HTTP 502 on open-meteo failure; fixed to return stale cache or demo fallback instead.
+- **Done**: commit dd0689d. Added _WEATHER_DEMO constant + _last_weather diagnostic dict; updated /api/weather except block (stale cache → demo); exposed in /api/scan-health. Updated test_weather_urlerror_returns_502 → test_weather_urlerror_returns_demo_fallback; added test_weather_urlerror_with_stale_cache_returns_stale. check-render PASS.
+- **Next**: INBOX resilience item 3 (data-integrity cross-ref app.py↔json) or Supabase epic.
+- **Prior runs**: run 30 — Skimlinks contract tests 91be81f; run 29 — agent_summary 500→503; run 28 — self-heal stale CI_FAILURES; run 27 — scan-health google_available; runs 20-26 — launch infra.
 - **Status**: All Supabase epic items shipped (Render ✓, JWT auth ✓, _CompatDB Postgres ✓, Storage ✓). Test suite 225 tests, 93% route coverage (5 ext_dep).
 - **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
 
