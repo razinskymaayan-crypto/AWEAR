@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-02, run 47)
-- **Task**: Fix match-ring "%" display — was floating 27px above the number due to align-self:flex-start+margin-top:6px on .match-band-pct; changed to inline-centered with color:inherit so "90%" reads as one unified green unit.
-- **Done**: commit 15f12d4. 2-line CSS change in static/app.css. check-render PASS, Gabbana 8.5/10 PASS.
-- **Next**: Continue INBOX ★★★★★ UX quality items — further WOW flow polish. Note: check-interactions.mjs doesn't test diary/book sheets yet — request steve lane to extend scripts/check-interactions.mjs.
-- **Prior runs**: run 46 — fix genImage persist to closet 3c4d18d; run 45 — extend check-interactions.mjs to 7 overlays 3546b72; run 44 — DS-009/DS-004 icon container cleanup bd271d3; run 43 — text truncation + journal safe-area 8c05be3.
+## Mark lane — last run (2026-08-02, run 48)
+- **Task**: Commerce — per-item Buy button in look-sheet (INBOX ★★★★★ 2026-08-02 item #1).
+- **Done**: commit 54ae5f6. Each item row in look-sheet now has an arrowOut-icon Buy pill that calls buyLinkFor(item, influencerUser) → openBuyLink. Icon arrowOut (not bag) distinguishes per-item "open in store" from footer "Buy This Look" bag CTA. CSS fixes: border:0, cursor:pointer, min-height:44px, transform on :active, proper token fallbacks. Gabbana 8/10 PASS.
+- **Next**: INBOX commerce item #2 — 3-tier item status (✅ Buyable / 🔄 Find Similar / ♻️ Resale) per item in look-sheet. Or INBOX commerce item #3 — source-link UI prominence in scan-confirm.
+- **Prior runs**: run 47 — fix match-ring % display 15f12d4; run 46 — fix genImage persist to closet 3c4d18d; run 45 — extend check-interactions.mjs 3546b72; run 44 — DS-009/DS-004 icon container cleanup bd271d3.
 
 ## Ayalon lane — last run (2026-08-01, run 44)
 - **Task**: DoD audit — verify 2 new commerce commits (COMMERCE-1 Skimlinks affiliate, COMMERCE-2 Buy EXACT product).
