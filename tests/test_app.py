@@ -3407,3 +3407,104 @@ def test_profiles_list_pagination(client):
     assert d["limit"] == 1, f"limit must echo 1, got {d['limit']}"
     assert d["offset"] == 0, f"offset must echo 0, got {d['offset']}"
     assert len(d["items"]) <= 1, f"items must be at most 1, got {len(d['items'])}"
+
+
+# --------------------------------------------------------------------------- #
+# Skimlinks affiliate URL contract — monetization wiring (commit a6e799f)
+# --------------------------------------------------------------------------- #
+
+_affiliate_url = appmod.affiliate_url
+_build_buy_options = appmod.build_buy_options
+_SKIMLINKS_ID = appmod.SKIMLINKS_ID
+_RETAILERS = appmod.RETAILERS
+
+
+def test_affiliate_url_wraps_in_skimlinks():
+    """affiliate_url() wraps a merchant URL in a Skimlinks deep-link.
+
+    FAIL-BEFORE: function did not exist (added in commit a6e799f).
+    PASS-AFTER: output contains Skimlinks domain + publisher id + encoded URL.
+    """
+    raw = "https://www.asos.com/search/?q=white+tee"
+    result = _affiliate_url(raw)
+
+    assert "go.skimresources.com" in result, f"Skimlinks domain missing: {result}"
+    assert f"id={_SKIMLINKS_ID}" in result, f"Publisher id missing: {result}"
+    assert "https%3A%2F%2Fwww.asos.com" in result, f"Encoded URL missing: {result}"
+
+
+def test_affiliate_url_xcust_is_appended_and_encoded():
+    """affiliate_url() appends a URL-encoded xcust SubID when provided.
+
+    FAIL-BEFORE: function did not exist.
+    PASS-AFTER: xcust param present and colon is percent-encoded (%3A).
+    """
+    result = _affiliate_url("https://www.zara.com/search?q=jacket", xcust="poster_01:post_99")
+    assert "xcust=poster_01%3Apost_99" in result, (
+        f"xcust must be present and colon encoded as %3A: {result}"
+    )
+
+
+def test_affiliate_url_no_xcust_omits_param():
+    """affiliate_url() without xcust does not include xcust in the link.
+
+    FAIL-BEFORE: function did not exist.
+    PASS-AFTER: xcust absent so Skimlinks doesn't receive a blank SubID.
+    """
+    result = _affiliate_url("https://www.asos.com/search/?q=jeans")
+    assert "xcust=" not in result, f"xcust should be absent when not supplied: {result}"
+
+
+def test_build_buy_options_returns_all_retailers():
+    """build_buy_options() returns one entry per entry in RETAILERS.
+
+    FAIL-BEFORE: function did not exist.
+    PASS-AFTER: len(result) == len(RETAILERS).
+    """
+    opts = _build_buy_options("white linen blazer")
+    assert len(opts) == len(_RETAILERS), (
+        f"Expected {len(_RETAILERS)} retailers, got {len(opts)}"
+    )
+
+
+def test_build_buy_options_each_item_has_required_fields():
+    """build_buy_options() items each have retailer, scope, and url.
+
+    FAIL-BEFORE: function did not exist.
+    PASS-AFTER: all three keys present and non-empty for every entry.
+    """
+    opts = _build_buy_options("black jeans")
+    for opt in opts:
+        assert "retailer" in opt, f"missing 'retailer' key: {opt}"
+        assert "scope" in opt, f"missing 'scope' key: {opt}"
+        assert "url" in opt, f"missing 'url' key: {opt}"
+        assert opt["retailer"], "retailer name must be non-empty"
+        assert opt["url"], "url must be non-empty"
+
+
+def test_build_buy_options_urls_are_skimlinks_wrapped():
+    """build_buy_options() wraps every retailer URL through Skimlinks.
+
+    FAIL-BEFORE: function did not exist (pre-a6e799f placeholder was bare URLs).
+    PASS-AFTER: every url starts with the Skimlinks go domain.
+    """
+    opts = _build_buy_options("silk blouse")
+    for opt in opts:
+        assert opt["url"].startswith("https://go.skimresources.com/"), (
+            f"URL for {opt['retailer']} is not Skimlinks-wrapped: {opt['url']}"
+        )
+
+
+def test_build_buy_options_xcust_propagates_to_all_urls():
+    """build_buy_options() threads xcust into every retailer URL.
+
+    FAIL-BEFORE: function did not exist.
+    PASS-AFTER: all urls contain xcust so the poster who tagged the item gets
+    credited when any retailer link converts.
+    """
+    xcust = "poster_42:post_007"
+    opts = _build_buy_options("denim jacket", xcust=xcust)
+    for opt in opts:
+        assert "xcust=" in opt["url"], (
+            f"xcust missing from {opt['retailer']} URL: {opt['url']}"
+        )
