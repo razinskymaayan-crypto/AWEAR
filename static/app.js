@@ -1573,11 +1573,11 @@
     const clientRef='scan_'+Date.now()+'_'+Math.floor(Math.random()*1e6);
     const accepted=_scItems.filter(i=>i.accepted), rejected=_scItems.filter(i=>!i.accepted);
     const payload={user_id:_scUid,client_ref:clientRef,items:[
-      ...accepted.map(si=>({accepted:true,ai:si.ai,final:{...si.final,name:si.final.name||si.ai.name,category:si.final.category||si.ai.category}})),
+      ...accepted.map(si=>({accepted:true,ai:si.ai,final:{...si.final,name:si.final.name||si.ai.name,category:si.final.category||si.ai.category,image:(si.genImage&&si.genImage!=='pending')?si.genImage:null}})),
       ...rejected.map(si=>({accepted:false,ai:si.ai,final:si.ai}))
     ]};
     try{ await fetch('/api/closet/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }catch(_){}
-    const acceptedItems=accepted.map(si=>({...si.ai,name:si.final.name||si.ai.name,category:si.final.category||si.ai.category,brand_vibe:si.final.brand||si.ai.brand_vibe,price_estimate_usd:si.final.price||si.ai.price_estimate_usd,source_url:si.final.source_url||null}));
+    const acceptedItems=accepted.map(si=>({...si.ai,image_url:(si.genImage&&si.genImage!=='pending')?si.genImage:(si.ai.image_url||null),name:si.final.name||si.ai.name,category:si.final.category||si.ai.category,brand_vibe:si.final.brand||si.ai.brand_vibe,price_estimate_usd:si.final.price||si.ai.price_estimate_usd,source_url:si.final.source_url||null}));
     const meta={overall_style:_scData.overall_style,occasion:_scData.occasion,trend_score:_scData.trend_score,summary:_scData.summary,stylist_tip:_scData.stylist_tip,look_total_usd:_scData.look_total_usd,mode:_scData.mode||'live'};
     saveWardrobe(acceptedItems.concat(loadWardrobe()));
     saveMeta(meta); saveLastScan({photo:_scData.photo||null,items:acceptedItems,meta});
