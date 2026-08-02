@@ -9,6 +9,22 @@
 
 ## משימות חדשות
 
+★★★★★ [כיוון מייסד — 2026-08-02 — עדיפות עליונה, גובר על הנחיית 19.7 "אין פיצ'רים חדשים"] ★★★★★
+**המיקוד עכשיו: לבנות את מנוע-המסחר האמיתי.** ה-SoT הנעול: **docs/COMMERCE_PLAN.md — קִראו אותו לפני עבודה.**
+המודל כבר מחווט (Skimlinks affiliate + xcust ייחוס-מפרסם, Buy פותח מוצר אמיתי, source_url מ-scan-confirm ל-post). המשימות ממשיכות מזה. משימה אחת לריצה, in-lane, VALUE GATE אמיתי + gabbana 8+ ל-UI.
+
+- **mark/dolce/valentino (UI):**
+  1. **Buy per-item** — ב-look-sheet יש רק "Buy This Look". הוסף כפתור **Buy** לכל פריט בנפרד (פותח את המוצר שלו דרך buyLinkFor). זה התרחיש המרכזי: "רואה חולצה → קונה אותה".
+  2. **סטטוס-פריט 3-דרגתי** — לכל פריט הצג: ✅ זמין (Buy) / 🔄 "מצא דומה" (פריט זמין דומה) / ♻️ "יד-שנייה" (Depop/Vinted/preloved). לעולם לא כפתור-Buy מת. פרטים ב-COMMERCE_PLAN.md.
+  3. **UI ל-tagging** — שדה "Source link" ב-scan-confirm קיים אבל חלש. הבלט אותו + hint "זה הופך את הפריט לניתן-לקנייה ומזכה אותך בטוקנים" + ולידציית-URL בסיסית.
+- **steve/oren/sam (backend):**
+  1. **קליטת המרות Skimlinks** — endpoint שמקבל postback/מדגם דוח, קורא `xcust` (poster_id:post_id), ומזכה את ה-wallet של המפרסם ב-**pending** tokens (→ confirmed אחרי חלון-החזרות). מפתח-API מ-.env (SKIMLINKS_* — לא בקוד).
+  2. **endpoint "מצא דומה"** — בהינתן פריט לא-זמין, החזר lookalikes זמינים מהקטלוג (משתמש ב-_match_score הקיים).
+- **ayalon:** לשמור על COMMERCE_PLAN.md כ-SoT, לאמת DoD של כל משימת-מסחר שנחתה.
+**כולם:** OW-014 (בדיקת-רגרסיה באותו PR), OW-016 (הכלל את המחלקה, לא רק האינסטנס). `.github/` לא בטיפולכם.
+
+[scout — 2026-07-29 — INS-20260728-003] מיפוי מוצרי seed-content שהמותג שלהם רץ על Shopify: עבור כל מותג בקטלוג ה-seed (או הפוסטים שכבר קיימים באפליקציה), בדקו אם ה-store הוא Shopify (בדיקה פשוטה: GET לעמוד המוצר, חפשו Shopify-specific markers / cdn.shopify.com / products.json ציבורי). מטרה: לדעת איזה אחוז מהקטלוג ניתן לפתרון SKU מדויק דרך Storefront API (Tier A בהמשך לתשתית fulfillment) לעומת מותגים שידרשו affiliate fallback. תוצר: טבלה קצרה ב-notes/shopify-brand-audit.md — לא דורש קוד חדש, רק grep+curl על הקטלוג הקיים. פרטים: docs/research/2026-07-28-buy-exact-item-fulfillment-mechanisms.md.
+
 הקשר־על: יעד = דמו מלוטש. החזון המלא ב-docs/PRODUCT_VISION.md — קראו אותו לפני עבודה. עבדו לפי הסדר, משימה אחת לכל ריצה, מקצה לקצה, עם VALUE GATE אמיתי. אל תעשו סקרים/מחקר כל עוד יש כאן משימות.
 
 ★★★★★ [כיוון מייסד — 2026-07-19 — עד מחר בערב (2026-07-20 ~20:00)] ★★★★★
