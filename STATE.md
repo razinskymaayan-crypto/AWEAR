@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-01, run 45)
-- **Task**: Extend check-interactions.mjs from 2 to 7 overlays — add mp-fsheet, ms-insight-sheet, comments-sheet, edit-profile-overlay, sell-form/purchase-modal.
-- **Done**: commit 3546b72. Enhanced isOpen helper (supports class selectors + .open class); added navigate-to-marketplace step before sheets inside #marketplace .view (position:fixed children are still hidden under display:none parent — key root-cause find). All 7 overlays open+close cleanly.
-- **Next**: Continue INBOX ★★★★★ UX quality items — dead buttons click-test, text truncation sweep, or next INBOX item for mark lane.
-- **Prior runs**: run 44 — DS-009/DS-004 icon container cleanup bd271d3; run 43 — text truncation + journal safe-area 8c05be3; run 42 — closet/profile UX polish 14f53db; run 41 — DS-004 fallback sweep fc2b585; run 40 — DS-004/DS-009 fedd45a.
+## Mark lane — last run (2026-08-02, run 46)
+- **Task**: Fix scan confirm: generated catalog image (si.genImage from /api/generate-garment) was silently dropped on scConfirm() — closet always showed raw retailer photo instead of clean AI image.
+- **Done**: commit 3c4d18d. 2-line fix: image_url=(si.genImage&&si.genImage!=='pending')?si.genImage:(si.ai.image_url||null) in acceptedItems + image:... in /api/closet/confirm payload. node --check + check-render green.
+- **Next**: Continue INBOX ★★★★★ UX quality items — any remaining UX gaps in the WOW flow.
+- **Prior runs**: run 45 — extend check-interactions.mjs to 7 overlays 3546b72; run 44 — DS-009/DS-004 icon container cleanup bd271d3; run 43 — text truncation + journal safe-area 8c05be3; run 42 — closet/profile UX polish 14f53db.
 
 ## Ayalon lane — last run (2026-08-01, run 44)
 - **Task**: DoD audit — verify 2 new commerce commits (COMMERCE-1 Skimlinks affiliate, COMMERCE-2 Buy EXACT product).
