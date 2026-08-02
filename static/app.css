@@ -832,8 +832,8 @@
   .match-band-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
     font-family: "Poppins", sans-serif; font-size: var(--t-h1, 26px);
     font-weight: 700; line-height: 1; letter-spacing: -1px; }
-  .match-band-pct { font-size: var(--t-h3, 15px); font-weight: 500; color: var(--muted, #9e99ad);
-    margin-inline-start: 1px; align-self: flex-start; margin-top: 6px; }
+  .match-band-pct { font-size: var(--t-caption, 12px); font-weight: 600; color: inherit;
+    margin-inline-start: 2px; line-height: 1; }
   .match-band-label { font-size: var(--t-caption, 12px); color: var(--muted, #9e99ad);
     font-weight: 600; margin-top: 4px; }
   .match-band-reason { font-size: var(--t-small, 13px); color: var(--fg, #f0ecf5);
