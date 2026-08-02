@@ -74,6 +74,21 @@ RATE_WINDOW = 60  # seconds
 # ---------------------------------------------------------------------------
 _weather_cache: dict[str, tuple[float, dict]] = {}  # key -> (timestamp, payload)
 WEATHER_CACHE_TTL = 1800  # 30 minutes in seconds
+_WEATHER_DEMO: dict = {
+    "latitude": 32.08,
+    "longitude": 34.78,
+    "timezone": "Asia/Jerusalem",
+    "current_weather": {
+        "temperature": 24.0,
+        "windspeed": 12.0,
+        "winddirection": 180.0,
+        "weathercode": 0,
+        "time": "2026-01-01T12:00",
+    },
+    "hourly": {"time": [], "apparent_temperature": []},
+    "daily": {"time": [], "precipitation_probability_max": []},
+    "awear_mode": "demo",
+}
 
 
 def check_rate_limit(client_ip: str, endpoint: str, limit: int) -> bool:
@@ -154,6 +169,7 @@ _last_outfit: dict = {"mode": None, "reason": None}      # tracks last /api/outf
 _last_stylist: dict = {"mode": None, "reason": None}     # tracks last /api/stylist/chat
 _last_marketplace: dict = {"mode": None, "reason": None} # tracks last /api/marketplace/assist
 _last_declutter: dict = {"mode": None, "reason": None}   # tracks last /api/declutter
+_last_weather: dict = {"mode": None, "reason": None}    # tracks last /api/weather outcome
 _data_integrity: dict = {
     "products": 0,
     "posts": 0,
@@ -791,6 +807,7 @@ async def scan_health(request: Request, probe: int = 0):
             "declutter":   {"last_mode": _last_declutter["mode"],   "last_reason": _last_declutter["reason"]},
         },
         "data_integrity": dict(_data_integrity),
+        "weather": {"last_mode": _last_weather["mode"], "last_reason": _last_weather["reason"]},
         "agent_services": {
             # True only when the module imported AND credentials exist (token file or app-password).
             # Import alone isn't enough — google_services.py is in the repo so the import always
@@ -3286,16 +3303,25 @@ async def get_weather(request: Request, lat: float, lon: float):
     # Cache miss — fetch from open-meteo in a thread (must not block the event loop)
     try:
         data = await asyncio.to_thread(_fetch_weather_sync, round(lat, 2), round(lon, 2))
-    except urllib.error.URLError as exc:
-        logger.error("weather fetch failed: %s", exc)
-        raise HTTPException(status_code=502, detail="Weather service unavailable.")
+        _weather_cache[cache_key] = (now, data)
+        logger.info("weather cache miss: %s — fetched and cached", cache_key)
+        _last_weather["mode"] = "live"
+        _last_weather["reason"] = None
+        return data
     except Exception as exc:
-        logger.error("weather unexpected error: %s", exc)
-        raise HTTPException(status_code=502, detail="Weather service error.")
-
-    _weather_cache[cache_key] = (now, data)
-    logger.info("weather cache miss: %s — fetched and cached", cache_key)
-    return data
+        logger.error("weather fetch error: %s", exc)
+        # Return stale cache entry if one exists — better than an error.
+        if cached is not None:
+            _last_weather["mode"] = "stale_cache"
+            _last_weather["reason"] = "network_error"
+            logger.warning("weather returning stale cache for %s", cache_key)
+            _, stale_data = cached
+            return stale_data
+        # No cache at all — return a demo payload so the UI stays usable.
+        _last_weather["mode"] = "demo"
+        _last_weather["reason"] = "network_error"
+        logger.warning("weather no cache for %s — returning demo", cache_key)
+        return dict(_WEATHER_DEMO)
 
 
 # ---------------------------------------------------------------------------

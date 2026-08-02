@@ -3049,10 +3049,11 @@ def test_weather_missing_params_returns_422(client):
     assert r.status_code == 422
 
 
-def test_weather_urlerror_returns_502(client, monkeypatch):
-    """URLError from _fetch_weather_sync must surface as 502 with 'weather' in detail.
+def test_weather_urlerror_returns_demo_fallback(client, monkeypatch):
+    """URLError from _fetch_weather_sync with no cache returns 200 + demo payload.
 
-    FAIL-BEFORE: no test existed. PASS-AFTER: error handling proven.
+    FAIL-BEFORE: old code raised 502 on network error.
+    PASS-AFTER: returns 200 with awear_mode='demo' instead of erroring.
     """
     import urllib.error
 
@@ -3063,8 +3064,33 @@ def test_weather_urlerror_returns_502(client, monkeypatch):
 
     monkeypatch.setattr(appmod, "_fetch_weather_sync", _fail)
     r = client.get("/api/weather?lat=48.85&lon=2.35")
-    assert r.status_code == 502
-    assert "weather" in r.json().get("detail", "").lower()
+    assert r.status_code == 200
+    d = r.json()
+    assert "current_weather" in d, "demo fallback must have current_weather"
+    assert d.get("awear_mode") == "demo"
+
+
+def test_weather_urlerror_with_stale_cache_returns_stale(client, monkeypatch):
+    """URLError with a stale cache entry returns the stale data (not 502, not demo).
+
+    FAIL-BEFORE: old code raised 502 regardless of cache state.
+    PASS-AFTER: stale cache entry is returned on network failure.
+    """
+    import time
+    import urllib.error
+
+    stale_payload = {"current_weather": {"temperature": 18, "weathercode": 3}, "awear_mode": "stale"}
+    # Insert an entry older than WEATHER_CACHE_TTL to make it stale.
+    appmod._weather_cache["48.85,2.35"] = (time.time() - appmod.WEATHER_CACHE_TTL - 1, stale_payload)
+
+    def _fail(lat, lon):
+        raise urllib.error.URLError("simulated network error")
+
+    monkeypatch.setattr(appmod, "_fetch_weather_sync", _fail)
+    r = client.get("/api/weather?lat=48.85&lon=2.35")
+    assert r.status_code == 200
+    d = r.json()
+    assert d.get("current_weather", {}).get("temperature") == 18, "must return stale cache data"
 
 
 def test_weather_cache_hit_skips_second_fetch(client, monkeypatch):
