@@ -953,6 +953,12 @@
   .sheet-look-emoji { font-size: var(--t-h1,26px); width: 40px; text-align: center; flex-shrink: 0; }
   .sheet-look-name { flex: 1; font-weight: 700; font-size: var(--t-small,13px); min-width: 0;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sheet-look-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .sheet-look-meta .sheet-look-name { flex: 0; }
+  .sheet-look-badge { font-size: var(--t-micro,11px); font-weight: 700; letter-spacing: .01em; }
+  .slb-buyable { color: color-mix(in srgb, var(--success,#52c97a) 65%, #fff); }
+  .slb-similar { color: var(--warning,#e8a84a); }
+  .slb-resale { color: color-mix(in srgb, var(--accent3,#7a6af0) 65%, #fff); }
   .sheet-look-price { font-family: "Poppins", sans-serif; font-size: var(--t-small); font-weight: 700;
     color: var(--muted); flex-shrink: 0; }
 
@@ -983,13 +989,15 @@
   }
   .sheet-buy:active { transform: scale(.97); filter: brightness(.93); }
   /* per-item "buy" pill inside the look sheet */
-  .sheet-row-buy { flex-shrink: 0; padding: 7px 14px; border-radius: 20px;
+  .sheet-row-buy { flex-shrink: 0; padding: 7px 14px; border-radius: var(--r-lg,20px);
     border: 0; cursor: pointer; font-family: inherit; min-height: 44px;
     display: inline-flex; align-items: center; gap: 5px;
     background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a));
     color: var(--on-accent,#fff);
     font-size: var(--t-caption,12px); font-weight: 800; transition: transform .14s, filter .15s; }
   .sheet-row-buy:active { transform: scale(.96); filter: brightness(.9); }
+  .sheet-row-similar { background: var(--warning,#e8a84a); color: var(--bg,#0e0c0f); }
+  .sheet-row-resale { background: color-mix(in srgb, var(--accent3,#7a6af0) 80%, #000); color: var(--on-accent,#fff); }
   /* "tap to shop" pill on each feed card */
   .fc-shop { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 9px 15px;
     background: rgba(255,255,255,.14); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.2);

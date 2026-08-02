@@ -725,6 +725,12 @@
     return preloved ? 'preloved' : 'retail';
   }
 
+  function itemBuyStatus(it){
+    if(itemKind(it)==='preloved') return 'resale';
+    if(it && (it.source_url || (it.buy_options && it.buy_options[0] && it.buy_options[0].url))) return 'buyable';
+    return 'similar';
+  }
+
   function openSheetLook(label, items, totalPrice, earnAmt, influencerUser){
     const list = items||[];
     // BE-002: the displayed "Look total" must equal the sum of the rows shown below.
@@ -732,11 +738,22 @@
     const itemsSum = list.reduce((s,it)=>s+(Number(it.price_estimate_usd||it.price)||0),0);
     totalPrice = itemsSum>0 ? itemsSum : (Number(totalPrice)||0);
     const rows = list.map((it, i) => {
+      const st = itemBuyStatus(it);
+      const badgeClass = st==='resale' ? 'slb-resale' : st==='similar' ? 'slb-similar' : 'slb-buyable';
+      const badgeText = st==='resale' ? 'Preloved' : st==='similar' ? 'Find similar' : 'In stock';
+      const pill = st==='resale'
+        ? `<button class="sheet-row-buy sheet-row-resale" type="button" data-action="resale-item" data-item-idx="${i}" aria-label="Resale ${attr(it.name)}">${icon('leaf',14)} Resale</button>`
+        : st==='similar'
+        ? `<button class="sheet-row-buy sheet-row-similar" type="button" data-action="find-similar-item" data-item-idx="${i}" aria-label="Find similar to ${attr(it.name)}">${icon('search',14)} Find Similar</button>`
+        : `<button class="sheet-row-buy" type="button" data-action="buy-look-item" data-item-idx="${i}" aria-label="Buy ${attr(it.name)}">${icon('arrowOut',14)} Buy</button>`;
       return `<div class="sheet-look-row">
         <div class="sheet-look-emoji">${productImage(it)}</div>
-        <div class="sheet-look-name">${esc(it.name)}</div>
+        <div class="sheet-look-meta">
+          <div class="sheet-look-name">${esc(it.name)}</div>
+          <span class="sheet-look-badge ${badgeClass}">${badgeText}</span>
+        </div>
         <div class="sheet-look-price">$${esc(it.price_estimate_usd||it.price||0)}</div>
-        <button class="sheet-row-buy" type="button" data-action="buy-look-item" data-item-idx="${i}" aria-label="Buy ${attr(it.name)}">${icon('arrowOut',14)} Buy</button>
+        ${pill}
       </div>`;
     }).join('');
     const earnLine = (earnAmt && influencerUser)
@@ -1023,6 +1040,28 @@
       const idx = parseInt(itemBuy.dataset.itemIdx, 10);
       const ctx = _checkoutCtx;
       if (ctx && ctx.items && ctx.items[idx]) openBuyLink(buyLinkFor(ctx.items[idx], ctx.influencerUser || ''));
+      return;
+    }
+    const findSimilar = e.target.closest('[data-action="find-similar-item"]');
+    if (findSimilar) {
+      const idx = parseInt(findSimilar.dataset.itemIdx, 10);
+      const ctx = _checkoutCtx;
+      if (ctx && ctx.items && ctx.items[idx]) {
+        const it = ctx.items[idx];
+        const q = encodeURIComponent((it.search_query || it.name) || '');
+        openBuyLink(skimWrap('https://www.google.com/search?tbm=shop&q='+q, ctx.influencerUser||''));
+      }
+      return;
+    }
+    const resaleBtn = e.target.closest('[data-action="resale-item"]');
+    if (resaleBtn) {
+      const idx = parseInt(resaleBtn.dataset.itemIdx, 10);
+      const ctx = _checkoutCtx;
+      if (ctx && ctx.items && ctx.items[idx]) {
+        const it = ctx.items[idx];
+        const q = encodeURIComponent((it.search_query || it.name) || '');
+        openBuyLink('https://www.depop.com/search/?q='+q);
+      }
       return;
     }
   });
