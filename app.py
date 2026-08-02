@@ -3959,6 +3959,7 @@ class ClosetItemPatch(BaseModel):
     color: Optional[str] = None
     brand: Optional[str] = None
     source_url: Optional[str] = None
+    image_url: Optional[str] = None
     price_estimate_usd: Optional[float] = None
     user_id: str = ""
 
@@ -4191,7 +4192,7 @@ async def patch_closet_item(item_id: str, body: ClosetItemPatch, request: Reques
         raise HTTPException(status_code=403, detail="Not authorised to edit this item.")
 
     # Build SET clause from non-None patchable fields only.
-    _PATCHABLE = ("name", "category", "color", "brand", "source_url", "price_estimate_usd")
+    _PATCHABLE = ("name", "category", "color", "brand", "source_url", "image_url", "price_estimate_usd")
     updates = {f: getattr(body, f) for f in _PATCHABLE if getattr(body, f) is not None}
     if not updates:
         raise HTTPException(status_code=400, detail="No fields provided to update.")

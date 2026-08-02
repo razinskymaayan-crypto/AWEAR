@@ -1216,6 +1216,19 @@ def test_closet_patch_wrong_user_403(client):
     assert r.status_code == 403
 
 
+def test_closet_patch_updates_image_url(client):
+    item_id = _seed_closet_item(client, "user_patch_img", name="Canvas Tote", ref="patch-img-1")
+
+    new_url = "/static/img/generated/gen_abc123.png"
+    r = client.patch(f"/api/closet/{item_id}", json={
+        "user_id": "user_patch_img",
+        "image_url": new_url,
+    })
+    assert r.status_code == 200
+    assert r.json()["image_url"] == new_url
+    assert r.json()["name"] == "Canvas Tote"  # unchanged field preserved
+
+
 # ── generate-garment endpoint ──────────────────────────────────────────────
 
 def test_generate_garment_demo_path_no_key(client):
