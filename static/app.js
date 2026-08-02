@@ -731,11 +731,12 @@
     // Derive it from the items themselves; only trust the caller's number if none are priced.
     const itemsSum = list.reduce((s,it)=>s+(Number(it.price_estimate_usd||it.price)||0),0);
     totalPrice = itemsSum>0 ? itemsSum : (Number(totalPrice)||0);
-    const rows = list.map(it => {
+    const rows = list.map((it, i) => {
       return `<div class="sheet-look-row">
         <div class="sheet-look-emoji">${productImage(it)}</div>
         <div class="sheet-look-name">${esc(it.name)}</div>
         <div class="sheet-look-price">$${esc(it.price_estimate_usd||it.price||0)}</div>
+        <button class="sheet-row-buy" type="button" data-action="buy-look-item" data-item-idx="${i}" aria-label="Buy ${attr(it.name)}">${icon('arrowOut',14)} Buy</button>
       </div>`;
     }).join('');
     const earnLine = (earnAmt && influencerUser)
@@ -1016,8 +1017,14 @@
   // piece (never an external redirect). Buy stays inside the app.
   sheetBody.addEventListener('click', e => {
     const alt = e.target.closest('[data-buy-alt]');
-    if (!alt) return;
-    try { openSheetSingle(JSON.parse(alt.dataset.buyAlt), 0, ''); } catch(err){}
+    if (alt) { try { openSheetSingle(JSON.parse(alt.dataset.buyAlt), 0, ''); } catch(err){} return; }
+    const itemBuy = e.target.closest('[data-action="buy-look-item"]');
+    if (itemBuy) {
+      const idx = parseInt(itemBuy.dataset.itemIdx, 10);
+      const ctx = _checkoutCtx;
+      if (ctx && ctx.items && ctx.items[idx]) openBuyLink(buyLinkFor(ctx.items[idx], ctx.influencerUser || ''));
+      return;
+    }
   });
 
   document.querySelector('main').addEventListener('click', e => {
