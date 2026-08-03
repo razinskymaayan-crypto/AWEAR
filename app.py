@@ -356,6 +356,8 @@ SKIMLINKS_ID = "307075X1795350"
 RESALE_SUGGESTION_PCT = 0.5   # suggested resale price = 50% of original price estimate
 AWEAR_COMMISSION_PCT = 0.15   # AWEAR's commission on a completed resale, on top of the above
 CREATOR_CREDIT_PCT = 0.05   # creator earns 5% of order amount_usd. LOCKED economics — do not change.
+SKIMLINKS_SECRET = os.getenv("SKIMLINKS_SECRET", "")        # shared secret for postback verification
+SKIMLINKS_CREATOR_SHARE_PCT = 0.40  # poster earns 40% of AWEAR's Skimlinks commission as tokens
 ORDER_DEDUP_WINDOW_SEC = 15  # collapse double-fired orders that carry no client_ref (legacy path defense)
 PRELOVED_COMMISSION_PCT = 0.08  # AWEAR's commission on a preloved (P2P second-hand) deal
 
@@ -1690,15 +1692,25 @@ def init_db() -> None:
         )
         conn.execute("""
             CREATE TABLE IF NOT EXISTS credits (
-                id           TEXT PRIMARY KEY,
-                user_key     TEXT NOT NULL,
-                order_id     TEXT NOT NULL,
-                item_name    TEXT DEFAULT '',
-                amount_usd   REAL DEFAULT 0,
-                type         TEXT DEFAULT 'creator',
-                created_at   TEXT NOT NULL
+                id             TEXT PRIMARY KEY,
+                user_key       TEXT NOT NULL,
+                order_id       TEXT NOT NULL,
+                item_name      TEXT DEFAULT '',
+                amount_usd     REAL DEFAULT 0,
+                type           TEXT DEFAULT 'creator',
+                created_at     TEXT NOT NULL,
+                status         TEXT NOT NULL DEFAULT 'confirmed',
+                transaction_id TEXT DEFAULT ''
             )
         """)
+        _credits_cols = {r[1] for r in conn.execute("PRAGMA table_info(credits)").fetchall()}
+        if "status" not in _credits_cols:
+            conn.execute("ALTER TABLE credits ADD COLUMN status TEXT NOT NULL DEFAULT 'confirmed'")
+        if "transaction_id" not in _credits_cols:
+            conn.execute("ALTER TABLE credits ADD COLUMN transaction_id TEXT DEFAULT ''")
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_credits_txn ON credits (transaction_id)"
+        )
         # Direct messages between users. owner_key = the MG-005 user_key ("me").
         # peer_id = the other party (a seed user id). direction: 'out' = me->peer,
         # 'in' = peer->me. read = whether an inbound message has been seen by me.
@@ -5074,26 +5086,142 @@ async def get_wallet(request: Request, user_id: str = ""):
         raise HTTPException(status_code=400, detail="user_id must be at most 64 characters.")
     lookup_key = wallet_user_id or caller_key
 
+    balance_query = """SELECT
+       COALESCE(SUM(CASE WHEN COALESCE(status,'confirmed')='confirmed' THEN amount_usd ELSE 0 END), 0) AS confirmed_total,
+       COALESCE(SUM(CASE WHEN COALESCE(status,'confirmed')='pending'   THEN amount_usd ELSE 0 END), 0) AS pending_total
+   FROM credits WHERE user_key = ?"""
     with _get_db() as db:
-        total_row = db.execute(
-            "SELECT COALESCE(SUM(amount_usd), 0) AS total FROM credits WHERE user_key = ?",
-            (lookup_key,),
-        ).fetchone()
+        row = db.execute(balance_query, (lookup_key,)).fetchone()
         rows = db.execute(
-            """SELECT id, order_id, item_name, amount_usd, created_at
+            """SELECT id, order_id, item_name, amount_usd, type, created_at,
+                      COALESCE(status, 'confirmed') AS status
                FROM credits WHERE user_key = ?
                ORDER BY created_at DESC LIMIT 50""",
             (lookup_key,),
         ).fetchall()
 
+    balance = round(row["confirmed_total"], 4)
+    pending_balance = round(row["pending_total"], 4)
     credits = [
-        {"id": r["id"], "item": r["item_name"], "amount": r["amount_usd"],
-         "order_id": r["order_id"], "created_at": r["created_at"]}
+        {"id": r["id"], "order_id": r["order_id"], "item_name": r["item_name"],
+         "amount_usd": r["amount_usd"], "type": r["type"], "created_at": r["created_at"],
+         "status": r["status"]}
         for r in rows
     ]
-    balance = round(total_row["total"], 2)
-    logger.info("wallet: user=%s balance=%.2f credits=%d", lookup_key, balance, len(credits))
-    return {"balance": balance, "credits": credits}
+    logger.info("wallet: user=%s balance=%.4f pending=%.4f credits=%d", lookup_key, balance, pending_balance, len(credits))
+    return {"balance": balance, "pending_balance": pending_balance, "credits": credits}
+
+
+class SkimlinkPostback(BaseModel):
+    xcust: str = ""            # "poster_id:post_id" or "poster_id:post_id:item_id"
+    commission: float = 0.0    # AWEAR's commission in USD from this conversion
+    sale_amount: float = 0.0   # buyer's purchase amount
+    transaction_id: str = ""   # Skimlinks unique transaction id (for dedup)
+    advertiser_id: str = ""    # merchant identifier
+    currency: str = "USD"
+
+
+@app.post("/api/skimlinks/postback")
+async def skimlinks_postback(payload: SkimlinkPostback, request: Request):
+    """Ingest a Skimlinks conversion postback and create a pending creator credit.
+
+    When SKIMLINKS_SECRET is set, the caller must supply it in
+    X-Skimlinks-Secret. Without the env var the endpoint accepts all (demo mode).
+    xcust must encode at least "poster_id" (optionally ":post_id[:item_id]").
+    Rate limited to 60 requests/minute (postbacks are server-to-server).
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "skimlinks_postback", 60):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded.")
+
+    if SKIMLINKS_SECRET:
+        supplied = request.headers.get("x-skimlinks-secret", "")
+        if not hmac.compare_digest(supplied, SKIMLINKS_SECRET):
+            raise HTTPException(status_code=401, detail="Invalid Skimlinks secret.")
+
+    xcust = (payload.xcust or "").strip()
+    if not xcust:
+        raise HTTPException(status_code=400, detail="xcust is required.")
+
+    parts = xcust.split(":")
+    poster_id = parts[0].strip()
+    post_id = parts[1].strip() if len(parts) > 1 else ""
+    if not poster_id:
+        raise HTTPException(status_code=400, detail="xcust must encode a poster_id.")
+
+    commission = max(0.0, round(payload.commission, 4))
+    creator_credit = round(commission * SKIMLINKS_CREATOR_SHARE_PCT, 4)
+
+    txn_id = (payload.transaction_id or "").strip()
+    if txn_id:
+        with _get_db() as db:
+            existing = db.execute(
+                "SELECT id FROM credits WHERE transaction_id = ?", (txn_id,)
+            ).fetchone()
+        if existing:
+            logger.info("skimlinks_postback dedup: txn=%s existing=%s", txn_id, existing["id"])
+            return {"status": "duplicate", "credit_id": existing["id"],
+                    "poster_id": poster_id, "creator_credit_usd": 0.0}
+
+    now = datetime.datetime.utcnow().isoformat()
+    credit_id = "skm_" + uuid.uuid4().hex[:12]
+    order_ref = f"skm_{txn_id or uuid.uuid4().hex[:8]}"
+    item_label = f"Affiliate sale via post {post_id}" if post_id else "Affiliate sale"
+
+    with _get_db() as db:
+        db.execute(
+            """INSERT INTO credits
+               (id, user_key, order_id, item_name, amount_usd, type, created_at, status, transaction_id)
+               VALUES (?,?,?,?,?,?,?,?,?)""",
+            (credit_id, poster_id, order_ref, item_label, creator_credit,
+             "skimlinks", now, "pending", txn_id),
+        )
+        db.commit()
+
+    logger.info(
+        "skimlinks_postback: poster=%s post=%s commission=%.4f credit=%.4f txn=%s",
+        poster_id, post_id, commission, creator_credit, txn_id,
+    )
+    return {
+        "status": "pending",
+        "credit_id": credit_id,
+        "poster_id": poster_id,
+        "post_id": post_id,
+        "creator_credit_usd": creator_credit,
+    }
+
+
+@app.post("/api/skimlinks/confirm-pending")
+async def skimlinks_confirm_pending(request: Request, days: int = 30):
+    """Confirm pending Skimlinks credits older than `days` days (default: 30).
+
+    Same secret check as /api/skimlinks/postback. Idempotent — safe to call
+    repeatedly (only moves pending→confirmed, never the reverse).
+    Rate limited to 10 requests/minute.
+    """
+    user_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(user_key, "skimlinks_confirm", 10):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded.")
+
+    if SKIMLINKS_SECRET:
+        supplied = request.headers.get("x-skimlinks-secret", "")
+        if not hmac.compare_digest(supplied, SKIMLINKS_SECRET):
+            raise HTTPException(status_code=401, detail="Invalid Skimlinks secret.")
+
+    if days < 1:
+        raise HTTPException(status_code=400, detail="days must be >= 1.")
+
+    cutoff = (datetime.datetime.utcnow() - datetime.timedelta(days=days)).isoformat()
+    with _get_db() as db:
+        cur = db.execute(
+            "UPDATE credits SET status='confirmed' WHERE status='pending' AND created_at <= ?",
+            (cutoff,),
+        )
+        db.commit()
+        count = cur.rowcount
+
+    logger.info("skimlinks_confirm_pending: confirmed=%d days=%d", count, days)
+    return {"confirmed": count, "cutoff": cutoff}
 
 
 # ---------------------------------------------------------------------------

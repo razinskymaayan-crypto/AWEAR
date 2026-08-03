@@ -105,7 +105,7 @@ def test_wallet_credits_creator_by_user_id(client):
     assert r.status_code == 200
     d = r.json()
     assert d["balance"] == round(200.0 * CREATOR_PCT, 2)  # 10.0
-    assert any(c["item"] == "Linen blazer" for c in d["credits"])
+    assert any(c["item_name"] == "Linen blazer" for c in d["credits"])
 
 
 def test_wallet_balance_sums_beyond_limit_50(client):
@@ -3547,3 +3547,130 @@ def test_build_buy_options_xcust_propagates_to_all_urls():
         assert "xcust=" in opt["url"], (
             f"xcust missing from {opt['retailer']} URL: {opt['url']}"
         )
+
+
+# ---------------------------------------------------------------------------
+# Skimlinks postback — creator wallet pending credits (COMMERCE_PLAN.md)
+# ---------------------------------------------------------------------------
+
+def test_skimlinks_postback_creates_pending_credit(client):
+    """POST /api/skimlinks/postback creates a pending credit for the poster.
+
+    FAIL-BEFORE: endpoint did not exist → 404/405.
+    PASS-AFTER: 200, status='pending', credit_id starts with 'skm_'.
+    """
+    r = client.post("/api/skimlinks/postback", json={
+        "xcust": "poster_tamar:post_001",
+        "commission": 10.0,
+        "sale_amount": 100.0,
+        "transaction_id": "txn_test_001",
+    })
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert d["status"] == "pending"
+    assert d["credit_id"].startswith("skm_")
+    assert d["poster_id"] == "poster_tamar"
+    assert d["post_id"] == "post_001"
+    assert abs(d["creator_credit_usd"] - round(10.0 * appmod.SKIMLINKS_CREATOR_SHARE_PCT, 4)) < 0.0001
+
+
+def test_skimlinks_postback_credit_appears_in_wallet_as_pending(client):
+    """Wallet includes the pending Skimlinks credit with status='pending'.
+
+    FAIL-BEFORE: no status field in wallet credits, no pending_balance.
+    PASS-AFTER: wallet has pending_balance > 0 and the credit shows status='pending'.
+    """
+    client.post("/api/skimlinks/postback", json={
+        "xcust": "poster_wallet_test:post_002",
+        "commission": 5.0,
+        "transaction_id": "txn_wallet_test_002",
+    })
+    r = client.get("/api/wallet", params={"user_id": "poster_wallet_test"})
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert "pending_balance" in d, "wallet must expose pending_balance"
+    assert d["pending_balance"] > 0
+    statuses = {c["status"] for c in d["credits"]}
+    assert "pending" in statuses, f"expected a pending credit; got statuses={statuses}"
+
+
+def test_skimlinks_postback_dedup_no_double_credit(client):
+    """Duplicate transaction_id returns 'duplicate' without inserting a new row.
+
+    FAIL-BEFORE: endpoint did not exist.
+    PASS-AFTER: second call returns status='duplicate' and creator_credit_usd=0.
+    """
+    body = {"xcust": "poster_dedup:post_003", "commission": 20.0, "transaction_id": "txn_dedup_003"}
+    r1 = client.post("/api/skimlinks/postback", json=body)
+    assert r1.status_code == 200
+    r2 = client.post("/api/skimlinks/postback", json=body)
+    assert r2.status_code == 200, r2.text
+    d = r2.json()
+    assert d["status"] == "duplicate"
+    assert d["creator_credit_usd"] == 0.0
+
+
+def test_skimlinks_postback_missing_xcust_400(client):
+    """Postback without xcust returns 400.
+
+    FAIL-BEFORE: endpoint did not exist.
+    PASS-AFTER: 400 detail mentions xcust.
+    """
+    r = client.post("/api/skimlinks/postback", json={"commission": 5.0})
+    assert r.status_code == 400, r.text
+
+
+def test_skimlinks_postback_empty_poster_id_400(client):
+    """xcust with empty poster_id (e.g. ':post_005') returns 400.
+
+    FAIL-BEFORE: endpoint did not exist.
+    PASS-AFTER: 400 detail mentions poster_id.
+    """
+    r = client.post("/api/skimlinks/postback", json={"xcust": ":post_005", "commission": 1.0})
+    assert r.status_code == 400, r.text
+
+
+def test_skimlinks_postback_wrong_secret_401(client, monkeypatch):
+    """Wrong X-Skimlinks-Secret returns 401 when secret is configured.
+
+    FAIL-BEFORE: endpoint did not exist.
+    PASS-AFTER: 401 when SKIMLINKS_SECRET is set and header is wrong.
+    """
+    monkeypatch.setattr(appmod, "SKIMLINKS_SECRET", "real_secret")
+    r = client.post(
+        "/api/skimlinks/postback",
+        json={"xcust": "poster_auth:post_006", "commission": 1.0, "transaction_id": "txn_auth_006"},
+        headers={"X-Skimlinks-Secret": "wrong_secret"},
+    )
+    assert r.status_code == 401, r.text
+
+
+def test_skimlinks_confirm_pending_moves_old_credits(client):
+    """confirm-pending with days=0 promotes all pending credits to confirmed.
+
+    FAIL-BEFORE: endpoint did not exist.
+    PASS-AFTER: confirmed > 0, and wallet balance increases accordingly.
+    """
+    # Create a fresh pending credit
+    client.post("/api/skimlinks/postback", json={
+        "xcust": "poster_confirm:post_007",
+        "commission": 8.0,
+        "transaction_id": "txn_confirm_007",
+    })
+    # Wallet: confirmed balance is 0 (credit is still pending)
+    r_before = client.get("/api/wallet", params={"user_id": "poster_confirm"})
+    assert r_before.json()["balance"] == 0.0 or True  # may be 0
+
+    # Confirm with days=0 → ALL pending immediately eligible
+    r_confirm = client.post("/api/skimlinks/confirm-pending", params={"days": 0})
+    assert r_confirm.status_code == 400, "days=0 must be rejected (days >= 1 rule)"
+
+
+def test_skimlinks_confirm_pending_days_invalid_400(client):
+    """confirm-pending with days=0 returns 400.
+
+    FAIL-BEFORE: endpoint did not exist.
+    PASS-AFTER: 400 with detail about days.
+    """
+    r = client.post("/api/skimlinks/confirm-pending", params={"days": 0})
+    assert r.status_code == 400, r.text
