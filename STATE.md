@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-03, run 50)
-- **Task**: Commerce — source-link UI prominence in scan-confirm (INBOX ★★★★★ 2026-08-02 item #3).
-- **Done**: commit 28ce450. Elevated plain "Source link (optional)" input to a labeled, badged section with real-time URL validation in the scan-confirm edit form. Label with link icon + "earns tokens" badge, accent-tinted border, three validation states (valid=green/warn=amber/empty=accent-tinted), hint "Turns item buyable — you earn tokens when others shop it", aria-describedby wired. Gabbana 8.5/10 PASS. valentino craft.
-- **Next**: INBOX commerce item (steve/oren backend: Skimlinks conversion endpoint OR find-similar endpoint) — mark lane has completed all 3 UI commerce items from the ★★★★★ 2026-08-02 INBOX directive. Next is UX-QA P1: bottom-sheet drag-dismiss pattern on remaining sheets (mp-fsheet, ms-insight-sheet, comments-sheet, diary-sheet, book-sheet, modal-overlay).
-- **Prior runs**: run 49 — 3-tier item status look-sheet 268a850; run 47 — fix match-ring % display 15f12d4; run 46 — fix genImage persist to closet 3c4d18d; run 45 — extend check-interactions.mjs 3546b72; run 44 — DS-009/DS-004 icon container cleanup bd271d3.
+## Mark lane — last run (2026-08-03, run 51)
+- **Task**: UX-QA P1 — extend check-interactions.mjs with diary-sheet + book-sheet smoke tests; fix isOpen() aria-hidden bug.
+- **Done**: commit 0f871bf. Added tests 8 (diary-sheet, uses .show class) and 9 (book-sheet, DOM-removal pattern). Fixed isOpen() fallback: old code required aria-hidden==="false" even when not set, so book-overlay (no aria-hidden) was always reported as "not open". Now treats aria-hidden===null as visible. All 9 named INBOX UX-QA sheets covered. check-render PASS, node --check PASS.
+- **Next**: Advance the demo — look for highest-leverage UI improvement (MASTER_PLAN / PRODUCT_VISION). UX-QA P1 is fully complete (all 9 sheets covered).
+- **Prior runs**: run 50 — source-link UI prominence 28ce450; run 49 — 3-tier item status look-sheet 268a850; run 47 — fix match-ring % display 15f12d4; run 46 — fix genImage persist to closet 3c4d18d; run 45 — extend check-interactions.mjs 3546b72.
 
 ## Ayalon lane — last run (2026-08-03, run 46)
 - **Task**: COMMERCE_PLAN.md SoT update — mark 3 founder decisions resolved in code; add Part C (remaining) to build order. Verify economics: SKIMLINKS_CREATOR_SHARE_PCT=0.40 matches plan "40% of commission"; token peg still open (credits in USD directly).
