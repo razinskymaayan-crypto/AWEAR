@@ -1570,6 +1570,13 @@
   .wa-how-icon { color: var(--accent2,#c4855a); flex-shrink: 0; padding-top: 2px; }
   .wa-how-copy { font-size: var(--t-small,13px); font-weight: 700; line-height: 1.45; color: var(--fg,#f0ecf5); }
   .wa-how-sub { font-size: var(--t-micro,11px); color: var(--muted,#9e99ad); font-weight: 600; margin-top: 2px; }
+  .wa-status-confirmed { background: color-mix(in srgb, var(--success,#52c97a) 20%, transparent); color: var(--success,#52c97a); }
+  .wa-status-pending   { background: color-mix(in srgb, var(--warning,#e8a84a) 20%, transparent); color: var(--warning,#e8a84a); }
+  .wa-credit-pending-amt { color: var(--warning,#e8a84a); }
+  .wa-pending-banner { margin-top: 12px; padding: 10px 14px; background: color-mix(in srgb, var(--warning,#e8a84a) 12%, transparent); border-radius: var(--r-sm,10px); border: 1px solid color-mix(in srgb, var(--warning,#e8a84a) 28%, transparent); display: flex; align-items: center; gap: 8px; }
+  .wa-pending-banner-amt { font-size: var(--t-body,14px); font-weight: 900; color: var(--warning,#e8a84a); font-family: 'Poppins', sans-serif; flex-shrink: 0; }
+  .wa-pending-banner-label { font-size: var(--t-micro,11px); color: color-mix(in srgb, var(--fg,#f0ecf5) 70%, var(--warning,#e8a84a)); font-weight: 700; flex: 1; line-height: 1.35; }
+  .wa-withdraw-row { display: flex; align-items: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid color-mix(in srgb, var(--fg,#f0ecf5) 12%, transparent); justify-content: flex-end; }
 
   /* ---- Sustainability Score ---- */
   .sus-wrap { display: flex; flex-direction: column; padding-bottom: 20px; }

@@ -4016,81 +4016,109 @@
     const el = document.getElementById('wallet-inner');
     if (!el) return;
 
-    const SEED_FLAG = 'awear_wallet_seeded';
+    const SEED_FLAG = 'awear_wallet_seeded_v2';
     if (!localStorage.getItem(SEED_FLAG)) {
-      const existing = JSON.parse(localStorage.getItem(CREDITS_KEY) || '[]');
-      if (existing.length === 0) {
-        const now = Date.now();
-        localStorage.setItem(CREDITS_KEY, JSON.stringify([
-          {id:'c_s1', from:'sofia.style',  item:'Linen blazer',        amount:4.50, ts: now - 3*86400000},
-          {id:'c_s2', from:'maya_looks',   item:'2-item summer look',  amount:7.25, ts: now - 7*86400000},
-          {id:'c_s3', from:'zara.vibes',   item:'Slip midi dress',     amount:3.10, ts: now - 14*86400000},
-        ]));
-      }
+      const now = Date.now();
+      localStorage.setItem(CREDITS_KEY, JSON.stringify([
+        {id:'c_s1', item_name:'Linen blazer',    amount_usd:4.50, status:'confirmed', created_at: new Date(now-3*86400000).toISOString()},
+        {id:'c_s2', item_name:'Summer look (2)', amount_usd:7.25, status:'confirmed', created_at: new Date(now-7*86400000).toISOString()},
+        {id:'c_s3', item_name:'Slip midi dress',  amount_usd:3.10, status:'pending',   created_at: new Date(now-14*86400000).toISOString()},
+      ]));
       localStorage.setItem(SEED_FLAG, '1');
     }
 
-    const credits = JSON.parse(localStorage.getItem(CREDITS_KEY) || '[]');
-    const total = credits.reduce((s, c) => s + (c.amount || 0), 0);
-
-    function fmtDate(ts) {
-      return new Date(ts).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    function normalizeCredit(c) {
+      return {
+        item_name:  c.item_name || c.item || 'purchase',
+        amount_usd: c.amount_usd != null ? c.amount_usd : (c.amount || 0),
+        status:     c.status || 'confirmed',
+        created_at: c.created_at || new Date(c.ts || Date.now()).toISOString(),
+      };
     }
 
-    const creditRows = credits.length > 0
-      ? credits.map(c => `
-        <div class="wa-credit-row">
-          <div class="wa-credit-avatar">${initials(c.from||'?')}</div>
-          <div class="wa-credit-info">
-            <div class="wa-credit-from">@${esc(c.from||'creator')}</div>
-            <div class="wa-credit-item">${esc(c.item||'purchase')}</div>
+    function renderFromData(balance, pending_balance, credits) {
+      function fmtDate(iso) {
+        return new Date(iso).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+      }
+
+      const creditRows = credits.length > 0
+        ? credits.map(c => {
+            const n = normalizeCredit(c);
+            const isPending = n.status === 'pending';
+            return `
+            <div class="wa-credit-row">
+              <div class="wa-credit-avatar wa-status-${isPending ? 'pending' : 'confirmed'}">${isPending ? icon('clock',18) : icon('check',18)}</div>
+              <div class="wa-credit-info">
+                <div class="wa-credit-from">${esc(n.item_name)}</div>
+                <div class="wa-credit-item">${isPending ? 'Pending — clears after 30d return window' : 'Confirmed credit'}</div>
+              </div>
+              <div class="wa-credit-right">
+                <div class="wa-credit-amt${isPending ? ' wa-credit-pending-amt' : ''}">+$${n.amount_usd.toFixed(2)}</div>
+                <div class="wa-credit-date">${fmtDate(n.created_at)}</div>
+              </div>
+            </div>`;
+          }).join('')
+        : `<div class="wa-empty">
+            ${icon('coins',40)}
+            <div class="wa-empty-title">No credits yet</div>
+            <div class="wa-empty-sub">Share your looks to the feed. When someone buys via your post, you earn a share as creator credits.</div>
+          </div>`;
+
+      el.innerHTML = `
+        <div class="wa-header">
+          <div class="wa-title">${icon('coins',20)} Creator Wallet</div>
+        </div>
+        <div class="wa-hero">
+          <div class="wa-bal-amt">$${balance.toFixed(2)}</div>
+          <div class="wa-bal-label">Confirmed earnings</div>
+          ${pending_balance > 0 ? `
+          <div class="wa-pending-banner">
+            <div class="wa-pending-banner-amt">$${pending_balance.toFixed(2)}</div>
+            <div class="wa-pending-banner-label">Pending — clears after the 30-day return window</div>
+          </div>` : ''}
+          <div class="wa-withdraw-row">
+            <button class="wa-withdraw-btn" id="wa-withdraw">Withdraw</button>
           </div>
-          <div class="wa-credit-right">
-            <div class="wa-credit-amt">+$${(c.amount||0).toFixed(2)}</div>
-            <div class="wa-credit-date">${fmtDate(c.ts||Date.now())}</div>
+        </div>
+        <div class="wa-section-label">Credits history</div>
+        <div class="wa-credit-list">${creditRows}</div>
+        <div class="wa-section-label" style="margin-top:16px">How it works</div>
+        <div class="wa-how-list">
+          <div class="wa-how-row">
+            <div class="wa-how-icon">${icon('share',16)}</div>
+            <div><div class="wa-how-copy">Share a look to the feed</div><div class="wa-how-sub">Tag items so followers can buy directly</div></div>
           </div>
-        </div>`).join('')
-      : `<div class="wa-empty">
-          ${icon('coins',40)}
-          <div class="wa-empty-title">No credits yet</div>
-          <div class="wa-empty-sub">Share your looks to the feed. When someone buys via your post, you earn 5% as a creator credit.</div>
+          <div class="wa-how-row">
+            <div class="wa-how-icon">${icon('bag',16)}</div>
+            <div><div class="wa-how-copy">Someone buys via your post</div><div class="wa-how-sub">You earn ~40% of AWEAR's affiliate commission on every purchase</div></div>
+          </div>
+          <div class="wa-how-row">
+            <div class="wa-how-icon">${icon('cash',16)}</div>
+            <div><div class="wa-how-copy">Cash out when ready</div><div class="wa-how-sub">Minimum $10 — Stripe Connect available post-launch</div></div>
+          </div>
         </div>`;
 
-    el.innerHTML = `
-      <div class="wa-header">
-        <div class="wa-title">${icon('coins',20)} Creator Wallet</div>
-      </div>
-      <div class="wa-hero">
-        <div class="wa-bal-amt">$${total.toFixed(2)}</div>
-        <div class="wa-bal-label">Total credits earned</div>
-        <div class="wa-pending-row">
-          <div class="wa-pending-amt">$${total.toFixed(2)}</div>
-          <div class="wa-pending-label">Pending payout</div>
-          <button class="wa-withdraw-btn" id="wa-withdraw">Withdraw</button>
-        </div>
-      </div>
-      <div class="wa-section-label">Credits history</div>
-      <div class="wa-credit-list">${creditRows}</div>
-      <div class="wa-section-label" style="margin-top:16px">How it works</div>
-      <div class="wa-how-list">
-        <div class="wa-how-row">
-          <div class="wa-how-icon">${icon('share',16)}</div>
-          <div><div class="wa-how-copy">Share a look to the feed</div><div class="wa-how-sub">Tag items from your closet or AWEAR's catalog</div></div>
-        </div>
-        <div class="wa-how-row">
-          <div class="wa-how-icon">${icon('bag',16)}</div>
-          <div><div class="wa-how-copy">Someone buys via your post</div><div class="wa-how-sub">Every in-app purchase through your look earns you 5%</div></div>
-        </div>
-        <div class="wa-how-row">
-          <div class="wa-how-icon">${icon('cash',16)}</div>
-          <div><div class="wa-how-copy">Cash out when ready</div><div class="wa-how-sub">Minimum $10 — Stripe Connect available post-launch</div></div>
-        </div>
-      </div>`;
+      el.querySelector('#wa-withdraw')?.addEventListener('click', () => {
+        if (balance < 10) { showToast('Minimum withdrawal is $10'); return; }
+        showToast('Withdrawal requested — processing in 2–5 business days');
+      });
+    }
 
-    el.querySelector('#wa-withdraw')?.addEventListener('click', () => {
-      if (total < 10) { showToast('Minimum withdrawal is $10'); return; }
-      showToast('Withdrawal requested — processing in 2–5 business days');
-    });
+    // Render immediately from localStorage (no flicker)
+    const local = JSON.parse(localStorage.getItem(CREDITS_KEY) || '[]');
+    const localBal = local.filter(c => (c.status || 'confirmed') !== 'pending').reduce((s,c) => s + (c.amount_usd ?? c.amount ?? 0), 0);
+    const localPending = local.filter(c => c.status === 'pending').reduce((s,c) => s + (c.amount_usd ?? c.amount ?? 0), 0);
+    renderFromData(localBal, localPending, local);
+
+    // Update from real API if non-empty
+    fetch('/api/wallet?user_id=tamar')
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d && (d.balance > 0 || d.pending_balance > 0 || (d.credits && d.credits.length > 0))) {
+          renderFromData(d.balance || 0, d.pending_balance || 0, d.credits || []);
+        }
+      })
+      .catch(() => {});
   }
 
   // ---- Built by Agents Dashboard ----
