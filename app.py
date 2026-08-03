@@ -1708,8 +1708,10 @@ def init_db() -> None:
             conn.execute("ALTER TABLE credits ADD COLUMN status TEXT NOT NULL DEFAULT 'confirmed'")
         if "transaction_id" not in _credits_cols:
             conn.execute("ALTER TABLE credits ADD COLUMN transaction_id TEXT DEFAULT ''")
+        conn.execute("DROP INDEX IF EXISTS idx_credits_txn")
         conn.execute(
-            "CREATE INDEX IF NOT EXISTS idx_credits_txn ON credits (transaction_id)"
+            "CREATE UNIQUE INDEX IF NOT EXISTS idx_credits_txn"
+            " ON credits (transaction_id) WHERE transaction_id != ''"
         )
         # Direct messages between users. owner_key = the MG-005 user_key ("me").
         # peer_id = the other party (a seed user id). direction: 'out' = me->peer,
@@ -5169,14 +5171,23 @@ async def skimlinks_postback(payload: SkimlinkPostback, request: Request):
     item_label = f"Affiliate sale via post {post_id}" if post_id else "Affiliate sale"
 
     with _get_db() as db:
-        db.execute(
-            """INSERT INTO credits
+        cursor = db.execute(
+            """INSERT OR IGNORE INTO credits
                (id, user_key, order_id, item_name, amount_usd, type, created_at, status, transaction_id)
                VALUES (?,?,?,?,?,?,?,?,?)""",
             (credit_id, poster_id, order_ref, item_label, creator_credit,
              "skimlinks", now, "pending", txn_id),
         )
         db.commit()
+        # rowcount == 0 means the UNIQUE constraint on transaction_id fired (race-dedup)
+        if cursor.rowcount == 0 and txn_id:
+            row = db.execute(
+                "SELECT id FROM credits WHERE transaction_id = ?", (txn_id,)
+            ).fetchone()
+            existing_id = row["id"] if row else credit_id
+            logger.info("skimlinks_postback race-dedup: txn=%s existing=%s", txn_id, existing_id)
+            return {"status": "duplicate", "credit_id": existing_id,
+                    "poster_id": poster_id, "creator_credit_usd": 0.0}
 
     logger.info(
         "skimlinks_postback: poster=%s post=%s commission=%.4f credit=%.4f txn=%s",
