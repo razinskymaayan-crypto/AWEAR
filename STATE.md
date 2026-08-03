@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-02, run 49)
-- **Task**: Commerce — 3-tier item status per item in look-sheet (INBOX ★★★★★ 2026-08-02 item #2).
-- **Done**: commit 268a850. Each look-sheet row now resolves to ✅ Buyable (Buy button, accent gradient) / 🔄 Find Similar (amber, Google Shopping search) / ♻️ Resale (darkened purple, Depop search) via itemBuyStatus(). Status badge below item name ("In stock" / "Find similar" / "Preloved") in pastel lightened colors (contrast ≥7:1 via color-mix 65%/#fff). Click handlers for find-similar-item and resale-item actions added. Gabbana 8/10 PASS.
-- **Next**: INBOX commerce item #3 — source-link UI prominence in scan-confirm (hint "turns item buyable + earns tokens" + URL validation).
-- **Prior runs**: run 47 — fix match-ring % display 15f12d4; run 46 — fix genImage persist to closet 3c4d18d; run 45 — extend check-interactions.mjs 3546b72; run 44 — DS-009/DS-004 icon container cleanup bd271d3.
+## Mark lane — last run (2026-08-03, run 50)
+- **Task**: Commerce — source-link UI prominence in scan-confirm (INBOX ★★★★★ 2026-08-02 item #3).
+- **Done**: commit 28ce450. Elevated plain "Source link (optional)" input to a labeled, badged section with real-time URL validation in the scan-confirm edit form. Label with link icon + "earns tokens" badge, accent-tinted border, three validation states (valid=green/warn=amber/empty=accent-tinted), hint "Turns item buyable — you earn tokens when others shop it", aria-describedby wired. Gabbana 8.5/10 PASS. valentino craft.
+- **Next**: INBOX commerce item (steve/oren backend: Skimlinks conversion endpoint OR find-similar endpoint) — mark lane has completed all 3 UI commerce items from the ★★★★★ 2026-08-02 INBOX directive. Next is UX-QA P1: bottom-sheet drag-dismiss pattern on remaining sheets (mp-fsheet, ms-insight-sheet, comments-sheet, diary-sheet, book-sheet, modal-overlay).
+- **Prior runs**: run 49 — 3-tier item status look-sheet 268a850; run 47 — fix match-ring % display 15f12d4; run 46 — fix genImage persist to closet 3c4d18d; run 45 — extend check-interactions.mjs 3546b72; run 44 — DS-009/DS-004 icon container cleanup bd271d3.
 
 ## Ayalon lane — last run (2026-08-01, run 44)
 - **Task**: DoD audit — verify 2 new commerce commits (COMMERCE-1 Skimlinks affiliate, COMMERCE-2 Buy EXACT product).
