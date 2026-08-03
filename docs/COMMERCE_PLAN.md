@@ -53,22 +53,23 @@ Auto-detection stays an assist, never the source of truth for a purchase.
 
 ## Build order
 **Part A — Plumbing (days):**
-1. Sign up to an affiliate network with instant approval (**Skimlinks or Sovrn**) → get publisher ID. *(founder, ~10 min)*
-2. Replace placeholder `AFFILIATE_TAG = "awear"` in `app.py` with the real ID; make `affiliate_url()` build
-   real deep-links **with the SubID** (`poster_id:post_id:item_id`).
-3. Buy button → open **in-app webview** (Capacitor Browser plugin) on the deep-link. *(code)*
+1. ✅ Sign up to an affiliate network with instant approval (**Skimlinks**) → get publisher ID. *(founder — done)*
+2. ✅ Replace placeholder `AFFILIATE_TAG = "awear"` → real Skimlinks ID + `affiliate_url()` with SubID (`poster_id:post_id`). Commit `a6e799f`. 7 hermetic pytests, commit `91be81f`.
+3. ✅ Buy button → open **in-app webview** (Capacitor Browser plugin) on the deep-link. Commit `f3d9a4a`.
 
 **Part B — The real work:**
-4. **Poster-side tagging** flow: on post-create, Vision proposes items → poster confirms/pastes product URL.
-5. **Item status** resolver (buyable / find-similar / resale) + the three-tier Buy UI.
-6. **Conversion → tokens:** ingest the network's postback → match SubID → credit poster's wallet
-   (pending → confirmed after the return window).
+4. ✅ **Poster-side tagging** flow: "Source link" field in scan-confirm, badged + URL validation + "earns tokens" hint. Commit `28ce450`.
+5. ✅ **Item status** resolver (buyable / find-similar / resale) + three-tier Buy UI in look-sheet. Commits `268a850` (status resolver) + `54ae5f6` (per-item Buy button).
+6. ✅ **Conversion → tokens:** `/api/skimlinks/postback` ingests network postback → matches SubID → credits poster's wallet (pending → confirmed after return window). Commits `b19c904` + `70b80ed` (race dedup). 8 hermetic pytests.
 
-## Decisions still needed from the founder
-1. **Which affiliate network** to start with (recommend **Skimlinks** — broad fashion catalog, instant, SubID support).
-2. **Token economics:** poster's share of commission (proposed **40%**) and what a token redeems for
-   (proposed: **credit toward own purchases** first, cashout later).
-3. **Token → money peg:** is 1 token = $0.01 of credit? (proposed, simple.)
+**Part C — Remaining:**
+7. ⬜ **Find-similar endpoint** — given an unavailable item, return lookalikes from catalog using `_match_score`. (steve lane, next up)
+8. ⬜ **Wallet UI** — display pending/confirmed token balance; token → display peg decision (founder, see Decisions above).
+
+## Decisions made (shipped in code — do not re-open)
+1. ✅ **Affiliate network: Skimlinks** — `SKIMLINKS_ID = "307075X1795350"` live in `app.py:347`. Instant approval, broad fashion catalog, `xcust` SubID for poster attribution. Confirmed 2026-08-01.
+2. ✅ **Token economics: 40% of AWEAR's commission** — `SKIMLINKS_CREATOR_SHARE_PCT = 0.40` in `app.py:360`. Credits stored as USD amounts in `credits` table. Status: `pending` until return window passes, then `confirmed` via `/api/skimlinks/confirm-pending`. Confirmed 2026-08-01.
+3. ⬜ **Token → money peg** (still open): credits currently stored as USD amounts directly. Whether to display as "tokens" with a 1 token = $0.01 display layer is a UX decision — founder to decide when wallet UI ships.
 
 ## What is NOT in scope (rejected)
 - Bot-automated payment / auto-checkout on retailer sites (voids commission, illegal-ish, breaks).

@@ -17,11 +17,12 @@
 - **Next**: INBOX commerce item (steve/oren backend: Skimlinks conversion endpoint OR find-similar endpoint) — mark lane has completed all 3 UI commerce items from the ★★★★★ 2026-08-02 INBOX directive. Next is UX-QA P1: bottom-sheet drag-dismiss pattern on remaining sheets (mp-fsheet, ms-insight-sheet, comments-sheet, diary-sheet, book-sheet, modal-overlay).
 - **Prior runs**: run 49 — 3-tier item status look-sheet 268a850; run 47 — fix match-ring % display 15f12d4; run 46 — fix genImage persist to closet 3c4d18d; run 45 — extend check-interactions.mjs 3546b72; run 44 — DS-009/DS-004 icon container cleanup bd271d3.
 
-## Ayalon lane — last run (2026-08-01, run 44)
-- **Task**: DoD audit — verify 2 new commerce commits (COMMERCE-1 Skimlinks affiliate, COMMERCE-2 Buy EXACT product).
-- **Done**: Grep-verified both commits: `a6e799f` (SKIMLINKS_ID + affiliate_url() + CREATOR_CREDIT_PCT + COMMERCE_PLAN.md), `f3d9a4a` (buyLinkFor/skimWrap/openBuyLink/handleCheckout/handleLookCheckout + source_url threading). Updated DOD_AUDIT.md (2 new rows + header + progress note). commit caa298b. check-render PASS.
-- **Next**: DoD audit — continue verifying newly completed work as commerce/mark/steve lanes ship.
-- **Prior runs**: run 43 — RESILIENCE-2/3 + COMPAT-DB verified 8e0226e; run 42 — BH-20 closet/profile UX polish verified 58caca7.
+## Ayalon lane — last run (2026-08-03, run 46)
+- **Task**: COMMERCE_PLAN.md SoT update — mark 3 founder decisions resolved in code; add Part C (remaining) to build order. Verify economics: SKIMLINKS_CREATOR_SHARE_PCT=0.40 matches plan "40% of commission"; token peg still open (credits in USD directly).
+- **Done**: COMMERCE_PLAN.md updated (decisions section: 2 resolved, 1 still open; build order: A+B fully ✅, Part C added for find-similar + wallet UI). STATE.md updated. check-render PASS.
+- **Context**: run 45 (2026-08-03) verified COMMERCE-3/4/5/6/7 in DOD_AUDIT.md (commit 7c977d4) — STATE.md was not updated that run.
+- **Next**: DoD audit — verify steve's find-similar endpoint when it ships (COMMERCE-8 expected); check wallet UI token peg decision once surfaced.
+- **Prior runs**: run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4; run 44 — COMMERCE-1/2 verified caa298b; run 43 — RESILIENCE-2/3 + COMPAT-DB verified 8e0226e; run 42 — BH-20 verified 58caca7.
 
 ## Steve lane — last run (2026-08-03, run 33)
 - **Task**: Fix double-crediting race: non-UNIQUE idx_credits_txn → partial UNIQUE index + INSERT OR IGNORE (rejection fix).
