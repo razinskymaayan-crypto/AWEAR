@@ -53,7 +53,8 @@ async function testOverlay(name, sheetSel, closeSel, openFn) {
       if (!el) return false;
       if (el.classList.contains('show') || el.classList.contains('open')) return true;
       const cs = getComputedStyle(el);
-      return cs.display !== 'none' && cs.visibility !== 'hidden' && el.getAttribute('aria-hidden') === 'false';
+      const ah = el.getAttribute('aria-hidden');
+      return cs.display !== 'none' && cs.visibility !== 'hidden' && (ah === null || ah === 'false');
     };
     const opened = await page.evaluate(isOpen, sheetSel);
     await page.click(closeSel, { timeout: 2500 });
@@ -105,6 +106,18 @@ await testOverlay('edit-profile overlay', 'edit-profile-overlay', '#edit-profile
 // 7) Sell-form (purchase-modal) — close via aria-label="Close" X button in header
 await testOverlay('sell-form (purchase-modal)', 'purchase-modal', '#purchase-modal [aria-label="Close"]', () => {
   window.openSellForm && openSellForm();
+});
+
+// 8) Diary sheet (dynamically appended; uses .show on the overlay)
+await testOverlay('diary sheet', 'diary-overlay', '.diary-x-close', () => {
+  window.showDiaryModal && showDiaryModal();
+});
+
+// 9) Book sheet (dynamically appended; removed from DOM on cancel — no .show class)
+await page.evaluate(() => { window.showView && showView('outfits'); });
+await page.waitForTimeout(400);
+await testOverlay('book sheet', 'book-overlay-el', '.book-cancel', () => {
+  window.openBooking && openBooking('stylist_1', 'Abigail Osei');
 });
 
 await browser.close();
