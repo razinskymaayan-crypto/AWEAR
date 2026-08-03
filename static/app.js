@@ -1597,7 +1597,11 @@
           <input class="sc-field" value="${attr(it.category)}" placeholder="Category" oninput="scUpdateField(${idx},'category',this.value)">
           <input class="sc-field" value="${attr(it.brand)}" placeholder="Brand" oninput="scUpdateField(${idx},'brand',this.value)">
           <input class="sc-field" type="number" value="${attr(''+it.price)}" placeholder="Price USD" oninput="scUpdateField(${idx},'price',+this.value)">
-          <input class="sc-field" value="${attr(it.source_url)}" placeholder="Source link (optional)" oninput="scUpdateField(${idx},'source_url',this.value)">
+          <div class="sc-source-wrap">
+            <div class="sc-source-label">${icon('link',12)} Source link<span class="sc-source-badge">earns tokens</span></div>
+            <input class="sc-field sc-source-field${it.source_url&&/^https?:\/\/.{4,}/.test(it.source_url.trim())?' sc-field--valid':it.source_url?' sc-field--warn':''}" value="${attr(it.source_url)}" placeholder="https://shop.com/item..." type="url" autocomplete="url" aria-describedby="sc-src-hint-${idx}" oninput="scUpdateField(${idx},'source_url',this.value);_scUrlFeedback(this)">
+            <div class="sc-source-hint" id="sc-src-hint-${idx}">${icon('zap',11)} Turns item buyable — you earn tokens when others shop it</div>
+          </div>
         </div>`:''}
       </div>`;
     }).join('');
@@ -1605,6 +1609,12 @@
   }
   function scSetAccepted(idx,val){_scItems[idx].accepted=val;if(!val)_scItems[idx].editing=false;_renderScConfirm();}
   function scToggleEdit(idx){_scItems[idx].editing=!_scItems[idx].editing;if(_scItems[idx].editing)_scItems[idx].accepted=true;_renderScConfirm();}
+  function _scUrlFeedback(input){
+    const v=input.value.trim();
+    const ok=v.length>0&&/^https?:\/\/.{4,}/.test(v);
+    input.classList.toggle('sc-field--valid',ok);
+    input.classList.toggle('sc-field--warn',v.length>0&&!ok);
+  }
   function scUpdateField(idx,field,val){
     _scItems[idx].final[field]=val;
     const card=document.getElementById('sc-card-'+idx);
