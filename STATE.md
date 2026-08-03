@@ -23,9 +23,9 @@
 - **Next**: DoD audit — continue verifying newly completed work as commerce/mark/steve lanes ship.
 - **Prior runs**: run 43 — RESILIENCE-2/3 + COMPAT-DB verified 8e0226e; run 42 — BH-20 closet/profile UX polish verified 58caca7.
 
-## Steve lane — last run (2026-08-03, run 32)
-- **Task**: INBOX ★★★★★ commerce item — Skimlinks conversion postback endpoint (creator wallet pending tokens).
-- **Done**: commit d184f54. POST /api/skimlinks/postback: ingest affiliate postbacks, parse xcust→poster_id:post_id, credit poster wallet with pending tokens (40% × commission), dedup on transaction_id. POST /api/skimlinks/confirm-pending: promote pending→confirmed after return window (days param, default 30). credits table migration: added status (pending/confirmed, default=confirmed) + transaction_id columns. Wallet: exposes pending_balance + per-credit status field. 8 new pytests, 235/235 green. sam IC.
+## Steve lane — last run (2026-08-03, run 33)
+- **Task**: Fix double-crediting race: non-UNIQUE idx_credits_txn → partial UNIQUE index + INSERT OR IGNORE (rejection fix).
+- **Done**: commit 6776d9a. DROP+recreate idx_credits_txn as UNIQUE (WHERE transaction_id != '') to prevent concurrent postbacks from both inserting the same txn. INSERT OR IGNORE + rowcount==0 dedup path handles race at DB layer. Syntax OK, check-render PASS.
 - **Next**: INBOX ★★★★★ commerce item 2 — find-similar endpoint (given unavailable item, return lookalikes from catalog using _match_score).
 - **Prior runs**: run 31 — /api/weather fallback dd0689d; run 30 — Skimlinks contract tests 91be81f; run 29 — agent_summary 500→503; run 28 — self-heal stale CI_FAILURES; run 27 — scan-health google_available; runs 20-26 — launch infra.
 - **Status**: All Supabase epic items shipped (Render ✓, JWT auth ✓, _CompatDB Postgres ✓, Storage ✓). Test suite 225 tests, 93% route coverage (5 ext_dep).

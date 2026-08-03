@@ -3,6 +3,7 @@
 > **CANONICAL SOURCE** — הוסף כאן בלבד. Archive → `activity_log_archive.md`. Worktree copies = read-only snapshots, לא לכתיבה.
 > פורמט: `| YYYY-MM-DD | agent | branch/file | status | short description |`
 
+| 2026-08-03 | sam | auto/steve / app.py | done | fix(commerce): prevent double-crediting via non-UNIQUE txn index race — upgraded idx_credits_txn to partial UNIQUE index + INSERT OR IGNORE + rowcount==0 dedup. commit 6776d9a. |
 | 2026-08-02 | ayalon | auto/ayalon / docs/DOD_AUDIT.md | done | DoD audit update: close item-12 pipeline gap (genImage persists to closet — commit 3c4d18d; PATCH image_url backend — commit 707e3a8); add weather resilience entry (commit dd0689d). All 13 items now fully verified, 0 open gaps. |
 | 2026-08-01 | sam | auto/steve / app.py + tests/test_app.py | done | Hardening: /api/declutter tracks live/demo mode in _last_declutter; exposed under ai_features.declutter in GET /api/scan-health. Two regression tests added. commit 40f8669. |
 | 2026-07-31 | steve | auto/steve / .claude/agents/knowledge/CI_FAILURES.md + STATE.md | done | Self-heal run 28: cleared 8 stale [OPEN] entries (test_profiles_list_contract) — commit f051da1 already in origin/main, test passes via TestClient simulation. No app code change. |
