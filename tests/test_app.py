@@ -3720,3 +3720,78 @@ def test_find_similar_empty_query_returns_list(client):
     d = r.json()
     assert isinstance(d["alternatives"], list)
     assert d["total"] == len(d["alternatives"])
+
+
+# ---------------------------------------------------------------------------
+# /api/products — catalog endpoint contract
+# ---------------------------------------------------------------------------
+
+def test_products_pagination_contract(client):
+    """GET /api/products returns {items, total, limit, offset} envelope with working pagination."""
+    r = client.get("/api/products", params={"limit": 5, "offset": 0})
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert "items" in d and "total" in d and "limit" in d and "offset" in d
+    assert isinstance(d["items"], list)
+    assert d["limit"] == 5
+    assert d["offset"] == 0
+    assert len(d["items"]) <= 5
+    assert d["total"] > 0
+
+    # offset slicing: page 2 items must differ from page 1
+    r2 = client.get("/api/products", params={"limit": 5, "offset": 5})
+    assert r2.status_code == 200
+    page2 = r2.json()
+    page1_ids = {p["id"] for p in d["items"]}
+    page2_ids = {p["id"] for p in page2["items"]}
+    assert page1_ids.isdisjoint(page2_ids), "page 1 and page 2 must not share items"
+
+
+def test_products_category_filter(client):
+    """category= param returns only products of that category."""
+    r_all = client.get("/api/products", params={"limit": 200})
+    assert r_all.status_code == 200
+    all_cats = {p["category"] for p in r_all.json()["items"] if p.get("category")}
+    assert all_cats, "test requires at least one categorised product"
+
+    cat = next(iter(sorted(all_cats)))
+    r = client.get("/api/products", params={"category": cat, "limit": 200})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["total"] > 0
+    assert all(p.get("category") == cat for p in d["items"]), \
+        "filter returned item with wrong category"
+
+
+def test_products_in_stock_filter(client):
+    """in_stock=true returns only buyable items; in_stock=false returns unavailable ones."""
+    r_in = client.get("/api/products", params={"in_stock": True, "limit": 200})
+    assert r_in.status_code == 200
+    in_stock_items = r_in.json()["items"]
+    assert all(p.get("in_stock") is True for p in in_stock_items), \
+        "in_stock=true filter returned an out-of-stock product"
+
+    r_out = client.get("/api/products", params={"in_stock": False, "limit": 200})
+    assert r_out.status_code == 200
+    out_items = r_out.json()["items"]
+    assert all(p.get("in_stock") is False for p in out_items), \
+        "in_stock=false filter returned an in-stock product"
+
+
+# ---------------------------------------------------------------------------
+# /api/categories — filter-chip contract
+# ---------------------------------------------------------------------------
+
+def test_categories_contract(client):
+    """GET /api/categories returns {items, total} with {name, count} per item."""
+    r = client.get("/api/categories")
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert "items" in d and "total" in d
+    assert isinstance(d["items"], list)
+    assert d["total"] == len(d["items"])
+    assert d["total"] > 0, "products catalog must have at least one category"
+    for item in d["items"]:
+        assert "name" in item and "count" in item, f"category item missing fields: {item}"
+        assert isinstance(item["count"], int) and item["count"] > 0, \
+            f"category {item['name']} has non-positive count: {item['count']}"
