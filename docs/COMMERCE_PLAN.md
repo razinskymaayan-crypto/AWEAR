@@ -62,14 +62,14 @@ Auto-detection stays an assist, never the source of truth for a purchase.
 5. ✅ **Item status** resolver (buyable / find-similar / resale) + three-tier Buy UI in look-sheet. Commits `268a850` (status resolver) + `54ae5f6` (per-item Buy button).
 6. ✅ **Conversion → tokens:** `/api/skimlinks/postback` ingests network postback → matches SubID → credits poster's wallet (pending → confirmed after return window). Commits `b19c904` + `70b80ed` (race dedup). 8 hermetic pytests.
 
-**Part C — Remaining:**
-7. ⬜ **Find-similar endpoint** — given an unavailable item, return lookalikes from catalog using `_match_score`. (steve lane, next up)
-8. ⬜ **Wallet UI** — display pending/confirmed token balance; token → display peg decision (founder, see Decisions above).
+**Part C — All shipped:**
+7. ✅ **Find-similar endpoint** — `/api/find-similar` at `app.py:2153`: returns in-stock catalog lookalikes via `_match_score`. 3 hermetic pytests (`tests/test_app.py:3680`). UI "Find Similar" button at `app.js:747` currently routes to Google Shopping as practical fallback; catalog endpoint available for deeper UI wiring. Commit `d4f08bc`.
+8. ✅ **Wallet UI** — `renderWallet()` at `app.js:4015`: shows confirmed earnings (green) + pending banner (amber, "clears after 30-day return window") separately; `normalizeCredit()` handles old localStorage + new API format; fires async `GET /api/wallet?user_id=tamar`; "How it works" copy: "~40% of AWEAR's affiliate commission". Commit `41c83e3`.
 
 ## Decisions made (shipped in code — do not re-open)
 1. ✅ **Affiliate network: Skimlinks** — `SKIMLINKS_ID = "307075X1795350"` live in `app.py:347`. Instant approval, broad fashion catalog, `xcust` SubID for poster attribution. Confirmed 2026-08-01.
 2. ✅ **Token economics: 40% of AWEAR's commission** — `SKIMLINKS_CREATOR_SHARE_PCT = 0.40` in `app.py:360`. Credits stored as USD amounts in `credits` table. Status: `pending` until return window passes, then `confirmed` via `/api/skimlinks/confirm-pending`. Confirmed 2026-08-01.
-3. ⬜ **Token → money peg** (still open): credits currently stored as USD amounts directly. Whether to display as "tokens" with a 1 token = $0.01 display layer is a UX decision — founder to decide when wallet UI ships.
+3. ⬜ **Token → money peg** (still open): Wallet UI ships displaying raw USD amounts (`$X.XX`). Whether to add a "tokens" abstraction layer (1 token = $0.01) is a UX display decision only — founder to decide; no code change blocks the demo.
 
 ## What is NOT in scope (rejected)
 - Bot-automated payment / auto-checkout on retailer sites (voids commission, illegal-ish, breaks).
