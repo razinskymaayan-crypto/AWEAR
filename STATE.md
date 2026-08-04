@@ -17,12 +17,12 @@
 - **Next**: INBOX commerce remaining — Wallet UI founder decision on token peg (see NEEDS_DECISION.md / COMMERCE_PLAN decisions #3). Then: find-similar endpoint UI when steve ships backend.
 - **Prior runs**: run 51 — diary-sheet + book-sheet interaction tests 0f871bf; run 50 — source-link UI prominence 28ce450; run 49 — 3-tier item status look-sheet 268a850; run 47 — fix match-ring % display 15f12d4; run 46 — fix genImage persist to closet 3c4d18d.
 
-## Ayalon lane — last run (2026-08-03, run 46)
-- **Task**: COMMERCE_PLAN.md SoT update — mark 3 founder decisions resolved in code; add Part C (remaining) to build order. Verify economics: SKIMLINKS_CREATOR_SHARE_PCT=0.40 matches plan "40% of commission"; token peg still open (credits in USD directly).
-- **Done**: COMMERCE_PLAN.md updated (decisions section: 2 resolved, 1 still open; build order: A+B fully ✅, Part C added for find-similar + wallet UI). STATE.md updated. check-render PASS.
-- **Context**: run 45 (2026-08-03) verified COMMERCE-3/4/5/6/7 in DOD_AUDIT.md (commit 7c977d4) — STATE.md was not updated that run.
-- **Next**: DoD audit — verify steve's find-similar endpoint when it ships (COMMERCE-8 expected); check wallet UI token peg decision once surfaced.
-- **Prior runs**: run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4; run 44 — COMMERCE-1/2 verified caa298b; run 43 — RESILIENCE-2/3 + COMPAT-DB verified 8e0226e; run 42 — BH-20 verified 58caca7.
+## Ayalon lane — last run (2026-08-04, run 48)
+- **Task**: Fix investor-critical stale data in PITCH_DECK.md + BUSINESS_PLAN.md — creator credits "5%" → "~40% מעמלת AWEAR", garment image pipeline status, Skimlinks live status.
+- **Done**: docs/PITCH_DECK.md: (1) creator credits corrected 5%→~40% in Slide 5 + Slide 8 demo step; (2) Phase 1 updated to note Skimlinks live (publisher ID `307075X1795350`); (3) garment image note updated ("שמירה לארון = שלב הבא" removed; commit 3c4d18d already closed it); (4) status update entry added 2026-08-04. docs/BUSINESS_PLAN.md: affiliate_url note updated from "when we sign up" to "already live". check-render PASS.
+- **Context**: Run 47 (2026-08-03) verified COMMERCE-8/9 in DOD_AUDIT.md (commit 9b81cee) — STATE.md was not updated that run.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — 4 changes, awaiting founder approval); token peg UX decision (#3 in COMMERCE_PLAN); PITCH_DECK PDF/Keynote conversion is human-only step.
+- **Prior runs**: run 47 — COMMERCE-8/9 DoD verified + COMMERCE_PLAN Part C closed 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4; run 44 — COMMERCE-1/2 verified caa298b.
 
 ## Steve lane — last run (2026-08-03, run 33)
 - **Task**: Fix double-crediting race: non-UNIQUE idx_credits_txn → partial UNIQUE index + INSERT OR IGNORE (rejection fix).

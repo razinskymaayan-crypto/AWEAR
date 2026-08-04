@@ -31,7 +31,7 @@
 **Punchline:** *צילום תלבושת → AI מזהה כל פריט → אישור בטאפ אחד (המשתמשת תמיד בשליטה) → הארון הדיגיטלי הופך לפיד חי שאפשר לקנות ממנו.*
 
 חמש שכבות בסינרגיה, כולן עובדות באב-טיפוס:
-1. **Closet = Profile** — מדפי קטגוריה, כל פריט = **clean catalog image שה-AI יצר מהצילום האמיתי שלה** — לא תמונת קמעונאי אקראית, לא placeholder שבור. (Phase 1 היום: תמונת קמעונאי דרך `search_query` בארון; Phase 2 ✅ **shipped** `9975080`: OpenAI `gpt-image-1` מייצר תמונת סטודיו מהצילום — ה-garment אחרי הסרת הגוף, רקע שקוף, תאורת מוצר — **גלויה במסך "האם זיהינו נכון?"**; שמירה לארון = שלב הבא.)
+1. **Closet = Profile** — מדפי קטגוריה, כל פריט = **clean catalog image שה-AI יצר מהצילום האמיתי שלה** — לא תמונת קמעונאי אקראית, לא placeholder שבור. (Phase 1 היום: תמונת קמעונאי דרך `search_query` בארון; Phase 2 ✅ **fully shipped**: OpenAI `gpt-image-1` מייצר תמונת סטודיו מהצילום — ה-garment אחרי הסרת הגוף, רקע שקוף, תאורת מוצר — **גלויה במסך "האם זיהינו נכון?"** ✅ ו**נשמרת לארון** (commit `3c4d18d`).)
 2. **Shop-the-Look** — קנייה in-app, המשתמשת לא עוזבת את האפליקציה.
 3. **Resale Marketplace** — ה-AI מציע מה למכור (50% מהמחיר המקורי) לפי usage נמוך.
 4. **AI Stylist** — "מה ללבוש" לפי event + עונה, stats, streaks.
@@ -75,9 +75,9 @@
 **Punchline:** *Awear מרוויחה מהיום הראשון — חוקי, מיידי, ללא תלות במותג — וכל שלב במנוע כבר מוכח ע"י שחקן אמיתי בשוק.*
 
 ארבעה מנועים מדורגים — כל שלב מממן ומוכיח את הבא, אותו closet-graph מזין את כולם:
-- **Phase 1 (מהיום): Affiliate + Creator Credits — מנוע הוכחת-intent.** רשתות AWIN/Rakuten/Sovrn/Impact/CJ; עמלת אופנה ריאלית **7–10.5%, ‏blended ~8%** (‏~5.8% נטו מה-GMV אחרי ‏~27% reversals). אפס מלאי, אפס לוגיסטיקה. (Comp: Phia — affiliate-only, גייסה $35M בשווי ~$185M.)
-  - נקודת ההכנסה היחידה בקוד: `affiliate_url()` — שורה אחת, וכל כפתור "קני" מתחיל להכניס כסף.
-  - **Creator Credits:** פוסט נושא `influencer_id` → קנייה → ייחוס → creator מזוכה **5%** (ledger append-only, idempotent) → Wallet מציג balance.
+- **Phase 1 (מהיום): Affiliate + Creator Credits — מנוע הוכחת-intent.** רשת **Skimlinks** ✅ חי מ-2026-08-01 (publisher ID `307075X1795350`; תמיכה ב-AWIN/Rakuten/Impact/CJ בהמשך); עמלת אופנה ריאלית **7–10.5%, ‏blended ~8%** (‏~5.8% נטו מה-GMV אחרי ‏~27% reversals). אפס מלאי, אפס לוגיסטיקה. (Comp: Phia — affiliate-only, גייסה $35M בשווי ~$185M.)
+  - `affiliate_url()` כבר **חי** — xcust SubID לייחוס פוסט, כל כפתור "קני" מרוויח עמלה היום.
+  - **Creator Credits:** פוסט נושא `influencer_id` → קנייה → ייחוס → creator מזוכה **~40% מעמלת AWEAR** (≈3.2% מה-GMV; pending → confirmed אחרי 30 יום; idempotent on transaction_id) → Wallet מציג balance.
 - **Phase 2 (post-raise): AWEAR Pro ‏$5.99/mo — מנוע ה-margin הראשון.** ה-scan הבסיסי לעולם חינם; Pro = unlimited + פיצ'רים כבדי-AI. (Comp: StyleDNA גובה $7.99–19.99/mo.) *⚠️ ממתין לאישור מייסדות.*
 - **Phase 3 (post-raise + פתרון payout): Resale + dropshipping סלקטיבי — מנוע ה-GMV.** ‏Resale: הצעת מחיר 50% מהמקור · עמלת AWEAR ‏**15%** מהמכירה. Dropshipping (Spocket/Zendrop/CJ + מותגי D2C ישראלים) רק בקטגוריות שה-match-data מוכיח בהן demand. (Comp: Vinted — רווחית.)
 - **Phase 4 (‏5M+ MAU): Sponsored placement ממותגים — מנוע ה-ARPU האינקרמנטלי.**
@@ -143,7 +143,7 @@
 3. **For You feed** — looks שאפשר לקנות, full-screen.
 4. **Buy in-app** (simulated checkout) → "Order confirmed".
 5. **Item lands in closet** → "added to your closet".
-6. **Creator Wallet** → המשפיען שמהפוסט שלו קנו מזוכה בקרדיט (5%).
+6. **Creator Wallet** → המשפיען שמהפוסט שלו קנו מזוכה בקרדיט (~40% מעמלת AWEAR; pending → confirmed).
 7. **[Bonus]** dashboard חי של צוות האייג'נטים = "built by agents".
 
 > **Speaker note:** לחזור על ה-flow פעמיים ב-dry-run לפני הפגישה. אפס broken images, graceful offline (A6). אם משהו נכשל — להמשיך, האפליקציה תמיד מצליחה בדמו (client-side fallback קיים).
@@ -175,6 +175,7 @@
 - **עדכון 2026-07-25:** match score SPA wiring ✅ **shipped** (commit `251e38e` by mark lane) — `app.js:699–714` מביא `match_pct`/`reason`/`matching_items` מה-server אחרי פתיחת ה-item sheet; local `calcCompatScore()` ממשיך להציג optimistic placeholder מיידי. DoD Audit #13 **fully verified** — 13/13 מאומתים (12 fully verified, 1 doc-only; 0 backend-only/pending).
 - **עדכון 2026-07-26:** (1) **Nav fix** ✅ **shipped** (commit `ca649fa`) — לחיצה על look-tile בפרופיל/ארון פותחת עכשיו את ה-look הספציפי הזה (לפני כן: נווטה ל-feed הכללי). שדרוג demo-reliability ל-beat 6: אחרי הצגת הארון, אפשר לדפוק look-tile ולהגיע ישר ל-item sheet — "the wardrobe is the profile" בטאפ אחד. (2) **Outfit generator DS-004 polish** ✅ **shipped** (commit `a6ab1fa` by mark lane) — כל 14 חוקי og-* ב-CSS עכשיו עם fallback טוקן נכון (Gabbana 5/10 → כל P0+P1+P2 נסגרו; Gabbana 8/10 PASS). שינוי ויזואלי בלבד — אין שינוי בתוכן ה-deck.
 - **עדכון 2026-07-27:** (1) **BH-10 DS-004 --success sweep** ✅ **shipped** (commit `0651046` by mark lane) — 14 occurrences of stale light-mode success fallbacks corrected to `#52c97a` (canonical dark-mode token) across analytics, sustainability, marketplace, earn, and stylist screens. App is visually clean across all screens — no visible DS-004 regressions remain. Deck content unchanged. (2) **Backend resilience hardening** ✅ **shipped** (commit `d148c50` by steve lane) — agent_schedule/agent_meeting/agent_summary return 503 (service unavailable) instead of crashing with unhandled 500 when Google Calendar/SMTP is unreachable. Slide 3 "Moat #2 — agentic company / עלות לא גדלה לינארית" claim strengthened: the operational layer is now resilient to external-service failure in demo conditions. No content change to the deck.
+- **עדכון 2026-08-04:** (1) **creator credits תוקן: 5% → ~40% מעמלת AWEAR** (≈3.2% מה-GMV) — השינוי ב-`SKIMLINKS_CREATOR_SHARE_PCT = 0.40` ב-app.py ו-Wallet UI קדמה לעדכון ה-deck; Slides 5 ו-8 תוקנו. (2) **Skimlinks חי** עם publisher ID אמיתי מ-2026-08-01 — עודכן ב-Phase 1. (3) **garment image pipeline סגור** — "שמירה לארון = שלב הבא" הוסר; commit `3c4d18d` סגר את הפער; Slide 2 מדויק. (4) **Commerce engine fully shipped** — כל 8 פריטי COMMERCE_PLAN ✅; הפנייה ל-`docs/COMMERCE_PLAN.md` ל-SoT מלא.
 - **מה נשאר (אנושי):** (1) המרה ל-PDF/Keynote בעיצוב AWEAR · (2) screenshots אמיתיים ל-Slides 2,8 · (3) sign-off CMO + Jeff (owners) · (4) dry-run ×2 לפי C2.
 - **תלות:** A6 (demo reliability, 0 broken images) לפני הצגה חיה ב-Slide 8.
 
