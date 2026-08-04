@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-03, run 52)
-- **Task**: COMMERCE_PLAN Part C item 8 — Wallet UI: wire to real `/api/wallet` API, show pending vs confirmed split, fix "5%" copy to "40% of AWEAR's affiliate commission".
-- **Done**: renderWallet() rewritten (app.js) — shows confirmed earnings (green) + pending banner (amber) separately; normalizeCredit() handles both old localStorage and new API format; seeds updated to `{item_name, amount_usd, status, created_at}` (v2); fires async fetch to `/api/wallet?user_id=tamar` and updates DOM if non-empty; "How it works" copy corrected. 8 new CSS classes in app.css. check-render PASS, node --check PASS, gabbana PASS (spacing fixed to 8pt grid). IC: dolce.
-- **Next**: INBOX commerce remaining — Wallet UI founder decision on token peg (see NEEDS_DECISION.md / COMMERCE_PLAN decisions #3). Then: find-similar endpoint UI when steve ships backend.
-- **Prior runs**: run 51 — diary-sheet + book-sheet interaction tests 0f871bf; run 50 — source-link UI prominence 28ce450; run 49 — 3-tier item status look-sheet 268a850; run 47 — fix match-ring % display 15f12d4; run 46 — fix genImage persist to closet 3c4d18d.
+## Mark lane — last run (2026-08-04, run 53)
+- **Task**: Wire "Find Similar" button to `/api/find-similar` — in-app results sheet instead of Google Shopping redirect.
+- **Done**: `openFindSimilar(it, influencerUser)` async function added (app.js); fetches catalog lookalikes from `/api/find-similar`, renders up to 6 alternatives with image/name/brand/price/Buy button; graceful fallback to web search on empty/error. `.fsim-*` CSS classes added (app.css). `sheet-row-buy` min-width:44px added. Gabbana 9.5/10 PASS. check-render PASS, node --check PASS. Commit fd686d0.
+- **Next**: INBOX commerce remaining — token peg UX decision (NEEDS_DECISION #3 in COMMERCE_PLAN). Then any new commerce/design INBOX item.
+- **Prior runs**: run 52 — Wallet UI fd686d0; run 51 — diary-sheet + book-sheet interaction tests 0f871bf; run 50 — source-link UI prominence 28ce450; run 49 — 3-tier item status look-sheet 268a850; run 47 — fix match-ring % display 15f12d4.
 
 ## Ayalon lane — last run (2026-08-04, run 48)
 - **Task**: Fix investor-critical stale data in PITCH_DECK.md + BUSINESS_PLAN.md — creator credits "5%" → "~40% מעמלת AWEAR", garment image pipeline status, Skimlinks live status.
