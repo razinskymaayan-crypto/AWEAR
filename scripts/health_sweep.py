@@ -101,6 +101,12 @@ BODIES = {
     "/api/analytics/wear": {"item_id": "prod_ss_001", "item_name": "Linen blazer"},
     "/api/stories": {"image_url": "https://example.com/sweep-test.jpg"},
     "/api/dm/send": {"to_user_id": "user_002", "text": "Hey there!"},
+    "/api/skimlinks/postback": {
+        "xcust": "sweep_user:sweep_post",
+        "commission": 1.50,
+        "sale_amount": 10.00,
+        "transaction_id": "sweep_txn_health_001",
+    },
 }
 
 # Query params for GET routes whose required params aren't path segments.

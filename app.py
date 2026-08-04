@@ -2150,6 +2150,26 @@ def resolve_product(q: str = "", category: str = "", color: str = "", brand: str
             "message": "Not sold new anymore — keep it in your closet, style it, or list it for resale."}
 
 
+@app.get("/api/find-similar")
+def find_similar(q: str = "", category: str = "", brand: str = "", color: str = "", limit: int = 6):
+    """Return in-stock lookalikes for an unavailable item, scored by _match_score.
+
+    Called when an item status is 'find-similar' (discontinued / sold-out / off-season).
+    Only returns in-stock products. limit is capped at 12.
+    Response: {"alternatives": [<buy_route>, ...], "total": N}
+    """
+    limit = min(max(1, limit), 12)
+    item = {"search_query": q, "category": category, "brand": brand, "color": color}
+    in_stock = [p for p in _products_cache if p.get("in_stock")]
+    scored = sorted(
+        ((_match_score(item, p), p) for p in in_stock),
+        key=lambda t: t[0],
+        reverse=True,
+    )
+    alternatives = [_buy_route(p) for s, p in scored if s > 0][:limit]
+    return {"alternatives": alternatives, "total": len(alternatives)}
+
+
 @app.post("/api/admin/reload-products")
 def admin_reload_products():
     """Hot-reload products.json into the in-memory cache without server restart."""

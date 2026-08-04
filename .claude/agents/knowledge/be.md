@@ -35,6 +35,12 @@
 **לקח:** כל endpoint שכותב/קורא state פר-משתמש חייב: `user_key = (request.client.host if request.client else None) or "anon"`. בלי זה — `request.client` יכול להיות None מאחורי proxy/test client וה-endpoint קורס.
 **מנגנון:** grep לפני commit של endpoint חדש: `grep -n "user_key" app.py` — הדפוס חייב להופיע בכל handler חדש שנוגע בנתוני משתמש. בנוסף `check_rate_limit` לכל endpoint חדש.
 
+
+### BE-007 | postback dedup — UNIQUE PARTIAL index + INSERT OR IGNORE, not SELECT-before-INSERT
+**מקור:** jeff-rejections (2026-08-03) — idx_credits_txn non-UNIQUE race condition.
+**לקח:** SELECT-before-INSERT dedup FAILS under concurrency — two threads both pass the SELECT check before either INSERTs. For server-to-server postbacks (Skimlinks, affiliate networks), the only race-safe pattern is: (1) CREATE UNIQUE INDEX … WHERE transaction_id != '' (partial — avoids collisions on empty-string rows); (2) INSERT OR IGNORE; (3) check cursor.rowcount == 0 to detect the race. The SELECT-before-INSERT pre-check is kept ONLY as a fast-path to avoid touching the DB at all on a known duplicate.
+**מנגנון:** any endpoint that creates a ledger row keyed on an external id (transaction_id, order_id, etc.) must use UNIQUE PARTIAL index + INSERT OR IGNORE, not naive SELECT-before-INSERT.
+
 ---
 
 

@@ -38,6 +38,7 @@
 | BE-004 | in-memory store → SQLite: init_db() + _get_db() + row_factory | [[be.md]] |
 | BE-005 | saves/bookmarks/likes = SQLite מיום ראשון, לא in-memory | [[be.md]] |
 | BE-006 | `user_key = (request.client.host if request.client else None) or "anon"` — בכל endpoint חדש | [[be.md]] |
+| BE-007 | postback dedup = UNIQUE PARTIAL index + INSERT OR IGNORE (not SELECT-before-INSERT alone — race) | [[be.md]] |
 | BE-IDEMPOTENT | כתיבת כסף/קרדיט = idempotency key (`client_ref`, SELECT-before-INSERT) | [[be.md]] |
 | BE-TAG-INTEGRITY | הפניות id בין קבצים = orphan check פרוגרמטי + cache reload + curl verify | [[be.md]] |
 | BE-DIAG-LIVENESS | "key configured" ≠ "key works" — probe אמיתי opt-in עם error enum | [[be.md]] |

@@ -3674,3 +3674,49 @@ def test_skimlinks_confirm_pending_days_invalid_400(client):
     """
     r = client.post("/api/skimlinks/confirm-pending", params={"days": 0})
     assert r.status_code == 400, r.text
+
+
+# ---------------------------------------------------------------------------
+# /api/find-similar — COMMERCE_PLAN item 7
+# ---------------------------------------------------------------------------
+
+def test_find_similar_returns_200_and_shape(client):
+    """GET /api/find-similar returns {alternatives, total} with buy_route fields.
+
+    FAIL-BEFORE: endpoint did not exist (404).
+    PASS-AFTER: 200 with well-shaped alternatives list.
+    """
+    r = client.get("/api/find-similar", params={"category": "top", "limit": 4})
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert "alternatives" in d, "response must have 'alternatives' key"
+    assert "total" in d, "response must have 'total' key"
+    assert isinstance(d["alternatives"], list)
+    assert d["total"] == len(d["alternatives"])
+    for alt in d["alternatives"]:
+        for field in ("id", "name", "brand", "source", "checkout", "buy_url"):
+            assert field in alt, f"alternative missing field: {field}"
+
+
+def test_find_similar_limit_respected(client):
+    """limit param caps the result count.
+
+    FAIL-BEFORE: endpoint did not exist.
+    PASS-AFTER: never returns more than limit items.
+    """
+    r = client.get("/api/find-similar", params={"category": "dress", "limit": 2})
+    assert r.status_code == 200, r.text
+    assert len(r.json()["alternatives"]) <= 2
+
+
+def test_find_similar_empty_query_returns_list(client):
+    """With no query params the endpoint returns a valid (possibly empty) list.
+
+    FAIL-BEFORE: endpoint did not exist.
+    PASS-AFTER: always 200 with list shape.
+    """
+    r = client.get("/api/find-similar")
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert isinstance(d["alternatives"], list)
+    assert d["total"] == len(d["alternatives"])
