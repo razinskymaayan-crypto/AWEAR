@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-04, run 53)
-- **Task**: Wire "Find Similar" button to `/api/find-similar` — in-app results sheet instead of Google Shopping redirect.
-- **Done**: `openFindSimilar(it, influencerUser)` async function added (app.js); fetches catalog lookalikes from `/api/find-similar`, renders up to 6 alternatives with image/name/brand/price/Buy button; graceful fallback to web search on empty/error. `.fsim-*` CSS classes added (app.css). `sheet-row-buy` min-width:44px added. Gabbana 9.5/10 PASS. check-render PASS, node --check PASS. Commit fd686d0.
-- **Next**: INBOX commerce remaining — token peg UX decision (NEEDS_DECISION #3 in COMMERCE_PLAN). Then any new commerce/design INBOX item.
-- **Prior runs**: run 52 — Wallet UI fd686d0; run 51 — diary-sheet + book-sheet interaction tests 0f871bf; run 50 — source-link UI prominence 28ce450; run 49 — 3-tier item status look-sheet 268a850; run 47 — fix match-ring % display 15f12d4.
+## Mark lane — last run (2026-08-04, run 54)
+- **Task**: Per-item match% badge on feed card look pills — product vision #1 WOW hook, visible before any tap.
+- **Done**: Each `fc-pill` now computes `calcCompatScore(it, wardrobe)` per item and shows the % as `fc-pill-pct` (color: var(--fg), high contrast always). Tier color (green/amber/rose) applied to `border-color` on the pill itself. Pills now uniform `height:44px` (was 32-40px). Removed orphaned `fc-match` post-level pill (redundant now). Gabbana 8/10 PASS. check-render + node --check PASS. Commit dde3cdf.
+- **Next**: Any new INBOX item for mark lane; token peg UX decision is still NEEDS_DECISION #3 (founder-only, no code needed).
+- **Prior runs**: run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3; run 50 — source-link UI 28ce450; run 49 — 3-tier item status 268a850; run 47 — match-ring % fix 15f12d4.
 
 ## Ayalon lane — last run (2026-08-04, run 48)
 - **Task**: Fix investor-critical stale data in PITCH_DECK.md + BUSINESS_PLAN.md — creator credits "5%" → "~40% מעמלת AWEAR", garment image pipeline status, Skimlinks live status.
