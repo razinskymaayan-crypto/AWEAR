@@ -784,6 +784,62 @@
     showSheet();
   }
 
+  async function openFindSimilar(it, influencerUser){
+    sheetBody.innerHTML = `
+      <div class="fsim-header">
+        <div class="fsim-subtitle">${icon('search',13)} Similar to</div>
+        <div class="fsim-orig-name">${esc(it.name)}</div>
+      </div>
+      <div class="fsim-loading">${icon('search',18)} Finding matches…</div>`;
+    sheetFooter.innerHTML = '';
+    _checkoutCtx = { it: {...it}, influencerUser: influencerUser || null };
+    showSheet();
+    try {
+      const p = new URLSearchParams({
+        q: it.search_query || it.name || '',
+        category: it.category || '',
+        brand: it.brand_vibe || it.brand || '',
+        color: it.color || '',
+        limit: '6'
+      });
+      const res = await fetch('/api/find-similar?' + p.toString());
+      if (!res.ok) throw new Error('api');
+      const data = await res.json();
+      const alts = data.alternatives || [];
+      if (!alts.length) {
+        sheetBody.innerHTML = `
+          <div class="fsim-header"><div class="fsim-subtitle">${icon('search',13)} Similar to</div><div class="fsim-orig-name">${esc(it.name)}</div></div>
+          <div class="fsim-empty">No catalog matches right now.</div>`;
+        sheetFooter.innerHTML = `<button class="sheet-buy" data-action="fsim-web-search" data-q="${attr(it.search_query||it.name||'')}" data-influencer="${attr(influencerUser||'')}">${icon('arrowOut',18)} Search online</button>`;
+        return;
+      }
+      const rows = alts.map(alt => `
+        <div class="fsim-row">
+          <div class="fsim-img">${alt.image_url
+            ? `<img src="${attr(alt.image_url)}" alt="${attr(alt.name||'')}" loading="lazy" onerror="this.onerror=null;imgFallback(this)">`
+            : `<span class="img-fallback">${icon('shirt',20)}</span>`}</div>
+          <div class="fsim-meta">
+            <div class="fsim-name">${esc(alt.name||'')}</div>
+            <div class="fsim-brand">${esc(alt.brand||'')}</div>
+            ${alt.price_usd ? `<div class="fsim-price">$${esc(String(alt.price_usd))}</div>` : ''}
+          </div>
+          <button class="sheet-row-buy" type="button" data-action="fsim-buy" data-url="${attr(alt.buy_url||'')}" aria-label="Buy ${attr(alt.name||'')}">${icon('arrowOut',14)} Buy</button>
+        </div>`).join('');
+      sheetBody.innerHTML = `
+        <div class="fsim-header">
+          <div class="fsim-subtitle">${icon('search',13)} Similar to</div>
+          <div class="fsim-orig-name">${esc(it.name)}</div>
+        </div>
+        <div class="fsim-list">${rows}</div>`;
+      sheetFooter.innerHTML = '';
+    } catch(_){
+      sheetBody.innerHTML = `
+        <div class="fsim-header"><div class="fsim-subtitle">${icon('search',13)} Similar to</div><div class="fsim-orig-name">${esc(it.name)}</div></div>
+        <div class="fsim-empty">Couldn't load catalog matches.</div>`;
+      sheetFooter.innerHTML = `<button class="sheet-buy" data-action="fsim-web-search" data-q="${attr(it.search_query||it.name||'')}" data-influencer="${attr(influencerUser||'')}">${icon('arrowOut',18)} Search online</button>`;
+    }
+  }
+
   function showSheet(){
     sheetOverlay.classList.add('show');
     buySheet.classList.add('show');
@@ -1023,6 +1079,11 @@
     if (btn.dataset.action === 'checkout') handleCheckout();
     if (btn.dataset.action === 'checkout-look') handleLookCheckout();
     if (btn.dataset.action === 'goto-closet') { closeSheet(); showView('closet'); }
+    if (btn.dataset.action === 'fsim-web-search') {
+      const q = encodeURIComponent(btn.dataset.q || '');
+      const inf = btn.dataset.influencer || '';
+      openBuyLink(skimWrap('https://www.google.com/search?tbm=shop&q='+q, inf));
+    }
     if (btn.dataset.action === 'view-seller-profile') {
       if (!_mpSheetStore) return;
       closeSheet();
@@ -1047,10 +1108,14 @@
       const idx = parseInt(findSimilar.dataset.itemIdx, 10);
       const ctx = _checkoutCtx;
       if (ctx && ctx.items && ctx.items[idx]) {
-        const it = ctx.items[idx];
-        const q = encodeURIComponent((it.search_query || it.name) || '');
-        openBuyLink(skimWrap('https://www.google.com/search?tbm=shop&q='+q, ctx.influencerUser||''));
+        openFindSimilar(ctx.items[idx], ctx.influencerUser || '');
       }
+      return;
+    }
+    const fsimBuy = e.target.closest('[data-action="fsim-buy"]');
+    if (fsimBuy) {
+      const url = fsimBuy.dataset.url;
+      if (url) openBuyLink(url);
       return;
     }
     const resaleBtn = e.target.closest('[data-action="resale-item"]');

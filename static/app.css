@@ -990,7 +990,7 @@
   .sheet-buy:active { transform: scale(.97); filter: brightness(.93); }
   /* per-item "buy" pill inside the look sheet */
   .sheet-row-buy { flex-shrink: 0; padding: 7px 14px; border-radius: var(--r-lg,20px);
-    border: 0; cursor: pointer; font-family: inherit; min-height: 44px;
+    border: 0; cursor: pointer; font-family: inherit; min-height: 44px; min-width: 44px;
     display: inline-flex; align-items: center; gap: 5px;
     background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a));
     color: var(--on-accent,#fff);
@@ -998,6 +998,26 @@
   .sheet-row-buy:active { transform: scale(.96); filter: brightness(.9); }
   .sheet-row-similar { background: var(--warning,#e8a84a); color: var(--bg,#0e0c0f); }
   .sheet-row-resale { background: color-mix(in srgb, var(--accent3,#7a6af0) 80%, #000); color: var(--on-accent,#fff); }
+  /* Find-similar results sheet */
+  .fsim-header { margin-bottom: var(--space-4,16px); }
+  .fsim-subtitle { font-size: var(--t-micro,11px); font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--warning,#e8a84a); display: flex; align-items: center; gap: 4px; margin-bottom: var(--space-1,4px); }
+  .fsim-orig-name { font-size: var(--t-h3,15px); font-weight: 700; color: var(--fg,#f0ecf5); }
+  .fsim-loading { display: flex; align-items: center; gap: 8px; color: var(--muted,#8a8498);
+    font-size: var(--t-small,13px); padding: var(--space-6,24px) 0; justify-content: center; }
+  .fsim-empty { text-align: center; color: var(--muted,#8a8498); font-size: var(--t-small,13px);
+    padding: var(--space-6,24px) 0; }
+  .fsim-list { display: flex; flex-direction: column; gap: var(--space-2,8px); margin-bottom: var(--space-4,16px); }
+  .fsim-row { display: flex; align-items: center; gap: var(--space-3,12px); padding: var(--space-2,8px);
+    background: var(--card,#1e1a22); border-radius: var(--r-md,14px); }
+  .fsim-img { width: 52px; height: 52px; flex-shrink: 0; border-radius: var(--r-sm,10px);
+    background: var(--card-hover,#262030); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .fsim-img img { width: 100%; height: 100%; object-fit: cover; }
+  .fsim-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1,4px); }
+  .fsim-name { font-size: var(--t-small,13px); font-weight: 700; color: var(--fg,#f0ecf5);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fsim-brand { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); }
+  .fsim-price { font-family: "Poppins", sans-serif; font-size: var(--t-small,13px); font-weight: 600; color: var(--fg,#f0ecf5); }
   /* "tap to shop" pill on each feed card */
   .fc-shop { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 9px 15px;
     background: rgba(255,255,255,.14); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.2);
