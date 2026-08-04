@@ -5550,6 +5550,7 @@
     overlay.classList.add('show');
     sheet.classList.add('show');
     overlay.setAttribute('aria-hidden','false');
+    sheet.setAttribute('aria-hidden', 'false');
     if (!overlay._bound) {
       overlay.addEventListener('click', closeStoreInsight);
       document.getElementById('ms-insight-close')?.addEventListener('click', closeStoreInsight);
@@ -5564,6 +5565,7 @@
     const sheet = document.getElementById('ms-insight-sheet');
     if (overlay) { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
     if (sheet) sheet.classList.remove('show');
+    if (sheet) sheet.setAttribute('aria-hidden', 'true');
   }
 
   // Shared pull-to-dismiss for bottom sheets — copy of buy-sheet pattern (see buy-sheet block).
@@ -5623,6 +5625,7 @@
     overlay.classList.add('show');
     sheet.classList.add('show');
     overlay.setAttribute('aria-hidden','false');
+    sheet.setAttribute('aria-hidden', 'false');
     _bindFilterSheetEvents(sheet, scroll);
   }
 
@@ -5633,6 +5636,7 @@
     overlay.classList.remove('show');
     sheet.classList.remove('show');
     overlay.setAttribute('aria-hidden','true');
+    if (sheet) sheet.setAttribute('aria-hidden', 'true');
   }
 
   function _bindFilterSheetEvents(sheet, scroll) {
@@ -7664,6 +7668,7 @@
       ? localComments.map(c => _commentItemHTML(c, creatorHandle)).join('')
       : `<div style="color:var(--muted,#9e99ad);font-size:var(--t-small);padding:12px 0">No comments yet</div>`;
     sheet.classList.add('open');
+    sheet.setAttribute('aria-hidden', 'false');
     if (_commentsBackdrop) _commentsBackdrop.classList.add('show');
     document.body.classList.add('sheet-open');
 
@@ -7693,6 +7698,7 @@
 
   function closeCommentsSheet() {
     if (_commentsSheet) _commentsSheet.classList.remove('open');
+    if (_commentsSheet) _commentsSheet.setAttribute('aria-hidden', 'true');
     if (_commentsBackdrop) _commentsBackdrop.classList.remove('show');
     document.body.classList.remove('sheet-open');
     _commentsPostId = null;
