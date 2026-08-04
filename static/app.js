@@ -1903,12 +1903,18 @@
 
     // Item pills (right side on image)
     const pillItems=(post.items||[]).slice(0,4);
-    const pillsHTML=pillItems.map((it,i)=>`
-      <button class="fc-pill" data-shop="${attr(post.id||'')}" data-item="${i}" aria-label="${attr(it.name)}">
-        <span class="ic-svg" style="width:17px;height:17px" aria-hidden="true">
+    const pillsHTML=pillItems.map((it,i)=>{
+      const iScore=_ownWardrobe.length?calcCompatScore(it,_ownWardrobe):{pct:0};
+      const iBorder=iScore.pct>=80?'var(--success,#52c97a)':iScore.pct>=60?'var(--accent2,#c4855a)':'var(--accent,#e8526a)';
+      const pctBadge=_ownWardrobe.length?`<span class="fc-pill-pct">${iScore.pct}%</span>`:'';
+      const borderStyle=_ownWardrobe.length?` style="border-color:${iBorder}"`:''
+      return `<button class="fc-pill${_ownWardrobe.length?' fc-pill--scored':''}" data-shop="${attr(post.id||'')}" data-item="${i}" aria-label="${attr(it.name)}"${borderStyle}>
+        <span class="ic-svg" style="width:15px;height:15px" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">${ICONS[catIcon(it.category)]||ICONS.hanger}</svg>
         </span>
-      </button>`).join('');
+        ${pctBadge}
+      </button>`;
+    }).join('');
 
     const followKey=post.userId||post.user||'';
     const isFollowing=followKey&&followState[followKey];
@@ -1970,7 +1976,6 @@
           <span class="fc-caption">${esc(post.caption||'')}</span>
         </div>
         <div class="fc-tags">${tagPills}</div>
-        ${_ownWardrobe.length?`<span class="fc-match">${icon('hanger',11)} ${_ownScore.pct}% match to your closet</span>`:''}
         ${ownBadge}${earnLine}
       </div>
     </div>`;

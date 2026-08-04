@@ -302,19 +302,27 @@
   }
   .fc-pill {
     position: relative;
-    width: 32px; height: 32px;
-    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 44px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0;
     background: transparent;
-    border: 1px solid var(--line,#2e2836); border-radius: 50%;
+    border: 1px solid var(--line,#2e2836); border-radius: var(--r-xs,6px);
     cursor: pointer; color: var(--muted,#9e99ad);
     transition: transform 150ms ease, color 150ms ease, border-color 150ms ease;
     flex-shrink: 0;
+    padding: 4px 2px;
   }
-  /* 44px hit-area while keeping 32px visual (ui-ux-pro-max minHeight:44) */
-  .fc-pill::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; }
+  /* hit-area already meets 44px minimum via height:44px */
+  .fc-pill::before { content: ''; position: absolute; inset: -4px; border-radius: var(--r-xs,6px); }
   .fc-pill:active { transform: scale(.9); color: var(--fg,#f0ecf5); border-color: var(--fg,#f0ecf5); }
   .fc-pill-name { display: none; }
   .fc-pill-price { display: none; }
+  .fc-pill-pct {
+    font-size: var(--t-micro,11px); font-weight: 700; line-height: 1;
+    color: var(--fg,#f0ecf5); font-family: inherit; display: block; letter-spacing: -0.3px;
+    margin-top: 3px;
+  }
+  .fc-pill--scored { border-width: 1.5px; }
 
   /* ---- Bottom action bar ---- */
   /* Action bar — below image, Instagram-style */
@@ -371,14 +379,6 @@
   .fc-caption { font-size: var(--t-small,13px); color: var(--fg,#f0ecf5); line-height: 1.5; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
   .fc-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; max-height: 44px; overflow: hidden; }
   .ftag { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); font-weight: 700; }
-  .fc-match {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836);
-    color: var(--accent,#e8526a);
-    font-size: var(--t-micro,11px); font-weight: 700;
-    padding: 4px 10px; border-radius: var(--r-pill,999px);
-    margin-bottom: 6px;
-  }
   .fc-earn {
     font-size: var(--t-micro,11px); color: var(--success,#52c97a); font-weight: 700;
     margin-top: 4px; display: flex; align-items: center; gap: 4px;
