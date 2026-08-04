@@ -761,10 +761,21 @@
            ${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase
          </p>` : '';
 
+    const wardrobe = loadWardrobe();
+    const allTags = [...new Set(list.flatMap(it => it.style_tags||[]))];
+    const lookScore = wardrobe.length ? calcCompatScore({style_tags: allTags}, wardrobe) : null;
+    const tierColor = !lookScore ? '' : lookScore.pct>=80 ? 'var(--success,#52c97a)' : lookScore.pct>=60 ? 'var(--warning,#e8a84a)' : 'var(--danger,#e05252)';
+    const collage = flatLayCollageHTML(list);
+    const matchChip = lookScore
+      ? `<div class="sl-match-chip"><span class="sl-match-num" style="color:${tierColor}">${lookScore.pct}%</span> match to your style</div>`
+      : '';
+
     sheetBody.innerHTML = `
-      <div style="font-weight:900;font-size:var(--t-h3,15px);margin-bottom:14px;letter-spacing:-.2px">
-        ${esc(label)} · ${list.length} items
+      <div class="sl-hero">
+        ${collage}
+        ${matchChip}
       </div>
+      <div class="sl-title">${esc(label)} · ${list.length} items</div>
       <div class="sheet-look-list">${rows}</div>
       <div class="sheet-total">
         <span class="sheet-total-label">Look total</span>

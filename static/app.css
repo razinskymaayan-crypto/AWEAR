@@ -942,6 +942,19 @@
   .flatlay-empty { display: flex; align-items: center; justify-content: center; }
   .flatlay-empty .fl-empty { color: var(--muted, #9e99ad); }
 
+  /* look sheet hero — flat-lay + match chip */
+  .sl-hero { position: relative; margin-bottom: 16px; border-radius: var(--r-md,14px); overflow: hidden; }
+  .sl-hero .flatlay { aspect-ratio: 4 / 3; }
+  .sl-match-chip {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    background: var(--surface,#161318); border: 1px solid var(--line,#2e2836);
+    border-radius: var(--r-pill,999px); padding: 8px 14px;
+    font-size: var(--t-caption,12px); font-weight: 700; color: var(--fg,#f0ecf5);
+    white-space: nowrap; pointer-events: none;
+  }
+  .sl-match-num { font-size: var(--t-body,14px); font-weight: 900; }
+  .sl-title { font-weight: 900; font-size: var(--t-h3,15px); margin-bottom: 12px; letter-spacing: -.2px; }
+
   /* look rows */
   .sheet-look-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
   .sheet-look-row {
