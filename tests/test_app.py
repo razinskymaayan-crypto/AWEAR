@@ -3795,3 +3795,57 @@ def test_categories_contract(client):
         assert "name" in item and "count" in item, f"category item missing fields: {item}"
         assert isinstance(item["count"], int) and item["count"] > 0, \
             f"category {item['name']} has non-positive count: {item['count']}"
+
+
+# ---------------------------------------------------------------------------
+# /api/demo/seed-closet — idempotent demo wardrobe seed (OW-014: fail-before/pass-after)
+# ---------------------------------------------------------------------------
+
+def test_demo_seed_closet_populates_empty_closet(client):
+    """POST /api/demo/seed-closet seeds items for a new user with empty closet.
+
+    FAIL-BEFORE: endpoint did not exist (404).
+    PASS-AFTER: 200 with seeded > 0, already_seeded = False; GET /api/closet
+    confirms the same items are stored.
+    """
+    uid = "demo_test_user_seed_001"
+    r = client.post("/api/demo/seed-closet", params={"user_id": uid})
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert d["already_seeded"] is False, "fresh user should not be pre-seeded"
+    assert d["seeded"] > 0, "must seed at least one item"
+    assert d["user_id"] == uid
+
+    # Confirm items actually landed in the closet
+    r2 = client.get("/api/closet", params={"user_id": uid})
+    assert r2.status_code == 200, r2.text
+    items = r2.json()["items"]
+    assert len(items) == d["seeded"], (
+        f"closet has {len(items)} items but seed reported {d['seeded']}"
+    )
+    cats = {it["category"] for it in items}
+    assert "top" in cats and "bottoms" in cats and "shoes" in cats, \
+        f"seed must cover top/bottoms/shoes for match% to work; got {cats}"
+
+
+def test_demo_seed_closet_idempotent(client):
+    """POST /api/demo/seed-closet is a no-op when the closet already has items.
+
+    FAIL-BEFORE: endpoint did not exist (404).
+    PASS-AFTER: second call returns already_seeded=True and seeded=0; closet
+    item count is unchanged (no duplicates inserted).
+    """
+    uid = "demo_test_user_seed_002"
+    r1 = client.post("/api/demo/seed-closet", params={"user_id": uid})
+    assert r1.status_code == 200 and r1.json()["seeded"] > 0
+
+    r2 = client.post("/api/demo/seed-closet", params={"user_id": uid})
+    assert r2.status_code == 200, r2.text
+    d2 = r2.json()
+    assert d2["already_seeded"] is True, "second seed call should detect existing items"
+    assert d2["seeded"] == 0, "second seed must write zero rows"
+
+    # Closet count must be exactly the original seed, not doubled
+    r3 = client.get("/api/closet", params={"user_id": uid})
+    items = r3.json()["items"]
+    assert len(items) == r1.json()["seeded"], "idempotent call must not duplicate rows"

@@ -4273,6 +4273,76 @@ async def patch_closet_item(item_id: str, body: ClosetItemPatch, request: Reques
 
 
 # ---------------------------------------------------------------------------
+# Demo closet seed — POST /api/demo/seed-closet
+# Idempotently pre-populates a realistic demo wardrobe so match%, outfit
+# generation, and "Today's Look" all work without the user scanning first.
+# Mirrors the _seed_dm_for_owner() pattern (DM section below).
+# Only seeds when the closet is genuinely empty — safe to call repeatedly.
+# ---------------------------------------------------------------------------
+
+# 12-item demo wardrobe covering all match-relevant categories so no product
+# returns a low match score on a fresh demo account.
+_CLOSET_DEMO_SEED: list[tuple] = [
+    # (name, category, color, brand, search_query, price_usd)
+    ("White Linen Blouse",       "top",       "white",  "Zara",          "white linen blouse",               49),
+    ("Black Ribbed Crop Top",    "top",       "black",  "ASOS",          "black ribbed crop top",             28),
+    ("Cream Oversized Knit",     "top",       "cream",  "& Other Stories","cream oversized knit sweater",     75),
+    ("Striped Breton Top",       "top",       "navy",   "Sézane",        "navy breton stripe top",            89),
+    ("High-Waist Blue Jeans",    "bottoms",   "blue",   "Mango",         "high waist straight jeans blue",    59),
+    ("Black Satin Midi Skirt",   "bottoms",   "black",  "COS",           "black satin midi skirt",            89),
+    ("White Leather Sneakers",   "shoes",     "white",  "New Balance",   "white leather low sneakers",       110),
+    ("Tan Ankle Boots",          "shoes",     "tan",    "Vagabond",      "tan leather ankle boots",          179),
+    ("Olive Trench Coat",        "outerwear", "olive",  "TOTEME",        "olive green belted trench coat",   390),
+    ("Black Mini Crossbody Bag", "bag",       "black",  "Coach",         "black leather mini crossbody bag", 195),
+    ("Gold Hoop Earrings",       "accessory", "gold",   "Mejuri",        "14k gold hoop earrings",            68),
+    ("Tortoiseshell Sunglasses", "accessory", "brown",  "Le Specs",      "tortoiseshell oversized sunglasses",79),
+]
+
+
+@app.post("/api/demo/seed-closet")
+async def seed_demo_closet(request: Request, user_id: str = ""):
+    """Idempotently seed a demo wardrobe for a user with an empty closet.
+
+    Safe to call repeatedly — does nothing if the user already has closet
+    items. Returns ``{"seeded": N, "already_seeded": bool}``.
+
+    Rate-limited to 5 requests/minute (write endpoint).
+    """
+    caller_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(caller_key, "demo_seed_closet", 5):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 5 requests/minute.")
+
+    target_key = (user_id or "").strip() or caller_key
+    if len(target_key) > 64:
+        raise HTTPException(status_code=400, detail="user_id must be at most 64 characters.")
+
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM closet_items WHERE user_key = ? LIMIT 1", (target_key,)
+        ).fetchone()
+        if existing:
+            return {"seeded": 0, "already_seeded": True, "user_id": target_key}
+
+        now = datetime.datetime.utcnow().isoformat()
+        for name, category, color, brand, search_query, price_usd in _CLOSET_DEMO_SEED:
+            item_id = "ci_demo_" + uuid.uuid4().hex[:8]
+            db.execute(
+                """INSERT INTO closet_items
+                       (id, user_key, name, category, color, brand, search_query,
+                        price_estimate_usd, image_url, confidence, source, source_url,
+                        ai_original, client_ref, created_at)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (item_id, target_key, name, category, color, brand, search_query,
+                 price_usd, "", "demo", "demo", "", "", "demo_seed", now),
+            )
+        db.commit()
+
+    n = len(_CLOSET_DEMO_SEED)
+    logger.info("demo_seed_closet: seeded %d items for user=%s", n, target_key)
+    return {"seeded": n, "already_seeded": False, "user_id": target_key}
+
+
+# ---------------------------------------------------------------------------
 # Analytics — wear_log table  (wear events + summary + wrapped)
 # POST /api/analytics/wear · GET /api/analytics/summary · GET /api/analytics/wrapped/{year}
 # BE-004/BE-005: SQLite from day 1. MG-005: user_key from IP. OW-001: grep 3 layers.
