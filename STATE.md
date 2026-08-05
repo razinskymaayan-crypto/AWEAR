@@ -17,11 +17,11 @@
 - **Next**: Any new INBOX item; token peg UX decision is still NEEDS_DECISION #3 (founder-only). object-fit:contain→cover on `.sheet-look-emoji img` is a P2 visual note for next run.
 - **Prior runs**: run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf; run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3; run 50 — source-link UI 28ce450; run 49 — 3-tier item status 268a850.
 
-## Ayalon lane — last run (2026-08-05, run 49)
-- **Task**: DoD verification of mark run-56 (BH-21: look-sheet item thumbnail drill-down) + steve run-35 (STEVE-35: 265 total pytests). DOD_AUDIT.md updated. Commit 38cc0da.
-- **Done**: BH-21 and STEVE-35 rows added to DOD_AUDIT.md with grep evidence. All COMMERCE-1 through COMMERCE-9 remain ✅. check-render PASS.
+## Ayalon lane — last run (2026-08-05, run 50)
+- **Task**: DEMO_SCRIPT.md re-verification + 4 targeted updates. Commit 3dfa560.
+- **Done**: (1) Fixed stale "pipeline gap" note in beat 2 — closet image gap was closed 2026-08-02 (commit 3c4d18d); presenter no longer instructed to apologize. (2) Beat 6 closet image note updated to confident framing. (3) Beat 5 new tip: BH-21 item thumbnail drill-down bonus demo path. (4) Pre-flight: added `POST /api/demo/seed-closet` fast-seed shortcut. (5) Footer status updated to 2026-08-05 re-verified. check-render PASS.
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — 4 changes, awaiting founder approval); token peg UX decision (#3 in COMMERCE_PLAN); PITCH_DECK PDF/Keynote conversion is human-only step.
-- **Prior runs**: run 48 — PITCH_DECK + BUSINESS_PLAN stale data fixed 3c4d18d; run 47 — COMMERCE-8/9 DoD verified 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4; run 44 — COMMERCE-1/2 verified caa298b.
+- **Prior runs**: run 49 — BH-21 + STEVE-35 DoD 38cc0da; run 48 — PITCH_DECK + BUSINESS_PLAN stale data fixed 3c4d18d; run 47 — COMMERCE-8/9 DoD verified 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4.
 
 ## Steve lane — last run (2026-08-05, run 35)
 - **Task**: Test coverage — 19 hermetic pytests for 5 untested endpoint groups.
