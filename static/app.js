@@ -69,6 +69,9 @@
   const mainEl     = document.getElementById('main');
   // Backdrop tap closes the purchase modal (no X button — keep existing inner close buttons)
   if (modal) modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
+  // Drag-down-to-dismiss on the card itself (same pattern as every other bottom sheet).
+  // _addSheetDragDismiss is a function declaration (hoisted) so it's safe to call here.
+  if (modal && modalCard) _addSheetDragDismiss(modalCard, null, () => modal.classList.remove('show'));
 
   // ---- header section name map: view-id -> founder-facing label shown next to "awear" ----
   // declared before showView() (~line 2733) so the router can read it TDZ-safe.

@@ -456,7 +456,8 @@
     align-items: center; justify-content: center; padding: max(28px, env(safe-area-inset-top, 0px)) 28px 28px; z-index: 60; backdrop-filter: blur(4px); }
   .modal-overlay.show { display: flex; }
   .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px;
-    padding: 28px 22px; text-align: center; width: 100%; animation: pop .25s ease; }
+    padding: 28px 22px; text-align: center; width: 100%; animation: pop .25s ease;
+    max-height: calc(100dvh - max(env(safe-area-inset-top, 0px), 56px) - 56px); overflow-y: auto; }
   @keyframes pop { from { transform: scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
   .modal-card .big { font-size: 48px; margin-bottom: 12px; }
   .modal-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
