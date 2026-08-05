@@ -24,13 +24,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — 4 changes, awaiting founder approval); token peg UX decision (#3 in COMMERCE_PLAN); PITCH_DECK PDF/Keynote conversion is human-only step.
 - **Prior runs**: run 47 — COMMERCE-8/9 DoD verified + COMMERCE_PLAN Part C closed 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4; run 44 — COMMERCE-1/2 verified caa298b.
 
-## Steve lane — last run (2026-08-03, run 33)
-- **Task**: Fix double-crediting race: non-UNIQUE idx_credits_txn → partial UNIQUE index + INSERT OR IGNORE (rejection fix).
-- **Done**: commit 6776d9a. DROP+recreate idx_credits_txn as UNIQUE (WHERE transaction_id != '') to prevent concurrent postbacks from both inserting the same txn. INSERT OR IGNORE + rowcount==0 dedup path handles race at DB layer. Syntax OK, check-render PASS.
-- **Next**: INBOX ★★★★★ commerce item 2 — find-similar endpoint (given unavailable item, return lookalikes from catalog using _match_score).
-- **Prior runs**: run 31 — /api/weather fallback dd0689d; run 30 — Skimlinks contract tests 91be81f; run 29 — agent_summary 500→503; run 28 — self-heal stale CI_FAILURES; run 27 — scan-health google_available; runs 20-26 — launch infra.
-- **Status**: All Supabase epic items shipped (Render ✓, JWT auth ✓, _CompatDB Postgres ✓, Storage ✓). Test suite 225 tests, 93% route coverage (5 ext_dep).
-- **Founder action needed**: Set DATABASE_URL on Render dashboard (postgresql://...) to activate Postgres; run notes/schema_postgres.sql in Supabase SQL editor once.
+## Steve lane — last run (2026-08-05, run 34)
+- **Task**: POST /api/demo/seed-closet — idempotent 12-item wardrobe seed for investor demo.
+- **Done**: commit c77b72b. New endpoint + _CLOSET_DEMO_SEED constant (4 tops, 2 bottoms, 2 shoes, outerwear, bag, 2 accessories). Idempotent: returns already_seeded=True if closet non-empty. 2 hermetic pytests pass. Fixes DEMO_SCRIPT.md failure mode "Add clothes to see your match" (empty-closet account). check-render PASS.
+- **Next**: Any new INBOX item; commerce plan fully shipped. No open defects in lane.
+- **Prior runs**: run 33 — idx_credits_txn UNIQUE race fix 6776d9a; run 31 — /api/weather fallback dd0689d; run 30 — Skimlinks contract tests 91be81f; run 29 — agent_summary 500→503; run 28 — self-heal stale CI_FAILURES.
+- **Status**: Commerce fully shipped (find-similar, postback, dedup, wallet, confirm-pending). Test suite 227 tests. 94% route coverage (66/70; 4 ext_dep).
 
 ## Phase status
 | Phase | Status |
