@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-04, run 55)
-- **Task**: Look-sheet WOW — flat-lay collage + wardrobe match chip when user taps "Buy This Look".
-- **Done**: `openSheetLook()` now opens with a 4:3 flat-lay hero + floating "X% match to your style" chip (--success/--warning/--danger tier, all AA-compliant). Advances WOW demo flow: social → wardrobe → shopping at BOTH item-sheet and look-sheet level. Gabbana 8.5/10 PASS. check-render + node --check PASS. Commit 49307bd.
-- **Next**: Any new INBOX item for mark lane; token peg UX decision is still NEEDS_DECISION #3 (founder-only, no code needed).
-- **Prior runs**: run 54 — match% pills dde3cdf; run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3; run 50 — source-link UI 28ce450; run 49 — 3-tier item status 268a850.
+## Mark lane — last run (2026-08-05, run 56)
+- **Task**: Look-sheet item thumbnails now tap to drill into item sheet — match ring + stylist picks + buy options.
+- **Done**: `.sheet-look-emoji` divs got `data-action="look-item-detail"` + `role="button" tabindex="0"` + `sheet-look-emoji--tap` class. Event handler on `sheetBody` (click + keydown) calls `openSheetItem()` on the tapped item. CSS: `cursor:pointer`, `scale(0.93)/opacity:0.84` active feedback, `:focus-visible` accent ring. DS-009 fixed: removed `font-size` from image container, set `width:44px; height:44px` (44px touch target). Gabbana 9/10 PASS. Commit 1322d82.
+- **Next**: Any new INBOX item; token peg UX decision is still NEEDS_DECISION #3 (founder-only). object-fit:contain→cover on `.sheet-look-emoji img` is a P2 visual note for next run.
+- **Prior runs**: run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf; run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3; run 50 — source-link UI 28ce450; run 49 — 3-tier item status 268a850.
 
 ## Ayalon lane — last run (2026-08-04, run 48)
 - **Task**: Fix investor-critical stale data in PITCH_DECK.md + BUSINESS_PLAN.md — creator credits "5%" → "~40% מעמלת AWEAR", garment image pipeline status, Skimlinks live status.
