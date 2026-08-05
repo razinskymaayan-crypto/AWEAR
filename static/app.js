@@ -686,12 +686,14 @@
 
     // In-app Buy — purchase happens through AWEAR, never a redirect to an external store.
     _checkoutCtx = { it: {...it, kind: itemKind(it), seller_key: it.seller_key||it.seller||''}, influencerUser: null };
-    sheetFooter.innerHTML = priceVal
-      ? `<button class="sheet-buy" data-action="checkout" aria-label="Buy ${attr(it.name)}">
-           ${icon('bag',18)} Buy
-           <span class="sheet-buy-price">$${esc(priceVal)}</span>
-         </button>`
-      : `<div style="text-align:center;color:var(--muted);font-size:var(--t-small);padding:10px 0">Price not available for this item yet</div>`;
+    const _buyStatus = itemBuyStatus(it);
+    sheetFooter.innerHTML = _buyStatus === 'similar'
+      ? `<button class="sheet-buy sheet-buy--similar" data-action="item-find-similar" aria-label="Find similar to ${attr(it.name)}">${icon('search',18)} Find Similar</button>`
+      : _buyStatus === 'resale'
+      ? `<button class="sheet-buy sheet-buy--resale" data-action="item-resale" aria-label="Shop resale for ${attr(it.name)}">${icon('leaf',18)} Shop Resale</button>`
+      : priceVal
+      ? `<button class="sheet-buy" data-action="checkout" aria-label="Buy ${attr(it.name)}">${icon('bag',18)} Buy<span class="sheet-buy-price">$${esc(priceVal)}</span></button>`
+      : `<button class="sheet-buy" data-action="checkout" aria-label="Buy ${attr(it.name)}">${icon('bag',18)} Buy</button>`;
 
     showSheet();
 
@@ -1101,6 +1103,17 @@
       if (!_mpSheetStore) return;
       closeSheet();
       openUserProfile(_mpSheetStore);
+    }
+    if (btn.dataset.action === 'item-find-similar') {
+      const ctx = _checkoutCtx;
+      if (ctx && ctx.it) openFindSimilar(ctx.it, ctx.influencerUser || '');
+    }
+    if (btn.dataset.action === 'item-resale') {
+      const ctx = _checkoutCtx;
+      if (ctx && ctx.it) {
+        const q = encodeURIComponent((ctx.it.search_query || ctx.it.name) || '');
+        openBuyLink('https://www.depop.com/search/?q='+q);
+      }
     }
   });
 

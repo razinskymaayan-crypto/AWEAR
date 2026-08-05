@@ -1001,6 +1001,8 @@
     min-height: 52px;
   }
   .sheet-buy:active { transform: scale(.97); filter: brightness(.93); }
+  .sheet-buy--similar { background: var(--card,#1e1a22); color: var(--fg,#f0ecf5); border: 1.5px solid var(--warning,#e8a84a); }
+  .sheet-buy--resale { background: var(--card,#1e1a22); color: var(--fg,#f0ecf5); border: 1.5px solid var(--accent3,#7a6af0); }
   /* per-item "buy" pill inside the look sheet */
   .sheet-row-buy { flex-shrink: 0; padding: 7px 14px; border-radius: var(--r-lg,20px);
     border: 0; cursor: pointer; font-family: inherit; min-height: 44px; min-width: 44px;
