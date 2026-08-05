@@ -2547,6 +2547,7 @@
   .mp-item-img .img-fallback, .sf-card-img .img-fallback, .ex-card-bg .img-fallback, .ex-result-emoji .img-fallback {
     background: linear-gradient(160deg, var(--card), var(--bg)); color: var(--muted); font-size: var(--t-display,32px); }
   .sheet-look-emoji { overflow: hidden; border-radius: 9px; background: var(--card, #1e1a22); }
+  .sheet-look-emoji img { object-fit: cover; }
   .sheet-look-emoji .img-fallback { background: var(--card, #1e1a22); color: var(--muted, #9e99ad); }
   .sheet-look-emoji--tap { cursor: pointer; transition: transform 0.14s ease, opacity 0.14s ease; }
   .sheet-look-emoji--tap:active { transform: scale(0.93); opacity: 0.84; }
