@@ -17,12 +17,11 @@
 - **Next**: Any new INBOX item; token peg UX decision is still NEEDS_DECISION #3 (founder-only). object-fit:contain→cover on `.sheet-look-emoji img` is a P2 visual note for next run.
 - **Prior runs**: run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf; run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3; run 50 — source-link UI 28ce450; run 49 — 3-tier item status 268a850.
 
-## Ayalon lane — last run (2026-08-04, run 48)
-- **Task**: Fix investor-critical stale data in PITCH_DECK.md + BUSINESS_PLAN.md — creator credits "5%" → "~40% מעמלת AWEAR", garment image pipeline status, Skimlinks live status.
-- **Done**: docs/PITCH_DECK.md: (1) creator credits corrected 5%→~40% in Slide 5 + Slide 8 demo step; (2) Phase 1 updated to note Skimlinks live (publisher ID `307075X1795350`); (3) garment image note updated ("שמירה לארון = שלב הבא" removed; commit 3c4d18d already closed it); (4) status update entry added 2026-08-04. docs/BUSINESS_PLAN.md: affiliate_url note updated from "when we sign up" to "already live". check-render PASS.
-- **Context**: Run 47 (2026-08-03) verified COMMERCE-8/9 in DOD_AUDIT.md (commit 9b81cee) — STATE.md was not updated that run.
+## Ayalon lane — last run (2026-08-05, run 49)
+- **Task**: DoD verification of mark run-56 (BH-21: look-sheet item thumbnail drill-down) + steve run-35 (STEVE-35: 265 total pytests). DOD_AUDIT.md updated. Commit 38cc0da.
+- **Done**: BH-21 and STEVE-35 rows added to DOD_AUDIT.md with grep evidence. All COMMERCE-1 through COMMERCE-9 remain ✅. check-render PASS.
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — 4 changes, awaiting founder approval); token peg UX decision (#3 in COMMERCE_PLAN); PITCH_DECK PDF/Keynote conversion is human-only step.
-- **Prior runs**: run 47 — COMMERCE-8/9 DoD verified + COMMERCE_PLAN Part C closed 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4; run 44 — COMMERCE-1/2 verified caa298b.
+- **Prior runs**: run 48 — PITCH_DECK + BUSINESS_PLAN stale data fixed 3c4d18d; run 47 — COMMERCE-8/9 DoD verified 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4; run 44 — COMMERCE-1/2 verified caa298b.
 
 ## Steve lane — last run (2026-08-05, run 35)
 - **Task**: Test coverage — 19 hermetic pytests for 5 untested endpoint groups.
