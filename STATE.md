@@ -24,12 +24,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — 4 changes, awaiting founder approval); token peg UX decision (#3 in COMMERCE_PLAN); PITCH_DECK PDF/Keynote conversion is human-only step.
 - **Prior runs**: run 47 — COMMERCE-8/9 DoD verified + COMMERCE_PLAN Part C closed 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4; run 44 — COMMERCE-1/2 verified caa298b.
 
-## Steve lane — last run (2026-08-05, run 34)
-- **Task**: POST /api/demo/seed-closet — idempotent 12-item wardrobe seed for investor demo.
-- **Done**: commit c77b72b. New endpoint + _CLOSET_DEMO_SEED constant (4 tops, 2 bottoms, 2 shoes, outerwear, bag, 2 accessories). Idempotent: returns already_seeded=True if closet non-empty. 2 hermetic pytests pass. Fixes DEMO_SCRIPT.md failure mode "Add clothes to see your match" (empty-closet account). check-render PASS.
-- **Next**: Any new INBOX item; commerce plan fully shipped. No open defects in lane.
-- **Prior runs**: run 33 — idx_credits_txn UNIQUE race fix 6776d9a; run 31 — /api/weather fallback dd0689d; run 30 — Skimlinks contract tests 91be81f; run 29 — agent_summary 500→503; run 28 — self-heal stale CI_FAILURES.
-- **Status**: Commerce fully shipped (find-similar, postback, dedup, wallet, confirm-pending). Test suite 227 tests. 94% route coverage (66/70; 4 ext_dep).
+## Steve lane — last run (2026-08-05, run 35)
+- **Task**: Test coverage — 19 hermetic pytests for 5 untested endpoint groups.
+- **Done**: commit e00f95e. Added tests for POST /like (toggle + 404), POST /save (toggle + 404), GET /users/{id}/saves (list + empty), GET /users/{id}/follow-status (false/true/cycle), GET /notifications/{id} (shape, seeding, unread_only filter), POST /notifications/{id}/read-all (shape + SQLite persistence). 265 total tests (was ~246).
+- **Next**: Any new INBOX item; remaining test gap = endpoints tested error-path only (posts/{id} GET, profiles/{id} GET, stories DELETE, bookmarks DELETE) — P2 polish.
+- **Prior runs**: run 34 — /api/demo/seed-closet c77b72b; run 33 — idx_credits_txn UNIQUE race fix 6776d9a; run 31 — /api/weather fallback dd0689d; run 30 — Skimlinks contract tests 91be81f.
+- **Status**: Commerce fully shipped. 265 tests. 94% route coverage (67/71 routes exercised per defect_scan).
 
 ## Phase status
 | Phase | Status |
