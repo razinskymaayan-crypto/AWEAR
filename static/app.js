@@ -747,7 +747,9 @@
         ? `<button class="sheet-row-buy sheet-row-similar" type="button" data-action="find-similar-item" data-item-idx="${i}" aria-label="Find similar to ${attr(it.name)}">${icon('search',14)} Find Similar</button>`
         : `<button class="sheet-row-buy" type="button" data-action="buy-look-item" data-item-idx="${i}" aria-label="Buy ${attr(it.name)}">${icon('arrowOut',14)} Buy</button>`;
       return `<div class="sheet-look-row">
-        <div class="sheet-look-emoji">${productImage(it)}</div>
+        <div class="sheet-look-emoji sheet-look-emoji--tap" role="button" tabindex="0"
+          data-action="look-item-detail" data-item-idx="${i}"
+          aria-label="View ${attr(it.name)} details">${productImage(it)}</div>
         <div class="sheet-look-meta">
           <div class="sheet-look-name">${esc(it.name)}</div>
           <span class="sheet-look-badge ${badgeClass}">${badgeText}</span>
@@ -1114,6 +1116,13 @@
       if (ctx && ctx.items && ctx.items[idx]) openBuyLink(buyLinkFor(ctx.items[idx], ctx.influencerUser || ''));
       return;
     }
+    const lookDetail = e.target.closest('[data-action="look-item-detail"]');
+    if (lookDetail) {
+      const idx = parseInt(lookDetail.dataset.itemIdx, 10);
+      const ctx = _checkoutCtx;
+      if (ctx && ctx.items && ctx.items[idx]) openSheetItem(ctx.items[idx], ctx.items);
+      return;
+    }
     const findSimilar = e.target.closest('[data-action="find-similar-item"]');
     if (findSimilar) {
       const idx = parseInt(findSimilar.dataset.itemIdx, 10);
@@ -1139,6 +1148,17 @@
         openBuyLink('https://www.depop.com/search/?q='+q);
       }
       return;
+    }
+  });
+
+  sheetBody.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const lookDetailKey = e.target.closest('[data-action="look-item-detail"]');
+    if (lookDetailKey) {
+      e.preventDefault();
+      const idx = parseInt(lookDetailKey.dataset.itemIdx, 10);
+      const ctx = _checkoutCtx;
+      if (ctx && ctx.items && ctx.items[idx]) openSheetItem(ctx.items[idx], ctx.items);
     }
   });
 

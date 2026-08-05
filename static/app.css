@@ -963,7 +963,7 @@
     background: var(--card, #1e1a22);
     border: 1px solid var(--line, #2e2836);
   }
-  .sheet-look-emoji { font-size: var(--t-h1,26px); width: 40px; text-align: center; flex-shrink: 0; }
+  .sheet-look-emoji { width: 44px; height: 44px; text-align: center; flex-shrink: 0; }
   .sheet-look-name { flex: 1; font-weight: 700; font-size: var(--t-small,13px); min-width: 0;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sheet-look-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
@@ -2548,6 +2548,9 @@
     background: linear-gradient(160deg, var(--card), var(--bg)); color: var(--muted); font-size: var(--t-display,32px); }
   .sheet-look-emoji { overflow: hidden; border-radius: 9px; background: var(--card, #1e1a22); }
   .sheet-look-emoji .img-fallback { background: var(--card, #1e1a22); color: var(--muted, #9e99ad); }
+  .sheet-look-emoji--tap { cursor: pointer; transition: transform 0.14s ease, opacity 0.14s ease; }
+  .sheet-look-emoji--tap:active { transform: scale(0.93); opacity: 0.84; }
+  .sheet-look-emoji--tap:focus-visible { outline: 2px solid var(--accent,#e8526a); outline-offset: 2px; border-radius: 9px; }
   /* Avatar fallback — initials circle when an external avatar URL fails to load (A6 demo reliability) */
   .avatar-fallback { border-radius: 50%; background: linear-gradient(135deg, var(--accent,#e8526a), var(--accent2,#c4855a));
     display: inline-flex; align-items: center; justify-content: center; font-weight: 900; color: var(--on-accent,#fff);
