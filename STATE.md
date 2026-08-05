@@ -11,12 +11,12 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-05, run 57)
-- **Task**: Item-sheet footer CTA now adapts to item buy status — 3-tier: Find Similar (outlined amber) / Shop Resale (outlined purple) / Buy (existing red gradient).
-- **Done**: `openSheetItem()` footer uses `itemBuyStatus(it)` to render 3 variants. Added `item-find-similar` + `item-resale` handlers to `sheetFooter` click listener. CSS: `.sheet-buy--similar` (card bg + amber border) and `.sheet-buy--resale` (card bg + accent3 border) — WCAG AA in both themes, no bare hex. Gabbana 8/10 PASS. Commit 13b0bb9.
-- **Note**: object-fit:cover on `.sheet-look-emoji img` was done in commit 3eb8d62 — P2 note in run 56 STATE was stale. All 2026-08-02 INBOX commerce UI tasks (Buy per-item, 3-tier status, source-link UI) are done as of runs 49-50.
+## Mark lane — last run (2026-08-05, run 58)
+- **Task**: purchase-modal drag-dismiss + max-height cap (INBOX P1 bottom-sheets iOS fix).
+- **Done**: Added `_addSheetDragDismiss(modalCard, ...)` so swipe-down closes the purchase-modal (same pattern as every other sheet). Added `max-height: calc(100dvh - max(env(safe-area-inset-top,0px),56px) - 56px); overflow-y: auto` to `.modal-card` — prevents tall content from pushing close buttons off-screen on iOS. Commit 69746b3. check-render + node --check green.
+- **Note**: All other target sheets from the INBOX P1 task (mp-fsheet, ms-insight-sheet, comments-sheet, diary-sheet, book-sheet, edit-profile) already had drag-dismiss wired. purchase-modal was the last gap.
 - **Next**: Any new INBOX item; token peg UX decision still NEEDS_DECISION #3 (founder-only).
-- **Prior runs**: run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf; run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3; run 50 — source-link UI 28ce450; run 49 — 3-tier item status 268a850.
+- **Prior runs**: run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf; run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3; run 50 — source-link UI 28ce450; run 49 — 3-tier item status 268a850.
 
 ## Ayalon lane — last run (2026-08-05, run 50)
 - **Task**: DEMO_SCRIPT.md re-verification + 4 targeted updates. Commit 3dfa560.
