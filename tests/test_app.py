@@ -3676,6 +3676,47 @@ def test_skimlinks_confirm_pending_days_invalid_400(client):
     assert r.status_code == 400, r.text
 
 
+def test_skimlinks_unique_index_blocks_race_double_insert(client):
+    """UNIQUE INDEX on credits.transaction_id silently rejects a duplicate INSERT.
+
+    OW-014 regression for the 2026-08-03 rejection: idx_credits_txn was NON-UNIQUE,
+    so two concurrent postbacks that both passed the SELECT dedup check before either
+    committed could both INSERT the same transaction_id → double-crediting.
+
+    Fix: CREATE UNIQUE INDEX + INSERT OR IGNORE.  This test proves the fix at the
+    DB level: a second INSERT OR IGNORE with the same non-empty transaction_id must
+    leave exactly 1 row.
+
+    FAIL-BEFORE: without UNIQUE INDEX, both inserts succeed → count == 2.
+    PASS-AFTER:  UNIQUE INDEX fires → second insert silently ignored → count == 1.
+    """
+    txn_id = "txn_race_proof_unique_idx_001"
+    row = ("ci_race_proof_1", "poster_race_proof", "ord_race_proof", "Race-proof item",
+           4.0, "skimlinks", "2026-01-01T00:00:00", "pending", txn_id)
+    row2 = ("ci_race_proof_2", "poster_race_proof", "ord_race_proof", "Race-proof item 2",
+            4.0, "skimlinks", "2026-01-01T00:00:00", "pending", txn_id)
+    sql = (
+        "INSERT OR IGNORE INTO credits"
+        " (id, user_key, order_id, item_name, amount_usd, type, created_at, status, transaction_id)"
+        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    )
+    with appmod._get_db() as db:
+        db.execute(sql, row)
+        db.execute(sql, row2)
+        count = db.execute(
+            "SELECT COUNT(*) FROM credits WHERE transaction_id = ?", (txn_id,)
+        ).fetchone()[0]
+        changes = db.execute("SELECT changes()").fetchone()[0]
+
+    assert count == 1, (
+        f"UNIQUE INDEX on credits.transaction_id is missing or broken — "
+        f"{count} rows with same txn_id; concurrent double-crediting race is live"
+    )
+    assert changes == 0, (
+        "INSERT OR IGNORE should return 0 changes on a duplicate transaction_id"
+    )
+
+
 # ---------------------------------------------------------------------------
 # /api/find-similar — COMMERCE_PLAN item 7
 # ---------------------------------------------------------------------------
