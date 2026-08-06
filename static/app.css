@@ -1132,8 +1132,12 @@
     background: var(--bg); overflow: hidden; }
   .onb-slide { position: absolute; inset: 0; display: flex; flex-direction: column; }
   .onb-photo-wrap { position: absolute; inset: 0; background: var(--bg2); overflow: hidden; }
-  .onb-photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .5s ease; }
-  .onb-photo-wrap img.loaded { opacity: 1; }
+  @keyframes onb-kb {
+    from { transform: scale(1)    translate(0,    0);    }
+    to   { transform: scale(1.12) translate(-2%, -1.5%); }
+  }
+  .onb-photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .5s ease; will-change: transform; transform-origin: center 30%; }
+  .onb-photo-wrap img.loaded { opacity: 1; animation: onb-kb 10s ease-in-out infinite alternate; }
   .onb-photo-wrap .img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
     background: linear-gradient(160deg, var(--card), var(--bg)); color: rgba(255,255,255,.25); }
   .onb-scrim { position: absolute; inset: 0;
