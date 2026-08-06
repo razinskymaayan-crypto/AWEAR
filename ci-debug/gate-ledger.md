@@ -228,3 +228,4 @@
 2026-08-05T23:08:04Z | jeff: merged -> mark
 2026-08-06T02:40:05Z | jeff: merged -> mark
 2026-08-06T06:43:24Z | jeff: merged -> steve
+2026-08-06T10:49:18Z | jeff: merged -> none | REJECTED (adversarial review): steve — see ci-debug/jeff-rejections.txt

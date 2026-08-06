@@ -38,3 +38,4 @@
 2026-07-30T02:37:10Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_profiles_list_contract
 2026-07-30T06:46:23Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_profiles_list_contract
 2026-08-03T07:43:19Z steve: REJECT: `idx_credits_txn` is a non-UNIQUE index — two concurrent postbacks with the same `transaction_id` can both pass the `SELECT` dedup check before either `INSERT`s, causing double-crediting of creator tokens; fix requires `CREATE UNIQUE INDEX` + `IntegrityError` catch (or `INSERT OR IGNORE`).
+2026-08-06T10:49:18Z steve: REJECT: image_url_source for at least 4 Kangol hat products references wrong-color variant images — prod_ht_009 (black) → `9720BC_BEIGE_…`, prod_ht_010 (navy) → `1456BC_BEIGE.jpg`, prod_ht_011 (black) → `0289BC_HAZYINDIGO_1.jpg`, prod_ht_014 (red) → `K3793_BLACK.jpg` — so the local `/static/img/products/` files derived from these sources will display the wrong color variant to users.
