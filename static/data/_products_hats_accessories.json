@@ -6,13 +6,18 @@
     "category": "hat",
     "subcategory": "bucket hat",
     "color": "black",
-    "price_estimate_usd": 55.00,
+    "price_estimate_usd": 55.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1321249-basic-boonie-hat-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_001.jpg",
     "description": "Nylon boonie hat featuring Stüssy basic logo embroidery with woven eyelets, a mesh sweatband and lining, and a self-fabric strap with bead keeper. 100% nylon, unisex design available in S/M and L/XL.",
     "search_query": "stussy boonie bucket hat black",
-    "tags": ["streetwear", "outdoor", "unisex"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "outdoor",
+      "unisex"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1321249_BLAC_1.jpg?v=1780684697"
   },
   {
     "id": "prod_ht_002",
@@ -21,13 +26,18 @@
     "category": "hat",
     "subcategory": "bucket hat",
     "color": "black/olive",
-    "price_estimate_usd": 55.00,
+    "price_estimate_usd": 55.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1321250-reversible-stock-bucket-hat-black-olive",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_002.jpg",
     "description": "Classic fit reversible cotton twill bucket hat with unstructured silhouette. Exterior features Stüssy stock logo embroidery; interior features serif logo. Woven eyelets, two-sided wear. 100% cotton, unisex.",
     "search_query": "stussy reversible bucket hat black olive",
-    "tags": ["streetwear", "casual", "reversible"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "casual",
+      "reversible"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1321250_BLOL_1.jpg?v=1780350857"
   },
   {
     "id": "prod_ht_003",
@@ -36,13 +46,18 @@
     "category": "hat",
     "subcategory": "bucket hat",
     "color": "black",
-    "price_estimate_usd": 50.00,
+    "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1321023-stock-bucket-hat-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_003.jpg",
     "description": "Classic unstructured bucket hat crafted from cotton twill with Stüssy stock logo embroidery, tonal topstitching, and woven eyelets. Cotton twill sweatband. 100% cotton, unisex, S/M and L/XL.",
     "search_query": "stussy stock bucket hat black cotton",
-    "tags": ["streetwear", "casual", "classic"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "casual",
+      "classic"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://uk.stussy.com/cdn/shop/files/1321023_BLAC_1.jpg?v=1760523808&width=1920"
   },
   {
     "id": "prod_ht_004",
@@ -51,13 +66,18 @@
     "category": "hat",
     "subcategory": "dad hat",
     "color": "black",
-    "price_estimate_usd": 50.00,
+    "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311107-new-era-9twenty-basic-strapback-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_004.jpg",
     "description": "New Era 9TWENTY six-panel cap in cotton twill with Stüssy basic stock logo in raised embroidery. Unstructured crown, woven eyelets, precurved brim, strapback closure with metal triglide. 100% cotton, unisex.",
     "search_query": "stussy new era 9twenty dad hat black strapback",
-    "tags": ["streetwear", "dad hat", "collaboration"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "dad hat",
+      "collaboration"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311107_BLAC_1_7530060f-8c7f-4931-bfbc-4b0c0b0c1e1c.jpg?v=1763556413"
   },
   {
     "id": "prod_ht_005",
@@ -66,13 +86,18 @@
     "category": "hat",
     "subcategory": "dad hat",
     "color": "black",
-    "price_estimate_usd": 45.00,
+    "price_estimate_usd": 45.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311232-basic-stussy-cap-canvas-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_005.jpg",
     "description": "Low-profile six-panel cap in washed cotton canvas with Stüssy basic logo embroidery. Unstructured crown, woven eyelets, precurved brim, and strapback closure with metal triglide. 100% cotton, unisex, one size.",
     "search_query": "stussy canvas dad hat black strapback",
-    "tags": ["streetwear", "casual", "logo"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "casual",
+      "logo"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311232_BLAC_1.jpg?v=1771874658"
   },
   {
     "id": "prod_ht_006",
@@ -81,13 +106,18 @@
     "category": "hat",
     "subcategory": "beanie",
     "color": "black",
-    "price_estimate_usd": 45.00,
+    "price_estimate_usd": 45.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1321262-basic-stussy-cuff-beanie-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_006.jpg",
     "description": "Fitted cuff beanie with soft, lightweight ribbed texture and Stüssy basic stock logo embroidery at front. 100% acrylic, one size fits all, unisex.",
     "search_query": "stussy cuff beanie black acrylic",
-    "tags": ["streetwear", "winter", "beanie"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "winter",
+      "beanie"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1321262_BLAC_1.jpg?v=1767726450"
   },
   {
     "id": "prod_ht_007",
@@ -96,13 +126,18 @@
     "category": "hat",
     "subcategory": "trucker hat",
     "color": "green",
-    "price_estimate_usd": 50.00,
+    "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311164-new-era-9twenty-washed-basic-trucker-green",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_007.jpg",
     "description": "Six-panel trucker cap in washed cotton twill with mesh panels and Stüssy basic logo in raised embroidery. Contrast topstitching, unstructured crown, precurved brim, strapback closure with metal slide. 100% cotton body, 100% polyester mesh.",
     "search_query": "stussy new era trucker hat green mesh",
-    "tags": ["streetwear", "trucker", "summer"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "trucker",
+      "summer"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311164_GREN_1.jpg?v=1771463867"
   },
   {
     "id": "prod_ht_008",
@@ -111,13 +146,18 @@
     "category": "hat",
     "subcategory": "trucker hat",
     "color": "navy",
-    "price_estimate_usd": 50.00,
+    "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311217-mid-depth-tough-gear-trucker-navy",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_008.jpg",
     "description": "Mid-depth trucker cap with unstructured crown and split front panel. Features Stüssy tough gear logo in raised embroidery, precurved brim, double row snapback closure, and cotton twill sweatband. 100% polyester body and mesh, unisex.",
     "search_query": "stussy trucker hat navy snapback mesh",
-    "tags": ["streetwear", "trucker", "new arrival"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "trucker",
+      "new arrival"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311217_NAVY_1.jpg?v=1778692877"
   },
   {
     "id": "prod_ht_009",
@@ -126,13 +166,18 @@
     "category": "hat",
     "subcategory": "baseball cap",
     "color": "black",
-    "price_estimate_usd": 40.00,
+    "price_estimate_usd": 40.0,
     "product_url": "https://www.kangol.com/products/cotton-twill-army-cap",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_009.jpg",
     "description": "Classic military-style cap with hidden interior pocket in the top panel, raised Kangol wordmark embroidery off-center on front, and a Kangol tab at center back. Features patented Flexfit® headband system with a 2 3/8\" peak and flat crown. Cotton blend, imported. Available S/M through XXL.",
     "search_query": "kangol army cap black flexfit cotton",
-    "tags": ["classic", "military", "flexfit"],
-    "in_stock": true
+    "tags": [
+      "classic",
+      "military",
+      "flexfit"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/9720BC_BEIGE_8c386a15-95d6-42d4-b9e4-8d8b9666cd60.jpg?v=1771436461"
   },
   {
     "id": "prod_ht_010",
@@ -141,13 +186,19 @@
     "category": "hat",
     "subcategory": "baseball cap",
     "color": "navy",
-    "price_estimate_usd": 50.00,
+    "price_estimate_usd": 50.0,
     "product_url": "https://www.kangol.com/products/tropic-ventair-spacecap",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_010.jpg",
     "description": "Seamless knit baseball hat in Kangol's signature Tropic® fabric, featuring a ventair pattern that allows airflow for ultimate comfort in spring and summer. Fitted closure, round crown, unlined, 2 3/4\" peak. 65% polyester, 35% modacrylic. Available S through XXL.",
     "search_query": "kangol tropic ventair spacecap baseball navy summer",
-    "tags": ["summer", "athletic", "ventilated", "fitted"],
-    "in_stock": true
+    "tags": [
+      "summer",
+      "athletic",
+      "ventilated",
+      "fitted"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/1456BC_BEIGE.jpg?v=1755011031"
   },
   {
     "id": "prod_ht_011",
@@ -156,13 +207,19 @@
     "category": "hat",
     "subcategory": "snapback",
     "color": "black",
-    "price_estimate_usd": 60.00,
+    "price_estimate_usd": 60.0,
     "product_url": "https://www.kangol.com/products/tropic-spitfire",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_011.jpg",
     "description": "Iconic Kangol fashion cap with a distinctive round crown that implies quartered panels. Can be worn peak forward or backward to display the Kangaroo logo. 65% polyester, 35% modacrylic Tropic fabric. 2 1/4\" peak, imported. Available S through XXL.",
     "search_query": "kangol spitfire cap black tropic streetwear",
-    "tags": ["streetwear", "iconic", "logo", "fashion"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "iconic",
+      "logo",
+      "fashion"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/0289BC_HAZYINDIGO_1.jpg?v=1773312880"
   },
   {
     "id": "prod_ht_012",
@@ -171,13 +228,19 @@
     "category": "hat",
     "subcategory": "beret",
     "color": "dark blue",
-    "price_estimate_usd": 65.00,
+    "price_estimate_usd": 65.0,
     "product_url": "https://www.kangol.com/products/anglobasque-beret",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_012.jpg",
     "description": "Structured beret with a 10-inch crown and stiffened woven sweatband for a close-fitting silhouette. Wool felt construction with satin lining for luxury comfort. Iconic Kangol style. 90% wool, 10% polyester, imported. Available S through XL.",
     "search_query": "kangol beret wool felt dark blue classic",
-    "tags": ["classic", "French", "wool", "fashion"],
-    "in_stock": true
+    "tags": [
+      "classic",
+      "French",
+      "wool",
+      "fashion"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/0252HT_DARK-BLUE_5971fd7f-9b6f-41ac-9d8d-134e8ec25481.jpg?v=1767882379"
   },
   {
     "id": "prod_ht_013",
@@ -186,13 +249,19 @@
     "category": "hat",
     "subcategory": "bucket hat",
     "color": "olive",
-    "price_estimate_usd": 75.00,
+    "price_estimate_usd": 75.0,
     "product_url": "https://www.kangol.com/products/a-w-g-bucket-k5492",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_013.jpg",
     "description": "All Weather Gear Bucket made from lightweight water-repellent fabric in a wide brim bucket shape. Offers sun and rain protection, functional utility loops at the back, and a detachable adjustable reflective bungee chin cord. 57% nylon, 32% polyester, 11% elastane.",
     "search_query": "kangol all weather gear bucket hat olive utility",
-    "tags": ["outdoor", "utility", "water-repellent", "functional"],
-    "in_stock": false
+    "tags": [
+      "outdoor",
+      "utility",
+      "water-repellent",
+      "functional"
+    ],
+    "in_stock": false,
+    "image_url_source": "http://kangol.com/cdn/shop/files/K5492_OLIVE_1.jpg?v=1769117351"
   },
   {
     "id": "prod_ht_014",
@@ -201,13 +270,19 @@
     "category": "hat",
     "subcategory": "beanie",
     "color": "red",
-    "price_estimate_usd": 38.00,
+    "price_estimate_usd": 38.0,
     "product_url": "https://www.kangol.com/products/2-way-text-beanie-k3793",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_014.jpg",
     "description": "Dual-style beanie offering two looks: wear full-length as a slouchy pull-on with colorblocked Kangol wordmark and kangaroo logo, or fold up the cuff for a classic Kangol logo look. Acrylic construction, retro-sporty aesthetic. One size.",
     "search_query": "kangol beanie red two way slouchy cuff",
-    "tags": ["winter", "retro", "logo", "versatile"],
-    "in_stock": false
+    "tags": [
+      "winter",
+      "retro",
+      "logo",
+      "versatile"
+    ],
+    "in_stock": false,
+    "image_url_source": "http://kangol.com/cdn/shop/files/K3793_BLACK.jpg?v=1755012459"
   },
   {
     "id": "prod_ht_015",
@@ -216,13 +291,19 @@
     "category": "hat",
     "subcategory": "trucker hat",
     "color": "black",
-    "price_estimate_usd": 28.00,
+    "price_estimate_usd": 28.0,
     "product_url": "https://www.brixton.com/products/alpha-block-netplus-trucker-hat-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_015.jpg",
     "description": "Medium-profile structured 5-panel trucker hat made from recycled fishing nets (Bureo NetPlus material) combined with organic cotton. Features merrowed-edge embroidered patch, mesh back panels, and moisture-wicking inner sweatband. Adjustable snapback. 57% polyester, 43% organic cotton.",
     "search_query": "brixton trucker hat black sustainable recycled snapback",
-    "tags": ["sustainable", "trucker", "streetwear", "eco"],
-    "in_stock": true
+    "tags": [
+      "sustainable",
+      "trucker",
+      "streetwear",
+      "eco"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.brixton.com/cdn/shop/products/nmyxuxk3irfk9caidwhe_4e5ccc3f-4d49-4a7c-9867-9d5909653ff9.jpg?crop=center&height=1200&v=1738632549&width=1200"
   },
   {
     "id": "prod_ht_016",
@@ -231,13 +312,19 @@
     "category": "hat",
     "subcategory": "bucket hat",
     "color": "black",
-    "price_estimate_usd": 30.00,
+    "price_estimate_usd": 30.0,
     "product_url": "https://www.brixton.com/products/eldon-packable-bucket-hat-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_016.jpg",
     "description": "Lightweight, travel-friendly bucket hat with chainstitch embroidery detail and moisture-wicking elastic sweatband. Engineered for everyday adventures at the beach or city. 97% cotton, 3% elastane. Packable design, S/M and L/XL.",
     "search_query": "brixton eldon packable bucket hat black travel",
-    "tags": ["travel", "packable", "casual", "summer"],
-    "in_stock": false
+    "tags": [
+      "travel",
+      "packable",
+      "casual",
+      "summer"
+    ],
+    "in_stock": false,
+    "image_url_source": "http://www.brixton.com/cdn/shop/files/ahdfbihdx0mbhyfaiiuu.jpg?crop=center&height=1200&v=1769441843&width=1200"
   },
   {
     "id": "prod_ht_017",
@@ -246,13 +333,19 @@
     "category": "hat",
     "subcategory": "bucket hat",
     "color": "natural/black",
-    "price_estimate_usd": 69.00,
+    "price_estimate_usd": 69.0,
     "product_url": "https://www.brixton.com/products/harmony-packable-bucket-hat-natural-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_017.jpg",
     "description": "Fashion straw bucket hat in color-blocked natural and black paper straw. Packable construction with elastic sweatband and metal headwear plaque. Perfect for poolside lounging or city exploration. 100% straw, brim length 9cm/3.75\".",
     "search_query": "brixton straw bucket hat natural black packable summer",
-    "tags": ["summer", "straw", "fashion", "packable"],
-    "in_stock": false
+    "tags": [
+      "summer",
+      "straw",
+      "fashion",
+      "packable"
+    ],
+    "in_stock": false,
+    "image_url_source": "http://www.brixton.com/cdn/shop/files/ovxlzwnkeef9e3bvuhla.jpg?crop=center&height=1200&v=1769441844&width=1200"
   },
   {
     "id": "prod_ht_018",
@@ -261,13 +354,19 @@
     "category": "hat",
     "subcategory": "snapback",
     "color": "medium wash denim",
-    "price_estimate_usd": 69.00,
+    "price_estimate_usd": 69.0,
     "product_url": "https://www.brixton.com/products/altered-threads-brood-baggy-snap-cap-medium-wash-denim",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_018.jpg",
     "description": "1920s-inspired newsboy cap featuring ultra-soft blanket flannel combined with cotton denim. Cotton corduroy bill and custom liner. Blends vintage authenticity with modern comfort. 45% cotton, 45% polyester, 10% wool. Adjustable snapback.",
     "search_query": "brixton newsboy snap cap denim vintage 1920s",
-    "tags": ["vintage", "denim", "fashion", "newsboy"],
-    "in_stock": false
+    "tags": [
+      "vintage",
+      "denim",
+      "fashion",
+      "newsboy"
+    ],
+    "in_stock": false,
+    "image_url_source": "http://www.brixton.com/cdn/shop/files/avr4pmuptuljog2rdgoa.jpg?crop=center&height=1200&v=1759351370&width=1200"
   },
   {
     "id": "prod_ht_019",
@@ -276,13 +375,19 @@
     "category": "hat",
     "subcategory": "baseball cap",
     "color": "navy",
-    "price_estimate_usd": 40.00,
+    "price_estimate_usd": 40.0,
     "product_url": "https://www.kangol.com/products/wool-flexfit-baseball",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_019.jpg",
     "description": "Classic baseball cap in wool with Flexfit® stretch technology for a comfortable, custom fit. Available in 17 colorways including Royal Blue, Taupe, Olive, Beige, Black, Brown, and Navy. Structured crown, precurved brim. Imported.",
     "search_query": "kangol wool flexfit baseball cap navy structured",
-    "tags": ["classic", "flexfit", "wool", "baseball"],
-    "in_stock": true
+    "tags": [
+      "classic",
+      "flexfit",
+      "wool",
+      "baseball"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://kangol.com/cdn/shop/files/8650BC_ROYAL-BLUE_66f79fd0-962a-496e-85b7-07babea76fa1.jpg?v=1771451950"
   },
   {
     "id": "prod_ht_020",
@@ -291,13 +396,19 @@
     "category": "hat",
     "subcategory": "trucker hat",
     "color": "navy",
-    "price_estimate_usd": 50.00,
+    "price_estimate_usd": 50.0,
     "product_url": "https://www.stussy.com/collections/headwear/products/1311170-trucker-s-crown-snapback-navy",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ht_020.jpg",
     "description": "Structured trucker cap featuring Stüssy's iconic S Crown logo in raised embroidery on the front panel. Adjustable snapback closure, mesh back panels for ventilation, precurved brim. Unisex, one size fits all.",
     "search_query": "stussy S crown trucker hat navy snapback mesh",
-    "tags": ["streetwear", "logo", "trucker", "iconic"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "logo",
+      "trucker",
+      "iconic"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/1311170_NAVY_1_39a82386-9abf-4b68-ae73-6ec3934f519e.jpg?v=1772048613"
   },
   {
     "id": "prod_ac_001",
@@ -306,13 +417,19 @@
     "category": "accessory",
     "subcategory": "watch",
     "color": "silver/black",
-    "price_estimate_usd": 219.00,
+    "price_estimate_usd": 219.0,
     "product_url": "https://us.danielwellington.com/products/classic-sheffield-silver-40mm",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_001.jpg",
     "description": "Men's minimalist watch with 40mm stainless steel case, eggshell white dial, and black leather strap. Japanese quartz movement, water resistant to 3 ATM. Interchangeable 20mm leather strap with spring bar connectors. 316L stainless steel case. 2-year warranty.",
     "search_query": "daniel wellington classic sheffield silver watch men leather",
-    "tags": ["minimalist", "classic", "menswear", "leather strap"],
-    "in_stock": true
+    "tags": [
+      "minimalist",
+      "classic",
+      "menswear",
+      "leather strap"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://jewelshop.co.za/wp-content/uploads/2021/09/Black-white-silver.png"
   },
   {
     "id": "prod_ac_002",
@@ -321,13 +438,19 @@
     "category": "accessory",
     "subcategory": "watch",
     "color": "rose gold/brown",
-    "price_estimate_usd": 219.00,
+    "price_estimate_usd": 219.0,
     "product_url": "https://us.danielwellington.com/products/classic-st-mawes-rose-gold",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_002.jpg",
     "description": "Slim 40mm watch from Daniel Wellington's flagship Classic Collection. PVD-plated rose gold stainless steel case, eggshell white dial, and brown leather St Mawes strap. Japanese quartz movement, 3 ATM water resistant, interchangeable strap. 6mm case thickness.",
     "search_query": "daniel wellington classic rose gold watch leather brown",
-    "tags": ["minimalist", "rose gold", "classic", "gift"],
-    "in_stock": true
+    "tags": [
+      "minimalist",
+      "rose gold",
+      "classic",
+      "gift"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://www.fields.ie/dw/image/v2/BFNQ_PRD/on/demandware.static/-/Sites-ang_master-catalog/default/dw5bc48afc/hi-res/dw00100035-daniel-wellington-classic-st-mawes-lady-rose-gold-plated-and-brown-leather-strap-watch-18-46-1-0014-img3.jpg?sw=1000&sh=1000&sm=fit"
   },
   {
     "id": "prod_ac_003",
@@ -336,13 +459,19 @@
     "category": "accessory",
     "subcategory": "watch",
     "color": "gold/white",
-    "price_estimate_usd": 209.00,
+    "price_estimate_usd": 209.0,
     "product_url": "https://us.danielwellington.com/products/petite-evergold",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_003.jpg",
     "description": "Women's 32mm watch with an eggshell white dial and gold mesh strap in PVD-plated gold stainless steel. Japanese quartz movement, 3 ATM water resistant. Interchangeable 14mm mesh strap. Elevates any outfit with a pop of gold.",
     "search_query": "daniel wellington petite evergold watch women mesh gold",
-    "tags": ["minimalist", "gold", "mesh strap", "women"],
-    "in_stock": true
+    "tags": [
+      "minimalist",
+      "gold",
+      "mesh strap",
+      "women"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://assets.digitalcontent.marksandspencer.app/images/w_2560,q_auto,f_auto/MS_03_T08_8434S_Z0_X_EC_0/Daniel-Wellington-Petite-Evergold-Gold-Watch"
   },
   {
     "id": "prod_ac_004",
@@ -351,13 +480,19 @@
     "category": "accessory",
     "subcategory": "watch",
     "color": "rose gold/linen",
-    "price_estimate_usd": 209.00,
+    "price_estimate_usd": 209.0,
     "product_url": "https://us.danielwellington.com/products/marlon-sheffield-linen-rose-gold",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_004.jpg",
     "description": "Vintage-inspired 32x36.3mm cushion-shaped case watch with a linen-embossed dial and rose gold PVD-plated stainless steel case. Brown leather strap, Japanese quartz movement, 3 ATM water resistance. Interchangeable 17mm strap with spring bar connectors.",
     "search_query": "daniel wellington marlon vintage cushion watch rose gold linen",
-    "tags": ["vintage", "rose gold", "cushion case", "unisex"],
-    "in_stock": true
+    "tags": [
+      "vintage",
+      "rose gold",
+      "cushion case",
+      "unisex"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://dynamic.zacdn.com/sxUjGBFUAaCl-zXh64nG5tgQArg=/filters:quality(70):format(webp)/https://static-sg.zacdn.com/p/daniel-wellington-2431-3060883-6.jpg"
   },
   {
     "id": "prod_ac_005",
@@ -366,13 +501,19 @@
     "category": "accessory",
     "subcategory": "sunglasses",
     "color": "black",
-    "price_estimate_usd": 85.00,
+    "price_estimate_usd": 85.0,
     "product_url": "https://www.lespecs.com/products/lumen-black-polarized",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_005.jpg",
     "description": "Softly sculpted cat-eye sunglasses with a subtle upward sweep through the outer corners and beveled detail. Smoke mono polarized lenses (0.65mm TAC, Category 3 UV protection). Made from ecozen t110 with 10% plant biomass. 147.4mm width, 55mm lens.",
     "search_query": "le specs lumen cat eye polarized sunglasses black women",
-    "tags": ["cat-eye", "polarized", "sustainable", "UV protection"],
-    "in_stock": true
+    "tags": [
+      "cat-eye",
+      "polarized",
+      "sustainable",
+      "UV protection"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://lespecs.com/cdn/shop/files/321c0f8ab6a6541d271110d11500bffa_1024x1024.jpg?v=1774489279"
   },
   {
     "id": "prod_ac_006",
@@ -381,13 +522,19 @@
     "category": "accessory",
     "subcategory": "sunglasses",
     "color": "black",
-    "price_estimate_usd": 75.00,
+    "price_estimate_usd": 75.0,
     "product_url": "https://www.lespecs.com/products/foundry-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_006.jpg",
     "description": "Narrow modern oval silhouette sunglasses with a sleek, streamlined profile and strong directional feel. Soft beveled details and double rivet detailing on the front frame. Black frame with smokey brown mono lenses, Category 3 UV protection. 145mm width, 50mm lens. Unisex.",
     "search_query": "le specs foundry oval sunglasses black unisex streetwear",
-    "tags": ["oval", "unisex", "streetwear", "minimalist"],
-    "in_stock": true
+    "tags": [
+      "oval",
+      "unisex",
+      "streetwear",
+      "minimalist"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://lespecs.com/cdn/shop/files/d70308504732dddd1c2257813701b525_1024x1024.jpg?v=1781760585"
   },
   {
     "id": "prod_ac_007",
@@ -396,13 +543,19 @@
     "category": "accessory",
     "subcategory": "sunglasses",
     "color": "silver/milky butter",
-    "price_estimate_usd": 99.00,
+    "price_estimate_usd": 99.0,
     "product_url": "https://www.lespecs.com/products/mecharo-silver-milky-butter",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_007.jpg",
     "description": "Sleek oval sunglasses with clean, elongated proportions and a modern streamlined profile. Combination metal and acetate frame with fine metal temples and subtle dome rivet detailing. Smoke tint polycarbonate lenses, Category 2 UV protection. 147.5mm width. Unisex.",
     "search_query": "le specs mecharo oval metal sunglasses silver butter unisex",
-    "tags": ["oval", "metal", "fashion", "unisex"],
-    "in_stock": true
+    "tags": [
+      "oval",
+      "metal",
+      "fashion",
+      "unisex"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://lespecs.com/cdn/shop/files/b81c999f3f272b435d6011252bd7489e_1024x1024.jpg?v=1774489139"
   },
   {
     "id": "prod_ac_008",
@@ -413,11 +566,17 @@
     "color": "caramel",
     "price_estimate_usd": 59.99,
     "product_url": "https://www.lespecs.com/products/air-heart-caramel-lsp2002215",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_008.jpg",
     "description": "Iconic oversized cat-eye sunglasses favored by celebrities, featuring a thick semi-translucent caramel frame with metal top bar accent and khaki mono lenses. BPA-free polymer plastic frame, shatter and scratch-resistant polycarbonate lenses with UV Category 3 protection. 147mm width.",
     "search_query": "le specs air heart cat eye caramel oversized sunglasses",
-    "tags": ["cat-eye", "oversized", "celebrity", "fashion"],
-    "in_stock": true
+    "tags": [
+      "cat-eye",
+      "oversized",
+      "celebrity",
+      "fashion"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0029/7900/4480/files/487b0785cfabcaba4670e20f696b1608.jpg?v=1727142917"
   },
   {
     "id": "prod_ac_009",
@@ -426,13 +585,19 @@
     "category": "accessory",
     "subcategory": "earrings",
     "color": "gold",
-    "price_estimate_usd": 98.00,
+    "price_estimate_usd": 98.0,
     "product_url": "https://www.mejuri.com/world/en/products/tube-huggie-hoops",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_009.jpg",
     "description": "Modern tube hoop earrings lightweight enough to wear effortlessly, with a clicker closure for maximum comfort and security. 18k Gold Vermeil (thick 18k solid gold plating on 94% recycled sterling silver base). 12mm outer diameter, 2mm width. Hypoallergenic.",
     "search_query": "mejuri tube huggie hoop earrings gold vermeil everyday",
-    "tags": ["everyday", "gold", "minimalist", "hypoallergenic"],
-    "in_stock": true
+    "tags": [
+      "everyday",
+      "gold",
+      "minimalist",
+      "hypoallergenic"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/0-NewHoopStandard_TubeHoopsHuggie12mm_V_ANGLED_175_new_5cbbb646-e211-4c1e-bbfa-b25c3ca7c517.png?v=1758043829"
   },
   {
     "id": "prod_ac_010",
@@ -441,13 +606,19 @@
     "category": "accessory",
     "subcategory": "earrings",
     "color": "gold",
-    "price_estimate_usd": 128.00,
+    "price_estimate_usd": 128.0,
     "product_url": "https://www.mejuri.com/world/en/products/bold-huggie-hoops",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_010.jpg",
     "description": "Bold statement hoops that elevate any outfit and boost your mood. 18k Gold Vermeil on 91% recycled sterling silver base. Thick 18K solid gold plating. 12mm outer diameter, 3.2mm width. Hypoallergenic clicker closure.",
     "search_query": "mejuri bold huggie hoop earrings gold statement",
-    "tags": ["statement", "gold", "everyday", "hypoallergenic"],
-    "in_stock": true
+    "tags": [
+      "statement",
+      "gold",
+      "everyday",
+      "hypoallergenic"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://n.nordstrommedia.com/it/7fcb279c-b550-43ea-9465-a58b390fbe9f.png?h=368&w=240&dpr=2"
   },
   {
     "id": "prod_ac_011",
@@ -456,13 +627,19 @@
     "category": "accessory",
     "subcategory": "ring",
     "color": "gold",
-    "price_estimate_usd": 98.00,
+    "price_estimate_usd": 98.0,
     "product_url": "https://www.mejuri.com/world/en/products/duo-beaded-stacker-ring",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_011.jpg",
     "description": "Handcrafted stacker ring with iconic doubled beaded texture. 18k Gold Vermeil on 94% recycled sterling silver base. 2.9mm width, 1.7mm thickness. Hypoallergenic. Available in sizes 4-10. Designed for everyday wear and stacking.",
     "search_query": "mejuri beaded stacker ring gold vermeil stackable",
-    "tags": ["stacker", "gold", "beaded", "hypoallergenic"],
-    "in_stock": true
+    "tags": [
+      "stacker",
+      "gold",
+      "beaded",
+      "hypoallergenic"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/0-VermeilSilverStackerRings_DuoBeadedStackerRing_V_ANGLED_011_new_6555c174-cb9f-41bc-bf06-d5aad78b7e93.png?v=1758142440"
   },
   {
     "id": "prod_ac_012",
@@ -471,13 +648,19 @@
     "category": "accessory",
     "subcategory": "ring",
     "color": "gold",
-    "price_estimate_usd": 168.00,
+    "price_estimate_usd": 168.0,
     "product_url": "https://www.mejuri.com/world/en/products/stevie-ring",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_012.jpg",
     "description": "Chunky chain-link ring with interlocking oval links that turns up, stands out, and plays well with others. 18k Gold Vermeil on 91% recycled sterling silver. 6.50mm width. Hypoallergenic. Available sizes 4-10. Can be stacked or worn solo.",
     "search_query": "mejuri stevie chain link ring gold chunky statement",
-    "tags": ["chunky", "chain", "statement", "gold"],
-    "in_stock": true
+    "tags": [
+      "chunky",
+      "chain",
+      "statement",
+      "gold"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/00-Stevie2_StevieRing_SS_OffFigAngledView_PDP.png?v=1758736417"
   },
   {
     "id": "prod_ac_013",
@@ -486,13 +669,19 @@
     "category": "accessory",
     "subcategory": "ring",
     "color": "gold",
-    "price_estimate_usd": 118.00,
+    "price_estimate_usd": 118.0,
     "product_url": "https://www.mejuri.com/world/en/products/bold-eternity-line-band",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_013.jpg",
     "description": "Slim ring with a fluted texture that catches light from every angle for added depth and detail. 18k Gold Vermeil on 91% recycled sterling silver. 3mm width, 1.35mm thickness. Hypoallergenic. Available sizes 4-10. Designed for everyday wear.",
     "search_query": "mejuri eternity band ring gold fluted slim everyday",
-    "tags": ["band", "slim", "gold", "everyday"],
-    "in_stock": true
+    "tags": [
+      "band",
+      "slim",
+      "gold",
+      "everyday"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://cdn.shopify.com/s/files/1/0797/3637/3533/files/0-VermeilLES_EternityLineBand_V_OffFigAngledView_PDP.png?v=1758736411"
   },
   {
     "id": "prod_ac_014",
@@ -501,13 +690,19 @@
     "category": "accessory",
     "subcategory": "necklace",
     "color": "gold",
-    "price_estimate_usd": 52.00,
+    "price_estimate_usd": 52.0,
     "product_url": "https://www.missoma.com/products/short-chain-necklace-18ct-gold-plated-vermeil",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_014.jpg",
     "description": "Classic plain chain necklace in 18ct Gold Vermeil. Versatile short length, ideal as a base layer or worn solo. Water-resistant. Includes 2-year warranty and 60-day returns. Free engraving available.",
     "search_query": "missoma short chain necklace gold vermeil layering",
-    "tags": ["layering", "gold", "minimalist", "everyday"],
-    "in_stock": false
+    "tags": [
+      "layering",
+      "gold",
+      "minimalist",
+      "everyday"
+    ],
+    "in_stock": false,
+    "image_url_source": "http://www.missoma.com/cdn/shop/products/short-chain-necklace-necklaces-missoma-736924.jpg?v=1674576154"
   },
   {
     "id": "prod_ac_015",
@@ -516,13 +711,19 @@
     "category": "accessory",
     "subcategory": "necklace",
     "color": "gold",
-    "price_estimate_usd": 108.00,
+    "price_estimate_usd": 108.0,
     "product_url": "https://www.missoma.com/products/mini-paperclip-chain-necklace-18ct-gold-plated",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_015.jpg",
     "description": "Delicate mini paperclip link chain necklace in 18ct Gold Plated, designed as a versatile layering piece. Water-resistant construction for everyday wear. Includes 2-year warranty, 60-day returns, and complimentary gift wrap. Free engraving available.",
     "search_query": "missoma paperclip chain necklace gold plated dainty layering",
-    "tags": ["layering", "paperclip", "dainty", "gold"],
-    "in_stock": false
+    "tags": [
+      "layering",
+      "paperclip",
+      "dainty",
+      "gold"
+    ],
+    "in_stock": false,
+    "image_url_source": "http://www.missoma.com/cdn/shop/files/mini-paperclip-chain-necklace-18ct-gold-plated-necklaces-missoma-648756.webp?v=1776723134"
   },
   {
     "id": "prod_ac_016",
@@ -531,13 +732,19 @@
     "category": "accessory",
     "subcategory": "earrings",
     "color": "gold/clear",
-    "price_estimate_usd": 83.00,
+    "price_estimate_usd": 83.0,
     "product_url": "https://www.missoma.com/products/classic-stone-stud-earrings-18ct-gold-plated-vermeil-cubic-zirconia",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_016.jpg",
     "description": "Versatile rounded stud earrings with cubic zirconia stones set in 18ct Gold Vermeil. Designed as everyday earrings that can be incorporated into layered ear stacks for a polished look. Includes 2-year warranty and 60-day returns.",
     "search_query": "missoma cubic zirconia stud earrings gold vermeil everyday",
-    "tags": ["studs", "cubic zirconia", "gold", "everyday"],
-    "in_stock": false
+    "tags": [
+      "studs",
+      "cubic zirconia",
+      "gold",
+      "everyday"
+    ],
+    "in_stock": false,
+    "image_url_source": "http://www.missoma.com/cdn/shop/products/classic-stone-stud-earrings-18ct-gold-plated-vermeilcubic-zirconia-earrings-missoma-842497.jpg?v=1694056947"
   },
   {
     "id": "prod_ac_017",
@@ -546,13 +753,19 @@
     "category": "accessory",
     "subcategory": "earrings",
     "color": "mixed metal",
-    "price_estimate_usd": 125.00,
+    "price_estimate_usd": 125.0,
     "product_url": "https://www.missoma.com/products/lucy-williams-chunky-entwine-small-hoop-earrings-mixed-metal",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_017.jpg",
     "description": "Everyday hoop earrings from the Lucy Williams x Missoma collaboration featuring an entwined pattern in mixed metal (18ct Gold Vermeil and Sterling Silver). 15mm diameter small size. Best seller. Includes 2-year warranty.",
     "search_query": "missoma lucy williams entwine hoop earrings mixed metal gold silver",
-    "tags": ["collaboration", "mixed metal", "hoops", "best seller"],
-    "in_stock": false
+    "tags": [
+      "collaboration",
+      "mixed metal",
+      "hoops",
+      "best seller"
+    ],
+    "in_stock": false,
+    "image_url_source": "http://www.missoma.com/cdn/shop/files/lucy-williams-entwine-small-hoop-earrings-mixed-metal-earrings-missoma-237490.jpg?v=1752054354"
   },
   {
     "id": "prod_ac_018",
@@ -561,13 +774,19 @@
     "category": "accessory",
     "subcategory": "crossbody bag",
     "color": "black",
-    "price_estimate_usd": 60.00,
+    "price_estimate_usd": 60.0,
     "product_url": "https://www.stussy.com/collections/accessories/products/canvas-crossbody-bag-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_018.jpg",
     "description": "12oz cotton canvas crossbody bag with adjustable strap extending to 51 inches. Hidden snap closure, silver nickel hardware, embroidered Stüssy logo. Interior 13.5x12\" laptop sleeve and zippered drop pocket with YKK VISLON® technology. 14.5\"W x 15\"H x 5.3\"D. 100% cotton.",
     "search_query": "stussy canvas crossbody bag black laptop sleeve streetwear",
-    "tags": ["streetwear", "canvas", "laptop", "everyday"],
-    "in_stock": true
+    "tags": [
+      "streetwear",
+      "canvas",
+      "laptop",
+      "everyday"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://puresoles.ph/cdn/shop/files/IMG_0238.png?v=1759924217&width=1946"
   },
   {
     "id": "prod_ac_019",
@@ -576,13 +795,19 @@
     "category": "accessory",
     "subcategory": "tote bag",
     "color": "stone",
-    "price_estimate_usd": 60.00,
+    "price_estimate_usd": 60.0,
     "product_url": "https://www.stussy.com/collections/accessories/products/waxed-canvas-market-tote-stone",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_019.jpg",
     "description": "Oversized market tote in waxed 100% cotton canvas with webbed strap handles, large central compartment, exterior drop pocket, Stüssy basic logo embroidery at side, interior zip pockets, and double-layered base panel. 18.1\"W x 12.1\"H x 9\"D.",
     "search_query": "stussy waxed canvas tote bag stone market oversized",
-    "tags": ["tote", "canvas", "waxed", "market"],
-    "in_stock": true
+    "tags": [
+      "tote",
+      "canvas",
+      "waxed",
+      "market"
+    ],
+    "in_stock": true,
+    "image_url_source": "https://shop-jp.doverstreetmarket.com/cdn/shop/files/134278_STON_1.png?v=1763540701&width=2000"
   },
   {
     "id": "prod_ac_020",
@@ -591,12 +816,18 @@
     "category": "accessory",
     "subcategory": "belt",
     "color": "black",
-    "price_estimate_usd": 80.00,
+    "price_estimate_usd": 80.0,
     "product_url": "https://www.stussy.com/collections/accessories/products/135205-rivet-stud-belt-black",
-    "image_url": "",
+    "image_url": "/static/img/products/prod_ac_020.jpg",
     "description": "Leather belt featuring a metal buckle and studded design with Stüssy-branded rivets throughout. 1-inch width. Available in S/M (40 inches) and L/XL (44 inches). 100% cow leather, imported. Unisex design.",
     "search_query": "stussy rivet stud belt black leather studded",
-    "tags": ["belt", "leather", "studded", "streetwear"],
-    "in_stock": true
+    "tags": [
+      "belt",
+      "leather",
+      "studded",
+      "streetwear"
+    ],
+    "in_stock": true,
+    "image_url_source": "http://www.stussy.com/cdn/shop/files/135205_BLAC_1.jpg?v=1772646498"
   }
 ]
