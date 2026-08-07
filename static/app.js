@@ -1535,14 +1535,12 @@
           </div>
           <button class="ig-edit" id="edit-profile-btn" type="button">Edit profile</button>
         </div>
-        <div class="ig-headmain">
-          <div class="ig-headstats">
-            <div><b>${fmtN(followersCount)}</b><span>Followers</span></div>
-            <div><b>${fmtN(followingCount)}</b><span>Following</span></div>
-            <div><b>${feed.length}</b><span>Looks</span></div>
-            <div><b>${wardrobe.length}</b><span>Items</span></div>
-          </div>
-        </div>
+      </div>
+      <div class="ig-headstats">
+        <div><b>${fmtN(followersCount)}</b><span>Followers</span></div>
+        <div><b>${fmtN(followingCount)}</b><span>Following</span></div>
+        <div><b>${feed.length}</b><span>Looks</span></div>
+        <div><b>${wardrobe.length}</b><span>Items</span></div>
       </div>
       ${(() => {
         const s = season;

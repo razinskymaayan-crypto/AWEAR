@@ -101,8 +101,8 @@
     padding: 16px; color: var(--hl); font-size: var(--t-body); margin-top: 14px; }
 
   /* ---- Dolce design system (profile + closet shelves) ---- */
-  .ig-head { display: flex; align-items: flex-start; gap: 16px; padding: 8px 4px 16px; }
-  .ig-avacol { display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0; }
+  .ig-head { display: flex; align-items: flex-start; gap: 16px; padding: 8px 16px 16px; }
+  .ig-avacol { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
   .ig-ava { width: 96px; height: 96px; border-radius: 50%; flex-shrink: 0; position: relative;
     background: var(--line); padding: 3px; }
   .ig-ava::after { content: ""; position: absolute; inset: 3px; border-radius: 50%;
@@ -121,14 +121,13 @@
   .ig-stats > div { display: flex; flex-direction: column; gap: 3px; flex: 1; }
   .ig-stats b { font-size: var(--t-h2,18px); font-weight: 900; font-family: "Poppins", sans-serif; }
   .ig-stats span { font-size: var(--t-micro); color: var(--muted); font-weight: 700; }
-  .ig-headmain { position: relative; flex: 1; min-width: 0; min-height: 96px; }
-  .ig-headstats { position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); display: flex; justify-content: space-around; text-align: center; gap: 4px; }
+  .ig-headstats { display: flex; justify-content: space-around; text-align: center; gap: 4px; padding: 0 16px 16px; border-bottom: 1px solid var(--line,#2e2836); }
   .ig-headstats > div { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
   .ig-headstats b { font-size: var(--t-h2, 18px); font-weight: 900; font-family: "Poppins", sans-serif; }
-  .ig-headstats span { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); font-weight: 700; white-space: nowrap; display: block; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .ig-headstats span { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); font-weight: 700; letter-spacing: .3px; }
   .ig-avacol .ig-nameblock { text-align: center; }
   .ig-avacol .ig-name { font-size: var(--t-lead, 17px); font-weight: 900; letter-spacing: -.3px; line-height: 1.2; }
-  .ig-avacol .ig-edit { margin-top: 0; min-width: 160px; }
+  .ig-avacol .ig-edit { margin-top: 0; min-width: 160px; border-radius: var(--r-pill, 999px); }
   .ig-nameblock .ig-name-bio { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); margin-top: 4px; line-height: 1.4; text-align: center; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .ig-bio { font-size: var(--t-small); color: var(--muted); line-height: 1.55; padding: 0 2px 16px; }
   .ig-bio b { color: var(--text); font-weight: 800; }
