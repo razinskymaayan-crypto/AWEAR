@@ -2117,7 +2117,7 @@ def _match_score(item: dict, p: dict) -> int:
     return score
 
 
-def _buy_route(p: dict) -> dict:
+def _buy_route(p: dict, xcust: str = "") -> dict:
     retailer = (p.get("brand") or "").lower()
     in_app = retailer in IN_APP_RETAILERS
     return {
@@ -2129,29 +2129,36 @@ def _buy_route(p: dict) -> dict:
         "retailer": p.get("brand"),
         "source": "in_app" if in_app else "affiliate",      # dropship/universal vs affiliate
         "checkout": "in_app" if in_app else "redirect",       # one-tap in-app vs prefilled redirect
-        "buy_url": affiliate_url(p.get("product_url") or ""),
+        "buy_url": affiliate_url(p.get("product_url") or "", xcust),
     }
 
 
 @app.get("/api/resolve-product")
-def resolve_product(q: str = "", category: str = "", color: str = "", brand: str = ""):
+def resolve_product(
+    q: str = "", category: str = "", color: str = "", brand: str = "",
+    poster_id: str = "", post_id: str = "",
+):
+    xcust = ":".join(part for part in (poster_id, post_id) if part)
     item = {"search_query": q, "category": category, "color": color, "brand": brand}
     scored = sorted(((_match_score(item, p), p) for p in _products_cache), key=lambda t: t[0], reverse=True)
     if scored and scored[0][0] >= 3:
-        route = _buy_route(scored[0][1])
+        route = _buy_route(scored[0][1], xcust)
         route["status"] = "exact"
         return route
     sims = [p for s, p in scored[:8] if s > 0][:4]
     if sims:
         return {"status": "similar", "checkout": "redirect", "source": "affiliate",
-                "alternatives": [_buy_route(p) for p in sims]}
+                "alternatives": [_buy_route(p, xcust) for p in sims]}
     # discontinued / nothing matches: never a dead end — own it, style it, resell it
     return {"status": "archive", "source": "none", "checkout": "none", "alternatives": [],
             "message": "Not sold new anymore — keep it in your closet, style it, or list it for resale."}
 
 
 @app.get("/api/find-similar")
-def find_similar(q: str = "", category: str = "", brand: str = "", color: str = "", limit: int = 6):
+def find_similar(
+    q: str = "", category: str = "", brand: str = "", color: str = "", limit: int = 6,
+    poster_id: str = "", post_id: str = "",
+):
     """Return in-stock lookalikes for an unavailable item, scored by _match_score.
 
     Called when an item status is 'find-similar' (discontinued / sold-out / off-season).
@@ -2159,6 +2166,7 @@ def find_similar(q: str = "", category: str = "", brand: str = "", color: str = 
     Response: {"alternatives": [<buy_route>, ...], "total": N}
     """
     limit = min(max(1, limit), 12)
+    xcust = ":".join(part for part in (poster_id, post_id) if part)
     item = {"search_query": q, "category": category, "brand": brand, "color": color}
     in_stock = [p for p in _products_cache if p.get("in_stock")]
     scored = sorted(
@@ -2166,7 +2174,7 @@ def find_similar(q: str = "", category: str = "", brand: str = "", color: str = 
         key=lambda t: t[0],
         reverse=True,
     )
-    alternatives = [_buy_route(p) for s, p in scored if s > 0][:limit]
+    alternatives = [_buy_route(p, xcust) for s, p in scored if s > 0][:limit]
     return {"alternatives": alternatives, "total": len(alternatives)}
 
 

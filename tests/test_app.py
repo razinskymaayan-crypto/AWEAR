@@ -4389,3 +4389,70 @@ def test_notifications_like_emits_to_post_owner_via_endpoint(client):
 
     # Cleanup: unlike.
     client.post(f"/api/posts/{_LIKE_POST_ID}/like")
+
+
+# ---------------------------------------------------------------------------
+# Affiliate attribution — xcust wired through resolve-product and find-similar
+# FAIL-BEFORE: buy_url never carried xcust; Skimlinks postback could not credit
+#              the right poster because the SubID was absent from every link.
+# PASS-AFTER:  poster_id + post_id params are embedded as xcust in buy_url.
+# ---------------------------------------------------------------------------
+
+def test_resolve_product_buy_url_carries_xcust_when_poster_provided(client):
+    """When poster_id and post_id are supplied, buy_url must contain xcust=poster_id:post_id."""
+    r = client.get(
+        "/api/resolve-product",
+        params={"q": "carhartt k87", "category": "top", "poster_id": "user_001", "post_id": "post_042"},
+    )
+    assert r.status_code == 200
+    d = r.json()
+    assert d["status"] in ("exact", "similar")
+    if d["status"] == "exact":
+        assert "xcust=user_001%3Apost_042" in d["buy_url"] or "xcust=user_001:post_042" in d["buy_url"], (
+            f"buy_url missing xcust: {d['buy_url']}"
+        )
+    else:
+        for alt in d["alternatives"]:
+            assert "xcust=user_001%3Apost_042" in alt["buy_url"] or "xcust=user_001:post_042" in alt["buy_url"], (
+                f"alternative buy_url missing xcust: {alt['buy_url']}"
+            )
+
+
+def test_resolve_product_buy_url_no_xcust_when_no_poster(client):
+    """Without poster_id/post_id the buy_url must not contain xcust (backwards-compat)."""
+    r = client.get("/api/resolve-product", params={"q": "carhartt k87", "category": "top"})
+    assert r.status_code == 200
+    d = r.json()
+    if d["status"] == "exact":
+        assert "xcust=" not in d["buy_url"], f"xcust should be absent: {d['buy_url']}"
+    elif d["status"] == "similar":
+        for alt in d.get("alternatives", []):
+            assert "xcust=" not in alt["buy_url"]
+
+
+def test_find_similar_buy_url_carries_xcust_when_poster_provided(client):
+    """find-similar buy URLs must carry xcust when poster context is supplied."""
+    r = client.get(
+        "/api/find-similar",
+        params={"q": "sneakers", "category": "shoes", "poster_id": "user_002", "post_id": "post_007"},
+    )
+    assert r.status_code == 200
+    d = r.json()
+    for alt in d.get("alternatives", []):
+        assert "xcust=user_002%3Apost_007" in alt["buy_url"] or "xcust=user_002:post_007" in alt["buy_url"], (
+            f"find-similar buy_url missing xcust: {alt['buy_url']}"
+        )
+
+
+def test_resolve_product_poster_id_only_xcust_has_no_trailing_colon(client):
+    """With only poster_id (no post_id), xcust must be just the poster_id (no trailing colon)."""
+    r = client.get(
+        "/api/resolve-product",
+        params={"q": "carhartt k87", "category": "top", "poster_id": "user_003"},
+    )
+    assert r.status_code == 200
+    d = r.json()
+    buy_url = d.get("buy_url") or (d.get("alternatives") or [{}])[0].get("buy_url", "")
+    if buy_url and "xcust=" in buy_url:
+        assert "xcust=user_003" in buy_url
+        assert "xcust=user_003%3A" not in buy_url, "trailing colon must not appear with no post_id"
