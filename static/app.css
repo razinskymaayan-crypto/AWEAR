@@ -1217,7 +1217,8 @@
   .ex-result-cat { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 2px; }
 
   /* ---- Outfit Generator ---- */
-  .og-wrap { display: flex; flex-direction: column; padding-bottom: 16px; }
+  .og-wrap { position: relative; display: flex; flex-direction: column; padding-bottom: 16px; }
+  .og-wrap::after { content: ''; display: block; position: sticky; bottom: 0; height: 24px; margin-top: -24px; background: linear-gradient(to bottom, transparent, var(--bg,#FAF9F7)); pointer-events: none; }
   .og-header { padding: 16px 18px 10px; }
   .og-title { font-size: var(--t-title,20px); font-weight: 700; letter-spacing: -.4px; }
   .og-sub { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); font-weight: 500; margin-top: 4px; }
@@ -1827,8 +1828,8 @@
   .ms-suggest-sub { font-size: var(--t-micro,11px); color: var(--muted,#9e99ad); font-weight: 600; }
   .ms-suggest-card { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--card,#1e1a22); border-radius: var(--r-md,14px); margin-bottom: 8px; cursor: pointer; border: 1px solid var(--line,#2e2836); transition: background .15s; }
   .ms-suggest-card:active { background: var(--card-hover,#262030); }
-  .ms-suggest-img { width: 48px; height: 48px; border-radius: var(--r-sm,10px); overflow: hidden; flex-shrink: 0; }
-  .ms-suggest-sell { font-size: var(--t-micro,11px); font-weight: 800; color: var(--accent,#e8526a); background: color-mix(in srgb, var(--accent,#e8526a) 12%, transparent); padding: 6px 12px; border-radius: var(--r-pill,999px); white-space: nowrap; flex-shrink: 0; border: 1px solid color-mix(in srgb, var(--accent,#e8526a) 20%, transparent); }
+  .ms-suggest-img { width: 48px; height: 48px; border-radius: var(--r-sm,10px); overflow: hidden; flex-shrink: 0; background: var(--surface,#F3F1EC); display: flex; align-items: center; justify-content: center; color: var(--muted,#6F6A63); }
+  .ms-suggest-sell { font-size: var(--t-micro,11px); font-weight: 800; color: var(--accent,#e8526a); background: color-mix(in srgb, var(--accent,#e8526a) 12%, transparent); padding: 0 12px; border-radius: var(--r-pill,999px); white-space: nowrap; flex-shrink: 0; border: 1px solid color-mix(in srgb, var(--accent,#e8526a) 20%, transparent); min-height: 44px; display: inline-flex; align-items: center; }
 
   /* ---- Marketplace CO2 Badge (P1-B) ---- */
   .mp-co2-badge { font-size: var(--t-micro,11px); font-weight: 700; color: var(--success,#52c97a); margin-top: 3px; display: inline-flex; align-items: center; gap: 3px; }
