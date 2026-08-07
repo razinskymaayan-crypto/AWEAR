@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-07, run 59)
-- **Task**: Profile header — kill "Follo..." stat label truncation (BH-22).
-- **Done**: Moved `.ig-headstats` from absolute-positioned inside `.ig-headmain` (51px per cell) to a full-width sibling row below the avatar block. Made `.ig-avacol` `width: 100%` so avatar/name/bio/Edit button are all centered. Edit button now uses `var(--r-pill)` per DS spec. Commit 2721e66. check-render + node --check green. Gabbana 8.2/10 PASS.
-- **Next**: Any new INBOX item; token peg UX decision still NEEDS_DECISION #3 (founder-only).
-- **Prior runs**: run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf; run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3; run 50 — source-link UI 28ce450.
+## Mark lane — last run (2026-08-07, run 60)
+- **Task**: AI Stylist hero portrait ratio + night-occasion logic fix.
+- **Done**: (1) `.ogd-media` aspect-ratio 16/10 → 4/5 — hero now fills editorial portrait format per VISUAL_VISION spec. (2) `occasionRankForNow` hr<5 branch added — midnight–5am now maps to "Date Night" instead of "Casual Day", killing "late night · Casual Day" contradiction. (3) eyebrow icon 12→16px. (4) ogd-swatch border upgraded to 2px var(--bg) with stronger shadow. Commit 751fbb8. check-render + node --check green. Gabbana 8.5/10 PASS.
+- **Next**: Any new INBOX/DEFECTS item; token peg UX decision still NEEDS_DECISION #3 (founder-only). Gabbana P1 open items: store product image fallbacks (Finding 1), check-in strip peek gradient (Finding 2 in prior audit).
+- **Prior runs**: run 59 — profile stats truncation fix 2721e66; run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf; run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3; run 50 — source-link UI 28ce450.
 
 ## Ayalon lane — last run (2026-08-05, run 50)
 - **Task**: DEMO_SCRIPT.md re-verification + 4 targeted updates. Commit 3dfa560.
