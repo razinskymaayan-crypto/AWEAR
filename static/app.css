@@ -1230,10 +1230,10 @@
   .og-scenarios::-webkit-scrollbar { display: none; }
   /* Today's Look — daily hero (headline of the AI tab) */
   .og-daily { margin: 16px 18px 16px; background: var(--card, #1e1a22); border: 1px solid var(--line, #2e2836); border-radius: var(--r-lg, 20px); overflow: hidden; display: flex; flex-direction: column; }
-  .ogd-media { position: relative; aspect-ratio: 16/10; background: var(--surface, #161318); }
+  .ogd-media { position: relative; aspect-ratio: 4/5; background: var(--surface, #161318); }
   .ogd-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .ogd-media .img-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted, #9e99ad); }
-  .ogd-swatch { position: absolute; right: var(--space-3, 12px); bottom: var(--space-3, 12px); width: 26%; aspect-ratio: 4/5; border-radius: var(--r-sm, 10px); overflow: hidden; border: 1px solid var(--line, #2e2836); box-shadow: 0 2px 8px rgba(0,0,0,.12); background: var(--surface, #161318); }
+  .ogd-swatch { position: absolute; right: var(--space-3, 12px); bottom: var(--space-3, 12px); width: 26%; aspect-ratio: 4/5; border-radius: var(--r-sm, 10px); overflow: hidden; border: 2px solid var(--bg, #0e0c0f); box-shadow: 0 4px 12px rgba(0,0,0,.22); background: var(--surface, #161318); }
   .ogd-swatch-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .ogd-body { padding: var(--space-4, 16px); display: flex; flex-direction: column; gap: var(--space-2, 8px); }
   .ogd-eyebrow { display: flex; align-items: center; gap: 6px; font-size: var(--t-caption, 12px); font-weight: 600; color: var(--accent2, #c4855a); letter-spacing: .2px; text-transform: capitalize; }

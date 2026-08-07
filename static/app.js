@@ -2602,7 +2602,7 @@
     const hr = now.getHours();
     const dow = now.getDay();
     const order = [];
-    if (hr >= 18) order.push(0);                                  // evening → Date Night
+    if (hr >= 18 || hr < 5) order.push(0);                        // evening/night → Date Night
     else if (dow >= 1 && dow <= 4 && hr >= 8) order.push(1);      // weekday daytime → Work Ready
     else if (dow === 0 || dow === 6) order.push(4);               // weekend → Weekend Vibes
     else order.push(3);                                          // default → Casual Day
@@ -3509,7 +3509,7 @@
     if (!wardrobe.length) {
       el.innerHTML = `
         <div class="og-daily og-daily-empty">
-          <div class="ogd-eyebrow">${icon('sparkle',12)} <span>${esc(ctx.eyebrow)}</span></div>
+          <div class="ogd-eyebrow">${icon('sparkle',16)} <span>${esc(ctx.eyebrow)}</span></div>
           <div class="ogd-empty-title">Your stylist is ready</div>
           <div class="ogd-empty-sub">Add a few pieces and I'll build your look for ${esc(ctx.dayLabel + ' ' + ctx.timeLabel)} every day.</div>
           <button class="ogd-cta" data-action="ogd-scan">${icon('camera',16)} Scan your first item</button>
@@ -3533,7 +3533,7 @@
           ${items[1] ? `<div class="ogd-swatch">${productImage(items[1], 'ogd-swatch-img')}</div>` : ''}
         </div>
         <div class="ogd-body">
-          <div class="ogd-eyebrow">${icon(ctx.occ.icon,12)} <span>${esc(ctx.eyebrow)}</span></div>
+          <div class="ogd-eyebrow">${icon(ctx.occ.icon,16)} <span>${esc(ctx.eyebrow)}</span></div>
           <div class="ogd-name">${esc(look.name || ctx.occ.label)}</div>
           ${pairLabels.length ? `<div class="ogd-pairs">${esc(pairLabels.join(' · '))}</div>` : ''}
           <button class="ogd-cta" data-action="ogd-wear">See the full look ${icon('arrowRight',16)}</button>
