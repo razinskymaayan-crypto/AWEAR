@@ -6953,12 +6953,12 @@
     {icon:'briefcase',label:'Power Dressing',tag:'formal'},
   ];
   const EX_CARDS = [
-    {name:'Urban summer look',sub:'Zara + Samba',badge:'Trending'},
-    {name:'Streetwear All Black',sub:'Cargo + oversized',badge:'Top pick'},
-    {name:'Cottage Romance',sub:'Vintage + romantic',badge:''},
-    {name:'Sport Luxe',sub:'Nike + minimal',badge:'New'},
-    {name:'Classic minimal',sub:'White + nude',badge:''},
-    {name:'Y2K Butterfly',sub:'Low-rise + crop',badge:'Viral'},
+    {name:'Urban summer look',sub:'Zara + Samba',badge:'Trending',image_url:'/static/img/users/carmel/look3.jpg'},
+    {name:'Streetwear All Black',sub:'Cargo + oversized',badge:'Top pick',image_url:'/static/img/users/carmel/look1.jpg'},
+    {name:'Cottage Romance',sub:'Vintage + romantic',badge:'',image_url:'/static/img/users/maayan/look3.jpg'},
+    {name:'Sport Luxe',sub:'Nike + minimal',badge:'New',image_url:'/static/img/users/maayan/look2.jpg'},
+    {name:'Classic minimal',sub:'White + nude',badge:'',image_url:'/static/img/users/carmel/look2.jpg'},
+    {name:'Y2K Butterfly',sub:'Low-rise + crop',badge:'Viral',image_url:'/static/img/users/tamar/look1.jpg'},
   ];
 
   let exVibe = 'all', exInited = false;
@@ -7032,7 +7032,7 @@
     }
     document.getElementById('ex-grid').innerHTML = cards.map(c =>
       `<div class="ex-card" data-q="${attr(c.name)}">
-         <div class="ex-card-bg">${productImage({name:c.name, search_query:c.name+' '+(c.sub||'')})}</div>
+         <div class="ex-card-bg">${productImage({name:c.name, search_query:c.name+' '+(c.sub||''), image_url:c.image_url||null})}</div>
          <div class="ex-card-info">
            <div class="ex-card-name">${esc(c.name)}</div>
            <div class="ex-card-sub">${esc(c.sub)}</div>
