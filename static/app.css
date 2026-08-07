@@ -2798,6 +2798,9 @@
 .sc-source-hint { font-size:var(--t-micro,11px); color:var(--muted,#9e99ad); display:flex; align-items:center; gap:4px; }
 .sc-field--valid { border-color:var(--success,#52c97a) !important; }
 .sc-field--warn { border-color:var(--warning,#e8a84a) !important; }
+.sc-url-row { display:flex; align-items:center; gap:6px; margin-top:10px; padding-top:10px; border-top:1px solid var(--line,#2e2836); color:var(--muted,#9e99ad); }
+.sc-url-row .sc-field { flex:1; font-size:var(--t-caption,12px); min-height:36px; padding:0 10px; }
+.sc-url-ok { color:var(--success,#52c97a); display:flex; align-items:center; }
 .sc-footer { padding:16px 20px; border-top:1px solid var(--line,#2e2836); }
 .sc-cta { width:100%; min-height:52px; background:linear-gradient(135deg,var(--accent,#e8526a),var(--accent2,#c4855a)); border:none; border-radius:var(--r-pill,999px); font-family:inherit; font-size:var(--t-body,14px); font-weight:900; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:opacity .12s; }
 .sc-cta:disabled { opacity:.45; cursor:not-allowed; }

@@ -1692,6 +1692,7 @@
     hdr.innerHTML=`<div class="sc-header"><div class="sc-header-title">${icon('check',18)} Did we get it right?</div><div class="sc-header-sub">${_scItems.length} item${_scItems.length!==1?'s':''} found${isDemo?' (demo)':''}</div><button class="sc-close" onclick="closeScanConfirm()" aria-label="Close">${icon('x',16)}</button></div>`;
     body.innerHTML=_scItems.map((si,idx)=>{
       const it=si.final, isLow=si.ai.confidence==='low';
+      const urlValid=it.source_url&&/^https?:\/\/.{4,}/.test((it.source_url||'').trim());
       return `<div class="sc-card${si.accepted?'':' sc-rejected'}" id="sc-card-${idx}">
         ${_scImgEl(si,idx)}
         ${isLow?`<div class="sc-low-badge">${icon('alertTriangle',12)} Low confidence — please refine</div>`:''}
@@ -1702,16 +1703,16 @@
           <button class="sc-btn sc-edit${si.editing?' active':''}" onclick="scToggleEdit(${idx})">${icon('edit',14)}</button>
           <button class="sc-btn sc-reject${!si.accepted?' active':''}" onclick="scSetAccepted(${idx},false)">${icon('x',14)}</button>
         </div>
+        <div class="sc-url-row">
+          ${icon('link',11)}
+          <input class="sc-field sc-source-field${urlValid?' sc-field--valid':it.source_url?' sc-field--warn':''}" value="${attr(it.source_url)}" placeholder="Paste product URL to earn tokens" type="url" autocomplete="url" oninput="scUpdateField(${idx},'source_url',this.value);_scUrlFeedback(this)">
+          ${urlValid?`<span class="sc-url-ok">${icon('check',11)}</span>`:`<span class="sc-source-badge">${icon('zap',10)} earns</span>`}
+        </div>
         ${si.editing?`<div class="sc-edit-form">
           <input class="sc-field" value="${attr(it.name)}" placeholder="Name" oninput="scUpdateField(${idx},'name',this.value)">
           <input class="sc-field" value="${attr(it.category)}" placeholder="Category" oninput="scUpdateField(${idx},'category',this.value)">
           <input class="sc-field" value="${attr(it.brand)}" placeholder="Brand" oninput="scUpdateField(${idx},'brand',this.value)">
           <input class="sc-field" type="number" value="${attr(''+it.price)}" placeholder="Price USD" oninput="scUpdateField(${idx},'price',+this.value)">
-          <div class="sc-source-wrap">
-            <div class="sc-source-label">${icon('link',12)} Source link<span class="sc-source-badge">earns tokens</span></div>
-            <input class="sc-field sc-source-field${it.source_url&&/^https?:\/\/.{4,}/.test(it.source_url.trim())?' sc-field--valid':it.source_url?' sc-field--warn':''}" value="${attr(it.source_url)}" placeholder="https://shop.com/item..." type="url" autocomplete="url" aria-describedby="sc-src-hint-${idx}" oninput="scUpdateField(${idx},'source_url',this.value);_scUrlFeedback(this)">
-            <div class="sc-source-hint" id="sc-src-hint-${idx}">${icon('zap',11)} Turns item buyable — you earn tokens when others shop it</div>
-          </div>
         </div>`:''}
       </div>`;
     }).join('');
