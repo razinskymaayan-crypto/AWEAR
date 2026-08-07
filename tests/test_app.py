@@ -2521,6 +2521,61 @@ def test_product_match_response_shape(client):
     assert isinstance(body["matching_items"], list)
 
 
+def test_product_match_bag_in_closet_counts_for_outerwear(client):
+    """FAIL-BEFORE: bag category missing from _COMPLEMENTS — score stays at 55.
+    PASS-AFTER:  'outerwear' complement list includes 'bag', so a bag in the
+    closet raises match_pct from 55 to 63 (55 + 8 × 1 category match)."""
+    uid = "user_match_bag_counts_xyz"
+    appmod._rate_store.clear()
+    conf = client.post("/api/closet/confirm", json={
+        "user_id": uid, "client_ref": "bag-conf-001",
+        "items": [{
+            "accepted": True,
+            "ai":    {"name": "Black Crossbody Bag", "category": "bag", "color": "black",
+                      "brand": "Coach", "search_query": "black crossbody bag", "price_estimate_usd": 195},
+            "final": {"name": "Black Crossbody Bag", "category": "bag", "color": "black",
+                      "brand": "Coach", "search_query": "black crossbody bag", "price_estimate_usd": 195,
+                      "confidence": "high"},
+        }],
+    })
+    assert conf.status_code == 200
+
+    r = client.get(f"/api/products/{_MATCH_PRODUCT_ID}/match", params={"user_id": uid})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["match_pct"] > 55, "bag in closet must raise match_pct above the 55 base"
+    assert any(it["category"] == "bag" for it in body["matching_items"]), \
+        "bag must appear in matching_items"
+
+
+def test_product_match_dress_in_closet_counts_for_shoes(client):
+    """FAIL-BEFORE: dress category missing from _COMPLEMENTS — score stays at 55.
+    PASS-AFTER:  'shoes' complement list includes 'dress', so a dress in the
+    closet raises match_pct from 55 to 63 for a shoes product."""
+    uid = "user_match_dress_counts_xyz"
+    appmod._rate_store.clear()
+    conf = client.post("/api/closet/confirm", json={
+        "user_id": uid, "client_ref": "dress-conf-001",
+        "items": [{
+            "accepted": True,
+            "ai":    {"name": "Floral Midi Dress", "category": "dress", "color": "floral",
+                      "brand": "Zara", "search_query": "floral midi dress", "price_estimate_usd": 89},
+            "final": {"name": "Floral Midi Dress", "category": "dress", "color": "floral",
+                      "brand": "Zara", "search_query": "floral midi dress", "price_estimate_usd": 89,
+                      "confidence": "high"},
+        }],
+    })
+    assert conf.status_code == 200
+
+    # prod_sw_001 is a shoes product
+    r = client.get("/api/products/prod_sw_001/match", params={"user_id": uid})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["match_pct"] > 55, "dress in closet must raise shoes match_pct above 55 base"
+    assert any(it["category"] == "dress" for it in body["matching_items"]), \
+        "dress must appear in matching_items"
+
+
 # ---------------------------------------------------------------------------
 # Search — cross-entity (products/posts/profiles)
 # FAIL-BEFORE: no test existed. PASS-AFTER: contract + edge + validation proven.

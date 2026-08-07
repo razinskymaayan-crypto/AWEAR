@@ -2048,13 +2048,17 @@ async def product_wardrobe_match(product_id: str, request: Request, user_id: Opt
     closet = [{"name": r["name"], "category": r["category"], "color": r["color"]} for r in rows]
 
     # Complementarity matrix: what categories pair well with the product's category.
+    # "bag" and "dress" are valid /api/analyze output categories — they must appear
+    # here so a scanned bag/dress in the user's closet contributes to match scores.
     _COMPLEMENTS: dict[str, list[str]] = {
-        "top":       ["bottoms", "shoes", "outerwear", "accessory"],
-        "bottoms":   ["top", "shoes", "accessory"],
-        "shoes":     ["top", "bottoms"],
-        "outerwear": ["top", "bottoms", "shoes"],
-        "accessory": ["top", "bottoms"],
-        "hat":       ["top"],
+        "top":       ["bottoms", "shoes", "outerwear", "accessory", "bag"],
+        "bottoms":   ["top", "shoes", "accessory", "bag"],
+        "shoes":     ["top", "bottoms", "dress"],
+        "outerwear": ["top", "bottoms", "shoes", "bag"],
+        "accessory": ["top", "bottoms", "dress"],
+        "hat":       ["top", "dress"],
+        "bag":       ["top", "bottoms", "dress", "outerwear"],
+        "dress":     ["shoes", "accessory", "bag", "outerwear"],
     }
     prod_cat = (product.get("category") or "").lower()
     complements = set(_COMPLEMENTS.get(prod_cat, []))
