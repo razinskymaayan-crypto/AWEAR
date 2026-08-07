@@ -17,11 +17,11 @@
 - **Next**: Any new INBOX/DEFECTS item; token peg UX decision still NEEDS_DECISION #3 (founder-only). Remaining Gabbana P2: store thumbnail dark-ambient photo inconsistency (loremflickr pipeline, needs backend image fetch improvement — mark for valentino/sam).
 - **Prior runs**: run 60 — AI Stylist portrait hero fix 751fbb8; run 59 — profile stats truncation fix 2721e66; run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf; run 53 — Find Similar wired fd686d0; run 52 — Wallet UI 41c83e3.
 
-## Ayalon lane — last run (2026-08-05, run 50)
-- **Task**: DEMO_SCRIPT.md re-verification + 4 targeted updates. Commit 3dfa560.
-- **Done**: (1) Fixed stale "pipeline gap" note in beat 2 — closet image gap was closed 2026-08-02 (commit 3c4d18d); presenter no longer instructed to apologize. (2) Beat 6 closet image note updated to confident framing. (3) Beat 5 new tip: BH-21 item thumbnail drill-down bonus demo path. (4) Pre-flight: added `POST /api/demo/seed-closet` fast-seed shortcut. (5) Footer status updated to 2026-08-05 re-verified. check-render PASS.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — 4 changes, awaiting founder approval); token peg UX decision (#3 in COMMERCE_PLAN); PITCH_DECK PDF/Keynote conversion is human-only step.
-- **Prior runs**: run 49 — BH-21 + STEVE-35 DoD 38cc0da; run 48 — PITCH_DECK + BUSINESS_PLAN stale data fixed 3c4d18d; run 47 — COMMERCE-8/9 DoD verified 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4.
+## Ayalon lane — last run (2026-08-07, run 54)
+- **Task**: Commerce DoD verification + NEEDS_DECISION #9 (token peg) surfaced.
+- **Done**: Verified 272 pytests confirmed, 0 open DEFECTS, all 8 COMMERCE_PLAN items ✅. Surfaced COMMERCE_PLAN decision #3 (token peg) into NEEDS_DECISION.md as #9 — was buried in COMMERCE_PLAN.md only. Updated STATE.md. check-render PASS.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only.
+- **Prior runs**: run 53 — DEMO_SCRIPT sync for runs 51-52 ships cf4ea7b; run 52 — COMMERCE-XCUST + MATCH-MATRIX DoD 6ee8141; run 51 — BH-22/THUMBNAIL/ITEM-SHEET-CTA/ONBOARDING/COMMERCE-7-REGRESSION DoD; run 50 — DEMO_SCRIPT re-verification + 4 updates 3dfa560; run 49 — BH-21 + STEVE-35 DoD 38cc0da; run 48 — PITCH_DECK + BUSINESS_PLAN stale data fixed; run 47 — COMMERCE-8/9 DoD 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4.
 
 ## Steve lane — last run (2026-08-05, run 35)
 - **Task**: Test coverage — 19 hermetic pytests for 5 untested endpoint groups.

@@ -45,5 +45,11 @@ Strategy riddle 08 (`.claude/master/strategy/08-company-legal-fundraising.md`) i
 - **Decisions**: (1) incorporation — Israeli Ltd. now, Delaware flip only on a US-lead trigger; (2) instrument — post-money SAFE, $3M cap (negotiation range $2.5-4M), no discount, MFN, 36-month date-conversion fallback, drafted to the ITA SAFE safe-harbor; (3) book a startup lawyer + accountant session THIS WEEK (registration, founders' agreement, IP assignment, SAFE draft) — human-only, no default possible; (4) proactively offer the uncle an accountant check on the Angels-Law up-to-~33% credit (expires 2026-12-31; may require shares → the one scenario reviving a minimal priced round); (5) reserve a 10% ESOP pool in the charter at incorporation; (6) IIA/Tnufa grants — recommendation: reject (royalties + IP-in-Israel lock that taxes a future flip).
 - **Recommendation & default applied**: all six as stated above are the narrative defaults in the riddle doc; nothing signed or filed — (3) cannot be defaulted and blocks the rest. Real lawyer/accountant review required before any signature.
 
+### 9. Token → money peg (Wallet UX display) — surfaced 2026-08-07, ayalon lane
+Wallet UI (`renderWallet()` at `app.js:4015`) currently shows raw USD amounts (`$X.XX earned`). COMMERCE_PLAN.md decision #3 left open: whether to add a "tokens" abstraction layer (e.g. 1 token = $0.01, so $0.30 = 30 tokens). The Wallet screen is shown on **beat 7** of the investor demo — the display choice affects how the creator-loop story lands with investors.
+- **Options**: (a) keep raw USD display — precise, honest, no conversion confusion; (b) add tokens abstraction — more "social/gamified" feeling, less direct reference to money on screen, consistent with how creator platforms (LTK, Instagram Collabs) frame it; (c) hybrid — show both ("30 tokens = $0.30").
+- **Recommendation**: (a) for the demo — investors understand money; "tokens" abstraction can be revisited post-seed when designing the full rewards UX. The mechanics are already correct (40% AWEAR commission, pending → confirmed after 30-day return window) and that story is cleaner without introducing a conversion rate.
+- **Default applied**: (a) — current code unchanged. Purely a UX display decision; no code change blocks the demo or any commerce functionality.
+
 ## Answered
 (none yet)
