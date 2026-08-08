@@ -23,12 +23,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only.
 - **Prior runs**: run 53 — DEMO_SCRIPT sync for runs 51-52 ships cf4ea7b; run 52 — COMMERCE-XCUST + MATCH-MATRIX DoD 6ee8141; run 51 — BH-22/THUMBNAIL/ITEM-SHEET-CTA/ONBOARDING/COMMERCE-7-REGRESSION DoD; run 50 — DEMO_SCRIPT re-verification + 4 updates 3dfa560; run 49 — BH-21 + STEVE-35 DoD 38cc0da; run 48 — PITCH_DECK + BUSINESS_PLAN stale data fixed; run 47 — COMMERCE-8/9 DoD 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4.
 
-## Steve lane — last run (2026-08-08, run 36)
-- **Task**: Postgres compat — credits schema missing `status`/`transaction_id` + `INSERT OR IGNORE` translation in `_CompatDB`.
-- **Done**: commit 344ae17. notes/schema_postgres.sql credits table: added `status TEXT NOT NULL DEFAULT 'confirmed'` + `transaction_id TEXT DEFAULT ''` + `idx_credits_txn` unique partial index. app.py `_CompatDB.execute()`: rewrites `INSERT OR IGNORE INTO` → `INSERT INTO ... ON CONFLICT DO NOTHING` for postgres dialect. 2 hermetic regression tests added. 274 total tests (was 272).
-- **Next**: Any new INBOX/DEFECTS item; P2 polish: test error-path gaps for posts/{id} GET, profiles/{id} GET, stories DELETE.
-- **Prior runs**: run 35 — test coverage 19 pytests e00f95e; run 34 — /api/demo/seed-closet c77b72b; run 33 — idx_credits_txn UNIQUE race fix 6776d9a; run 31 — /api/weather fallback dd0689d; run 30 — Skimlinks contract tests 91be81f.
-- **Status**: Commerce fully shipped. 265 tests. 94% route coverage (67/71 routes exercised per defect_scan).
+## Steve lane — last run (2026-08-08, run 37)
+- **Task**: Fix silently-skipped duplicate test — `test_categories_contract` defined twice; Python discards the first (more comprehensive) definition. Renamed second to `test_categories_filter_chips_contract` so both run.
+- **Done**: commit 37e1404. tests/test_app.py only. 274 → 275 tests. Both tests pass.
+- **Next**: Any new INBOX/DEFECTS item; check health_sweep.py for routes returning 4xx that could be improved.
+- **Prior runs**: run 36 — Postgres compat 344ae17; run 35 — test coverage 19 pytests e00f95e; run 34 — /api/demo/seed-closet c77b72b; run 33 — idx_credits_txn UNIQUE race fix 6776d9a; run 31 — /api/weather fallback dd0689d; run 30 — Skimlinks contract tests 91be81f.
+- **Status**: Commerce fully shipped. 275 tests. 94% route coverage (67/71 routes OK, 4 ext-dep expected).
 
 ## Phase status
 | Phase | Status |
