@@ -127,14 +127,19 @@ CREATE INDEX IF NOT EXISTS idx_orders_userkey_ref     ON orders (user_key, clien
 CREATE INDEX IF NOT EXISTS idx_orders_userkey_created ON orders (user_key, created_at);
 
 CREATE TABLE IF NOT EXISTS credits (
-    id         TEXT PRIMARY KEY,
-    user_key   TEXT NOT NULL,
-    order_id   TEXT NOT NULL,
-    item_name  TEXT DEFAULT '',
-    amount_usd DOUBLE PRECISION DEFAULT 0,
-    type       TEXT DEFAULT 'creator',
-    created_at TEXT NOT NULL
+    id             TEXT PRIMARY KEY,
+    user_key       TEXT NOT NULL,
+    order_id       TEXT NOT NULL,
+    item_name      TEXT DEFAULT '',
+    amount_usd     DOUBLE PRECISION DEFAULT 0,
+    type           TEXT DEFAULT 'creator',
+    created_at     TEXT NOT NULL,
+    status         TEXT NOT NULL DEFAULT 'confirmed',
+    transaction_id TEXT DEFAULT ''
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_credits_txn
+    ON credits (transaction_id) WHERE transaction_id != '';
 
 CREATE TABLE IF NOT EXISTS dm_messages (
     id         BIGSERIAL PRIMARY KEY,

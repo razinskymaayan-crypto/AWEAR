@@ -1455,6 +1455,7 @@ class _CompatDB:
     """
 
     _QMARK_RE = re.compile(r"\?")
+    _OR_IGNORE_RE = re.compile(r"\bINSERT\s+OR\s+IGNORE\b", re.IGNORECASE)
 
     def __init__(self, conn, dialect: str):
         self._conn = conn
@@ -1465,6 +1466,9 @@ class _CompatDB:
         if self._dialect == "sqlite":
             return self._conn.execute(sql, params)
         sql_pg = self._QMARK_RE.sub("%s", sql)
+        if self._OR_IGNORE_RE.search(sql_pg):
+            sql_pg = self._OR_IGNORE_RE.sub("INSERT", sql_pg)
+            sql_pg = sql_pg.rstrip().rstrip(";") + " ON CONFLICT DO NOTHING"
         from psycopg2.extras import RealDictCursor  # lazy — only when DATABASE_URL set
         cur = self._conn.cursor(cursor_factory=RealDictCursor)
         self._pg_cursors.append(cur)

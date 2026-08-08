@@ -4511,3 +4511,44 @@ def test_resolve_product_poster_id_only_xcust_has_no_trailing_colon(client):
     if buy_url and "xcust=" in buy_url:
         assert "xcust=user_003" in buy_url
         assert "xcust=user_003%3A" not in buy_url, "trailing colon must not appear with no post_id"
+
+
+# ---------------------------------------------------------------------------
+# _CompatDB.execute() — INSERT OR IGNORE → ON CONFLICT DO NOTHING (OW-014)
+# FAIL-BEFORE: no rewrite happened, INSERT OR IGNORE reached Postgres as-is.
+# PASS-AFTER: rewrite fires when dialect=postgres; skipped for SQLite.
+# ---------------------------------------------------------------------------
+
+def test_compat_db_postgres_insert_or_ignore_rewritten_to_on_conflict():
+    """_CompatDB translates INSERT OR IGNORE INTO → INSERT INTO ... ON CONFLICT DO NOTHING."""
+    from unittest.mock import MagicMock, patch
+    from app import _CompatDB
+
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_cursor.description = None
+    mock_cursor.rowcount = 1
+    mock_conn.cursor.return_value = mock_cursor
+
+    with patch("psycopg2.extras.RealDictCursor", MagicMock()):
+        db = _CompatDB(mock_conn, "postgres")
+        db.execute("INSERT OR IGNORE INTO credits (id) VALUES (?)", ("x",))
+
+    sql_sent = mock_cursor.execute.call_args[0][0]
+    assert "ON CONFLICT DO NOTHING" in sql_sent, f"Expected ON CONFLICT DO NOTHING, got: {sql_sent}"
+    assert "OR IGNORE" not in sql_sent, f"INSERT OR IGNORE should be rewritten, got: {sql_sent}"
+
+
+def test_compat_db_sqlite_insert_or_ignore_unchanged():
+    """_CompatDB leaves INSERT OR IGNORE intact for SQLite dialect."""
+    import sqlite3
+    from app import _CompatDB
+
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE t (id TEXT PRIMARY KEY)")
+    db = _CompatDB(conn, "sqlite")
+    db.execute("INSERT OR IGNORE INTO t (id) VALUES (?)", ("x",))
+    db.execute("INSERT OR IGNORE INTO t (id) VALUES (?)", ("x",))  # dup — should be silently ignored
+    row = conn.execute("SELECT COUNT(*) FROM t").fetchone()[0]
+    conn.close()
+    assert row == 1, f"Expected 1 row (OR IGNORE dedup), got {row}"
