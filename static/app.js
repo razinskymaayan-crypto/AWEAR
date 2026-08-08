@@ -8452,13 +8452,11 @@
       return;
     }
 
-    const wardTags = new Set(wardrobe.flatMap(i => (i.style_tags||[]).map(t=>t.toLowerCase())));
     grid.innerHTML = items.map(it => {
       const disc = it.orig > it.price ? Math.round((1 - it.price/it.orig)*100) : 0;
       const badgeCls = it._badgeCls || (it.badge==='New'?'new':'');
-      const itTags = it.style_tags.map(t=>t.toLowerCase());
-      const matchCount = itTags.filter(t=>wardTags.has(t)).length;
-      const compatTxt = wardrobe.length ? `${Math.round((matchCount/Math.max(itTags.length,1))*100)}% closet match` : '';
+      const compatPct = wardrobe.length ? calcCompatScore(it, wardrobe).pct : null;
+      const compatTxt = compatPct !== null ? `${compatPct}% closet match` : '';
       return `
         <div class="sf-card" onclick="openShopItem('${attr(it.id)}')">
           <div class="sf-card-img">
