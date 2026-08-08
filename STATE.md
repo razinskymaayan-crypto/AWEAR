@@ -17,11 +17,11 @@
 - **Next**: Any new INBOX/DEFECTS item; token peg UX decision still NEEDS_DECISION #3 (founder-only). Remaining Gabbana P2: store thumbnail dark-ambient photo inconsistency (loremflickr pipeline — valentino/sam).
 - **Prior runs**: run 64 — scan-confirm source link elevation 0f0db8b; run 63 — demo match% seed fix 324cadd; run 62 — scan-confirm source link always-visible cb28e28; run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8; run 59 — profile stats truncation 2721e66; run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd.
 
-## Ayalon lane — last run (2026-08-08, run 56)
-- **Task**: Demo doc sync — DEMO_SCRIPT + PITCH_DECK updated with accurate build state (test count 272→278, SEED-WALLET + SHOP-MATCH-CONSISTENCY logged, re-verification marker run-53→run-55).
-- **Done**: docs/DEMO_SCRIPT.md + docs/PITCH_DECK.md. Commit 0f424f9. check-render PASS.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only.
-- **Prior runs**: run 55 — SEED-CLOSET + SEED-WALLET DoD entries + beat-7 pre-flight a2a9b91; run 54 — full commerce DoD re-verification + NEEDS_DECISION #9; run 53 — DEMO_SCRIPT sync cf4ea7b; run 52 — COMMERCE-XCUST + MATCH-MATRIX DoD 6ee8141; run 51 — BH-22/THUMBNAIL/ITEM-SHEET-CTA/ONBOARDING/COMMERCE-7-REGRESSION DoD; run 50 — DEMO_SCRIPT re-verification + 4 updates 3dfa560; run 49 — BH-21 + STEVE-35 DoD 38cc0da; run 48 — PITCH_DECK + BUSINESS_PLAN stale data fixed.
+## Ayalon lane — last run (2026-08-08, run 57)
+- **Task**: DoD verification — added entries for SCAN-SOURCE-ELEVATION (mark run 64, 0f0db8b) and SHOP-MATCH-CONSISTENCY (mark run 65, 6d7ac3f); updated stale "272 pytests" summary → 277/278.
+- **Done**: docs/DOD_AUDIT.md. Commit cbb7bb6. check-render PASS.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all 9 items ✅, DoD audit current.
+- **Prior runs**: run 56 — demo doc sync 0f424f9; run 55 — SEED-CLOSET + SEED-WALLET DoD entries + beat-7 pre-flight a2a9b91; run 54 — full commerce DoD re-verification + NEEDS_DECISION #9; run 53 — DEMO_SCRIPT sync cf4ea7b; run 52 — COMMERCE-XCUST + MATCH-MATRIX DoD 6ee8141; run 51 — BH-22/THUMBNAIL/ITEM-SHEET-CTA/ONBOARDING/COMMERCE-7-REGRESSION DoD; run 50 — DEMO_SCRIPT re-verification + 4 updates 3dfa560.
 
 ## Steve lane — last run (2026-08-08, run 38)
 - **Task**: Add `POST /api/demo/seed-wallet` — idempotent demo creator-wallet seed (mirrors seed-closet pattern). Investor now sees compelling creator earnings ($21.35 confirmed + $10.40 pending) instead of $0 on the wallet screen.
