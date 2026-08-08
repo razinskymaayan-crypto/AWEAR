@@ -1,4 +1,7 @@
-:root {
+/* Light-mode token overrides — scoped to prefers-color-scheme:light so dark-mode devices
+   see the correct dark defaults from tokens.css (DS-004: var() fallbacks must use dark-SoT values) */
+@media (prefers-color-scheme: light) {
+  :root {
     /* v2 — Premium Editorial Light (Founder override 2026-06-21) */
     --bg:     #FAF9F7;  /* warm off-white canvas */
     --bg2:    #FFFFFF;  /* raised surfaces */
@@ -19,6 +22,7 @@
     --accent3: #3D3833;
     --bg-overlay: rgba(250,249,247,.92);
   }
+}
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body { font-family: "Heebo", -apple-system, system-ui, sans-serif;
     background: var(--line, #2e2836);
