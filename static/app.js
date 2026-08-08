@@ -774,7 +774,7 @@
     const tierColor = !lookScore ? '' : lookScore.pct>=80 ? 'var(--success,#52c97a)' : lookScore.pct>=60 ? 'var(--warning,#e8a84a)' : 'var(--danger,#e05252)';
     const collage = flatLayCollageHTML(list);
     const matchChip = lookScore
-      ? `<div class="sl-match-chip"><span class="sl-match-num" style="color:${tierColor}">${lookScore.pct}%</span> match to your style</div>`
+      ? `<div class="sl-match-chip"><span class="sl-match-num" data-target="${lookScore.pct}" style="color:${tierColor}">0%</span> match to your style</div>`
       : '';
 
     sheetBody.innerHTML = `
@@ -942,6 +942,22 @@
   // Respects prefers-reduced-motion (jumps straight to the value).
   function animateMatchBand(){
     const numEl = buySheet.querySelector('.match-band-num[data-target]');
+    const chipEl = buySheet.querySelector('.sl-match-num[data-target]');
+    if(!numEl && !chipEl) return;
+    if(!numEl && chipEl){
+      const chipTarget = parseInt(chipEl.getAttribute('data-target'), 10) || 0;
+      const chipReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(!chipReduce && chipTarget > 0){
+        const chipDur = 600, chipStart = performance.now();
+        const chipStep = function(now){
+          const p = Math.min(1, (now - chipStart) / chipDur);
+          chipEl.textContent = Math.round(chipTarget * (1 - Math.pow(1 - p, 3))) + '%';
+          if(p < 1) requestAnimationFrame(chipStep);
+        };
+        requestAnimationFrame(chipStep);
+      } else { chipEl.textContent = chipTarget + '%'; }
+      return;
+    }
     if(!numEl) return;
     const target = parseInt(numEl.getAttribute('data-target'), 10) || 0;
     const pctSpan = numEl.querySelector('.match-band-pct');
