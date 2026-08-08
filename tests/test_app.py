@@ -3878,7 +3878,7 @@ def test_products_in_stock_filter(client):
 # /api/categories — filter-chip contract
 # ---------------------------------------------------------------------------
 
-def test_categories_contract(client):
+def test_categories_filter_chips_contract(client):
     """GET /api/categories returns {items, total} with {name, count} per item."""
     r = client.get("/api/categories")
     assert r.status_code == 200, r.text
