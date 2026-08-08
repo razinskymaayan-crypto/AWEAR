@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-07, run 62)
-- **Task**: scan-confirm source link always-visible — "Paste product URL to earn tokens" row now shown on every item card (not just edit mode). Badge flips to green check on valid URL. Removed sc-source-wrap from edit form (deduplication). Commit cb28e28.
-- **Done**: static/app.js + static/app.css. DS-004 clean. check-render green. node --check green.
-- **Prior rejection fixed**: DS-004 fallbacks (22f86bb, this session) — var(--bg,#FAF9F7)→#0e0c0f, var(--surface,#F3F1EC)→#161318, var(--muted,#6F6A63)→#8a8498.
+## Mark lane — last run (2026-08-08, run 63)
+- **Task**: Demo match% fix — seeded feed post items had no style_tags/color, causing calcCompatScore() to return 40% (baseScore only). Added style_tags+color to all 10 items across 3 demo posts, matching wardrobe SoT. Fresh demo sessions now show 90–99% on feed pills. Commit 324cadd.
+- **Done**: static/app.js only. check-render green. node --check green.
 - **Next**: Any new INBOX/DEFECTS item; token peg UX decision still NEEDS_DECISION #3 (founder-only). Remaining Gabbana P2: store thumbnail dark-ambient photo inconsistency (loremflickr pipeline — valentino/sam).
+- **Prior runs**: run 62 — scan-confirm source link always-visible cb28e28; run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8; run 59 — profile stats truncation 2721e66; run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf.
 - **Prior runs**: run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8; run 59 — profile stats truncation 2721e66; run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf.
 
 ## Ayalon lane — last run (2026-08-07, run 54)
