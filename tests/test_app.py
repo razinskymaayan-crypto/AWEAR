@@ -3946,6 +3946,82 @@ def test_demo_seed_closet_idempotent(client):
     items = r3.json()["items"]
     assert len(items) == r1.json()["seeded"], "idempotent call must not duplicate rows"
 
+
+# ---------------------------------------------------------------------------
+# /api/demo/seed-wallet — idempotent demo creator-wallet seed (OW-014)
+# ---------------------------------------------------------------------------
+
+def test_demo_seed_wallet_populates_empty_wallet(client):
+    """POST /api/demo/seed-wallet seeds credits for a user with no wallet history.
+
+    FAIL-BEFORE: endpoint did not exist (404).
+    PASS-AFTER: 200 with seeded > 0, already_seeded=False; GET /api/wallet
+    confirms the credited balance matches the seed totals.
+    """
+    uid = "demo_wallet_test_001"
+    r = client.post("/api/demo/seed-wallet", params={"user_id": uid})
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert d["already_seeded"] is False, "fresh user should not be pre-seeded"
+    assert d["seeded"] > 0, "must seed at least one credit"
+    assert d["user_id"] == uid
+    assert d["balance_confirmed"] > 0, "seed must include confirmed credits"
+    assert d["balance_pending"] > 0, "seed must include pending credits"
+
+    # Wallet endpoint must reflect the seeded balance
+    rw = client.get("/api/wallet", params={"user_id": uid})
+    assert rw.status_code == 200, rw.text
+    wdata = rw.json()
+    assert abs(wdata["balance"] - d["balance_confirmed"]) < 0.01, (
+        f"wallet balance {wdata['balance']} should match seed confirmed {d['balance_confirmed']}"
+    )
+    assert abs(wdata["pending_balance"] - d["balance_pending"]) < 0.01, (
+        f"pending balance {wdata['pending_balance']} should match seed pending {d['balance_pending']}"
+    )
+    assert len(wdata["credits"]) == d["seeded"], "credit history count must match seed count"
+
+
+def test_demo_seed_wallet_idempotent(client):
+    """POST /api/demo/seed-wallet is a no-op when credits already exist.
+
+    FAIL-BEFORE: endpoint did not exist (404).
+    PASS-AFTER: second call returns already_seeded=True, seeded=0; wallet
+    credit count is unchanged (no duplicates).
+    """
+    uid = "demo_wallet_test_002"
+    r1 = client.post("/api/demo/seed-wallet", params={"user_id": uid})
+    assert r1.status_code == 200 and r1.json()["seeded"] > 0
+
+    r2 = client.post("/api/demo/seed-wallet", params={"user_id": uid})
+    assert r2.status_code == 200, r2.text
+    d2 = r2.json()
+    assert d2["already_seeded"] is True, "second call must detect existing credits"
+    assert d2["seeded"] == 0, "second call must write zero rows"
+
+    rw = client.get("/api/wallet", params={"user_id": uid})
+    assert len(rw.json()["credits"]) == r1.json()["seeded"], \
+        "idempotent call must not duplicate credits"
+
+
+def test_demo_seed_wallet_confirmed_and_pending_split(client):
+    """Credits include both confirmed and pending rows; wallet sums them separately.
+
+    FAIL-BEFORE: endpoint did not exist (404).
+    PASS-AFTER: wallet returns non-zero balance (confirmed) AND non-zero
+    pending_balance; credit list contains rows with both status values.
+    """
+    uid = "demo_wallet_test_003"
+    client.post("/api/demo/seed-wallet", params={"user_id": uid})
+    rw = client.get("/api/wallet", params={"user_id": uid})
+    assert rw.status_code == 200, rw.text
+    wdata = rw.json()
+    statuses = {c["status"] for c in wdata["credits"]}
+    assert "confirmed" in statuses, "seed must include confirmed credits"
+    assert "pending" in statuses, "seed must include pending credits"
+    assert wdata["balance"] > 0, "confirmed balance must be positive"
+    assert wdata["pending_balance"] > 0, "pending balance must be positive"
+
+
 # ---------------------------------------------------------------------------
 # Likes, Saves, Follow-status, Notifications — coverage added (steve run 35)
 # ---------------------------------------------------------------------------

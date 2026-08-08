@@ -4359,6 +4359,88 @@ async def seed_demo_closet(request: Request, user_id: str = ""):
 
 
 # ---------------------------------------------------------------------------
+# Demo wallet seed — POST /api/demo/seed-wallet
+# Idempotently pre-populates a realistic creator-earnings history so the
+# Wallet screen shows compelling affiliate credits (not $0) in the demo.
+# Mirrors the seed-closet pattern — safe to call repeatedly.
+# ---------------------------------------------------------------------------
+
+# 9 demo credits: 6 confirmed (past 30-day return window) + 3 pending (recent).
+# Amounts are realistic Skimlinks affiliate commissions: AWEAR earns ~8% on
+# fashion orders, creator gets 40% of that (SKIMLINKS_CREATOR_SHARE_PCT).
+_WALLET_DEMO_SEED: list[tuple] = [
+    # (item_name, amount_usd, type, days_ago, status)
+    ("Black Satin Midi Skirt",       4.50, "affiliate", 38, "confirmed"),
+    ("Linen Blazer",                 3.20, "affiliate", 45, "confirmed"),
+    ("Olive Trench Coat",            5.40, "affiliate", 52, "confirmed"),
+    ("White Leather Sneakers",       2.75, "affiliate", 33, "confirmed"),
+    ("Gold Hoop Earrings",           1.90, "affiliate", 60, "confirmed"),
+    ("Cream Oversized Knit",         3.60, "affiliate", 41, "confirmed"),
+    ("Tan Ankle Boots",              4.80, "affiliate", 15, "pending"),
+    ("Tortoiseshell Sunglasses",     2.40, "affiliate",  7, "pending"),
+    ("High-Waist Blue Jeans",        3.20, "affiliate",  3, "pending"),
+]
+
+
+@app.post("/api/demo/seed-wallet")
+async def seed_demo_wallet(request: Request, user_id: str = ""):
+    """Idempotently seed a demo creator wallet for a user with no credits.
+
+    Safe to call repeatedly — does nothing if the user already has credit rows.
+    Returns ``{"seeded": N, "already_seeded": bool, "user_id": str,
+               "balance_confirmed": float, "balance_pending": float}``.
+
+    Rate-limited to 5 requests/minute (write endpoint).
+    """
+    caller_key = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(caller_key, "demo_seed_wallet", 5):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded — max 5 requests/minute.")
+
+    target_key = (user_id or "").strip() or caller_key
+    if len(target_key) > 64:
+        raise HTTPException(status_code=400, detail="user_id must be at most 64 characters.")
+
+    with _get_db() as db:
+        existing = db.execute(
+            "SELECT 1 FROM credits WHERE user_key = ? LIMIT 1", (target_key,)
+        ).fetchone()
+        if existing:
+            return {"seeded": 0, "already_seeded": True, "user_id": target_key,
+                    "balance_confirmed": 0.0, "balance_pending": 0.0}
+
+        now = datetime.datetime.utcnow()
+        confirmed_total = 0.0
+        pending_total = 0.0
+        for item_name, amount_usd, credit_type, days_ago, status in _WALLET_DEMO_SEED:
+            credit_id = "crd_demo_" + uuid.uuid4().hex[:8]
+            order_id = "ord_demo_" + uuid.uuid4().hex[:8]
+            created_at = (now - datetime.timedelta(days=days_ago)).isoformat()
+            db.execute(
+                """INSERT INTO credits
+                       (id, user_key, order_id, item_name, amount_usd, type, created_at, status)
+                   VALUES (?,?,?,?,?,?,?,?)""",
+                (credit_id, target_key, order_id, item_name, amount_usd,
+                 credit_type, created_at, status),
+            )
+            if status == "confirmed":
+                confirmed_total += amount_usd
+            else:
+                pending_total += amount_usd
+        db.commit()
+
+    n = len(_WALLET_DEMO_SEED)
+    logger.info("demo_seed_wallet: seeded %d credits for user=%s confirmed=%.2f pending=%.2f",
+                n, target_key, confirmed_total, pending_total)
+    return {
+        "seeded": n,
+        "already_seeded": False,
+        "user_id": target_key,
+        "balance_confirmed": round(confirmed_total, 2),
+        "balance_pending": round(pending_total, 2),
+    }
+
+
+# ---------------------------------------------------------------------------
 # Analytics — wear_log table  (wear events + summary + wrapped)
 # POST /api/analytics/wear · GET /api/analytics/summary · GET /api/analytics/wrapped/{year}
 # BE-004/BE-005: SQLite from day 1. MG-005: user_key from IP. OW-001: grep 3 layers.
