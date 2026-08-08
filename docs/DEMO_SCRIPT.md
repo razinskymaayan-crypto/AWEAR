@@ -136,6 +136,8 @@ Point at the balance + earnings history. (You may have already flashed the "@use
 
 > 💡 *COMMERCE-XCUST ✅ **shipped** commit `b9597d1` (2026-08-07): The final attribution gap is closed — `GET /api/resolve-product` and `GET /api/find-similar` now both embed `xcust=poster_id:post_id` in every affiliate link they return. **If an investor asks "how do you know which creator gets credit for a sale?" → say: "Every affiliate deep-link from any path in the app carries the original poster's ID as a sub-parameter — the network postback credits their wallet automatically, with no AWEAR server-side interception of the payment."***
 
+> ⚙️ *PRE-FLIGHT (beat 7): Run `POST /api/demo/seed-wallet?user_id=tamar` before the demo (commit `65e0046`). Without it the Wallet screen shows $0 — with it, it shows **$21.35 confirmed + $10.40 pending** (9 realistic affiliate credits). Idempotent — safe to call multiple times. Pair with `POST /api/demo/seed-closet?user_id=tamar` for beat-2 (closet must also be non-empty).*
+
 ---
 
 ## 8. The closer — built by agents (4:25 → 5:00) — **WOW #5 / the thesis**

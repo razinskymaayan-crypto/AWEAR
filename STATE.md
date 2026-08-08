@@ -17,11 +17,11 @@
 - **Next**: Any new INBOX/DEFECTS item; token peg UX decision still NEEDS_DECISION #3 (founder-only). Remaining Gabbana P2: store thumbnail dark-ambient photo inconsistency (loremflickr pipeline — valentino/sam).
 - **Prior runs**: run 64 — scan-confirm source link elevation 0f0db8b; run 63 — demo match% seed fix 324cadd; run 62 — scan-confirm source link always-visible cb28e28; run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8; run 59 — profile stats truncation 2721e66; run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd.
 
-## Ayalon lane — last run (2026-08-07, run 54)
-- **Task**: Commerce DoD verification + NEEDS_DECISION #9 (token peg) surfaced.
-- **Done**: Verified 272 pytests confirmed, 0 open DEFECTS, all 8 COMMERCE_PLAN items ✅. Surfaced COMMERCE_PLAN decision #3 (token peg) into NEEDS_DECISION.md as #9 — was buried in COMMERCE_PLAN.md only. Updated STATE.md. check-render PASS.
+## Ayalon lane — last run (2026-08-08, run 55)
+- **Task**: SEED-CLOSET + SEED-WALLET DoD verification — two demo-seed endpoints (Steve runs 34+38) added to DOD_AUDIT.md; DEMO_SCRIPT beat-7 pre-flight step documented.
+- **Done**: docs/DOD_AUDIT.md (SEED-CLOSET entry: c77b72b, 2 tests; SEED-WALLET entry: 65e0046, 3 tests; header updated run-55; test count 277 definitions/278 effective); docs/DEMO_SCRIPT.md beat-7 pre-flight tip added. check-render PASS.
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only.
-- **Prior runs**: run 53 — DEMO_SCRIPT sync for runs 51-52 ships cf4ea7b; run 52 — COMMERCE-XCUST + MATCH-MATRIX DoD 6ee8141; run 51 — BH-22/THUMBNAIL/ITEM-SHEET-CTA/ONBOARDING/COMMERCE-7-REGRESSION DoD; run 50 — DEMO_SCRIPT re-verification + 4 updates 3dfa560; run 49 — BH-21 + STEVE-35 DoD 38cc0da; run 48 — PITCH_DECK + BUSINESS_PLAN stale data fixed; run 47 — COMMERCE-8/9 DoD 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4.
+- **Prior runs**: run 54 — full commerce DoD re-verification + NEEDS_DECISION #9; run 53 — DEMO_SCRIPT sync cf4ea7b; run 52 — COMMERCE-XCUST + MATCH-MATRIX DoD 6ee8141; run 51 — BH-22/THUMBNAIL/ITEM-SHEET-CTA/ONBOARDING/COMMERCE-7-REGRESSION DoD; run 50 — DEMO_SCRIPT re-verification + 4 updates 3dfa560; run 49 — BH-21 + STEVE-35 DoD 38cc0da; run 48 — PITCH_DECK + BUSINESS_PLAN stale data fixed; run 47 — COMMERCE-8/9 DoD 9b81cee; run 46 — COMMERCE_PLAN.md SoT update a5a1992; run 45 — COMMERCE-3/4/5/6/7 verified 7c977d4.
 
 ## Steve lane — last run (2026-08-08, run 38)
 - **Task**: Add `POST /api/demo/seed-wallet` — idempotent demo creator-wallet seed (mirrors seed-closet pattern). Investor now sees compelling creator earnings ($21.35 confirmed + $10.40 pending) instead of $0 on the wallet screen.
