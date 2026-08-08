@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-08, run 64)
-- **Task**: Source-link field elevation in scan-confirm — editorial uppercase label, commerce hint ("makes it shoppable and earns you tokens"), semantic `<label>`, 44px touch target, focus-visible outline. Gabbana 8.5/10 PASS. Commit 0f0db8b.
-- **Done**: static/app.css + static/app.js. check-render green. node --check green.
+## Mark lane — last run (2026-08-08, run 65)
+- **Task**: Shopping grid match% — replaced raw tag-overlap formula with `calcCompatScore()` in `renderShopGrid()`. Commit 6d7ac3f.
+- **Done**: static/app.js only. check-render green. node --check green.
 - **Next**: Any new INBOX/DEFECTS item; token peg UX decision still NEEDS_DECISION #3 (founder-only). Remaining Gabbana P2: store thumbnail dark-ambient photo inconsistency (loremflickr pipeline — valentino/sam).
-- **Prior runs**: run 63 — demo match% seed fix 324cadd; run 62 — scan-confirm source link always-visible cb28e28; run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8; run 59 — profile stats truncation 2721e66; run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd; run 54 — match% pills dde3cdf.
+- **Prior runs**: run 64 — scan-confirm source link elevation 0f0db8b; run 63 — demo match% seed fix 324cadd; run 62 — scan-confirm source link always-visible cb28e28; run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8; run 59 — profile stats truncation 2721e66; run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9; run 56 — look-item-detail drill-down 1322d82; run 55 — flat-lay hero + match chip 49307bd.
 
 ## Ayalon lane — last run (2026-08-07, run 54)
 - **Task**: Commerce DoD verification + NEEDS_DECISION #9 (token peg) surfaced.
