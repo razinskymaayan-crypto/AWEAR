@@ -4254,12 +4254,12 @@
     ];
 
     const AGENT_ACTIVITY = [
-      {date:'Jun 26', agent:'Oren',      desc:'Fixed look total as single source of truth — no contradictions at "Buy this look"'},
-      {date:'Jun 26', agent:'Sam',       desc:'Made all 27 feed posts shoppable — For You feed is fully commerce-ready'},
-      {date:'Jun 25', agent:'Sam',       desc:'AI chat reliable fallback + removed emoji from stylist responses'},
-      {date:'Jun 25', agent:'Sam',       desc:'Native share on Style Identity and Season report — real iOS share sheet'},
-      {date:'Jun 25', agent:'Sam',       desc:'Smart Sell: 5 least-worn items surfaced with 50% resale price in closet'},
-      {date:'Jun 24', agent:'Oren',      desc:'In-app checkout preserves catalog images — closet stays clean after purchase'},
+      {date:'Aug 8',  agent:'Steve',    desc:'Creator wallet seeded — demo shows $21.35 confirmed + $10.40 pending earnings'},
+      {date:'Aug 8',  agent:'Mark',     desc:'Shopping match score — style-weighted compatibility algorithm replaces tag overlap'},
+      {date:'Aug 7',  agent:'Sam',      desc:'Attribution closed — every affiliate link carries xcust creator ID; wallet auto-credited on sale'},
+      {date:'Aug 6',  agent:'Mark',     desc:'3-tier item CTA — Buy / Find Similar / Resale adapts live to each item\'s availability'},
+      {date:'Aug 5',  agent:'Mark',     desc:'Look drill-down — every item thumbnail opens its full detail sheet and commerce options in one tap'},
+      {date:'Aug 2',  agent:'Mark',     desc:'AI image pipeline closed — generated catalog photo flows from scan through confirm to closet shelf'},
     ];
 
     el.innerHTML = `
