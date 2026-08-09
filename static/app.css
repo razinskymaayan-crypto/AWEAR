@@ -1027,9 +1027,9 @@
   .fsim-subtitle { font-size: var(--t-micro,11px); font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
     color: var(--warning,#e8a84a); display: flex; align-items: center; gap: 4px; margin-bottom: var(--space-1,4px); }
   .fsim-orig-name { font-size: var(--t-h3,15px); font-weight: 700; color: var(--fg,#f0ecf5); }
-  .fsim-loading { display: flex; align-items: center; gap: 8px; color: var(--muted,#8a8498);
+  .fsim-loading { display: flex; align-items: center; gap: 8px; color: var(--muted,#9e99ad);
     font-size: var(--t-small,13px); padding: var(--space-6,24px) 0; justify-content: center; }
-  .fsim-empty { text-align: center; color: var(--muted,#8a8498); font-size: var(--t-small,13px);
+  .fsim-empty { text-align: center; color: var(--muted,#9e99ad); font-size: var(--t-small,13px);
     padding: var(--space-6,24px) 0; }
   .fsim-list { display: flex; flex-direction: column; gap: var(--space-2,8px); margin-bottom: var(--space-4,16px); }
   .fsim-row { display: flex; align-items: center; gap: var(--space-3,12px); padding: var(--space-2,8px);
@@ -1040,7 +1040,7 @@
   .fsim-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1,4px); }
   .fsim-name { font-size: var(--t-small,13px); font-weight: 700; color: var(--fg,#f0ecf5);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .fsim-brand { font-size: var(--t-micro,11px); color: var(--muted,#8a8498); }
+  .fsim-brand { font-size: var(--t-micro,11px); color: var(--muted,#9e99ad); }
   .fsim-price { font-family: "Poppins", sans-serif; font-size: var(--t-small,13px); font-weight: 600; color: var(--fg,#f0ecf5); }
   /* "tap to shop" pill on each feed card */
   .fc-shop { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 9px 15px;
@@ -1837,7 +1837,7 @@
   .ms-suggest-sub { font-size: var(--t-micro,11px); color: var(--muted,#9e99ad); font-weight: 600; }
   .ms-suggest-card { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--card,#1e1a22); border-radius: var(--r-md,14px); margin-bottom: 8px; cursor: pointer; border: 1px solid var(--line,#2e2836); transition: background .15s; }
   .ms-suggest-card:active { background: var(--card-hover,#262030); }
-  .ms-suggest-img { width: 48px; height: 48px; border-radius: var(--r-sm,10px); overflow: hidden; flex-shrink: 0; background: var(--surface,#161318); display: flex; align-items: center; justify-content: center; color: var(--muted,#8a8498); }
+  .ms-suggest-img { width: 48px; height: 48px; border-radius: var(--r-sm,10px); overflow: hidden; flex-shrink: 0; background: var(--surface,#161318); display: flex; align-items: center; justify-content: center; color: var(--muted,#9e99ad); }
   .ms-suggest-sell { font-size: var(--t-micro,11px); font-weight: 800; color: var(--accent,#e8526a); background: color-mix(in srgb, var(--accent,#e8526a) 12%, transparent); padding: 0 12px; border-radius: var(--r-pill,999px); white-space: nowrap; flex-shrink: 0; border: 1px solid color-mix(in srgb, var(--accent,#e8526a) 20%, transparent); min-height: 44px; display: inline-flex; align-items: center; }
 
   /* ---- Marketplace CO2 Badge (P1-B) ---- */
@@ -2801,11 +2801,11 @@
 .sc-field:focus { border-color:var(--accent,#e8526a); }
 .sc-field::placeholder { color:var(--muted,#9e99ad); }
 .sc-source-wrap { margin-top:8px; padding-top:12px; border-top:1px solid var(--line,#2e2836); display:flex; flex-direction:column; gap:4px; }
-.sc-source-label { display:flex; align-items:center; gap:4px; font-size:var(--t-micro,11px); font-weight:500; text-transform:uppercase; letter-spacing:.06em; color:var(--muted,#8a8498); cursor:pointer; }
-.sc-source-opt { font-weight:500; color:var(--muted,#8a8498); font-size:var(--t-micro,11px); margin-inline-start:2px; }
+.sc-source-label { display:flex; align-items:center; gap:4px; font-size:var(--t-micro,11px); font-weight:500; text-transform:uppercase; letter-spacing:.06em; color:var(--muted,#9e99ad); cursor:pointer; }
+.sc-source-opt { font-weight:500; color:var(--muted,#9e99ad); font-size:var(--t-micro,11px); margin-inline-start:2px; }
 .sc-source-badge { background:color-mix(in srgb,var(--accent,#e8526a) 12%,transparent); border:1px solid color-mix(in srgb,var(--accent,#e8526a) 28%,transparent); border-radius:var(--r-pill,999px); padding:2px 8px; font-size:var(--t-micro,11px); color:var(--accent,#e8526a); font-weight:700; }
 .sc-source-field { border-color:color-mix(in srgb,var(--accent,#e8526a) 25%,var(--line,#2e2836)) !important; }
-.sc-source-hint { font-size:var(--t-micro,11px); color:var(--muted,#8a8498); display:flex; align-items:flex-start; gap:4px; line-height:1.4; }
+.sc-source-hint { font-size:var(--t-micro,11px); color:var(--muted,#9e99ad); display:flex; align-items:flex-start; gap:4px; line-height:1.4; }
 .sc-source-hint svg { flex-shrink:0; margin-top:1px; color:var(--accent,#e8526a); }
 .sc-field--valid { border-color:var(--success,#52c97a) !important; }
 .sc-field--warn { border-color:var(--warning,#e8a84a) !important; }

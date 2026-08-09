@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-09, run 71)
-- **Task**: Fix look-sheet thumbnail fallback (DS-016) — all 3 demo posts lacked image_url, causing random loremflickr images in look-sheets.
-- **Done**: static/app.js (added image_url to 10 items across demo_post_1/2/3, matching _SCAN_DEMO_OUTFITS URLs). node --check + check-render green.
+## Mark lane — last run (2026-08-09, run 72)
+- **Task**: DS-004 rejection fix — corrected 7 var(--muted,#8a8498) fallbacks to SoT value var(--muted,#9e99ad) in app.css.
+- **Done**: static/app.css (7 fallback values updated). check-render green. Commit 4b746f3.
 - **Next**: Further gabbana-flagged polish; NEEDS_DECISION #3 (token peg) founder-only.
-- **Prior runs**: run 70 — store tab UX + --warning WCAG fix 0f77b14; run 69 — profile look-tap 3-tier buy sheet a554415; run 68 — DS-004 light-theme scope 843722d.
+- **Prior runs**: run 71 — DS-016 thumbnail fix ca1294b; run 70 — store tab UX + --warning WCAG fix 0f77b14; run 69 — profile look-tap 3-tier buy sheet a554415; run 68 — DS-004 light-theme scope 843722d.
 - **Prior runs**: run 69 — profile look-tap 3-tier buy sheet a554415; run 68 — DS-004 light-theme scope 843722d; run 67 — look-sheet chip animation 5a3f177; run 66 — activity feed refresh 2d34d59; run 65 — shopping grid match% 6d7ac3f; run 64 — scan-confirm source link elevation 0f0db8b; run 63 — demo match% seed fix 324cadd.
 
 ## Ayalon lane — last run (2026-08-09, run 60)
