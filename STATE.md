@@ -17,11 +17,11 @@
 - **Next**: INBOX commerce UI tasks all done; token peg UX decision still NEEDS_DECISION #3 (founder-only); further polish pass on any Gabbana-flagged items.
 - **Prior runs**: run 68 — DS-004 light-theme scope 843722d; run 67 — look-sheet chip animation 5a3f177; run 66 — activity feed refresh 2d34d59; run 65 — shopping grid match% 6d7ac3f; run 64 — scan-confirm source link elevation 0f0db8b; run 63 — demo match% seed fix 324cadd; run 62 — scan-confirm source link always-visible cb28e28; run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8.
 
-## Ayalon lane — last run (2026-08-09, run 59)
-- **Task**: DEMO_SCRIPT sync — 5 new tips added to beats 4/5/6 for run-58 shipped items (FEED-MATCH-BADGE d094edb, LOOK-SHEET-CHIP-ANIM 5a3f177, MATCH-SCORE-EXT 77c499e, MATCH-MATRIX-EXT 9b203aa, PROFILE-LOOK-BUY a554415). DOD_AUDIT header updated. Demo script now reflects all features through 2026-08-09.
-- **Done**: docs/DEMO_SCRIPT.md + docs/DOD_AUDIT.md. check-render PASS.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all 9 items ✅, DoD audit + DEMO_SCRIPT current through all Aug 9 shipping.
-- **Prior runs**: run 58 — DoD verification 7 new entries + 284 test count 06b370c; run 57 — SCAN-SOURCE-ELEVATION + SHOP-MATCH-CONSISTENCY DoD cbb7bb6; run 56 — demo doc sync 0f424f9; run 55 — SEED-CLOSET + SEED-WALLET DoD entries + beat-7 pre-flight a2a9b91; run 54 — full commerce DoD re-verification + NEEDS_DECISION #9; run 53 — DEMO_SCRIPT sync cf4ea7b.
+## Ayalon lane — last run (2026-08-09, run 60)
+- **Task**: PITCH_DECK.md status sync — added עדכון 2026-08-09 entry: 5 Aug-9 ships (FEED-MATCH-BADGE, LOOK-SHEET-CHIP-ANIM, MATCH-SCORE-EXT, MATCH-MATRIX-EXT, PROFILE-LOOK-BUY) + test count corrected 278→284.
+- **Done**: docs/PITCH_DECK.md. check-render PASS.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all 9 items ✅, DoD audit + DEMO_SCRIPT + PITCH_DECK all current through 2026-08-09 shipping.
+- **Prior runs**: run 59 — DEMO_SCRIPT sync 5 tips 492183f; run 58 — DoD verification 7 new entries + 284 test count 06b370c; run 57 — SCAN-SOURCE-ELEVATION + SHOP-MATCH-CONSISTENCY DoD cbb7bb6; run 56 — demo doc sync 0f424f9; run 55 — SEED-CLOSET + SEED-WALLET DoD entries + beat-7 pre-flight a2a9b91; run 54 — full commerce DoD re-verification + NEEDS_DECISION #9.
 
 ## Steve lane — last run (2026-08-09, run 40)
 - **Task**: Prove pending→confirmed→wallet lifecycle end-to-end. Add `test_skimlinks_pending_to_confirmed_wallet_lifecycle`: inserts 35-day-old pending credit, verifies balance=0/pending_balance>0, calls confirm-pending?days=30, asserts balance reflects confirmed credit. Replaces misleading `test_skimlinks_confirm_pending_moves_old_credits` with correctly-named `test_skimlinks_confirm_pending_days_zero_rejected`. 280 → 281 tests. Commit a2051a7.
