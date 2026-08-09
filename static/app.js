@@ -1951,7 +1951,8 @@
     const lookTot=lookTotalOf(post);
     const _ownWardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
     const _ownScore=_ownWardrobe.length?calcCompatScore({style_tags:tags},_ownWardrobe):{pct:0,matches:[]};
-    const ownBadge=_ownWardrobe.length?`<div class="fc-own-badge">${icon('hanger',12)} ${esc(_ownScore.pct)}% already in your closet</div>`:'';
+    const _matchTier=_ownScore.pct>=80?'fc-match--high':_ownScore.pct>=60?'fc-match--mid':'fc-match--low';
+    const matchOverlay=_ownWardrobe.length?`<div class="fc-match-overlay ${_matchTier}">${icon('sparkle',12)} ${esc(_ownScore.pct)}% match</div>`:'';
 
     // Avatar — use seed user avatar or initials
     const seedUser=!isMine?SEED_USERS.find(u=>u.id===post.userId):null;
@@ -2003,6 +2004,7 @@
       <div class="fc-image-wrap">
         <div class="fcbg" style="background:${attr(post.grad||'linear-gradient(160deg,#a18cd1,#fbc2eb)')}">${bgImg}</div>
         <div class="heart-burst">${icon('heartFill',100)}</div>
+        ${matchOverlay}
       </div>
 
       <div class="fc-below">
@@ -2038,7 +2040,7 @@
           <span class="fc-caption">${esc(post.caption||'')}</span>
         </div>
         <div class="fc-tags">${tagPills}</div>
-        ${ownBadge}${earnLine}
+        ${earnLine}
       </div>
     </div>`;
   }
