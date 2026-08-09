@@ -8924,42 +8924,10 @@
           card.addEventListener('click', () => {
             const p = gridLooks[Number(card.dataset.postIdx)];
             if (!p) return;
-            // Open same-design post card in sheet
             const lookItems = (p.items||[]).slice(0,5);
-            sheetBody.innerHTML = `
-              <div class="fc-header" style="padding:14px 16px 10px">
-                <div class="fc-hdr-avatar">${esc(u.name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?')}</div>
-                <div class="fc-hdr-info">
-                  <div class="fc-hdr-user" style="font-size:var(--t-small,13px);font-weight:900">${esc(u.handle)}</div>
-                  <div class="fc-hdr-time">${fmtN(p.likes||0)} likes</div>
-                </div>
-              </div>
-              <div style="position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;background:${attr(p.grad||'var(--surface,#161318)')}">
-                ${p.img ? `<img src="${attr(p.img)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">` : `<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted,#9e99ad)">${icon('image',48)}</div>`}
-              </div>
-              <div style="padding:10px 16px 8px">
-                <div style="font-size:var(--t-small,13px);line-height:1.5;margin-bottom:8px">
-                  <span style="font-weight:900;margin-right:5px">${esc(u.handle)}</span><span style="color:var(--fg,#f0ecf5)">${esc(p.caption||'')}</span>
-                </div>
-                ${lookItems.length ? `
-                <div style="font-size:var(--t-micro,11px);font-weight:800;color:var(--muted,#9e99ad);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Items in this look</div>
-                <div style="display:flex;flex-direction:column;gap:8px">
-                  ${lookItems.map(it => `<div style="display:flex;align-items:center;gap:10px;background:var(--card,#1e1a22);border-radius:var(--r-sm,10px);padding:9px 12px;border:1px solid var(--line,#2e2836)">
-                    <span style="color:var(--muted,#9e99ad)">${icon(catIcon(it.category),18)}</span>
-                    <div style="flex:1;min-width:0">
-                      <div style="font-size:var(--t-small,13px);font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(it.name)}</div>
-                      <div style="font-size:var(--t-micro,11px);color:var(--muted,#9e99ad);text-transform:capitalize">${esc(it.category||'')}</div>
-                    </div>
-                    ${it.price_estimate_usd?`<span style="font-size:var(--t-small,13px);font-weight:900;color:var(--accent2,#c4855a);flex-shrink:0">$${esc(String(it.price_estimate_usd))}</span>`:''}
-                  </div>`).join('')}
-                </div>` : `
-                <div style="display:flex;align-items:center;gap:10px;background:var(--card,#1e1a22);border:1px solid var(--line,#2e2836);border-radius:var(--r-sm,10px);padding:11px 12px;color:var(--muted,#9e99ad)">
-                  <span style="color:var(--accent2,#c4855a)">${icon('shoppingBag',18)}</span>
-                  <div style="font-size:var(--t-small,13px);font-weight:700">Shop this look — coming soon</div>
-                </div>`}
-              </div>`;
-            sheetFooter.innerHTML = `<button class="sheet-buy" style="background:var(--card,#1e1a22);border:1.5px solid var(--line,#2e2836);color:var(--muted,#9e99ad)" onclick="closeSheet()">Close</button>`;
-            showSheet();
+            const label = p.caption || (u.name + "'s look");
+            const total = lookItems.reduce((s,it) => s + Number(it.price_estimate_usd||0), 0);
+            openSheetLook(label, lookItems, total, p.earn||0, u.handle||u.id||'');
           });
         });
 
