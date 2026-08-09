@@ -3700,23 +3700,12 @@ def test_skimlinks_postback_wrong_secret_401(client, monkeypatch):
     assert r.status_code == 401, r.text
 
 
-def test_skimlinks_confirm_pending_moves_old_credits(client):
-    """confirm-pending with days=0 promotes all pending credits to confirmed.
+def test_skimlinks_confirm_pending_days_zero_rejected(client):
+    """confirm-pending rejects days=0 (rule: days must be >= 1).
 
     FAIL-BEFORE: endpoint did not exist.
-    PASS-AFTER: confirmed > 0, and wallet balance increases accordingly.
+    PASS-AFTER: 400 with detail about days requirement.
     """
-    # Create a fresh pending credit
-    client.post("/api/skimlinks/postback", json={
-        "xcust": "poster_confirm:post_007",
-        "commission": 8.0,
-        "transaction_id": "txn_confirm_007",
-    })
-    # Wallet: confirmed balance is 0 (credit is still pending)
-    r_before = client.get("/api/wallet", params={"user_id": "poster_confirm"})
-    assert r_before.json()["balance"] == 0.0 or True  # may be 0
-
-    # Confirm with days=0 → ALL pending immediately eligible
     r_confirm = client.post("/api/skimlinks/confirm-pending", params={"days": 0})
     assert r_confirm.status_code == 400, "days=0 must be rejected (days >= 1 rule)"
 
@@ -3769,6 +3758,62 @@ def test_skimlinks_unique_index_blocks_race_double_insert(client):
     )
     assert changes == 0, (
         "INSERT OR IGNORE should return 0 changes on a duplicate transaction_id"
+    )
+
+
+def test_skimlinks_pending_to_confirmed_wallet_lifecycle(client):
+    """Full creator-earnings lifecycle: postback creates pending credit → confirm-pending
+    promotes it to confirmed → wallet balance reflects it.
+
+    FAIL-BEFORE: confirm-pending UPDATE was never exercised end-to-end; wallet balance
+    only counts confirmed rows (COALESCE(status,'confirmed')='confirmed'), so a broken
+    UPDATE would leave balance=0 forever while pending_balance grew.
+    PASS-AFTER: after confirm-pending, wallet balance > 0 (not just pending_balance).
+
+    Uses a direct DB INSERT with an old created_at to bypass the days >= 1 cutoff
+    constraint (a freshly-created postback credit is always too new for any days >= 1 window).
+    """
+    import datetime as _dt
+
+    user = "poster_lifecycle_e2e"
+    credit_id = "ci_lifecycle_e2e_001"
+    old_ts = (_dt.datetime.utcnow() - _dt.timedelta(days=35)).isoformat()
+
+    # Step 1 — insert a pending credit dated 35 days ago directly into the DB.
+    with appmod._get_db() as db:
+        db.execute(
+            "INSERT OR IGNORE INTO credits"
+            " (id, user_key, order_id, item_name, amount_usd, type, created_at, status, transaction_id)"
+            " VALUES (?,?,?,?,?,?,?,?,?)",
+            (credit_id, user, "ord_lifecycle_e2e", "Lifecycle test item",
+             6.0, "skimlinks", old_ts, "pending", "txn_lifecycle_e2e_001"),
+        )
+        db.commit()
+
+    # Step 2 — wallet shows pending_balance but balance=0.
+    r_before = client.get("/api/wallet", params={"user_id": user})
+    assert r_before.status_code == 200, r_before.text
+    before = r_before.json()
+    assert before["balance"] == 0.0, (
+        f"pending credit must not appear in balance (got {before['balance']})"
+    )
+    assert before["pending_balance"] >= 6.0, (
+        f"pending credit must appear in pending_balance (got {before['pending_balance']})"
+    )
+
+    # Step 3 — confirm-pending with days=30 promotes credits older than 30 days.
+    r_confirm = client.post("/api/skimlinks/confirm-pending", params={"days": 30})
+    assert r_confirm.status_code == 200, r_confirm.text
+    assert r_confirm.json()["confirmed"] >= 1, (
+        "confirm-pending must report at least 1 confirmed row"
+    )
+
+    # Step 4 — wallet balance now reflects the confirmed credit.
+    r_after = client.get("/api/wallet", params={"user_id": user})
+    assert r_after.status_code == 200, r_after.text
+    after = r_after.json()
+    assert after["balance"] >= 6.0, (
+        f"confirmed credit must appear in wallet balance (got {after['balance']})"
     )
 
 
