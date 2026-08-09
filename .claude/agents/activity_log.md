@@ -3,6 +3,7 @@
 > **CANONICAL SOURCE** — הוסף כאן בלבד. Archive → `activity_log_archive.md`. Worktree copies = read-only snapshots, לא לכתיבה.
 > פורמט: `| YYYY-MM-DD | agent | branch/file | status | short description |`
 
+| 2026-08-09 | mark | auto/mark / static/app.js | done | fix(commerce): profile look-tap now calls openSheetLook() — flat-lay + wardrobe match chip + per-item Buy/Find Similar/Resale, not dead Close sheet. commit a554415. |
 | 2026-08-04 | mark | auto/mark / static/app.js + static/app.css | done | feat(commerce): wire Find Similar to /api/find-similar — in-app results sheet replaces Google Shopping redirect; openFindSimilar() shows up to 6 catalog lookalikes with Buy button, fallback to web search. Gabbana 9.5/10 PASS. commit fd686d0. |
 | 2026-08-04 | sam | auto/steve / app.py + tests/test_app.py + scripts/health_sweep.py | done | feat(commerce): /api/find-similar endpoint — in-stock lookalikes via _match_score, COMMERCE_PLAN item 7. 3 hermetic pytests. Also fix health_sweep coverage for /api/skimlinks/postback + BE-007 learning. |
 | 2026-08-03 | sam | auto/steve / app.py | done | fix(commerce): prevent double-crediting via non-UNIQUE txn index race — upgraded idx_credits_txn to partial UNIQUE index + INSERT OR IGNORE + rowcount==0 dedup. commit 6776d9a. |

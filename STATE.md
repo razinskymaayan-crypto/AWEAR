@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-08, run 68)
-- **Task**: DS-004 root-cause fix — wrap app.css light-theme :root in @media (prefers-color-scheme: light). Commit 843722d.
-- **Done**: static/app.css only. check-render green. Fixes rejection from 2026-08-07 by scoping light-theme token overrides to light-mode devices; dark-mode now gets proper dark theme from tokens.css; var() fallbacks already used correct dark-SoT values.
-- **Next**: INBOX commerce UI tasks (buy-per-item in look-sheet); token peg UX decision still NEEDS_DECISION #3 (founder-only).
-- **Prior runs**: run 67 — look-sheet chip animation 5a3f177; run 66 — activity feed refresh 2d34d59; run 65 — shopping grid match% 6d7ac3f; run 64 — scan-confirm source link elevation 0f0db8b; run 63 — demo match% seed fix 324cadd; run 62 — scan-confirm source link always-visible cb28e28; run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8; run 59 — profile stats truncation 2721e66; run 58 — purchase-modal drag-dismiss 69746b3; run 57 — item-sheet 3-tier CTA 13b0bb9.
+## Mark lane — last run (2026-08-09, run 69)
+- **Task**: Commerce UX fix — profile look-tap now opens proper 3-tier buy sheet (Buy/Find Similar/Resale per item) instead of a dead "Close"-only sheet. Commit a554415.
+- **Done**: static/app.js only. Replaced stale 45-line inline sheet renderer with openSheetLook() call in the public profile Posts tab. check-render + check-interactions green.
+- **Next**: INBOX commerce UI tasks all done; token peg UX decision still NEEDS_DECISION #3 (founder-only); further polish pass on any Gabbana-flagged items.
+- **Prior runs**: run 68 — DS-004 light-theme scope 843722d; run 67 — look-sheet chip animation 5a3f177; run 66 — activity feed refresh 2d34d59; run 65 — shopping grid match% 6d7ac3f; run 64 — scan-confirm source link elevation 0f0db8b; run 63 — demo match% seed fix 324cadd; run 62 — scan-confirm source link always-visible cb28e28; run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8.
 
 ## Ayalon lane — last run (2026-08-08, run 57)
 - **Task**: DoD verification — added entries for SCAN-SOURCE-ELEVATION (mark run 64, 0f0db8b) and SHOP-MATCH-CONSISTENCY (mark run 65, 6d7ac3f); updated stale "272 pytests" summary → 277/278.
