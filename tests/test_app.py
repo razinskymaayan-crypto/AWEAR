@@ -4628,3 +4628,111 @@ def test_compat_db_sqlite_insert_or_ignore_unchanged():
     row = conn.execute("SELECT COUNT(*) FROM t").fetchone()[0]
     conn.close()
     assert row == 1, f"Expected 1 row (OR IGNORE dedup), got {row}"
+
+
+# --------------------------------------------------------------------------- #
+# _match_score — extended haystack + exact-match bonuses (MASTER_PLAN MATCH step)
+# --------------------------------------------------------------------------- #
+def test_match_score_includes_product_search_query_in_haystack():
+    """_match_score includes the product's search_query in the keyword haystack.
+
+    FAIL-BEFORE: haystack was name+brand+color only; a word present only in
+    search_query ("sleeve", "tee") contributed zero to the score.
+    PASS-AFTER: haystack extends to search_query; each such word adds +1.
+    """
+    from app import _match_score
+    product = {
+        "name": "Pocket T-Shirt",   # no "sleeve", no "tee"
+        "brand": "TestBrand",
+        "color": "white",
+        "category": "top",
+        "subcategory": "short-sleeve",
+        "search_query": "testbrand pocket tee short sleeve white",  # "tee" and "sleeve" here
+        "tags": ["casual"],
+        "in_stock": True,
+    }
+    item = {"search_query": "sleeve tee", "category": "top"}
+    score = _match_score(item, product)
+    # Old: cat=+3; "sleeve"/"tee" not in "pocket t-shirt testbrand white" → total=3
+    # New: both in extended haystack → total≥5
+    assert score >= 5, f"expected ≥5 (sleeve+tee from search_query), got {score}"
+
+
+def test_match_score_includes_product_tags_in_haystack():
+    """_match_score includes the product's tags list in the keyword haystack.
+
+    FAIL-BEFORE: tags were not in haystack; tag keyword scored 0 even if item queried for it.
+    PASS-AFTER: tags appended to haystack; tag keyword contributes +1.
+    """
+    from app import _match_score
+    product = {
+        "name": "Heavy Pocket Shirt",   # no "workwear"
+        "brand": "TestBrand",
+        "color": "blue",
+        "category": "top",
+        "subcategory": "short-sleeve",
+        "search_query": "testbrand heavy shirt blue",  # no "workwear"
+        "tags": ["workwear", "classic"],               # "workwear" only here
+        "in_stock": True,
+    }
+    item = {"search_query": "workwear shirt", "category": "top"}
+    score = _match_score(item, product)
+    # Old: cat=+3, "shirt" in old hay +1, "workwear" not in old hay → total=4
+    # New: "workwear" in tags → total≥5
+    assert score >= 5, f"expected ≥5 (workwear from tags), got {score}"
+
+
+def test_match_score_color_exact_match_bonus_above_keyword():
+    """Color exact match gives a bonus above keyword-level color presence.
+
+    FAIL-BEFORE: both products (name contains "Black") scored the same because
+    keyword "black" matched the name of BOTH; no bonus for actual color field equality.
+    PASS-AFTER: explicit color bonus only fires when item.color == product.color.
+    """
+    from app import _match_score
+    prod_black = {
+        "name": "Black Classic Tee", "brand": "Brand", "color": "black",
+        "category": "top", "subcategory": "short-sleeve",
+        "search_query": "brand classic tee black", "tags": [], "in_stock": True,
+    }
+    prod_gray = {
+        "name": "Black Classic Tee", "brand": "Brand", "color": "gray",
+        "category": "top", "subcategory": "short-sleeve",
+        "search_query": "brand classic tee gray", "tags": [], "in_stock": True,
+    }
+    item = {"category": "top", "brand": "Brand", "color": "black"}
+    s_exact = _match_score(item, prod_black)
+    s_keyword_only = _match_score(item, prod_gray)
+    # Old: "black" is in BOTH names → both score 5 (equal)
+    # New: prod_black gets +2 color bonus → s_exact > s_keyword_only
+    assert s_exact > s_keyword_only, (
+        f"exact color ({s_exact}) should beat keyword-only color ({s_keyword_only})"
+    )
+
+
+def test_match_score_subcategory_exact_match_bonus():
+    """Subcategory exact match gives a bonus when products are otherwise identical.
+
+    FAIL-BEFORE: subcategory was not in item query terms and products were scored equally
+    when name/brand/color were identical.
+    PASS-AFTER: subcategory bonus differentiates matching from non-matching subcategory.
+    """
+    from app import _match_score
+    prod_slim = {
+        "name": "Everyday Jeans", "brand": "TestBrand", "color": "blue",
+        "category": "jeans", "subcategory": "slim fit",
+        "search_query": "testbrand everyday jeans blue", "tags": [], "in_stock": True,
+    }
+    prod_wide = {
+        "name": "Everyday Jeans", "brand": "TestBrand", "color": "blue",
+        "category": "jeans", "subcategory": "wide leg",
+        "search_query": "testbrand everyday jeans blue", "tags": [], "in_stock": True,
+    }
+    item = {"category": "jeans", "subcategory": "slim fit", "color": "blue"}
+    s_slim = _match_score(item, prod_slim)
+    s_wide = _match_score(item, prod_wide)
+    # Old: both score 4 (cat=+3, "blue"=+1); subcategory not in q → no difference
+    # New: slim gets subcategory bonus (+2) and color bonus (+2) → s_slim > s_wide
+    assert s_slim > s_wide, (
+        f"subcategory match ({s_slim}) should beat mismatch ({s_wide})"
+    )

@@ -2113,12 +2113,37 @@ IN_APP_RETAILERS: set[str] = set()
 
 
 def _match_score(item: dict, p: dict) -> int:
-    """Cheap keyword + category match between a wardrobe item and a catalog product."""
+    """Keyword + category + attribute-exact match between a wardrobe item and a catalog product.
+
+    Exact-match bonuses (brand +3, color +2, subcategory +2) ensure a Carhartt black slim-fit
+    query ranks the right product above look-alike neighbors when multiple items share a category.
+    Extended haystack includes product search_query and tags so niche terms like "tee" or
+    "workwear" — absent from the product name — still contribute to matching.
+    """
     score = 0
-    if (item.get("category") or "").lower() and (item.get("category") or "").lower() == (p.get("category") or "").lower():
+
+    item_cat = (item.get("category") or "").lower()
+    prod_cat = (p.get("category") or "").lower()
+    if item_cat and item_cat == prod_cat:
         score += 3
-    q = " ".join(str(item.get(k, "")) for k in ("search_query", "name", "brand", "color")).lower().replace(",", " ")
-    hay = (str(p.get("name", "")) + " " + str(p.get("brand", "")) + " " + str(p.get("color", ""))).lower()
+
+    # Exact-match bonuses for high-signal attributes
+    if item.get("brand") and (item.get("brand") or "").lower() == (p.get("brand") or "").lower():
+        score += 3
+    if item.get("color") and (item.get("color") or "").lower() == (p.get("color") or "").lower():
+        score += 2
+    if item.get("subcategory") and (item.get("subcategory") or "").lower() == (p.get("subcategory") or "").lower():
+        score += 2
+
+    # Keyword overlap: item words (including subcategory) vs extended product text
+    q = " ".join(str(item.get(k, "")) for k in ("search_query", "name", "brand", "color", "subcategory")).lower().replace(",", " ")
+    hay = " ".join([
+        str(p.get("name", "")),
+        str(p.get("brand", "")),
+        str(p.get("color", "")),
+        str(p.get("search_query", "")),
+        " ".join(p.get("tags") or []),
+    ]).lower()
     for w in {w for w in q.split() if len(w) >= 3}:
         if w in hay:
             score += 1
