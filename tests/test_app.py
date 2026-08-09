@@ -4736,3 +4736,55 @@ def test_match_score_subcategory_exact_match_bonus():
     assert s_slim > s_wide, (
         f"subcategory match ({s_slim}) should beat mismatch ({s_wide})"
     )
+
+
+# ---------------------------------------------------------------------------
+# Wardrobe match — category complementarity breadth (OW-014: fail-before/pass-after)
+# Hat and shoe/accessory products showed only 71-79% with the demo closet because
+# _COMPLEMENTS was too narrow.  Expanded complements → 95% for all categories.
+# ---------------------------------------------------------------------------
+
+def test_product_match_hat_with_demo_closet_shows_high_score(client):
+    """Hat products must return >= 87% match when the demo closet is seeded.
+
+    FAIL-BEFORE: hat complements = ['top', 'dress'] — only top matched in demo closet
+    → 55 + 8 + 5 + 3 = 71, which is < 87.
+    PASS-AFTER: hat complements expanded to include bottoms/shoes/outerwear
+    → 4 cats × 8 = 32 → 55 + 32 + 5 + 3 = 95 ≥ 87.
+    """
+    import app as appmod
+    appmod._rate_store.clear()
+    uid = "test_hat_match_demo_seed_001"
+    seed = client.post("/api/demo/seed-closet", params={"user_id": uid})
+    assert seed.status_code == 200, seed.text
+
+    r = client.get("/api/products/prod_ht_001/match", params={"user_id": uid})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["match_pct"] >= 87, (
+        f"hat match_pct should be >= 87 with demo closet, got {body['match_pct']}. "
+        "Likely _COMPLEMENTS['hat'] is too narrow."
+    )
+
+
+def test_product_match_shoes_with_demo_closet_shows_high_score(client):
+    """Shoes products must return >= 87% match when the demo closet is seeded.
+
+    FAIL-BEFORE: shoes complements = ['top', 'bottoms', 'dress'] — dress missing in demo
+    closet → 2 cats × 8 = 16 → 55 + 16 + 5 + 3 = 79, which is < 87.
+    PASS-AFTER: shoes complements expanded to include outerwear/accessory
+    → 4 cats × 8 = 32 → 55 + 32 + 5 + 3 = 95 ≥ 87.
+    """
+    import app as appmod
+    appmod._rate_store.clear()
+    uid = "test_shoes_match_demo_seed_001"
+    seed = client.post("/api/demo/seed-closet", params={"user_id": uid})
+    assert seed.status_code == 200, seed.text
+
+    r = client.get("/api/products/prod_sw_001/match", params={"user_id": uid})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["match_pct"] >= 87, (
+        f"shoes match_pct should be >= 87 with demo closet, got {body['match_pct']}. "
+        "Likely _COMPLEMENTS['shoes'] is too narrow."
+    )

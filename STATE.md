@@ -23,11 +23,11 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all 9 items ✅, DoD audit current.
 - **Prior runs**: run 56 — demo doc sync 0f424f9; run 55 — SEED-CLOSET + SEED-WALLET DoD entries + beat-7 pre-flight a2a9b91; run 54 — full commerce DoD re-verification + NEEDS_DECISION #9; run 53 — DEMO_SCRIPT sync cf4ea7b; run 52 — COMMERCE-XCUST + MATCH-MATRIX DoD 6ee8141; run 51 — BH-22/THUMBNAIL/ITEM-SHEET-CTA/ONBOARDING/COMMERCE-7-REGRESSION DoD; run 50 — DEMO_SCRIPT re-verification + 4 updates 3dfa560.
 
-## Steve lane — last run (2026-08-08, run 38)
-- **Task**: Add `POST /api/demo/seed-wallet` — idempotent demo creator-wallet seed (mirrors seed-closet pattern). Investor now sees compelling creator earnings ($21.35 confirmed + $10.40 pending) instead of $0 on the wallet screen.
-- **Done**: app.py + tests/test_app.py. 3 new hermetic pytests pass. 275 → 278 tests. check-render green.
-- **Next**: Any new INBOX/DEFECTS item; health-sweep showed 0 crashes/0 suspicious-4xx — backend clean. Supabase Auth next for launch.
-- **Prior runs**: run 37 — duplicate test fix 37e1404; run 36 — Postgres compat 344ae17; run 35 — test coverage 19 pytests e00f95e; run 34 — /api/demo/seed-closet c77b72b; run 33 — idx_credits_txn UNIQUE race fix 6776d9a; run 31 — /api/weather fallback dd0689d.
+## Steve lane — last run (2026-08-09, run 39)
+- **Task**: Expand `_COMPLEMENTS` matrix — hat/shoes/accessory/bag categories now show 87-95% match (was 71-79%) with the demo wardrobe. 2 new hermetic pytests (fail-before: 71/79 < 87; pass-after: 95 ≥ 87). 278 → 280 tests. check-render green.
+- **Done**: app.py (line 2057-2066) + tests/test_app.py (2 tests appended). IC: sam.
+- **Next**: Any new INBOX/DEFECTS item; health-sweep 0 crashes — backend clean. Launch infra (Render+Supabase) fully wired.
+- **Prior runs**: run 38 — seed-wallet endpoint; run 37 — duplicate test fix 37e1404; run 36 — Postgres compat 344ae17; run 35 — test coverage 19 pytests e00f95e; run 34 — /api/demo/seed-closet c77b72b; run 33 — idx_credits_txn UNIQUE race fix 6776d9a; run 31 — /api/weather fallback dd0689d.
 - **Status**: Commerce fully shipped. 278 tests. 94% route coverage (67/71 routes OK, 4 ext-dep expected).
 
 ## Phase status

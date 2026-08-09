@@ -2057,11 +2057,11 @@ async def product_wardrobe_match(product_id: str, request: Request, user_id: Opt
     _COMPLEMENTS: dict[str, list[str]] = {
         "top":       ["bottoms", "shoes", "outerwear", "accessory", "bag"],
         "bottoms":   ["top", "shoes", "accessory", "bag"],
-        "shoes":     ["top", "bottoms", "dress"],
+        "shoes":     ["top", "bottoms", "dress", "outerwear", "accessory"],
         "outerwear": ["top", "bottoms", "shoes", "bag"],
-        "accessory": ["top", "bottoms", "dress"],
-        "hat":       ["top", "dress"],
-        "bag":       ["top", "bottoms", "dress", "outerwear"],
+        "accessory": ["top", "bottoms", "dress", "shoes", "outerwear"],
+        "hat":       ["top", "bottoms", "dress", "shoes", "outerwear"],
+        "bag":       ["top", "bottoms", "dress", "outerwear", "shoes"],
         "dress":     ["shoes", "accessory", "bag", "outerwear"],
     }
     prod_cat = (product.get("category") or "").lower()
