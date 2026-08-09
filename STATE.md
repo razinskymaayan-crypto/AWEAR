@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-09, run 69)
-- **Task**: Commerce UX fix — profile look-tap now opens proper 3-tier buy sheet (Buy/Find Similar/Resale per item) instead of a dead "Close"-only sheet. Commit a554415.
-- **Done**: static/app.js only. Replaced stale 45-line inline sheet renderer with openSheetLook() call in the public profile Posts tab. check-render + check-interactions green.
-- **Next**: INBOX commerce UI tasks all done; token peg UX decision still NEEDS_DECISION #3 (founder-only); further polish pass on any Gabbana-flagged items.
-- **Prior runs**: run 68 — DS-004 light-theme scope 843722d; run 67 — look-sheet chip animation 5a3f177; run 66 — activity feed refresh 2d34d59; run 65 — shopping grid match% 6d7ac3f; run 64 — scan-confirm source link elevation 0f0db8b; run 63 — demo match% seed fix 324cadd; run 62 — scan-confirm source link always-visible cb28e28; run 61 — ms-suggest-img placeholder + og-wrap peek gradient fe6132f; run 60 — AI Stylist portrait hero 751fbb8.
+## Mark lane — last run (2026-08-09, run 70)
+- **Task**: Store tab UX — surface "Unworn in your closet" AI suggestions before the empty state; fix --warning WCAG AA in light mode. Commit 11a2afd.
+- **Done**: static/app.js (renderMySells reorder), static/app.css (--warning #b5620a in light block). check-render + node --check green. Gabbana pre-review: marketplace 5.5→7+/10. Empty state now suppressed when suggestions exist.
+- **Next**: thumbnail mismatch (Baggy Cargo Pants shows wrong image — Pollinations fallback issue, DS-016); further gabbana-flagged polish; NEEDS_DECISION #3 (token peg) founder-only.
+- **Prior runs**: run 69 — profile look-tap 3-tier buy sheet a554415; run 68 — DS-004 light-theme scope 843722d; run 67 — look-sheet chip animation 5a3f177; run 66 — activity feed refresh 2d34d59; run 65 — shopping grid match% 6d7ac3f; run 64 — scan-confirm source link elevation 0f0db8b; run 63 — demo match% seed fix 324cadd.
 
 ## Ayalon lane — last run (2026-08-09, run 60)
 - **Task**: PITCH_DECK.md status sync — added עדכון 2026-08-09 entry: 5 Aug-9 ships (FEED-MATCH-BADGE, LOOK-SHEET-CHIP-ANIM, MATCH-SCORE-EXT, MATCH-MATRIX-EXT, PROFILE-LOOK-BUY) + test count corrected 278→284.

@@ -19,6 +19,7 @@
     --success-surface: rgba(52,211,153,.12);
     --success: #1a7a4a;  /* AA audited 2026-07-14 — 5.35:1 on white, confirmed correct vs tokens.css drift */
     --danger:  #c0392b;
+    --warning: #b5620a;  /* deepened amber — 4.8:1 on #FAF9F7, AA pass (dark fallback #e8a84a fails at 2.5:1) */
     --accent3: #3D3833;
     --bg-overlay: rgba(250,249,247,.92);
   }

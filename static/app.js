@@ -5977,13 +5977,31 @@
         <button class="ms-act-btn" id="ms-list-btn">${icon('tag',14)} List an item</button>
       </div>
 
-      ${mine.length === 0 ? `
+      ${suggestions.length ? `
+        <div style="padding:0 16px 8px">
+          <div class="ms-suggest-hd">
+            ${icon('sparkle',14)} Unworn in your closet
+            <span class="ms-suggest-sub">Worth selling?</span>
+          </div>
+          ${suggestions.map(item => `
+            <div class="ms-suggest-card mp-suggest-card" data-item='${attr(JSON.stringify(item))}'>
+              <div class="ms-suggest-img">${productImage(item)}</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:var(--t-small,13px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(item.name||'Item')}</div>
+                <div style="font-size:var(--t-micro,11px);color:var(--muted,#9e99ad);margin-top:2px">Suggested: $${Math.round((item.price_estimate_usd||120)*0.5)}</div>
+              </div>
+              <div class="ms-suggest-sell">+ Sell</div>
+            </div>`).join('')}
+        </div>
+      ` : ''}
+
+      ${mine.length === 0 ? (suggestions.length ? '' : `
         <div class="ms-empty">
           <div class="ms-empty-icon">${icon('storefront',28)}</div>
           <div style="font-size:var(--t-body,14px);font-weight:800;color:var(--fg,#f0ecf5)">Your store is ready</div>
           <div style="font-size:var(--t-caption,12px);color:var(--muted,#9e99ad);margin-top:5px">List your first item and start earning</div>
         </div>
-      ` : `
+      `) : `
         <div class="ms-section-hd">
           <div class="ms-section-title">Active Listings <span style="color:var(--muted,#9e99ad);font-weight:600">${msActiveCount ? `${shown.length} of ${mine.length}` : mine.length}</span></div>
           ${msActiveCount
@@ -6011,24 +6029,6 @@
         </div>
         `}
       `}
-
-      ${suggestions.length ? `
-        <div style="padding:${mine.length ? '6px' : '0'} 16px 8px">
-          <div class="ms-suggest-hd">
-            ${icon('sparkle',14)} Unworn in your closet
-            <span class="ms-suggest-sub">Worth selling?</span>
-          </div>
-          ${suggestions.map(item => `
-            <div class="ms-suggest-card mp-suggest-card" data-item='${attr(JSON.stringify(item))}'>
-              <div class="ms-suggest-img">${productImage(item)}</div>
-              <div style="flex:1;min-width:0">
-                <div style="font-size:var(--t-small,13px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(item.name||'Item')}</div>
-                <div style="font-size:var(--t-micro,11px);color:var(--muted,#9e99ad);margin-top:2px">Suggested: $${Math.round((item.price_estimate_usd||120)*0.5)}</div>
-              </div>
-              <div class="ms-suggest-sell">+ Sell</div>
-            </div>`).join('')}
-        </div>
-      ` : ''}
     `;
   }
 
