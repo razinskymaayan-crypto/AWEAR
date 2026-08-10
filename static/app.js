@@ -1430,6 +1430,7 @@
     const cta = feed.length < 9 ? `<div class="looks-grid-cta"><span style="color:var(--muted,#9e99ad);font-size:var(--t-small,13px);font-weight:600;line-height:1.6">Share your next look and build your style story</span><button class="looks-grid-cta-btn" onclick="document.getElementById('file-input').click()">Add a look</button></div>` : '';
     return `<div class="looks-grid">${feed.map((p,i)=>`<div class="look-cell" data-look-idx="${i}" role="button" tabindex="0" aria-label="${attr(p.caption||'My look')}">
       ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
+      ${p.look_total_usd?`<div class="lc-shop-pill">${icon('bag',11)}</div>`:''}
       <div class="lc-meta">${esc(p.item_count||0)} items${p.look_total_usd?' · $'+esc(p.look_total_usd):''}</div>
     </div>`).join('')}</div>${cta}`;}
 
