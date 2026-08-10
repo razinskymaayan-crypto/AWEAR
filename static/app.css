@@ -23,6 +23,10 @@
     --accent3: #3D3833;
     --bg-overlay: rgba(250,249,247,.92);
   }
+  /* Status badge contrast — dark-mode color-mix loses contrast on white card; use tokens directly */
+  .slb-buyable { color: var(--success, #52c97a); }
+  .slb-similar { color: var(--warning, #e8a84a); }
+  .slb-resale  { color: var(--warning, #e8a84a); }
 }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body { font-family: "Heebo", -apple-system, system-ui, sans-serif;
@@ -964,7 +968,7 @@
 
   /* look sheet hero — flat-lay + match chip */
   .sl-hero { position: relative; margin-bottom: 16px; border-radius: var(--r-md,14px); overflow: hidden; }
-  .sl-hero .flatlay { aspect-ratio: 4 / 3; }
+  .sl-hero .flatlay { aspect-ratio: 4 / 5; }
   .sl-match-chip {
     position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
     background: var(--surface,#161318); border: 1px solid var(--line,#2e2836);
