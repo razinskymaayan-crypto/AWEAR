@@ -157,22 +157,22 @@
   .shelf-ledge { height: 10px; border-radius: 3px; margin: 0 2px;
     background: linear-gradient(180deg, var(--line,#2e2836) 0%, color-mix(in srgb, var(--line,#2e2836) 78%, var(--muted,#9e99ad)) 100%);
     box-shadow: 0 4px 12px rgba(20,17,15,.1), inset 0 1px 0 rgba(255,255,255,.6); }
-  .ptile { flex-shrink: 0; width: 132px; background: var(--card); border-radius: 16px; padding: 8px;
+  .ptile { flex-shrink: 0; width: 132px; background: var(--card); border-radius: var(--r-md, 14px); padding: 8px;
     cursor: pointer; display: flex; flex-direction: column;
     border: 1px solid var(--line);
-    transition: transform .15s; }
-  .ptile:active { transform: scale(.97); }
-  .ptile .pimg { height: 104px; display: flex; align-items: center; justify-content: center;
-    overflow: hidden; border-radius: 10px; }
-  .ptile .pname { color: var(--text); font-size: var(--t-small,13px); font-weight: 800; line-height: 1.25; margin-top: 8px;
+    transition: transform .15s, opacity .15s; }
+  .ptile:active { transform: scale(.97); opacity: .8; }
+  .ptile .pimg { aspect-ratio: 3/4; width: 100%; display: flex; align-items: center; justify-content: center;
+    overflow: hidden; border-radius: var(--r-sm, 10px); }
+  .ptile .pname { color: var(--text); font-size: var(--t-small,13px); font-weight: 700; line-height: 1.25; margin-top: 8px;
     display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
     min-height: calc(2 * 1.25em); }
-  .ptile .pbrand { color: var(--muted); font-size: var(--t-micro); font-weight: 700; margin-top: 2px;
+  .ptile .pbrand { color: var(--muted); font-size: var(--t-micro, 11px); font-weight: 600;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ptile .pprice { color: var(--text); font-size: var(--t-body); font-weight: 900; margin-top: 5px; font-family: "Poppins", sans-serif; }
-  .ptile .pacts { display: flex; gap: 6px; margin-top: auto; padding-top: 10px; }
-  .ptile .pbuy { flex: 1; min-height: 44px; border-radius: 9px; padding: 7px 0; font-size: var(--t-micro);
-    font-weight: 800; cursor: pointer; font-family: inherit; transition: background .15s, border-color .15s;
+  .ptile .pprice { color: var(--text); font-size: var(--t-body, 14px); font-weight: 600; margin-top: var(--space-1, 4px); font-family: "Poppins", sans-serif; }
+  .ptile .pacts { display: flex; gap: var(--space-2, 8px); margin-top: auto; padding-top: var(--space-2, 8px); }
+  .ptile .pbuy { flex: 1; min-height: 44px; border-radius: var(--r-sm, 10px); padding: 7px 0; font-size: var(--t-micro, 11px);
+    font-weight: 700; cursor: pointer; font-family: inherit; transition: background .15s, border-color .15s;
     color: var(--fg); background: transparent; border: 1px solid var(--line); }
   .ptile .pbuy:active { background: var(--card-hover); }
   .looks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-1, 4px); }
