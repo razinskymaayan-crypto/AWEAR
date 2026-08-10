@@ -17,11 +17,11 @@
 - **Next**: NEEDS_DECISION #3 (token peg) founder-only; continue A4a MASTER_PLAN Looks tab polish.
 - **Prior runs**: run 74 — look-sheet 4:3→4:5 + status badge contrast b076404; run 73 — Commerce WOW polish 4d26ab7; run 72 — DS-004 --muted fallbacks 4b746f3; run 71 — DS-016 thumbnail fix ca1294b; run 70 — store tab UX + --warning WCAG fix 0f77b14; run 69 — profile look-tap 3-tier buy sheet a554415; run 68 — DS-004 light-theme scope 843722d.
 
-## Ayalon lane — last run (2026-08-09, run 60)
-- **Task**: PITCH_DECK.md status sync — added עדכון 2026-08-09 entry: 5 Aug-9 ships (FEED-MATCH-BADGE, LOOK-SHEET-CHIP-ANIM, MATCH-SCORE-EXT, MATCH-MATRIX-EXT, PROFILE-LOOK-BUY) + test count corrected 278→284.
-- **Done**: docs/PITCH_DECK.md. check-render PASS.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all 9 items ✅, DoD audit + DEMO_SCRIPT + PITCH_DECK all current through 2026-08-09 shipping.
-- **Prior runs**: run 59 — DEMO_SCRIPT sync 5 tips 492183f; run 58 — DoD verification 7 new entries + 284 test count 06b370c; run 57 — SCAN-SOURCE-ELEVATION + SHOP-MATCH-CONSISTENCY DoD cbb7bb6; run 56 — demo doc sync 0f424f9; run 55 — SEED-CLOSET + SEED-WALLET DoD entries + beat-7 pre-flight a2a9b91; run 54 — full commerce DoD re-verification + NEEDS_DECISION #9.
+## Ayalon lane — last run (2026-08-10, run 61)
+- **Task**: PITCH_DECK + DEMO_SCRIPT sync — added עדכון 2026-08-10 entry: 5 ships (LOOK-CARD-SHOP-PILL, LOOK-SHEET-COLLAGE-ASPECT, COMMERCE-UI-POLISH, FEED-CONTENT-ENRICHMENT, TEST-COVERAGE-STORIES-DM) + test count 284→303. Beat-6 tip added for bag-pill visibility.
+- **Done**: docs/PITCH_DECK.md + docs/DEMO_SCRIPT.md. check-render PASS. Commit 0032a50.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all 9 items ✅, DoD audit + DEMO_SCRIPT + PITCH_DECK all current through 2026-08-10 shipping.
+- **Prior runs**: run 60 — PITCH_DECK 2026-08-09 sync c12c121; run 59 — DEMO_SCRIPT sync 5 tips 492183f; run 58 — DoD verification 7 new entries + 284 test count 06b370c; run 57 — SCAN-SOURCE-ELEVATION + SHOP-MATCH-CONSISTENCY DoD cbb7bb6; run 56 — demo doc sync 0f424f9; run 55 — SEED-CLOSET + SEED-WALLET DoD entries + beat-7 pre-flight a2a9b91.
 
 ## Steve lane — last run (2026-08-10, run 42)
 - **Task**: feat(data) — enrich posts.json: 18 product tags added across 14 posts (11 new unique products surfaced). Catalog visibility 132→121 untagged (79/200 products now in feed). Commit TBD.
