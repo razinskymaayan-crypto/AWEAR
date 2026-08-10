@@ -394,9 +394,7 @@
   function openSheetSingle(it, earnAmt, influencerUser){
     logAdminEvent('buy_intent', 'Opened sheet: ' + (it.name||'item'));
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success,#52c97a);font-weight:700;margin-top:8px;text-align:center">
-           ${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase
-         </p>` : '';
+      ? `<p class="sl-earn" style="margin-top:8px">${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase</p>` : '';
     const wardrobe4compat = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const csHTML = wardrobe4compat.length ? compatScoreHTML(it, wardrobe4compat) : '';
 
@@ -764,9 +762,7 @@
       </div>`;
     }).join('');
     const earnLine = (earnAmt && influencerUser)
-      ? `<p style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--success,#52c97a);font-weight:700;margin-top:4px;text-align:center">
-           ${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase
-         </p>` : '';
+      ? `<p class="sl-earn">${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase</p>` : '';
 
     const wardrobe = loadWardrobe();
     const allTags = [...new Set(list.flatMap(it => it.style_tags||[]))];

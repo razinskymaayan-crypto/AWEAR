@@ -357,7 +357,13 @@
   /* quiet chrome at rest — the ONE accent appears only on active states */
   .fca-btn.liked { color: var(--accent,#e8526a); }
   .fca-btn.saved { color: var(--accent2,#c4855a); }
-  .fca-btn.buy-btn { color: var(--fg,#f0ecf5); font-weight: 700; }
+  .fca-btn.buy-btn {
+    color: var(--accent,#e8526a);
+    font-weight: 700;
+    border: 1px solid color-mix(in srgb, var(--accent,#e8526a) 60%, transparent);
+    border-radius: var(--r-pill,999px);
+    padding: 8px 12px;
+  }
   /* comment count beside the comment icon — quiet, muted at rest */
   .fca-btn[data-action="comment"] .fca-count {
     font-size: var(--t-small,13px); font-weight: 600; color: var(--fg,#f0ecf5);
@@ -390,6 +396,11 @@
   .fc-earn {
     font-size: var(--t-micro,11px); color: var(--success,#52c97a); font-weight: 700;
     margin-top: 4px; display: flex; align-items: center; gap: 4px;
+  }
+  .sl-earn {
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    font-size: var(--t-micro,11px); color: var(--success,#52c97a); font-weight: 700;
+    margin-top: 4px; text-align: center;
   }
 
   /* Comments sheet — rendered OUTSIDE card, as bottom sheet */
@@ -1104,10 +1115,10 @@
   }
   /* .store-row is now informational (in-app sourcing), not a tappable outbound link. */
   .store-logo {
-    width: 32px; height: 32px; border-radius: 8px; background: #fff;
-    border: 1px solid var(--line);
+    width: 32px; height: 32px; border-radius: 8px; background: var(--card,#1e1a22);
+    border: 1px solid var(--line,#2e2836);
     display: flex; align-items: center; justify-content: center;
-    font-size: var(--t-micro); font-weight: 900; color: #111;
+    font-size: var(--t-micro,11px); font-weight: 900; color: var(--fg,#f0ecf5);
     flex-shrink: 0; letter-spacing: -.3px;
     overflow: hidden;
   }
