@@ -4833,3 +4833,169 @@ def test_product_match_shoes_with_demo_closet_shows_high_score(client):
         f"shoes match_pct should be >= 87 with demo closet, got {body['match_pct']}. "
         "Likely _COMPLEMENTS['shoes'] is too narrow."
     )
+
+
+# ---------------------------------------------------------------------------
+# Stories — ephemeral 24h outfit posts (POST/GET/DELETE /api/stories)
+# ---------------------------------------------------------------------------
+
+def test_story_create_returns_id_and_fields(client):
+    r = client.post("/api/stories", json={"image_url": "https://example.com/img.jpg", "caption": "ootd"})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert "id" in body
+    assert body["image_url"] == "https://example.com/img.jpg"
+    assert body["caption"] == "ootd"
+    assert "created_at" in body
+
+
+def test_story_create_empty_image_url_400(client):
+    r = client.post("/api/stories", json={"image_url": "", "caption": "no image"})
+    assert r.status_code == 400, r.text
+
+
+def test_story_create_missing_image_url_400(client):
+    # image_url is a required field — Pydantic returns 422 for missing required fields
+    r = client.post("/api/stories", json={"caption": "no url at all"})
+    assert r.status_code == 422, r.text
+
+
+def test_story_list_returns_items_and_total(client):
+    r = client.get("/api/stories")
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert "items" in body
+    assert isinstance(body["items"], list)
+    assert "total" in body
+    assert isinstance(body["total"], int)
+
+
+def test_story_list_includes_created_story(client):
+    post = client.post("/api/stories", json={"image_url": "https://example.com/list-check.jpg", "caption": "visible"})
+    assert post.status_code == 200, post.text
+    created_id = post.json()["id"]
+
+    r = client.get("/api/stories")
+    assert r.status_code == 200, r.text
+    ids = [item["id"] for item in r.json()["items"]]
+    assert created_id in ids, f"newly created story id={created_id} not found in GET /api/stories"
+
+
+def test_story_delete_owner_returns_deleted(client):
+    post = client.post("/api/stories", json={"image_url": "https://example.com/to-delete.jpg"})
+    assert post.status_code == 200, post.text
+    story_id = post.json()["id"]
+
+    r = client.delete(f"/api/stories/{story_id}")
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["deleted"] is True
+    assert body["id"] == story_id
+
+
+def test_story_delete_not_found_404(client):
+    r = client.delete("/api/stories/99999")
+    assert r.status_code == 404, r.text
+
+
+# ---------------------------------------------------------------------------
+# DM — Direct Messages between users (GET/POST /api/dm/*)
+# ---------------------------------------------------------------------------
+
+def test_dm_conversations_returns_conversations_key(client):
+    r = client.get("/api/dm/conversations")
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert "conversations" in body
+
+
+def test_dm_conversations_seeds_demo_on_first_call(client):
+    # Seeding is idempotent; this call (or a prior test's call) triggers it.
+    r = client.get("/api/dm/conversations")
+    assert r.status_code == 200, r.text
+    convos = r.json()["conversations"]
+    assert len(convos) > 0, "expected seeded demo conversations, got empty list"
+
+
+def test_dm_conversations_idempotent(client):
+    r1 = client.get("/api/dm/conversations")
+    assert r1.status_code == 200, r1.text
+    count1 = len(r1.json()["conversations"])
+
+    r2 = client.get("/api/dm/conversations")
+    assert r2.status_code == 200, r2.text
+    count2 = len(r2.json()["conversations"])
+
+    assert count1 == count2, f"idempotency broken: first call={count1}, second={count2}"
+
+
+def test_dm_thread_peer_and_messages_shape(client):
+    # Ensure seed exists before querying a specific thread.
+    client.get("/api/dm/conversations")
+
+    r = client.get("/api/dm/thread/user_001")
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert "peer" in body
+    assert "messages" in body
+    assert isinstance(body["messages"], list)
+    peer = body["peer"]
+    assert peer["user_id"] == "user_001"
+
+
+def test_dm_thread_messages_have_from_field(client):
+    client.get("/api/dm/conversations")
+
+    r = client.get("/api/dm/thread/user_001")
+    assert r.status_code == 200, r.text
+    messages = r.json()["messages"]
+    assert len(messages) > 0, "expected seeded messages in user_001 thread"
+    for msg in messages:
+        assert "from" in msg, f"message missing 'from' field: {msg}"
+        assert msg["from"] in ("me", "them"), f"unexpected 'from' value: {msg['from']}"
+
+
+def test_dm_send_creates_message_returns_id(client):
+    r = client.post("/api/dm/send", json={"to_user_id": "user_001", "text": "hello there"})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert "id" in body
+    assert "created_at" in body
+
+
+def test_dm_send_empty_to_user_id_400(client):
+    r = client.post("/api/dm/send", json={"to_user_id": "", "text": "hi"})
+    assert r.status_code == 400, r.text
+
+
+def test_dm_send_empty_text_400(client):
+    r = client.post("/api/dm/send", json={"to_user_id": "user_001", "text": ""})
+    assert r.status_code == 400, r.text
+
+
+def test_dm_send_text_too_long_400(client):
+    r = client.post("/api/dm/send", json={"to_user_id": "user_001", "text": "x" * 2001})
+    assert r.status_code == 400, r.text
+
+
+def test_dm_send_unknown_recipient_404(client):
+    r = client.post("/api/dm/send", json={"to_user_id": "nonexistent_xyz", "text": "hello"})
+    assert r.status_code == 404, r.text
+
+
+def test_dm_send_then_thread_includes_new_message(client):
+    # Ensure seed exists so the thread endpoint has rows to return.
+    client.get("/api/dm/conversations")
+
+    unique_text = "hermetic-dm-send-verify-unique-text-42"
+    send = client.post("/api/dm/send", json={"to_user_id": "user_004", "text": unique_text})
+    assert send.status_code == 200, send.text
+    new_id = send.json()["id"]
+
+    r = client.get("/api/dm/thread/user_004")
+    assert r.status_code == 200, r.text
+    messages = r.json()["messages"]
+    ids = [m["id"] for m in messages]
+    texts = [m["text"] for m in messages]
+    assert new_id in ids, f"sent message id={new_id} not found in thread messages"
+    assert unique_text in texts, f"sent text not found in thread messages"
