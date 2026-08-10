@@ -1431,7 +1431,7 @@
     return `<div class="looks-grid">${feed.map((p,i)=>`<div class="look-cell" data-look-idx="${i}" role="button" tabindex="0" aria-label="${attr(p.caption||'My look')}">
       ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
       ${p.look_total_usd?`<div class="lc-shop-pill">${icon('bag',11)}</div>`:''}
-      <div class="lc-meta">${esc(p.item_count||0)} items${p.look_total_usd?' · $'+esc(p.look_total_usd):''}</div>
+      <div class="lc-meta">${p.caption?`<span class="lc-cap">${esc(p.caption)}</span>`:''}<span class="lc-stats">${esc(p.item_count||0)} items${p.look_total_usd?' · $'+esc(p.look_total_usd):''}</span></div>
     </div>`).join('')}</div>${cta}`;}
 
   function forSaleHTML(){
