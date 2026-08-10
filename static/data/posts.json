@@ -124,7 +124,8 @@
     "comments": 52,
     "items_tagged": [
       "prod_lp_004",
-      "prod_sw_011"
+      "prod_sw_011",
+      "prod_ac_020"
     ],
     "created_at": "2026-06-09T10:30:00Z"
   },
@@ -149,7 +150,9 @@
     "likes": 198,
     "comments": 14,
     "items_tagged": [
-      "prod_lp_019"
+      "prod_lp_019",
+      "prod_ht_006",
+      "prod_sw_001"
     ],
     "created_at": "2026-06-06T15:00:00Z"
   },
@@ -393,7 +396,8 @@
     "comments": 341,
     "items_tagged": [
       "prod_ct_009",
-      "prod_ac_010"
+      "prod_ac_010",
+      "prod_ac_019"
     ],
     "created_at": "2026-06-18T14:00:00Z"
   },
@@ -472,7 +476,8 @@
     "comments": 234,
     "items_tagged": [
       "prod_ss_005",
-      "prod_lp_017"
+      "prod_lp_017",
+      "prod_sw_007"
     ],
     "created_at": "2026-06-18T10:30:00Z"
   },
