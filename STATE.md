@@ -23,12 +23,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all 9 items ✅, all docs current through 2026-08-10.
 - **Prior runs**: run 61 — PITCH_DECK + DEMO_SCRIPT sync 0032a50; run 60 — PITCH_DECK 2026-08-09 sync c12c121; run 59 — DEMO_SCRIPT sync 5 tips 492183f; run 58 — DoD verification 7 new entries + 284 test count 06b370c; run 57 — SCAN-SOURCE-ELEVATION + SHOP-MATCH-CONSISTENCY DoD cbb7bb6; run 56 — demo doc sync 0f424f9.
 
-## Steve lane — last run (2026-08-11, run 44)
-- **Task**: feat(data) — posts enrichment: 95 more products tagged, 79→174/200 (87% catalog coverage).
-- **Done**: static/data/posts.json only (sam IC). Semantic matching by post caption vibe (vintage, capsule, streetwear, cottagecore, etc.), all 6 categories covered, max 6 items_tagged/post enforced. data_integrity.py PASS. check-render PASS. Commit 168c90f.
-- **Next**: INBOX/DEFECTS first; remaining 26 niche/seasonal products (ski jackets, parkas) or backend test coverage; Supabase/Postgres migration (DECISIONS #17).
-- **Prior runs**: run 43 — For You sort_by=match 32b3369; run 42 — posts enrichment +18 tags; run 41 — posts enrichment +5 fc5edea; run 40 — skimlinks lifecycle test a2051a7; run 39 — complementarity matrix 9b203aa; run 38 — seed-wallet endpoint; run 37 — duplicate test fix; run 36 — Postgres compat; run 35 — test coverage 19 pytests.
-- **Status**: Commerce fully shipped. 305 tests. 94% route coverage (68/72 routes OK, 4 ext-dep expected). Feed catalog: 174/200 products exposed.
+## Steve lane — last run (2026-08-11, run 45)
+- **Task**: feat(data) — posts enrichment: 26 remaining products tagged, 174→200/200 (100% catalog coverage).
+- **Done**: static/data/posts.json only (sam IC). Semantic matching: 1 free-slot append + 25 swaps (replaced items appearing 2+ posts, maintaining their coverage). All categories (CK/Ralph Lauren basics, Acne Studios, Carhartt cargo, Stüssy/Kangol hats, North Face/Rains/Columbia outerwear). data_integrity.py 0 warnings/errors. check-render PASS.
+- **Next**: INBOX/DEFECTS first; backend test coverage (94%→higher, 4 uncovered routes); Supabase/Postgres migration (DECISIONS #17).
+- **Prior runs**: run 44 — posts enrichment 79→174/200 168c90f; run 43 — For You sort_by=match 32b3369; run 42 — posts enrichment +18 tags; run 41 — posts enrichment +5 fc5edea; run 40 — skimlinks lifecycle test a2051a7; run 39 — complementarity matrix 9b203aa.
+- **Status**: Commerce fully shipped. 305 tests. 94% route coverage (68/72 routes OK, 4 ext-dep expected). Feed catalog: 200/200 products exposed (100%).
 
 ## Phase status
 | Phase | Status |
