@@ -166,6 +166,7 @@
     cap:'<path d="M5 15a7 5 0 0 1 14 0"/><rect x="4" y="15" width="16" height="3" rx="1.5"/><path d="M20 16.5h2.5"/>',
     skirt:'<path d="M8 3h8v4L20 21H4L8 7V3Z" stroke-linejoin="round"/><path d="M8 7h8"/>',
     watch:'<rect x="8.5" y="7" width="7" height="10" rx="2.5"/><path d="M11 7V5h2v2M11 17v2h2v-2"/><path d="M8.5 12h7"/>',
+    pencil:'<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3l-11 11-4 1 1-4 11-11Z" stroke-linejoin="round"/><path d="M14.5 5.5l3 3"/>',
   };
   function icon(name, size){
     const s = size || 20;
@@ -1428,10 +1429,9 @@
     const feed=loadFeedPosts();
     if(!feed.length) return `<div class="shelf-empty"><div class="big" style="display:flex;justify-content:center;color:var(--accent2)">${icon('image',44)}</div>You haven't shared any looks yet.<br/>Snap an outfit and share it to the feed<br/>so it shows up here on your profile.</div>`;
     const cta = feed.length < 9 ? `<div class="looks-grid-cta"><span style="color:var(--muted,#9e99ad);font-size:var(--t-small,13px);font-weight:600;line-height:1.6">Share your next look and build your style story</span><button class="looks-grid-cta-btn" onclick="document.getElementById('file-input').click()">Add a look</button></div>` : '';
-    return `<div class="looks-grid">${feed.map((p,i)=>`<div class="look-cell" data-look-idx="${i}" role="button" tabindex="0" aria-label="${attr(p.caption||'My look')}">
+    return `<div class="lg-edit-hdr"><button class="lg-edit-btn" id="lg-edit-btn">${icon('pencil',14)} Edit</button></div><div class="looks-grid">${feed.map((p,i)=>`<div class="look-cell" data-look-idx="${i}" role="button" tabindex="0" aria-label="${attr(p.caption||'My look')}">
       ${p.photo?`<img src="${attr(p.photo)}" alt="">`:''}
       <button class="lc-del" data-del-look="${i}" type="button" aria-label="Delete look">${icon('trash',16)}</button>
-      ${p.look_total_usd?`<div class="lc-shop-pill">${icon('bag',14)}</div>`:''}
       <div class="lc-meta">${p.caption?`<span class="lc-cap">${esc(p.caption)}</span>`:''}<span class="lc-stats">${esc(p.item_count||0)} items${p.look_total_usd?' · $'+esc(p.look_total_usd):''}</span></div>
     </div>`).join('')}</div>${cta}`;}
 
@@ -1586,6 +1586,12 @@
       saveFeedPosts(posts);
       renderCloset();
     }));
+    document.getElementById('lg-edit-btn')?.addEventListener('click', () => {
+      const grid = closetBody.querySelector('.looks-grid');
+      const btn = document.getElementById('lg-edit-btn');
+      const isEdit = grid?.classList.toggle('looks-grid--edit');
+      if (btn) btn.innerHTML = isEdit ? `${icon('check',14)} Done` : `${icon('pencil',14)} Edit`;
+    });
     // Clicking one of YOUR OWN looks opens that specific look — it used to jump to the generic feed
     // (wrong destination: you tap a post and lose your place). Open the look sheet instead.
     closetBody.querySelectorAll('[data-look-idx]').forEach(cell=>cell.addEventListener('click',()=>{

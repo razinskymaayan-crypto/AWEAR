@@ -203,13 +203,21 @@
   .look-cell .lc-del {
     position: absolute; top: 0; inset-inline-start: 0;
     min-width: 44px; min-height: 44px; width: 44px; height: 44px;
-    display: flex; align-items: center; justify-content: center;
+    display: none; align-items: center; justify-content: center;
     background: radial-gradient(circle at 30% 30%, rgba(0,0,0,.75) 0%, rgba(0,0,0,.40) 55%, transparent 80%);
     border: 0; border-start-start-radius: var(--r-sm, 10px);
     cursor: pointer; color: var(--on-media, #ffffff); filter: drop-shadow(0 1px 3px rgba(0,0,0,.5));
     -webkit-tap-highlight-color: transparent; }
   .look-cell .lc-del:active { opacity: .6; }
+  .looks-grid--edit .look-cell .lc-del { display: flex; }
   .look-cell:not(:has(.lc-del:active)):active { transform: scale(.97); }
+  .lg-edit-hdr { display: flex; justify-content: flex-end; padding: 0 0 8px; }
+  .lg-edit-btn { border: 0; background: transparent; color: var(--muted, #9e99ad);
+    font-size: var(--t-caption, 12px); font-weight: 700; font-family: inherit; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 12px; border-radius: var(--r-pill, 999px); min-height: 44px;
+    transition: color .15s; }
+  .lg-edit-btn:active { color: var(--fg, #f0ecf5); }
   .earn { background: var(--surface);
     border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 20px; }
   .earn .top { display: flex; align-items: baseline; gap: 8px; }
