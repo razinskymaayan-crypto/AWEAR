@@ -17,11 +17,11 @@
 - **Next**: P2 polish (filter active pill light mode flat style, P2-C mp-item-info padding); or lc-shop-pill RTL (P2 backlog); or next unfinished MASTER_PLAN item.
 - **Prior runs**: run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead; run 75 — lc-shop-pill frosted bag icon 825a668; run 74 — look-sheet 4:3→4:5 + status badge contrast b076404; run 73 — Commerce WOW polish 4d26ab7.
 
-## Ayalon lane — last run (2026-08-11, run 63)
-- **Task**: DOD_AUDIT verification — 6 new verified entries for mark-76→79 + steve catalog/backend ships (LOOK-CAPTION, LOOK-DELETE-BTN, CLOSET-PORTRAIT-TILES, MARKETPLACE-DS-POLISH, FOR-YOU-CATALOG, CATALOG-ENRICHMENT). 305 test defs confirmed; data_integrity.py PASS; 200/200 products, 40/40 posts shoppable.
-- **Done**: docs/DOD_AUDIT.md. check-render PASS. Commit c7e4d31.
+## Ayalon lane — last run (2026-08-11, run 64)
+- **Task**: DEMO_SCRIPT sync — added tips for LOOK-CAPTION (beat-6), FOR-YOU-CATALOG (beat-4), CATALOG-ENRICHMENT (beat-4); noted CLOSET-PORTRAIT-TILES + MARKETPLACE-DS-POLISH as background quality. Test suite: 305 effective pytests. Status line updated.
+- **Done**: docs/DEMO_SCRIPT.md. check-render PASS. Commit f7b928a.
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-11.
-- **Prior runs**: run 62 — DoD 7 entries mark-70→75 + steve-41/42 6007b9c; run 61 — PITCH_DECK + DEMO_SCRIPT sync 0032a50; run 60 — PITCH_DECK sync c12c121; run 59 — DEMO_SCRIPT sync 492183f; run 58 — DoD 7 entries + 284 test count 06b370c; run 57 — SCAN-SOURCE-ELEVATION + SHOP-MATCH-CONSISTENCY DoD cbb7bb6.
+- **Prior runs**: run 63 — DOD_AUDIT 6 entries mark-76→79 + steve catalog/backend c7e4d31; run 62 — DoD 7 entries mark-70→75 + steve-41/42 6007b9c; run 61 — PITCH_DECK + DEMO_SCRIPT sync 0032a50; run 60 — PITCH_DECK sync c12c121; run 59 — DEMO_SCRIPT sync 492183f; run 58 — DoD 7 entries + 284 test count 06b370c.
 
 ## Steve lane — last run (2026-08-11, run 45)
 - **Task**: feat(data) — posts enrichment: 26 remaining products tagged, 174→200/200 (100% catalog coverage).
