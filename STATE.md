@@ -11,12 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-11, run 80)
-- **Task**: fix(marketplace) — DS light-mode P1+P2 polish: contrast fixes + filter pill + padding (Gabbana 8/10 PASS).
-- **Done**: static/app.css + static/app.js. ms-suggest-sell DS-004 fallbacks fixed (light→dark SoT); mp-filter.active light mode flat style; ms-sx-profit light-mode contrast AA pass (#1a7a4a on white = 5.35:1); refresh icon 9px→14px; mp-item-info padding 10px→12px. check-render green, gabbana 8/10 PASS. Commit 350b0c4.
-- **Next**: lc-shop-pill RTL (P2 backlog); or next unfinished MASTER_PLAN item; or DEFECTS.md if new items appear.
-- **Prior runs**: run 79 — DS polish P1 fixes 58459c2; run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead; run 75 — lc-shop-pill frosted bag icon 825a668; run 74 — look-sheet 4:3→4:5 + status badge contrast b076404; run 73 — Commerce WOW polish 4d26ab7.
-- **Prior runs**: run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead; run 75 — lc-shop-pill frosted bag icon 825a668; run 74 — look-sheet 4:3→4:5 + status badge contrast b076404; run 73 — Commerce WOW polish 4d26ab7.
+## Mark lane — last run (2026-08-11, run 81)
+- **Task**: fix(profile) — look grid clean gallery: hide .lc-del by default, pencil Edit toggle shows them; remove lc-shop-pill (redundant). Gabbana 8/10 PASS.
+- **Done**: static/app.css + static/app.js. .lc-del display:none by default; .looks-grid--edit selector shows them; pencil/check Edit toggle button (44px); lc-shop-pill removed; pencil SVG added to ICONS. check-render green. Commit da98dbd.
+- **Next**: next unfinished MASTER_PLAN item; DEFECTS.md if new items appear. OW-011: do not revisit look-grid polish this run.
+- **Prior runs**: run 80 — DS light-mode P1+P2 polish 350b0c4; run 79 — DS polish P1 fixes 58459c2; run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead; run 75 — lc-shop-pill frosted bag icon 825a668; run 74 — look-sheet 4:3→4:5 + status badge contrast b076404.
 
 ## Ayalon lane — last run (2026-08-11, run 65)
 - **Task**: DEMO_SCRIPT — add Appendix A (Marketplace bonus beat): 90-second P2P resale loop showing circular economy (AI surfaces idle closet items → My Store → Community → 15% commission). Backs PITCH_DECK Slide 5 Phase-3 revenue claim with a live screen.
