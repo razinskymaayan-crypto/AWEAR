@@ -1990,16 +1990,57 @@ async def load_data_files():
         logger.error("AI startup smoke wrapper failed unexpectedly: %s", e, exc_info=True)
 
 
+# Category complementarity matrix — "bag" and "dress" are /api/analyze output
+# categories and must appear so closet items in those categories contribute.
+_WARDROBE_COMPLEMENTS: dict[str, list[str]] = {
+    "top":       ["bottoms", "shoes", "outerwear", "accessory", "bag"],
+    "bottoms":   ["top", "shoes", "accessory", "bag"],
+    "shoes":     ["top", "bottoms", "dress", "outerwear", "accessory"],
+    "outerwear": ["top", "bottoms", "shoes", "bag"],
+    "accessory": ["top", "bottoms", "dress", "shoes", "outerwear"],
+    "hat":       ["top", "bottoms", "dress", "shoes", "outerwear"],
+    "bag":       ["top", "bottoms", "dress", "outerwear", "shoes"],
+    "dress":     ["shoes", "accessory", "bag", "outerwear"],
+}
+
+
+def _wardrobe_match_score(product: dict, closet_cats: set, closet_count: int) -> int:
+    """Compute 0-95 wardrobe compatibility for a product vs. a user's closet.
+
+    Pure computation — callers are responsible for the DB fetch. Used by both
+    the single-product endpoint (/api/products/{id}/match) and the bulk sort
+    (/api/products?sort_by=match) so the scoring logic stays in one place.
+    """
+    prod_cat = (product.get("category") or "").lower()
+    complements = set(_WARDROBE_COMPLEMENTS.get(prod_cat, []))
+    matched = complements & closet_cats
+    score = 55 + min(len(matched), 4) * 8
+    if closet_count >= 5:
+        score += 5
+    if closet_count >= 10:
+        score += 3
+    return min(score, 95)
+
+
 @app.get("/api/products")
 async def get_products(
+    request: Request,
     category: Optional[str] = None,
     color: Optional[str] = None,
     in_stock: Optional[bool] = None,
+    sort_by: Optional[str] = None,
+    user_id: Optional[str] = None,
     limit: int = 50,
     offset: int = 0,
 ):
-    """Return paginated products with optional filtering by category, color, and stock status."""
-    products = _products_cache
+    """Return paginated products with optional filtering by category, color, and stock status.
+
+    ``sort_by=match&user_id=<id>`` ranks the filtered list by wardrobe compatibility —
+    highest-scoring products first — and adds a ``match_pct`` field to each item.
+    Requires one DB read to fetch the user's closet category set; O(N) scoring over
+    the filtered list. Falls back silently to unsorted if the DB read fails.
+    """
+    products = list(_products_cache)
 
     if category:
         products = [p for p in products if p.get("category") == category]
@@ -2007,6 +2048,26 @@ async def get_products(
         products = [p for p in products if p.get("color") == color]
     if in_stock is not None:
         products = [p for p in products if p.get("in_stock") == in_stock]
+
+    if sort_by == "match":
+        ip = (request.client.host if request.client else None) or "anon"
+        user_key = (user_id or "").strip() or ip
+        try:
+            with _get_db() as db:
+                rows = db.execute(
+                    "SELECT category FROM closet_items WHERE user_key = ? LIMIT 100",
+                    (user_key,),
+                ).fetchall()
+            closet_cats = {(r["category"] or "").lower() for r in rows}
+            closet_count = len(rows)
+        except Exception:
+            closet_cats = set()
+            closet_count = 0
+        products = sorted(
+            [{**p, "match_pct": _wardrobe_match_score(p, closet_cats, closet_count)} for p in products],
+            key=lambda p: p["match_pct"],
+            reverse=True,
+        )
 
     total = len(products)
     return {
@@ -2051,34 +2112,12 @@ async def product_wardrobe_match(product_id: str, request: Request, user_id: Opt
 
     closet = [{"name": r["name"], "category": r["category"], "color": r["color"]} for r in rows]
 
-    # Complementarity matrix: what categories pair well with the product's category.
-    # "bag" and "dress" are valid /api/analyze output categories — they must appear
-    # here so a scanned bag/dress in the user's closet contributes to match scores.
-    _COMPLEMENTS: dict[str, list[str]] = {
-        "top":       ["bottoms", "shoes", "outerwear", "accessory", "bag"],
-        "bottoms":   ["top", "shoes", "accessory", "bag"],
-        "shoes":     ["top", "bottoms", "dress", "outerwear", "accessory"],
-        "outerwear": ["top", "bottoms", "shoes", "bag"],
-        "accessory": ["top", "bottoms", "dress", "shoes", "outerwear"],
-        "hat":       ["top", "bottoms", "dress", "shoes", "outerwear"],
-        "bag":       ["top", "bottoms", "dress", "outerwear", "shoes"],
-        "dress":     ["shoes", "accessory", "bag", "outerwear"],
-    }
-    prod_cat = (product.get("category") or "").lower()
-    complements = set(_COMPLEMENTS.get(prod_cat, []))
     closet_cats = {(it.get("category") or "").lower() for it in closet}
+    match_pct = _wardrobe_match_score(product, closet_cats, len(closet))
 
+    complements = set(_WARDROBE_COMPLEMENTS.get((product.get("category") or "").lower(), []))
     matched_cats = complements & closet_cats
     matching_items = [it for it in closet if (it.get("category") or "").lower() in matched_cats][:6]
-
-    # Score: base 55 + 8 per complementary category present (max 4 × 8 = 32) + richness bonus
-    score = 55 + min(len(matched_cats), 4) * 8
-    if len(closet) >= 5:
-        score += 5
-    if len(closet) >= 10:
-        score += 3
-
-    match_pct = min(score, 95)
 
     if match_pct >= 85:
         reason = f"Excellent match — pairs well with {len(matching_items)} items you own."

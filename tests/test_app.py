@@ -3919,6 +3919,37 @@ def test_products_in_stock_filter(client):
         "in_stock=false filter returned an in-stock product"
 
 
+# /api/products?sort_by=match — wardrobe-sorted catalog (OW-014: fail-before proven)
+# ---------------------------------------------------------------------------
+
+def test_products_sort_by_match_adds_match_pct_field(client):
+    """sort_by=match annotates every returned item with a match_pct field (0-95)."""
+    r = client.get("/api/products", params={"sort_by": "match", "limit": 10})
+    assert r.status_code == 200, r.text
+    items = r.json()["items"]
+    assert items, "expected at least one product"
+    for p in items:
+        assert "match_pct" in p, f"missing match_pct on product {p.get('id')}"
+        assert 0 <= p["match_pct"] <= 95, f"match_pct out of range: {p['match_pct']}"
+
+
+def test_products_sort_by_match_is_descending(client):
+    """sort_by=match returns products in non-ascending match_pct order."""
+    r = client.get("/api/products", params={"sort_by": "match", "limit": 20})
+    assert r.status_code == 200, r.text
+    scores = [p["match_pct"] for p in r.json()["items"]]
+    assert scores == sorted(scores, reverse=True), \
+        f"products not in descending match order: {scores[:5]}"
+
+
+def test_products_sort_by_unknown_value_returns_normal_list(client):
+    """An unknown sort_by value is silently ignored — no match_pct, no crash."""
+    r = client.get("/api/products", params={"sort_by": "nonexistent_sort", "limit": 5})
+    assert r.status_code == 200, r.text
+    for p in r.json()["items"]:
+        assert "match_pct" not in p, "unexpected match_pct on non-match sort"
+
+
 # ---------------------------------------------------------------------------
 # /api/categories — filter-chip contract
 # ---------------------------------------------------------------------------
