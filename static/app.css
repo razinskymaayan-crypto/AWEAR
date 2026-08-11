@@ -27,6 +27,8 @@
   .slb-buyable { color: var(--success, #52c97a); }
   .slb-similar { color: var(--warning, #e8a84a); }
   .slb-resale  { color: var(--warning, #e8a84a); }
+  /* P1-F: sell pill on light bg needs visible shape instead of near-black color-mix smudge */
+  .ms-suggest-sell { background: var(--surface,#F3F1EC); border-color: var(--line,#E9E5DF); color: var(--text,#14110F); }
 }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body { font-family: "Heebo", -apple-system, system-ui, sans-serif;
@@ -1748,7 +1750,7 @@
   .mp-item:active { transform: scale(.97); }
   .mp-item-img { aspect-ratio: 4/5; display: flex; align-items: center; justify-content: center; background: linear-gradient(110deg, var(--card) 30%, var(--card-hover) 50%, var(--card) 70%); background-size: 200% 100%; animation: shimmer 1.6s infinite; position: relative; }
   @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-  .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: var(--t-micro,11px); font-weight: 900; padding: 3px 8px; border-radius: 20px; }
+  .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: var(--t-micro,11px); font-weight: 900; padding: 3px 8px; border-radius: var(--r-pill,999px); }
   .mp-item-info { padding: 10px 12px 12px; }
   .mp-item-name { font-size: var(--t-small); font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .mp-item-price { font-size: var(--t-h3,15px); font-weight: 900; color: var(--accent); margin-top: 5px; }
@@ -1840,13 +1842,13 @@
   /* My Store header — store pic (right) + cyclical stats strip (left) */
   .ms-head { margin: 0 16px 16px; }
   .ms-head-row { display: flex; align-items: center; gap: 12px; }
-  .ms-statstrip { flex: 1; min-width: 0; display: flex; gap: var(--space-1,4px); align-items: stretch; }
-  .ms-sx { flex: 1 1 0; min-width: 0; overflow: hidden; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-md,14px); padding: 9px 3px; text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
-  .ms-sx-val { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); line-height: 1.05; white-space: nowrap; }
+  .ms-statstrip { flex: 1; min-width: 0; display: flex; gap: var(--space-2,8px); align-items: stretch; }
+  .ms-sx { flex: 1 1 0; min-width: 0; overflow: hidden; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-sm,10px); padding: 9px 3px; text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+  .ms-sx-val { font-size: var(--t-h3,15px); font-weight: 900; color: var(--fg,#f0ecf5); line-height: 1.05; white-space: nowrap; }
   .ms-sx-label { font-size: var(--t-micro,11px); color: var(--muted,#9e99ad); font-weight: 700; line-height: 1.1; white-space: nowrap; }
   /* Profit = the one number the seller cares about most — anchor the eye */
   .ms-sx-profit { background: color-mix(in srgb, var(--success,#52c97a) 12%, var(--card,#1e1a22)); border-color: color-mix(in srgb, var(--success,#52c97a) 45%, var(--line,#2e2836)); }
-  .ms-sx-profit .ms-sx-val { font-size: var(--t-h3,15px); color: var(--success,#52c97a); }
+  .ms-sx-profit .ms-sx-val { font-size: var(--t-lead,17px); color: var(--success,#52c97a); }
   .ms-sx-profit .ms-sx-label { color: var(--muted,#9e99ad); }
   .ms-sx-btn { font-family: inherit; cursor: pointer; min-height: 44px; border-color: color-mix(in srgb, var(--accent3,#7a6af0) 40%, var(--line,#2e2836)); }
   .ms-sx-btn:active { background: var(--card-hover,#262030); }
@@ -1859,7 +1861,7 @@
   .ms-actions { padding: 0 16px 12px; display: flex; gap: 6px; }
   /* Three identical action buttons — same size (flex:1), same color, slim height */
   .ms-act-btn { flex: 1; min-width: 0; background: var(--card,#1e1a22); border: 1px solid var(--line,#2e2836); border-radius: var(--r-pill,999px); padding: var(--space-2,8px) var(--space-2,8px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; color: var(--fg,#f0ecf5); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; white-space: nowrap; }
-  .ms-act-btn:active { background: var(--card-hover,#262030); }
+  .ms-act-btn:active { background: var(--card-hover,#262030); transform: scale(.96); }
   .ms-section-hd { padding: 0 16px 10px; display: flex; align-items: center; justify-content: space-between; }
   .ms-section-title { font-size: var(--t-small,13px); font-weight: 900; color: var(--fg,#f0ecf5); }
   .ms-section-sub { font-size: var(--t-micro,11px); color: var(--accent3,#7a6af0); font-weight: 700; }
@@ -2049,7 +2051,7 @@
   /* ---- Quick Sort Chips ---- */
   .mp-quick-sort { display: flex; gap: 6px; padding: 0 16px 10px; overflow-x: auto; scrollbar-width: none; }
   .mp-quick-sort::-webkit-scrollbar { display: none; }
-  .mp-qs-chip { flex-shrink: 0; padding: 7px 16px; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; border: 1.5px solid var(--line,#2e2836); background: none; color: var(--muted,#9e99ad); cursor: pointer; transition: all .18s; min-height: 36px; white-space: nowrap; }
+  .mp-qs-chip { flex-shrink: 0; padding: 10px 16px; border-radius: var(--r-pill,999px); font-family: inherit; font-size: var(--t-caption,12px); font-weight: 700; border: 1.5px solid var(--line,#2e2836); background: none; color: var(--muted,#9e99ad); cursor: pointer; transition: all .18s; min-height: 44px; white-space: nowrap; }
   .mp-qs-chip.active { background: var(--surface,#161318); border-color: var(--accent3,#7a6af0); color: var(--accent3,#7a6af0); font-weight: 800; }
   .mp-qs-chip:active { opacity: .7; }
 
