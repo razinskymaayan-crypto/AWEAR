@@ -17,11 +17,11 @@
 - **Next**: P2 polish (filter active pill light mode flat style, P2-C mp-item-info padding); or lc-shop-pill RTL (P2 backlog); or next unfinished MASTER_PLAN item.
 - **Prior runs**: run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead; run 75 — lc-shop-pill frosted bag icon 825a668; run 74 — look-sheet 4:3→4:5 + status badge contrast b076404; run 73 — Commerce WOW polish 4d26ab7.
 
-## Ayalon lane — last run (2026-08-10, run 62)
-- **Task**: DOD_AUDIT verification — 7 new verified entries for mark-70→75 + steve-41/42 ships (STORE-TAB-UX, DS-016-IMAGES, COMMERCE-UI-POLISH, LOOK-SHEET-COLLAGE-ASPECT, LOOK-CARD-SHOP-PILL, FEED-CONTENT-ENRICHMENT, TEST-COVERAGE-STORIES-DM). Closes OW-002 gap; 302 test defs / 303 effective confirmed.
-- **Done**: docs/DOD_AUDIT.md. check-render PASS. Commit 6007b9c.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all 9 items ✅, all docs current through 2026-08-10.
-- **Prior runs**: run 61 — PITCH_DECK + DEMO_SCRIPT sync 0032a50; run 60 — PITCH_DECK 2026-08-09 sync c12c121; run 59 — DEMO_SCRIPT sync 5 tips 492183f; run 58 — DoD verification 7 new entries + 284 test count 06b370c; run 57 — SCAN-SOURCE-ELEVATION + SHOP-MATCH-CONSISTENCY DoD cbb7bb6; run 56 — demo doc sync 0f424f9.
+## Ayalon lane — last run (2026-08-11, run 63)
+- **Task**: DOD_AUDIT verification — 6 new verified entries for mark-76→79 + steve catalog/backend ships (LOOK-CAPTION, LOOK-DELETE-BTN, CLOSET-PORTRAIT-TILES, MARKETPLACE-DS-POLISH, FOR-YOU-CATALOG, CATALOG-ENRICHMENT). 305 test defs confirmed; data_integrity.py PASS; 200/200 products, 40/40 posts shoppable.
+- **Done**: docs/DOD_AUDIT.md. check-render PASS. Commit c7e4d31.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-11.
+- **Prior runs**: run 62 — DoD 7 entries mark-70→75 + steve-41/42 6007b9c; run 61 — PITCH_DECK + DEMO_SCRIPT sync 0032a50; run 60 — PITCH_DECK sync c12c121; run 59 — DEMO_SCRIPT sync 492183f; run 58 — DoD 7 entries + 284 test count 06b370c; run 57 — SCAN-SOURCE-ELEVATION + SHOP-MATCH-CONSISTENCY DoD cbb7bb6.
 
 ## Steve lane — last run (2026-08-11, run 45)
 - **Task**: feat(data) — posts enrichment: 26 remaining products tagged, 174→200/200 (100% catalog coverage).
