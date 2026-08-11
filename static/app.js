@@ -2789,7 +2789,7 @@
         if (completePct < 100) {
           return `
           <div class="home-sec-label">${t('home.profile_pct_title', {pct: completePct})}</div>
-          <div onclick="${nextStep ? nextStep.action : ''}" style="margin:0 16px 16px;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px;cursor:pointer;box-shadow:0 2px 16px rgba(0,0,0,.24)">
+          <div onclick="${nextStep ? nextStep.action : ''}" style="margin:0 16px 16px;background:var(--card);border:1px solid var(--line,#2e2836);border-radius:16px;padding:16px;cursor:pointer;box-shadow:0 2px 16px rgba(0,0,0,.24)">
             <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:12px">
               <div style="height:100%;width:${completePct}%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s ease"></div>
             </div>
@@ -2799,7 +2799,7 @@
                 <div style="font-size:var(--t-small,13px);font-weight:800">${esc(t('home.next_step_label', {step: nextStep.label}))}</div>
                 <div style="font-size:var(--t-micro,11px);color:var(--accent);font-weight:700;margin-top:4px">+${nextStep.pts} ${t('home.points_suffix')}</div>
               </div>
-              <div style="font-size:var(--t-h3,15px);color:var(--muted)">›</div>
+              <div style="color:var(--muted,#8a8498)">${icon('chevronRight', 15)}</div>
             </div>` : ''}
           </div>`;
         }
@@ -2848,14 +2848,7 @@
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('chat')"><span class="hq-icon">${icon('chat', 20)}</span>Abigail</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('stylists')"><span class="hq-icon">${icon('user', 20)}</span>Stylists</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('analytics')"><span class="hq-icon">${icon('barChart', 20)}</span>Analytics</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('wishlist')"><span class="hq-icon">${icon('bookmark', 20)}</span>Wishlist</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('marketplace')"><span class="hq-icon">${icon('cart', 20)}</span>Marketplace</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('compare')"><span class="hq-icon">${icon('scale', 20)}</span>Compare</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('rewards')"><span class="hq-icon">${icon('award', 20)}</span>Rewards</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('wallet')"><span class="hq-icon">${icon('coins', 20)}</span>Wallet</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('agents')"><span class="hq-icon">${icon('users', 20)}</span>Agent Team</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('sustainability')"><span class="hq-icon">${icon('leaf', 20)}</span>Eco</button>
-        <button class="hq-btn" style="flex-shrink:0" onclick="showView('season-recap')"><span class="hq-icon">${icon('sparkle', 20)}</span>My Season</button>
       </div>
     `;
 
