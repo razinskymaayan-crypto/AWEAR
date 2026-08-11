@@ -5965,7 +5965,7 @@
             <div class="ms-sx ms-sx-profit"><div class="ms-sx-val">${fmtMoney(profit)}</div><div class="ms-sx-label">Profit</div></div>
             <button class="ms-sx ms-sx-btn" id="ms-views-btn" aria-label="Views — tap to cycle today, 30 days, all-time">
               <div class="ms-sx-val">${vw.v.toLocaleString()}</div>
-              <div class="ms-sx-label">${icon('refresh',9)} ${vw.l}</div>
+              <div class="ms-sx-label">${icon('refresh',14)} ${vw.l}</div>
             </button>
           </div>
           <div class="ms-store-pic-wrap">

@@ -28,7 +28,12 @@
   .slb-similar { color: var(--warning, #e8a84a); }
   .slb-resale  { color: var(--warning, #e8a84a); }
   /* P1-F: sell pill on light bg needs visible shape instead of near-black color-mix smudge */
-  .ms-suggest-sell { background: var(--surface,#F3F1EC); border-color: var(--line,#E9E5DF); color: var(--text,#14110F); }
+  /* DS-004: fallbacks use dark SoT (var() resolves to light override; fallback is academic) */
+  .ms-suggest-sell { background: var(--surface,#161318); border-color: var(--line,#2e2836); color: var(--text,#fbfbfd); }
+  /* P2: active filter pill flat editorial-black in light mode (gradient of two near-blacks is indistinct) */
+  .mp-filter.active { background: var(--accent,#e8526a); border-color: transparent; }
+  /* P1: profit stat — remove tinted bg so #1a7a4a on white = 5.35:1 AA pass (tinted bg drops to ~4.3:1) */
+  .ms-sx-profit { background: var(--card,#1e1a22); border-color: color-mix(in srgb, var(--success,#52c97a) 40%, var(--line,#2e2836)); }
 }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body { font-family: "Heebo", -apple-system, system-ui, sans-serif;
@@ -1751,7 +1756,7 @@
   .mp-item-img { aspect-ratio: 4/5; display: flex; align-items: center; justify-content: center; background: linear-gradient(110deg, var(--card) 30%, var(--card-hover) 50%, var(--card) 70%); background-size: 200% 100%; animation: shimmer 1.6s infinite; position: relative; }
   @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
   .mp-item-badge { position: absolute; top: 8px; right: 8px; font-size: var(--t-micro,11px); font-weight: 900; padding: 3px 8px; border-radius: var(--r-pill,999px); }
-  .mp-item-info { padding: 10px 12px 12px; }
+  .mp-item-info { padding: 12px; }
   .mp-item-name { font-size: var(--t-small); font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .mp-item-price { font-size: var(--t-h3,15px); font-weight: 900; color: var(--accent); margin-top: 5px; }
   .mp-item-seller { font-size: var(--t-micro); color: var(--muted); font-weight: 600; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
