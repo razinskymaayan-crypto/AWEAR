@@ -11,10 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-11, run 79)
-- **Task**: fix(marketplace) — DS polish: KPI readability + touch targets + badge token (A4a marketplace area, Gabbana P1 fixes).
-- **Done**: static/app.css only. ms-statstrip gap 4px→8px; ms-sx border-radius --r-md→--r-sm; ms-sx-val 13px→15px (profit 17px); mp-qs-chip touch target 36px→44px; mp-item-badge border-radius tokenized; ms-act-btn:active scale(.96); ms-suggest-sell light-mode pill fix. check-render green, check-interactions green. Commit 58459c2.
-- **Next**: P2 polish (filter active pill light mode flat style, P2-C mp-item-info padding); or lc-shop-pill RTL (P2 backlog); or next unfinished MASTER_PLAN item.
+## Mark lane — last run (2026-08-11, run 80)
+- **Task**: fix(marketplace) — DS light-mode P1+P2 polish: contrast fixes + filter pill + padding (Gabbana 8/10 PASS).
+- **Done**: static/app.css + static/app.js. ms-suggest-sell DS-004 fallbacks fixed (light→dark SoT); mp-filter.active light mode flat style; ms-sx-profit light-mode contrast AA pass (#1a7a4a on white = 5.35:1); refresh icon 9px→14px; mp-item-info padding 10px→12px. check-render green, gabbana 8/10 PASS. Commit 350b0c4.
+- **Next**: lc-shop-pill RTL (P2 backlog); or next unfinished MASTER_PLAN item; or DEFECTS.md if new items appear.
+- **Prior runs**: run 79 — DS polish P1 fixes 58459c2; run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead; run 75 — lc-shop-pill frosted bag icon 825a668; run 74 — look-sheet 4:3→4:5 + status badge contrast b076404; run 73 — Commerce WOW polish 4d26ab7.
 - **Prior runs**: run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead; run 75 — lc-shop-pill frosted bag icon 825a668; run 74 — look-sheet 4:3→4:5 + status badge contrast b076404; run 73 — Commerce WOW polish 4d26ab7.
 
 ## Ayalon lane — last run (2026-08-11, run 65)
