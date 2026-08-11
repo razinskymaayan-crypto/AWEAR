@@ -23,12 +23,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all 9 items ✅, all docs current through 2026-08-10.
 - **Prior runs**: run 61 — PITCH_DECK + DEMO_SCRIPT sync 0032a50; run 60 — PITCH_DECK 2026-08-09 sync c12c121; run 59 — DEMO_SCRIPT sync 5 tips 492183f; run 58 — DoD verification 7 new entries + 284 test count 06b370c; run 57 — SCAN-SOURCE-ELEVATION + SHOP-MATCH-CONSISTENCY DoD cbb7bb6; run 56 — demo doc sync 0f424f9.
 
-## Steve lane — last run (2026-08-11, run 43)
-- **Task**: feat(backend) — GET /api/products?sort_by=match&user_id= — wardrobe-ranked For You catalog in one call.
-- **Done**: app.py + tests/test_app.py (sam IC). Extracted _WARDROBE_COMPLEMENTS + _wardrobe_match_score module-level helper (DRY); refactored product_wardrobe_match to delegate; extended get_products with sort_by=match + user_id. 3 hermetic pytests (fail-before proven: match_pct field absent before). check-render PASS, Python syntax PASS. Commit 32b3369.
-- **Next**: INBOX/DEFECTS first; posts enrichment (121/200 still untagged) or backend test coverage gaps.
-- **Prior runs**: run 42 — posts enrichment +18 tags; run 41 — posts enrichment +5 fc5edea; run 40 — skimlinks lifecycle test a2051a7; run 39 — complementarity matrix 9b203aa; run 38 — seed-wallet endpoint; run 37 — duplicate test fix; run 36 — Postgres compat; run 35 — test coverage 19 pytests; run 34 — /api/demo/seed-closet; run 33 — idx_credits_txn UNIQUE race fix.
-- **Status**: Commerce fully shipped. 281 tests. 94% route coverage (68/72 routes OK, 4 ext-dep expected).
+## Steve lane — last run (2026-08-11, run 44)
+- **Task**: feat(data) — posts enrichment: 95 more products tagged, 79→174/200 (87% catalog coverage).
+- **Done**: static/data/posts.json only (sam IC). Semantic matching by post caption vibe (vintage, capsule, streetwear, cottagecore, etc.), all 6 categories covered, max 6 items_tagged/post enforced. data_integrity.py PASS. check-render PASS. Commit 168c90f.
+- **Next**: INBOX/DEFECTS first; remaining 26 niche/seasonal products (ski jackets, parkas) or backend test coverage; Supabase/Postgres migration (DECISIONS #17).
+- **Prior runs**: run 43 — For You sort_by=match 32b3369; run 42 — posts enrichment +18 tags; run 41 — posts enrichment +5 fc5edea; run 40 — skimlinks lifecycle test a2051a7; run 39 — complementarity matrix 9b203aa; run 38 — seed-wallet endpoint; run 37 — duplicate test fix; run 36 — Postgres compat; run 35 — test coverage 19 pytests.
+- **Status**: Commerce fully shipped. 305 tests. 94% route coverage (68/72 routes OK, 4 ext-dep expected). Feed catalog: 174/200 products exposed.
 
 ## Phase status
 | Phase | Status |
