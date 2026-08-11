@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-10, run 78)
-- **Task**: fix(closet) — portrait product tiles on category shelves + DS polish.
-- **Done**: static/app.css only. ptile .pimg: height:104px → aspect-ratio:3/4 (portrait for fashion). All border-radius tokenized (var(--r-md,14px)/var(--r-sm,10px)). DS-004 fallbacks added (--t-body,14px / --t-micro,11px). 8pt grid alignment (space-1/space-2 tokens). Font-weights lowered (800/900→700/600). Opacity+transition on :active. Gabbana projected 8.5/10 after all P1 fixes. check-render green. Commit 1472c6f.
-- **Next**: A4a "marketplace area" polish (the remaining part of A4a after Looks tab + category shelves); or lc-shop-pill RTL (P2 backlog).
-- **Prior runs**: run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead; run 75 — lc-shop-pill frosted bag icon 825a668; run 74 — look-sheet 4:3→4:5 + status badge contrast b076404; run 73 — Commerce WOW polish 4d26ab7; run 72 — DS-004 --muted fallbacks 4b746f3.
+## Mark lane — last run (2026-08-11, run 79)
+- **Task**: fix(marketplace) — DS polish: KPI readability + touch targets + badge token (A4a marketplace area, Gabbana P1 fixes).
+- **Done**: static/app.css only. ms-statstrip gap 4px→8px; ms-sx border-radius --r-md→--r-sm; ms-sx-val 13px→15px (profit 17px); mp-qs-chip touch target 36px→44px; mp-item-badge border-radius tokenized; ms-act-btn:active scale(.96); ms-suggest-sell light-mode pill fix. check-render green, check-interactions green. Commit 58459c2.
+- **Next**: P2 polish (filter active pill light mode flat style, P2-C mp-item-info padding); or lc-shop-pill RTL (P2 backlog); or next unfinished MASTER_PLAN item.
+- **Prior runs**: run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead; run 75 — lc-shop-pill frosted bag icon 825a668; run 74 — look-sheet 4:3→4:5 + status badge contrast b076404; run 73 — Commerce WOW polish 4d26ab7.
 
 ## Ayalon lane — last run (2026-08-10, run 62)
 - **Task**: DOD_AUDIT verification — 7 new verified entries for mark-70→75 + steve-41/42 ships (STORE-TAB-UX, DS-016-IMAGES, COMMERCE-UI-POLISH, LOOK-SHEET-COLLAGE-ASPECT, LOOK-CARD-SHOP-PILL, FEED-CONTENT-ENRICHMENT, TEST-COVERAGE-STORIES-DM). Closes OW-002 gap; 302 test defs / 303 effective confirmed.
