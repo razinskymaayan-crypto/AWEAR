@@ -741,6 +741,7 @@
     // Derive it from the items themselves; only trust the caller's number if none are priced.
     const itemsSum = list.reduce((s,it)=>s+(Number(it.price_estimate_usd||it.price)||0),0);
     totalPrice = itemsSum>0 ? itemsSum : (Number(totalPrice)||0);
+    const wardrobe = loadWardrobe();
     const rows = list.map((it, i) => {
       const st = itemBuyStatus(it);
       const badgeClass = st==='resale' ? 'slb-resale' : st==='similar' ? 'slb-similar' : 'slb-buyable';
@@ -750,13 +751,20 @@
         : st==='similar'
         ? `<button class="sheet-row-buy sheet-row-similar" type="button" data-action="find-similar-item" data-item-idx="${i}" aria-label="Find similar to ${attr(it.name)}">${icon('search',14)} Find Similar</button>`
         : `<button class="sheet-row-buy" type="button" data-action="buy-look-item" data-item-idx="${i}" aria-label="Buy ${attr(it.name)}">${icon('arrowOut',14)} Buy</button>`;
+      const iScore = wardrobe.length ? calcCompatScore(it, wardrobe) : null;
+      const iMatchChip = iScore
+        ? `<span class="sl-row-match sl-row-match--${iScore.pct>=80?'high':iScore.pct>=60?'mid':'low'}">${icon('sparkle',11)} ${iScore.pct}% match</span>`
+        : '';
       return `<div class="sheet-look-row">
         <div class="sheet-look-emoji sheet-look-emoji--tap" role="button" tabindex="0"
           data-action="look-item-detail" data-item-idx="${i}"
           aria-label="View ${attr(it.name)} details">${productImage(it)}</div>
         <div class="sheet-look-meta">
           <div class="sheet-look-name">${esc(it.name)}</div>
-          <span class="sheet-look-badge ${badgeClass}">${badgeText}</span>
+          <div class="sl-row-badges">
+            <span class="sheet-look-badge ${badgeClass}">${badgeText}</span>
+            ${iMatchChip}
+          </div>
         </div>
         <div class="sheet-look-price">$${esc(it.price_estimate_usd||it.price||0)}</div>
         ${pill}
@@ -765,7 +773,6 @@
     const earnLine = (earnAmt && influencerUser)
       ? `<p class="sl-earn">${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase</p>` : '';
 
-    const wardrobe = loadWardrobe();
     const allTags = [...new Set(list.flatMap(it => it.style_tags||[]))];
     const lookScore = wardrobe.length ? calcCompatScore({style_tags: allTags}, wardrobe) : null;
     const tierColor = !lookScore ? '' : lookScore.pct>=80 ? 'var(--success,#52c97a)' : lookScore.pct>=60 ? 'var(--warning,#e8a84a)' : 'var(--danger,#e05252)';

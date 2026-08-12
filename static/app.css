@@ -1029,6 +1029,11 @@
   .slb-buyable { color: color-mix(in srgb, var(--success,#52c97a) 65%, #fff); }
   .slb-similar { color: var(--warning,#e8a84a); }
   .slb-resale { color: color-mix(in srgb, var(--accent3,#7a6af0) 65%, #fff); }
+  .sl-row-badges { display: flex; align-items: center; gap: var(--space-1,4px); flex-wrap: wrap; }
+  .sl-row-match { font-size: var(--t-micro,11px); font-weight: 700; display: inline-flex; align-items: center; gap: 3px; }
+  .sl-row-match--high { color: var(--success,#52c97a); }
+  .sl-row-match--mid  { color: var(--warning,#e8a84a); }
+  .sl-row-match--low  { color: var(--muted,#8a8498); }
   .sheet-look-price { font-family: "Poppins", sans-serif; font-size: var(--t-small); font-weight: 700;
     color: var(--muted); flex-shrink: 0; }
 
