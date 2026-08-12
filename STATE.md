@@ -17,11 +17,11 @@
 - **Next**: next unfinished MASTER_PLAN/INBOX item; DEFECTS.md if new items appear. OW-011: do not revisit home quick-actions or look-grid this run.
 - **Prior runs**: run 81 — look grid edit mode da98dbd; run 80 — DS light-mode P1+P2 polish 350b0c4; run 79 — DS polish P1 fixes 58459c2; run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead.
 
-## Ayalon lane — last run (2026-08-11, run 65)
-- **Task**: DEMO_SCRIPT — add Appendix A (Marketplace bonus beat): 90-second P2P resale loop showing circular economy (AI surfaces idle closet items → My Store → Community → 15% commission). Backs PITCH_DECK Slide 5 Phase-3 revenue claim with a live screen.
-- **Done**: docs/DEMO_SCRIPT.md. check-render PASS.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg USD/token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-11.
-- **Prior runs**: run 64 — DEMO_SCRIPT sync f7b928a; run 63 — DOD_AUDIT 6 entries mark-76→79 + steve catalog/backend c7e4d31; run 62 — DoD 7 entries mark-70→75 + steve-41/42 6007b9c; run 61 — PITCH_DECK + DEMO_SCRIPT sync 0032a50; run 60 — PITCH_DECK sync c12c121; run 59 — DEMO_SCRIPT sync 492183f.
+## Ayalon lane — last run (2026-08-12, run 66)
+- **Task**: DoD run-66 — verify 7 ships from mark-80→82 + steve-46→48. DEMO_SCRIPT updated with FEED-REAL-PHOTOS-7 + BROWSE-IMAGE-URL notes.
+- **Done**: docs/DOD_AUDIT.md (7 new verified entries; pytests 305→311); docs/DEMO_SCRIPT.md (beat-4 + Store-tab tips). Commit 2eaff75. check-render PASS.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg USD/token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-12.
+- **Prior runs**: run 65 — DEMO_SCRIPT Appendix A (Marketplace bonus beat) 1e291d8; run 64 — DEMO_SCRIPT sync f7b928a; run 63 — DOD_AUDIT 6 entries mark-76→79 + steve catalog/backend c7e4d31; run 62 — DoD 7 entries mark-70→75 + steve-41/42 6007b9c; run 61 — PITCH_DECK + DEMO_SCRIPT sync 0032a50.
 
 ## Steve lane — last run (2026-08-12, run 48)
 - **Task**: fix(data) — prod_ht_019 color mismatch (declared "navy" but CDN image is ROYAL-BLUE) + OW-016 CDN color-consistency detector in data_integrity.py. Catches the 2026-08-06 rejection class automatically before every merge.
