@@ -1738,9 +1738,9 @@
           <button class="sc-btn sc-reject${!si.accepted?' active':''}" onclick="scSetAccepted(${idx},false)">${icon('x',14)}</button>
         </div>
         <div class="sc-source-wrap">
-          <label class="sc-source-label" for="sc-src-${idx}">${icon('link',12)} Source Link <span class="sc-source-opt">optional</span></label>
-          <input id="sc-src-${idx}" class="sc-field sc-source-field${urlValid?' sc-field--valid':it.source_url?' sc-field--warn':''}" value="${attr(it.source_url)}" placeholder="https://..." type="url" autocomplete="url" oninput="scUpdateField(${idx},'source_url',this.value);_scUrlFeedback(this)">
-          <div class="sc-source-hint">${icon('zap',10)} Links this item to the real product — makes it shoppable and earns you tokens when someone buys</div>
+          <label class="sc-source-label" for="sc-src-${idx}">${icon('link',13)} Product link <span class="sc-source-badge">${icon('zap',9)} Earn tokens</span></label>
+          <input id="sc-src-${idx}" class="sc-field sc-source-field${urlValid?' sc-field--valid':it.source_url?' sc-field--warn':''}" value="${attr(it.source_url)}" placeholder="https://store.com/product-page" type="url" autocomplete="url" oninput="scUpdateField(${idx},'source_url',this.value);_scUrlFeedback(this)">
+          <div class="sc-source-hint">${icon('zap',10)} Paste the exact product URL — makes this item shoppable and earns you creator tokens every time someone buys through your post</div>
         </div>
         ${si.editing?`<div class="sc-edit-form">
           <input class="sc-field" value="${attr(it.name)}" placeholder="Name" oninput="scUpdateField(${idx},'name',this.value)">
