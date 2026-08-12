@@ -2369,9 +2369,9 @@ async def toggle_like(post_id: str, request: Request):
         conn.commit()
 
         total_likes = conn.execute(
-            "SELECT COUNT(*) FROM post_likes WHERE post_id = ?",
+            "SELECT COUNT(*) AS n FROM post_likes WHERE post_id = ?",
             (post_id,),
-        ).fetchone()[0]
+        ).fetchone()["n"]
 
     # Emit notification to post owner when a new like is added (not on unlike).
     # SF-004: direct function call — no HTTP to avoid ASGI deadlock.
@@ -2396,9 +2396,9 @@ async def get_post(post_id: str):
 
     with _get_db() as conn:
         db_likes = conn.execute(
-            "SELECT COUNT(*) FROM post_likes WHERE post_id = ?",
+            "SELECT COUNT(*) AS n FROM post_likes WHERE post_id = ?",
             (post_id,),
-        ).fetchone()[0]
+        ).fetchone()["n"]
 
     return {**post, "likes": db_likes}
 
@@ -2457,10 +2457,10 @@ async def get_user_stats(user_id: str):
         placeholders = ",".join("?" * len(post_ids))
         with _get_db() as conn:
             row = conn.execute(
-                f"SELECT COUNT(*) FROM post_likes WHERE post_id IN ({placeholders})",
+                f"SELECT COUNT(*) AS n FROM post_likes WHERE post_id IN ({placeholders})",
                 post_ids,
             ).fetchone()
-            total_likes = row[0] if row else 0
+            total_likes = row["n"] if row else 0
 
     return {
         "user_id": user_id,
@@ -2505,8 +2505,8 @@ async def toggle_follow(user_id: str, request: Request):
             following = True
 
         follow_delta = db.execute(
-            "SELECT COUNT(*) FROM follows WHERE followed_user_id=?", (user_id,)
-        ).fetchone()[0]
+            "SELECT COUNT(*) AS n FROM follows WHERE followed_user_id=?", (user_id,)
+        ).fetchone()["n"]
 
     base_followers = _follower_count(target.get("followers"))
     return {
@@ -2699,8 +2699,8 @@ async def add_comment(post_id: str, request: Request):
     user_key = (request.client.host if request.client else None) or "anon"
     with _get_db() as db:
         count = db.execute(
-            "SELECT COUNT(*) FROM comments WHERE post_id = ?", (post_id,)
-        ).fetchone()[0]
+            "SELECT COUNT(*) AS n FROM comments WHERE post_id = ?", (post_id,)
+        ).fetchone()["n"]
         comment = {
             "id": f"c_{post_id}_{count}",
             "user_key": user_key,
@@ -2733,9 +2733,9 @@ async def get_comments(post_id: str, limit: int = 20, offset: int = 0):
             (post_id, limit, offset),
         ).fetchall()
         total = db.execute(
-            "SELECT COUNT(*) FROM comments WHERE post_id = ? AND status = 'visible'",
+            "SELECT COUNT(*) AS n FROM comments WHERE post_id = ? AND status = 'visible'",
             (post_id,),
-        ).fetchone()[0]
+        ).fetchone()["n"]
     return {
         "items": [dict(r) for r in rows],
         "total": total,
@@ -2916,9 +2916,9 @@ async def list_daily_logs(request: Request, limit: int = 60, offset: int = 0):
             (user_key, limit, offset),
         ).fetchall()
         total = conn.execute(
-            "SELECT COUNT(*) FROM daily_logs WHERE user_key = ?",
+            "SELECT COUNT(*) AS n FROM daily_logs WHERE user_key = ?",
             (user_key,),
-        ).fetchone()[0]
+        ).fetchone()["n"]
 
     return {
         "items": [_daily_log_row_to_dict(r) for r in rows],
@@ -2957,8 +2957,8 @@ def _emit_notification(user_id: str, notif_type: str, from_key: str, post_id: st
         return
     with _get_db() as db:
         count = db.execute(
-            "SELECT COUNT(*) FROM notifications WHERE user_id = ?", (user_id,)
-        ).fetchone()[0]
+            "SELECT COUNT(*) AS n FROM notifications WHERE user_id = ?", (user_id,)
+        ).fetchone()["n"]
         notif_id = f"n_{user_id}_{count}"
         created_at = datetime.datetime.utcnow().isoformat()
         db.execute(
@@ -2987,11 +2987,11 @@ async def get_notifications(user_id: str, limit: int = 20, unread_only: bool = F
         rows = db.execute(query, params).fetchall()
 
         total = db.execute(
-            "SELECT COUNT(*) FROM notifications WHERE user_id = ?", (user_id,)
-        ).fetchone()[0]
+            "SELECT COUNT(*) AS n FROM notifications WHERE user_id = ?", (user_id,)
+        ).fetchone()["n"]
         unread = db.execute(
-            "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND read = 0", (user_id,)
-        ).fetchone()[0]
+            "SELECT COUNT(*) AS n FROM notifications WHERE user_id = ? AND read = 0", (user_id,)
+        ).fetchone()["n"]
 
     items = [dict(r) for r in rows]
     for item in items:
@@ -3963,9 +3963,9 @@ async def wishlist_toggle(request: Request, body: WishlistToggleRequest):
         db.commit()
 
         count = db.execute(
-            "SELECT COUNT(*) FROM wishlist WHERE user_key = ?",
+            "SELECT COUNT(*) AS n FROM wishlist WHERE user_key = ?",
             (user_key,),
-        ).fetchone()[0]
+        ).fetchone()["n"]
 
     logger.info("wishlist_toggle: user=%s item_id=%s saved=%s count=%d", user_key, item_id, saved, count)
     return {"saved": saved, "count": count}
@@ -4646,9 +4646,9 @@ async def log_wear_event(request: Request, body: WearLogRequest):
         db.commit()
 
         total_wears = db.execute(
-            "SELECT COUNT(*) FROM wear_log WHERE user_key = ?",
+            "SELECT COUNT(*) AS n FROM wear_log WHERE user_key = ?",
             (user_key,),
-        ).fetchone()[0]
+        ).fetchone()["n"]
 
     logger.info("wear_log: user=%s item_id=%s total_wears=%d", user_key, item_id, total_wears)
     return {"logged": True, "total_wears": total_wears}
@@ -4677,9 +4677,9 @@ async def analytics_summary(request: Request):
 
     with _get_db() as db:
         total_rows = db.execute(
-            "SELECT COUNT(*) FROM wear_log WHERE user_key = ?",
+            "SELECT COUNT(*) AS n FROM wear_log WHERE user_key = ?",
             (user_key,),
-        ).fetchone()[0]
+        ).fetchone()["n"]
 
         # No real data yet — return demo values so the UI is never empty.
         if total_rows == 0:
@@ -4721,15 +4721,15 @@ async def analytics_summary(request: Request):
         # --- Rewear score: % of distinct items worn >= 2 times ---
         reworn_rows = db.execute(
             """
-            SELECT COUNT(*) FROM (
+            SELECT COUNT(*) AS n FROM (
                 SELECT item_id FROM wear_log
                 WHERE user_key = ?
                 GROUP BY item_id
                 HAVING COUNT(*) >= 2
-            )
+            ) AS sub
             """,
             (user_key,),
-        ).fetchone()[0]
+        ).fetchone()["n"]
         rewear_score = round((reworn_rows / total_distinct) * 100) if total_distinct else 0
 
         # --- Most worn item ---
@@ -5072,12 +5072,12 @@ async def analytics_seasons_archive(request: Request):
 
             count_row = db.execute(
                 """
-                SELECT COUNT(*) FROM wear_log
+                SELECT COUNT(*) AS n FROM wear_log
                 WHERE user_key = ? AND worn_at >= ? AND worn_at <= ?
                 """,
                 (user_key, start_iso, end_iso),
             ).fetchone()
-            outfit_count = count_row[0] if count_row else 0
+            outfit_count = count_row["n"] if count_row else 0
 
             score: Optional[int] = None
             if outfit_count > 0:

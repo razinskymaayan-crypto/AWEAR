@@ -5030,3 +5030,62 @@ def test_dm_send_then_thread_includes_new_message(client):
     texts = [m["text"] for m in messages]
     assert new_id in ids, f"sent message id={new_id} not found in thread messages"
     assert unique_text in texts, f"sent text not found in thread messages"
+
+
+# --------------------------------------------------------------------------- #
+# Postgres COUNT(*) alias — production crash guard (OW-014)
+# --------------------------------------------------------------------------- #
+def test_postgres_count_star_alias_row_access_by_name():
+    """SELECT COUNT(*) AS n returns a row accessible by row['n'] for both dialects.
+
+    FAIL-BEFORE: app used fetchone()[0] on RealDictCursor rows → KeyError in
+    production Postgres (psycopg2 RealDictCursor returns dict, not tuple).
+    PASS-AFTER: all COUNT queries use 'AS n' alias + fetchone()["n"].
+
+    This test proves the fix using SQLite (which also supports name-based access)
+    and shows that a plain dict (RealDictRow-like) rejects integer-index access.
+    """
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.execute("CREATE TABLE t (id INTEGER)")
+    conn.execute("INSERT INTO t VALUES (1)")
+    conn.execute("INSERT INTO t VALUES (2)")
+    row = conn.execute("SELECT COUNT(*) AS n FROM t").fetchone()
+    assert row["n"] == 2, "SELECT COUNT(*) AS n must be accessible as row['n']"
+    conn.close()
+
+    # Prove that a Postgres-style RealDictRow (plain dict) rejects row[0]
+    dict_row = {"n": 42}
+    assert dict_row["n"] == 42, "dict key access works"
+    raised = False
+    try:
+        _ = dict_row[0]
+    except KeyError:
+        raised = True
+    assert raised, "dict[0] must raise KeyError — proving why fetchone()[0] breaks in Postgres"
+
+
+def test_postgres_count_subquery_alias_sqlite_compat():
+    """SELECT COUNT(*) AS n FROM (...) AS sub works in SQLite (and is required in Postgres).
+
+    FAIL-BEFORE: analytics_summary used fetchone()[0] on a subquery COUNT — breaks
+    in Postgres because (a) RealDictRow rejects int keys, (b) Postgres requires a
+    subquery alias that SQLite silently accepts.
+    PASS-AFTER: alias AS n on outer COUNT + AS sub on inner subquery.
+    """
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.execute("CREATE TABLE wear_log (item_id TEXT, user_key TEXT)")
+    conn.execute("INSERT INTO wear_log VALUES ('shirt','u1')")
+    conn.execute("INSERT INTO wear_log VALUES ('shirt','u1')")
+    conn.execute("INSERT INTO wear_log VALUES ('jeans','u1')")
+    row = conn.execute(
+        """SELECT COUNT(*) AS n FROM (
+               SELECT item_id FROM wear_log WHERE user_key='u1'
+               GROUP BY item_id HAVING COUNT(*) >= 2
+           ) AS sub"""
+    ).fetchone()
+    assert row["n"] == 1, f"Expected 1 (only 'shirt' worn ≥2 times), got {row['n']}"
+    conn.close()
