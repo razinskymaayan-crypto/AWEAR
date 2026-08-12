@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-11, run 82)
-- **Task**: fix(home) — DS-004/DS-008 + quick-actions 13→6 + outfit card 4:5 ratio. Gabbana 8/10 PASS.
-- **Done**: static/app.css + static/app.js. rgba(255,255,255,.06) border → var(--line,#2e2836); › typography → icon('chevronRight',15); 13 quick-actions trimmed to 6 (Outfit AI/Shopping/Abigail/Stylists/Analytics/Wallet); .ho-top fixed 164px → aspect-ratio:4/5. check-render green. Commit 66aad7b.
-- **Next**: next unfinished MASTER_PLAN/INBOX item; DEFECTS.md if new items appear. OW-011: do not revisit home quick-actions or look-grid this run.
-- **Prior runs**: run 81 — look grid edit mode da98dbd; run 80 — DS light-mode P1+P2 polish 350b0c4; run 79 — DS polish P1 fixes 58459c2; run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead.
+## Mark lane — last run (2026-08-12, run 83)
+- **Task**: feat(look-sheet) — per-item closet match % chip on each look-sheet row. Gabbana 8.5/10 PASS.
+- **Done**: static/app.css + static/app.js. wardrobe load hoisted before rows map; per-item `calcCompatScore()` + `sl-row-match` chip (green/amber/muted by tier, icon('sparkle',11), gap var(--space-1,4px)). check-render green. Commit c9a9b6d.
+- **Next**: next unfinished MASTER_PLAN/INBOX item; DEFECTS.md if new items appear. OW-011: do not revisit look-sheet match chips this run.
+- **Prior runs**: run 82 — home DS-004/DS-008 + quick-actions 13→6 + outfit 4:5 66aad7b; run 81 — look grid edit mode da98dbd; run 80 — DS light-mode P1+P2 350b0c4; run 79 — DS polish P1 58459c2; run 78 — closet portrait tiles 1472c6f; run 77 — lc-del + shop-pill b18f05a.
 
 ## Ayalon lane — last run (2026-08-12, run 68)
 - **Task**: DoD gap fill — add POSTGRES-COUNT-FIX entry to DOD_AUDIT.md (steve run 46, 15 Postgres crash sites, missing despite run-66 DoD sweep).
