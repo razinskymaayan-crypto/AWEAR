@@ -22,6 +22,11 @@ ERRORS (any error -> exit code 1):
   6. Post field validation (required strings, likes int >= 0, items_tagged list)
   7. Profile field validation (required strings)
 
+ERRORS (continued):
+ 11. image_url_source color consistency: CDN filename color segment must not
+     contradict declared product color (e.g., BEIGE URL for a black hat).
+     Catches the 2026-08-06 rejection class (wrong-color variant images).
+
 WARNINGS (reported, do not fail the run):
   8. Fragment consistency: _products_*.json vs merged products.json
      (cross-fragment dup ids, ids missing either direction, field drift)
@@ -257,6 +262,110 @@ def check_duplicate_image_urls(products):
     report_check("duplicate image_url across products", issues, is_warning=True)
 
 
+_CDN_COLOR_CANON = {
+    "black": "black", "blk": "black",
+    "white": "white", "ivory": "white", "cream": "white", "ecru": "white",
+    "navy": "navy", "nvy": "navy",
+    "royalblue": "royal_blue", "royal": "royal_blue",
+    "blue": "blue", "cobalt": "blue", "indigo": "blue", "denim": "blue",
+    "red": "red", "crimson": "red", "scarlet": "red", "cherry": "red",
+    "beige": "beige", "sand": "beige", "camel": "beige", "nude": "beige",
+    "brown": "brown", "chocolate": "brown", "cognac": "brown", "chestnut": "brown",
+    "grey": "grey", "gray": "grey", "charcoal": "grey", "ash": "grey", "heather": "grey",
+    "green": "green", "forest": "green", "hunter": "green", "emerald": "green",
+    "olive": "olive",
+    "khaki": "khaki",
+    "pink": "pink", "blush": "pink", "flamingo": "pink",
+    "rose": "pink",
+    "purple": "purple", "plum": "purple", "lavender": "purple", "violet": "purple",
+    "orange": "orange", "rust": "orange",
+    "yellow": "yellow", "mustard": "yellow", "gold": "yellow", "lemon": "yellow",
+    "hazyindigo": "grey_blue",
+}
+
+_DECL_COLOR_CANON = dict(_CDN_COLOR_CANON)
+_DECL_COLOR_CANON.update({
+    "royalblue": "royal_blue",
+    "silver": "grey",
+})
+
+
+def _cdn_colors_from_url(url):
+    """Extract canonical color names from a CDN image URL filename.
+
+    Splits the filename by underscores (after stripping dashes) and matches
+    each segment against the colour canon. Also checks adjacent-segment
+    compounds (e.g. ROYAL+BLUE → royalblue).
+    Returns a set of canonical names, empty if none recognised.
+    """
+    fname = url.split("/")[-1].split("?")[0]
+    clean = fname.replace("-", "").replace(".", "_")
+    parts = clean.split("_")
+    found = set()
+    for seg in parts:
+        canon = _CDN_COLOR_CANON.get(seg.lower())
+        if canon:
+            found.add(canon)
+    for i in range(len(parts) - 1):
+        compound = (parts[i] + parts[i + 1]).lower()
+        canon = _CDN_COLOR_CANON.get(compound)
+        if canon:
+            found.add(canon)
+    return found
+
+
+def _decl_color_canon(color):
+    """Map a declared product color string to a canonical name.
+
+    Returns None when:
+    - it's a multi-colour declaration (contains '/')
+    - the primary word is not in the canon (exotic / custom colour name)
+    """
+    c = color.lower().strip()
+    if "/" in c:
+        return None
+    phrase = c.replace(" ", "").replace("-", "")
+    if phrase in _DECL_COLOR_CANON:
+        return _DECL_COLOR_CANON[phrase]
+    first = c.split()[0].replace("-", "") if c else ""
+    return _DECL_COLOR_CANON.get(first)
+
+
+def check_image_color_consistency(products):
+    """Check 11: image_url_source filename must not contradict the declared product color.
+
+    Shopify / Kangol CDN filenames commonly embed the colour variant as an
+    uppercase segment (e.g. 9720BC_BEIGE_xxx.jpg, K3793_RED.jpg).  This
+    detector flags when the URL's encoded colour and the product's declared
+    colour map to different canonical colour families — the exact class of bug
+    caught in the 2026-08-06 rejection (four Kangol hats showing wrong-colour
+    variant images).  OW-016: define the class, build the detector.
+    """
+    issues = []
+    for p in products:
+        src = (p.get("image_url_source") or "").strip()
+        if not src.startswith("http"):
+            continue
+        color = (p.get("color") or "").strip()
+        if not color:
+            continue
+        declared = _decl_color_canon(color)
+        if declared is None:
+            continue
+        url_colors = _cdn_colors_from_url(src)
+        if not url_colors:
+            continue
+        if declared not in url_colors:
+            fname = src.split("/")[-1].split("?")[0][:70]
+            issues.append(
+                "product %s (%r): declared color %r (canon=%r) not in URL colors %s — "
+                "image_url_source may show wrong colour variant: %s"
+                % (p.get("id"), (p.get("name") or "")[:35], color, declared,
+                   sorted(url_colors), fname)
+            )
+    report_check("image_url_source color consistency", issues)
+
+
 def check_unreferenced_products(posts, product_ids):
     """Check 10: products referenced by zero posts -- count only, visibility."""
     referenced = set()
@@ -309,6 +418,7 @@ def main():
     if products is not None:
         check_fragments(data_dir, products)
         check_duplicate_image_urls(products)
+        check_image_color_consistency(products)
     if posts is not None and products is not None:
         check_unreferenced_products(posts, product_ids)
 

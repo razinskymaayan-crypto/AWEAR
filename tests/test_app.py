@@ -2189,6 +2189,62 @@ def test_data_integrity_cli_detects_invalid_user_id(tmp_path):
     )
 
 
+def test_data_integrity_cli_detects_wrong_color_image_url(tmp_path):
+    """scripts/data_integrity.py exits 1 when image_url_source encodes a different colour.
+
+    FAIL-BEFORE (2026-08-06 rejection): no detector — 4 Kangol hat products had
+    BEIGE/HAZYINDIGO/BLACK CDN filenames while declared black/navy/red; the gate
+    reviewer caught it manually only after the PR landed.
+    PASS-AFTER: exit 1 on colour contradiction, output names the product.
+    OW-016: define the class (wrong-colour CDN variant), build the detector.
+    """
+    import subprocess
+    import sys
+    wrong_color_product = {
+        **_VALID_PRODUCT,
+        "color": "black",
+        "image_url_source": "https://cdn.example.com/files/9720BC_BEIGE_front.jpg",
+    }
+    data_dir = _write_data_dir(tmp_path, products=[wrong_color_product])
+    result = subprocess.run(
+        [sys.executable, "scripts/data_integrity.py", "--data-dir", data_dir],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 1, (
+        "Expected exit 1 for wrong-colour image_url_source but got 0:\n" + result.stdout
+    )
+    assert "p1" in result.stdout, (
+        "Error output should name the offending product; got:\n" + result.stdout
+    )
+
+
+def test_data_integrity_cli_correct_color_image_url_passes(tmp_path):
+    """scripts/data_integrity.py exits 0 when image_url_source colour matches declared colour.
+
+    Companion to the wrong-colour test — verifies the detector does not false-positive
+    on a properly matched product (e.g. prod_ht_009: black hat, BLACK in CDN filename).
+    OW-016: detector must be bidirectional (true-positive + true-negative proven).
+    """
+    import subprocess
+    import sys
+    correct_color_product = {
+        **_VALID_PRODUCT,
+        "color": "black",
+        "image_url_source": "https://cdn.example.com/files/9720BC_BLACK_front.jpg",
+    }
+    data_dir = _write_data_dir(tmp_path, products=[correct_color_product])
+    result = subprocess.run(
+        [sys.executable, "scripts/data_integrity.py", "--data-dir", data_dir],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, (
+        "Expected exit 0 for correct-colour image_url_source but got non-zero:\n"
+        + result.stdout + result.stderr
+    )
+
+
 def test_dm_seed_peer_ids_all_resolve_to_profiles():
     """Every peer_id in app._DM_SEED must exist in profiles.json.
 
