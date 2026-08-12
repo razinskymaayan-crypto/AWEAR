@@ -17,18 +17,18 @@
 - **Next**: next unfinished MASTER_PLAN/INBOX item; DEFECTS.md if new items appear. OW-011: do not revisit home quick-actions or look-grid this run.
 - **Prior runs**: run 81 — look grid edit mode da98dbd; run 80 — DS light-mode P1+P2 polish 350b0c4; run 79 — DS polish P1 fixes 58459c2; run 78 — closet portrait tiles + DS polish 1472c6f; run 77 — lc-del delete button + shop-pill icon size b18f05a; run 76 — lc-cap AI captions on look grid e136ead.
 
-## Ayalon lane — last run (2026-08-12, run 67)
-- **Task**: Sync DEMO_SCRIPT + PITCH_DECK to correct test count (311) and document run-66 ships.
-- **Done**: docs/DEMO_SCRIPT.md (footnote items 37–40 + test count 305→311); docs/PITCH_DECK.md (new 2026-08-12 update entry + test count 303→311). Commit 5b8a036. check-render PASS.
+## Ayalon lane — last run (2026-08-12, run 68)
+- **Task**: DoD gap fill — add POSTGRES-COUNT-FIX entry to DOD_AUDIT.md (steve run 46, 15 Postgres crash sites, missing despite run-66 DoD sweep).
+- **Done**: docs/DOD_AUDIT.md (POSTGRES-COUNT-FIX entry with line-level grep evidence at 15 app.py sites). check-render PASS.
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-12.
-- **Prior runs**: run 66 — DoD 7 ships mark-80→82 + steve-46→48 2eaff75; run 65 — DEMO_SCRIPT Appendix A (Marketplace bonus beat) 1e291d8; run 64 — DEMO_SCRIPT sync f7b928a; run 63 — DOD_AUDIT 6 entries mark-76→79 + steve catalog/backend c7e4d31; run 62 — DoD 7 entries mark-70→75 + steve-41/42 6007b9c.
+- **Prior runs**: run 67 — DEMO_SCRIPT + PITCH_DECK test count 305→311 5b8a036; run 66 — DoD 7 ships mark-80→82 + steve-46→48 2eaff75; run 65 — DEMO_SCRIPT Appendix A (Marketplace bonus beat) 1e291d8; run 64 — DEMO_SCRIPT sync f7b928a; run 63 — DOD_AUDIT 6 entries mark-76→79 + steve catalog/backend c7e4d31.
 
 ## Steve lane — last run (2026-08-12, run 48)
 - **Task**: fix(data) — prod_ht_019 color mismatch (declared "navy" but CDN image is ROYAL-BLUE) + OW-016 CDN color-consistency detector in data_integrity.py. Catches the 2026-08-06 rejection class automatically before every merge.
 - **Done**: scripts/data_integrity.py (check_image_color_consistency + _CDN_COLOR_CANON), static/data/products.json + _products_hats_accessories.json (prod_ht_019 navy→royal blue), tests/test_app.py (2 new pytests fail-before/pass-after). Commit a950a87. data_integrity.py PASS (all 200 products clean). check-render PASS.
 - **Next**: INBOX/DEFECTS first; remaining MASTER_PLAN/INBOX items.
 - **Prior runs**: run 46 — Postgres COUNT crash fix 8528783; run 45 — posts enrichment 174→200 tags; run 44 — posts enrichment 79→174/200 168c90f; run 43 — For You sort_by=match 32b3369; run 42 — posts enrichment +18 tags.
-- **Status**: Commerce fully shipped. 309 tests. 94% route coverage (68/72 routes OK, 4 ext-dep expected). Feed catalog: 200/200 products (100%). Search now matches on tags + search_query.
+- **Status**: Commerce fully shipped. 311 tests (test_app.py) + 1 (test_data_integrity.py) = 312 total. 94% route coverage (68/72 routes OK, 4 ext-dep expected). Feed catalog: 200/200 products (100%). Search now matches on tags + search_query.
 
 ## Phase status
 | Phase | Status |
