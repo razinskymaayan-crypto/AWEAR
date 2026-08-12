@@ -2534,7 +2534,8 @@ async def get_follow_status(user_id: str, request: Request):
 async def search(q: str, limit: int = 20):
     """
     Cross-entity search. q = query string.
-    Searches products (name, brand, category), posts (caption, tags), profiles (display_name).
+    Searches products (name, brand, category, color, search_query, subcategory, description, tags),
+    posts (caption, tags), profiles (display_name, username).
     Returns combined results with entity_type field.
     """
     if not q or len(q.strip()) < 2:
@@ -2543,10 +2544,14 @@ async def search(q: str, limit: int = 20):
     q_lower = q.lower().strip()
     results = []
 
-    # Products
+    # Products — search name/brand/category/color plus search_query and tags so
+    # niche style terms ("vintage", "streetwear", "cottagecore") surface correctly.
     for p in _products_cache:
-        if any(q_lower in str(p.get(f, "")).lower()
-               for f in ["name", "brand", "category", "color"]):
+        scalar_hit = any(q_lower in str(p.get(f, "")).lower()
+                         for f in ["name", "brand", "category", "color",
+                                   "search_query", "subcategory", "description"])
+        tag_hit = any(q_lower in t.lower() for t in (p.get("tags") or []))
+        if scalar_hit or tag_hit:
             results.append({**p, "entity_type": "product"})
 
     # Posts

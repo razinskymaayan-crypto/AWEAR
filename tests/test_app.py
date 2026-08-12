@@ -2617,6 +2617,34 @@ def test_search_missing_query_400(client):
     assert r.status_code in (400, 422)
 
 
+def test_search_product_found_by_tag(client):
+    """FAIL-BEFORE: 'streetwear' only in prod_ss_003 tags[], not name/brand/category/color.
+    PASS-AFTER: expanded haystack includes tags so the product surfaces.
+    """
+    r = client.get("/api/search", params={"q": "streetwear"})
+    assert r.status_code == 200
+    body = r.json()
+    product_ids = [it["id"] for it in body["items"] if it.get("entity_type") == "product"]
+    assert "prod_ss_003" in product_ids, (
+        "prod_ss_003 (Lazy Tee) has 'streetwear' in tags[] but not in name — "
+        "must be found by tag search"
+    )
+
+
+def test_search_product_found_by_search_query(client):
+    """FAIL-BEFORE: 'flexfit' only in prod_ht_009 search_query, not name/brand/category/color.
+    PASS-AFTER: search_query is included in the haystack so the product surfaces.
+    """
+    r = client.get("/api/search", params={"q": "flexfit"})
+    assert r.status_code == 200
+    body = r.json()
+    product_ids = [it["id"] for it in body["items"] if it.get("entity_type") == "product"]
+    assert "prod_ht_009" in product_ids, (
+        "prod_ht_009 (Cotton Twill Army Cap) has 'flexfit' in search_query but not in name — "
+        "must be found by search_query search"
+    )
+
+
 # ---------------------------------------------------------------------------
 # Profile detail — GET /api/profiles/{user_id}
 # FAIL-BEFORE: no test existed. PASS-AFTER: 200 + 404 proven.
