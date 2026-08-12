@@ -86,6 +86,10 @@ Point below the hero: **Chat with Abigail** ("Ask your stylist") and **Style Swi
 
 > 💡 *CATALOG-ENRICHMENT ✅ **shipped** commits `168c90f`+`19a331e` (2026-08-11, steve lane): All **200/200 products** in the catalog are now tagged in feed posts — was 79/200 at run-61. Every product in the app is now reachable from the feed. No demo flow change; the feed just has richer content coverage and investors won't encounter a post with untagged items.*
 
+> 💡 *FEED-REAL-PHOTOS-7 ✅ **shipped** commit `199a35d` (2026-08-12, mark lane): Feed now has **7 real demo-user photos** (was 4) — Carmel/look2, Tamar/look3, Maayan/look2 added. The "real people with their own photos" claim in Beat-1 is now backed by 7 distinct real looks. Gabbana 8/10 PASS.*
+
+> 💡 *BROWSE-IMAGE-URL (Store tab) ✅ **shipped** commit `acfc368` (2026-08-12, mark lane): If the investor taps **Store** (second icon in the bottom nav) at any point, they'll see **real product images** on every card — was blank (loremflickr.com CDN too slow for demo). No demo beat change; this is defensive coverage so an off-script tap into Store doesn't embarrass the demo.*
+
 ---
 
 ## 5. THE WOW — tap one item (2:30 → 3:25) — **the centerpiece**
