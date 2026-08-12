@@ -23,12 +23,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg USD/token peg UX — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-11.
 - **Prior runs**: run 64 — DEMO_SCRIPT sync f7b928a; run 63 — DOD_AUDIT 6 entries mark-76→79 + steve catalog/backend c7e4d31; run 62 — DoD 7 entries mark-70→75 + steve-41/42 6007b9c; run 61 — PITCH_DECK + DEMO_SCRIPT sync 0032a50; run 60 — PITCH_DECK sync c12c121; run 59 — DEMO_SCRIPT sync 492183f.
 
-## Steve lane — last run (2026-08-11, run 45)
-- **Task**: feat(data) — posts enrichment: 26 remaining products tagged, 174→200/200 (100% catalog coverage).
-- **Done**: static/data/posts.json only (sam IC). Semantic matching: 1 free-slot append + 25 swaps (replaced items appearing 2+ posts, maintaining their coverage). All categories (CK/Ralph Lauren basics, Acne Studios, Carhartt cargo, Stüssy/Kangol hats, North Face/Rains/Columbia outerwear). data_integrity.py 0 warnings/errors. check-render PASS.
-- **Next**: INBOX/DEFECTS first; backend test coverage (94%→higher, 4 uncovered routes); Supabase/Postgres migration (DECISIONS #17).
-- **Prior runs**: run 44 — posts enrichment 79→174/200 168c90f; run 43 — For You sort_by=match 32b3369; run 42 — posts enrichment +18 tags; run 41 — posts enrichment +5 fc5edea; run 40 — skimlinks lifecycle test a2051a7; run 39 — complementarity matrix 9b203aa.
-- **Status**: Commerce fully shipped. 305 tests. 94% route coverage (68/72 routes OK, 4 ext-dep expected). Feed catalog: 200/200 products exposed (100%).
+## Steve lane — last run (2026-08-12, run 46)
+- **Task**: fix(db) — Postgres COUNT(*) crash: 15 fetchone()[0] → fetchone()["n"] with AS n alias; subquery also gets AS sub alias. 2 new regression pytests.
+- **Done**: app.py (15 sites) + tests/test_app.py (2 new tests). Commit 8528783. check-render PASS, syntax OK.
+- **Next**: INBOX/DEFECTS first; Supabase/Postgres migration DoD verify (all components now in place — test on real DB); remaining MASTER_PLAN/INBOX items.
+- **Prior runs**: run 45 — posts enrichment 174→200 tags; run 44 — posts enrichment 79→174/200 168c90f; run 43 — For You sort_by=match 32b3369; run 42 — posts enrichment +18 tags; run 41 — +5 fc5edea.
+- **Status**: Commerce fully shipped. 307 tests. 94% route coverage (68/72 routes OK, 4 ext-dep expected). Feed catalog: 200/200 products (100%). Postgres COUNT crash fixed.
 
 ## Phase status
 | Phase | Status |
