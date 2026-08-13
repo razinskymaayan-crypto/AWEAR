@@ -5318,3 +5318,58 @@ def test_posts_sort_by_match_graceful_empty_closet(client):
         assert pct <= 55, (
             f"empty closet yields no complement matches — score must be <= 55 (base), got {pct}"
         )
+
+
+# ---------------------------------------------------------------------------
+# Color-aware wardrobe match — OW-014 regression tests
+# FAIL-BEFORE: _wardrobe_match_score had no closet_colors param; same-family
+# color match returned same score as a random color.
+# ---------------------------------------------------------------------------
+
+def test_wardrobe_match_same_color_family_lifts_score():
+    """Same color family in closet yields a higher score than no color info.
+
+    FAIL-BEFORE: closet_colors param did not exist; color had no effect on score.
+    PASS-AFTER: prod with navy color, closet contains navy → +7 over base.
+    """
+    import app as _appmod
+    prod = {"category": "top", "color": "navy"}
+    # No color info: only category bonus (no complement match → base 55)
+    score_no_color = _appmod._wardrobe_match_score(prod, set(), 0, frozenset())
+    assert score_no_color == 55, f"empty closet base must be 55, got {score_no_color}"
+
+    # With navy in closet colors → +7
+    score_color = _appmod._wardrobe_match_score(prod, set(), 0, frozenset({"navy"}))
+    assert score_color == 62, f"navy match should give 55+7=62, got {score_color}"
+    assert score_color > score_no_color
+
+
+def test_wardrobe_match_neutral_product_bonus():
+    """A neutral-color product (black) gets a +5 bonus when closet has any colors.
+
+    FAIL-BEFORE: closet_colors param did not exist; neutral products scored same as unknown.
+    PASS-AFTER: black (neutral) product scores 5 higher than unknown-color product.
+    """
+    import app as _appmod
+    neutral_prod = {"category": "top", "color": "black"}
+    unknown_prod  = {"category": "top", "color": "neon-chartreuse-xyz"}  # not in any family
+    closet_colors = frozenset({"blue"})
+
+    score_neutral = _appmod._wardrobe_match_score(neutral_prod, set(), 0, closet_colors)
+    score_unknown = _appmod._wardrobe_match_score(unknown_prod, set(), 0, closet_colors)
+
+    assert score_neutral == 60, f"black (neutral) + non-empty closet → 55+5=60, got {score_neutral}"
+    assert score_neutral > score_unknown, "neutral color must outscore an unrecognized color"
+
+
+def test_wardrobe_match_empty_closet_colors_unchanged():
+    """Empty frozenset() for closet_colors preserves the existing 55 base invariant.
+
+    FAIL-BEFORE: n/a (param didn't exist); this guards the backward-compat guarantee.
+    PASS-AFTER: same score as before the color change when closet_colors is empty.
+    """
+    import app as _appmod
+    prod = {"category": "top", "color": "navy"}
+    # No color info at all: score must still be exactly 55
+    score = _appmod._wardrobe_match_score(prod, set(), 0, frozenset())
+    assert score == 55, f"empty closet_colors must yield base 55, got {score}"

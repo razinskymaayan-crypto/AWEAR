@@ -2060,7 +2060,7 @@ def _color_family(color: str) -> str:
     return _COLOR_FAMILY_LOOKUP.get(color.lower().strip(), color.lower().strip())
 
 
-def _wardrobe_match_score(product: dict, closet_cats: set, closet_count: int) -> int:
+def _wardrobe_match_score(product: dict, closet_cats: set, closet_count: int, closet_colors: frozenset = frozenset()) -> int:
     """Compute 0-95 wardrobe compatibility for a product vs. a user's closet.
 
     Pure computation — callers are responsible for the DB fetch. Used by both
@@ -2075,6 +2075,16 @@ def _wardrobe_match_score(product: dict, closet_cats: set, closet_count: int) ->
         score += 5
     if closet_count >= 10:
         score += 3
+    # Color bonus: only when closet has color info (avoids changing empty-closet base = 55 invariant)
+    _NEUTRAL_FAMILIES = frozenset({"black", "white", "grey", "beige"})
+    if closet_colors:
+        prod_fam = _color_family(product.get("color") or "")
+        if prod_fam in closet_colors:
+            score += 7      # same color family in closet — cohesive palette
+        elif prod_fam in _NEUTRAL_FAMILIES:
+            score += 5      # neutral product goes with any closet
+        elif closet_colors & _NEUTRAL_FAMILIES:
+            score += 3      # neutral base in closet accepts any color addition
     return min(score, 95)
 
 
@@ -2111,16 +2121,18 @@ async def get_products(
         try:
             with _get_db() as db:
                 rows = db.execute(
-                    "SELECT category FROM closet_items WHERE user_key = ? LIMIT 100",
+                    "SELECT category, color FROM closet_items WHERE user_key = ? LIMIT 100",
                     (user_key,),
                 ).fetchall()
             closet_cats = {(r["category"] or "").lower() for r in rows}
             closet_count = len(rows)
+            closet_colors = frozenset(_color_family(r["color"] or "") for r in rows if r["color"])
         except Exception:
             closet_cats = set()
             closet_count = 0
+            closet_colors = frozenset()
         products = sorted(
-            [{**p, "match_pct": _wardrobe_match_score(p, closet_cats, closet_count)} for p in products],
+            [{**p, "match_pct": _wardrobe_match_score(p, closet_cats, closet_count, closet_colors)} for p in products],
             key=lambda p: p["match_pct"],
             reverse=True,
         )
@@ -2169,7 +2181,8 @@ async def product_wardrobe_match(product_id: str, request: Request, user_id: Opt
     closet = [{"name": r["name"], "category": r["category"], "color": r["color"]} for r in rows]
 
     closet_cats = {(it.get("category") or "").lower() for it in closet}
-    match_pct = _wardrobe_match_score(product, closet_cats, len(closet))
+    closet_colors = frozenset(_color_family(it.get("color") or "") for it in closet if it.get("color"))
+    match_pct = _wardrobe_match_score(product, closet_cats, len(closet), closet_colors)
 
     complements = set(_WARDROBE_COMPLEMENTS.get((product.get("category") or "").lower(), []))
     matched_cats = complements & closet_cats
@@ -2365,14 +2378,16 @@ async def get_posts(
 
         closet_cats: set = set()
         closet_count = 0
+        closet_colors: frozenset = frozenset()
         try:
             with _get_db() as db:
                 rows = db.execute(
-                    "SELECT category FROM closet_items WHERE user_key = ? LIMIT 100",
+                    "SELECT category, color FROM closet_items WHERE user_key = ? LIMIT 100",
                     (viewer_key,),
                 ).fetchall()
             closet_cats = {(r["category"] or "").lower() for r in rows}
             closet_count = len(rows)
+            closet_colors = frozenset(_color_family(r["color"] or "") for r in rows if r["color"])
         except Exception:
             pass
 
@@ -2381,7 +2396,7 @@ async def get_posts(
         def _post_match(post: dict) -> int:
             tagged = post.get("items_tagged") or []
             scores = [
-                _wardrobe_match_score(product_map[pid], closet_cats, closet_count)
+                _wardrobe_match_score(product_map[pid], closet_cats, closet_count, closet_colors)
                 for pid in tagged
                 if pid in product_map
             ]
