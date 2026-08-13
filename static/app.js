@@ -590,16 +590,16 @@
     const chips = matchNames.slice(0,3)
       .map(m=>`<span class="match-chip" style="border-color:${tierColor}">${esc(m)}</span>`)
       .join('');
-    const R = 34, LEN = +(2 * Math.PI * R).toFixed(2);
+    const R = 42, LEN = +(2 * Math.PI * R).toFixed(2);
     return `<div class="match-band match-band-${tier}">
       <div class="match-band-ring">
-        <svg width="92" height="92" viewBox="0 0 92 92" aria-hidden="true">
-          <circle class="match-band-ring-track" cx="46" cy="46" r="${R}" fill="none"
+        <svg width="112" height="112" viewBox="0 0 112 112" aria-hidden="true">
+          <circle class="match-band-ring-track" cx="56" cy="56" r="${R}" fill="none"
             stroke="var(--line,#2e2836)" stroke-width="6"/>
-          <circle class="match-band-ring-fill" cx="46" cy="46" r="${R}" fill="none"
+          <circle class="match-band-ring-fill" cx="56" cy="56" r="${R}" fill="none"
             stroke="${tierColor}" stroke-width="6" stroke-linecap="round"
             data-target="${pct}" data-len="${LEN}"
-            style="stroke-dasharray:${LEN};stroke-dashoffset:${LEN};transform:rotate(-90deg);transform-origin:46px 46px"/>
+            style="stroke-dasharray:${LEN};stroke-dashoffset:${LEN};transform:rotate(-90deg);transform-origin:56px 56px"/>
         </svg>
         <div class="match-band-num" data-target="${pct}" style="color:${tierColor}">0<span class="match-band-pct">%</span></div>
       </div>
@@ -6831,7 +6831,7 @@
     if(_dmDemoFallback){
       const footer = document.createElement('div');
       footer.className = 'dm-caught-up';
-      footer.innerHTML = `You’re all caught up<button class="dm-new-cta" onclick="document.querySelector('.dm-compose-btn, [aria-label*=compose], [aria-label*=new]')?.click()">Start a conversation</button>`;
+      footer.innerHTML = `<span class="dm-caught-up-text">You’re all caught up</span><button class="dm-new-cta" onclick="dmPeer={user_id:’u1’,name:’Tamar’,handle:’@tamar’,avatar:’’};renderDM()">Start a conversation</button>`;
       listEl.appendChild(footer);
     }
   }
