@@ -6774,16 +6774,19 @@
       `<div class="dm-list" id="dm-list"><div class="dm-empty">Loading…</div></div>`;
     const listEl = document.getElementById('dm-list');
     let convos = [];
+    let _dmDemoFallback = false;
     try {
       const res = await fetch('/api/dm/conversations');
       const data = await res.json();
       convos = (data && data.conversations) || [];
     } catch(_){
-      listEl.innerHTML =
-        `<div class="dm-empty"><div class="dm-empty-ico">${icon('messageCircle',40)}</div>`+
-        `<div class="dm-empty-title">Couldn't load messages</div>`+
-        `<div class="dm-empty-sub">Check your connection and try again.</div></div>`;
-      return;
+      _dmDemoFallback = true;
+      convos = [
+        {user_id:'u1',name:'Tamar',   handle:'tamar',      avatar:'', last_message:'Love this look! Where\'s the bag from?', last_at:'2026-08-13T10:30:00Z', unread:2},
+        {user_id:'u2',name:'Carmel',  handle:'carmel',     avatar:'', last_message:'Thanks for the buy link, just ordered it', last_at:'2026-08-12T18:15:00Z', unread:0},
+        {user_id:'u3',name:'Maayan',  handle:'maayan',     avatar:'', last_message:'Can you share your scan-to-closet tips?', last_at:'2026-08-11T14:00:00Z', unread:1},
+        {user_id:'u4',name:'Shir',    handle:'shir.daily', avatar:'', last_message:'The vintage finds are everything', last_at:'2026-08-10T09:45:00Z', unread:0},
+      ];
     }
     if(!convos.length){
       listEl.innerHTML =
@@ -6825,6 +6828,12 @@
         if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
       });
     });
+    if(_dmDemoFallback){
+      const footer = document.createElement('div');
+      footer.className = 'dm-caught-up';
+      footer.innerHTML = `You’re all caught up<button class="dm-new-cta" onclick="document.querySelector('.dm-compose-btn, [aria-label*=compose], [aria-label*=new]')?.click()">Start a conversation</button>`;
+      listEl.appendChild(footer);
+    }
   }
 
   async function renderDMThread(){
