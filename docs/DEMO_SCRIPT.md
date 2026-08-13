@@ -90,6 +90,10 @@ Point below the hero: **Chat with Abigail** ("Ask your stylist") and **Style Swi
 
 > 💡 *BROWSE-IMAGE-URL (Store tab) ✅ **shipped** commit `acfc368` (2026-08-12, mark lane): If the investor taps **Store** (second icon in the bottom nav) at any point, they'll see **real product images** on every card — was blank (loremflickr.com CDN too slow for demo). No demo beat change; this is defensive coverage so an off-script tap into Store doesn't embarrass the demo.*
 
+> 💡 *FEED-BUY-CTA-FILLED ✅ **shipped** commit `b92cf50` (2026-08-13, mark lane): The **Buy button on feed cards** is now a **filled accent pill** (`var(--accent,#e8526a)`, font-weight 800) — was a ghost outline that blended into photos. During beat-4, the commerce CTA is unmissable on every feed post. If an investor says "I don't see the shopping" — point at the bright red Buy pill. No talking-point change needed; the button speaks for itself.*
+
+> 💡 *FOR-YOU-POSTS-RANK ⬜ **backend shipped** commit `9ffb9b2` (2026-08-13, sam lane); **UI wiring → mark lane next task**: `GET /api/posts?sort_by=match&viewer_id=<id>` ranks feed posts by closet match (each post annotated with `match_pct`). Once the mark lane wires this to the For You fetch, you can say: "The entire For You feed is ordered by what fits her style — every post at the top is there because at least one tagged item scores high against her closet." Currently posts appear in default order in the SPA; skip this talking point until the wiring lands.*
+
 ---
 
 ## 5. THE WOW — tap one item (2:30 → 3:25) — **the centerpiece**
@@ -115,6 +119,10 @@ Point below the hero: **Chat with Abigail** ("Ask your stylist") and **Style Swi
 > 💡 *MATCH-MATRIX ✅ **shipped** commits `5a24c0b` (2026-08-07) + `9b203aa` (2026-08-09, steve lane): Bags, dresses, hats, shoes, and accessories all now count in wardrobe match scoring — `_COMPLEMENTS` fully expanded. With the 12-item demo seed wardrobe, these categories now reach **95%** match (was 71-79%). No UI change; the number is simply more accurate and more impressive in the room.*
 
 > 💡 *MATCH-SCORE-EXT ✅ **shipped** commit `77c499e` (2026-08-09, steve lane): Match scoring now extends the keyword haystack to include each product's `search_query` and `tags`, plus adds explicit bonuses for exact brand (+3), color (+2), subcategory (+2). Niche terms like "tee" or "workwear" now contribute correctly. The ring % an investor sees is the most reliable it has ever been — the right product ranks above look-alikes that share only the top-level category.*
+
+> 💡 *MATCH-RING-112 ✅ **shipped** commit `b92cf50` (2026-08-13, mark lane): The match% ring in the item detail sheet is now **112px wide** (was 92px) and the hero number is **font-weight 900** (was 700) — larger, bolder, unmissable. No change to script wording; the ring now commands the top of the sheet on its own. Give it the full two seconds of silence.*
+
+> 💡 *COLOR-AWARE-MATCH ✅ **shipped** commits `e9260f8` + `de5989b` (2026-08-13, steve lane): Match% now weighs **colour family** in the wardrobe score — same colour family in closet → +7; neutral-palette product (white/black/beige) → +5; neutral-palette base in closet → +3. 12 canonical colour families cover ~60 real catalog label variants (navy = midnight navy = collegiate navy). Result: a beige trench against a cream-blouse closet, or a navy blazer against navy jeans, now scores meaningfully higher. No UI change; the ring simply shows a more honest, more impressive number. 3 hermetic pytests confirm the new bonuses and the empty-closet invariant (score stays 55 base with no colour data).*
 
 > 💡 *LOOK-SHEET-CHIP-ANIM ✅ **shipped** commit `5a3f177` (2026-08-09, mark lane): The look-sheet's "X% match to your style" chip now **animates from 0 → target** on open (easeOutCubic, 600ms) — matching the dramatic ring count-up on the item-detail sheet. Every tap in the WOW flow now delivers a personalization-signal moment: item sheet (ring), look sheet (chip). Consistent throughout.*
 
@@ -201,6 +209,7 @@ Point at the live activity timeline (real recent commits) and the team grid.
 - **Match ring shows "Add clothes to see your match":** you're on an empty-closet account — that's the pre-flight seeded-account check failing. Recover verbally ("on a new user this fills as she scans") and switch to the seeded account after the meeting beat.
 - **Phone dies / freezes:** switch to `static/pitch.html` (the deck) on a laptop and walk the same 8 beats verbally. Same story, no phone.
 - **Investor asks a hard money question mid-demo:** "Great question — I'll hit that on the model slide right after." Finish the flow first; the product is the wow.
+- **DM tab shows error / blank:** commit `c4fc7b3` (2026-08-13) added a seeded demo fallback — if the API is unavailable, the DM tab shows a realistic inbox (Tamar, Carmel, Maayan, Shir) with conversation previews. "Start a conversation" is wired to open Tamar's thread. No dead screen for investors.
 
 ---
 
