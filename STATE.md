@@ -18,12 +18,12 @@
 - **Prior runs**: run 86 — DM tab fallback inbox c4fc7b3; run 85 — scan-confirm source-link callout b7588ba; run 84 — look-sheet editorial polish 4ee2c5f; run 83 — look-sheet match % chips c9a9b6d; run 82 — home DS-004/DS-008 + quick-actions 13→6 + outfit 4:5 66aad7b; run 81 — look grid edit mode da98dbd.
 - **Prior runs**: run 85 — scan-confirm source-link callout b7588ba; run 84 — look-sheet editorial polish 4ee2c5f; run 83 — look-sheet match % chips c9a9b6d; run 82 — home DS-004/DS-008 + quick-actions 13→6 + outfit 4:5 66aad7b; run 81 — look grid edit mode da98dbd.
 
-## Ayalon lane — last run (2026-08-13, run 70)
-- **Task**: docs(dod): run-70 — sync DEMO_SCRIPT footer: items (41)-(48) + 320 pytests. Commit b8dc73e.
-- **Done**: docs/DEMO_SCRIPT.md footer (ship log) updated with items (41)-(48) that run-69 verified inline but missed in the proof-table; test count updated 311→320; re-verified marker updated to run-70. check-render PASS.
-- **Gap still pending**: FOR-YOU-POSTS-RANK (9ffb9b2) backend only — mark lane must wire ?sort_by=match&viewer_id= to For You tab fetch.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-13.
-- **Prior runs**: run 69 — DoD 8 ships (mark 83-87 + steve 49-50) + DEMO_SCRIPT tips b7a1067; run 68 — POSTGRES-COUNT-FIX DOD gap; run 67 — DEMO_SCRIPT + PITCH_DECK 311 5b8a036; run 66 — DoD 7 ships 2eaff75; run 65 — DEMO_SCRIPT Appendix A 1e291d8.
+## Ayalon lane — last run (2026-08-13, run 71)
+- **Task**: docs(pitch): run-71 — PITCH_DECK עדכון 2026-08-13: WOW-3-FIXES + COLOR-AWARE-MATCH + 6 run-69 ships + 320 tests.
+- **Done**: docs/PITCH_DECK.md עדכון entry added for 2026-08-13 — covers WOW-3-FIXES (b92cf50, match ring 112px/w900 + buy CTA filled), COLOR-AWARE-MATCH (de5989b, color-family scoring strengthens Slide 3 claim), COLOR-FAMILY-NORM (e9260f8), LOOK-ITEM-MATCH-CHIP (c9a9b6d), DM-FALLBACK (c4fc7b3), FOR-YOU-POSTS-RANK backend (9ffb9b2, UI still ⬜), test count 311→320. check-render PASS.
+- **Gap still pending**: FOR-YOU-POSTS-RANK (9ffb9b2) backend only — mark lane must wire ?sort_by=match&viewer_id= to For You tab fetch (beat-4 tip still ⬜).
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, PITCH_DECK now current through 2026-08-13.
+- **Prior runs**: run 70 — sync DEMO_SCRIPT footer items (41)-(48) + 320 tests b8dc73e; run 69 — DoD 8 ships + DEMO_SCRIPT tips b7a1067; run 68 — POSTGRES-COUNT-FIX DOD gap; run 67 — DEMO_SCRIPT + PITCH_DECK 311 5b8a036; run 66 — DoD 7 ships 2eaff75.
 
 ## Steve lane — last run (2026-08-13, run 50)
 - **Task**: feat(match) — color-aware wardrobe scoring for For You feed + product match. Commit de5989b.
