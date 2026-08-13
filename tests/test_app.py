@@ -5173,3 +5173,72 @@ def test_postgres_count_subquery_alias_sqlite_compat():
     ).fetchone()
     assert row["n"] == 1, f"Expected 1 (only 'shirt' worn ≥2 times), got {row['n']}"
     conn.close()
+
+
+# --------------------------------------------------------------------------- #
+# _color_family / _match_score — color synonym family matching (OW-014)
+# --------------------------------------------------------------------------- #
+def test_color_family_navy_synonyms_score_above_unrelated():
+    """Same color family members score higher than unrelated colors in _match_score.
+
+    FAIL-BEFORE: exact color match only — "navy" vs "midnight navy" scored 0 (no exact match),
+    same as "navy" vs "red" (0); family synonyms were invisible to the scorer.
+    PASS-AFTER: "midnight navy" gets +1 family bonus, so it scores above "red" (0).
+    """
+    from app import _match_score
+    item = {"category": "outerwear", "color": "navy", "brand": "TestBrand",
+            "search_query": "navy jacket", "subcategory": "jacket"}
+    prod_synonym = {
+        "name": "Jacket", "brand": "TestBrand", "color": "midnight navy",
+        "category": "outerwear", "subcategory": "jacket",
+        "search_query": "midnight navy jacket", "tags": [], "in_stock": True,
+    }
+    prod_unrelated = {
+        "name": "Jacket", "brand": "TestBrand", "color": "red",
+        "category": "outerwear", "subcategory": "jacket",
+        "search_query": "red jacket", "tags": [], "in_stock": True,
+    }
+    s_syn = _match_score(item, prod_synonym)
+    s_unr = _match_score(item, prod_unrelated)
+    assert s_syn > s_unr, (
+        f"navy-family synonym ({s_syn}) should beat unrelated color ({s_unr})"
+    )
+
+
+def test_color_family_exact_beats_synonym():
+    """Exact color match scores higher than same-family synonym.
+
+    FAIL-BEFORE: no family concept existed — exact and synonym scored identically (both 0).
+    PASS-AFTER: exact = +2, synonym = +1, so exact > synonym.
+    """
+    from app import _match_score
+    item = {"category": "top", "color": "navy", "brand": "TestBrand",
+            "search_query": "navy tee", "subcategory": "short-sleeve"}
+    prod_exact = {
+        "name": "Tee", "brand": "TestBrand", "color": "navy",
+        "category": "top", "subcategory": "short-sleeve",
+        "search_query": "navy tee testbrand", "tags": [], "in_stock": True,
+    }
+    prod_family = {
+        "name": "Tee", "brand": "TestBrand", "color": "dark navy",
+        "category": "top", "subcategory": "short-sleeve",
+        "search_query": "dark navy tee testbrand", "tags": [], "in_stock": True,
+    }
+    s_exact = _match_score(item, prod_exact)
+    s_fam = _match_score(item, prod_family)
+    assert s_exact > s_fam, (
+        f"exact color ({s_exact}) should beat family synonym ({s_fam})"
+    )
+
+
+def test_color_family_lookup_returns_unknown_colors_unchanged():
+    """_color_family returns the original color string for unrecognized colors.
+
+    FAIL-BEFORE: _color_family didn't exist.
+    PASS-AFTER: unknown color returns itself, preventing false family matches.
+    """
+    from app import _color_family
+    assert _color_family("hot magenta") == "hot magenta", "unknown color should return itself"
+    assert _color_family("NAVY") == "navy", "known color should return its family key"
+    assert _color_family("midnight navy") == "navy", "synonym should return canonical family"
+    assert _color_family("charcoal grey") == "grey", "grey synonym should resolve to grey family"

@@ -2003,6 +2003,62 @@ _WARDROBE_COMPLEMENTS: dict[str, list[str]] = {
     "dress":     ["shoes", "accessory", "bag", "outerwear"],
 }
 
+_COLOR_FAMILIES: dict[str, list[str]] = {
+    "black": [
+        "black", "black wash", "faded black", "dark nocturnal", "dark mountain",
+        "black/olive", "black/white", "black / white", "natural/black", "black moss",
+        "rinsed black olive",
+    ],
+    "white": ["white", "off white", "off-white", "ivory", "ecru", "gold/white"],
+    "navy": [
+        "navy", "navy blue", "dark navy", "midnight navy", "collegiate navy",
+        "sky captain navy", "vintage navy", "navy stripe", "navy/white stripe",
+        "dark sapphire", "deep blue", "dark blue",
+    ],
+    "blue": [
+        "blue", "royal blue", "dutch blue", "medium blue", "mid blue", "mid-blue",
+        "armonia light blue", "light blue vintage", "faded blue", "dry blue raw",
+        "bodega bay", "reflecting pond",
+    ],
+    "indigo": [
+        "indigo", "prewashed indigo", "bauhaus light-to-medium indigo",
+        "new ink dark indigo", "parkland medium indigo", "stonewashed indigo",
+        "light wash", "medium wash", "medium wash denim", "dark denim wash",
+        "dark stonewash", "rinse",
+    ],
+    "grey": [
+        "grey", "gray", "charcoal", "charcoal grey", "heather grey",
+        "carbon heather", "cobblestone", "gravel", "shadow", "stone", "dark stone",
+    ],
+    "brown": [
+        "brown", "camel", "camel beige", "caramel", "chestnut", "tobacco brown",
+        "toasted almond", "turkish coffee", "wheat nubuck", "dark coffee",
+        "rose gold/brown", "rose gold/linen", "tobacco destroy wash",
+        "dark beech / black",
+    ],
+    "beige": ["beige", "taupe", "dark sand", "desert sand", "khaki", "dark khaki", "rinsed khaki"],
+    "green": [
+        "green", "dark green", "sage green", "olive", "heritage green",
+        "loden green", "bamboo green", "vintage camo",
+    ],
+    "red": ["red", "washed red"],
+    "pink": ["tango pink"],
+    "gold": ["gold", "gold/clear", "faded apricot"],
+    "silver": ["silver/black", "silver/milky butter", "mixed metal"],
+}
+
+# Build reverse lookup once at module load: color_name -> family_key
+_COLOR_FAMILY_LOOKUP: dict[str, str] = {
+    color.lower(): family
+    for family, members in _COLOR_FAMILIES.items()
+    for color in members
+}
+
+
+def _color_family(color: str) -> str:
+    """Return the canonical color family for a color name, or the original string if unrecognized."""
+    return _COLOR_FAMILY_LOOKUP.get(color.lower().strip(), color.lower().strip())
+
 
 def _wardrobe_match_score(product: dict, closet_cats: set, closet_count: int) -> int:
     """Compute 0-95 wardrobe compatibility for a product vs. a user's closet.
@@ -2169,8 +2225,14 @@ def _match_score(item: dict, p: dict) -> int:
     # Exact-match bonuses for high-signal attributes
     if item.get("brand") and (item.get("brand") or "").lower() == (p.get("brand") or "").lower():
         score += 3
-    if item.get("color") and (item.get("color") or "").lower() == (p.get("color") or "").lower():
-        score += 2
+    # Color match: +2 exact, +1 same family (synonym → still relevant, less precise)
+    _ic = (item.get("color") or "").lower().strip()
+    _pc = (p.get("color") or "").lower().strip()
+    if _ic and _pc:
+        if _ic == _pc:
+            score += 2
+        elif _color_family(_ic) == _color_family(_pc):
+            score += 1
     if item.get("subcategory") and (item.get("subcategory") or "").lower() == (p.get("subcategory") or "").lower():
         score += 2
 
