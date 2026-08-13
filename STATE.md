@@ -11,10 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-13, run 86)
-- **Task**: feat(dm) — DM tab demo fallback: seeded inbox replaces error state; "You're all caught up" + "Start a conversation" CTA; badge ring. Gabbana-reviewed (7.4/10 before badge outline; muted --muted was already #6F6A63 AA-compliant). Commit c4fc7b3.
-- **Done**: static/app.css + static/app.js. renderDMList() catch block now shows 4 seeded conversations (initial-avatar circles T/C/M/S) instead of error. dm-caught-up footer with ghost CTA. dm-badge gets `outline: 2px solid var(--bg)` ring. All DS-004 fallbacks use dark-mode SoT values.
+## Mark lane — last run (2026-08-13, run 87)
+- **Task**: feat(ui) — 3 Gabbana-identified WOW demo fixes. Commit b92cf50.
+- **Done**: static/app.css + static/app.js. (1) Match band ring 92px→112px + number 24px/w700→32px/w900 — the % match hero is now unmissable. (2) Feed buy CTA ghost→filled accent + weight 800 — commerce intent unmistakable at a glance. (3) DM "Start a conversation" wired to open Tamar's thread (was a broken querySelector). Also: dm-new-cta min-height 44px (WCAG), buy-btn padding on 8pt grid. All DS-004 clean, check-render + check-interactions PASS. Gabbana re-gate: all 3 fixes ≥ 8/10.
 - **Next**: DEFECTS.md if new items; check remaining MASTER_PLAN/INBOX items; next highest-value demo improvement.
+- **Prior runs**: run 86 — DM tab fallback inbox c4fc7b3; run 85 — scan-confirm source-link callout b7588ba; run 84 — look-sheet editorial polish 4ee2c5f; run 83 — look-sheet match % chips c9a9b6d; run 82 — home DS-004/DS-008 + quick-actions 13→6 + outfit 4:5 66aad7b; run 81 — look grid edit mode da98dbd.
 - **Prior runs**: run 85 — scan-confirm source-link callout b7588ba; run 84 — look-sheet editorial polish 4ee2c5f; run 83 — look-sheet match % chips c9a9b6d; run 82 — home DS-004/DS-008 + quick-actions 13→6 + outfit 4:5 66aad7b; run 81 — look grid edit mode da98dbd.
 
 ## Ayalon lane — last run (2026-08-12, run 68)
