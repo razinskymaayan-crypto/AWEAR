@@ -2338,15 +2338,59 @@ async def get_categories():
 
 @app.get("/api/posts")
 async def get_posts(
+    request: Request,
     user_id: Optional[str] = None,
+    sort_by: Optional[str] = None,
+    viewer_id: Optional[str] = None,
     limit: int = 20,
     offset: int = 0,
 ):
-    """Return paginated posts, optionally filtered by user_id."""
-    posts = _posts_cache
+    """Return paginated posts, optionally filtered by user_id.
+
+    ``sort_by=match&viewer_id=<id>`` ranks posts by how well their tagged
+    items match the viewer's closet — the highest-scoring posts (those whose
+    tagged garments best complement what the viewer already owns) appear first.
+    Falls back to insertion order if the viewer has no closet items or if the
+    viewer's closet cannot be read. The ``match_pct`` of the top-scoring tagged
+    item is annotated on each post item when ``sort_by=match``.
+    """
+    posts = list(_posts_cache)
 
     if user_id:
         posts = [p for p in posts if p.get("user_id") == user_id]
+
+    if sort_by == "match":
+        caller_ip = (request.client.host if request.client else None) or "anon"
+        viewer_key = (viewer_id or "").strip() or caller_ip
+
+        closet_cats: set = set()
+        closet_count = 0
+        try:
+            with _get_db() as db:
+                rows = db.execute(
+                    "SELECT category FROM closet_items WHERE user_key = ? LIMIT 100",
+                    (viewer_key,),
+                ).fetchall()
+            closet_cats = {(r["category"] or "").lower() for r in rows}
+            closet_count = len(rows)
+        except Exception:
+            pass
+
+        product_map = {p["id"]: p for p in _products_cache}
+
+        def _post_match(post: dict) -> int:
+            tagged = post.get("items_tagged") or []
+            scores = [
+                _wardrobe_match_score(product_map[pid], closet_cats, closet_count)
+                for pid in tagged
+                if pid in product_map
+            ]
+            return max(scores) if scores else 0
+
+        scored_map = {p["id"]: _post_match(p) for p in posts}
+        posts = sorted(posts, key=lambda p: scored_map.get(p["id"], 0), reverse=True)
+        # Annotate each post with its top tagged item's match_pct for the UI.
+        posts = [{**p, "match_pct": scored_map.get(p["id"], 0)} for p in posts]
 
     total = len(posts)
     return {

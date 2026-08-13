@@ -5242,3 +5242,79 @@ def test_color_family_lookup_returns_unknown_colors_unchanged():
     assert _color_family("NAVY") == "navy", "known color should return its family key"
     assert _color_family("midnight navy") == "navy", "synonym should return canonical family"
     assert _color_family("charcoal grey") == "grey", "grey synonym should resolve to grey family"
+
+
+# --------------------------------------------------------------------------- #
+# GET /api/posts?sort_by=match — personalized "For You" feed ranking (OW-014)
+# --------------------------------------------------------------------------- #
+
+def test_posts_sort_by_match_returns_200_and_shape(client):
+    """sort_by=match returns a valid paginated response with match_pct on each item.
+
+    FAIL-BEFORE: sort_by param did not exist — endpoint ignored it; no match_pct field.
+    PASS-AFTER: 200 with items list; each item has an integer match_pct ≥ 0.
+    """
+    r = client.get("/api/posts", params={"sort_by": "match"})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert "items" in body
+    assert "total" in body
+    assert isinstance(body["items"], list)
+    for item in body["items"]:
+        assert "match_pct" in item, f"post {item.get('id')} missing match_pct"
+        assert isinstance(item["match_pct"], int), f"match_pct must be int, got {type(item['match_pct'])}"
+        assert item["match_pct"] >= 0, f"match_pct must be non-negative, got {item['match_pct']}"
+
+
+def test_posts_sort_by_match_orders_high_closet_posts_first(client):
+    """With a seeded closet, posts whose tagged items complement the closet rank first.
+
+    FAIL-BEFORE: no sort_by=match — all posts returned in insertion order, ignoring
+    wardrobe compatibility; an investor sees a random feed with no personalization.
+    PASS-AFTER: posts annotated and sorted descending by match_pct; the first post's
+    match_pct >= the last post's match_pct.
+
+    Uses the demo seed closet (all major categories present) so every tagged post
+    returns a high score — but the ORDER must still be non-increasing.
+    """
+    import app as _appmod
+    _appmod._rate_store.clear()
+    uid = "test_feed_match_sort_001"
+    seed = client.post("/api/demo/seed-closet", params={"user_id": uid})
+    assert seed.status_code == 200, seed.text
+
+    r = client.get("/api/posts", params={"sort_by": "match", "viewer_id": uid, "limit": 40})
+    assert r.status_code == 200, r.text
+    items = r.json()["items"]
+    assert len(items) > 0, "expected at least one post"
+
+    scores = [item["match_pct"] for item in items]
+    for i in range(len(scores) - 1):
+        assert scores[i] >= scores[i + 1], (
+            f"posts not sorted by match_pct: item {i} has {scores[i]} < item {i+1} has {scores[i+1]}"
+        )
+
+
+def test_posts_sort_by_match_graceful_empty_closet(client):
+    """sort_by=match with no closet items returns 200 with match_pct <= 55 on all items.
+
+    FAIL-BEFORE: endpoint didn't exist — sort_by param was ignored, no match_pct field.
+    PASS-AFTER: 200 with items; all have a non-negative match_pct; posts with tagged
+    items score at most 55 (the _wardrobe_match_score base — no complement bonuses
+    when the closet is empty), and posts with no tagged items score 0.
+
+    This verifies the endpoint is safe with an empty closet and produces consistent
+    capped scores rather than crashing or returning negative values.
+    """
+    r = client.get("/api/posts", params={"sort_by": "match", "viewer_id": "viewer_with_no_closet_xyz"})
+    assert r.status_code == 200, r.text
+    items = r.json()["items"]
+    assert isinstance(items, list)
+    for item in items:
+        assert "match_pct" in item, f"post {item.get('id')} missing match_pct"
+        pct = item["match_pct"]
+        assert isinstance(pct, int), f"match_pct must be int, got {type(pct)}"
+        assert pct >= 0, f"match_pct must be non-negative, got {pct}"
+        assert pct <= 55, (
+            f"empty closet yields no complement matches — score must be <= 55 (base), got {pct}"
+        )
