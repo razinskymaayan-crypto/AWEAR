@@ -1892,6 +1892,8 @@
               brand_vibe: prod.brand  || '',
               price_estimate_usd: prod.price_estimate_usd || 0,
               image_url: prod.image_url || null,
+              source_url: (prod.in_stock !== false && prod.product_url) ? prod.product_url : null,
+              search_query: prod.search_query || prod.name,
               q:        prod.name
             };
           }).filter(Boolean)
