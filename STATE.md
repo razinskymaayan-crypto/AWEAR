@@ -18,11 +18,12 @@
 - **Prior runs**: run 86 — DM tab fallback inbox c4fc7b3; run 85 — scan-confirm source-link callout b7588ba; run 84 — look-sheet editorial polish 4ee2c5f; run 83 — look-sheet match % chips c9a9b6d; run 82 — home DS-004/DS-008 + quick-actions 13→6 + outfit 4:5 66aad7b; run 81 — look grid edit mode da98dbd.
 - **Prior runs**: run 85 — scan-confirm source-link callout b7588ba; run 84 — look-sheet editorial polish 4ee2c5f; run 83 — look-sheet match % chips c9a9b6d; run 82 — home DS-004/DS-008 + quick-actions 13→6 + outfit 4:5 66aad7b; run 81 — look grid edit mode da98dbd.
 
-## Ayalon lane — last run (2026-08-12, run 68)
-- **Task**: DoD gap fill — add POSTGRES-COUNT-FIX entry to DOD_AUDIT.md (steve run 46, 15 Postgres crash sites, missing despite run-66 DoD sweep).
-- **Done**: docs/DOD_AUDIT.md (POSTGRES-COUNT-FIX entry with line-level grep evidence at 15 app.py sites). check-render PASS.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-12.
-- **Prior runs**: run 67 — DEMO_SCRIPT + PITCH_DECK test count 305→311 5b8a036; run 66 — DoD 7 ships mark-80→82 + steve-46→48 2eaff75; run 65 — DEMO_SCRIPT Appendix A (Marketplace bonus beat) 1e291d8; run 64 — DEMO_SCRIPT sync f7b928a; run 63 — DOD_AUDIT 6 entries mark-76→79 + steve catalog/backend c7e4d31.
+## Ayalon lane — last run (2026-08-13, run 69)
+- **Task**: DoD verification run-69 — 8 new deliveries (mark 83-87 + steve 49-50) + DEMO_SCRIPT 4 tips. Commit b7a1067.
+- **Done**: docs/DOD_AUDIT.md (8 new entries: LOOK-ITEM-MATCH-CHIP/EDITORIAL-P2/SCAN-SOURCE-P3/DM-FALLBACK/WOW-3-FIXES/FOR-YOU-POSTS-RANK/COLOR-FAMILY-NORM/COLOR-AWARE-MATCH; test count 311→320). docs/DEMO_SCRIPT.md (FEED-BUY-CTA-FILLED/MATCH-RING-112/COLOR-AWARE-MATCH/FOR-YOU-POSTS-RANK tips + DM recovery note). check-render PASS.
+- **Gap flagged**: FOR-YOU-POSTS-RANK (9ffb9b2) is backend-only — mark lane must wire ?sort_by=match&viewer_id= to For You tab fetch (mark STATE.md already notes this as "next").
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-13.
+- **Prior runs**: run 68 — POSTGRES-COUNT-FIX DOD gap; run 67 — DEMO_SCRIPT + PITCH_DECK test count 305→311 5b8a036; run 66 — DoD 7 ships mark-80→82 + steve-46→48 2eaff75; run 65 — DEMO_SCRIPT Appendix A 1e291d8; run 64 — DEMO_SCRIPT sync f7b928a.
 
 ## Steve lane — last run (2026-08-13, run 50)
 - **Task**: feat(match) — color-aware wardrobe scoring for For You feed + product match. Commit de5989b.
