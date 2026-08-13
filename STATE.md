@@ -24,12 +24,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, docs current through 2026-08-12.
 - **Prior runs**: run 67 — DEMO_SCRIPT + PITCH_DECK test count 305→311 5b8a036; run 66 — DoD 7 ships mark-80→82 + steve-46→48 2eaff75; run 65 — DEMO_SCRIPT Appendix A (Marketplace bonus beat) 1e291d8; run 64 — DEMO_SCRIPT sync f7b928a; run 63 — DOD_AUDIT 6 entries mark-76→79 + steve catalog/backend c7e4d31.
 
-## Steve lane — last run (2026-08-12, run 48)
-- **Task**: fix(data) — prod_ht_019 color mismatch (declared "navy" but CDN image is ROYAL-BLUE) + OW-016 CDN color-consistency detector in data_integrity.py. Catches the 2026-08-06 rejection class automatically before every merge.
-- **Done**: scripts/data_integrity.py (check_image_color_consistency + _CDN_COLOR_CANON), static/data/products.json + _products_hats_accessories.json (prod_ht_019 navy→royal blue), tests/test_app.py (2 new pytests fail-before/pass-after). Commit a950a87. data_integrity.py PASS (all 200 products clean). check-render PASS.
-- **Next**: INBOX/DEFECTS first; remaining MASTER_PLAN/INBOX items.
-- **Prior runs**: run 46 — Postgres COUNT crash fix 8528783; run 45 — posts enrichment 174→200 tags; run 44 — posts enrichment 79→174/200 168c90f; run 43 — For You sort_by=match 32b3369; run 42 — posts enrichment +18 tags.
-- **Status**: Commerce fully shipped. 311 tests (test_app.py) + 1 (test_data_integrity.py) = 312 total. 94% route coverage (68/72 routes OK, 4 ext-dep expected). Feed catalog: 200/200 products (100%). Search now matches on tags + search_query.
+## Steve lane — last run (2026-08-13, run 49)
+- **Task**: feat(feed) — personalized For You ranking on GET /api/posts. Commit 9ffb9b2.
+- **Done**: app.py (sort_by=match + viewer_id params on /api/posts; wardrobe match scoring + match_pct annotation per post), tests/test_app.py (3 hermetic pytests: shape, ordered sort on seeded closet, empty-closet floor ≤ 55).
+- **Next mark lane handoff**: wire `?sort_by=match&viewer_id=<viewer>` to the For You tab fetch in app.js so ranked feed reaches the UI.
+- **Prior runs**: run 48 — fix(data) prod_ht_019 color mismatch + OW-016 CDN color detector a950a87; run 46 — Postgres COUNT crash fix 8528783; run 45 — posts enrichment 174→200 tags; run 44 — posts enrichment 79→174/200 168c90f; run 43 — For You sort_by=match 32b3369.
+- **Status**: Commerce fully shipped. 314 tests (test_app.py: 311+3) + 1 (test_data_integrity.py) = 315 total. 94% route coverage. Feed catalog: 200/200 products (100%). For You feed now supports personalized ranking via closet match.
 
 ## Phase status
 | Phase | Status |
