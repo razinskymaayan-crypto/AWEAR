@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-12, run 85)
-- **Task**: feat(scan-confirm) — elevate source-link field to prominent earn-tokens callout. Gabbana-reviewed, DS-004 clean. Commit b7588ba.
-- **Done**: static/app.css + static/app.js. Scan-confirm "Product link" field: accent-tinted callout box, 13px/700 label, solid-accent "Earn tokens" badge (~6:1 WCAG AA, dark bg text), clearer hint + better placeholder. Addresses INBOX (2026-08-02) item 3 for mark/dolce/valentino UI.
-- **Next**: INBOX (2026-08-02) item 3 complete. Check if UX-QA bottom-sheets P1 is still open; or next MASTER_PLAN item. DEFECTS.md if new items appear.
-- **Prior runs**: run 84 — look-sheet editorial polish 4ee2c5f; run 83 — look-sheet match % chips c9a9b6d; run 82 — home DS-004/DS-008 + quick-actions 13→6 + outfit 4:5 66aad7b; run 81 — look grid edit mode da98dbd; run 80 — DS light-mode P1+P2 350b0c4.
+## Mark lane — last run (2026-08-13, run 86)
+- **Task**: feat(dm) — DM tab demo fallback: seeded inbox replaces error state; "You're all caught up" + "Start a conversation" CTA; badge ring. Gabbana-reviewed (7.4/10 before badge outline; muted --muted was already #6F6A63 AA-compliant). Commit c4fc7b3.
+- **Done**: static/app.css + static/app.js. renderDMList() catch block now shows 4 seeded conversations (initial-avatar circles T/C/M/S) instead of error. dm-caught-up footer with ghost CTA. dm-badge gets `outline: 2px solid var(--bg)` ring. All DS-004 fallbacks use dark-mode SoT values.
+- **Next**: DEFECTS.md if new items; check remaining MASTER_PLAN/INBOX items; next highest-value demo improvement.
+- **Prior runs**: run 85 — scan-confirm source-link callout b7588ba; run 84 — look-sheet editorial polish 4ee2c5f; run 83 — look-sheet match % chips c9a9b6d; run 82 — home DS-004/DS-008 + quick-actions 13→6 + outfit 4:5 66aad7b; run 81 — look grid edit mode da98dbd.
 
 ## Ayalon lane — last run (2026-08-12, run 68)
 - **Task**: DoD gap fill — add POSTGRES-COUNT-FIX entry to DOD_AUDIT.md (steve run 46, 15 Postgres crash sites, missing despite run-66 DoD sweep).
