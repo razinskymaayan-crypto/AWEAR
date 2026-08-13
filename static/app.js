@@ -1829,7 +1829,7 @@
     try {
       const [profilesRes, postsRes, productsRes] = await Promise.all([
         fetch('/api/profiles?limit=20'),
-        fetch('/api/posts?limit=40'),
+        fetch('/api/posts?limit=40&sort_by=match&viewer_id=' + encodeURIComponent(getOrCreateUserId())),
         fetch('/api/products?limit=300')
       ]);
       if (!profilesRes.ok || !postsRes.ok) return null;
@@ -1876,6 +1876,7 @@
           likes:    post.likes      || 0,
           trend:    Math.min(99, 70 + (post.likes ? Math.floor(post.likes / 50) : 0)),
           earn:     Math.round((post.likes || 100) / 80),
+          match_pct: post.match_pct || 0,
           items:    (post.items_tagged || []).slice(0, 4).map(pid => {
             const prod = productMap[pid];
             // Fail loud, not silently: an unresolved tag must never leak a raw
@@ -1972,8 +1973,9 @@
     const lookTot=lookTotalOf(post);
     const _ownWardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
     const _ownScore=_ownWardrobe.length?calcCompatScore({style_tags:tags},_ownWardrobe):{pct:0,matches:[]};
-    const _matchTier=_ownScore.pct>=80?'fc-match--high':_ownScore.pct>=60?'fc-match--mid':'fc-match--low';
-    const matchOverlay=_ownWardrobe.length?`<div class="fc-match-overlay ${_matchTier}">${icon('sparkle',12)} ${esc(_ownScore.pct)}% match</div>`:'';
+    const _displayPct=(post.match_pct!=null&&post.match_pct>0)?post.match_pct:_ownScore.pct;
+    const _matchTier=_displayPct>=80?'fc-match--high':_displayPct>=60?'fc-match--mid':'fc-match--low';
+    const matchOverlay=(_ownWardrobe.length||post.match_pct>0)?`<div class="fc-match-overlay ${_matchTier}">${icon('sparkle',12)} ${esc(_displayPct)}% match</div>`:'';
 
     // Avatar — use seed user avatar or initials
     const seedUser=!isMine?SEED_USERS.find(u=>u.id===post.userId):null;
@@ -8144,16 +8146,19 @@
     });
     let seeds=SEED_POSTS.filter(p=>!isBlocked(p.user));
     if(!activeFilters.has('all')) seeds=seeds.filter(p=>(p.tags||[]).some(t=>activeFilters.has(t)));
-    // "For You" is personalized to your wardrobe (formerly the separate "Your Match" tab —
-    // merged in so there's one discovery feed, not two confusingly-similar ones).
-    const wardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
-    if(wardrobe.length){
-      const wardTags=new Set(wardrobe.flatMap(i=>(i.style_tags||[]).map(t=>t.toLowerCase())));
-      seeds=[...seeds].sort((a,b)=>{
-        const aMatch=(a.tags||[]).filter(t=>wardTags.has(t.toLowerCase())).length;
-        const bMatch=(b.tags||[]).filter(t=>wardTags.has(t.toLowerCase())).length;
-        return bMatch-aMatch;
-      });
+    // "For You" is server-sorted by wardrobe match (sort_by=match via loadFeedData).
+    // Fall back to client-side tag-overlap sort only when server match_pct is absent.
+    const hasServerMatch=seeds.some(p=>p.match_pct>0);
+    if(!hasServerMatch){
+      const wardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');
+      if(wardrobe.length){
+        const wardTags=new Set(wardrobe.flatMap(i=>(i.style_tags||[]).map(t=>t.toLowerCase())));
+        seeds=[...seeds].sort((a,b)=>{
+          const aMatch=(a.tags||[]).filter(t=>wardTags.has(t.toLowerCase())).length;
+          const bMatch=(b.tags||[]).filter(t=>wardTags.has(t.toLowerCase())).length;
+          return bMatch-aMatch;
+        });
+      }
     }
     if(!seeds.length&&!loadFeedPosts().length){
       const em=document.createElement('div');em.className='feed-empty';
