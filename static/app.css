@@ -833,7 +833,7 @@
   .item-hero { position: relative; border-radius: 18px; overflow: hidden; margin-bottom: 16px;
     background: var(--card, #1e1a22); aspect-ratio: 4/5; max-height: 340px;
     box-shadow: 0 4px 16px rgba(0,0,0,.18); }
-  .item-hero img { width: 100%; height: 100%; object-fit: contain; display: block; background: transparent; }
+  .item-hero img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; background: transparent; }
   /* skeleton shimmer behind product images until they load */
   .item-hero, .combo-thumb { background: linear-gradient(100deg, var(--card,#1e1a22) 25%, var(--card-hover,#262030) 50%, var(--card,#1e1a22) 75%);
     background-size: 220% 100%; animation: pi-shimmer 1.4s linear infinite; }
@@ -1022,7 +1022,7 @@
     background: var(--card, #1e1a22);
     border: 1px solid var(--line, #2e2836);
   }
-  .sheet-look-emoji { width: 64px; height: 64px; text-align: center; flex-shrink: 0; }
+  .sheet-look-emoji { width: 76px; height: 76px; text-align: center; flex-shrink: 0; }
   .sheet-look-name { flex: 1; font-weight: 700; font-size: var(--t-small,13px); min-width: 0;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sheet-look-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
@@ -1122,7 +1122,7 @@
   .sheet-buy .sheet-buy-price {
     background: rgba(255,255,255,.22);
     border-radius: 8px; padding: 2px 8px;
-    font-size: var(--t-body); font-weight: 800;
+    font-size: var(--t-body, 14px); font-weight: 800;
   }
   /* Marketplace product detail sheet: store label, description, dual action footer */
   .mp-sheet-store { display: inline-flex; align-items: center; gap: 5px; margin: 4px 0 6px;
@@ -1151,8 +1151,8 @@
   .store-row {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 14px; border-radius: 14px;
-    background: rgba(255,255,255,.03);
-    border: 1px solid rgba(255,255,255,.07);
+    background: var(--card, #1e1a22);
+    border: 1px solid var(--line, #2e2836);
     text-decoration: none; color: var(--text);
     transition: background .15s;
     min-height: 48px;
