@@ -17,12 +17,11 @@
 - **Next**: DEFECTS.md if new items; check remaining MASTER_PLAN/INBOX items; next highest-value demo improvement.
 - **Prior runs**: run 90 — look-sheet editorial polish af93d52; run 89 — wire product_url+search_query into look-sheet items 45edbdc; run 88 — For You server-ranked feed f8d44f7; run 87 — WOW-3-FIXES b92cf50; run 86 — DM tab fallback inbox c4fc7b3; run 85 — scan-confirm source-link callout b7588ba.
 
-## Ayalon lane — last run (2026-08-13, run 71)
-- **Task**: docs(pitch): run-71 — PITCH_DECK עדכון 2026-08-13: WOW-3-FIXES + COLOR-AWARE-MATCH + 6 run-69 ships + 320 tests.
-- **Done**: docs/PITCH_DECK.md עדכון entry added for 2026-08-13 — covers WOW-3-FIXES (b92cf50, match ring 112px/w900 + buy CTA filled), COLOR-AWARE-MATCH (de5989b, color-family scoring strengthens Slide 3 claim), COLOR-FAMILY-NORM (e9260f8), LOOK-ITEM-MATCH-CHIP (c9a9b6d), DM-FALLBACK (c4fc7b3), FOR-YOU-POSTS-RANK backend (9ffb9b2, UI still ⬜), test count 311→320. check-render PASS.
-- **Gap closed**: FOR-YOU-POSTS-RANK UI wired — mark run 88 (f8d44f7) wired sort_by=match&viewer_id= to For You tab fetch. beat-4 tip now ✅.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, PITCH_DECK now current through 2026-08-13.
-- **Prior runs**: run 70 — sync DEMO_SCRIPT footer items (41)-(48) + 320 tests b8dc73e; run 69 — DoD 8 ships + DEMO_SCRIPT tips b7a1067; run 68 — POSTGRES-COUNT-FIX DOD gap; run 67 — DEMO_SCRIPT + PITCH_DECK 311 5b8a036; run 66 — DoD 7 ships 2eaff75.
+## Ayalon lane — last run (2026-08-14, run 72)
+- **Task**: docs(pitch): run-72 — PITCH_DECK update 2026-08-14: 6 new ships + 325 tests. Commit dc73a3b.
+- **Done**: docs/PITCH_DECK.md — (1) Fixed FOR-YOU-POSTS-RANK ⬜→✅ in 2026-08-13 entry (UI wired f8d44f7, mark run-88); (2) Added 2026-08-14 entry covering: LOOK-SHEET-PRODUCT-URLS (45edbdc), LOOK-SHEET-EDITORIAL-POLISH (af93d52), LIGHT-MODE-POLISH 8 fixes (3b58a1e+e51c915), DEMO-STATUS endpoint (c8500d4), OUTFIT-ANCHOR-ITEM (ef26541), STYLIST-DISTINCT-TIPS (d790d8e); test count 320→325. Commerce DoD fully re-verified (8/8 items confirmed in code). check-render PASS.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote is human-only. PITCH_DECK now current through 2026-08-14.
+- **Prior runs**: run 71 — PITCH_DECK 2026-08-13 + 320 tests ecfbb44; run 70 — DEMO_SCRIPT footer (41)-(48) b8dc73e; run 69 — DoD 8 ships b7a1067; run 67 — DEMO_SCRIPT + PITCH_DECK 311 5b8a036; run 66 — DoD 7 ships 2eaff75.
 
 ## Steve lane — last run (2026-08-14, run 51)
 - **Task**: feat(stylist): distinct fallback outfit tips per look + anchor-item-aware first tip. Commit d790d8e.
