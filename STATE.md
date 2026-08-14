@@ -24,12 +24,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote conversion is human-only. Commerce plan all items ✅, PITCH_DECK now current through 2026-08-13.
 - **Prior runs**: run 70 — sync DEMO_SCRIPT footer items (41)-(48) + 320 tests b8dc73e; run 69 — DoD 8 ships + DEMO_SCRIPT tips b7a1067; run 68 — POSTGRES-COUNT-FIX DOD gap; run 67 — DEMO_SCRIPT + PITCH_DECK 311 5b8a036; run 66 — DoD 7 ships 2eaff75.
 
-## Steve lane — last run (2026-08-13, run 50)
-- **Task**: feat(match) — color-aware wardrobe scoring for For You feed + product match. Commit de5989b.
-- **Done**: app.py (_wardrobe_match_score gains closet_colors param; get_products/get_posts/product_wardrobe_match all updated to SELECT category+color and pass color families; same-color +7, neutral-product +5, neutral-in-closet +3 bonuses; empty closet still = 55 base). tests/test_app.py (3 new hermetic pytests: same-family bonus, neutral bonus, empty-closet invariant).
-- **Status**: Commerce fully shipped. 318 tests total (314 + 3 new color tests + 1 data_integrity). 94% route coverage. For You feed personalized by closet match. Match % is now color-aware.
-- **Mark lane handoff**: DONE (run 88, f8d44f7) — sort_by=match&viewer_id= wired in app.js.
-- **Prior runs**: run 49 — feat(feed) personalized For You ranking 9ffb9b2; run 48 — fix(data) prod_ht_019 color mismatch a950a87; run 46 — Postgres COUNT crash fix 8528783; run 43 — For You sort_by=match 32b3369.
+## Steve lane — last run (2026-08-14, run 51)
+- **Task**: feat(stylist): distinct fallback outfit tips per look + anchor-item-aware first tip. Commit d790d8e.
+- **Done**: app.py `_fallback_outfits` — replaced single `tip` var with `base_tips` tuple (3 distinct tips per occasion × 6 occasion types). Anchor item name injected into tips[0] ("Built around the {item} — ..."). tests/test_app.py (2 hermetic pytests: fail-before proven for identical tips + anchor name in tip[0]). 325 total tests.
+- **Status**: Commerce fully shipped. 325 tests. 95% route coverage. All demo beats covered. Stylist fallback now shows 3 distinct looks with genuine styling advice.
+- **Next**: DEFECTS.md if new items; remaining INBOX improvements in lane.
+- **Prior runs**: run 50 — COLOR-AWARE-MATCH de5989b; run 49 — feat(feed) personalized For You ranking 9ffb9b2; run 48 — fix(data) prod_ht_019 color mismatch a950a87; run 43 — For You sort_by=match 32b3369.
 
 ## Phase status
 | Phase | Status |

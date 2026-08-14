@@ -3,6 +3,7 @@
 > **CANONICAL SOURCE** — הוסף כאן בלבד. Archive → `activity_log_archive.md`. Worktree copies = read-only snapshots, לא לכתיבה.
 > פורמט: `| YYYY-MM-DD | agent | branch/file | status | short description |`
 
+| 2026-08-14 | sam | auto/steve / app.py + tests/test_app.py | done | feat(stylist): distinct fallback outfit tips per look + anchor-item-aware first tip — 3 distinct styling perspectives per occasion × 6 occasion types; tips[0] references anchor item by name; 2 hermetic pytests (OW-014 fail-before proven). 325 total tests. Commit d790d8e. |
 | 2026-08-14 | sam | auto/steve / app.py + tests/test_app.py | done | feat(outfit): anchor_item — POST /api/outfit/generate now features the tapped item in every AI look + fallback; 2 hermetic pytests (OW-014). Closes WOW flow gap. Commit ef26541. |
 | 2026-08-12 | sam | auto/steve / app.py + tests/test_app.py | done | feat(search): expand GET /api/search product haystack — now matches tags[], search_query, subcategory, description in addition to name/brand/category/color. 2 hermetic regression tests (FAIL-BEFORE proven). 309 total tests. commit df926e1. |
 | 2026-08-11 | sam | auto/steve / static/data/posts.json | done | feat(data): posts enrichment — 95 products tagged (79→174/200, 87% catalog coverage), semantic matching by caption vibe, max 6 items/post. data_integrity.py PASS. commit 168c90f. |
