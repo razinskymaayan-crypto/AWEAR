@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-13, run 90)
-- **Task**: fix(look-sheet): editorial polish — cover hero image, 76px thumbnails, token store-rows, DS-004 fallback. Commit af93d52.
-- **Done**: static/app.css only. 4 changes: (1) item-hero img object-fit contain→cover+top-center; (2) sheet-look-emoji 64→76px; (3) store-row rgba(255,255,255,.03/.07)→var(--card)/var(--line) tokens; (4) sheet-buy-price var(--t-body)→var(--t-body,14px) DS-004 fix. Gabbana 9/10 PASS (was 6/10). check-render ✓.
+## Mark lane — last run (2026-08-14, run 91)
+- **Task**: fix(light-mode): 5 polish fixes — home greeting name pop + wallet AA/visual. Commit 3b58a1e.
+- **Done**: static/app.css only. End-of-file @media light-mode block (after main rules to win cascade). 5 fixes: (1) home greeting em gradient invisible in light mode → brand red --hl; (2) wallet pending amount amber fails AA → near-black text; (3) wallet hero blob grey (dark-brown at 14%) → rose tint; (4) wallet pending banner warm tan clashes with rose blob → neutral surface; (5) wallet Withdraw button grey-on-grey → editorial black. Gabbana: Home 8/10 PASS, Wallet 9/10 PASS.
 - **Next**: DEFECTS.md if new items; check remaining MASTER_PLAN/INBOX items; next highest-value demo improvement.
-- **Prior runs**: run 89 — wire product_url+search_query into look-sheet items 45edbdc; run 88 — For You server-ranked feed f8d44f7; run 87 — WOW-3-FIXES b92cf50; run 86 — DM tab fallback inbox c4fc7b3; run 85 — scan-confirm source-link callout b7588ba; run 84 — look-sheet editorial polish 4ee2c5f.
+- **Prior runs**: run 90 — look-sheet editorial polish af93d52; run 89 — wire product_url+search_query into look-sheet items 45edbdc; run 88 — For You server-ranked feed f8d44f7; run 87 — WOW-3-FIXES b92cf50; run 86 — DM tab fallback inbox c4fc7b3; run 85 — scan-confirm source-link callout b7588ba.
 
 ## Ayalon lane — last run (2026-08-13, run 71)
 - **Task**: docs(pitch): run-71 — PITCH_DECK עדכון 2026-08-13: WOW-3-FIXES + COLOR-AWARE-MATCH + 6 run-69 ships + 320 tests.
