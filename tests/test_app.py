@@ -1160,6 +1160,36 @@ def test_outfit_anchor_item_appears_in_fallback():
         assert "Red Blazer" in names, f"anchor item missing from outfit items: {names}"
 
 
+def test_fallback_outfits_tips_are_distinct():
+    """_fallback_outfits returns 3 looks with distinct tips — not all the same text.
+
+    FAIL-BEFORE: all 3 tips were identical (same `tip` var used in loop).
+    PASS-AFTER: at least 2 of the 3 tips differ.
+    """
+    from app import _fallback_outfits
+    result = _fallback_outfits([], "casual")
+    tips = [o["tip"] for o in result["outfits"]]
+    assert len(tips) >= 2
+    assert len(set(tips)) >= 2, f"All tips identical: {tips[0]!r}"
+
+
+def test_fallback_outfits_anchor_tip_references_item():
+    """When anchor_item is provided, the first outfit tip mentions the item name.
+
+    FAIL-BEFORE: anchor_item name was never mentioned in tips (same generic text).
+    PASS-AFTER: tips[0] contains the anchor item's name.
+    """
+    from app import _fallback_outfits
+    anchor = {"name": "Silk Slip Dress", "category": "dress", "color": "ivory"}
+    result = _fallback_outfits([], "casual", anchor_item=anchor)
+    tips = [o["tip"] for o in result["outfits"]]
+    assert "Silk Slip Dress" in tips[0], (
+        f"Anchor item name not found in first tip: {tips[0]!r}"
+    )
+    # All 3 looks still present
+    assert len(result["outfits"]) >= 2
+
+
 def test_outfit_generate_anchor_item_200(client):
     """POST /api/outfit/generate with anchor_item returns 200 with valid outfits.
 

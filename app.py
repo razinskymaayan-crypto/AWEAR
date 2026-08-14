@@ -1076,25 +1076,63 @@ def _fallback_outfits(wardrobe: list, occasion: str, anchor_item: dict = {}) -> 
     bags = _by_cat("bag")
 
     occ = (occasion or "").strip().lower()
-    # occasion-aware placeholders + tips (non "go buy something" styling tips)
+    # occasion-aware placeholders + 3 distinct tips per look perspective
+    # i=0 "The everyday edit": wearable/safe
+    # i=1 "Off-duty look": elevated/effortless
+    # i=2 "Statement version": bold/confident
     if any(k in occ for k in ("interview", "work", "office", "business")):
-        tip = "Keep it clean and structured — a tucked-in top and one quiet accessory read as polished."
+        base_tips = (
+            "Keep it clean and structured — a tucked-in top and one quiet accessory read as polished.",
+            "A relaxed blazer over clean separates strikes the right approachable-professional note.",
+            "Opt for one clear focal point and quiet everything else — confidence, not busyness.",
+        )
         ph_top, ph_bottom, ph_shoe, ph_bag = "White button-up", "Tailored trousers", "Classic loafers", "Structured tote"
     elif any(k in occ for k in ("date", "dinner", "romant")):
-        tip = "Let one piece do the talking and keep the rest soft — confidence is the real accessory."
+        base_tips = (
+            "Let one piece do the talking and keep the rest soft — confidence is the real accessory.",
+            "A tonal palette with one unexpected texture creates quiet drama without effort.",
+            "Go for the silhouette that makes you stand tall — bold cut beats bold color every time.",
+        )
         ph_top, ph_bottom, ph_shoe, ph_bag = "Silk blouse", "Midi skirt", "Low heel", "Small shoulder bag"
     elif any(k in occ for k in ("workout", "gym", "sport", "run")):
-        tip = "Match your top and bottom tones so the look stays sharp even mid-workout."
+        base_tips = (
+            "Match your top and bottom tones so the look stays sharp even mid-workout.",
+            "A tonal set with a contrasting shoe keeps the outfit cohesive and functional.",
+            "Lean into a single bold color head-to-toe — the cleanest performance look there is.",
+        )
         ph_top, ph_bottom, ph_shoe, ph_bag = "Sport crop top", "Leggings", "Training sneakers", "Compact gym bag"
     elif any(k in occ for k in ("party", "night", "club", "festive")):
-        tip = "Go monochrome and let texture or shine carry the drama for the evening."
+        base_tips = (
+            "Go monochrome and let texture or shine carry the drama for the evening.",
+            "One standout piece, quieted by everything else — the edit that always reads expensive.",
+            "Lean into the unexpected: a relaxed silhouette with a statement shoe changes the whole mood.",
+        )
         ph_top, ph_bottom, ph_shoe, ph_bag = "Statement top", "Black trousers", "Heeled boots", "Mini clutch"
     elif any(k in occ for k in ("beach", "vacation", "summer", "holiday")):
-        tip = "Breathable layers in light tones keep the look easy and the day comfortable."
+        base_tips = (
+            "Breathable layers in light tones keep the look easy and the day comfortable.",
+            "Layer a sheer cover-up over your base — effortless depth without adding weight.",
+            "One saturated color against neutral separates is the vacation look that photographs well.",
+        )
         ph_top, ph_bottom, ph_shoe, ph_bag = "Linen shirt", "Flowy skirt", "Leather sandals", "Straw tote"
     else:
-        tip = "Mix neutral basics with one statement piece — that contrast is what makes a look intentional."
+        base_tips = (
+            "Mix neutral basics with one statement piece — that contrast is what makes a look intentional.",
+            "Layer textures instead of colors — a knit over a silk blouse elevates a simple palette.",
+            "Try a monochrome foundation with one accent — the edit that always looks expensive.",
+        )
         ph_top, ph_bottom, ph_shoe, ph_bag = "Basic top", "Matching bottoms", "Everyday shoes", "Day bag"
+
+    # Apply anchor override to tips[0] if anchor_item has a name
+    anchor_name = (anchor_item or {}).get("name", "")
+    if anchor_name:
+        tips = (
+            f"Built around the {anchor_name} — {base_tips[0]}",
+            base_tips[1],
+            base_tips[2],
+        )
+    else:
+        tips = base_tips
 
     def _real(it: dict, category: str) -> dict:
         return {"name": it.get("name") or "Item", "category": category, "_missing": False}
@@ -1136,7 +1174,7 @@ def _fallback_outfits(wardrobe: list, occasion: str, anchor_item: dict = {}) -> 
         outfits.append({
             "name": look_names[i] if i < len(look_names) else f"Look {i + 1}",
             "match_pct": match_pct,
-            "tip": tip,
+            "tip": tips[i] if i < len(tips) else tips[-1],
             "items": items,
         })
 
