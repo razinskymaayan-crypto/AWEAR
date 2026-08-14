@@ -5975,6 +5975,93 @@ async def dm_send(payload: DMSendRequest, request: Request):
     return {"id": new_id, "created_at": created_at}
 
 
+# ---------------------------------------------------------------------------
+# GET /api/demo/status — pre-flight readiness check for the investor demo.
+# ---------------------------------------------------------------------------
+
+@app.get("/api/demo/status")
+async def demo_status(request: Request, user_id: str = "tamar"):
+    """Return a green/red readiness checklist for the investor demo.
+
+    Run 10 minutes before the meeting:
+        curl http://localhost:8000/api/demo/status | python3 -m json.tool
+
+    All checks must show ok=true for a reliable demo. Seed shortcuts are
+    included in the response so the founder can fix any red item instantly.
+    """
+    demo_user = (user_id or "tamar").strip() or "tamar"
+
+    checks: dict[str, dict] = {}
+
+    # 1. Claude API key — needed for live scan + outfit generation
+    checks["claude_key"] = {
+        "ok": bool(os.getenv("ANTHROPIC_API_KEY")),
+        "label": "Claude API key (AI scan + outfit generation)",
+        "fix": "Set ANTHROPIC_API_KEY in .env — demo falls back to canned data without it (still works but scan is simulated)",
+    }
+
+    # 2. Product catalog loaded
+    product_count = len(_products_cache)
+    checks["catalog"] = {
+        "ok": product_count >= 200,
+        "label": f"Product catalog ({product_count}/200 products loaded)",
+        "fix": "python3 scripts/data_integrity.py to diagnose — then restart the server",
+    }
+
+    # 3. Demo closet seeded for demo_user
+    # 4. Demo wallet seeded for demo_user
+    try:
+        with _get_db() as db:
+            closet_n = db.execute(
+                "SELECT COUNT(*) AS n FROM closet_items WHERE user_key = ?",
+                (demo_user,),
+            ).fetchone()["n"]
+            wallet_n = db.execute(
+                "SELECT COUNT(*) AS n FROM credits WHERE user_key = ? AND status = 'confirmed'",
+                (demo_user,),
+            ).fetchone()["n"]
+    except Exception:
+        closet_n = 0
+        wallet_n = 0
+
+    checks["closet_seeded"] = {
+        "ok": closet_n > 0,
+        "label": f"Demo closet seeded for '{demo_user}' ({closet_n} items)",
+        "fix": f"curl -X POST 'http://localhost:8000/api/demo/seed-closet?user_id={demo_user}'",
+    }
+    checks["wallet_seeded"] = {
+        "ok": wallet_n > 0,
+        "label": f"Demo wallet seeded for '{demo_user}' ({wallet_n} confirmed credits)",
+        "fix": f"curl -X POST 'http://localhost:8000/api/demo/seed-wallet?user_id={demo_user}'",
+    }
+
+    # 5. Local product image files on disk
+    img_dir = Path("static/img/products")
+    img_count = len(list(img_dir.glob("*.jpg"))) if img_dir.exists() else 0
+    checks["product_images"] = {
+        "ok": img_count >= 200,
+        "label": f"Local product images ({img_count}/200 files on disk)",
+        "fix": "python3 scripts/fetch_local_images.py to re-download missing images",
+    }
+
+    all_ok = all(c["ok"] for c in checks.values())
+    logger.info("demo_status: user=%s ready=%s", demo_user, all_ok)
+
+    return {
+        "ready": all_ok,
+        "demo_user": demo_user,
+        "checks": checks,
+        "seed_commands": {
+            "closet": f"curl -X POST 'http://localhost:8000/api/demo/seed-closet?user_id={demo_user}'",
+            "wallet": f"curl -X POST 'http://localhost:8000/api/demo/seed-wallet?user_id={demo_user}'",
+            "all": (
+                f"curl -X POST 'http://localhost:8000/api/demo/seed-closet?user_id={demo_user}' && "
+                f"curl -X POST 'http://localhost:8000/api/demo/seed-wallet?user_id={demo_user}'"
+            ),
+        },
+    }
+
+
 @app.middleware("http")
 async def _no_store_app_assets(request, call_next):
     # The iOS WebView (Capacitor) aggressively caches app.js/app.css and would silently run STALE

@@ -4182,6 +4182,46 @@ def test_demo_seed_wallet_confirmed_and_pending_split(client):
     assert wdata["pending_balance"] > 0, "pending balance must be positive"
 
 
+def test_demo_status_structure_and_seeded_user(client):
+    """GET /api/demo/status returns readiness checklist; seeded user shows ok=True on closet+wallet.
+
+    FAIL-BEFORE: endpoint did not exist (404).
+    PASS-AFTER: 200, ready field present, all 5 checks have ok+label+fix keys,
+    seeded user shows closet_seeded.ok=True and wallet_seeded.ok=True.
+    """
+    uid = "demo_status_test_001"
+    # Seed both closet and wallet for the test user.
+    client.post("/api/demo/seed-closet", params={"user_id": uid})
+    client.post("/api/demo/seed-wallet", params={"user_id": uid})
+
+    r = client.get("/api/demo/status", params={"user_id": uid})
+    assert r.status_code == 200, r.text
+    data = r.json()
+
+    # Top-level shape
+    assert "ready" in data
+    assert "checks" in data
+    assert "seed_commands" in data
+    assert data["demo_user"] == uid
+
+    # All 5 checks present and have required keys
+    expected_keys = {"claude_key", "catalog", "closet_seeded", "wallet_seeded", "product_images"}
+    assert expected_keys == set(data["checks"].keys()), f"unexpected checks: {set(data['checks'].keys())}"
+    for key, check in data["checks"].items():
+        assert "ok" in check, f"check {key} missing 'ok'"
+        assert "label" in check, f"check {key} missing 'label'"
+        assert "fix" in check, f"check {key} missing 'fix'"
+
+    # Seeded user: closet + wallet must report ok=True
+    assert data["checks"]["closet_seeded"]["ok"] is True, "closet not seeded"
+    assert data["checks"]["wallet_seeded"]["ok"] is True, "wallet not seeded"
+
+    # seed_commands contains the 3 expected keys
+    assert "closet" in data["seed_commands"]
+    assert "wallet" in data["seed_commands"]
+    assert "all" in data["seed_commands"]
+
+
 # ---------------------------------------------------------------------------
 # Likes, Saves, Follow-status, Notifications — coverage added (steve run 35)
 # ---------------------------------------------------------------------------
