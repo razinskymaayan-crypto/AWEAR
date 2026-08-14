@@ -2882,3 +2882,25 @@
 .sc-img-footer { position:absolute; bottom:8px; right:8px; }
 .sc-regen-btn { background:rgba(0,0,0,.55); border:none; color:var(--fg,#f0ecf5); border-radius:var(--r-pill,999px); font-family:inherit; font-size:var(--t-micro,11px); font-weight:700; padding:0 14px; cursor:pointer; display:flex; align-items:center; gap:4px; line-height:1; min-height:44px; }
 .sc-regen-btn:active { opacity:.75; transform:scale(.97); }
+
+/* ---- Light-mode cascade fixes (must come AFTER main rules to win specificity-equal override) ---- */
+@media (prefers-color-scheme: light) {
+  /* Greeting name: accent→accent2 gradient is both near-black on warm white — invisible.
+     Use brand red (--hl) so the name pops editorially. */
+  .home-greeting em { background: none; -webkit-background-clip: unset; background-clip: unset; color: var(--hl, #E84A5F); }
+  /* Wallet pending amount: amber (#b5620a) on cream banner ~3.6:1 — fails WCAG AA.
+     Near-black text; amber border already signals pending state.
+     DS-004: fallbacks use dark SoT (#fbfbfd = --text in dark mode). */
+  .wa-pending-banner-amt, .wa-credit-pending-amt { color: var(--text, #fbfbfd); }
+  /* Wallet hero blob: dark-brown (--accent2=#3D3833) at 14% reads as grey placeholder.
+     Replace with brand red tint for intentional warmth. */
+  .wa-hero::before { background: color-mix(in srgb, var(--hl, #E84A5F) 10%, transparent); }
+  /* Wallet pending banner: warm tan (--warning 12%) clashes with rose blob — three palettes on one card.
+     Replace with neutral surface + hairline border for a unified cool palette.
+     DS-004: fallbacks use dark SoT (#161318 = --surface, #2e2836 = --line in dark mode). */
+  .wa-pending-banner { background: var(--surface, #161318); border-color: var(--line, #2e2836); }
+  /* Withdraw button: grey-on-grey invisible in light mode.
+     Editorial-black fill with white text — matches "Wore it" pattern on Home.
+     DS-004: fallbacks use dark SoT (#fbfbfd = --text, #1e1a22 = --card in dark mode). */
+  .wa-withdraw-btn { background: var(--text, #fbfbfd); border-color: transparent; color: var(--card, #1e1a22); }
+}
