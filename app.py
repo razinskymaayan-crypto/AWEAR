@@ -1050,9 +1050,10 @@ class OutfitRequest(BaseModel):
     wardrobe: list = []
     style_vibes: list = []
     user_id: str = ""  # optional; pulls confirmed closet items from DB when set
+    anchor_item: dict = {}  # optional; the specific item to feature in every outfit
 
 
-def _fallback_outfits(wardrobe: list, occasion: str) -> dict:
+def _fallback_outfits(wardrobe: list, occasion: str, anchor_item: dict = {}) -> dict:
     """Build 2-3 outfit suggestions server-side from the provided wardrobe.
 
     Used when the Claude call fails OR returns no usable outfits, so the AI
@@ -1119,6 +1120,16 @@ def _fallback_outfits(wardrobe: list, occasion: str) -> dict:
             _pick(shoes, i, ph_shoe, "shoes"),
             _pick(bags, i, ph_bag, "bag"),
         ]
+        if anchor_item and anchor_item.get("name"):
+            anchor_entry = {
+                "name": anchor_item.get("name"),
+                "category": (anchor_item.get("category") or "top").lower(),
+                "_missing": False,
+                "_anchor": True,
+            }
+            # Remove any existing item of same category to avoid duplicates
+            items = [it for it in items if it.get("category") != anchor_entry["category"]]
+            items.insert(0, anchor_entry)
         owned = sum(1 for it in items if not it["_missing"])
         # honest match: more owned items => higher score (62 base, +9 per owned, capped 94)
         match_pct = min(94, 62 + owned * 9)
@@ -1166,6 +1177,13 @@ async def generate_outfit(request: Request, data: OutfitRequest):
     except Exception:
         wardrobe = list(data.wardrobe)
 
+    anchor = data.anchor_item if isinstance(data.anchor_item, dict) else {}
+    if anchor.get("name"):
+        # Ensure anchor item is in the wardrobe list for AI context
+        anchor_key = (anchor.get("name", ""), (anchor.get("category") or "").lower())
+        if not any((it.get("name", ""), (it.get("category") or "").lower()) == anchor_key for it in wardrobe):
+            wardrobe = [anchor] + list(wardrobe)
+
     wardrobe_desc = ", ".join(
         f"{it.get('name','')} ({it.get('category','')})"
         for it in wardrobe[:30]
@@ -1183,18 +1201,21 @@ async def generate_outfit(request: Request, data: OutfitRequest):
         " — _missing: true if the item isn't in the wardrobe and needs to be bought."
     )
     try:
+        content = (
+            f"Occasion: {data.occasion}\n"
+            f"Wardrobe: {wardrobe_desc}\n"
+            f"Preferred styles: {', '.join(data.style_vibes) or 'any'}"
+        )
+        if anchor.get("name"):
+            content += (
+                f"\nFocus item (must appear in every outfit): {anchor.get('name')} "
+                f"({anchor.get('category') or 'item'}, {anchor.get('color') or 'any color'})"
+            )
         response = client.messages.create(
             model=MODEL,
             max_tokens=800,
             system=system,
-            messages=[{
-                "role": "user",
-                "content": (
-                    f"Occasion: {data.occasion}\n"
-                    f"Wardrobe: {wardrobe_desc}\n"
-                    f"Preferred styles: {', '.join(data.style_vibes) or 'any'}"
-                ),
-            }],
+            messages=[{"role": "user", "content": content}],
         )
         text = response.content[0].text.strip()
         # strip markdown fences if present
@@ -1207,7 +1228,7 @@ async def generate_outfit(request: Request, data: OutfitRequest):
         if not isinstance(result, dict) or not isinstance(result.get("outfits"), list) or not result["outfits"]:
             _last_outfit["mode"] = "demo"
             _last_outfit["reason"] = "empty_response"
-            return _fallback_outfits(wardrobe, data.occasion)
+            return _fallback_outfits(wardrobe, data.occasion, anchor_item=anchor)
         _last_outfit["mode"] = "live"
         _last_outfit["reason"] = None
         return result
@@ -1215,7 +1236,7 @@ async def generate_outfit(request: Request, data: OutfitRequest):
         print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         _last_outfit["mode"] = "demo"
         _last_outfit["reason"] = "exception"
-        return _fallback_outfits(wardrobe, data.occasion)
+        return _fallback_outfits(wardrobe, data.occasion, anchor_item=anchor)
 
 
 class DeclutterRequest(BaseModel):

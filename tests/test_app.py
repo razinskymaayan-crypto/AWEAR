@@ -1142,6 +1142,42 @@ def test_outfit_generate_backward_compat_no_user_id(client):
     assert any(it["name"] == "Black Jeans" for it in real_items)
 
 
+# anchor_item support (OW-014 fail-before/pass-after)
+def test_outfit_anchor_item_appears_in_fallback():
+    """anchor_item is included as the first item in each fallback outfit.
+
+    FAIL-BEFORE: anchor_item field did not exist — endpoint would ignore it;
+    the tapped item from the feed would never appear in generated outfits.
+    PASS-AFTER: anchor_item entry appears in every returned outfit's items list.
+    """
+    from app import _fallback_outfits
+    anchor = {"name": "Red Blazer", "category": "outerwear", "color": "red"}
+    result = _fallback_outfits([], "casual", anchor_item=anchor)
+    outfits = result.get("outfits", [])
+    assert outfits, "fallback must return at least one outfit"
+    for outfit in outfits:
+        names = [it.get("name") for it in outfit.get("items", [])]
+        assert "Red Blazer" in names, f"anchor item missing from outfit items: {names}"
+
+
+def test_outfit_generate_anchor_item_200(client):
+    """POST /api/outfit/generate with anchor_item returns 200 with valid outfits.
+
+    FAIL-BEFORE: anchor_item field did not exist — endpoint would 422 or ignore it.
+    PASS-AFTER: returns 200 with outfits list; anchor item visible in fallback response.
+    """
+    r = client.post("/api/outfit/generate", json={
+        "occasion": "casual",
+        "wardrobe": [],
+        "anchor_item": {"name": "Navy Trench Coat", "category": "outerwear", "color": "navy"},
+    })
+    assert r.status_code == 200
+    body = r.json()
+    assert "outfits" in body
+    assert isinstance(body["outfits"], list)
+    assert len(body["outfits"]) >= 1
+
+
 # --------------------------------------------------------------------------- #
 # Closet management: DELETE and PATCH /api/closet/{item_id}
 # These endpoints did not exist before this change — all tests below would
