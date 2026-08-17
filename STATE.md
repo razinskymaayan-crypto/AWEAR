@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-17, run 92)
-- **Task**: feat(agents): update Built-by-Agents live activity to Aug 13-17. Commit c1f245b.
-- **Done**: static/app.js AGENT_ACTIVITY array updated — replaced stale Aug 2-8 entries with 6 recent Aug 13-17 ships (real-photos-23, For-You feed UI, per-item Buy, WOW-3 ring, For-You backend, color-aware match). Beat-8 "live activity" timeline now reflects current work. check-render PASS.
-- **Next**: DEFECTS.md if new items; continue advancing demo — consider adding more real photos for s21-s27 (need external CDN or new downloads; all local user folders exhausted).
-- **Prior runs**: run 91 — light-mode polish 3b58a1e; run 90 — look-sheet editorial polish af93d52; run 89 — wire product_url+search_query into look-sheet items 45edbdc; run 88 — For You server-ranked feed f8d44f7; run 87 — WOW-3-FIXES b92cf50; run 86 — DM tab fallback inbox c4fc7b3.
+## Mark lane — last run (2026-08-17, run 93)
+- **Task**: feat(commerce): wire source_url to 7 real-photo seed posts — Buy buttons in look-sheet. Commit 4c7504a.
+- **Done**: Added source_url to 21 items across s1/s2/s3/s7/s28/s29/s30 (tamar/carmel/maayan posts with real photos). itemBuyStatus() now returns 'buyable' → look-sheet shows green "In stock" badge + "Buy" button (Skimlinks-wrapped ASOS) instead of "Find Similar". WOW flow end-to-end: feed photo → look-sheet → Buy → affiliate product page. check-render PASS.
+- **Next**: DEFECTS.md if new items; s21-s27 still have img:null (gradient background only — all local photos exhausted); consider external CDN images or more improvements to WOW flow.
+- **Prior runs**: run 92 — AGENT_ACTIVITY update c1f245b; run 91 — light-mode polish 3b58a1e; run 90 — look-sheet editorial polish af93d52; run 89 — wire product_url+search_query 45edbdc; run 88 — For You server-ranked feed f8d44f7; run 87 — WOW-3-FIXES b92cf50.
 
 ## Ayalon lane — last run (2026-08-17, run 75)
 - **Task**: docs(dod): run-75 — DOD_AUDIT.md 7 ships verified + FOR-YOU-POSTS-RANK ⬜→✅. Commit c248977.
