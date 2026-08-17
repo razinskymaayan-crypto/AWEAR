@@ -17,11 +17,11 @@
 - **Next**: DEFECTS.md if new items; check remaining MASTER_PLAN/INBOX items; next highest-value demo improvement.
 - **Prior runs**: run 90 — look-sheet editorial polish af93d52; run 89 — wire product_url+search_query into look-sheet items 45edbdc; run 88 — For You server-ranked feed f8d44f7; run 87 — WOW-3-FIXES b92cf50; run 86 — DM tab fallback inbox c4fc7b3; run 85 — scan-confirm source-link callout b7588ba.
 
-## Ayalon lane — last run (2026-08-14, run 73)
-- **Task**: docs(demo): run-73 — DEMO_SCRIPT re-verified 2026-08-14; 6 new ships + unlock FOR-YOU talking point. Commit c26b8ab.
-- **Done**: docs/DEMO_SCRIPT.md — (1) FOR-YOU-POSTS-RANK ⬜→✅ in beat-4: mark run-88 (f8d44f7) wired UI; talking point "entire For You feed ordered by her style" unblocked; (2) STYLIST-DISTINCT-TIPS tip (d790d8e) added to beat-3; (3) OUTFIT-ANCHOR-ITEM tip (ef26541) added to beat-3 extension; (4) LOOK-SHEET-PRODUCT-URLS tip (45edbdc) added to beat-5; (5) LOOK-SHEET-EDITORIAL-POLISH tip (af93d52) added to beat-5; (6) LIGHT-MODE-POLISH tip (3b58a1e+e51c915) added to pre-flight; footer items (49)-(54) + test count 320→325. check-render PASS.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote is human-only. DEMO_SCRIPT now current through 2026-08-14 run-73 (325 tests, 54 ships logged).
-- **Prior runs**: run 72 — PITCH_DECK 2026-08-14 6 ships+325 tests dc73a3b; run 71 — PITCH_DECK 2026-08-13+320 tests ecfbb44; run 70 — DEMO_SCRIPT footer (41)-(48) b8dc73e; run 69 — DoD 8 ships b7a1067; run 67 — DEMO_SCRIPT+PITCH_DECK 311 5b8a036.
+## Ayalon lane — last run (2026-08-17, run 75)
+- **Task**: docs(dod): run-75 — DOD_AUDIT.md 7 ships verified + FOR-YOU-POSTS-RANK ⬜→✅. Commit c248977.
+- **Done**: docs/DOD_AUDIT.md — (1) FOR-YOU-POSTS-RANK ⬜→✅ (f8d44f7 UI wired); (2) LOOK-SHEET-PRODUCT-URLS (45edbdc) verified; (3) LOOK-SHEET-EDITORIAL-POLISH (af93d52) verified; (4) STYLIST-DISTINCT-TIPS (d790d8e) verified; (5) LIGHT-MODE-POLISH (3b58a1e) verified; (6) FEED-REAL-PHOTOS-23 (4560894) verified; (7) STYLIST-BROKENPIPE-FIX (27c19af) verified. Header updated with run-75 timestamp. 326 tests confirmed. check-render PASS.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call). DoD audit current through 2026-08-17 run-75 (326 tests, 56 ships logged in DEMO_SCRIPT, all 7 post-run-69 items verified in DOD_AUDIT).
+- **Prior runs**: run 74 — DEMO_SCRIPT 2 ships+326 tests 963fe6b; run 73 — DEMO_SCRIPT re-verified 6 ships c26b8ab; run 72 — PITCH_DECK dc73a3b; run 71 — PITCH_DECK ecfbb44; run 70 — DEMO_SCRIPT footer b8dc73e.
 
 ## Steve lane — last run (2026-08-17, run 52)
 - **Task**: fix(stylist): eliminate BrokenPipeError crash in health sweep. Commit 27c19af.
