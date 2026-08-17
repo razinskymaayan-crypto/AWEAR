@@ -6122,6 +6122,76 @@ async def demo_status(request: Request, user_id: str = "tamar"):
     }
 
 
+# POST /api/demo/simulate-purchase — simulate creator earnings for investor demos.
+@app.post("/api/demo/simulate-purchase")
+async def demo_simulate_purchase(
+    request: Request,
+    post_id: str = "",
+    sale_amount_usd: float = 100.0,
+):
+    """Trigger the full creator-earns-tokens loop without a real Skimlinks postback.
+    Resolves post → poster → inserts a pending credit → investor can see it in /api/wallet.
+    """
+    caller = (request.client.host if request.client else None) or "anon"
+    if not check_rate_limit(caller, "demo_simulate_purchase", 10):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+    # Resolve post from cache
+    resolved_post_id = post_id
+    if post_id:
+        post = next((p for p in _posts_cache if p["id"] == post_id), None)
+        if post is None:
+            raise HTTPException(status_code=404, detail=f"Post {post_id!r} not found in cache")
+    else:
+        if not _posts_cache:
+            raise HTTPException(status_code=503, detail="Posts cache is empty — server not ready")
+        post = _posts_cache[0]
+        resolved_post_id = post["id"]
+
+    poster_id = post["user_id"]
+
+    # Compute affiliate commission and creator share
+    commission = round(sale_amount_usd * 0.08, 4)
+    creator_credit = round(commission * SKIMLINKS_CREATOR_SHARE_PCT, 4)
+
+    credit_id = "demo_" + uuid.uuid4().hex[:12]
+    order_id = f"demo_sim_{uuid.uuid4().hex[:8]}"
+    item_name = f"Simulated sale via post {resolved_post_id}"
+    now = datetime.datetime.utcnow().isoformat()
+
+    with _get_db() as db:
+        db.execute(
+            """INSERT INTO credits
+               (id, user_key, order_id, item_name, amount_usd, type, created_at, status, transaction_id)
+               VALUES (?,?,?,?,?,?,?,?,?)""",
+            (credit_id, poster_id, order_id, item_name, creator_credit,
+             "demo_sim", now, "pending", ""),
+        )
+        db.commit()
+
+    logger.info(
+        "demo_simulate_purchase: post=%s poster=%s sale=%.2f credit=%.4f",
+        resolved_post_id, poster_id, sale_amount_usd, creator_credit,
+    )
+
+    narrative = (
+        f"Buyer paid ${sale_amount_usd}  →  AWEAR earned ${commission} commission (8%)"
+        f"  →  {poster_id} earned ${creator_credit} pending tokens (40% share)"
+    )
+
+    return {
+        "status": "simulated",
+        "narrative": narrative,
+        "credit_id": credit_id,
+        "post_id": resolved_post_id,
+        "poster_id": poster_id,
+        "sale_amount_usd": sale_amount_usd,
+        "awear_commission_usd": commission,
+        "creator_credit_usd": creator_credit,
+        "check_wallet": f"/api/wallet?user_id={poster_id}",
+    }
+
+
 @app.middleware("http")
 async def _no_store_app_assets(request, call_next):
     # The iOS WebView (Capacitor) aggressively caches app.js/app.css and would silently run STALE

@@ -23,12 +23,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call). DoD audit current through 2026-08-17 run-75 (326 tests, 56 ships logged in DEMO_SCRIPT, all 7 post-run-69 items verified in DOD_AUDIT).
 - **Prior runs**: run 74 — DEMO_SCRIPT 2 ships+326 tests 963fe6b; run 73 — DEMO_SCRIPT re-verified 6 ships c26b8ab; run 72 — PITCH_DECK dc73a3b; run 71 — PITCH_DECK ecfbb44; run 70 — DEMO_SCRIPT footer b8dc73e.
 
-## Steve lane — last run (2026-08-17, run 52)
-- **Task**: fix(stylist): eliminate BrokenPipeError crash in health sweep. Commit 27c19af.
-- **Done**: app.py — 3 `print(flush=True)` in exception handlers replaced with `logger.error()` (generate_outfit, stylist_chat, moderate_comment). `stylist_chat` gets early-exit when no ANTHROPIC_API_KEY (sets reason='no_key' before any network call, consistent with moderate_comment). 1 regression pytest in tests/test_app.py (fail-before: reason='exception'; pass-after: reason='no_key'). Eliminates crash reported in ci-debug/health-sweep.json.
-- **Status**: Commerce fully shipped. 326 tests. 95% route coverage. All demo beats covered. Health-sweep crash fixed.
+## Steve lane — last run (2026-08-17, run 53)
+- **Task**: feat(demo): POST /api/demo/simulate-purchase — investor demo tool for creator earnings loop.
+- **Done**: app.py — new endpoint `demo_simulate_purchase` (line 6126): resolves a post → poster_id → inserts pending credit (8% affiliate commission × 40% creator share). 2 hermetic pytests in tests/test_app.py (basic shape + wallet credit appears). Lets founder trigger the full earn-tokens WOW moment live in the pitch without real Skimlinks credentials. 328 tests total.
+- **Status**: Commerce fully shipped. 328 tests. 95% route coverage. All demo beats covered. Full creator-earnings loop demonstrable without external deps.
 - **Next**: DEFECTS.md if new items; remaining INBOX improvements in lane.
-- **Prior runs**: run 51 — feat(stylist) distinct fallback tips d790d8e; run 50 — COLOR-AWARE-MATCH de5989b; run 49 — feat(feed) personalized For You ranking 9ffb9b2; run 48 — fix(data) prod_ht_019 color mismatch a950a87; run 43 — For You sort_by=match 32b3369.
+- **Prior runs**: run 52 — fix(stylist) BrokenPipeError 27c19af; run 51 — feat(stylist) distinct fallback tips d790d8e; run 50 — COLOR-AWARE-MATCH de5989b; run 49 — feat(feed) personalized For You ranking 9ffb9b2; run 48 — fix(data) prod_ht_019 color mismatch a950a87.
 
 ## Phase status
 | Phase | Status |

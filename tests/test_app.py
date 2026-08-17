@@ -3995,6 +3995,41 @@ def test_skimlinks_pending_to_confirmed_wallet_lifecycle(client):
     )
 
 
+# Demo simulate-purchase (investor demo tool)
+def test_demo_simulate_purchase_basic(client):
+    """POST /api/demo/simulate-purchase returns status=simulated and credits the poster."""
+    r = client.post("/api/demo/simulate-purchase")
+    assert r.status_code == 200
+    d = r.json()
+    assert d["status"] == "simulated"
+    assert "credit_id" in d and d["credit_id"].startswith("demo_")
+    assert "poster_id" in d and d["poster_id"]
+    assert d["creator_credit_usd"] > 0
+    assert "check_wallet" in d
+
+
+def test_demo_simulate_purchase_credit_appears_in_wallet(client):
+    """simulate-purchase credits appear as pending in GET /api/wallet."""
+    # Pick the first post to resolve a real poster_id
+    posts_r = client.get("/api/posts", params={"limit": 1})
+    assert posts_r.status_code == 200
+    post = posts_r.json()["items"][0]
+    poster_id = post["user_id"]
+
+    r = client.post("/api/demo/simulate-purchase",
+                    params={"post_id": post["id"], "sale_amount_usd": 50.0})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["poster_id"] == poster_id
+    expected_credit = round(50.0 * 0.08 * 0.40, 4)
+    assert abs(d["creator_credit_usd"] - expected_credit) < 0.001
+
+    wallet_r = client.get("/api/wallet", params={"user_id": poster_id})
+    assert wallet_r.status_code == 200
+    pending = wallet_r.json().get("pending_usd", 0)
+    assert pending >= expected_credit
+
+
 # ---------------------------------------------------------------------------
 # /api/find-similar — COMMERCE_PLAN item 7
 # ---------------------------------------------------------------------------
