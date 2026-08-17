@@ -1271,7 +1271,7 @@ async def generate_outfit(request: Request, data: OutfitRequest):
         _last_outfit["reason"] = None
         return result
     except Exception as e:
-        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
+        logger.error("generate_outfit error: %s", e, exc_info=True)
         _last_outfit["mode"] = "demo"
         _last_outfit["reason"] = "exception"
         return _fallback_outfits(wardrobe, data.occasion, anchor_item=anchor)
@@ -1337,6 +1337,10 @@ async def stylist_chat(request: Request, data: StylistMessage):
     if not check_rate_limit(ip, "stylist_chat", limit=20):
         logger.warning("Rate limit exceeded: stylist/chat from %s", ip)
         raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        _last_stylist["mode"] = "demo"
+        _last_stylist["reason"] = "no_key"
+        return {"ok": False}
     system = (
         "You are Abigail, the AI stylist inside AWEAR — a global fashion app. "
         "You help users style their wardrobe, suggest outfits, and give honest fashion advice. "
@@ -1359,9 +1363,7 @@ async def stylist_chat(request: Request, data: StylistMessage):
         _last_stylist["reason"] = None
         return {"answer": response.content[0].text, "ok": True}
     except Exception as e:
-        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
-        # Demo reliability (A6): signal unavailability so the client falls through
-        # to its local stylist replies instead of rendering a broken message.
+        logger.error("stylist_chat error: %s", e, exc_info=True)
         _last_stylist["mode"] = "demo"
         _last_stylist["reason"] = "exception"
         return {"ok": False}
@@ -1431,7 +1433,6 @@ async def moderate_comment(data: CommentModerationRequest):
         _last_moderation["error"] = None
         return {"harmful": bool(parsed.get("harmful", False)), "severity": severity, "mode": "live"}
     except Exception as e:
-        print(f"[ERROR] {e}\n{traceback.format_exc()}", flush=True)
         # Key IS configured — this is an infra failure, not the demo state.
         # harmful=None (unknown) rather than False so a caller can't mistake
         # "we don't know" for "we checked and it's clean". _classify_api_error

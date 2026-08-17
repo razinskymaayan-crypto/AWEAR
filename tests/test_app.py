@@ -2009,6 +2009,34 @@ def test_stylist_chat_missing_question_returns_422(client):
     assert r.status_code == 422, f"Expected 422 for missing question, got {r.status_code}"
 
 
+def test_stylist_chat_no_key_sets_reason_no_key(client):
+    """With no ANTHROPIC_API_KEY, stylist_chat early-exits with reason='no_key'.
+
+    FAIL-BEFORE: the endpoint fell into the try/except path and set reason='exception',
+    also risking BrokenPipeError from print(flush=True) in the except block when
+    stdout is a closed pipe (the health-sweep crash in ci-debug/health-sweep.json).
+    PASS-AFTER: early-exit before any Claude call sets reason='no_key'; the endpoint
+    never attempts a network call and never writes to stdout in the error path.
+    """
+    import app as appmod
+    import os
+    appmod._last_stylist["mode"] = None
+    appmod._last_stylist["reason"] = None
+    prev_key = os.environ.pop("ANTHROPIC_API_KEY", None)
+    try:
+        r = client.post("/api/stylist/chat", json={"question": "What should I wear?"})
+        assert r.status_code == 200, r.text
+        body = r.json()
+        assert body.get("ok") is False, f"Expected ok=False in no-key mode, got: {body}"
+        assert appmod._last_stylist["mode"] == "demo"
+        assert appmod._last_stylist["reason"] == "no_key", (
+            f"Expected reason='no_key' (early-exit path), got: {appmod._last_stylist['reason']!r}"
+        )
+    finally:
+        if prev_key is not None:
+            os.environ["ANTHROPIC_API_KEY"] = prev_key
+
+
 # ---------------------------------------------------------------------------
 # Stories — POST/GET/DELETE contract, TTL filter, ownership guard
 # ---------------------------------------------------------------------------
