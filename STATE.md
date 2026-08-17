@@ -23,12 +23,12 @@
 - **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call); PITCH_DECK PDF/Keynote is human-only. DEMO_SCRIPT now current through 2026-08-14 run-73 (325 tests, 54 ships logged).
 - **Prior runs**: run 72 — PITCH_DECK 2026-08-14 6 ships+325 tests dc73a3b; run 71 — PITCH_DECK 2026-08-13+320 tests ecfbb44; run 70 — DEMO_SCRIPT footer (41)-(48) b8dc73e; run 69 — DoD 8 ships b7a1067; run 67 — DEMO_SCRIPT+PITCH_DECK 311 5b8a036.
 
-## Steve lane — last run (2026-08-14, run 51)
-- **Task**: feat(stylist): distinct fallback outfit tips per look + anchor-item-aware first tip. Commit d790d8e.
-- **Done**: app.py `_fallback_outfits` — replaced single `tip` var with `base_tips` tuple (3 distinct tips per occasion × 6 occasion types). Anchor item name injected into tips[0] ("Built around the {item} — ..."). tests/test_app.py (2 hermetic pytests: fail-before proven for identical tips + anchor name in tip[0]). 325 total tests.
-- **Status**: Commerce fully shipped. 325 tests. 95% route coverage. All demo beats covered. Stylist fallback now shows 3 distinct looks with genuine styling advice.
+## Steve lane — last run (2026-08-17, run 52)
+- **Task**: fix(stylist): eliminate BrokenPipeError crash in health sweep. Commit 27c19af.
+- **Done**: app.py — 3 `print(flush=True)` in exception handlers replaced with `logger.error()` (generate_outfit, stylist_chat, moderate_comment). `stylist_chat` gets early-exit when no ANTHROPIC_API_KEY (sets reason='no_key' before any network call, consistent with moderate_comment). 1 regression pytest in tests/test_app.py (fail-before: reason='exception'; pass-after: reason='no_key'). Eliminates crash reported in ci-debug/health-sweep.json.
+- **Status**: Commerce fully shipped. 326 tests. 95% route coverage. All demo beats covered. Health-sweep crash fixed.
 - **Next**: DEFECTS.md if new items; remaining INBOX improvements in lane.
-- **Prior runs**: run 50 — COLOR-AWARE-MATCH de5989b; run 49 — feat(feed) personalized For You ranking 9ffb9b2; run 48 — fix(data) prod_ht_019 color mismatch a950a87; run 43 — For You sort_by=match 32b3369.
+- **Prior runs**: run 51 — feat(stylist) distinct fallback tips d790d8e; run 50 — COLOR-AWARE-MATCH de5989b; run 49 — feat(feed) personalized For You ranking 9ffb9b2; run 48 — fix(data) prod_ht_019 color mismatch a950a87; run 43 — For You sort_by=match 32b3369.
 
 ## Phase status
 | Phase | Status |
