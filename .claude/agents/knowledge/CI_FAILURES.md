@@ -124,3 +124,8 @@ Top-priority defect — before INBOX work.
 
 ## [FIXED 2026-07-31 steve self-heal] REPEAT-FAILURE: steve(exposed-bug) — test_profiles_list_contract (2026-07-29->2026-07-30, 8 entries)
 > **Root cause + fix:** The gate kept appending [OPEN] entries across 8 runs (2026-07-29 to 2026-07-30) because each rejected branch was rolled back, but CI_FAILURES.md accumulated stale entries. Investigation (2026-07-31): commit f051da1 ("test(backend): add contract + pagination tests for /api/categories, /api/posts, /api/profiles") is already in origin/main — confirmed with `git merge-base --is-ancestor f051da1 origin/main`. The endpoint `/api/profiles` returns the correct envelope `{items, total, limit, offset}` with each item having `id` and `name`; verified via direct TestClient simulation (status 200, all shape + field assertions pass). Tests and endpoint code both landed cleanly in main after OW-013 gate issues were resolved. No code change needed — clearing stale [OPEN] entries only. Do NOT re-analyze.
+
+## [OPEN] PRODUCT BUG — exposed by steve's own new tests (2026-08-17T10:56:01Z)
+These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
+OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
+Top-priority defect — before INBOX work.
