@@ -4290,12 +4290,12 @@
     ];
 
     const AGENT_ACTIVITY = [
-      {date:'Aug 8',  agent:'Steve',    desc:'Creator wallet seeded — demo shows $21.35 confirmed + $10.40 pending earnings'},
-      {date:'Aug 8',  agent:'Mark',     desc:'Shopping match score — style-weighted compatibility algorithm replaces tag overlap'},
-      {date:'Aug 7',  agent:'Sam',      desc:'Attribution closed — every affiliate link carries xcust creator ID; wallet auto-credited on sale'},
-      {date:'Aug 6',  agent:'Mark',     desc:'3-tier item CTA — Buy / Find Similar / Resale adapts live to each item\'s availability'},
-      {date:'Aug 5',  agent:'Mark',     desc:'Look drill-down — every item thumbnail opens its full detail sheet and commerce options in one tap'},
-      {date:'Aug 2',  agent:'Mark',     desc:'AI image pipeline closed — generated catalog photo flows from scan through confirm to closet shelf'},
+      {date:'Aug 17', agent:'Mark',     desc:'Real looks — 23 of 30 feed posts now show real fashion photos from demo users'},
+      {date:'Aug 14', agent:'Mark',     desc:'For You feed — ranked by closet match, most-compatible looks surface first'},
+      {date:'Aug 14', agent:'Mark',     desc:'Look-sheet Buy — every item in a look has its own Buy button to the exact product page'},
+      {date:'Aug 13', agent:'Mark',     desc:'WOW moment upgrade — match ring 112px bold; Buy CTA accent-filled; DM wired'},
+      {date:'Aug 13', agent:'Sam',      desc:'For You ranking — GET /api/posts?sort_by=match ranks feed by closet match score'},
+      {date:'Aug 13', agent:'Steve',    desc:'Color-aware match — same color family in closet boosts compatibility score'},
     ];
 
     el.innerHTML = `
