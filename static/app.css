@@ -286,7 +286,7 @@
   /* ---- Image area (4:5 portrait, image+pills+reactions inside) ---- */
   .fc-image-wrap { position: relative; width: 100%; aspect-ratio: 4/5; overflow: hidden; background: var(--surface,#161318); }
   .fcbg { position: absolute; inset: 0; }
-  .fc-match-overlay { position: absolute; top: 12px; inset-inline-start: 12px; z-index: 4; display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: var(--r-pill,999px); font-size: var(--t-small,13px); font-weight: 800; color: var(--on-media,#ffffff); background: rgba(0,0,0,.72); backdrop-filter: blur(10px); pointer-events: none; border: 1.5px solid rgba(255,255,255,.18); }
+  .fc-match-overlay { position: absolute; top: 12px; inset-inline-start: 12px; z-index: 4; display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: var(--r-pill,999px); font-size: var(--t-caption,12px); font-weight: 700; color: var(--on-media,#ffffff); background: rgba(0,0,0,.60); backdrop-filter: blur(8px); pointer-events: none; border: 1px solid rgba(255,255,255,.15); }
   .fc-match--high svg { color: var(--success,#52c97a); }
   .fc-match--mid svg { color: var(--accent2,#c4855a); }
   .fc-match--low svg { color: var(--accent,#e8526a); }
@@ -2910,4 +2910,6 @@
   /* Story rings: accent gradient in light mode = near-black on near-black — use brand-hl red instead.
      DS-004: fallback is dark-SoT accent (#e8526a) which works in dark mode (ring is handled by main rule). */
   .story-ring:not(.seen):not(.add) { background: var(--hl, var(--accent, #e8526a)); }
+  /* Add-story ring: same fix — accent gradient becomes near-black in light mode. */
+  .story-ring.add { background: var(--hl, var(--accent, #e8526a)); }
 }
