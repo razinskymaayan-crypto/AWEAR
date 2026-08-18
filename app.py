@@ -5550,7 +5550,8 @@ async def get_wallet(request: Request, user_id: str = ""):
         for r in rows
     ]
     logger.info("wallet: user=%s balance=%.4f pending=%.4f credits=%d", lookup_key, balance, pending_balance, len(credits))
-    return {"balance": balance, "pending_usd": pending_balance, "credits": credits}
+    # pending_balance kept as alias for static/app.js until mark's lane migrates to pending_usd
+    return {"balance": balance, "pending_usd": pending_balance, "pending_balance": pending_balance, "credits": credits}
 
 
 class SkimlinkPostback(BaseModel):
