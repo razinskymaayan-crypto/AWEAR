@@ -2863,6 +2863,7 @@
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('stylists')"><span class="hq-icon">${icon('user', 20)}</span>Stylists</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('analytics')"><span class="hq-icon">${icon('barChart', 20)}</span>Analytics</button>
         <button class="hq-btn" style="flex-shrink:0" onclick="showView('wallet')"><span class="hq-icon">${icon('coins', 20)}</span>Wallet</button>
+        <button class="hq-btn" style="flex-shrink:0" onclick="showView('agents')"><span class="hq-icon">${icon('users', 20)}</span>Agent Team</button>
       </div>
     `;
 
@@ -4290,9 +4291,9 @@
     ];
 
     const AGENT_ACTIVITY = [
+      {date:'Aug 18', agent:'Mark',     desc:'Earn amounts — feed posts now show real creator earnings ($14–$50) based on look price'},
       {date:'Aug 17', agent:'Mark',     desc:'Real looks — 23 of 30 feed posts now show real fashion photos from demo users'},
       {date:'Aug 14', agent:'Mark',     desc:'For You feed — ranked by closet match, most-compatible looks surface first'},
-      {date:'Aug 14', agent:'Mark',     desc:'Look-sheet Buy — every item in a look has its own Buy button to the exact product page'},
       {date:'Aug 13', agent:'Mark',     desc:'WOW moment upgrade — match ring 112px bold; Buy CTA accent-filled; DM wired'},
       {date:'Aug 13', agent:'Sam',      desc:'For You ranking — GET /api/posts?sort_by=match ranks feed by closet match score'},
       {date:'Aug 13', agent:'Steve',    desc:'Color-aware match — same color family in closet boosts compatibility score'},
