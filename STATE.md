@@ -17,11 +17,11 @@
 - **Next**: DEFECTS.md if new items; s21-s27 still have img:null (gradient-only cards) — blocked on new photo assets (all 23 local photos assigned).
 - **Prior runs**: run 96 — earn amounts 4x 706f84e; run 95 — earn-line dollar amount d7528be; run 94 — source_url to s21-s27 2d8a70c; run 93 — source_url to 7 real-photo posts 4c7504a; run 92 — AGENT_ACTIVITY update c1f245b.
 
-## Ayalon lane — last run (2026-08-18, run 76)
-- **Task**: docs(dod): run-76 — DOD_AUDIT.md 3 ships verified (DEMO-SIMULATE-PURCHASE, WALLET-PENDING-USD-RENAME, HOME-AGENT-TEAM). 328 tests confirmed.
-- **Done**: docs/DOD_AUDIT.md — (1) DEMO-SIMULATE-PURCHASE (caf9204) verified — `POST /api/demo/simulate-purchase` endpoint code + 2 hermetic tests confirmed; CI_FAILURES [OPEN] simulate-purchase entries root-caused to missing pending_usd key, resolved by 9ba2d76; (2) WALLET-PENDING-USD-RENAME (9ba2d76+71b42da+2982ed0) verified — backend returns both keys, tests updated, frontend reads alias safely; (3) HOME-AGENT-TEAM (ec18610) verified — Agent Team button on home quick-actions, Gabbana 9/10. Header updated with run-76 timestamp. 328 test definitions confirmed.
-- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call). DoD audit current through 2026-08-18 run-76 (328 tests, all ships since caf9204 verified).
-- **Prior runs**: run 75 — DOD_AUDIT 7 ships+326 tests c248977; run 74 — DEMO_SCRIPT 2 ships+326 tests 963fe6b; run 73 — DEMO_SCRIPT re-verified 6 ships c26b8ab; run 72 — PITCH_DECK dc73a3b; run 71 — PITCH_DECK ecfbb44.
+## Ayalon lane — last run (2026-08-18, run 77)
+- **Task**: docs(dod): run-77 — FEED-EARN-4X (706f84e) verified. DoD audit current through all 2026-08-18 ships.
+- **Done**: docs/DOD_AUDIT.md — FEED-EARN-4X (706f84e, mark-98) verified: earn formula for API-loaded posts raised 4× ($5→$21); `app.js:1878` formula `Math.min(50, Math.round((post.likes ? Math.round(post.likes/20)*10 : 120) / 10))` confirmed; SEED_POSTS hard-coded earn values unchanged; check-render PASS; creator-economy story now coherent across seed and API posts. 328 test definitions (unchanged). Header updated with run-77 timestamp.
+- **Next**: NEEDS_DECISION #7 (Slide 3 moat edits — awaiting founder approval); NEEDS_DECISION #9 (token peg — await founder call). DoD audit current through 2026-08-18 run-77 (328 tests, all ships since caf9204 verified).
+- **Prior runs**: run 76 — DOD_AUDIT 3 ships d7ac444; run 75 — DOD_AUDIT 7 ships+326 tests c248977; run 74 — DEMO_SCRIPT 2 ships+326 tests 963fe6b; run 73 — DEMO_SCRIPT re-verified 6 ships c26b8ab; run 72 — PITCH_DECK dc73a3b.
 
 ## Steve lane — last run (2026-08-17, run 53)
 - **Task**: feat(demo): POST /api/demo/simulate-purchase — investor demo tool for creator earnings loop.
