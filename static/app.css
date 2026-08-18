@@ -2914,4 +2914,12 @@
   .story-ring:not(.seen):not(.add) { background: var(--hl, var(--accent, #e8526a)); }
   /* Add-story ring: same fix — accent gradient becomes near-black in light mode. */
   .story-ring.add { background: var(--hl, var(--accent, #e8526a)); }
+  /* Avatar initials: accent/accent2 gradient → #14110F/#3D3833 in light mode = near-black blob.
+     Use brand-hl red gradient for legible, on-brand initials — same fix pattern as story rings. */
+  .avatar-fallback,
+  .dm-avatar.avatar-fallback,
+  .dm-head-avatar.avatar-fallback { background: linear-gradient(135deg, var(--hl, #E84A5F), color-mix(in srgb, var(--hl, #E84A5F) 80%, #c4855a)); color: var(--on-accent, #fff); }
+  /* Agents stat numbers: accent3 → #3D3833 (dark brown) in light mode = same shade as body text.
+     Use brand-hl red so "18+ / 9 / 3wk" punch as a headline on the investor pitch slide. */
+  .ag-stat-num { color: var(--hl, #E84A5F); }
 }
