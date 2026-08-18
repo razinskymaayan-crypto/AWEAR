@@ -394,8 +394,8 @@
 
   function openSheetSingle(it, earnAmt, influencerUser){
     logAdminEvent('buy_intent', 'Opened sheet: ' + (it.name||'item'));
-    const earnLine = (earnAmt && influencerUser)
-      ? `<p class="sl-earn" style="margin-top:8px">${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase</p>` : '';
+    const earnLine = (Number(earnAmt) > 0 && influencerUser)
+      ? `<p class="sl-earn" style="margin-top:8px">${icon('diamond',14)} @${esc(influencerUser)} earns $${Number(earnAmt).toFixed(0)} per purchase</p>` : '';
     const wardrobe4compat = JSON.parse(localStorage.getItem('awear_wardrobe') || '[]');
     const csHTML = wardrobe4compat.length ? compatScoreHTML(it, wardrobe4compat) : '';
 
@@ -770,8 +770,8 @@
         ${pill}
       </div>`;
     }).join('');
-    const earnLine = (earnAmt && influencerUser)
-      ? `<p class="sl-earn">${icon('diamond',14)} @${esc(influencerUser)} earns a creator credit on this purchase</p>` : '';
+    const earnLine = (Number(earnAmt) > 0 && influencerUser)
+      ? `<p class="sl-earn">${icon('diamond',14)} @${esc(influencerUser)} earns $${Number(earnAmt).toFixed(0)} per purchase</p>` : '';
 
     const allTags = [...new Set(list.flatMap(it => it.style_tags||[]))];
     const lookScore = wardrobe.length ? calcCompatScore({style_tags: allTags}, wardrobe) : null;
@@ -1970,7 +1970,7 @@
     const liked=LIKES.has(post.id),saved=SAVED.has(post.id);
     const bgImg=post.img?`<img class="feed-img" src="${attr(post.img)}" alt="" onerror="this.style.display='none'">` :'';
     const tagPills=tags.map(t=>`<span class="ftag">#${esc(t)}</span>`).join('');
-    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn">${icon('diamond',13)} @${esc(post.user)} earns $${esc(post.earn)} on every purchase</div>`:'';
+    const earnLine=(!isMine&&post.earn)?`<div class="fc-earn">${icon('diamond',13)} @${esc(post.user)} earns $${esc(post.earn)} per purchase</div>`:'';
     const lbl=post.name?post.name+"'s look":(post.caption||'the look');
     const lookTot=lookTotalOf(post);
     const _ownWardrobe=JSON.parse(localStorage.getItem('awear_wardrobe')||'[]');

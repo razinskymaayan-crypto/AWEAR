@@ -30,6 +30,8 @@
   /* P1-F: sell pill on light bg needs visible shape — moved to end-of-file block to win cascade */
   /* DS-004: fallbacks use dark SoT (var() resolves to light override; fallback is academic) */
   .ms-suggest-sell { background: var(--text,#14110F); border-color: transparent; color: var(--bg,#FAF9F7); }
+  /* Earn lines — explicit AA-safe green fallback for light canvas (#1a7a4a = 5.35:1 on white, audited 2026-07-14) */
+  .sl-earn, .fc-earn { color: var(--success,#1a7a4a); }
   /* P2: active filter pill flat editorial-black in light mode (gradient of two near-blacks is indistinct) */
   .mp-filter.active { background: var(--accent,#e8526a); border-color: transparent; }
   /* P1: profit stat — remove tinted bg so #1a7a4a on white = 5.35:1 AA pass (tinted bg drops to ~4.3:1) */
@@ -433,12 +435,12 @@
   .fc-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; max-height: 44px; overflow: hidden; }
   .ftag { font-size: var(--t-caption,12px); color: var(--muted,#9e99ad); font-weight: 700; }
   .fc-earn {
-    font-size: var(--t-micro,11px); color: var(--success,#52c97a); font-weight: 700;
+    font-size: var(--t-caption,12px); color: var(--success,#52c97a); font-weight: 700;
     margin-top: 4px; display: flex; align-items: center; gap: 4px;
   }
   .sl-earn {
     display: flex; align-items: center; justify-content: center; gap: 5px;
-    font-size: var(--t-micro,11px); color: var(--success,#52c97a); font-weight: 700;
+    font-size: var(--t-caption,12px); color: var(--success,#52c97a); font-weight: 700;
     margin-top: 4px; text-align: center;
   }
 
