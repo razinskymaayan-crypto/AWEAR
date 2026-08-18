@@ -3810,8 +3810,8 @@ def test_skimlinks_postback_creates_pending_credit(client):
 def test_skimlinks_postback_credit_appears_in_wallet_as_pending(client):
     """Wallet includes the pending Skimlinks credit with status='pending'.
 
-    FAIL-BEFORE: no status field in wallet credits, no pending_balance.
-    PASS-AFTER: wallet has pending_balance > 0 and the credit shows status='pending'.
+    FAIL-BEFORE: no status field in wallet credits, no pending_usd.
+    PASS-AFTER: wallet has pending_usd > 0 and the credit shows status='pending'.
     """
     client.post("/api/skimlinks/postback", json={
         "xcust": "poster_wallet_test:post_002",
@@ -3821,8 +3821,8 @@ def test_skimlinks_postback_credit_appears_in_wallet_as_pending(client):
     r = client.get("/api/wallet", params={"user_id": "poster_wallet_test"})
     assert r.status_code == 200, r.text
     d = r.json()
-    assert "pending_balance" in d, "wallet must expose pending_balance"
-    assert d["pending_balance"] > 0
+    assert "pending_usd" in d, "wallet must expose pending_usd"
+    assert d["pending_usd"] > 0
     statuses = {c["status"] for c in d["credits"]}
     assert "pending" in statuses, f"expected a pending credit; got statuses={statuses}"
 
@@ -3945,8 +3945,8 @@ def test_skimlinks_pending_to_confirmed_wallet_lifecycle(client):
 
     FAIL-BEFORE: confirm-pending UPDATE was never exercised end-to-end; wallet balance
     only counts confirmed rows (COALESCE(status,'confirmed')='confirmed'), so a broken
-    UPDATE would leave balance=0 forever while pending_balance grew.
-    PASS-AFTER: after confirm-pending, wallet balance > 0 (not just pending_balance).
+    UPDATE would leave balance=0 forever while pending_usd grew.
+    PASS-AFTER: after confirm-pending, wallet balance > 0 (not just pending_usd).
 
     Uses a direct DB INSERT with an old created_at to bypass the days >= 1 cutoff
     constraint (a freshly-created postback credit is always too new for any days >= 1 window).
@@ -3968,15 +3968,15 @@ def test_skimlinks_pending_to_confirmed_wallet_lifecycle(client):
         )
         db.commit()
 
-    # Step 2 — wallet shows pending_balance but balance=0.
+    # Step 2 — wallet shows pending_usd but balance=0.
     r_before = client.get("/api/wallet", params={"user_id": user})
     assert r_before.status_code == 200, r_before.text
     before = r_before.json()
     assert before["balance"] == 0.0, (
         f"pending credit must not appear in balance (got {before['balance']})"
     )
-    assert before["pending_balance"] >= 6.0, (
-        f"pending credit must appear in pending_balance (got {before['pending_balance']})"
+    assert before["pending_usd"] >= 6.0, (
+        f"pending credit must appear in pending_usd (got {before['pending_usd']})"
     )
 
     # Step 3 — confirm-pending with days=30 promotes credits older than 30 days.
@@ -4264,8 +4264,8 @@ def test_demo_seed_wallet_populates_empty_wallet(client):
     assert abs(wdata["balance"] - d["balance_confirmed"]) < 0.01, (
         f"wallet balance {wdata['balance']} should match seed confirmed {d['balance_confirmed']}"
     )
-    assert abs(wdata["pending_balance"] - d["balance_pending"]) < 0.01, (
-        f"pending balance {wdata['pending_balance']} should match seed pending {d['balance_pending']}"
+    assert abs(wdata["pending_usd"] - d["balance_pending"]) < 0.01, (
+        f"pending balance {wdata['pending_usd']} should match seed pending {d['balance_pending']}"
     )
     assert len(wdata["credits"]) == d["seeded"], "credit history count must match seed count"
 
@@ -4297,7 +4297,7 @@ def test_demo_seed_wallet_confirmed_and_pending_split(client):
 
     FAIL-BEFORE: endpoint did not exist (404).
     PASS-AFTER: wallet returns non-zero balance (confirmed) AND non-zero
-    pending_balance; credit list contains rows with both status values.
+    pending_usd; credit list contains rows with both status values.
     """
     uid = "demo_wallet_test_003"
     client.post("/api/demo/seed-wallet", params={"user_id": uid})
@@ -4308,7 +4308,7 @@ def test_demo_seed_wallet_confirmed_and_pending_split(client):
     assert "confirmed" in statuses, "seed must include confirmed credits"
     assert "pending" in statuses, "seed must include pending credits"
     assert wdata["balance"] > 0, "confirmed balance must be positive"
-    assert wdata["pending_balance"] > 0, "pending balance must be positive"
+    assert wdata["pending_usd"] > 0, "pending balance must be positive"
 
 
 def test_demo_status_structure_and_seeded_user(client):
