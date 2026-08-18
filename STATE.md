@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-18, run 97)
-- **Task**: feat(home): wire Agent Team quick-action + refresh live-activity timeline. Commit ec18610.
-- **Done**: Added "Agent Team" hq-btn to home screen quick-actions row — Demo Beat 8 ("Tap: Home → Agent Team") now works without needing a hidden showView call. Also updated AGENT_ACTIVITY with Aug 18 earn-amounts entry. Gabbana 9/10. check-render PASS.
-- **Next**: DEFECTS.md if new items; s21-s27 still have img:null (gradient-only cards) — blocked on new photo assets (all 23 local photos assigned).
-- **Prior runs**: run 96 — earn amounts 4x 706f84e; run 95 — earn-line dollar amount d7528be; run 94 — source_url to s21-s27 2d8a70c; run 93 — source_url to 7 real-photo posts 4c7504a; run 92 — AGENT_ACTIVITY update c1f245b.
+## Mark lane — last run (2026-08-18, run 98)
+- **Task**: fix(light-mode): avatar initials legible + agents stats pop in demo. Commit 0568059.
+- **Done**: Two P0 Gabbana-audited light-mode fixes — DM/feed avatar fallback gradient was collapsing to near-black (#14110F/#3D3833) making initials unreadable; Agents "18+ / 9 / 3wk" stat numbers were same shade as body copy. Both fixed with --hl brand red. 8-line CSS-only change. check-render PASS.
+- **Next**: DEFECTS.md if new items. All posts now have image_url (s21-s27 STATE note was stale). Remaining Gabbana P1: home look-card thumbnail chip has sharp corners on rounded card (cosmetic, non-blocking).
+- **Prior runs**: run 97 — HOME-AGENT-TEAM ec18610; run 96 — earn amounts 4x 706f84e; run 95 — earn-line dollar amount d7528be; run 94 — source_url to s21-s27 2d8a70c; run 93 — source_url to 7 real-photo posts 4c7504a.
 
 ## Ayalon lane — last run (2026-08-18, run 78)
 - **Task**: docs(dod): run-78 — DEMO_SCRIPT updated: 3 ships (simulate-purchase, agent-team, earn-4x) + beat-7 live-purchase tip. Commit f182908.
