@@ -5511,6 +5511,7 @@ async def get_wallet(request: Request, user_id: str = ""):
 
         {
           "balance": 14.75,
+          "pending_usd": 1.60,
           "credits": [
             {"id": "crd_abc", "item": "Linen blazer", "amount": 4.50,
              "order_id": "ord_xyz", "created_at": "2026-06-24T10:00:00"}
@@ -5549,7 +5550,7 @@ async def get_wallet(request: Request, user_id: str = ""):
         for r in rows
     ]
     logger.info("wallet: user=%s balance=%.4f pending=%.4f credits=%d", lookup_key, balance, pending_balance, len(credits))
-    return {"balance": balance, "pending_balance": pending_balance, "credits": credits}
+    return {"balance": balance, "pending_usd": pending_balance, "credits": credits}
 
 
 class SkimlinkPostback(BaseModel):
