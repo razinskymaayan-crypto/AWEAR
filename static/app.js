@@ -1875,7 +1875,7 @@
           grad:     GRADS[idx % GRADS.length],
           likes:    post.likes      || 0,
           trend:    Math.min(99, 70 + (post.likes ? Math.floor(post.likes / 50) : 0)),
-          earn:     Math.round((post.likes || 100) / 80),
+          earn:     Math.min(50, Math.round((post.likes ? Math.round(post.likes / 20) * 10 : 120) / 10)),
           match_pct: post.match_pct || 0,
           items:    (post.items_tagged || []).slice(0, 4).map(pid => {
             const prod = productMap[pid];
