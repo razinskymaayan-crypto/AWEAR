@@ -11,11 +11,11 @@
 - **Context**: agents RESUMED 2026-07-05 by remote session (3 disjoint lanes, 6h cadence, `.agents_paused` deleted) — infra edits on shared files now need the concurrency check (activity_log) first
 - **2026-07-06 (main session)**: protection-layer hardening shipped — jeff GATE 0 (deterministic lane ownership), circuit breaker (3 consecutive failed cycles → auto-pause + TG), conflict TTL (chronic branch → one-time TG escalation; `auto/ayalon`+`auto/scout` will escalate on jeff's next run — founder should reconcile-or-delete them), main-canary (smoke on direct human pushes to main), `.gitattributes` union-merge for append-only logs, loop-liveness re-pointed to autopilot-managers (was watching the DISABLED autopilot.yml; window 3h→7h)
 
-## Mark lane — last run (2026-08-18, run 95)
-- **Task**: feat(earn-line): show dollar amount + consistent copy across feed+sheet. Commit d7528be.
-- **Done**: All 3 earn-line instances (feedCardHTML, openSheetSingle, openSheetLook) now show "$X per purchase" with real dollar amount. fc-earn/sl-earn bumped to --t-caption (12px). Light-mode override added with AA-audited #1a7a4a fallback. Gabbana 8.5/10 PASS.
-- **Next**: DEFECTS.md if new items; s21-s27 still have img:null (gradient-only cards) — add images next run; or any new INBOX item in lane.
-- **Prior runs**: run 94 — source_url to s21-s27 2d8a70c; run 93 — source_url to 7 real-photo posts 4c7504a; run 92 — AGENT_ACTIVITY update c1f245b; run 91 — light-mode polish 3b58a1e; run 90 — look-sheet editorial polish af93d52.
+## Mark lane — last run (2026-08-18, run 96)
+- **Task**: feat(feed): earn amounts 4x higher on API-loaded posts — earn formula changed from likes/80 to 10% of look-total (capped $50). Commit 706f84e.
+- **Done**: loadFeedData() earn field now uses `Math.min(50, Math.round(price/10))` — 10% of computed look-price. Fixes gap where API-loaded posts showed $5 while SEED_POSTS showed $20+. Typical post now $14-$50. node --check PASS, check-render PASS.
+- **Next**: DEFECTS.md if new items; s21-s27 still have img:null (gradient-only cards) — blocked on new photo assets (all 23 local photos assigned); or any new INBOX item in lane.
+- **Prior runs**: run 95 — earn-line dollar amount d7528be; run 94 — source_url to s21-s27 2d8a70c; run 93 — source_url to 7 real-photo posts 4c7504a; run 92 — AGENT_ACTIVITY update c1f245b; run 91 — light-mode polish 3b58a1e.
 
 ## Ayalon lane — last run (2026-08-17, run 75)
 - **Task**: docs(dod): run-75 — DOD_AUDIT.md 7 ships verified + FOR-YOU-POSTS-RANK ⬜→✅. Commit c248977.
