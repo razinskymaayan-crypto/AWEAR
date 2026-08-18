@@ -363,3 +363,4 @@
 2026-08-18T03:20:04Z | jeff: merged -> mark | REVERTED (broke build/guard): steve(exposed-bug)
 2026-08-18T04:53:46Z | jeff: merged -> mark | REVERTED (broke build/guard): steve(exposed-bug)
 2026-08-18T06:55:38Z | jeff: merged -> none | REVERTED (broke build/guard): steve(exposed-bug)
+2026-08-18T08:56:49Z | jeff: merged -> none | REJECTED (adversarial review): steve — see ci-debug/jeff-rejections.txt

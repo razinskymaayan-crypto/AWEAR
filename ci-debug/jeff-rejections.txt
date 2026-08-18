@@ -51,3 +51,4 @@
 2026-08-18T03:20:01Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
 2026-08-18T04:53:42Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
 2026-08-18T06:55:37Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
+2026-08-18T08:56:48Z steve: REJECT: `pending_balance → pending_usd` rename in `/api/wallet` response has no corresponding grep/update of `static/index.html` — OW-001 / backend-rename-safety violation; same silent-breakage pattern as the `price_estimate_ils→usd` incident that broke 54 callers.
