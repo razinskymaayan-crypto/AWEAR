@@ -174,3 +174,8 @@ Top-priority defect — before INBOX work.
 These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
 OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
 Top-priority defect — before INBOX work.
+
+## [OPEN] PRODUCT BUG — exposed by steve's own new tests (2026-08-18T06:55:37Z)
+These tests fail on BOTH the branch AND $BASE, so they found a REAL pre-existing bug: test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
+OWNER: steve lane. FIX THE UNDERLYING CODE (not the test); then re-add the tests and they land.
+Top-priority defect — before INBOX work.

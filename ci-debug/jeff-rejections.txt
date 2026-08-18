@@ -50,3 +50,4 @@
 2026-08-18T01:34:16Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
 2026-08-18T03:20:01Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
 2026-08-18T04:53:42Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
+2026-08-18T06:55:37Z steve: NEW TESTS EXPOSED A PRE-EXISTING BUG (not a regression): test_demo_simulate_purchase_basic test_demo_simulate_purchase_credit_appears_in_wallet
